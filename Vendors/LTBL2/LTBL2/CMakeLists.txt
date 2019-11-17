@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
+cmake_policy(SET CMP0074 NEW)
 
 project(LTBL2)
+set(CMAKE_BUILD_TYPE Release)
 
 # Compiler-specific flags and definitions
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -11,8 +13,9 @@ include_directories("${PROJECT_SOURCE_DIR}/source")
 
 # This is only required for the script to work in the version control
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
- 
-find_package(SFML 2.2 REQUIRED system window graphics)
+
+set (SFML_ROOT "../../SFML")
+find_package(SFML REQUIRED system window graphics)
  
 include_directories(${SFML_INCLUDE_DIR})
  
@@ -40,7 +43,7 @@ set( SOURCES
     "${SOURCE_PATH}/ltbl/quadtree/StaticQuadtree.h"
 )
 
-add_library(LTBL2 SHARED ${SOURCES})
+add_library(LTBL2 STATIC ${SOURCES})
 set_target_properties(LTBL2 PROPERTIES DEBUG_POSTFIX -d)
 
 target_link_libraries(LTBL2 ${SFML_LIBRARIES})
