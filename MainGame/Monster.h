@@ -15,7 +15,7 @@ public:
 	void behaviorWithStatic(WorldObject* target, float elapsedTime) override;
 	void behavior(float elapsedTime) override;
 	virtual void endingPreviousAction();
-	void stopping(bool doStand, bool forgetSelectedTarget);
+	void stopping(bool doStand, bool forgetBoundTarget);
 	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
 	WorldObject* getVictim() const { return victim; }
@@ -26,7 +26,7 @@ public:
 protected:
 	WorldObject* victim = nullptr;
 	std::map<Actions, bool> isAttack = { {commonHit, true}, {directHit, true} };
-	float hitDistance = 0, sightRange = 0;
+	float hitDistance = 0;
 	int animationLength;
 	bool wasHit = false;
 

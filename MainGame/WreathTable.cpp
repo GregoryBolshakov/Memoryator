@@ -34,6 +34,7 @@ void WreathTable::initPedestal()
 	focus1 = Vector2f(position.x - textureBox.width / 4, position.y);
 	focus2 = Vector2f(position.x + textureBox.width / 4, position.y);
 	ellipseSize = float((focus2.x - focus1.x) * 1.2);
+	initMicroBlocks();
 }
 
 void WreathTable::initCraftRecipes()

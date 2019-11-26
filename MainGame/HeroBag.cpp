@@ -1,5 +1,6 @@
 #include "HeroBag.h"
 #include "GridList.h"
+#include "Helper.h"
 
 HeroBag::HeroBag()
 {

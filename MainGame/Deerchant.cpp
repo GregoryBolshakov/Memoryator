@@ -26,7 +26,7 @@ Deerchant::Deerchant(std::string objectName, Vector2f centerPosition) : DynamicO
 	currentAction = relax;
 	toSaveName = "this1";
 	tag = Tag::hero1;
-	//canCrashIntoDynamic = false;
+	canCrashIntoStatic = true;
 
 	for (int i = 0; i < 3; i++)
 		bags.push_back((*new HeroBag));
@@ -92,7 +92,7 @@ void Deerchant::handleInput(bool usedMouse)
 		{
 			bool isIntersect = false;
 			if (boundTarget)
-				isIntersect = (sqrt(pow(this->position.x - movePosition.x, 2) + pow(this->position.y - movePosition.y, 2)) <= (this->radius + boundTarget->getRadius()));
+				isIntersect = (sqrt(pow(this->position.x - laxMovePosition.x, 2) + pow(this->position.y - laxMovePosition.y, 2)) <= (this->radius + boundTarget->getRadius()));
 			if (isIntersect || !boundTarget)
 			{
 				direction = STAND;
@@ -101,7 +101,7 @@ void Deerchant::handleInput(bool usedMouse)
 			}
 			else
 			{
-				if (boundTarget && Helper::getDist(position, movePosition) > (this->radius + boundTarget->getRadius()))
+				if (boundTarget && Helper::getDist(position, laxMovePosition) > (this->radius + boundTarget->getRadius()))
 				{
 					setMoveOffset(0);
 					changeAction(move, currentAction != move, false);
@@ -224,14 +224,14 @@ void Deerchant::behavior(float elapsedTime)
 
 	if (!boundTarget || boundTarget->isProcessed)
 	{
-		movePosition = Vector2f(-1, -1);
+		laxMovePosition = Vector2f(-1, -1);
 		return;
 	}
 
 	if (currentAction != jerking && boundTarget->isProcessed)
-		movePosition = boundTarget->getPosition();
+		laxMovePosition = boundTarget->getPosition();
 
-	bool isIntersect = (Helper::getDist(position, movePosition)) <= (this->radius + boundTarget->getRadius());
+	bool isIntersect = (Helper::getDist(position, laxMovePosition)) <= (this->radius + boundTarget->getRadius());
 
 	//touch selected object 
 	if (isIntersect)
@@ -246,6 +246,7 @@ void Deerchant::behavior(float elapsedTime)
 			changeAction(absorbs, true, false);
 			currentSprite[0] = 1;
 			side = calculateSide(boundTarget->getPosition(), elapsedTime);
+			//direction = calculateDirection();
 			boundTarget->setState(absorbed);
 			boundTarget->isProcessed = false;
 			stopping(true);
@@ -328,7 +329,7 @@ void Deerchant::onMouseUp(int currentMouseButton, WorldObject *mouseSelectedObje
 		}
 		boundTarget = new EmptyObject("buildItem", mouseWorldPos);
 		boundTarget->tag = Tag::buildObject;
-		movePosition = mouseWorldPos;
+		laxMovePosition = mouseWorldPos;
 		return;
 	}
 
@@ -357,7 +358,7 @@ void Deerchant::onMouseUp(int currentMouseButton, WorldObject *mouseSelectedObje
 			}
 			boundTarget = new EmptyObject("droppedItem", mouseWorldPos);
 			boundTarget->tag = Tag::dropPoint;
-			movePosition = mouseWorldPos;
+			laxMovePosition = mouseWorldPos;
 			return;
 		}
 
@@ -372,7 +373,7 @@ void Deerchant::onMouseUp(int currentMouseButton, WorldObject *mouseSelectedObje
 				}
 				boundTarget = new EmptyObject("droppedBag", mouseWorldPos);
 				boundTarget->tag = Tag::dropPoint;
-				movePosition = mouseWorldPos;
+				laxMovePosition = mouseWorldPos;
 			}
 		}
 		return;
@@ -381,7 +382,7 @@ void Deerchant::onMouseUp(int currentMouseButton, WorldObject *mouseSelectedObje
 	if (currentMouseButton == 2)
 	{
 		boundTarget = mouseSelectedObject;
-		movePosition = mouseSelectedObject->getPosition();
+		laxMovePosition = mouseSelectedObject->getPosition();
 	}
 }
 
@@ -448,11 +449,12 @@ void Deerchant::endingPreviousAction()
 		}
 	}
 	if (currentAction == throwNoose && currentSprite[0] == 12 && heldItem->content == std::make_pair(Tag::noose, 1))
-	{		
+	{
 		heldItem->content = { Tag::emptyCell, 0 };
 		birthDynamicInfo nooseObject;
 		nooseObject.position = position;
 		nooseObject.tag = Tag::noose;
+		nooseObject.owner = this;
 		birthDynamics.push(nooseObject);
 	}
     if (lastAction == throwNoose)
@@ -520,7 +522,7 @@ void Deerchant::jerkInteract(float elapsedTime)
 	}
 }
 
-void Deerchant::stopping(bool doStand, bool forgetSelectedTarget, bool offUnsealInventory)
+void Deerchant::stopping(bool doStand, bool forgetBoundTarget, bool offUnsealInventory)
 {
 	if (boundTarget != nullptr && currentAction != dropping)
 		if (boundTarget->getName() == "droppedBag")
@@ -530,12 +532,12 @@ void Deerchant::stopping(bool doStand, bool forgetSelectedTarget, bool offUnseal
 
 	if (doStand)
 	{
-		this->movePosition = { -1, -1 };
-		moveOffset = { 0, 0 };
+		this->laxMovePosition = { -1, -1 };
+		moveOffset = { -1, -1 };
 		this->direction = STAND;
 	}
 
-	if (forgetSelectedTarget && boundTarget != nullptr)
+	if (forgetBoundTarget && boundTarget != nullptr)
 	{
 		boundTarget->isProcessed = false;
 		boundTarget = nullptr;
@@ -578,7 +580,7 @@ void Deerchant::jerk(float power, float deceleration, Vector2f destinationPoint)
 	jerkDistance = 500;
 	currentSprite[0] = 1;
 
-	movePosition = Vector2f(position.x + cos(direction * pi / 180) * jerkDistance, position.y - sin(direction * pi / 180) * jerkDistance);
+	laxMovePosition = Vector2f(position.x + cos(direction * pi / 180) * jerkDistance, position.y - sin(direction * pi / 180) * jerkDistance);
 }
 
 void Deerchant::fightLogic(float elapsedTime, DynamicObject* target)

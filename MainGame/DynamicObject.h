@@ -20,9 +20,11 @@ protected:
 	Vector2f focus1, focus2;
 	float strength = 0;
 	float defaultSpeed, speed;
-	float timeAfterHitself = 0, timeForNewRoute = 10e5, timeAfterNewRoute = 10e5;
+	float timeAfterHitself = 0, timeForNewRoute = 5e5, timeAfterNewRoute = 5e5;
 	Side calculateSide(Vector2f otherObjectPosition, float elapsedTime);
+	Direction calculateDirection() const;
 	static Side invertSide(Side side);
+	virtual void initMicroBlocks();
 	Side side;	
 	Actions currentAction, lastAction = relax;
 	Direction direction;
@@ -57,11 +59,11 @@ public:
 	Vector2f getFocus1() const { return focus1; }
 	Vector2f getFocus2() const { return focus2; }
 	Vector2f getMoveOffset() { return moveOffset; }
-	Vector2f getMovePosition() { return movePosition; }
+	Vector2f getMovePosition() { return movePosition; }	
 	Actions getCurrentAction() { return currentAction; }
 	Direction getDirection() { return direction; }
 	Side getSide() { return side; }
-	WorldObject *getSelectedTarget() { return boundTarget; }
+	WorldObject *getBoundTarget() { return boundTarget; }
 	static std::string sideToString(Side side);
 	static std::string directionToString(Direction direction);
 
@@ -72,7 +74,8 @@ public:
 	void resetTimeAfterNewRoute() { timeAfterNewRoute = 0; }
 	void changeMovePositionToRoute(Vector2f newPosition) { movePosition = newPosition; }
 	void takeDamage(float damage, Vector2f attackerPos = {-1, -1}) override;
-	void setMoveOffset(float elapsedTime);	
+	void setMoveOffset(float elapsedTime);
+	void setRoute(std::vector<std::pair<int, int>> route) { this->route = route; }
 	virtual void changeAction(Actions newAction, bool resetSpriteNumber = false, bool rememberLastAction = false);
 	virtual void handleInput(bool usedMouse = false);
 	virtual void behaviorWithDynamic(DynamicObject* target, float elapsedTime) = 0;
@@ -82,18 +85,18 @@ public:
 	virtual void jerk(float power, float deceleration, Vector2f destinationPoint) = 0;
 
 	float timeForNewHitself;
-	float timeAfterHit = 0, timeForNewHit = 100000;
+	float timeAfterHit = 0, timeForNewHit = 100000, sightRange = 0;
 	bool isIntersectDynamic(Vector2f newPosition, DynamicObject& otherDynamic);
-	bool canCrashIntoDynamic = true, canCrashIntoStatic = true, doShake = false;
+	bool canCrashIntoDynamic = false, canCrashIntoStatic = false, doShake = false;
 	Vector2f EllipceSlip(DynamicObject *dynamic, Vector2f newPos, Vector2f destination, Vector2f f1, Vector2f f2, float ellipseSize, float height, float elapsedTime);
 	Vector2f doMove(long long elapsedTime);
 	Vector2f doSlip(Vector2f newPosition, std::vector<StaticObject*> localStaticItems, float height, float elapsedTime);
 	Vector2f doSlipOffDynamic(Vector2f newPosition, std::vector<DynamicObject*> localDynamicItems, float height, float elapsedTime);
+	Vector2f laxMovePosition = { -1, -1 };
 	std::string lastIntersected = "";
-	std::vector<std::pair<int, int>> route;
+	std::vector<std::pair<int, int>> route = { {} };
 
 	std::string debugInfo;
-	Vector2f memorizedRoutePosition = { -1, -1 };
 };
 
 #endif

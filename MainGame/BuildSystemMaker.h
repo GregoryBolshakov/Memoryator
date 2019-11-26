@@ -30,7 +30,7 @@ public:
 	std::vector<HeroBag>* boundBags;
 
 	void Init(const std::unordered_map<Tag, CellSprite>& itemsSpriteList);
-	void draw(RenderWindow &window, float elapsedTime, std::unordered_map<std::string, BoardSprite>& spriteMap, GridList<StaticObject>& staticGrid, float scaleFactor, Vector2f cameraPosition, std::vector<WorldObject*> visibleItems, bool showPositioning = true);
+	void draw(RenderWindow &window, float elapsedTime, std::unordered_map<std::string, BoardSprite>& spriteMap, GridList& staticGrid, float scaleFactor, Vector2f cameraPosition, std::vector<WorldObject*> visibleItems, bool showPositioning = true);
 	void onMouseUp(Vector2f focusedObjectPosition, float scaleFactor);
 	void buildHeldItem(Vector2f focusedObjectPosition, float scaleFactor);
 	void interact();
@@ -45,7 +45,7 @@ public:
 	bool canBePlaced = false;
 	Tag selectedObject = Tag::emptyCell;
 	void setHeldItem(std::pair<Tag, int>& heldItem) { if (nullptr != &heldItem) this->heldItem = &heldItem; }
-	void clearHareBags(int block, GridList<StaticObject>& staticGrid, std::vector<WorldObject*>* visibleItems);
+	void clearHareBags(int block, GridList& staticGrid, std::vector<WorldObject*>* visibleItems);
 	std::map<Tag, bool> droppedLootIdList = { {Tag::heroBag, 1} };
 private:	
 	std::unordered_map<Tag, CellSprite> craftIngredientsSpriteList;

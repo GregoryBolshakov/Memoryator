@@ -7,7 +7,8 @@ Monster::Monster(std::string objectName, Vector2f centerPosition) : DynamicObjec
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
 	currentAction = relax;
-	sightRange = 600;
+	side = down;
+	sightRange = 950;
 	strikingSprite = 6;
 	timeForNewHit = 1e5;
 }
@@ -47,11 +48,19 @@ void Monster::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
 	if (target->tag != Tag::hero1)
 		return;
 
+	if (Helper::getDist(target->getPosition(), position) > sightRange)
+	{		
+		laxMovePosition = { -1, -1 };
+		changeAction(relax, currentAction != relax);
+		return;
+	}
+
 	victim = target;
 	side = calculateSide(victim->getPosition(), elapsedTime);
+	//side = calculateSide(movePosition, elapsedTime);
 
 	if (Helper::getDist(position, victim->getPosition()) <= sightRange && timeAfterHit >= timeForNewHit)
-		speed = std::max((1 - Helper::getDist(position, victim->getPosition()) / sightRange) * defaultSpeed + defaultSpeed, defaultSpeed);
+		speed = std::max((1 - Helper::getDist(position, victim->getPosition()) / sightRange) * defaultSpeed / 2 + defaultSpeed, defaultSpeed);
 	else
 		speed = defaultSpeed;
 	if (isAttack.count(currentAction) == 0)
@@ -80,9 +89,11 @@ void Monster::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
 		if (isAttack.count(currentAction) == 0 && currentAction != combatState)
 		{
 			changeAction(move, false);
-			movePosition = victim->getPosition();
+			laxMovePosition = victim->getPosition();
 		}
 	}
+	else	
+		stopping(true, false);	
 	//---------------
 }
 
@@ -97,16 +108,17 @@ void Monster::endingPreviousAction()
 	lastAction = relax;
 }
 
-void Monster::stopping(bool doStand, bool forgetSelectedTarget)
+void Monster::stopping(bool doStand, bool forgetBoundTarget)
 {
 	if (doStand)
 	{
-		this->movePosition = { -1, -1 };
+		this->laxMovePosition = { -1, -1 };
 		moveOffset = { 0, 0 };
 		this->direction = STAND;
+		timeAfterNewRoute = timeForNewRoute;
 	}
 
-	if (forgetSelectedTarget && boundTarget != nullptr)
+	if (forgetBoundTarget && boundTarget != nullptr)
 	{
 		boundTarget->isProcessed = false;
 		boundTarget = nullptr;

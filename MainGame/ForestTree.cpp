@@ -79,7 +79,7 @@ Vector2i ForestTree::calculateTextureOffset()
 }
 
 void ForestTree::initPedestal()
-{
+{	
 	if (typeOfObject == 1)
 	{
 		focus1 = Vector2f (position.x - textureBox.width / 10, position.y);
@@ -167,7 +167,7 @@ void ForestTree::initPedestal()
 													focus2 = Vector2f(position.x + textureBox.width / 8, position.y);
 													ellipseSize = float((focus2.x - focus1.x) * 1.2);
 												}
-	//textureBoxOffset = Vector2f ((focus1.x + focus2.x) / 2 - textureBox.left, focus1.y - textureBox.top);
+	initMicroBlocks();
 }
 
 Vector2f ForestTree::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)

@@ -11,12 +11,8 @@
 #include <iostream>
 #include <windows.h>
 
-#include "GridList.h"
-#include "InventoryMaker.h"
 #include "Helper.h"
-#include "BuildSystemMaker.h"
 #include "EffectsSystemMaker.h"
-#include "SpriteStructures.h"
 #include "EventHandler.h"
 
 #include "DynamicObject.h"
@@ -50,13 +46,13 @@ public:
 
 	//adding to the grid
 	void birthObjects();
-	void initializeStaticItem(Tag itemClass, Vector2f itemPosition, int itemType, std::string itemName, bool reliable, int count = 1, std::vector<std::pair<Tag, int>> inventory = {});
+	void initializeStaticItem(Tag itemClass, Vector2f itemPosition, int itemType, std::string itemName, int count = 1, std::vector<std::pair<Tag, int>> inventory = {});
 	void initializeDynamicItem(Tag itemClass, Vector2f itemPosition, std::string itemName, WorldObject* owner = nullptr);
 
 	//getters
 	Vector2f getWorldSize() { return Vector2f (width, height); }
-	GridList<StaticObject> getStaticGrid() { return staticGrid; }
-	GridList<DynamicObject> getDynamicGrid() { return dynamicGrid; }
+	GridList getStaticGrid() { return staticGrid; }
+	GridList getDynamicGrid() { return dynamicGrid; }
 	Vector2f getCameraPosition() { return cameraPosition; }
 	InventoryMaker& getInventorySystem() { return inventorySystem; }
 	BuildSystemMaker& getBuildSystem() { return buildSystem; }
@@ -99,6 +95,7 @@ public:
 	void changeBookVisability() { isHeroBookVisible = !isHeroBookVisible; }
 
 	Vector2i currentTransparentPos = Vector2i(0, 0);
+	std::string debugInfo = "";
 private:
 	//lightSystem
 	const Color commonWorldColor = Color(0, 0, 0, 255),
@@ -135,6 +132,7 @@ private:
 	void cameraShakeInteract(float elapsedTime);
 	Vector2f cameraShakeVector = { 0, 0 };
 	float cameraShakeDuration = 0, cameraShakePower = 0.0002f;
+	std::map<int, bool> rememberedBlocks = { {0, true} };
 
 	//active generation
 	void inBlockGenerate(int blockIndex);
@@ -148,7 +146,7 @@ private:
 	int newNameId = 10;
 	int biomeGenerateDistance = 4;
 	float timeForNewSave, timeAfterSave;
-	const float timeForNewRotutes = 5000000;
+	const float timeForNewRotutes = 5e6;
 
 	//selection logic
 	void setTransparent(std::vector<WorldObject*> visibleItems, float elapsedTime);
@@ -167,8 +165,8 @@ private:
 	BuildSystemMaker buildSystem;
 
 	//grids
-	GridList<StaticObject> staticGrid;
-	GridList<DynamicObject> dynamicGrid;
+	GridList staticGrid;
+	GridList dynamicGrid;
 	std::vector<spriteChainElement> visibleBackground, visibleTerrain;
 	std::vector<WorldObject*> localTerrain;
 

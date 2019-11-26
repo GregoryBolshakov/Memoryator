@@ -128,8 +128,8 @@ int main() {
 
 		auto hero = dynamic_cast<DynamicObject*>(world.focusedObject);
 
-		//textWriter.drawString(std::to_string(world.scaleFactor), NormalFont, 30, 500, 500, &mainWindow);
-		textWriter.drawString(std::to_string(10e5 / drawTime), NormalFont, 30, 200, 200, &mainWindow, Color::Black);
+		//textWriter.drawString(world.debugInfo, NormalFont, 30, 500, 500, &mainWindow);
+		textWriter.drawString(std::to_string(Helper::getFps()), NormalFont, 30, 200, 200, &mainWindow, Color::Black);	
 
 		mainWindow.display();
 	}

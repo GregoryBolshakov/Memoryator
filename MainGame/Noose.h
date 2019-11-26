@@ -10,7 +10,7 @@ using namespace sf;
 class Noose : public DynamicObject
 {
 private:
-    void stopping(bool doStand = false, bool forgetSelectedTarget = false);
+    void stopping(bool doStand = false, bool forgetBoundTarget = false);
     void endingPreviousAction();
 	void rotateAndExtend(spriteChainElement* rope, spriteChainElement* loop);
 

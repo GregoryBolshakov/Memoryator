@@ -69,7 +69,10 @@ void ClapWhirl::behaviorWithStatic(WorldObject* target, float elapsedTime)
 void ClapWhirl::behavior(float elapsedTime)
 {
 	if (currentAction == dead)
+	{
 		stopping(true, true);
+		color.a = 0;
+	}
 
 	endingPreviousAction();
 	jerkInteract(elapsedTime);
@@ -80,7 +83,7 @@ void ClapWhirl::behavior(float elapsedTime)
 		ownerGlobalBounds = owner->getConditionalSizeUnits();
 	}
 
-	if (jerkTime / jerkDuration <= 1)
+	if (currentAction == jerking)
 		color.a = 255 * jerkTime / jerkDuration;
 	else
 		color.a = 0;
@@ -96,7 +99,7 @@ int ClapWhirl::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-void ClapWhirl::stopping(bool doStand, bool forgetSelectedTarget)
+void ClapWhirl::stopping(bool doStand, bool forgetBoundTarget)
 {
 	if (doStand)
 	{
@@ -104,7 +107,7 @@ void ClapWhirl::stopping(bool doStand, bool forgetSelectedTarget)
 		this->direction = STAND;
 	}
 
-	if (forgetSelectedTarget && boundTarget != nullptr)
+	if (forgetBoundTarget && boundTarget != nullptr)
 	{
 		boundTarget->isProcessed = false;
 		boundTarget = nullptr;

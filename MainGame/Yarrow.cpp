@@ -47,6 +47,7 @@ void Yarrow::initPedestal()
 		focus2 = Vector2f (position.x + textureBox.width / 10, position.y);
 		ellipseSize = float((focus2.x - focus1.x) * 1.08);
 	}
+	initMicroBlocks();
 }
 
 Vector2f Yarrow::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)

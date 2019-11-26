@@ -1,29 +1,6 @@
 #include "ObjectInitializer.h"
 #include "Helper.h"
 
-#include "Rock.h"
-#include "Ground.h"
-#include "GroundConnection.h"
-#include "DroppedLoot.h"
-#include "Grass.h"
-#include "Fog.h"
-#include "Spawn.h"
-#include "BonefireOfInsight.h"
-#include "HomeCosiness.h"
-#include "MushroomStone.h"
-#include "MushroomsOnStone.h"
-#include "Chamomile.h"
-#include "Yarrow.h"
-#include "Mugwort.h"
-#include "Fern.h"
-#include "Brazier.h"
-#include "Totem.h"
-#include "HareTrap.h"
-#include "Fence.h"
-#include "Stump.h"
-#include "ForestTree.h"
-#include "WreathTable.h"
-
 ObjectInitializer::ObjectInitializer()
 {
 }
@@ -41,8 +18,6 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 	int itemType,
 	std::string itemName,
 	int count,
-	Vector2f cameraPosition,
-	float scaleFactor,
 	std::unordered_map<std::string, BoardSprite>* spriteMap,
 	std::vector<std::pair<Tag, int>> inventory)
 {
@@ -185,10 +160,129 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 		: itemName;
 	item->setName(name);
 	if (!inventory.empty())
-		item->inventory = inventory;
-
-	//for bias positioning
-	auto spriteLeft = float((item->getPosition().x - cameraPosition.x - item->getTextureOffset().x) * scaleFactor + Helper::GetScreenSize().x / 2);
-	auto spriteTop = float((item->getPosition().y - cameraPosition.y + (item->getConditionalSizeUnits().y - item->getTextureOffset().y)) * scaleFactor + Helper::GetScreenSize().y / 2);
+		item->inventory = inventory;	
 	return item;
 }
+
+DynamicObject* ObjectInitializer::initializeDynamicItem(
+	Tag itemClass,
+	Vector2f itemPosition,
+	std::string itemName,
+	std::unordered_map<std::string, BoardSprite>* spriteMap,
+	WorldObject* owner)
+{
+	DynamicObject* item;
+	std::string nameOfImage;
+
+	switch (itemClass)
+	{
+	case Tag::hero1:
+	{
+		item = new Deerchant("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/hero/stand/down/1";		
+		break;
+	}
+	case Tag::wolf:
+	{
+		item = new Wolf("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/wolf/stand/down/1";
+		break;
+	}
+	case Tag::hare:
+	{
+		item = new Hare("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/hare/stand/down/1";
+		break;
+	}
+	case Tag::deer:
+	{
+		item = new Deer("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/deer/stand/down/1";
+		break;
+	}
+	case Tag::bear:
+	{
+		item = new Bear("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/deer/stand/down/1";
+		break;
+	}
+	case Tag::owl:
+	{
+		item = new Owl("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/deer/stand/down/1";
+		break;
+	}
+	case Tag::noose:
+	{
+		item = new Noose("item", Vector2f(0, 0), owner);
+		nameOfImage = "Game/worldSprites/noose/nooseLoop/1";
+		break;
+	}
+	case Tag::clapWhirl:
+	{
+		item = new ClapWhirl("item", Vector2f(0, 0), owner);
+		nameOfImage = "Game/worldSprites/nightmare3/clap/whirl";
+		break;
+	}
+	case Tag::owlBoss:
+	{
+		item = new OwlBoss("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/owlBoss/stand/down/1";
+		break;
+	}
+	case Tag::nightmare1:
+	{
+		item = new Nightmare1("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/nightmare1/stand/down/1";
+		break;
+	}
+	case Tag::nightmare2:
+	{
+		item = new Nightmare2("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/nightmare2/stand/down/1";
+		break;
+	}
+	case Tag::nightmare3:
+	{
+		item = new Nightmare3("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/nightmare2/stand/down/1";
+		break;
+	}
+	default:
+	{
+		item = new Nightmare2("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/nightmare2/stand/down/1";
+		break;
+	}
+	}
+
+	newNameId++;
+	nameOfImage += ".png";
+
+	const std::string name = itemName.empty()
+		? std::string(item->getToSaveName()) + "_" + std::to_string(newNameId)
+		: itemName;
+
+	item->setName(name);
+	item->setPosition(Vector2f(itemPosition));
+	const Vector2f textureSize = Vector2f(spriteMap->at(nameOfImage).texture.getSize());
+	item->setTextureSize(textureSize);
+	return item;
+}
+
+std::vector<StaticObject*> ObjectInitializer::vectorCastToStatic(std::vector<WorldObject*> items)
+{
+	std::vector<StaticObject*> staticItems = *(new std::vector<StaticObject*>());
+	for (auto& item : items)
+		staticItems.push_back(dynamic_cast<StaticObject*>(item));
+	return staticItems;
+}
+
+std::vector<DynamicObject*> ObjectInitializer::vectorCastToDynamic(std::vector<WorldObject*> items)
+{
+	std::vector<DynamicObject*> dynamicItems = *(new std::vector<DynamicObject*>());
+	for (auto& item : items)
+		dynamicItems.push_back(dynamic_cast<DynamicObject*>(item));
+	return dynamicItems;
+}
+

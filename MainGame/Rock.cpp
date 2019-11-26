@@ -96,7 +96,7 @@ void Rock::initPedestal()
 							ellipseSize = float((focus2.x - focus1.x) * 1.6);
 						}
 						
-	//textureBoxOffset = Vector2f ((focus1.x + focus2.x) / 2 - textureBox.left, focus1.y - textureBox.top);
+	initMicroBlocks();
 }
 
 Vector2f Rock::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)

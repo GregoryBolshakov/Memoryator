@@ -72,6 +72,7 @@ void Stump::initPedestal()
 					focus2 = Vector2f (position.x + textureBox.width / 4, position.y);
 					ellipseSize = float((focus2.x - focus1.x) * 1.6);
 				}
+	initMicroBlocks();
 }
 
 Vector2f Stump::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)

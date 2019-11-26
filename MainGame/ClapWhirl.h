@@ -25,7 +25,7 @@ public:
 	void jerk(float power, float deceleration, Vector2f destinationPoint = Vector2f(-1, -1)) override;
 	void fightLogic(float elapsedTime, DynamicObject* target = nullptr) override;
 private:
-	void stopping(bool doStand = false, bool forgetSelectedTarget = false);
+	void stopping(bool doStand = false, bool forgetBoundTarget = false);
 	void endingPreviousAction();
 	void rotateAndExtend(spriteChainElement* whirl);
 
