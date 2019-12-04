@@ -35,7 +35,7 @@ void Nightmare2::doAttack(WorldObject* target)
 {
 	if (timeAfterHit >= timeForNewHit)
 	{
-		if (Helper::getDist(position, victim->getPosition()) <= (this->radius + victim->getRadius() + hitDistance / 5))
+		if (Helper::getDist(position, boundTarget->getPosition()) <= (this->radius + boundTarget->getRadius() + hitDistance / 5))
 		{
 			changeAction(commonHit, true, false);
 			timeAfterHit = 0;

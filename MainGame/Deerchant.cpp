@@ -3,7 +3,7 @@
 #include "PickedObject.h"
 #include "Noose.h"
 #include "Brazier.h"
-#include "WreathTable.h"
+#include "EmptyObject.h"
 
 using namespace sf;
 
@@ -188,6 +188,9 @@ void Deerchant::setTarget(DynamicObject& object)
 
 void Deerchant::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
 {
+	if (Helper::getDist(position, target->getPosition()) <= radius + target->getRadius())
+		pushByBumping(target);
+
 	const bool isIntersect = Helper::getDist(position, target->getPosition()) <= this->radius + target->getRadius() + hitDistance;
 
 	if (isIntersect && calculateSide(target->getPosition(), elapsedTime) != invertSide(side))
@@ -210,10 +213,7 @@ void Deerchant::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
 void Deerchant::behaviorWithStatic(WorldObject* target, float elapsedTime)
 {	
 	if (target->tag == Tag::wreathTable && Helper::getDist(position, target->getPosition()) <= radius + target->getRadius())
-		nearTheTable = true;
-	if (target->tag == Tag::fog && target->getState() == common)
-		if (abs(position.x - target->getPosition().x) <= target->getConditionalSizeUnits().x / 2.5 && abs(position.y - target->getPosition().y) <= target->getConditionalSizeUnits().y / 2.5)
-			target->setState(absorbed);
+		nearTheTable = true;	
 }
 
 void Deerchant::behavior(float elapsedTime)

@@ -39,13 +39,15 @@ public:
 	std::vector<std::vector<WorldObject*>> getCells(){ return cells; }
 	void clearCell(int cellIndex);
 	void deleteItem(std::string name);
-	void setLockedMicroBlocks(WorldObject* item, bool value = false);
+	void setLockedMicroBlocks(WorldObject* item, bool value = false, bool dynamicMatrix = false);
+	void boundDynamicMatrix(std::vector<std::vector<bool>>* matrix) { this->dynamicMicroBlockMatrix = matrix; };
 	int getSize() { return items.size(); }
 	std::vector<int> getBlocksAround(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY, int offset);
 	std::vector<int> GridList::getBlocksInSight(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY);
 	bool isIntersectWithOthers(Vector2f position1, float radius1, std::vector<WorldObject*> visibleTerrain, bool isDotAdjustded = false) const;
 
 	std::vector<std::vector<bool>> microBlockMatrix;
+	std::vector<std::vector<bool>>* dynamicMicroBlockMatrix = nullptr;
 	std::vector<std::vector<float>> distances;
 	std::vector<std::vector<std::pair<int, int>>> previous;
 	std::vector<std::pair<int, int>> route = {{}};

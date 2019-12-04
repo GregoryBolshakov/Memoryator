@@ -1,15 +1,8 @@
-#include "Helper.h"
-#include "World.h"
 #include "MenuMaker.h"
-#include "ButtonMaker.h"
 #include "HeroBook.h"
-#include "TextWriter.h"
 #include "Deerchant.h"
 
-#include <cmath>
 #include <thread>
-#include <vector>
-#include <array>
 
 using namespace sf;
 using namespace std;
@@ -20,7 +13,7 @@ int main() {
 	RenderWindow mainWindow(VideoMode(static_cast<unsigned int>(screenSize.x), static_cast<unsigned int>(screenSize.y), 32), "game", Style::Fullscreen);
 	
 	MenuMaker menuSystem;
-	World world(40000, 40000);
+	WorldHandler world(40000, 40000);
 	world.initLightSystem(mainWindow);
 	bool windowFocus = true;
 
@@ -79,7 +72,7 @@ int main() {
 			if (event.type == Event::Closed)
 			{
 				world.Save();
-				world.~World();
+				world.~WorldHandler();
 				mainWindow.close();
 				break;
 			}

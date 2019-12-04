@@ -3,7 +3,7 @@
 
 GroundConnection::GroundConnection(std::string objectName, Vector2f centerPosition, int typeOfObject) : StaticObject(objectName, centerPosition)
 {
-	varietyOfTypes = 16;
+	varietyOfTypes = 12;
 	this->typeOfObject = typeOfObject;
 	isBackground = true;
 	toSaveName = "groundConnection";
@@ -85,7 +85,12 @@ void GroundConnection::prepareSpriteNames(long long elapsedTime, float scaleFact
 {
 	additionalSprites.clear();
 	spriteChainElement groundConnectionBody;
-	groundConnectionBody.path = "Game/worldSprites/terrainObjects/ground/groundConnection" + std::to_string(typeOfObject) + ".png";
+	if (typeOfObject >= 1 && typeOfObject <= 4)
+		groundConnectionBody.path = "Game/worldSprites/SwampyTrees/connection" + std::to_string(typeOfObject) + ".png";
+	if (typeOfObject >= 5 && typeOfObject <= 8)
+		groundConnectionBody.path = "Game/worldSprites/DarkWoods/connection" + std::to_string(typeOfObject) + ".png";
+	if (typeOfObject >= 9 && typeOfObject <= 12)
+		groundConnectionBody.path = "Game/worldSprites/BirchGrove/connection" + std::to_string(typeOfObject) + ".png";
 	groundConnectionBody.size = Vector2f(conditionalSizeUnits);
 	groundConnectionBody.offset = Vector2f(textureBoxOffset);
 	additionalSprites.push_back(groundConnectionBody);

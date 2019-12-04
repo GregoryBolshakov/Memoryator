@@ -42,13 +42,22 @@ void WorldObject::initPedestal()
 
 void WorldObject::initMicroBlocks()
 {
-	const Vector2i currentMicroBlock = Vector2i(position.x / microBlockSize.x, position.y / microBlockSize.y);
-	for (int i = -radius / microBlockSize.x; i <= int(radius / microBlockSize.x); i++)
-		for (int j = -radius / microBlockSize.y; j <= int(radius / microBlockSize.y); j++)
-			if (Helper::getDist(Vector2f(position.x + i * microBlockSize.x, position.y + j * microBlockSize.y), position) <= radius - sqrt(2 * microBlockSize.x))
-				lockedMicroBlocks.emplace_back(currentMicroBlock.x + i, currentMicroBlock.y + j);
-
 	microBlockCheckAreaBounds = { radius, radius };
+	lockedMicroBlocks.clear();
+	permissibleDistance = 0;
+	const Vector2i currentMicroBlock = Vector2i(position.x / microBlockSize.x, position.y / microBlockSize.y);
+	for (int i = -microBlockCheckAreaBounds.x / microBlockSize.x; i <= int(microBlockCheckAreaBounds.x / microBlockSize.x); i++)
+		for (int j = -microBlockCheckAreaBounds.y / microBlockSize.y; j <= int(microBlockCheckAreaBounds.y / microBlockSize.y); j++)
+			if (Helper::getDist(Vector2f(position.x + i * microBlockSize.x, position.y + j * microBlockSize.y), position) <= microBlockCheckAreaBounds.x - sqrt(2 * microBlockSize.x))
+			{
+				lockedMicroBlocks.emplace_back(currentMicroBlock.x + i, currentMicroBlock.y + j);
+				if (abs(i) > permissibleDistance)
+					permissibleDistance = abs(i);
+				if (abs(j) > permissibleDistance)
+					permissibleDistance = abs(j);
+			}
+
+	permissibleDistance++;
 }
 
 bool WorldObject::isLockedPlace(std::map<std::pair<int, int>, bool> checkBlocks)

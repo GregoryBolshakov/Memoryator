@@ -28,7 +28,7 @@ GridList::GridList(int width, int height, Vector2i size, Vector2i microSize)
 	{
 		arr.resize(0);
 	}
-	microBlockMatrix.resize(4000, std::vector<bool>(4000, true));
+	microBlockMatrix.resize(4000, std::vector<bool>(4000, true));	
 	distances.resize(4000, std::vector<float>(4000, 1000));
 	previous.resize(4000, std::vector<std::pair<int, int>>(4000, { -1, -1 }));
 }
@@ -102,13 +102,13 @@ void GridList::makeRoute(Vector2f startPos, Vector2f finishPos, int upperLeftX, 
 	int lastMicroblockX = finishPos.x / microSize.x, lastMicroblockY = finishPos.y / microSize.y;
 
 	bool isBreak = false;
-	if (!microBlockMatrix[curMicroblockX][curMicroblockY])
+	if (!microBlockMatrix[curMicroblockX][curMicroblockY]/* || !dynamicMicroBlockMatrix->at(curMicroblockX)[curMicroblockY]*/)
 	{
 		for (int i = -1; i <= 1; i++)
 		{
 			for (int j = -1; j <= 1; j++)
 				if (curMicroblockX + i > 0 && curMicroblockX + i < width / microSize.x &&
-					curMicroblockY + j > 0 && curMicroblockY + j < height / microSize.y && microBlockMatrix[curMicroblockX + i][curMicroblockY + j])
+					curMicroblockY + j > 0 && curMicroblockY + j < height / microSize.y && microBlockMatrix[curMicroblockX + i][curMicroblockY + j]/* && dynamicMicroBlockMatrix->at(curMicroblockX + i)[curMicroblockY + j]*/)
 				{
 					curMicroblockX += i;
 					curMicroblockY += j;
@@ -120,14 +120,14 @@ void GridList::makeRoute(Vector2f startPos, Vector2f finishPos, int upperLeftX, 
 		}
 	}
 
-	if (!microBlockMatrix[lastMicroblockX][lastMicroblockY])
+	if (!microBlockMatrix[lastMicroblockX][lastMicroblockY]/* || !dynamicMicroBlockMatrix->at(lastMicroblockX)[lastMicroblockY]*/)
 	{
-		for (int i = -1; i <= 1; i++)
+		for (int i = -permissibleDistance; i <= permissibleDistance; i++)
 		{
 			isBreak = false;
-			for (int j = -1; j <= 1; j++)
+			for (int j = -permissibleDistance; j <= permissibleDistance; j++)
 				if (lastMicroblockX + i > 0 && lastMicroblockX + i < width / microSize.x &&
-					lastMicroblockY + j > 0 && lastMicroblockY + j < height / microSize.y && microBlockMatrix[lastMicroblockX + i][lastMicroblockY + j])
+					lastMicroblockY + j > 0 && lastMicroblockY + j < height / microSize.y && microBlockMatrix[lastMicroblockX + i][lastMicroblockY + j]/* && dynamicMicroBlockMatrix->at(lastMicroblockX + i)[lastMicroblockY + j]*/)
 				{
 					lastMicroblockX += i;
 					lastMicroblockY += j;
@@ -137,8 +137,7 @@ void GridList::makeRoute(Vector2f startPos, Vector2f finishPos, int upperLeftX, 
 			if (isBreak)
 				break;
 		}
-	}
-
+	}	
 	for (int i = startXInd; i < startXInd + xMicroblocksCount; i++)	
 		for (int j = startYInd; j < startYInd + yMicroblocksCount; j++)		
 			distances[i][j] = inf;
@@ -179,7 +178,7 @@ void GridList::bfs(int xBorder, int yBorder, int startX, int startY, int finishX
 					step -= 0.0001;
 
 
-				if (distances[to.first][to.second] > distances[v.first][v.second] + step && (microBlockMatrix[to.first][to.second] != 0 || (to.first == finishX && to.second == finishY)))
+				if (distances[to.first][to.second] > distances[v.first][v.second] + step && ((microBlockMatrix[to.first][to.second] != 0 && dynamicMicroBlockMatrix->at(to.first)[to.second] != 0) || (to.first == finishX && to.second == finishY)))
 				{
 					distances[to.first][to.second] = distances[v.first][v.second] + step;
 					previous[to.first][to.second] = v;
@@ -273,16 +272,19 @@ bool GridList::isIntersectWithOthers(Vector2f position1, float radius1, std::vec
 	return false;
 }
 
-void GridList::setLockedMicroBlocks(WorldObject* item, bool value)
+void GridList::setLockedMicroBlocks(WorldObject* item, bool value, bool dynamicMatrix)
 {
 	const auto worldItem = dynamic_cast<WorldObject*>(item);
-	if (worldItem->tag == Tag::emptyObject)
-		int a = 1;
 	if (worldItem)
 		for (const auto block : worldItem->getLockedMicroBlocks())
 		{
 			if (!(block.x < 0 || block.x > width / microSize.x || block.y < 0 || block.y > height / microSize.y))
-				microBlockMatrix[block.x][block.y] = value;
+			{
+				if (dynamicMatrix)
+					dynamicMicroBlockMatrix->at(block.x)[block.y] = value;
+				else
+					microBlockMatrix[block.x][block.y] = value;
+			}
 		}
 }
 

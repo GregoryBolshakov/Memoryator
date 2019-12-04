@@ -26,6 +26,7 @@ Nightmare1::~Nightmare1()
 
 Vector2i Nightmare1::calculateTextureOffset()
 {	
+	initMicroBlocks();
 	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
 	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
 	return Vector2i(textureBox.width / 2, textureBox.height * 7 / 8);
@@ -35,7 +36,7 @@ void Nightmare1::doAttack(WorldObject* target)
 {
 	if (timeAfterHit >= timeForNewHit)
 	{
-		if (Helper::getDist(position, victim->getPosition()) <= (this->radius + victim->getRadius() + hitDistance / 5))
+		if (Helper::getDist(position, boundTarget->getPosition()) <= (this->radius + boundTarget->getRadius() + hitDistance / 5))
 		{
 			changeAction(commonHit, true, false);
 			timeAfterHit = 0;

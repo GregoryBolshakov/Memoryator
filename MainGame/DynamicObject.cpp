@@ -19,7 +19,7 @@ void DynamicObject::handleInput(bool usedMouse)
 
 void DynamicObject::initMicroBlocks()
 {
-	lockedMicroBlocks = {};
+	lockedMicroBlocks = { Vector2i(position.x / microBlockSize.x, position.y / microBlockSize.y) };
 }
 
 Side DynamicObject::calculateSide(Vector2f otherObjectPosition, float elapsedTime)
@@ -347,19 +347,31 @@ void DynamicObject::changeAction(Actions newAction, bool resetSpriteNumber, bool
 			number = 1;
 }
 
+void DynamicObject::pushByBumping(WorldObject* object)
+{
+	if (pushDamage != 0)
+		return;
+	pushDuration = 1e3;
+	pushPower = 2;
+	if (object->getPosition() != Vector2f(-1, -1))
+		pushDirection = Vector2f(this->position.x - object->getPosition().x, this->position.y - object->getPosition().y);
+}
+
 void DynamicObject::pushAway(float elapsedTime)
 {
-	if (pushDuration <= 0)
+	if (pushDuration <= 0 || currentAction == dead)
 	{
 		pushDirection = { 0, 0 };
 		pushDuration = 0;
 		pushVector = { 0, 0 };
+		pushDamage = 0;
 		color = Color(255, std::min(color.g + int(ceil(elapsedTime / 3000)), 255), std::min(color.b + int(ceil(elapsedTime / 3000)), 255), 255);
 		return;
 	}
 
 	pushDuration -= elapsedTime;
-	color = Color(255, 100, 100, 255);
+	if (pushDamage > 0)
+		color = Color(255, 100, 100, 255);
 
 	const float elongationCoefficient = pushShift * elapsedTime / sqrt(pow(pushDirection.x, 2) + pow(pushDirection.y, 2));
 	//position.x += elongationCoefficient * pushDirection.x; position.y += elongationCoefficient * pushDirection.y;
@@ -372,6 +384,7 @@ void DynamicObject::takeDamage(float damage, Vector2f attackerPos)
 	this->timeForNewHitself = 0;
 	this->healthPoint -= damage / this->armor;
 	pushPower = damage;
+	pushDamage = damage;
 	pushDuration = defaultPushDuration;
 	if (attackerPos != Vector2f(-1, -1))
 		pushDirection = Vector2f(this->position.x - attackerPos.x, this->position.y - attackerPos.y);

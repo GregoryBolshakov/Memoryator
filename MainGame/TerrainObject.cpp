@@ -15,6 +15,11 @@ TerrainObject::~TerrainObject()
 void TerrainObject::initMicroBlocks()
 {
 	const Vector2i currentMicroBlock = Vector2i(position.x / microBlockSize.x, position.y / microBlockSize.y);
+	if (mirrored)
+	{
+		focus1.x -= 2 * textureBoxOffset.x - conditionalSizeUnits.x;
+		focus2.x -= 2 * textureBoxOffset.x - conditionalSizeUnits.x;
+	}
 	if (isMultiellipse)
 	{
 		for (auto& ellipse : internalEllipses)

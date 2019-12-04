@@ -3,7 +3,7 @@
 
 Ground::Ground(std::string objectName, Vector2f centerPosition, int typeOfObject) : StaticObject(objectName, centerPosition)
 {
-	varietyOfTypes = 4;
+	varietyOfTypes = 3;
 	this->typeOfObject = typeOfObject;
 	isBackground = true;
 	toSaveName = "ground";
@@ -41,6 +41,12 @@ void Ground::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	additionalSprites.clear();
 	spriteChainElement groundBody;
 	groundBody.path = "Game/worldSprites/terrainObjects/ground/ground" + std::to_string(typeOfObject) + ".png";
+	if (typeOfObject == 3)
+		groundBody.path = "Game/worldSprites/BirchGrove/ground.png";
+	if (typeOfObject == 2)
+		groundBody.path = "Game/worldSprites/DarkWoods/ground.png";
+	if (typeOfObject == 1)
+		groundBody.path = "Game/worldSprites/SwampyTrees/ground.png";
 	groundBody.size = Vector2f(conditionalSizeUnits);
 	groundBody.offset = Vector2f(textureBoxOffset);
 	additionalSprites.push_back(groundBody);

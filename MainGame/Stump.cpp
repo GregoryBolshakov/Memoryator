@@ -6,8 +6,8 @@ Stump::Stump(std::string objectName, Vector2f centerPosition, int typeOfObject) 
 	varietyOfTypes = 4;
 	this->typeOfObject = typeOfObject;
 	strength = 0;
-	radius = 150;
-	animationSpeed = 0.0005f;
+	radius = 50;
+	animationSpeed = 10;
 	toSaveName = "stump";
 	setType(typeOfObject);
 	tag = Tag::stump;
@@ -113,7 +113,7 @@ void Stump::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 
 	timeForNewSprite += elapsedTime;
 
-	if (timeForNewSprite >= 40 / animationSpeed)
+	if (timeForNewSprite >= 1e6 / animationSpeed)
 	{
 		timeForNewSprite = 0;
 

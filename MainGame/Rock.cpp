@@ -7,7 +7,7 @@ Rock::Rock(std::string objectName, Vector2f centerPosition, int typeOfObject) : 
 	this->typeOfObject = typeOfObject;
 	strength = 0;
 	radius = 50;
-	animationSpeed = 0.0005f;
+	animationSpeed = 10;
 	toSaveName = "rock";
 	setType(typeOfObject);
 	tag = Tag::rock;
@@ -17,17 +17,27 @@ void Rock::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = Vector2i (272, 80);
+		conditionalSizeUnits = Vector2i (343, 95);
 	if (typeOfObject == 2)
-		conditionalSizeUnits = Vector2i (388, 228);
+		conditionalSizeUnits = Vector2i (236, 106);
 	if (typeOfObject == 3)
-		conditionalSizeUnits = Vector2i (568, 292);
+		conditionalSizeUnits = Vector2i (269, 116);
 	if (typeOfObject == 4)
-		conditionalSizeUnits = Vector2i (336, 240);
+		conditionalSizeUnits = Vector2i (349, 113);
 	if (typeOfObject == 5)
-		conditionalSizeUnits = Vector2i (280, 212);
+		conditionalSizeUnits = Vector2i (278, 204);
 	if (typeOfObject == 6)
-		conditionalSizeUnits = Vector2i (272, 196);
+		conditionalSizeUnits = Vector2i (417, 113);
+	if (typeOfObject == 7)
+		conditionalSizeUnits = Vector2i(434, 266);
+	if (typeOfObject == 8)
+		conditionalSizeUnits = Vector2i(475, 437);
+	if (typeOfObject == 9)
+		conditionalSizeUnits = Vector2i(269, 125);
+	if (typeOfObject == 10)
+		conditionalSizeUnits = Vector2i(238, 139);
+	if (typeOfObject == 11)
+		conditionalSizeUnits = Vector2i(319, 311);
 
 	radius = std::max(conditionalSizeUnits.x, conditionalSizeUnits.y) / 2;
 }
@@ -36,66 +46,14 @@ Vector2i Rock::calculateTextureOffset()
 {
 	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
 	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-
-	if (typeOfObject == 1)
-		return Vector2i (textureBox.width / 2, int(textureBox.height / 1.5));
-	if (typeOfObject == 2)
-		return Vector2i (textureBox.width / 2, int(textureBox.height / 1.5));
-	if (typeOfObject == 3)
-		return Vector2i (textureBox.width / 2, int(textureBox.height / 1.5));
-	if (typeOfObject == 4)
-		return Vector2i (textureBox.width / 2, int(textureBox.height / 1.5));
-	if (typeOfObject == 5)
-		return Vector2i (textureBox.width / 2, int(textureBox.height / 1.5));
-	if (typeOfObject == 6)
-
-	return Vector2i (textureBox.width / 2, int(textureBox.height / 1.25));
+	return Vector2i (textureBox.width / 2, int(textureBox.height / 1.5));
 }
 
 void Rock::initPedestal()
 {
-	if (typeOfObject == 1)
-	{
-		focus1 = Vector2f (position.x - textureBox.width / 4, position.y);
-		focus2 = Vector2f (position.x + textureBox.width / 4, position.y);
-		ellipseSize = float((focus2.x - focus1.x) * 1.6);
-	}
-	else
-		if (typeOfObject == 2)
-		{
-			focus1 = Vector2f (position.x - textureBox.width / 4, position.y);
-			focus2 = Vector2f (position.x + textureBox.width / 4, position.y);
-			ellipseSize = float((focus2.x - focus1.x) * 1.6);
-		}
-		else
-			if (typeOfObject == 3)
-			{
-				focus1 = Vector2f (position.x - textureBox.width / 4, position.y);
-				focus2 = Vector2f (position.x + textureBox.width / 4, position.y);
-				ellipseSize = float((focus2.x - focus1.x) * 1.6);
-			}
-			else
-				if (typeOfObject == 4)
-				{
-					focus1 = Vector2f (position.x - textureBox.width / 4, position.y);
-					focus2 = Vector2f (position.x + textureBox.width / 4, position.y);
-					ellipseSize = float((focus2.x - focus1.x) * 1.6);
-				}
-				else
-					if (typeOfObject == 5)
-					{
-						focus1 = Vector2f (position.x - textureBox.width / 4, position.y);
-						focus2 = Vector2f (position.x + textureBox.width / 4, position.y);
-						ellipseSize = float((focus2.x - focus1.x) * 1.6);
-					}
-					else
-						if (typeOfObject == 6)
-						{
-							focus1 = Vector2f (position.x - textureBox.width / 4, position.y);
-							focus2 = Vector2f (position.x + textureBox.width / 4, position.y);
-							ellipseSize = float((focus2.x - focus1.x) * 1.6);
-						}
-						
+	focus1 = Vector2f (position.x - textureBox.width / 4, position.y);
+	focus2 = Vector2f (position.x + textureBox.width / 4, position.y);
+	ellipseSize = float((focus2.x - focus1.x) * 1.6);
 	initMicroBlocks();
 }
 
@@ -115,29 +73,18 @@ void Rock::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	spriteChainElement rockBody;
 	rockBody.size = Vector2f(conditionalSizeUnits);
 	rockBody.offset = Vector2f(textureBoxOffset);
+	animationLength = 1;
 
-	switch (state)
-	{
-		case common:
-		{
-			animationLength = 1;
-			rockBody.path = "Game/worldSprites/terrainObjects/rock/rock" + std::to_string(typeOfObject) + ".png";
-			break;
-		}
-		case absorbed:
-		{
-			animationLength = 15;
-			rockBody.path = "Game/worldSprites/terrainObjects/rock/rock" + std::to_string(typeOfObject) + ".png";
-			color.a = 255 - currentSprite[0] * 255 / animationLength;
-			break;
-		}
-	}
+	if (typeOfObject >= 1 && typeOfObject <= 6)
+		rockBody.path = "Game/worldSprites/BirchGrove/rock" + std::to_string(typeOfObject) + ".png";
+	if (typeOfObject >= 7 && typeOfObject <= 11)
+		rockBody.path = "Game/worldSprites/DarkWoods/rock" + std::to_string(typeOfObject - 6) + ".png";
 
 	additionalSprites.push_back(rockBody);
 
 	timeForNewSprite += elapsedTime;
 
-	if (timeForNewSprite >= 40 / animationSpeed)
+	if (timeForNewSprite >= 1e6 / animationSpeed)
 	{
 		timeForNewSprite = 0;
 

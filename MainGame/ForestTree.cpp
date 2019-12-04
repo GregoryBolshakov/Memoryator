@@ -3,11 +3,11 @@
 
 ForestTree::ForestTree(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(objectName, centerPosition)
 {
-	varietyOfTypes = 12;
+	varietyOfTypes = 13;
 	this->typeOfObject = typeOfObject;
 	strength = 0;
 	radius = 50;
-	animationSpeed = 0.0005f;
+	animationSpeed = 10;
 	toSaveName = "ForestTree";
 	setType(typeOfObject);
 	tag = Tag::tree;
@@ -17,32 +17,34 @@ void ForestTree::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = Vector2i (481, 738);
+		conditionalSizeUnits = Vector2i (396, 1090);
 	if (typeOfObject == 2)
-		conditionalSizeUnits = Vector2i (578, 763);
+		conditionalSizeUnits = Vector2i (536, 1150);
 	if (typeOfObject == 3)
-		conditionalSizeUnits = Vector2i (606, 926);
+		conditionalSizeUnits = Vector2i (244, 799);
 	if (typeOfObject == 4)
-		conditionalSizeUnits = Vector2i (581, 927);
+		conditionalSizeUnits = Vector2i (623, 875);
 	if (typeOfObject == 5)
-		conditionalSizeUnits = Vector2i (344, 904);
+		conditionalSizeUnits = Vector2i (644, 1235);
 	if (typeOfObject == 6)
-		conditionalSizeUnits = Vector2i (379, 745);
+		conditionalSizeUnits = Vector2i (681, 1027);
 	if (typeOfObject == 7)
-		conditionalSizeUnits = Vector2i (418, 1102);
+		conditionalSizeUnits = Vector2i (616, 1169);
 	if (typeOfObject == 8)
-		conditionalSizeUnits = Vector2i (415, 1005);
+		conditionalSizeUnits = Vector2i (457, 1152);
 	if (typeOfObject == 9)
-		conditionalSizeUnits = Vector2i (328, 851);
+		conditionalSizeUnits = Vector2i (527, 1188);
 	if (typeOfObject == 10)
-		conditionalSizeUnits = Vector2i(864, 1004);
+		conditionalSizeUnits = Vector2i(786, 1296);
 	if (typeOfObject == 11)
-		conditionalSizeUnits = Vector2i(673, 1032);
+		conditionalSizeUnits = Vector2i(806, 1292);
 	if (typeOfObject == 12)
-		conditionalSizeUnits = Vector2i(1266, 961);
+		conditionalSizeUnits = Vector2i(795, 1190);
+	if (typeOfObject == 13)
+		conditionalSizeUnits = Vector2i(1221, 386);
 
 	const float extension = int(90 + rand() % 20) / 100.0f; // in percents
-	conditionalSizeUnits.x *= extension; conditionalSizeUnits.y *= extension;
+	//conditionalSizeUnits.x *= extension; conditionalSizeUnits.y *= extension;
 }
 
 Vector2i ForestTree::calculateTextureOffset()
@@ -50,123 +52,14 @@ Vector2i ForestTree::calculateTextureOffset()
 	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
 	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
 
-	if (typeOfObject == 1)
-		return Vector2i (textureBox.width / 2.2, int(textureBox.height / 1.1));
-	if (typeOfObject == 2)
-		return Vector2i (textureBox.width / 2, int(textureBox.height / 1.05));
-	if (typeOfObject == 3)
-		return Vector2i (textureBox.width / 2, int(textureBox.height / 1.05));
-	if (typeOfObject == 4)
-		return Vector2i (textureBox.width / 1.8, int(textureBox.height / 1.05));
-	if (typeOfObject == 5)
-		return Vector2i (textureBox.width / 2, int(textureBox.height / 1.05));
-	if (typeOfObject == 6)
-		return Vector2i (textureBox.width / 2, int(textureBox.height / 1.05));
-	if (typeOfObject == 7)
-		return Vector2i (textureBox.width / 2, int(textureBox.height / 1.05));
-	if (typeOfObject == 8)
-		return Vector2i (textureBox.width / 2, int(textureBox.height / 1.05));
-	if (typeOfObject == 9)
-		return Vector2i (textureBox.width / 2, int(textureBox.height / 1.05));
-	if (typeOfObject == 10)
-		return Vector2i(textureBox.width / 2, int(textureBox.height / 1.1));
-	if (typeOfObject == 11)
-		return Vector2i(textureBox.width / 1.8, int(textureBox.height / 1.1));
-	if (typeOfObject == 12)
-		return Vector2i(textureBox.width / 2, int(textureBox.height / 1.1));
-
-	return Vector2i (textureBox.width / 2, int(textureBox.height / 1.25));
+	return Vector2i (textureBox.width / 2.2, int(textureBox.height / 1.1));
 }
 
 void ForestTree::initPedestal()
 {	
-	if (typeOfObject == 1)
-	{
-		focus1 = Vector2f (position.x - textureBox.width / 10, position.y);
-		focus2 = Vector2f (position.x + textureBox.width / 10, position.y);
-
-		ellipseSize = float((focus2.x - focus1.x) * 1.4);
-	}
-	else
-		if (typeOfObject == 2)
-		{
-			focus1 = Vector2f (position.x - textureBox.width / 10, position.y);
-			focus2 = Vector2f (position.x + textureBox.width / 10, position.y);
-			ellipseSize = float((focus2.x - focus1.x) * 1.4);
-		}
-		else
-			if (typeOfObject == 3)
-			{
-				focus1 = Vector2f (position.x - textureBox.width / 8, position.y);
-				focus2 = Vector2f (position.x + textureBox.width / 8, position.y);
-				ellipseSize = float((focus2.x - focus1.x) * 1.4);
-			}
-			else
-				if (typeOfObject == 4)
-				{
-					focus1 = Vector2f (position.x - textureBox.width / 6, position.y);
-					focus2 = Vector2f (position.x + textureBox.width / 6, position.y);
-
-					ellipseSize = float((focus2.x - focus1.x) * 1.4);
-				}
-				else
-					if (typeOfObject == 5)
-					{
-						focus1 = Vector2f (position.x - textureBox.width / 8, position.y);
-						focus2 = Vector2f (position.x + textureBox.width / 8, position.y);
-						ellipseSize = float((focus2.x - focus1.x) * 1.4);
-					}
-					else
-						if (typeOfObject == 6)
-						{
-							focus1 = Vector2f (position.x - textureBox.width / 8, position.y);
-							focus2 = Vector2f (position.x + textureBox.width / 8, position.y);
-							ellipseSize = float((focus2.x - focus1.x) * 1.4);
-						}
-						else
-							if (typeOfObject == 7)
-							{
-								focus1 = Vector2f (position.x - textureBox.width / 8, position.y);
-								focus2 = Vector2f (position.x + textureBox.width / 8, position.y);
-
-								ellipseSize = float((focus2.x - focus1.x) * 1.4);
-							}
-							else
-								if (typeOfObject == 8)
-								{
-									focus1 = Vector2f (position.x - textureBox.width / 8, position.y);
-									focus2 = Vector2f (position.x + textureBox.width / 8, position.y);
-									ellipseSize = float((focus2.x - focus1.x) * 1.4);
-								}
-								else
-									if (typeOfObject == 9)
-									{
-										focus1 = Vector2f (position.x - textureBox.width / 8, position.y);
-										focus2 = Vector2f (position.x + textureBox.width / 8, position.y);
-										ellipseSize = float((focus2.x - focus1.x) * 1.4);
-									}
-									else
-										if (typeOfObject == 10)
-										{
-											focus1 = Vector2f(position.x - textureBox.width / 8, position.y);
-											focus2 = Vector2f(position.x + textureBox.width / 8, position.y);
-
-											ellipseSize = float((focus2.x - focus1.x) * 1.4);
-										}
-										else
-											if (typeOfObject == 11)
-											{
-												focus1 = Vector2f(position.x - textureBox.width / 8, position.y);
-												focus2 = Vector2f(position.x + textureBox.width / 8, position.y);
-												ellipseSize = float((focus2.x - focus1.x) * 1.4);
-											}
-											else
-												if (typeOfObject == 12)
-												{
-													focus1 = Vector2f(position.x - textureBox.width / 8, position.y);
-													focus2 = Vector2f(position.x + textureBox.width / 8, position.y);
-													ellipseSize = float((focus2.x - focus1.x) * 1.2);
-												}
+	focus1 = Vector2f (position.x - textureBox.width / 8, position.y);
+	focus2 = Vector2f (position.x + textureBox.width / 8, position.y);
+	ellipseSize = float((focus2.x - focus1.x) * 1.4);
 	initMicroBlocks();
 }
 
@@ -192,28 +85,28 @@ void ForestTree::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	treeBody.size = Vector2f(conditionalSizeUnits);
 	treeBody.offset = Vector2f(textureBoxOffset);
 
-	switch (state)
+	if (typeOfObject >= 1 && typeOfObject <= 7)
 	{
-		case common:
-		{
-            animationLength = 1;
-            treeBody.path = "Game/worldSprites/terrainObjects/forestTree/forestTree" + std::to_string(typeOfObject) + ".png";
-            break;
-		}
-		case absorbed:
-		{
-			animationLength = 15;
-			treeBody.path = "Game/worldSprites/terrainObjects/forestTree/forestTree" + std::to_string(typeOfObject) + ".png";
-			color.a = 255 - currentSprite[0] * 255 / animationLength;
-			break;
-		}
+		animationLength = 1;
+		treeBody.path = "Game/worldSprites/BirchGrove/birch" + std::to_string(typeOfObject) + ".png";
+	}
+	if (typeOfObject >= 8 && typeOfObject <= 13)
+	{
+		animationLength = 28;
+		treeBody.path = "Game/worldSprites/DarkWoods/tree" + std::to_string(typeOfObject - 7) + "/" + std::to_string(currentSprite[0]) + ".png";
+	}
+
+	if (state == absorbed)
+	{
+		animationLength = 15;
+		color.a = 255 - currentSprite[0] * 255 / animationLength;
 	}
 
     additionalSprites.push_back(treeBody);
 
 	timeForNewSprite += elapsedTime;
 
-	if (timeForNewSprite >= 40 / animationSpeed)
+	if (timeForNewSprite >= 1e6 / animationSpeed)
 	{
 		timeForNewSprite = 0;
 

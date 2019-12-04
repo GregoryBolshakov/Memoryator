@@ -4,7 +4,6 @@
 
 #include "DynamicObject.h"
 #include "HeroBag.h"
-#include "World.h"
 
 using namespace sf;
 

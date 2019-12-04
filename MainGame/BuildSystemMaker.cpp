@@ -100,7 +100,7 @@ void BuildSystemMaker::draw(RenderWindow &window, float elapsedTime, std::unorde
 		StaticObject* terrain = nullptr;
 		int type = 1;
 		if (droppedLootIdList.count(selectedObject) > 0)
-			terrain = ObjectInitializer::initializeStaticItem(Tag::droppedLoot, Vector2f(0, 0), int(selectedObject), "", 1, &spriteMap);
+			terrain = ObjectInitializer::initializeStaticItem(Tag::droppedLoot, Vector2f(0, 0), int(selectedObject), "", 1, DarkWoods, &spriteMap);
 		else
 		{
 			if (selectedObject == Tag::totem)
@@ -127,7 +127,7 @@ void BuildSystemMaker::draw(RenderWindow &window, float elapsedTime, std::unorde
 					}
 				}
 			}
-			terrain = ObjectInitializer::initializeStaticItem(selectedObject, Vector2f(0, 0), type, "", 1, &spriteMap);
+			terrain = ObjectInitializer::initializeStaticItem(selectedObject, Vector2f(0, 0), type, "", 1, DarkWoods, &spriteMap);
 		}		
 
 		const Vector2f terrainPos = terrain->getBuildPosition(visibleItems, scaleFactor, cameraPosition);		

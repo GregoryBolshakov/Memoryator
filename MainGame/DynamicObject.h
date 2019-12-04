@@ -20,11 +20,10 @@ protected:
 	Vector2f focus1, focus2;
 	float strength = 0;
 	float defaultSpeed, speed;
-	float timeAfterHitself = 0, timeForNewRoute = 5e5, timeAfterNewRoute = 5e5;
+	float timeAfterHitself = 0;
 	Side calculateSide(Vector2f otherObjectPosition, float elapsedTime);
 	Direction calculateDirection() const;
-	static Side invertSide(Side side);
-	virtual void initMicroBlocks();
+	static Side invertSide(Side side);	
 	Side side;	
 	Actions currentAction, lastAction = relax;
 	Direction direction;
@@ -35,7 +34,8 @@ protected:
 	//fight logic
 	virtual void fightLogic(float elapsedTime, DynamicObject* target = nullptr) = 0;
 	void pushAway(float elapsedTime);
-	float pushPower = 0;
+	virtual void pushByBumping(WorldObject* object);
+	float pushPower = 0, pushDamage = 0;
 	Vector2f pushDirection = { 0, 0 }, pushVector = {0, 0};
 	float defaultPushDuration = 2 * 1e5, pushDuration = 0, pushShift = 0.0005f;
 	//-----------
@@ -53,8 +53,6 @@ public:
 	float getSpeed() { return speed; }
 	float getStrength() { return strength; }
 	float getTimeAfterHitself() { return timeAfterHitself; }
-	float getTimeAfterNewRoute() { return timeAfterNewRoute; }
-	float getTimeForNewRoute() { return timeForNewRoute; }
 	bool getRouteGenerationAbility() { return routeGenerationAbility; }
 	Vector2f getFocus1() const { return focus1; }
 	Vector2f getFocus2() const { return focus2; }
@@ -70,12 +68,11 @@ public:
 	void setCurrentAction(Actions action) { this->currentAction = action; }	
 	float setTimeAfterHitself(float time) { timeAfterHitself = time; }
 
-	void increaseTimeAfterNewRoute(float value) { timeAfterNewRoute += value; }
-	void resetTimeAfterNewRoute() { timeAfterNewRoute = 0; }
 	void changeMovePositionToRoute(Vector2f newPosition) { movePosition = newPosition; }
 	void takeDamage(float damage, Vector2f attackerPos = {-1, -1}) override;
 	void setMoveOffset(float elapsedTime);
 	void setRoute(std::vector<std::pair<int, int>> route) { this->route = route; }
+	void initMicroBlocks() override;
 	virtual void changeAction(Actions newAction, bool resetSpriteNumber = false, bool rememberLastAction = false);
 	virtual void handleInput(bool usedMouse = false);
 	virtual void behaviorWithDynamic(DynamicObject* target, float elapsedTime) = 0;

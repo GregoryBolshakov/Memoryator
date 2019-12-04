@@ -18,7 +18,6 @@ OwlBoss::OwlBoss(std::string objectName, Vector2f centerPosition) : DynamicObjec
 	timeAfterHitself = 100000;
 	timeForNewHitself = timeAfterHitself;
 	timeForNewHit = 2000000;
-	timeForNewRoute = 2000000;
 	routeGenerationAbility = false;
 	canCrashIntoDynamic = false;
 
@@ -108,7 +107,6 @@ void OwlBoss::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
 	side = calculateSide(movePosition, elapsedTime);
 
 	timeAfterHit += elapsedTime;
-	timeAfterNewRoute += elapsedTime;
 
 	if (jerkDistance != 0 && currentAction == move)
 	{
@@ -149,7 +147,6 @@ void OwlBoss::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
 		if (Helper::getDist(this->position, target->getPosition()) <= this->radius)
 			target->takeDamage(this->strength, position);
 		timeAfterHit = 0;
-		timeAfterNewRoute = 0;
 		flapsBeforeJerkCount = rand() % 3 + 3;
 		changeAction(upFlap, true, true);
 		this->speed = defaultSpeed;

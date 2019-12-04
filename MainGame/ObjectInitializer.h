@@ -1,3 +1,4 @@
+#pragma once
 #ifndef OBJECTINITIALIZER_H
 #define OBJECTINITIALIZER_H
 
@@ -9,12 +10,9 @@
 #include "DroppedLoot.h"
 #include "Grass.h"
 #include "Ground.h"
-#include "Fog.h"
 #include "Spawn.h"
 #include "BonefireOfInsight.h"
 #include "HomeCosiness.h"
-#include "MushroomStone.h"
-#include "MushroomsOnStone.h"
 #include "Chamomile.h"
 #include "Yarrow.h"
 #include "Mugwort.h"
@@ -26,6 +24,10 @@
 #include "Stump.h"
 #include "ForestTree.h"
 #include "WreathTable.h"
+#include "Mushroom.h"
+#include "Log.h"
+#include "Bush.h"
+#include  "Roof.h"
 
 #include "Monster.h"
 #include "Deerchant.h"
@@ -42,6 +44,8 @@
 #include "ClapWhirl.h"
 #include <unordered_map>
 
+enum Biomes { SwampyTrees = 1, DarkWoods = 2, BirchGrove = 3, FlowerValley = 4 };
+
 class ObjectInitializer
 {
 public:
@@ -52,10 +56,12 @@ public:
 		Vector2f itemPosition,
 		int itemType,
 		std::string itemName, 
-		int count, 
+		int count,
+		Biomes biome,
 		std::unordered_map<std::string, BoardSprite>* spriteMap,
 		std::vector<std::pair<Tag, int>> inventory = {});
 	static int newNameId;
+	static int getRandomTypeByBiome(WorldObject* object, Biomes biome);
 	static DynamicObject* initializeDynamicItem(Tag itemClass,
 		Vector2f itemPosition,
 		std::string itemName,

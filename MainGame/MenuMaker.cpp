@@ -52,7 +52,7 @@ MenuMaker::~MenuMaker()
 
 }
 
-void MenuMaker::onKeyDown(Event event, World &world)
+void MenuMaker::onKeyDown(Event event, WorldHandler &world)
 {
 	if (event.key.code == Keyboard::Escape)
 	{
@@ -68,7 +68,7 @@ void MenuMaker::onKeyDown(Event event, World &world)
 	}
 }
 
-void MenuMaker::interact(World &world, RenderWindow &window)
+void MenuMaker::interact(WorldHandler &world, RenderWindow &window)
 {
 	wasActive = false;
 
@@ -78,7 +78,7 @@ void MenuMaker::interact(World &world, RenderWindow &window)
 	{
 		if (buttonList[ButtonTag::newRunTag].isSelected(mousePos))
 		{
-			world.generate(500);
+			world.runWorldGenerator();
 			menuState = closed;
 			wasActive = true;
 			return;
@@ -107,7 +107,7 @@ void MenuMaker::interact(World &world, RenderWindow &window)
 	{
 		if (buttonList[ButtonTag::newRunTag].isSelected(mousePos))
 		{
-			world.generate(500);
+			world.runWorldGenerator();
 			menuState = closed;
 			wasActive = true;
 			return;

@@ -18,6 +18,7 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 	int itemType,
 	std::string itemName,
 	int count,
+	Biomes biome,
 	std::unordered_map<std::string, BoardSprite>* spriteMap,
 	std::vector<std::pair<Tag, int>> inventory)
 {
@@ -48,15 +49,6 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 		case Tag::homeCosiness:
 		{
 			item = new HomeCosiness("item", Vector2f(0, 0), -1);
-			break;
-		}
-		case Tag::mushroomStone:
-		{
-			item = new MushroomStone("item", Vector2f(0, 0), -1);
-		}
-		case Tag::mushroomsOnStone:
-		{
-			item = new MushroomsOnStone("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::ground:
@@ -129,9 +121,24 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 			item = new Totem("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::fog:
+		case Tag::mushroom:
 		{
-			item = new Fog("item", Vector2f(0, 0), -1);
+			item = new Mushroom("item", Vector2f(0, 0), -1);
+			break;
+		}
+		case Tag::log:
+		{
+			item = new Log("item", Vector2f(0, 0), -1);
+			break;
+		}
+		case Tag::bush:
+		{
+			item = new Bush("item", Vector2f(0, 0), -1);
+			break;
+		}
+		case Tag::roof:
+		{
+			item = new Roof("item", Vector2f(0, 0), -1);
 			break;
 		}
 		default:
@@ -142,7 +149,7 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 	}
 
 	int currentType = itemType == -1
-		? currentType = rand() % item->getVarietyOfTypes() + 1
+		? currentType = getRandomTypeByBiome(item, biome)
 		: currentType = itemType;
 
 	newNameId++;
@@ -268,6 +275,46 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 	const Vector2f textureSize = Vector2f(spriteMap->at(nameOfImage).texture.getSize());
 	item->setTextureSize(textureSize);
 	return item;
+}
+
+int ObjectInitializer::getRandomTypeByBiome(WorldObject* object, Biomes biome)
+{
+	switch (object->tag)
+	{
+		case Tag::tree:
+		{
+			if (biome == BirchGrove)
+				return rand() % 7 + 1;
+			if (biome == DarkWoods)
+				return rand() % 6 + 8;
+			break;
+		}
+		case Tag::grass:
+		{
+			if (biome == BirchGrove)
+				return rand() % 8 + 1;
+			if (biome == DarkWoods)
+				return rand() % 13 + 9;
+			break;
+		}
+		case Tag::rock:
+		{
+			if (biome == BirchGrove)
+				return rand() % 6 + 1;
+			if (biome == DarkWoods)
+				return rand() % 5 + 7;
+			break;
+		}
+		case Tag::mushroom:
+		{
+			if (biome == BirchGrove)
+				return rand() % 3 + 1;
+			if (biome == DarkWoods)
+				return rand() % 9 + 4;
+			break;
+		}
+		default: return rand() % object->getVarietyOfTypes() + 1;
+	}
 }
 
 std::vector<StaticObject*> ObjectInitializer::vectorCastToStatic(std::vector<WorldObject*> items)
