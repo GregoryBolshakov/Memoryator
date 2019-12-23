@@ -1,0 +1,6 @@
+Tag: tree 
+Type: 13
+OffsetX: 0.377 OffsetY: 0.614
+Focus1 X: -0.297 Focus1 Y: 0
+Focus2 X: 0.297 Focus2 Y: 0
+Ellipse size: 1.03

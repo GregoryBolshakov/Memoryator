@@ -57,7 +57,8 @@ void Totem::initPedestal()
 	{
 		focus1 = Vector2f(position.x - textureBox.width / 4, position.y);
 		focus2 = Vector2f(position.x + textureBox.width / 4, position.y);
-		ellipseSize = float((focus2.x - focus1.x) * 1.8);
+		ellipseSizeMultipliers[0] = { 1.8 };
+		ellipseSize = float((focus2.x - focus1.x) * ellipseSizeMultipliers[0]);
 	}
 	
 	//textureBoxOffset = Vector2f ((focus1.x + focus2.x) / 2 - textureBox.left, focus1.y - textureBox.top);

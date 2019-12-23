@@ -17,13 +17,13 @@ void Roof::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = Vector2i(360, 800);
+		conditionalSizeUnits = Vector2i(248, 373);
 	if (typeOfObject == 2)
-		conditionalSizeUnits = Vector2i(338, 684);
+		conditionalSizeUnits = Vector2i(254, 555);
 	if (typeOfObject == 3)
-		conditionalSizeUnits = Vector2i(368, 700);
+		conditionalSizeUnits = Vector2i(255, 485);
 	if (typeOfObject == 4)
-		conditionalSizeUnits = Vector2i(360, 536);
+		conditionalSizeUnits = Vector2i(239, 474);
 }
 
 Vector2i Roof::calculateTextureOffset()
@@ -38,7 +38,8 @@ void Roof::initPedestal()
 {
 	focus1 = Vector2f(position.x - textureBox.width / 2.5, position.y);
 	focus2 = Vector2f(position.x + textureBox.width / 2.5, position.y);
-	ellipseSize = float((focus2.x - focus1.x) * 1.1);
+	ellipseSizeMultipliers[0] = 1.1;
+	ellipseSize = float((focus2.x - focus1.x) * ellipseSizeMultipliers[0]);
 	initMicroBlocks();
 }
 

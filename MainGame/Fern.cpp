@@ -32,12 +32,10 @@ Vector2i Fern::calculateTextureOffset()
 
 void Fern::initPedestal()
 {
-	if (typeOfObject == 1)
-	{
-		focus1 = Vector2f(position.x - textureBox.width / 10, position.y);
-		focus2 = Vector2f(position.x + textureBox.width / 10, position.y);
-		ellipseSize = float((focus2.x - focus1.x) * 1.08);
-	}
+	focus1 = position;
+	focus2 = position;
+	ellipseSizeMultipliers[0] = { 0 };
+	ellipseSize = 0;
 	initMicroBlocks();
 }
 

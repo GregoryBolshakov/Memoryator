@@ -292,7 +292,7 @@ void WorldHandler::birthObjects()
 		while (!birthStaticStack.empty())
 		{
 			Biomes biome = worldGenerator.biomeMatrix[int(birthStaticStack.top().position.x / blockSize.x)][int(birthStaticStack.top().position.y / blockSize.y)].biomeCell;
-			worldGenerator.initializeStaticItem(birthStaticStack.top().tag, birthStaticStack.top().position, birthStaticStack.top().typeOfObject, "", birthStaticStack.top().count, biome, birthStaticStack.top().inventory);
+			worldGenerator.initializeStaticItem(birthStaticStack.top().tag, birthStaticStack.top().position, birthStaticStack.top().typeOfObject, "", birthStaticStack.top().count, biome, true, birthStaticStack.top().inventory);
 			birthStaticStack.pop();
 		}
 		while (!birthDynamicStack.empty())
@@ -344,13 +344,7 @@ void WorldHandler::Load()
 					worldGenerator.initializeStaticItem(Tag::tree, Vector2f(posX, posY), typeOfObject, "", 1);
 				else
 					if (saveName == Grass("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
-						worldGenerator.initializeStaticItem(Tag::grass, Vector2f(posX, posY), typeOfObject, "", 1);
-					else
-						if (saveName == BonefireOfInsight("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
-							worldGenerator.initializeStaticItem(Tag::bonefireOfInsight, Vector2f(posX, posY), typeOfObject, "", 1);
-						else
-							if (saveName == HomeCosiness("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
-								worldGenerator.initializeStaticItem(Tag::homeCosiness, Vector2f(posX, posY), typeOfObject, "", 1);
+						worldGenerator.initializeStaticItem(Tag::grass, Vector2f(posX, posY), typeOfObject, "", 1);																
 	}
 
 	fin.close();
@@ -440,58 +434,62 @@ void WorldHandler::setTransparent(std::vector<WorldObject*> visibleItems, float 
 
 				bool isIntersect = (sqrt(pow(focusedObject->getPosition().x - visibleItem->getPosition().x, 2) + pow(focusedObject->getPosition().y - visibleItem->getPosition().y, 2)) <= (focusedObject->getRadius() + visibleItem->getRadius()));
 
-				switch (visibleItem->tag)
-				{
-				case Tag::tree:
+				auto terrain = dynamic_cast<TerrainObject*>(visibleItem);
+				if (terrain && pedestalController.readyToStart)				
+					mouseDisplayName = "Set ellipse";
+				else
+					switch (visibleItem->tag)
 					{
-						mouseDisplayName = "Absorb";
+					case Tag::tree:
+						{
+							mouseDisplayName = "Absorb";
+							break;
+						}
+					case Tag::brazier:
+					{					
+						if (inventorySystem.getHeldItem().content.first != Tag::emptyCell &&
+							Helper::getDist(brazier->getPlatePosition(), mousePos) <= brazier->getPlateRadius())
+						{
+							if (Helper::getDist(brazier->getPlatePosition(), focusedObject->getPosition()) <= brazier->getPlateRadius() + focusedObject->getRadius())
+								mouseDisplayName = "Toss";
+							else
+								mouseDisplayName = "Come to toss";
+						}
 						break;
 					}
-				case Tag::brazier:
-				{					
-					if (inventorySystem.getHeldItem().content.first != Tag::emptyCell &&
-						Helper::getDist(brazier->getPlatePosition(), mousePos) <= brazier->getPlateRadius())
-					{
-						if (Helper::getDist(brazier->getPlatePosition(), focusedObject->getPosition()) <= brazier->getPlateRadius() + focusedObject->getRadius())
-							mouseDisplayName = "Toss";
-						else
-							mouseDisplayName = "Come to toss";
-					}
-					break;
-				}
-				case Tag::hare:
-				case Tag::owl:
-					{
-						if (inventorySystem.getHeldItem().content.first == Tag::inkyBlackPen)
-							mouseDisplayName = "Sketch";
-						else
-							mouseDisplayName = "Catch up";
-						break;
-					}
-				case Tag::fern:
-					{
-						if (!visibleItem->inventory.empty())
-							mouseDisplayName = "Open";
-						else
+					case Tag::hare:
+					case Tag::owl:
+						{
+							if (inventorySystem.getHeldItem().content.first == Tag::inkyBlackPen)
+								mouseDisplayName = "Sketch";
+							else
+								mouseDisplayName = "Catch up";
+							break;
+						}
+					case Tag::fern:
+						{
+							if (!visibleItem->inventory.empty())
+								mouseDisplayName = "Open";
+							else
+								mouseDisplayName = "Pick up";
+							break;
+						}
+					case Tag::yarrow:
+					case Tag::chamomile:				
+					case Tag::mugwort:
+					case Tag::noose:
+					case Tag::hareTrap:
+					case Tag::droppedLoot:
+						{
 							mouseDisplayName = "Pick up";
-						break;
+							break;
+						}
+						default:
+						{
+							mouseDisplayName = visibleItem->getToSaveName();
+							break;
+						}
 					}
-				case Tag::yarrow:
-				case Tag::chamomile:				
-				case Tag::mugwort:
-				case Tag::noose:
-				case Tag::hareTrap:
-				case Tag::droppedLoot:
-					{
-						mouseDisplayName = "Pick up";
-						break;
-					}
-					default:
-					{
-						mouseDisplayName = visibleItem->getToSaveName();
-						break;
-					}
-				}
 
 				selectedObject = visibleItem;
 			}
@@ -582,6 +580,13 @@ void WorldHandler::cameraShakeInteract(float elapsedTime)
 
 void WorldHandler::onMouseUp(int currentMouseButton)
 {	
+	if (mouseDisplayName == "Set ellipse")
+	{
+		auto terrain = dynamic_cast<TerrainObject*>(selectedObject);
+		pedestalController.start(terrain);
+	}
+	if (pedestalController.isRunning())
+		return;
 	Vector2i mousePos = Mouse::getPosition();
 	Vector2f mouseWorldPos = Vector2f((mousePos.x - Helper::GetScreenSize().x / 2 + cameraPosition.x*scaleFactor) / scaleFactor,
 		(mousePos.y - Helper::GetScreenSize().y / 2 + cameraPosition.y*scaleFactor) / scaleFactor);
@@ -597,10 +602,6 @@ void WorldHandler::onMouseUp(int currentMouseButton)
 	auto hero = dynamic_cast<Deerchant*>(dynamicGrid.getItemByName(focusedObject->getName()));
 	hero->onMouseUp(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.buildingPosition != Vector2f(-1, -1)));
 	inventorySystem.inventoryBounding(&hero->bags);
-	/*Helper::drawText(std::to_string(inventorySystem.canAfford({ std::make_pair(Tag::noose, 1), std::make_pair(Tag::chamomile, 6) })), 30, 200, 200, &window);	
-	if (inventorySystem.canAfford({ std::make_pair(Tag::noose, 1), std::make_pair(Tag::chamomile, 4) }))*/
-	//auto hero = dynamic_cast<Deerchant*>(focusedObject);
-	//HeroBag::putItemsIn({ std::make_pair(Tag::noose, 1), std::make_pair(Tag::chamomile, 4) }, &(hero->bags));
 }
 
 void WorldHandler::interact(RenderWindow& window, long long elapsedTime)
@@ -729,6 +730,7 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime)
 	//buildSystem.setHeldItem(inventorySystem.getHeldItem()->lootInfo);
 	buildSystem.interact();
 	inventorySystem.interact(elapsedTime);
+	pedestalController.interact(elapsedTime);
 	//-------------------
 
 	//deleting items
@@ -831,7 +833,7 @@ void WorldHandler::draw(RenderWindow& window, long long elapsedTime)
 	setTransparent(localTerrain, elapsedTime);
 	drawVisibleItems(window, elapsedTime, visibleTerrain);
 
-	renderLightSystem(view, window);
+	//renderLightSystem(view, window);
 
 	RectangleShape rec, rec2, rec3;
 	rec.setSize(Vector2f(microblockSize));
@@ -843,7 +845,7 @@ void WorldHandler::draw(RenderWindow& window, long long elapsedTime)
 	rec3.setSize(Vector2f(microblockSize));
 	rec3.setFillColor(Color::Green);
 	rec3.setSize(Vector2f((microblockSize.x - 1) * scaleFactor, (microblockSize.y - 1) * scaleFactor));
-
+	pedestalController.draw(&window, cameraPosition, scaleFactor);
 	/*for (int i = (focusedObject->getPosition().x - 500) / microblockSize.x; i <= (focusedObject->getPosition().x + 500) / microblockSize.x; i++)
 		for (int j = (focusedObject->getPosition().y - 500) / microblockSize.y; j <= (focusedObject->getPosition().y + 500) / microblockSize.y; j++)
 		{

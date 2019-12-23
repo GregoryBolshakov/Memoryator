@@ -77,6 +77,7 @@ void Brazier::initPedestal()
 		microEllipse.first.second = Vector2f((microEllipse.second.first.x + microEllipse.second.second.x) / 2, (microEllipse.second.first.y + microEllipse.second.second.y) / 2);
 		internalEllipses.push_back(microEllipse);
 	}
+	ellipseSizeMultipliers = { 1.2, 1.2, 1.17, 1.17, 1.17, 1.95 };
 	initMicroBlocks();
 }
 

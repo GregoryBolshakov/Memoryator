@@ -16,7 +16,7 @@ public:
 	void generate();
 	void init(int width, int height, Vector2i blockSize, Vector2i microBlockSize, GridList* staticGrid, GridList* dynamicGrid, std::unordered_map<std::string, BoardSprite>* spriteMap, float* scaleFactor);
 
-	void initializeStaticItem(Tag itemClass, Vector2f itemPosition, int itemType, std::string itemName, int count = 1, Biomes biome = DarkWoods, std::vector<std::pair<Tag, int>> inventory = {});
+	void initializeStaticItem(Tag itemClass, Vector2f itemPosition, int itemType, std::string itemName, int count = 1, Biomes biome = DarkWoods, bool mirrored = true, std::vector<std::pair<Tag, int>> inventory = {});
 	void initializeDynamicItem(Tag itemClass, Vector2f itemPosition, std::string itemName, WorldObject* owner = nullptr);
 
 	//active generation

@@ -65,6 +65,7 @@ public:
 	float getMaxHealthPointValue();
 	bool getDeletePromise() const { return deletePromise; }
 	bool getMirroredState() const { return mirrored; }
+	void manuallyDisableMirroring() { mirrored = false; };
 	int getRadius() const { return radius; }
 	int getPermissibleDistance() const { return permissibleDistance; }
 	std::string getToSaveName() const { return toSaveName; }

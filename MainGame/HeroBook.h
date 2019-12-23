@@ -56,7 +56,6 @@ private:
 	// plants 301 - 399    //
 	// wreath 401 - 499    //
 	/////////////////////////
-	TextWriter textWriter;
 	bool visibility = false;
 	std::pair<Tag, int> heldItem = { Tag::emptyCell, 0 };
 	Cell* worldHeldItem = nullptr;

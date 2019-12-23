@@ -11,8 +11,6 @@
 #include "Grass.h"
 #include "Ground.h"
 #include "Spawn.h"
-#include "BonefireOfInsight.h"
-#include "HomeCosiness.h"
 #include "Chamomile.h"
 #include "Yarrow.h"
 #include "Mugwort.h"
@@ -57,8 +55,9 @@ public:
 		int itemType,
 		std::string itemName, 
 		int count,
-		Biomes biome,
+		Biomes biome,		
 		std::unordered_map<std::string, BoardSprite>* spriteMap,
+		bool mirrored = true,
 		std::vector<std::pair<Tag, int>> inventory = {});
 	static int newNameId;
 	static int getRandomTypeByBiome(WorldObject* object, Biomes biome);
@@ -69,6 +68,9 @@ public:
 		WorldObject* owner = nullptr);
 	static std::vector<StaticObject*> vectorCastToStatic(std::vector<WorldObject*> items);
 	static std::vector<DynamicObject*> vectorCastToDynamic(std::vector<WorldObject*> items);
+
+	static std::map<Tag, std::string> mappedTags;
+	static std::map<std::string, Tag> mappedStrings;
 };
 
 #endif

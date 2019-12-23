@@ -24,8 +24,8 @@ void TerrainObject::initMicroBlocks()
 	{
 		for (auto& ellipse : internalEllipses)
 		{
-			microBlockCheckAreaBounds.x += ellipse.first.first;
-			microBlockCheckAreaBounds.y += ellipse.first.first;
+			microBlockCheckAreaBounds.x += ellipse.first.first / 2;
+			microBlockCheckAreaBounds.y += ellipse.first.first / 2;
 		}
 		for (auto& ellipse : internalEllipses)
 		{
@@ -41,8 +41,8 @@ void TerrainObject::initMicroBlocks()
 		}	
 	}
 	else
-	{		
-		microBlockCheckAreaBounds = Vector2i(ellipseSize, ellipseSize);
+	{
+		microBlockCheckAreaBounds = Vector2i(ellipseSize / 2, ellipseSize / 2);
 		for (int i = -microBlockCheckAreaBounds.x / microBlockSize.x; i <= int(microBlockCheckAreaBounds.x / microBlockSize.x); i++)
 			for (int j = -microBlockCheckAreaBounds.y / microBlockSize.y; j <= int(microBlockCheckAreaBounds.y / microBlockSize.y); j++)
 			{

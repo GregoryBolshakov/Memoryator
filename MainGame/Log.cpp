@@ -22,8 +22,6 @@ void Log::setType(int typeOfObject)
 		conditionalSizeUnits = Vector2i(507, 231);
 	if (typeOfObject == 3)
 		conditionalSizeUnits = Vector2i(509, 246);
-	if (typeOfObject == 4)
-		conditionalSizeUnits = Vector2i(660, 312);
 }
 
 Vector2i Log::calculateTextureOffset()
@@ -31,23 +29,45 @@ Vector2i Log::calculateTextureOffset()
 	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
 	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
 
-	if (typeOfObject == 1)
-		return Vector2i(textureBox.width / 2, int(textureBox.height / 1.5));
-	if (typeOfObject == 2)
-		return Vector2i(textureBox.width / 2, int(textureBox.height / 1.5));
-	if (typeOfObject == 3)
-		return Vector2i(textureBox.width / 2, int(textureBox.height / 1.5));
-	if (typeOfObject == 4)
-		return Vector2i(textureBox.width / 2, int(textureBox.height / 1.5));
-
-	return Vector2i(textureBox.width / 2, int(textureBox.height / 1.25));
+	switch (typeOfObject)
+	{
+	case 1:
+		return Vector2i(textureBox.width * 0.492f, int(textureBox.height * 0.726f));
+	case 2:
+		return Vector2i(textureBox.width * 0.479f, int(textureBox.height * 0.735f));
+	case 3:
+		return Vector2i(textureBox.width * 0.502f, int(textureBox.height * 0.584f));
+	default:
+		return Vector2i(textureBox.width * 0.485f, int(textureBox.height * 0.591f));
+	}
 }
 
 void Log::initPedestal()
 {
-	focus1 = Vector2f(position.x - textureBox.width / 3, position.y);
-	focus2 = Vector2f(position.x + textureBox.width / 3, position.y);
-	ellipseSize = float((focus2.x - focus1.x) * 1.15);
+	switch (typeOfObject)
+	{
+	case 1:
+		focus1 = Vector2f(position.x - textureBox.width * 0.383f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.383f, position.y);
+		ellipseSizeMultipliers[0] = { 1.04 };
+		break;
+	case 2:
+		focus1 = Vector2f(position.x - textureBox.width * 0.399f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.399f, position.y);
+		ellipseSizeMultipliers[0] = { 1.07 };
+		break;
+	case 3:
+		focus1 = Vector2f(position.x - textureBox.width * 0.396f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.396f, position.y);
+		ellipseSizeMultipliers[0] = { 1.12 };
+		break;
+	default:
+		focus1 = Vector2f(position.x - textureBox.width * 0.311f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.311f, position.y);
+		ellipseSizeMultipliers[0] = { 1.307 };
+		break;
+	}
+	ellipseSize = Helper::getDist(focus1, focus2) * ellipseSizeMultipliers[0];
 	initMicroBlocks();
 }
 

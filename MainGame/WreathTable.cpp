@@ -33,7 +33,8 @@ void WreathTable::initPedestal()
 {
 	focus1 = Vector2f(position.x - textureBox.width / 4, position.y);
 	focus2 = Vector2f(position.x + textureBox.width / 4, position.y);
-	ellipseSize = float((focus2.x - focus1.x) * 1.2);
+	ellipseSizeMultipliers[0] = { 1.2 };
+	ellipseSize = float((focus2.x - focus1.x) * ellipseSizeMultipliers[0]);
 	initMicroBlocks();
 }
 

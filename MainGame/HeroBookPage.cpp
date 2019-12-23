@@ -222,37 +222,37 @@ void HeroBookPage::drawHeadingText(RenderWindow* window)
 	{
 	case 1:
 	{
-		textWriter.drawString("Creatures", NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.125 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		textWriter.drawString("Hare", NormalFont, 30, headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		textWriter.drawString("Owl", NormalFont, 30, headingTextPedestals[1].x * x + upperLeftCorner.x, headingTextPedestals[1].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		textWriter.drawString("Deer", NormalFont, 30, headingTextPedestals[2].x * x + upperLeftCorner.x, headingTextPedestals[2].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		textWriter.drawString("Bear", NormalFont, 30, headingTextPedestals[3].x * x + upperLeftCorner.x, headingTextPedestals[3].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		TextWriter::drawString("Creatures", NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.125 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		TextWriter::drawString("Hare", NormalFont, 30, headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		TextWriter::drawString("Owl", NormalFont, 30, headingTextPedestals[1].x * x + upperLeftCorner.x, headingTextPedestals[1].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		TextWriter::drawString("Deer", NormalFont, 30, headingTextPedestals[2].x * x + upperLeftCorner.x, headingTextPedestals[2].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		TextWriter::drawString("Bear", NormalFont, 30, headingTextPedestals[3].x * x + upperLeftCorner.x, headingTextPedestals[3].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
 	}
 	break;
 	case 2:
 	{
-		textWriter.drawString("Items", NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.125 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		textWriter.drawString("Bag", NormalFont, 30, headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		TextWriter::drawString("Items", NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.125 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		TextWriter::drawString("Bag", NormalFont, 30, headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
 	}
 	break;
 	case 3:
 	{
-		textWriter.drawString("World", NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.125 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		TextWriter::drawString("World", NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.125 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
 	}
 	break;
 	case 4:
 	{
-		textWriter.drawString("Flowers", NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.125 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		textWriter.drawString("Chamomile", NormalFont, 30, headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		textWriter.drawString("Yarrow", NormalFont, 30, headingTextPedestals[1].x * x + upperLeftCorner.x, headingTextPedestals[1].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		textWriter.drawString("Fern", NormalFont, 30, headingTextPedestals[2].x * x + upperLeftCorner.x, headingTextPedestals[2].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		textWriter.drawString("Mugwort", NormalFont, 30, headingTextPedestals[3].x * x + upperLeftCorner.x, headingTextPedestals[3].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		textWriter.drawString("Poppy", NormalFont, 30, headingTextPedestals[4].x * x + upperLeftCorner.x, headingTextPedestals[4].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		TextWriter::drawString("Flowers", NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.125 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		TextWriter::drawString("Chamomile", NormalFont, 30, headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		TextWriter::drawString("Yarrow", NormalFont, 30, headingTextPedestals[1].x * x + upperLeftCorner.x, headingTextPedestals[1].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		TextWriter::drawString("Fern", NormalFont, 30, headingTextPedestals[2].x * x + upperLeftCorner.x, headingTextPedestals[2].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		TextWriter::drawString("Mugwort", NormalFont, 30, headingTextPedestals[3].x * x + upperLeftCorner.x, headingTextPedestals[3].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		TextWriter::drawString("Poppy", NormalFont, 30, headingTextPedestals[4].x * x + upperLeftCorner.x, headingTextPedestals[4].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
 	}
 	break;
 	case 5:
 	{
-		textWriter.drawString("Sketching", NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.125 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		TextWriter::drawString("Sketching", NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.125 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
 	}
 	break;
 	case 102:
@@ -265,7 +265,7 @@ void HeroBookPage::drawHeadingText(RenderWindow* window)
 	case 404:
 	case 405:
 	{
-		textWriter.drawString(buttonToString(ButtonTag(currentPage)), NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.085 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));	
+		TextWriter::drawString(buttonToString(ButtonTag(currentPage)), NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.085 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));	
 	}
 	break;
 	default:
@@ -635,7 +635,7 @@ void HeroBookPage::drawConnectableFlowers(Tag currentFlower, RenderWindow* windo
 	const Vector2f pageSize = Vector2f(buttonList->at(ButtonTag::sketching).getGlobalBounds().width, buttonList->at(ButtonTag::sketching).getGlobalBounds().height);
 	const Vector2f headingPos = Vector2f(upperLeftCorner.x + 0.072 * pageSize.x, upperLeftCorner.y + 0.28 * pageSize.y);
 
-	textWriter.drawString("Connected with:", NormalFont, 30, headingPos.x, headingPos.y, window, Color(100, 68, 34, 180));
+	TextWriter::drawString("Connected with:", NormalFont, 30, headingPos.x, headingPos.y, window, Color(100, 68, 34, 180));
 
 	int cnt = 0;
 	for (auto& connection : plantsConnections.at(Tag(int(currentFlower))))

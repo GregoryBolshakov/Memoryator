@@ -1,12 +1,20 @@
+#pragma once
 #include "TextWriter.h"
 #include "HeroBag.h"
+
+int TextWriter::characterSize = 30 * Helper::GetScreenSize().y / 1440;
+std::unordered_map<FontName, Font> TextWriter::fonts = {};
+std::unordered_map<FontName, Text> TextWriter::textBoxes = {};
+Text TextWriter::numberOfItems;
 
 TextWriter::TextWriter()
 {
 	initFonts();
 	initTextBoxes();
+	numberOfItems.setFont(fonts[BebasFont]);
+	numberOfItems.setCharacterSize(30);
+	numberOfItems.setFillColor(Color::White);
 }
-
 
 TextWriter::~TextWriter()
 {
@@ -19,6 +27,8 @@ void TextWriter::initFonts()
 	fonts.insert({BebasFont, currentFont});
 	currentFont.loadFromFile("fonts/normal.ttf");
 	fonts.insert({ NormalFont, currentFont });
+	currentFont.loadFromFile("fonts/Console.ttf");
+	fonts.insert({ ConsoleFont, currentFont });
 }
 
 void TextWriter::initTextBoxes()
@@ -28,10 +38,8 @@ void TextWriter::initTextBoxes()
 	textBoxes.insert({ BebasFont, currentText });
 	currentText.setFont(fonts[NormalFont]);
 	textBoxes.insert({ NormalFont, currentText });
-
-	numberOfItems.setFont(fonts[BebasFont]);
-	numberOfItems.setCharacterSize(30);
-	numberOfItems.setFillColor(Color::White);
+	currentText.setFont(fonts[ConsoleFont]);
+	textBoxes.insert({ ConsoleFont, currentText });
 }
 
 void TextWriter::drawString(std::string str, FontName font, int size, float posX, float posY, RenderWindow* window, Color color)
@@ -88,5 +96,3 @@ void TextWriter::drawNumberOfItems(Vector2f pos, int itemsCount, RenderWindow &w
 	numberOfItems.setPosition(pos.x + HeroBag::itemCommonRadius * 2, pos.y + HeroBag::itemCommonRadius * 2);
 	window.draw(numberOfItems);
 }
-
-

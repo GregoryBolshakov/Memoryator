@@ -9,16 +9,10 @@
     <ClCompile Include="StaticObject.cpp" />
     <ClCompile Include="TerrainObject.cpp" />
     <ClCompile Include="WorldObject.cpp" />
-    <ClCompile Include="BonefireOfInsight.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
     <ClCompile Include="Chamomile.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
     <ClCompile Include="ForestTree.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="HomeCosiness.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
     <ClCompile Include="Spawn.cpp">
@@ -170,6 +164,15 @@
     <ClCompile Include="Roof.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>UISystems</Filter>
+    </ClCompile>
+    <ClCompile Include="InputBox.cpp">
+      <Filter>UISystems</Filter>
+    </ClCompile>
+    <ClCompile Include="PedestalController.cpp">
+      <Filter>UISystems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DynamicObject.h" />
@@ -180,16 +183,10 @@
     <ClInclude Include="Structs.h" />
     <ClInclude Include="TerrainObject.h" />
     <ClInclude Include="WorldObject.h" />
-    <ClInclude Include="BonefireOfInsight.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
     <ClInclude Include="Chamomile.h">
       <Filter>Terrain</Filter>
     </ClInclude>
     <ClInclude Include="ForestTree.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="HomeCosiness.h">
       <Filter>Terrain</Filter>
     </ClInclude>
     <ClInclude Include="Spawn.h">
@@ -341,6 +338,15 @@
     </ClInclude>
     <ClInclude Include="Roof.h">
       <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>UISystems</Filter>
+    </ClInclude>
+    <ClInclude Include="InputBox.h">
+      <Filter>UISystems</Filter>
+    </ClInclude>
+    <ClInclude Include="PedestalController.h">
+      <Filter>UISystems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

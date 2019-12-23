@@ -24,22 +24,26 @@ WorldGenerator::~WorldGenerator()
 {
 }
 
-void WorldGenerator::initializeStaticItem(Tag itemClass, Vector2f itemPosition, int itemType, std::string itemName, int count, Biomes biome, std::vector<std::pair<Tag, int>> inventory)
+void WorldGenerator::initializeStaticItem(Tag itemClass, Vector2f itemPosition, int itemType, std::string itemName, int count, Biomes biome, bool mirrored, std::vector<std::pair<Tag, int>> inventory)
 {
-	StaticObject* item = ObjectInitializer::initializeStaticItem(itemClass, itemPosition, itemType, itemName, count, biome, spriteMap, inventory);
+	StaticObject* item = ObjectInitializer::initializeStaticItem(itemClass, itemPosition, itemType, itemName, count, biome, spriteMap, mirrored, inventory);
 
 	// locked place check
-	std::map<std::pair<int, int>, bool> checkBlocks = {};
-	for (int i = (item->getPosition().x - item->getMicroBlockCheckAreaBounds().x) / microBlockSize.x; i < (item->getPosition().x + item->getMicroBlockCheckAreaBounds().x) / microBlockSize.x; i++)
-		for (int j = (item->getPosition().y - item->getMicroBlockCheckAreaBounds().y) / microBlockSize.y; j < (item->getPosition().y + item->getMicroBlockCheckAreaBounds().y) / microBlockSize.y; j++)
-			if (!(i < 0 || i > width / microBlockSize.x || j < 0 || j > height / microBlockSize.y) && !staticGrid->microBlockMatrix[i][j])
-				checkBlocks[{i, j}] = true;
-
-	if (item->isLockedPlace(checkBlocks))
+	const auto terrain = dynamic_cast<TerrainObject*>(item);
+	if (terrain)
 	{
-		item->~StaticObject();
-		delete item;
-		return;
+		std::map<std::pair<int, int>, bool> checkBlocks = {};
+		for (int i = (item->getPosition().x - item->getMicroBlockCheckAreaBounds().x) / microBlockSize.x; i < (item->getPosition().x + item->getMicroBlockCheckAreaBounds().x) / microBlockSize.x; i++)
+			for (int j = (item->getPosition().y - item->getMicroBlockCheckAreaBounds().y) / microBlockSize.y; j < (item->getPosition().y + item->getMicroBlockCheckAreaBounds().y) / microBlockSize.y; j++)
+				if (!(i < 0 || i > width / microBlockSize.x || j < 0 || j > height / microBlockSize.y) && !staticGrid->microBlockMatrix[i][j])
+					checkBlocks[{i, j}] = true;
+
+		if (item->isLockedPlace(checkBlocks))
+		{
+			item->~StaticObject();
+			delete item;
+			return;
+		}
 	}
 	//-------------------
 
@@ -62,7 +66,7 @@ void WorldGenerator::generate()
 
 	initializeDynamicItem(Tag::hero1, Vector2f(15000, 15000), "hero1");
 	initializeStaticItem(Tag::brazier, Vector2f(16300, 16300), 1, "brazier");
-	initializeStaticItem(Tag::tree, Vector2f(15300, 15000), 1, "testObject");
+	initializeStaticItem(Tag::stump, Vector2f(15500, 15000), 10, "stump", 1, DarkWoods, false);
 
 	// world generation
 	initBiomesGenerationInfo();
@@ -91,21 +95,21 @@ void WorldGenerator::inBlockGenerate(int blockIndex)
 			roomedBlocksContent = { {Tag::roof, 10}, {Tag::rock, 2}, {Tag::stump, 2}, {Tag::tree, 7} };
 		else
 			if (blockTypeProbablilty <= 30) // block with yarrow
-				roomedBlocksContent = { {Tag::yarrow, 30}, {Tag::rock, 2}, {Tag::stump, 2}, {Tag::tree, 7} };
+				roomedBlocksContent = { {Tag::yarrow, 20}, {Tag::rock, 2}, {Tag::stump, 2}, {Tag::tree, 7} };
 			else
 				if (blockTypeProbablilty <= 99) // common block				
-					roomedBlocksContent = { {Tag::rock, 3}, {Tag::stump, 2}, {Tag::tree, 7} };
-		otherBlocksContent = { {Tag::grass, 6} , {Tag::mushroom, 3} };
+					roomedBlocksContent = { {Tag::rock, 2}, {Tag::stump, 2}, {Tag::tree, 7} };
+		otherBlocksContent = { {Tag::grass, 6} , {Tag::mushroom, 4} };
 	}
 	else
 		if (biomeMatrix[groundIndX][groundIndY].biomeCell == BirchGrove)
 		{
-			if (blockTypeProbablilty <= 30) // block with chamomile			
-				roomedBlocksContent = { {Tag::chamomile, 30}, {Tag::rock, 2}, {Tag::stump, 2}, {Tag::log, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
+			if (blockTypeProbablilty <= 30) // block with chamomile
+				roomedBlocksContent = { {Tag::chamomile, 20}, {Tag::rock, 2}, {Tag::stump, 2}, {Tag::log, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
 			else
 				if (blockTypeProbablilty <= 99) // common block
-					roomedBlocksContent = { {Tag::rock, 2}, {Tag::stump, 2}, {Tag::log, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
-			otherBlocksContent = { {Tag::grass, 5} , {Tag::mushroom, 3} };
+					roomedBlocksContent = { {Tag::rock, 5}, {Tag::stump, 2}, {Tag::log, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
+			otherBlocksContent = { {Tag::grass, 6} , {Tag::mushroom, 3} };
 		}
 
 
@@ -126,25 +130,25 @@ void WorldGenerator::inBlockGenerate(int blockIndex)
 				for (auto& item : roomedBlocksContent)
 				{
 					const int placedObjectDeterminant = rand() % 100;
-					if (item.second >= placedObjectDeterminant)
+					if (item.second > placedObjectDeterminant)
 					{
 						initializeStaticItem(item.first, Vector2f(x, y), -1, "", 1, biomeMatrix[groundIndX][groundIndY].biomeCell);
 						break;
-					}					
+					}
 				}
 			}
 			else
 				for (auto& item : otherBlocksContent)
 				{
 					const int placedObjectDeterminant = rand() % 100;
-					if (item.second >= placedObjectDeterminant)
+					if (item.second > placedObjectDeterminant)
 					{
 						initializeStaticItem(item.first, Vector2f(x, y), -1, "", 1, biomeMatrix[groundIndX][groundIndY].biomeCell);
 						break;
 					}
 				}
 		}
-	}
+	}	
 }
 
 void WorldGenerator::generateGround(int blockIndex)

@@ -9,6 +9,7 @@
 #include "Helper.h"
 #include "EffectsSystemMaker.h"
 #include "WorldGenerator.h"
+#include "PedestalController.h"
 
 #include "DynamicObject.h"
 #include "EmptyObject.h"
@@ -62,6 +63,7 @@ public:
 	void runBuildSystemDrawing(RenderWindow& window, float elapsedTime);
 	void runInventorySystemDrawing(RenderWindow& window, float elapsedTime);
 	void runWorldGenerator();
+	PedestalController pedestalController;
 
 	//zoom
 	float scaleFactor;
