@@ -406,7 +406,7 @@ void InventoryMaker::drawHeroInventory(float elapsedTime, RenderWindow& window)
 	}
 	if (cursorText == "  throw away")
 	{
-		textWriter.drawString(cursorText, NormalFont, 35 * Helper::GetScreenSize().y / 1440, cursorTextPos.x - Helper::GetScreenSize().x / 26, cursorTextPos.y - Helper::GetScreenSize().y / 30,
+		TextWriter::drawString(cursorText, NormalFont, 35 * Helper::GetScreenSize().y / 1440, cursorTextPos.x - Helper::GetScreenSize().x / 26, cursorTextPos.y - Helper::GetScreenSize().y / 30,
 			&window, Color(53, 53, 53, 255));
 		window.draw(dropZone);
 	}

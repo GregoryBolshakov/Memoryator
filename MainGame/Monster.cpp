@@ -7,7 +7,8 @@ Monster::Monster(std::string objectName, Vector2f centerPosition) : DynamicObjec
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
 	currentAction = relax;
-	sightRange = 600;
+	side = down;
+	sightRange = 950;
 	strikingSprite = 6;
 	timeForNewHit = 1e5;
 }
@@ -30,7 +31,7 @@ void Monster::behavior(float elapsedTime)
 
 void Monster::setTarget(DynamicObject& object)
 {
-	victim = nullptr;
+	boundTarget = nullptr;
 	if (object.tag == Tag::hero1)
 		return; //targetPosition = object.getPosition();
 }
@@ -44,29 +45,39 @@ void Monster::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
 		return;
 	}
 
+	if (Helper::getDist(position, target->getPosition()) <= radius + target->getRadius())
+		pushByBumping(target);
+
 	if (target->tag != Tag::hero1)
 		return;
 
-	victim = target;
-	side = calculateSide(victim->getPosition(), elapsedTime);
+	if (Helper::getDist(target->getPosition(), position) > sightRange)
+	{		
+		laxMovePosition = { -1, -1 };
+		changeAction(relax, currentAction != relax);
+		return;
+	}
 
-	if (Helper::getDist(position, victim->getPosition()) <= sightRange && timeAfterHit >= timeForNewHit)
-		speed = std::max((1 - Helper::getDist(position, victim->getPosition()) / sightRange) * defaultSpeed + defaultSpeed, defaultSpeed);
+	boundTarget = target;
+	side = calculateSide(boundTarget->getPosition(), elapsedTime);	
+
+	if (Helper::getDist(position, boundTarget->getPosition()) <= sightRange && timeAfterHit >= timeForNewHit)
+		speed = std::max((1 - Helper::getDist(position, boundTarget->getPosition()) / sightRange) * defaultSpeed / 2 + defaultSpeed, defaultSpeed);
 	else
 		speed = defaultSpeed;
 	if (isAttack.count(currentAction) == 0)
 		timeAfterHit += elapsedTime;
 
 	// fight with player	
-	doAttack(victim);		
-	if (Helper::getDist(position, victim->getPosition()) <= (this->radius + victim->getRadius() + hitDistance * 1.3) &&
+	doAttack(boundTarget);
+	if (Helper::getDist(position, boundTarget->getPosition()) <= (this->radius + boundTarget->getRadius() + hitDistance * 1.3) &&
 		isAttack.count(currentAction) > 0 && currentSprite[0] == strikingSprite && !wasHit)
 	{
-		victim->takeDamage(this->strength, position);
+		boundTarget->takeDamage(this->strength, position);
 		wasHit = true;
 	}
 
-	if (isAttack.count(currentAction) == 0 && Helper::getDist(position, victim->getPosition()) <= (this->radius + victim->getRadius() + hitDistance / 5))
+	if (isAttack.count(currentAction) == 0 && Helper::getDist(position, boundTarget->getPosition()) <= (this->radius + boundTarget->getRadius() + hitDistance / 5))
 	{
 		stopping(true, false);
 		changeAction(combatState, false, false);
@@ -75,14 +86,16 @@ void Monster::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
 	//---------------------
 	
 	// move to player
-	if (Helper::getDist(position, victim->getPosition()) > (this->radius + victim->getRadius() + hitDistance / 5))
+	if (Helper::getDist(position, boundTarget->getPosition()) > (this->radius + boundTarget->getRadius() + hitDistance / 5))
 	{
 		if (isAttack.count(currentAction) == 0 && currentAction != combatState)
 		{
 			changeAction(move, false);
-			movePosition = victim->getPosition();
+			laxMovePosition = boundTarget->getPosition();
 		}
 	}
+	else	
+		stopping(true, false);	
 	//---------------
 }
 
@@ -97,16 +110,16 @@ void Monster::endingPreviousAction()
 	lastAction = relax;
 }
 
-void Monster::stopping(bool doStand, bool forgetSelectedTarget)
+void Monster::stopping(bool doStand, bool forgetBoundTarget)
 {
 	if (doStand)
 	{
-		this->movePosition = { -1, -1 };
+		this->laxMovePosition = { -1, -1 };
 		moveOffset = { 0, 0 };
 		this->direction = STAND;
 	}
 
-	if (forgetSelectedTarget && boundTarget != nullptr)
+	if (forgetBoundTarget && boundTarget != nullptr)
 	{
 		boundTarget->isProcessed = false;
 		boundTarget = nullptr;

@@ -7,42 +7,37 @@
 #include "GridList.h"
 #include "Helper.h"
 
-template <class T>
-GridList<T>::GridList() : width(0), height(0), size(0, 0)
+GridList::GridList() : width(0), height(0), size(0, 0)
 {
 }
 
-template <class T>
-Vector2i GridList<T>::getBlockSize() const
+Vector2i GridList::getBlockSize() const
 {
 	return size;
 }
 
-template <class T>
-GridList<T>::GridList(int width, int height, Vector2i size, Vector2i microsize)
+GridList::GridList(int width, int height, Vector2i size, Vector2i microSize)
 {
 	this->width = width;
 	this->height = height;
 	this->size = size;
-	this->microsize = microsize;
+	this->microSize = microSize;
 	auto vectorSize = int(ceil(double(height) / size.y) * ceil(double(width) / size.x));
 	cells.resize(vectorSize);
 	for (auto&arr : cells)
 	{
 		arr.resize(0);
 	}
-	microblockMatrix.resize(500, std::vector<int>(500, 1));
-	distances.resize(500, std::vector<float>(500, 55));
-	visited.resize(500, std::vector<bool>(500, false));
-	routes.resize(500, std::vector<std::vector<std::pair<int, int>>>(500, {{-1, -1}}));
+	microBlockMatrix.resize(4000, std::vector<bool>(4000, true));	
+	distances.resize(4000, std::vector<float>(4000, 1000));
+	previous.resize(4000, std::vector<std::pair<int, int>>(4000, { -1, -1 }));
 }
 
-template <class T>
-GridList<T>::~GridList()
+GridList::~GridList()
 {
-	for (std::vector<T*> cell : cells)
+	for (std::vector<WorldObject*> cell : cells)
 	{
-		for (T* ptr : cell)
+		for (WorldObject* ptr : cell)
 		{
 			delete ptr;
 		}
@@ -52,8 +47,7 @@ GridList<T>::~GridList()
 	items.clear();
 }
 
-template <class T>
-int GridList<T>::getIndexByPoint(int x, int y) const
+int GridList::getIndexByPoint(int x, int y) const
 {
 	auto y1 = y / size.y;
 	auto x1 = ceil(double(width) / size.x);
@@ -61,8 +55,7 @@ int GridList<T>::getIndexByPoint(int x, int y) const
 	return int(result);
 }
 
-template <class T>
-Vector2f GridList<T>::getPointByIndex(int index) const
+Vector2f GridList::getPointByIndex(int index) const
 {
 	int inLineNumber = ceil(double(width) / size.x);
 	int inRawNumber = (index) / inLineNumber;
@@ -74,362 +67,187 @@ Vector2f GridList<T>::getPointByIndex(int index) const
 	return result;
 }
 
-template <class T>
-int GridList<T>::getMicroblockByPoint(int x, int y) const
+int GridList::getMicroblockByPoint(int x, int y) const
 {
-	auto y1 = y / microsize.y;
-	auto x1 = ceil(double(width) / microsize.x);
-	auto result = x1 * y1 + x / microsize.x;
+	auto y1 = y / microSize.y;
+	auto x1 = ceil(double(width) / microSize.x);
+	auto result = x1 * y1 + x / microSize.x;
 	return int(result);
 }
 
-template <class T>
-Vector2f GridList<T>::getPointByMicroblock(int microblockIndex) const
+Vector2f GridList::getPointByMicroblock(int microBlockIndex) const
 {
-	int inLineNumber = ceil(double(width) / microsize.x);
-	int inRawNumber = (microblockIndex) / inLineNumber;
+	int inLineNumber = ceil(double(width) / microSize.x);
+	int inRawNumber = (microBlockIndex) / inLineNumber;
 
-	Vector2f result = Vector2f((microblockIndex % inLineNumber) * microsize.x, result.y = (inRawNumber * microsize.y));
+	Vector2f result = Vector2f((microBlockIndex % inLineNumber) * microSize.x, result.y = (inRawNumber * microSize.y));
 
 	return result;
 }
 
-template <class T>
-void GridList<T>::fillLocalMatrix(Vector2f targetPos, int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY)
+void GridList::makeRoute(Vector2f startPos, Vector2f finishPos, int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY, int permissibleDistance)
 {
-	const int xMicroblocksCount = ceil((bottomRightX - upperLeftX) / microsize.x);
-	const int yMicroblocksCount = ceil((bottomRightY - upperLeftY) / microsize.y);
+	route.clear();
 
-	const int startXInd = upperLeftX / microsize.x;
-	const int startYInd = upperLeftY / microsize.y;
+	if (abs(startPos.x - finishPos.x) / microSize.x + abs(startPos.y - finishPos.y) / microSize.y < 1)
+		return;
 
-	for (int i = startXInd; i < startXInd + xMicroblocksCount; i++)
+	const int xMicroblocksCount = ceil((bottomRightX - upperLeftX) / microSize.x);
+	const int yMicroblocksCount = ceil((bottomRightY - upperLeftY) / microSize.y);
+
+	const int startXInd = upperLeftX / microSize.x;
+	const int startYInd = upperLeftY / microSize.y;
+
+	int curMicroblockX = startPos.x / microSize.x, curMicroblockY = startPos.y / microSize.y;
+	int lastMicroblockX = finishPos.x / microSize.x, lastMicroblockY = finishPos.y / microSize.y;
+
+	bool isBreak = false;
+	if (!microBlockMatrix[curMicroblockX][curMicroblockY]/* || !dynamicMicroBlockMatrix->at(curMicroblockX)[curMicroblockY]*/)
 	{
-		for (int j = startYInd; j < startYInd + yMicroblocksCount; j++)
-			microblockMatrix[i][j] = 1;
-	}
-
-	std::vector<int> blockArea = getBlocksInSight(upperLeftX, upperLeftY, bottomRightX, bottomRightY);
-
-	for (auto&blockInd : blockArea)
-	{
-		for (auto&item : cells[blockInd])
-		{
-			auto object = dynamic_cast<TerrainObject*>(item);
-			if (!object || object->isBackground)
-				continue;
-
-			const int curMicroblockX = int(object->getPosition().x) / microsize.x;
-			const int curMicroblockY = int(object->getPosition().y) / microsize.y;
-
-			const int xFillFactor = (object->getRadius() / microsize.x) * 5;
-			const int yFillFactor = (object->getRadius() / microsize.y) * 5;
-
-			for (int i = curMicroblockX - xFillFactor; i <= curMicroblockX + xFillFactor; i++)
-			{
-				for (int j = curMicroblockY - yFillFactor; j <= curMicroblockY + yFillFactor; j++)
-				{
-					const Vector2f microblockPos = Vector2f(microsize.x * i + microsize.x / 2, microsize.y * j + microsize.y / 2);
-					
-					if (object->isMultiellipse)
-					{
-						bool isContinue = false;
-						for (int ellipce = 0; ellipce < object->internalEllipses.size(); ellipce++)
-						{
-							if (Helper::getDist(microblockPos, object->internalEllipses[ellipce].second.first) + Helper::getDist(microblockPos, object->internalEllipses[ellipce].second.second) <= object->internalEllipses[ellipce].first.first)
-							{
-								microblockMatrix[i][j] = 0;
-								isContinue = true;
-								break;
-							}
-						}
-						if (isContinue)
-							continue;
-					}
-					else
-						if (object->isDotsAdjusted)
-						{
-							if (!((microblockPos.x >= object->getDot1().x - microsize.x / 2 && microblockPos.x <= object->getDot2().x + microsize.x / 2) &&
-								(microblockPos.y >= object->getDot1().y - microsize.y / 2 && microblockPos.y <= object->getDot2().y + microsize.y / 2)))
-								continue;
-
-							float t1 = Helper::triangleArea(object->getDot1().x, object->getDot1().y, microblockPos.x - microsize.x / 2, microblockPos.y - microsize.y / 2, object->getDot2().x, object->getDot2().y),
-								t2 = Helper::triangleArea(object->getDot1().x, object->getDot1().y, microblockPos.x + microsize.x / 2, microblockPos.y + microsize.y / 2, object->getDot2().x, object->getDot2().y),
-								t3 = Helper::triangleArea(object->getDot1().x, object->getDot1().y, microblockPos.x + microsize.x / 2, microblockPos.y - microsize.y / 2, object->getDot2().x, object->getDot2().y),
-								t4 = Helper::triangleArea(object->getDot1().x, object->getDot1().y, microblockPos.x - microsize.x / 2, microblockPos.y + microsize.y / 2, object->getDot2().x, object->getDot2().y);
-
-							if (!(Helper::checkSigns(t1, t2) || Helper::checkSigns(t3, t4)))
-								microblockMatrix[i][j] = 0;
-						}
-						else
-						{
-							if (Helper::getDist(microblockPos, object->getFocus1()) + Helper::getDist(microblockPos, object->getFocus2()) - sqrt(pow(microsize.x, 2) + pow(microsize.y, 2)) > object->getEllipseSize())
-								continue;
-							if (i >= 0 && j >= 0 && i < microblockMatrix.size() && j < microblockMatrix[0].size())
-								microblockMatrix[i][j] = 0;
-						}
-				}
-			}
-		}
-	}
-}
-
-template <class T>
-void GridList<T>::makeRoute(Vector2f startPos, Vector2f finishPos, int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY)
-{
-	//if (blockArea.size() == 0)
-		//return;
-
-	const int xMicroblocksCount = ceil((bottomRightX - upperLeftX) / microsize.x);
-	const int yMicroblocksCount = ceil((bottomRightY - upperLeftY) / microsize.y);
-
-	const int startXInd = upperLeftX / microsize.x;
-	const int startYInd = upperLeftY / microsize.y;
-
-	int curMicroblockX = startPos.x / microsize.x, curMicroblockY = startPos.y / microsize.y;
-	int lastMicroblockX = finishPos.x / microsize.x, lastMicroblockY = finishPos.y / microsize.y;
-
-	for (int i = startXInd; i < startXInd + xMicroblocksCount; i++)
-	{
-		for (int j = startYInd; j < startYInd + yMicroblocksCount; j++)
-		{
-			distances[i][j] = inf;
-			visited[i][j] = false;
-			routes[i][j].clear();			
-		}
-	}
-
-	/*if (microblockMatrix[curMicroblockX][curMicroblockY] == 0)
-	{
-		float minD = 10e6;
-		int curI = curMicroblockX, curJ = curMicroblockY;
 		for (int i = -1; i <= 1; i++)
+		{
 			for (int j = -1; j <= 1; j++)
-			{
-				if (abs(i) == abs(j))
-					continue;
-				if (microblockMatrix[curMicroblockX + i][curMicroblockY + j] == 1)
+				if (curMicroblockX + i > 0 && curMicroblockX + i < width / microSize.x &&
+					curMicroblockY + j > 0 && curMicroblockY + j < height / microSize.y && microBlockMatrix[curMicroblockX + i][curMicroblockY + j]/* && dynamicMicroBlockMatrix->at(curMicroblockX + i)[curMicroblockY + j]*/)
 				{
-					Vector2f microblockPos = Vector2f(microsize.x * i + microsize.x / 2, microsize.y * j + microsize.y / 2);
-					float d = sqrt(pow(startPos.x - microblockPos.x, 2) + pow(startPos.y - microblockPos.y, 2));
-					if (d < minD)
-					{
-						minD = d;
-						curI = i;
-						curJ = j;
-					}
+					curMicroblockX += i;
+					curMicroblockY += j;
+					isBreak = true;
+					break;
 				}
-			}
-		curMicroblockX += curI;
-		curMicroblockY += curJ;
-	}*/
+			if (isBreak)
+				break;
+		}
+	}
+
+	if (!microBlockMatrix[lastMicroblockX][lastMicroblockY]/* || !dynamicMicroBlockMatrix->at(lastMicroblockX)[lastMicroblockY]*/)
+	{
+		for (int i = -permissibleDistance; i <= permissibleDistance; i++)
+		{
+			isBreak = false;
+			for (int j = -permissibleDistance; j <= permissibleDistance; j++)
+				if (lastMicroblockX + i > 0 && lastMicroblockX + i < width / microSize.x &&
+					lastMicroblockY + j > 0 && lastMicroblockY + j < height / microSize.y && microBlockMatrix[lastMicroblockX + i][lastMicroblockY + j]/* && dynamicMicroBlockMatrix->at(lastMicroblockX + i)[lastMicroblockY + j]*/)
+				{
+					lastMicroblockX += i;
+					lastMicroblockY += j;
+					isBreak = true;
+					break;
+				}
+			if (isBreak)
+				break;
+		}
+	}	
+	for (int i = startXInd; i < startXInd + xMicroblocksCount; i++)	
+		for (int j = startYInd; j < startYInd + yMicroblocksCount; j++)		
+			distances[i][j] = inf;
 
 	distances[curMicroblockX][curMicroblockY] = 0;
-	bfs(startXInd + xMicroblocksCount, startYInd + yMicroblocksCount, curMicroblockX, curMicroblockY, lastMicroblockX, lastMicroblockY);
+	bfs(startXInd + xMicroblocksCount, startYInd + yMicroblocksCount, curMicroblockX, curMicroblockY, lastMicroblockX, lastMicroblockY, permissibleDistance);
 }
 
-template <class T>
-void GridList<T>::bfs(int iBorder, int jBorder, int startX, int startY, int finishX, int finishY)
+void GridList::bfs(int xBorder, int yBorder, int startX, int startY, int finishX, int finishY, int permissibleDistance)
 {
 	std::queue<std::pair<int, int>> q;
-	q.push(std::make_pair(startX, startY));
-	visited[startX][startY] = true;
-	std::vector<std::vector<std::pair<int, int>>> p;
-	p.resize(500, std::vector<std::pair<int, int>>(500, {-1, -1}));
+	q.push(std::make_pair(startX, startY));	
 
 	int minDistToFinish = 1000;
-
+	float step = 1;
 	while (!q.empty()) 
 	{
 		std::pair<int, int> v = q.front();
 		q.pop();
+		bool isBreak = false;
 
 		for (int i = -1; i <= 1; i++)
 			for (int j = -1; j <= 1; j++)
 			{				
-				if (abs(i) == abs(j))
+				if (i == 0 && j == 0)
 					continue;
+				if (abs(i) == abs(j))
+					step = 1.42f;
+				else
+					step = 1.0f;
 
 				std::pair<int, int> to = std::make_pair(v.first + i, v.second + j);
-				if (to.first < 0 || to.first > iBorder || to.second < 0 || to.second > jBorder)
+				if (to.first < 0 || to.first > xBorder || to.second < 0 || to.second > yBorder)
 					continue;
 
-				if (!visited[to.first][to.second] && (microblockMatrix[to.first][to.second] != 0 || (to.first == finishX && to.second == finishY)))
+				if (abs(previous[v.first][v.second].first - v.first) + abs(previous[v.first][v.second].second - v.second) <= 2 &&
+					v.first - previous[v.first][v.second].first == to.first - v.first && v.second - previous[v.first][v.second].second == to.second - v.second)
+					step -= 0.0001;
+
+
+				if (distances[to.first][to.second] > distances[v.first][v.second] + step && ((microBlockMatrix[to.first][to.second] != 0 && dynamicMicroBlockMatrix->at(to.first)[to.second] != 0) || (to.first == finishX && to.second == finishY)))
 				{
-					visited[to.first][to.second] = true;
+					distances[to.first][to.second] = distances[v.first][v.second] + step;
+					previous[to.first][to.second] = v;
 					q.push(to);
-					distances[to.first][to.second] = distances[v.first][v.second] + 1;
-					p[to.first][to.second] = v;
-					if (abs(to.first - finishX) + abs(to.second = finishY) <= minDistToFinish)
-					{
-						minDistToFinish = abs(to.first - finishX) + abs(to.second = finishY);
-						reserveDestination = to;
-					}
+				}
+				if (to.first == finishX && to.second == finishY)
+				{
+					isBreak = true;
+					break;
 				}
 			}
+		if (isBreak)
+			break;
 	}
 
 	bool canCreateRoute = true;
 
-	if (!visited[finishX][finishY])
+	if ((finishX == -1) || distances[finishX][finishY] == inf)
 	{
-		finishX = reserveDestination.first; finishY = reserveDestination.second;
-		if (!visited[finishX][finishY])
-		{
-			canCreateRoute = false;
-			routes[finishX][finishY].clear();
-		}
+		canCreateRoute = false;
+		route.clear();		
 	}
 
 	if (canCreateRoute)
 	{
 		std::vector<std::pair<int, int>> path;
 
-		std::pair<int, int> currentMatrixCeil = p[finishX][finishY];
+		std::pair<int, int> currentMatrixCeil = previous[finishX][finishY];
+		float iterations = 0;
 		while (true)
 		{
-			if (currentMatrixCeil == std::make_pair(-1, -1))
+			iterations++;
+			if (currentMatrixCeil == std::make_pair(-1, -1) || iterations > distances[finishX][finishY])
 			{
-				routes[finishX][finishY].clear();
+				route.clear();
 				return;
 			}
-			path.push_back(currentMatrixCeil);
+
+			if (abs(previous[currentMatrixCeil.first][currentMatrixCeil.second].first - currentMatrixCeil.first) + abs(previous[currentMatrixCeil.first][currentMatrixCeil.second].second - currentMatrixCeil.second) > 2)
+			{
+				route.clear();
+				return;
+			}
+
+			path.push_back(currentMatrixCeil);			
+			currentMatrixCeil = previous[currentMatrixCeil.first][currentMatrixCeil.second];
 			if (currentMatrixCeil == std::make_pair(startX, startY))
 				break;
-			currentMatrixCeil = p[currentMatrixCeil.first][currentMatrixCeil.second];
 		}
-		reverse(path.begin(), path.end());
+		if (!path.empty())
+			reverse(path.begin(), path.end());
 
-
-		// cut the corners
-		if (path.size() >= 2)
-		while (true)
-		{
-			bool isBreak = true;
-			for (int i = 0; i < path.size() - 2; i++)
-			{
-				if ((path[i].first == path[i + 1].first && path[i].first == path[i + 2].first) ||
-					(path[i].second == path[i + 1].second && path[i].second == path[i + 2].second) ||
-						(abs(path[i + 1].first - path[i].first) == 1 && abs(path[i + 2].first - path[i + 1].first) == 0 &&
-							abs(path[i + 1].second - path[i].second) == 0 && abs(path[i + 2].second - path[i + 1].second) == 1) ||
-							(abs(path[i + 1].first - path[i].first) == 0 && abs(path[i + 2].first - path[i + 1].first) == 1 &&
-								abs(path[i + 1].second - path[i].second) == 1 && abs(path[i + 2].second - path[i + 1].second) == 0))
-				{
-
-					path.erase(path.begin() + (i + 1));
-					isBreak = false;
-					break;
-				}		
-			}
-			if (isBreak)
-				break;
-		}
-		//----------------
-
-		if (path[0] == std::make_pair(startX, startY))
+		if (!path.empty() && path[0] == std::make_pair(startX, startY))
 			path.erase(path.begin() + 0);
 
-		routes[finishX][finishY] = path;
+		// cut corners
+		int cnt = 0;
+		while (cnt < path.size() - 3)
+			if (path[cnt + 1].first - path[cnt].first == path[cnt + 2].first - path[cnt + 1].first && path[cnt + 1].second - path[cnt].second == path[cnt + 2].second - path[cnt + 1].second)
+				path.erase(path.begin() + cnt);
+			else
+				cnt++;
+		//------------
+
+		route = path;
 	}
 }
 
-template <class T>
-void GridList<T>::dfs(int i, int j, int iBorder, int jBorder, int startX, int startY, int finishX, int finishY)
-{
-	visited[i][j] = true;
-
-	if (i > 0)
-		if (microblockMatrix[i - 1][j] != 0 || /*(startX == i - 1 && startY == j) || */(finishX == i - 1 && finishY == j)/* && !visited[i - 1][j]*/)
-		{
-			if (distances[i - 1][j] > distances[i][j] + 1)
-			{
-				distances[i - 1][j] = distances[i][j] + 1;
-				routes[i - 1][j] = routes[i][j];
-				routes[i - 1][j].push_back(std::make_pair(i - 1, j));
-				dfs(i - 1, j, iBorder, jBorder, startX, startY, finishX, finishY);
-			}
-		}
-	if (i < iBorder)
-		if (microblockMatrix[i + 1][j] != 0 || /*(startX == i + 1 && startY == j) || */(finishX == i + 1 && finishY == j)/* && !visited[i + 1][j]*/)
-		{
-			if (distances[i + 1][j] > distances[i][j] + 1)
-			{
-				distances[i + 1][j] = distances[i][j] + 1;
-				routes[i + 1][j] = routes[i][j];
-				routes[i + 1][j].push_back(std::make_pair(i + 1, j));
-				dfs(i + 1, j, iBorder, jBorder, startX, startY, finishX, finishY);
-			}
-		}
-	if (j > 0)
-		if (microblockMatrix[i][j - 1] != 0 || /*(startX == i && startY == j - 1) || */(finishX == i && finishY == j - 1)/* && !visited[i][j - 1]*/)
-		{
-			if (distances[i][j - 1] > distances[i][j] + 1)
-			{
-				distances[i][j - 1] = distances[i][j] + 1;
-				routes[i][j - 1] = routes[i][j];
-				routes[i][j - 1].push_back(std::make_pair(i, j - 1));
-				dfs(i, j - 1, iBorder, jBorder, startX, startY, finishX, finishY);
-			}
-		}
-	if (j < jBorder)
-		if (microblockMatrix[i][j + 1] != 0 || /*(startX == i && startY == j + 1) || */(finishX == i && finishY == j + 1)/* && !visited[i][j + 1]*/)
-		{
-			if (distances[i][j + 1] > distances[i][j] + 1)
-			{
-				distances[i][j + 1] = distances[i][j] + 1;
-				routes[i][j + 1] = routes[i][j];
-				routes[i][j + 1].push_back(std::make_pair(i, j + 1));
-				dfs(i, j + 1, iBorder, jBorder, startX, startY, finishX, finishY);
-			}
-		}
-	if (i > 0 && j > 0)
-		if (microblockMatrix[i - 1][j - 1] != 0 || /*(startX == i - 1 && startY == j - 1) || */(finishX == i - 1 && finishY == j - 1)/* && !visited[i - 1][j - 1]*/)
-		{
-			if (distances[i - 1][j - 1] > distances[i][j] + sqrt(2))
-			{
-				distances[i - 1][j - 1] = distances[i][j] + sqrt(2);
-				routes[i - 1][j - 1] = routes[i][j];
-				routes[i - 1][j - 1].push_back(std::make_pair(i - 1, j - 1));
-				dfs(i - 1, j - 1, iBorder, jBorder, startX, startY, finishX, finishY);
-			}
-		}
-	if (i < iBorder && j  > 0)
-		if (microblockMatrix[i + 1][j - 1] != 0 || /*(startX == i + 1 && startY == j - 1) || */(finishX == i + 1 && finishY == j - 1)/* && !visited[i + 1][j - 1]*/)
-		{
-			if (distances[i + 1][j - 1] > distances[i][j] + sqrt(2))
-			{
-				distances[i + 1][j - 1] = distances[i][j] + sqrt(2);
-				routes[i + 1][j - 1] = routes[i][j];
-				routes[i + 1][j - 1].push_back(std::make_pair(i + 1, j - 1));
-				dfs(i + 1, j - 1, iBorder, jBorder, startX, startY, finishX, finishY);
-			}
-		}
-	if (i > 0 && j < jBorder)
-		if (microblockMatrix[i - 1][j + 1] != 0 || /*(startX == i - 1 && startY == j + 1) || */(finishX == i - 1 && finishY == j + 1)/* && !visited[i - 1][j + 1]*/)
-		{
-			if (distances[i - 1][j + 1] > distances[i][j] + sqrt(2))
-			{
-				distances[i - 1][j + 1] = distances[i][j] + sqrt(2);
-				routes[i - 1][j + 1] = routes[i][j];
-				routes[i - 1][j + 1].push_back(std::make_pair(i - 1, j + 1));
-				dfs(i - 1, j + 1, iBorder, jBorder, startX, startY, finishX, finishY);
-			}
-		}
-	if (i < iBorder && j < jBorder)
-		if (microblockMatrix[i + 1][j + 1] != 0 || /*(startX == i + 1 && startY == j + 1) || */(finishX == i + 1 && finishY == j + 1)/* && !visited[i + 1][j + 1]*/)
-		{
-			if (distances[i + 1][j + 1] > distances[i][j] + sqrt(2))
-			{
-				distances[i + 1][j + 1] = distances[i][j] + sqrt(2);
-				routes[i + 1][j + 1] = routes[i][j];
-				routes[i + 1][j + 1].push_back(std::make_pair(i + 1, j + 1));
-				dfs(i + 1, j + 1, iBorder, jBorder, startX, startY, finishX, finishY);
-			}
-		}
-}
-
-template <class T>
-bool GridList<T>::isIntersectWithOthers(Vector2f position1, float radius1, std::vector<WorldObject*> visibleTerrain, bool isDotAdjustded) const
+bool GridList::isIntersectWithOthers(Vector2f position1, float radius1, std::vector<WorldObject*> visibleTerrain, bool isDotAdjustded) const
 {
 	for (auto&anotherItem : visibleTerrain)
 	{
@@ -454,9 +272,25 @@ bool GridList<T>::isIntersectWithOthers(Vector2f position1, float radius1, std::
 	return false;
 }
 
-template <class T>
-void GridList<T>::addItem(T* item, const std::string& name, int x, int y)
+void GridList::setLockedMicroBlocks(WorldObject* item, bool value, bool dynamicMatrix)
 {
+	const auto worldItem = dynamic_cast<WorldObject*>(item);
+	if (worldItem)
+		for (const auto block : worldItem->getLockedMicroBlocks())
+		{
+			if (!(block.x < 0 || block.x > width / microSize.x || block.y < 0 || block.y > height / microSize.y))
+			{
+				if (dynamicMatrix)
+					dynamicMicroBlockMatrix->at(block.x)[block.y] = value;
+				else
+					microBlockMatrix[block.x][block.y] = value;
+			}
+		}
+}
+
+void GridList::addItem(WorldObject* item, const std::string& name, int x, int y)
+{
+	setLockedMicroBlocks(item);
 	int blocksCount = ceil(width / size.x) * ceil(height / size.y);
 
 	if (items.find(name) != items.end())
@@ -466,27 +300,28 @@ void GridList<T>::addItem(T* item, const std::string& name, int x, int y)
 
 	auto position = std::make_pair(index, int(cells[index].size()));
 
+	
+
 	cells[index].push_back(item);
 	items.insert({ name, position });
 }
 
-template <class T>
-void GridList<T>::clearCell(int cellIndex)
+void GridList::clearCell(int cellIndex)
 {
-	for (auto&item : cells[cellIndex])
+	for (auto& item : cells[cellIndex])
 	{
-		auto itemObject = dynamic_cast<WorldObject*>(item);
-		if (itemObject)
-			items.erase(items.find(itemObject->getName()));
-		itemObject->~WorldObject();
+		setLockedMicroBlocks(item, true);		
+		items.erase(items.find(item->getName()));
+		item->~WorldObject();
+		delete item;
 	}
 	cells[cellIndex].clear();
 }
 
-template <class T>
-void GridList<T>::deleteItem(std::string name)
-{	
+void GridList::deleteItem(std::string name)
+{		
 	auto position = items.at(name);
+	setLockedMicroBlocks(cells[position.first][position.second], true);
 	for (int i = position.second; i < cells[position.first].size(); i++)
 	{
 		auto itemToUpdate = dynamic_cast<WorldObject*>(cells[position.first][i]);
@@ -499,23 +334,20 @@ void GridList<T>::deleteItem(std::string name)
 	items.erase(items.find(name));
 }
 
-template <class T>
-T* GridList<T>::getItemByName(const std::string& name)
+WorldObject* GridList::getItemByName(const std::string& name)
 {
 	auto position = items.at(name);
 	return cells[position.first][position.second];
 }
 
-template <class T>
-std::vector<T*> GridList<T>::getItems(int blockIndex)
+std::vector<WorldObject*> GridList::getItems(int blockIndex)
 {
 	return cells[blockIndex];
 }
 
-template <class T>
-std::vector<T*> GridList<T>::getItems(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY)
+std::vector<WorldObject*> GridList::getItems(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY)
 {
-	std::vector<T*> result;
+	std::vector<WorldObject*> result;
 	if (upperLeftX <= 0)
 	{
 		upperLeftX = 0;
@@ -556,8 +388,7 @@ std::vector<T*> GridList<T>::getItems(int upperLeftX, int upperLeftY, int bottom
 	return result;
 }
 
-template <class T>
-std::vector<int> GridList<T>::getBlocksAround(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY, int offset)
+std::vector<int> GridList::getBlocksAround(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY, int offset)
 {
 	std::vector<int> result;
 
@@ -597,8 +428,7 @@ std::vector<int> GridList<T>::getBlocksAround(int upperLeftX, int upperLeftY, in
 	return result;
 }
 
-template <class T>
-std::vector<int> GridList<T>::getBlocksInSight(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY)
+std::vector<int> GridList::getBlocksInSight(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY)
 {
 	std::vector<int> result;
 
@@ -617,7 +447,7 @@ std::vector<int> GridList<T>::getBlocksInSight(int upperLeftX, int upperLeftY, i
 	auto columnsPerRow = int(ceil(double(width) / size.x));
 	auto maxColumn = int(cells.size()) - 1;
 
-	for (auto&i = 0; i <= rowsCount; i++)
+	for (auto i = 0; i <= rowsCount; i++)
 	{
 		if (lastColumn >= maxColumn)
 			lastColumn = maxColumn;
@@ -632,8 +462,7 @@ std::vector<int> GridList<T>::getBlocksInSight(int upperLeftX, int upperLeftY, i
 	return result;
 }
 
-template <class T>
-void GridList<T>::updateItemPosition(const std::string name, int x, int y)
+void GridList::updateItemPosition(const std::string name, int x, int y)
 {
 	auto position = items.at(name);
 	auto item = cells[position.first][position.second];

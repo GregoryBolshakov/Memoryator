@@ -4,7 +4,6 @@
 
 #include "DynamicObject.h"
 #include "HeroBag.h"
-#include "World.h"
 
 using namespace sf;
 
@@ -34,7 +33,7 @@ public:
 	void onMouseUp(int currentMouseButton, WorldObject *mouseSelectedObject, Vector2f mouseWorldPos, bool isBuilding = false);
 	void setTarget(DynamicObject& object) override;
 	void endingPreviousAction();
-	void stopping(bool doStand = false, bool forgetSelectedTarget = false, bool offUnsealInventory = false);
+	void stopping(bool doStand = false, bool forgetBoundTarget = false, bool offUnsealInventory = false);
 	void changeAction(Actions newAction, bool resetSpriteNumber, bool rememberLastAction) override;
 	Vector2f getBeltPosition();
 	//jerk

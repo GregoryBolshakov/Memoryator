@@ -14,9 +14,9 @@ enum class Tag {
 	hero1 = 101, hare = 102, owl = 103, deer = 104, fox = 105, bear = 106, wolf = 107, monster = 108, owlBoss = 109, nightmare1 = 110, nightmare2 = 111, nightmare3 = 112,
 	heroBag = 201, noose = 202, totem = 211, hareTrap = 216, fence = 218, inkyBlackPen = 219, 
 	unknownWreath = 251, hareWreath = 252, owlWreath = 253, tree = 301, grass = 302, spawn = 303, bonefireOfInsight = 304, homeCosiness = 305,
-	mushroomStone = 306, mushroomsOnStone = 307, ground = 311, groundConnection = 312, brazier = 314, wreathTable = 315, rock = 317, 
-	stump = 319, droppedLoot = 320, fog = 350,
-	chamomile = 401, yarrow = 402, fern = 403, mugwort = 404, poppy = 405, buildObject = 501, dropPoint = 502, emptyDraft = 503, emptyPage = 504, emptyCell = 505, selectedCell = 506, clapWhirl = 507
+	ground = 311, groundConnection = 312, brazier = 314, wreathTable = 315, rock = 317, 
+	stump = 319, droppedLoot = 320, mushroom = 321, log = 322, bush = 323, roof = 324, 
+	chamomile = 401, yarrow = 402, fern = 403, mugwort = 404, poppy = 405, buildObject = 501, dropPoint = 502, emptyDraft = 503, emptyPage = 504, emptyCell = 505, selectedCell = 506, clapWhirl = 507, emptyObject = 508
 };
 
 enum State { common = 1, absorbed = 2, constructed = 3 };
@@ -62,11 +62,13 @@ public:
 	int getType() { return typeOfObject; }
 	int getVarietyOfTypes() { return varietyOfTypes; }
 	float getHealthPoint() { return healthPoint; }
-	float getMaxHealthPointValue() { return maxHealthPointValue; }
-	bool getDeletePromise() { return deletePromise; }
-	bool getMirroredState() { return mirrored; }
-	int getRadius() { return radius; }
-	std::string getToSaveName() { return toSaveName; }
+	float getMaxHealthPointValue();
+	bool getDeletePromise() const { return deletePromise; }
+	bool getMirroredState() const { return mirrored; }
+	void manuallyDisableMirroring() { mirrored = false; };
+	int getRadius() const { return radius; }
+	int getPermissibleDistance() const { return permissibleDistance; }
+	std::string getToSaveName() const { return toSaveName; }
 	std::string getName() const { return name; }
 	virtual void prepareSpriteNames(long long elapsedTime, float scaleFactor = 1) = 0;
 	virtual void onSpriteChange();
@@ -76,11 +78,13 @@ public:
 	Vector2i getTextureSize() const { return  Vector2i(textureBox.width, textureBox.height); }
 	Vector2i getTextureOffset() const { return Vector2i(textureBoxOffset.x, textureBoxOffset.y); }
 	Vector2f getScaleRatio();
-	Vector2i getConditionalSizeUnits() { return conditionalSizeUnits; }
+	Vector2i getConditionalSizeUnits() const { return conditionalSizeUnits; }
+	Vector2i getMicroBlockCheckAreaBounds() { return microBlockCheckAreaBounds; }
+	std::vector<Vector2i> getLockedMicroBlocks() const { return lockedMicroBlocks; }
 	virtual Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) = 0;
 	virtual int getBuildType(Vector2f ounPos, Vector2f otherPos) = 0;
-	IntRect getOriginalTextureBox() { return originalTextureBox; }
-	State getState() { return state; }	
+	IntRect getOriginalTextureBox() const { return originalTextureBox; }
+	State getState() const { return state; }	
 	std::pair<std::stack<birthStaticInfo>, std::stack<birthDynamicInfo>> getBirthObjects() { return std::make_pair(birthStatics, birthDynamics); }
 
 	void clearBirthStack() { birthStatics = std::stack<birthStaticInfo>(); birthDynamics = std::stack<birthDynamicInfo>(); }
@@ -91,6 +95,8 @@ public:
 	virtual void setTextureSize(Vector2f textureSize);
 	void setState(State state) { this->state = state; }
 	virtual void takeDamage(float damage, Vector2f attackerPos = { -1, -1 });
+	virtual void initMicroBlocks();
+	virtual bool isLockedPlace(std::map<std::pair<int, int>, bool> checkBlocks);
 
 	bool isTransparent = false, isVisibleName = false, isSelected = false, isVisibleInventory = false;
 	bool isProcessed = false;
@@ -100,9 +106,8 @@ public:
 	virtual void initPedestal();
 
 	Color color = Color(255, 255, 255);
-	int currentBlock = 0;
 	std::vector<std::pair<Tag, int>> inventory = {};
-
+	static Vector2i microBlockSize;
 	Tag tag;
 
     std::vector<spriteChainElement> additionalSprites;
@@ -116,15 +121,17 @@ protected:
 	bool mirrored = false;
 	float timeForNewSprite{}, animationSpeed{};
 	float healthPoint = 0, armor = 1, maxHealthPointValue = 0;
-	std::string name, toSaveName;
+	std::string name, toSaveName = "";
 	IntRect textureBox, originalTextureBox;
 	Vector2i textureBoxOffset;
-	Vector2i conditionalSizeUnits;
+	Vector2i conditionalSizeUnits;	
+	Vector2i microBlockCheckAreaBounds = { 0, 0 };
 	Vector2f position = { 0, 0 };
-	int radius{};
+	int radius, permissibleDistance = 0;
 	State state = common;
 	std::stack<birthStaticInfo> birthStatics;
 	std::stack<birthDynamicInfo> birthDynamics;
+	std::vector<Vector2i> lockedMicroBlocks = {};
 };
 
 #endif

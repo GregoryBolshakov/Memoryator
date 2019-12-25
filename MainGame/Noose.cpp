@@ -113,7 +113,7 @@ int Noose::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-void Noose::stopping(bool doStand, bool forgetSelectedTarget)
+void Noose::stopping(bool doStand, bool forgetBoundTarget)
 {
 	if (doStand)
 	{
@@ -121,7 +121,7 @@ void Noose::stopping(bool doStand, bool forgetSelectedTarget)
 		this->direction = STAND;
 	}
 
-	if (forgetSelectedTarget && boundTarget != nullptr)
+	if (forgetBoundTarget && boundTarget != nullptr)
 	{
 		boundTarget->isProcessed = false;
 		boundTarget = nullptr;

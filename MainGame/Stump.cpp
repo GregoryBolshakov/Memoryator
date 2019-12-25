@@ -3,11 +3,11 @@
 
 Stump::Stump(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(objectName, centerPosition)
 {
-	varietyOfTypes = 4;
+	varietyOfTypes = 10;
 	this->typeOfObject = typeOfObject;
 	strength = 0;
-	radius = 150;
-	animationSpeed = 0.0005f;
+	radius = 50;
+	animationSpeed = 10;
 	toSaveName = "stump";
 	setType(typeOfObject);
 	tag = Tag::stump;
@@ -17,13 +17,25 @@ void Stump::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = Vector2i (424, 304);
+		conditionalSizeUnits = Vector2i (412, 256);
 	if (typeOfObject == 2)
-		conditionalSizeUnits = Vector2i (308, 196);
+		conditionalSizeUnits = Vector2i (507, 337);
 	if (typeOfObject == 3)
-		conditionalSizeUnits = Vector2i (212, 172);
+		conditionalSizeUnits = Vector2i (647, 312);
 	if (typeOfObject == 4)
-		conditionalSizeUnits = Vector2i (660, 312);
+		conditionalSizeUnits = Vector2i (462, 269);
+	if (typeOfObject == 5)
+		conditionalSizeUnits = Vector2i(243, 203);
+	if (typeOfObject == 6)
+		conditionalSizeUnits = Vector2i(236, 315);
+	if (typeOfObject == 7)
+		conditionalSizeUnits = Vector2i(286, 576);
+	if (typeOfObject == 8)
+		conditionalSizeUnits = Vector2i(354, 570);
+	if (typeOfObject == 9)
+		conditionalSizeUnits = Vector2i(335, 266);
+	if (typeOfObject == 10)
+		conditionalSizeUnits = Vector2i(186, 412);
 }
 
 Vector2i Stump::calculateTextureOffset()
@@ -31,47 +43,95 @@ Vector2i Stump::calculateTextureOffset()
 	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
 	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
 
-	if (typeOfObject == 1)
-		return Vector2i (textureBox.width / 2, int(textureBox.height / 1.5));
-	if (typeOfObject == 2)
-		return Vector2i (textureBox.width / 2, int(textureBox.height / 1.5));
-	if (typeOfObject == 3)
-		return Vector2i (textureBox.width / 2, int(textureBox.height / 1.5));
-	if (typeOfObject == 4)
-		return Vector2i (textureBox.width / 2, int(textureBox.height / 1.5));
-
-	return Vector2i (textureBox.width / 2, int(textureBox.height / 1.25));
+	switch (typeOfObject)
+	{
+	case 1:
+		return Vector2i(textureBox.width * 0.551f, int(textureBox.height * 0.68f));
+	case 2:
+		return Vector2i(textureBox.width * 0.59f, int(textureBox.height * 0.64f));
+	case 3:
+		return Vector2i(textureBox.width * 0.518f, int(textureBox.height * 0.446f));
+	case 4:
+		return Vector2i(textureBox.width * 0.485f, int(textureBox.height * 0.591f));
+	case 5:
+		return Vector2i(textureBox.width * 0.551f, int(textureBox.height * 0.68f));
+	case 6:
+		return Vector2i(textureBox.width * 0.468f, int(textureBox.height * 0.796f));
+	case 7:
+		return Vector2i(textureBox.width * 0.497, int(textureBox.height * 0.859f));
+	case 8:
+		return Vector2i(textureBox.width * 0.513f, int(textureBox.height * 0.868f));
+	case 9:
+		return Vector2i(textureBox.width * 0.501f, int(textureBox.height * 0.659f));
+	case 10:
+		return Vector2i(textureBox.width * 0.46f, int(textureBox.height * 0.83f));
+	default:
+		return Vector2i(textureBox.width * 0.409f, int(textureBox.height * 0.945f));
+	}	
 }
 
 void Stump::initPedestal()
 {
-	if (typeOfObject == 1)
+	switch (typeOfObject)
 	{
-		focus1 = Vector2f (position.x - textureBox.width / 2, position.y);
-		focus2 = Vector2f (position.x + textureBox.width / 3, position.y);
-		ellipseSize = float((focus2.x - focus1.x) * 1.2);
+	case 1:
+		focus1 = Vector2f(position.x - textureBox.width * 0.167f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.167f, position.y);
+		ellipseSizeMultipliers[0] = { 1.64 };
+		break;
+	case 2:
+		focus1 = Vector2f(position.x - textureBox.width * 0.401f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.401f, position.y);
+		ellipseSizeMultipliers[0] = { 1.15 };
+		break;
+	case 3:
+		focus1 = Vector2f(position.x - textureBox.width * 0.248f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.248f, position.y);
+		ellipseSizeMultipliers[0] = { 1.25 };
+		break;
+	case 4:
+		focus1 = Vector2f(position.x - textureBox.width * 0.311f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.311f, position.y);
+		ellipseSizeMultipliers[0] = { 1.307 };
+		break;
+	case 5:
+		focus1 = Vector2f(position.x - textureBox.width * 0.167f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.167f, position.y);
+		ellipseSizeMultipliers[0] = { 1.64 };
+		break;
+	case 6:
+		focus1 = Vector2f(position.x - textureBox.width * 0.327f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.327f, position.y);
+		ellipseSizeMultipliers[0] = { 1.34 };
+		break;
+	case 7:
+		focus1 = Vector2f(position.x - textureBox.width * 0.268f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.268f, position.y);
+		ellipseSizeMultipliers[0] = { 1.388 };
+		break;
+	case 8:
+		focus1 = Vector2f(position.x - textureBox.width * 0.189f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.189f, position.y);
+		ellipseSizeMultipliers[0] = { 1.448 };
+		break;
+	case 9:
+		focus1 = Vector2f(position.x - textureBox.width * 0.314f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.314f, position.y);
+		ellipseSizeMultipliers[0] = { 1.24 };
+		break;
+	case 10:
+		focus1 = Vector2f(position.x - textureBox.width * 0.335f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.335f, position.y);
+		ellipseSizeMultipliers[0] = { 1.43};
+		break;
+	default:
+		focus1 = Vector2f(position.x - textureBox.width * 0.111f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.111f, position.y);
+		ellipseSizeMultipliers[0] = { 1.78 };
+		break;
 	}
-	else
-		if (typeOfObject == 2)
-		{
-			focus1 = Vector2f (position.x - textureBox.width / 4, position.y);
-			focus2 = Vector2f (position.x + textureBox.width / 4, position.y);
-			ellipseSize = float((focus2.x - focus1.x) * 1.6);
-		}
-		else
-			if (typeOfObject == 3)
-			{
-				focus1 = Vector2f (position.x - textureBox.width / 4, position.y);
-				focus2 = Vector2f (position.x + textureBox.width / 4, position.y);
-				ellipseSize = float((focus2.x - focus1.x) * 1.6);
-			}
-			else
-				if (typeOfObject == 4)
-				{
-					focus1 = Vector2f (position.x - textureBox.width / 4, position.y);
-					focus2 = Vector2f (position.x + textureBox.width / 4, position.y);
-					ellipseSize = float((focus2.x - focus1.x) * 1.6);
-				}
+	ellipseSize = Helper::getDist(focus1, focus2) * ellipseSizeMultipliers[0];
+	initMicroBlocks();
 }
 
 Vector2f Stump::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
@@ -87,32 +147,21 @@ int Stump::getBuildType(Vector2f ounPos, Vector2f otherPos)
 void Stump::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 {
 	additionalSprites.clear();
-	spriteChainElement stumpBody;
-	stumpBody.size = Vector2f(conditionalSizeUnits);
-	stumpBody.offset = Vector2f(textureBoxOffset);
+	spriteChainElement body;
+	body.size = Vector2f(conditionalSizeUnits);
+	body.offset = Vector2f(textureBoxOffset);
 
-	switch (state)
-	{
-		case common:
-		{
-			animationLength = 1;
-			stumpBody.path = "Game/worldSprites/terrainObjects/stump/stump" + std::to_string(typeOfObject) + ".png";
-			break;
-		}
-		case absorbed:
-		{
-			animationLength = 15;
-			stumpBody.path = "Game/worldSprites/terrainObjects/stump/stump" + std::to_string(typeOfObject) + ".png";
-			color.a = 255 - currentSprite[0] * 255 / animationLength;
-			break;
-		}
-	}
+	animationLength = 1;
+	if (typeOfObject >= 1 && typeOfObject <= 4)
+		body.path = "Game/worldSprites/BirchGrove/stump" + std::to_string(typeOfObject) + ".png";
+	if (typeOfObject >= 5 && typeOfObject <= 10)
+		body.path = "Game/worldSprites/DarkWoods/stump" + std::to_string(typeOfObject - 4) + ".png";
 
-	additionalSprites.push_back(stumpBody);
+	additionalSprites.push_back(body);
 
 	timeForNewSprite += elapsedTime;
 
-	if (timeForNewSprite >= 40 / animationSpeed)
+	if (timeForNewSprite >= 1e6 / animationSpeed)
 	{
 		timeForNewSprite = 0;
 

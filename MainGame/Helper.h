@@ -4,6 +4,10 @@
 #include <SFML/Graphics.hpp>
 #include "TerrainObject.h"
 #include "DynamicObject.h"
+#include <cmath>
+#include <queue>
+#include <vector>
+#include <unordered_map>
 
 using namespace sf;
 

@@ -8,24 +8,11 @@
     <ClCompile Include="PickedObject.cpp" />
     <ClCompile Include="StaticObject.cpp" />
     <ClCompile Include="TerrainObject.cpp" />
-    <ClCompile Include="World.cpp" />
     <ClCompile Include="WorldObject.cpp" />
-    <ClCompile Include="BonefireOfInsight.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
     <ClCompile Include="Chamomile.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
     <ClCompile Include="ForestTree.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="HomeCosiness.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="MushroomsOnStone.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="MushroomStone.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
     <ClCompile Include="Spawn.cpp">
@@ -117,9 +104,6 @@
     <ClCompile Include="EffectsSystemMaker.cpp">
       <Filter>UISystems</Filter>
     </ClCompile>
-    <ClCompile Include="Fog.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
     <ClCompile Include="WreathDraft.cpp">
       <Filter>HeroBook</Filter>
     </ClCompile>
@@ -162,6 +146,33 @@
     <ClCompile Include="ClapWhirl.cpp">
       <Filter>DynamicObjects</Filter>
     </ClCompile>
+    <ClCompile Include="WorldHandler.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldGenerator.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Bush.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Mushroom.cpp">
+      <Filter>Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="Roof.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>UISystems</Filter>
+    </ClCompile>
+    <ClCompile Include="InputBox.cpp">
+      <Filter>UISystems</Filter>
+    </ClCompile>
+    <ClCompile Include="PedestalController.cpp">
+      <Filter>UISystems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DynamicObject.h" />
@@ -171,24 +182,11 @@
     <ClInclude Include="StaticObject.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="TerrainObject.h" />
-    <ClInclude Include="World.h" />
     <ClInclude Include="WorldObject.h" />
-    <ClInclude Include="BonefireOfInsight.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
     <ClInclude Include="Chamomile.h">
       <Filter>Terrain</Filter>
     </ClInclude>
     <ClInclude Include="ForestTree.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="HomeCosiness.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="MushroomsOnStone.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="MushroomStone.h">
       <Filter>Terrain</Filter>
     </ClInclude>
     <ClInclude Include="Spawn.h">
@@ -280,9 +278,6 @@
     <ClInclude Include="EffectsSystemMaker.h">
       <Filter>UISystems</Filter>
     </ClInclude>
-    <ClInclude Include="Fog.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
     <ClInclude Include="WreathDraft.h">
       <Filter>HeroBook</Filter>
     </ClInclude>
@@ -326,6 +321,33 @@
     <ClInclude Include="ClapWhirl.h">
       <Filter>DynamicObjects</Filter>
     </ClInclude>
+    <ClInclude Include="WorldHandler.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldGenerator.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Bush.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Mushroom.h">
+      <Filter>Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="Roof.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>UISystems</Filter>
+    </ClInclude>
+    <ClInclude Include="InputBox.h">
+      <Filter>UISystems</Filter>
+    </ClInclude>
+    <ClInclude Include="PedestalController.h">
+      <Filter>UISystems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Terrain">
@@ -345,6 +367,9 @@
     </Filter>
     <Filter Include="DynamicObjects">
       <UniqueIdentifier>{32724799-c352-4ce0-b0d1-8aa537ceb40f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World">
+      <UniqueIdentifier>{46674957-3cb2-43f1-a993-abf764803eae}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

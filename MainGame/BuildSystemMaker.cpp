@@ -88,7 +88,7 @@ void BuildSystemMaker::inicializeObjectsInfo()
 	fin.close();
 }
 
-void BuildSystemMaker::draw(RenderWindow &window, float elapsedTime, std::unordered_map<std::string, BoardSprite>& spriteMap, GridList<StaticObject>& staticGrid, float scaleFactor, Vector2f cameraPosition, std::vector<WorldObject*> visibleItems, bool showPositioning)
+void BuildSystemMaker::draw(RenderWindow &window, float elapsedTime, std::unordered_map<std::string, BoardSprite>& spriteMap, GridList& staticGrid, float scaleFactor, Vector2f cameraPosition, std::vector<WorldObject*> visibleItems, bool showPositioning)
 {
 	Vector2f mousePos = (Vector2f )Mouse::getPosition();
 	mouseWorldPos = Vector2f((mousePos.x - Helper::GetScreenSize().x / 2 + cameraPosition.x*scaleFactor) / scaleFactor,
@@ -100,7 +100,7 @@ void BuildSystemMaker::draw(RenderWindow &window, float elapsedTime, std::unorde
 		StaticObject* terrain = nullptr;
 		int type = 1;
 		if (droppedLootIdList.count(selectedObject) > 0)
-			terrain = ObjectInitializer::initializeStaticItem(Tag::droppedLoot, Vector2f(0, 0), int(selectedObject), "", 1, cameraPosition, scaleFactor, &spriteMap);
+			terrain = ObjectInitializer::initializeStaticItem(Tag::droppedLoot, Vector2f(0, 0), int(selectedObject), "", 1, DarkWoods, &spriteMap);
 		else
 		{
 			if (selectedObject == Tag::totem)
@@ -127,7 +127,7 @@ void BuildSystemMaker::draw(RenderWindow &window, float elapsedTime, std::unorde
 					}
 				}
 			}
-			terrain = ObjectInitializer::initializeStaticItem(selectedObject, Vector2f(0, 0), type, "", 1, cameraPosition, scaleFactor, &spriteMap);
+			terrain = ObjectInitializer::initializeStaticItem(selectedObject, Vector2f(0, 0), type, "", 1, DarkWoods, &spriteMap);
 		}		
 
 		const Vector2f terrainPos = terrain->getBuildPosition(visibleItems, scaleFactor, cameraPosition);		
@@ -363,7 +363,7 @@ void BuildSystemMaker::wasPlaced()
 	buildingPosition = Vector2f (-1, -1);
 }
 
-void BuildSystemMaker::clearHareBags(int block, GridList<StaticObject>& staticGrid, std::vector<WorldObject*>* visibleItems)
+void BuildSystemMaker::clearHareBags(int block, GridList& staticGrid, std::vector<WorldObject*>* visibleItems)
 {
 	for (auto& item : *visibleItems)
 	{

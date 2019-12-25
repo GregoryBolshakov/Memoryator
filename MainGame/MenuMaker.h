@@ -3,7 +3,7 @@
 #define MENUMAKER_H
 
 #include <SFML/Graphics.hpp>
-#include "World.h"
+#include "WorldHandler.h"
 #include "Helper.h"
 #include "ButtonMaker.h"
 
@@ -17,12 +17,12 @@ protected:
 
 public:
 	MenuMaker();
-	~MenuMaker();	
-	void interact(World &world, RenderWindow &window);
+	~MenuMaker();
+	void interact(WorldHandler &world, RenderWindow &window);
 	void drawButtons(RenderWindow &window);	
 	MenuStates getState() { return menuState; }
 	void setState(MenuStates state) { menuState = state; }
-	void onKeyDown(Event event, World &world);
+	void onKeyDown(Event event, WorldHandler &world);
 	bool getActivity() { return wasActive; }
 private:	
 	MenuStates menuState = mainMenu;

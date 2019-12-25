@@ -1,15 +1,9 @@
-#include "Helper.h"
-#include "World.h"
 #include "MenuMaker.h"
-#include "ButtonMaker.h"
 #include "HeroBook.h"
-#include "TextWriter.h"
 #include "Deerchant.h"
+#include "Console.h"
 
-#include <cmath>
 #include <thread>
-#include <vector>
-#include <array>
 
 using namespace sf;
 using namespace std;
@@ -20,9 +14,10 @@ int main() {
 	RenderWindow mainWindow(VideoMode(static_cast<unsigned int>(screenSize.x), static_cast<unsigned int>(screenSize.y), 32), "game", Style::Fullscreen);
 	
 	MenuMaker menuSystem;
-	World world(40000, 40000);
+	WorldHandler world(40000, 40000);
 	world.initLightSystem(mainWindow);
 	bool windowFocus = true;
+	Console console(IntRect(Helper::GetScreenSize().x * 0.2, Helper::GetScreenSize().y * 0.8, Helper::GetScreenSize().x * 0.6, Helper::GetScreenSize().y * 0.03), &world);
 
 	Clock interactClock;
 	Clock drawClock;
@@ -33,7 +28,7 @@ int main() {
 
 	HeroBook mainBook;
 
-	TextWriter textWriter;	
+	TextWriter textWriter;
 
 	while (mainWindow.isOpen())
 	{
@@ -68,6 +63,8 @@ int main() {
 			if (event.type == Event::KeyReleased)
 			{
 				menuSystem.onKeyDown(event, world);
+				if (event.key.code == Keyboard::Escape)
+					world.pedestalController.stop();
 			}
 
 			if (event.type == Event::GainedFocus)			
@@ -79,10 +76,11 @@ int main() {
 			if (event.type == Event::Closed)
 			{
 				world.Save();
-				world.~World();
+				world.~WorldHandler();
 				mainWindow.close();
 				break;
 			}
+			console.handleEvents(event);
 		}		
 
 		if (menuSystem.getState() == mainMenu)
@@ -104,8 +102,11 @@ int main() {
 			drawTime = drawClock.getElapsedTime().asMicroseconds();
 			drawClock.restart();
 
-			world.focusedObject->handleInput(world.getInventorySystem().getUsedMouse());
-			world.interact(mainWindow, interactTime);
+			if (!console.getState())
+			{
+				world.focusedObject->handleInput(world.getInventorySystem().getUsedMouse());
+				world.interact(mainWindow, interactTime);
+			}
 			auto hero = dynamic_cast<Deerchant*>(world.focusedObject);
 			mainBook.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().getHeldItem(), hero->nearTheTable);
 			mainBook.interact(interactTime);
@@ -127,9 +128,9 @@ int main() {
 		menuSystem.drawButtons(mainWindow);
 
 		auto hero = dynamic_cast<DynamicObject*>(world.focusedObject);
-
-		//textWriter.drawString(std::to_string(world.scaleFactor), NormalFont, 30, 500, 500, &mainWindow);
-		textWriter.drawString(std::to_string(10e5 / drawTime), NormalFont, 30, 200, 200, &mainWindow, Color::Black);
+		console.interact(interactTime);
+		console.draw(mainWindow);
+		TextWriter::drawString(std::to_string(Helper::getFps()), NormalFont, 30, 200, 200, &mainWindow, Color::Black);	
 
 		mainWindow.display();
 	}

@@ -1,33 +1,27 @@
 #include "ObjectInitializer.h"
 #include "Helper.h"
 
-#include "Rock.h"
-#include "Ground.h"
-#include "GroundConnection.h"
-#include "DroppedLoot.h"
-#include "Grass.h"
-#include "Fog.h"
-#include "Spawn.h"
-#include "BonefireOfInsight.h"
-#include "HomeCosiness.h"
-#include "MushroomStone.h"
-#include "MushroomsOnStone.h"
-#include "Chamomile.h"
-#include "Yarrow.h"
-#include "Mugwort.h"
-#include "Fern.h"
-#include "Brazier.h"
-#include "Totem.h"
-#include "HareTrap.h"
-#include "Fence.h"
-#include "Stump.h"
-#include "ForestTree.h"
-#include "WreathTable.h"
+std::map<Tag, std::string> ObjectInitializer::mappedTags = { {Tag::hero1, "hero1"}, {Tag::hare, "hare"}, {Tag::owl, "owl"}, {Tag::deer, "deer"}, {Tag::fox, "fox"}, {Tag::bear, "beer"}, {Tag::wolf, "wolf"},
+{Tag::monster, "monster"}, {Tag::owlBoss, "owlBoss"}, {Tag::nightmare1, "nightmare1"}, {Tag::nightmare2, "nightmare2"}, {Tag::nightmare3, "nightmare3"},
+{Tag::heroBag, "heroBag"}, {Tag::noose, "noose"}, {Tag::totem, "totem"}, {Tag::hareTrap, "hareTrap"}, {Tag::fence, "fence"}, {Tag::inkyBlackPen, "inkyBlackPen"},
+	{Tag::unknownWreath, "inknownWreath"}, {Tag::hareWreath, "hareWreath"}, {Tag::owlWreath, "owlWreath"}, {Tag::tree, "tree"}, {Tag::grass, "grass"}, {Tag::spawn, "spawn"}, {Tag::bonefireOfInsight, "bonefireOfInsight"},
+	{Tag::homeCosiness, "homeCosiness"}, {Tag::ground, "ground"}, {Tag::groundConnection, "groundConnection"}, {Tag::brazier, "brazier"}, {Tag::wreathTable, "wreathTable"}, {Tag::rock, "rock"},
+	{Tag::stump, "stump"}, {Tag::droppedLoot, "droppedLoot"}, {Tag::mushroom, "mushroom"}, {Tag::log, "log"}, {Tag::bush, "bush"}, {Tag::roof, "roof"},
+	{Tag::chamomile, "chamomile"}, {Tag::yarrow, "yarrow"}, {Tag::fern, "fern"}, {Tag::mugwort, "mugwort"}, {Tag::poppy, "poppy"}, {Tag::buildObject, "buildObject"}, {Tag::dropPoint, "dropPoint"},
+	{Tag::emptyDraft, "emptyDraft"}, {Tag::emptyPage, "emptyPage"}, {Tag::emptyCell, "emptyCell"}, {Tag::selectedCell, "selectedCell"}, {Tag::clapWhirl, "clapWhirl"}, {Tag::emptyObject, "emptyObject"} };
+
+std::map<std::string, Tag> ObjectInitializer::mappedStrings = { {"hero1", Tag::hero1}, {"hare", Tag::hare}, {"owl", Tag::owl}, {"deer", Tag::deer}, {"fox", Tag::fox}, {"bear", Tag::bear}, {"wolf", Tag::wolf},
+{"monster", Tag::monster}, {"owlBoss", Tag::owlBoss}, {"nightmare1", Tag::nightmare1}, {"nightmare2", Tag::nightmare2}, {"nightmare3", Tag::nightmare3},
+{"heroBag", Tag::heroBag}, {"noose", Tag::noose}, {"totem", Tag::totem}, {"hareTrap", Tag::hareTrap}, {"fence", Tag::fence}, {"inkyBlackPen", Tag::inkyBlackPen},
+	{"unknownWreath", Tag::unknownWreath}, {"hareWreath", Tag::hareWreath}, {"owlWreath", Tag::owlWreath}, {"tree", Tag::tree}, {"grass", Tag::grass}, {"spawn", Tag::spawn}, {"bonefireOfInsight", Tag::bonefireOfInsight},
+	{"homeCosiness", Tag::homeCosiness}, {"ground", Tag::ground}, {"groundConnection", Tag::groundConnection}, {"brazier", Tag::brazier}, {"wreathTable", Tag::wreathTable}, {"rock", Tag::rock},
+	{"stump", Tag::stump}, {"droppedLoot", Tag::droppedLoot}, {"mushroom", Tag::mushroom}, {"log", Tag::log}, {"bush", Tag::bush}, {"roof", Tag::roof},
+	{"chamomile", Tag::chamomile}, {"yarrow", Tag::yarrow}, {"fern", Tag::fern}, {"mugwort", Tag::mugwort}, {"poppy", Tag::poppy}, {"buildObject", Tag::buildObject}, {"dropPoint", Tag::dropPoint},
+	{"emptyDraft", Tag::emptyDraft}, {"emptyPage", Tag::emptyPage}, {"emptyCell", Tag::emptyCell}, {"selectedCell", Tag::selectedCell}, {"clapWhirl", Tag::clapWhirl}, {"emptyObject", Tag::emptyObject} };
 
 ObjectInitializer::ObjectInitializer()
 {
 }
-
 
 ObjectInitializer::~ObjectInitializer()
 {
@@ -41,9 +35,9 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 	int itemType,
 	std::string itemName,
 	int count,
-	Vector2f cameraPosition,
-	float scaleFactor,
+	Biomes biome,	
 	std::unordered_map<std::string, BoardSprite>* spriteMap,
+	bool mirrored,
 	std::vector<std::pair<Tag, int>> inventory)
 {
 	StaticObject* item = nullptr;
@@ -63,25 +57,6 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 		case Tag::spawn:
 		{
 			item = new Spawn("item", Vector2f(0, 0), -1);
-			break;
-		}
-		case Tag::bonefireOfInsight:
-		{
-			item = new BonefireOfInsight("item", Vector2f(0, 0), -1);
-			break;
-		}
-		case Tag::homeCosiness:
-		{
-			item = new HomeCosiness("item", Vector2f(0, 0), -1);
-			break;
-		}
-		case Tag::mushroomStone:
-		{
-			item = new MushroomStone("item", Vector2f(0, 0), -1);
-		}
-		case Tag::mushroomsOnStone:
-		{
-			item = new MushroomsOnStone("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::ground:
@@ -154,9 +129,24 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 			item = new Totem("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::fog:
+		case Tag::mushroom:
 		{
-			item = new Fog("item", Vector2f(0, 0), -1);
+			item = new Mushroom("item", Vector2f(0, 0), -1);
+			break;
+		}
+		case Tag::log:
+		{
+			item = new Log("item", Vector2f(0, 0), -1);
+			break;
+		}
+		case Tag::bush:
+		{
+			item = new Bush("item", Vector2f(0, 0), -1);
+			break;
+		}
+		case Tag::roof:
+		{
+			item = new Roof("item", Vector2f(0, 0), -1);
 			break;
 		}
 		default:
@@ -166,8 +156,11 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 		}
 	}
 
+	if (!mirrored)
+		item->manuallyDisableMirroring();
+
 	int currentType = itemType == -1
-		? currentType = rand() % item->getVarietyOfTypes() + 1
+		? currentType = getRandomTypeByBiome(item, biome)
 		: currentType = itemType;
 
 	newNameId++;
@@ -185,10 +178,177 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 		: itemName;
 	item->setName(name);
 	if (!inventory.empty())
-		item->inventory = inventory;
-
-	//for bias positioning
-	auto spriteLeft = float((item->getPosition().x - cameraPosition.x - item->getTextureOffset().x) * scaleFactor + Helper::GetScreenSize().x / 2);
-	auto spriteTop = float((item->getPosition().y - cameraPosition.y + (item->getConditionalSizeUnits().y - item->getTextureOffset().y)) * scaleFactor + Helper::GetScreenSize().y / 2);
+		item->inventory = inventory;	
 	return item;
 }
+
+DynamicObject* ObjectInitializer::initializeDynamicItem(
+	Tag itemClass,
+	Vector2f itemPosition,
+	std::string itemName,
+	std::unordered_map<std::string, BoardSprite>* spriteMap,
+	WorldObject* owner)
+{
+	DynamicObject* item;
+	std::string nameOfImage;
+
+	switch (itemClass)
+	{
+	case Tag::hero1:
+	{
+		item = new Deerchant("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/hero/stand/down/1";		
+		break;
+	}
+	case Tag::wolf:
+	{
+		item = new Wolf("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/wolf/stand/down/1";
+		break;
+	}
+	case Tag::hare:
+	{
+		item = new Hare("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/hare/stand/down/1";
+		break;
+	}
+	case Tag::deer:
+	{
+		item = new Deer("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/deer/stand/down/1";
+		break;
+	}
+	case Tag::bear:
+	{
+		item = new Bear("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/deer/stand/down/1";
+		break;
+	}
+	case Tag::owl:
+	{
+		item = new Owl("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/deer/stand/down/1";
+		break;
+	}
+	case Tag::noose:
+	{
+		item = new Noose("item", Vector2f(0, 0), owner);
+		nameOfImage = "Game/worldSprites/noose/nooseLoop/1";
+		break;
+	}
+	case Tag::clapWhirl:
+	{
+		item = new ClapWhirl("item", Vector2f(0, 0), owner);
+		nameOfImage = "Game/worldSprites/nightmare3/clap/whirl";
+		break;
+	}
+	case Tag::owlBoss:
+	{
+		item = new OwlBoss("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/owlBoss/stand/down/1";
+		break;
+	}
+	case Tag::nightmare1:
+	{
+		item = new Nightmare1("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/nightmare1/stand/down/1";
+		break;
+	}
+	case Tag::nightmare2:
+	{
+		item = new Nightmare2("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/nightmare2/stand/down/1";
+		break;
+	}
+	case Tag::nightmare3:
+	{
+		item = new Nightmare3("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/nightmare2/stand/down/1";
+		break;
+	}
+	default:
+	{
+		item = new Nightmare2("item", Vector2f(0, 0));
+		nameOfImage = "Game/worldSprites/nightmare2/stand/down/1";
+		break;
+	}
+	}
+
+	newNameId++;
+	nameOfImage += ".png";
+
+	const std::string name = itemName.empty()
+		? std::string(item->getToSaveName()) + "_" + std::to_string(newNameId)
+		: itemName;
+
+	item->setName(name);
+	item->setPosition(Vector2f(itemPosition));
+	const Vector2f textureSize = Vector2f(spriteMap->at(nameOfImage).texture.getSize());
+	item->setTextureSize(textureSize);
+	return item;
+}
+
+int ObjectInitializer::getRandomTypeByBiome(WorldObject* object, Biomes biome)
+{
+	switch (object->tag)
+	{
+		case Tag::tree:
+		{
+			if (biome == BirchGrove)
+				return rand() % 7 + 1;
+			if (biome == DarkWoods)
+				return rand() % 6 + 8;
+			break;
+		}
+		case Tag::grass:
+		{
+			if (biome == BirchGrove)
+				return rand() % 8 + 1;
+			if (biome == DarkWoods)
+				return rand() % 13 + 9;
+			break;
+		}
+		case Tag::rock:
+		{
+			if (biome == BirchGrove)
+				return rand() % 8 + 1;
+			if (biome == DarkWoods)
+				return rand() % 5 + 9;
+			break;
+		}
+		case Tag::stump:
+		{
+			if (biome == BirchGrove)
+				return rand() % 4 + 1;
+			if (biome == DarkWoods)
+				return rand() % 6 + 5;
+			break;
+		}
+		case Tag::mushroom:
+		{
+			if (biome == BirchGrove)
+				return rand() % 3 + 1;
+			if (biome == DarkWoods)
+				return rand() % 9 + 4;
+			break;
+		}
+		default: return rand() % object->getVarietyOfTypes() + 1;
+	}
+}
+
+std::vector<StaticObject*> ObjectInitializer::vectorCastToStatic(std::vector<WorldObject*> items)
+{
+	std::vector<StaticObject*> staticItems = *(new std::vector<StaticObject*>());
+	for (auto& item : items)
+		staticItems.push_back(dynamic_cast<StaticObject*>(item));
+	return staticItems;
+}
+
+std::vector<DynamicObject*> ObjectInitializer::vectorCastToDynamic(std::vector<WorldObject*> items)
+{
+	std::vector<DynamicObject*> dynamicItems = *(new std::vector<DynamicObject*>());
+	for (auto& item : items)
+		dynamicItems.push_back(dynamic_cast<DynamicObject*>(item));
+	return dynamicItems;
+}
+

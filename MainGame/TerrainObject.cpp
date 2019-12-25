@@ -12,7 +12,50 @@ TerrainObject::~TerrainObject()
 
 }
 
-bool TerrainObject::isIntersected(Vector2f curPosition, float radius, Vector2f newPosition) //const
+void TerrainObject::initMicroBlocks()
+{
+	const Vector2i currentMicroBlock = Vector2i(position.x / microBlockSize.x, position.y / microBlockSize.y);
+	if (mirrored)
+	{
+		focus1.x -= 2 * textureBoxOffset.x - conditionalSizeUnits.x;
+		focus2.x -= 2 * textureBoxOffset.x - conditionalSizeUnits.x;
+	}
+	if (isMultiellipse)
+	{
+		for (auto& ellipse : internalEllipses)
+		{
+			microBlockCheckAreaBounds.x += ellipse.first.first / 2;
+			microBlockCheckAreaBounds.y += ellipse.first.first / 2;
+		}
+		for (auto& ellipse : internalEllipses)
+		{
+			for (int i = -microBlockCheckAreaBounds.x / microBlockSize.x; i <= int(microBlockCheckAreaBounds.x / microBlockSize.x); i++)
+				for (int j = -microBlockCheckAreaBounds.y / microBlockSize.y; j <= int(microBlockCheckAreaBounds.y / microBlockSize.y); j++)
+				{
+					Vector2f pos = Vector2f(position.x + i * microBlockSize.x, position.y + j * microBlockSize.y);
+					auto const f1 = ellipse.second.first;
+					auto const f2 = ellipse.second.second;
+					if (Helper::getDist(pos, f1) + Helper::getDist(pos, f2) < ellipse.first.first - sqrt(2 * microBlockSize.x) * 1.2)
+						lockedMicroBlocks.emplace_back(currentMicroBlock.x + i, currentMicroBlock.y + j);
+				}
+		}	
+	}
+	else
+	{
+		microBlockCheckAreaBounds = Vector2i(ellipseSize / 2, ellipseSize / 2);
+		for (int i = -microBlockCheckAreaBounds.x / microBlockSize.x; i <= int(microBlockCheckAreaBounds.x / microBlockSize.x); i++)
+			for (int j = -microBlockCheckAreaBounds.y / microBlockSize.y; j <= int(microBlockCheckAreaBounds.y / microBlockSize.y); j++)
+			{
+				Vector2f pos = Vector2f(position.x + i * microBlockSize.x, position.y + j * microBlockSize.y);
+				auto const f1 = this->getFocus1();
+				auto const f2 = this->getFocus2();
+				if (Helper::getDist(pos, f1) + Helper::getDist(pos, f2) < this->getEllipseSize() - sqrt(2 * microBlockSize.x) * 1.2)
+					lockedMicroBlocks.emplace_back(currentMicroBlock.x + i, currentMicroBlock.y + j);
+			}		
+	}
+}
+
+bool TerrainObject::isIntersected(Vector2f curPosition, Vector2f newPosition) //const
 {
 	if (this->isMultiellipse)
 		return false;
@@ -35,7 +78,7 @@ bool TerrainObject::isIntersected(Vector2f curPosition, float radius, Vector2f n
 
 	Vector2f const position = newPosition;
 
-	return (sqrt(pow(position.x - f1.x, 2) + pow(position.y - f1.y, 2)) + sqrt(pow(position.x - f2.x, 2) + pow(position.y - f2.y, 2)) <= this->getEllipseSize());
+	return sqrt(pow(position.x - f1.x, 2) + pow(position.y - f1.y, 2)) + sqrt(pow(position.x - f2.x, 2) + pow(position.y - f2.y, 2)) <= this->getEllipseSize();
 }
 
 std::vector<int> TerrainObject::getMultiellipseIntersect(Vector2f position) const

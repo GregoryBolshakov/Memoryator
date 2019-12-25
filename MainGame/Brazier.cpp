@@ -1,7 +1,6 @@
 #include "Brazier.h"
 #include "Helper.h"
 #include <fstream>
-#include "ObjectInitializer.h"
 
 Brazier::Brazier(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(objectName, centerPosition)
 {
@@ -78,6 +77,8 @@ void Brazier::initPedestal()
 		microEllipse.first.second = Vector2f((microEllipse.second.first.x + microEllipse.second.second.x) / 2, (microEllipse.second.first.y + microEllipse.second.second.y) / 2);
 		internalEllipses.push_back(microEllipse);
 	}
+	ellipseSizeMultipliers = { 1.2, 1.2, 1.17, 1.17, 1.17, 1.95 };
+	initMicroBlocks();
 }
 
 void Brazier::initCraftRecipes()

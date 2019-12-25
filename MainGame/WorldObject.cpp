@@ -1,6 +1,8 @@
 #include "WorldObject.h"
 #include "Helper.h"
 
+Vector2i WorldObject::microBlockSize = {20, 20};
+
 WorldObject::WorldObject(std::string objectName, Vector2f centerPosition)
 {
 	name = objectName;
@@ -35,6 +37,19 @@ Vector2f WorldObject::getScaleRatio()
 
 void WorldObject::initPedestal()
 {
+	initMicroBlocks();
+}
+
+void WorldObject::initMicroBlocks()
+{
+}
+
+bool WorldObject::isLockedPlace(std::map<std::pair<int, int>, bool> checkBlocks)
+{
+	for (auto& block : lockedMicroBlocks)
+		if (checkBlocks.count({ block.x, block.y }) > 0)
+			return true;
+	return false;
 }
 
 void WorldObject::setPosition(Vector2f newPosition)
@@ -57,5 +72,10 @@ void WorldObject::onSpriteChange()
 WorldObject::~WorldObject()
 {
 
+}
+
+float WorldObject::getMaxHealthPointValue()
+{
+	return maxHealthPointValue;
 }
 

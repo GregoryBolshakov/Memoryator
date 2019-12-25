@@ -43,6 +43,7 @@ void Spawn::initPedestal()
 		focus2 = Vector2f (textureBox.left + textureBox.width - int(textureBox.width / 2), int(position.y + textureBox.height / 100));
 		ellipseSize = float((focus2.x - focus1.x) * 1.3);
 	}
+	ellipseSizeMultipliers = { 1.08, 1.2, 1.3 };
 }
 
 Vector2f Spawn::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)

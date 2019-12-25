@@ -29,12 +29,10 @@ Vector2i HareTrap::calculateTextureOffset()
 
 void HareTrap::initPedestal()
 {
-	if (typeOfObject == 1)
-	{
-		focus1 = Vector2f (position.x, position.y);
-		focus2 = Vector2f (position.x, position.y);
-		ellipseSize = float((focus2.x - focus1.x));
-	}
+	focus1 = position;
+	focus2 = position;
+	ellipseSizeMultipliers[0] = { 0 };
+	ellipseSize = 0;
 }
 
 Vector2f HareTrap::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)

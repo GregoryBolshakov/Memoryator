@@ -4,6 +4,7 @@
 
 EmptyObject::EmptyObject(std::string objectName, Vector2f centerPosition) : WorldObject(objectName, centerPosition)
 {
+	tag = Tag::emptyObject;
 }
 
 

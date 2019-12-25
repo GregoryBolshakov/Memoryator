@@ -35,13 +35,13 @@ void Nightmare3::doAttack(WorldObject* target)
 {
 	if (timeAfterHit >= timeForNewHit)
 	{
-		if (Helper::getDist(position, victim->getPosition()) <= (this->radius + victim->getRadius() + hitDistance / 3))
+		if (Helper::getDist(position, boundTarget->getPosition()) <= (this->radius + boundTarget->getRadius() + hitDistance / 3))
 		{
 			changeAction(commonHit, true, false);
 			timeAfterHit = 0;
 		}
 		else
-			if (Helper::getDist(position, victim->getPosition()) > this->radius + victim->getRadius() + hitDistance * 2)
+			if (Helper::getDist(position, boundTarget->getPosition()) > this->radius + boundTarget->getRadius() + hitDistance * 2)
 			{
 				changeAction(directHit, true, false);
 				timeAfterHit = 0;
