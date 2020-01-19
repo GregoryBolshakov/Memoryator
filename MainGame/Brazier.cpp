@@ -26,7 +26,7 @@ Vector2i Brazier::calculateTextureOffset()
 {
 	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
 	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-	return Vector2i (textureBox.width / 2, int(textureBox.height / 1.4));
+	return Vector2i (textureBox.width * 0.5, int(textureBox.height * 0.762));
 }
 
 void Brazier::initPedestal()
@@ -38,46 +38,33 @@ void Brazier::initPedestal()
 		ellipseSize = float((focus2.x - focus1.x) * 1.17);*/
 		focus1 = Vector2f(position.x, position.y);
 		focus2 = Vector2f(position.x, position.y);
-		ellipseSize = 0;
 
-		std::pair<std::pair<float, Vector2f>, std::pair<Vector2f, Vector2f>> microEllipse;
-		microEllipse.second.first = Vector2f(position.x - textureBox.width / 3, position.y + textureBox.height / 25);
-		microEllipse.second.second = Vector2f(position.x - textureBox.width / 8, position.y + textureBox.height / 25);
-		microEllipse.first.first = (microEllipse.second.second.x - microEllipse.second.first.x) * 1.2;
-		microEllipse.first.second = Vector2f((microEllipse.second.first.x + microEllipse.second.second.x) / 2, (microEllipse.second.first.y + microEllipse.second.second.y) / 2);
+		std::pair<Vector2f, Vector2f> microEllipse;
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.333, position.y + textureBox.height * 0.04);
+		microEllipse.second = Vector2f(position.x - textureBox.width * 0.124, position.y + textureBox.height * 0.04);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.second.first = Vector2f(position.x - textureBox.width / 4, position.y - textureBox.height / 25);
-		microEllipse.second.second = Vector2f(position.x, position.y - textureBox.width / 25);
-		microEllipse.first.first = (microEllipse.second.second.x - microEllipse.second.first.x) * 1.2;
-		microEllipse.first.second = Vector2f((microEllipse.second.first.x + microEllipse.second.second.x) / 2, (microEllipse.second.first.y + microEllipse.second.second.y) / 2);
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.25, position.y - textureBox.height * 0.04);
+		microEllipse.second = Vector2f(position.x, position.y - textureBox.height * 0.04);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.second.first = Vector2f(position.x, position.y - textureBox.width / 50);
-		microEllipse.second.second = Vector2f(position.x + textureBox.width / 4, position.y - textureBox.height / 50);
-		microEllipse.first.first = (microEllipse.second.second.x - microEllipse.second.first.x) * 1.17;
-		microEllipse.first.second = Vector2f((microEllipse.second.first.x + microEllipse.second.second.x) / 2, (microEllipse.second.first.y + microEllipse.second.second.y) / 2);
+		microEllipse.first = Vector2f(position.x, position.y - textureBox.height * 0.02);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.25, position.y - textureBox.height * 0.02);		
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.second.first = Vector2f(position.x + textureBox.width / 8, position.y + textureBox.height / 25);
-		microEllipse.second.second = Vector2f(position.x + textureBox.width / 2.5, position.y + textureBox.height / 25);
-		microEllipse.first.first = (microEllipse.second.second.x - microEllipse.second.first.x) * 1.17;
-		microEllipse.first.second = Vector2f((microEllipse.second.first.x + microEllipse.second.second.x) / 2, (microEllipse.second.first.y + microEllipse.second.second.y) / 2);
+		microEllipse.first = Vector2f(position.x + textureBox.width * 0.124, position.y + textureBox.height * 0.04);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.4, position.y + textureBox.height * 0.04);		
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.second.first = Vector2f(position.x - textureBox.width / 16, position.y + textureBox.height / 6);
-		microEllipse.second.second = Vector2f(position.x + textureBox.width / 16, position.y + textureBox.height / 6);
-		microEllipse.first.first = (microEllipse.second.second.x - microEllipse.second.first.x) * 1.17;
-		microEllipse.first.second = Vector2f((microEllipse.second.first.x + microEllipse.second.second.x) / 2, (microEllipse.second.first.y + microEllipse.second.second.y) / 2);
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.045, position.y + textureBox.height * 0.19);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.0698, position.y + textureBox.height * 0.19);		
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.second.first = Vector2f(position.x + textureBox.width / 5.5, position.y + textureBox.height / 6.5);
-		microEllipse.second.second = Vector2f(position.x + textureBox.width / 3.9, position.y + textureBox.height / 6.5);
-		microEllipse.first.first = (microEllipse.second.second.x - microEllipse.second.first.x) * 1.95;
-		microEllipse.first.second = Vector2f((microEllipse.second.first.x + microEllipse.second.second.x) / 2, (microEllipse.second.first.y + microEllipse.second.second.y) / 2);
+		microEllipse.first = Vector2f(position.x + textureBox.width * 0.155, position.y + textureBox.height * 0.151);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.327, position.y + textureBox.height * 0.151);		
 		internalEllipses.push_back(microEllipse);
 	}
-	ellipseSizeMultipliers = { 1.2, 1.2, 1.17, 1.17, 1.17, 1.95 };
+	ellipseSizeMultipliers = { 1.2, 1.2, 1.17, 1.17, 1.25, 1.16 };
 	initMicroBlocks();
 }
 
@@ -163,6 +150,7 @@ void Brazier::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	brazierBack.size = Vector2f(conditionalSizeUnits);	
 	brazierBack.offset = Vector2f(textureBoxOffset.x, textureBoxOffset.y - conditionalSizeUnits.y * 0.2f);
 	brazierBack.position = { position.x, position.y - conditionalSizeUnits.y * 0.2f };
+	brazierBack.antiTransparent = true;
 	if (!currentCraft.empty())
 	{
 		fire.path = "Game/worldSprites/terrainObjects/brazier/fire.png";

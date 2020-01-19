@@ -12,7 +12,8 @@ public:
 	void start(TerrainObject* object);
 	void stop();
 	void draw(RenderWindow* window, Vector2f cameraPosition, float scaleFactor);
-	void interact(float elapsedTime);
+	void handleEvents(Event& event);
+	void interact(float elapsedTime, Event event);
 	bool isRunning() { return running; }
 	bool readyToStart = false;
 private:
@@ -20,11 +21,13 @@ private:
 	TerrainObject* boundObject = nullptr;
 	Vector2f size = Vector2f(WorldObject::microBlockSize.x / 2, WorldObject::microBlockSize.y / 2);
 	RectangleShape filedFigure;
-	std::vector<CircleShape> focusFigures;
+	CircleShape focusFigure, centerFigure;
 	std::vector<Vector2f> focuses;
-	Vector2f cameraPosition = { 0, 0 }, lastMousePos = {0, 0};
-	float scaleFactor = 0;
+	Vector2f cameraPosition = { 0, 0 }, lastMousePos = { 0, 0 }, centerPosition = { 0, 0 };
+	float scaleFactor = 0, doubleClickTimer = 1e6, elapsedTime = 0;
 	void writeToFile();
+	int selectedFocus = -1, selectedEllipse = -1;
+	bool selectedCenter = false;
 };
 
 #endif

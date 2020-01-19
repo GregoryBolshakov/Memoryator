@@ -236,7 +236,7 @@ void GridList::bfs(int xBorder, int yBorder, int startX, int startY, int finishX
 
 		// cut corners
 		int cnt = 0;
-		while (cnt < path.size() - 3)
+		while (cnt < int(path.size() - 3))
 			if (path[cnt + 1].first - path[cnt].first == path[cnt + 2].first - path[cnt + 1].first && path[cnt + 1].second - path[cnt].second == path[cnt + 2].second - path[cnt + 1].second)
 				path.erase(path.begin() + cnt);
 			else
@@ -247,9 +247,9 @@ void GridList::bfs(int xBorder, int yBorder, int startX, int startY, int finishX
 	}
 }
 
-bool GridList::isIntersectWithOthers(Vector2f position1, float radius1, std::vector<WorldObject*> visibleTerrain, bool isDotAdjustded) const
+bool GridList::isIntersectWithOthers(WorldObject* object, std::vector<WorldObject*> visibleTerrain, bool isDotAdjustded) const
 {
-	for (auto&anotherItem : visibleTerrain)
+	/*for (auto&anotherItem : visibleTerrain)
 	{
 		auto const anotherObject = dynamic_cast<WorldObject*>(anotherItem);
 		if (!anotherObject)
@@ -260,16 +260,18 @@ bool GridList::isIntersectWithOthers(Vector2f position1, float radius1, std::vec
 
 		if (anotherItem->isDotsAdjusted && isDotAdjustded)
 			continue;
-
-		Vector2i const position2 = Vector2i(anotherObject->getPosition());
-		float const radius2 = anotherObject->getRadius();
-
-		//if (!(abs(position1.x - position2.x) <= (radius1 + radius2) && abs(position1.y - position2.y) <= (radius1 + radius2)))
-		if (int(sqrt(pow(position1.x - position2.x, 2) + pow(position1.y - position2.y, 2))) < radius1 + radius2)
+		
+		if (Helper::getDist(position, anotherObject->getPosition()) < radius + anotherObject->getRadius())
 			return true;
-	}
+	}*/
 
-	return false;
+	std::map<std::pair<int, int>, bool> checkBlocks = {};
+	for (int i = (object->getPosition().x - object->getMicroBlockCheckAreaBounds().x) / microSize.x; i < (object->getPosition().x + object->getMicroBlockCheckAreaBounds().x) / microSize.x; i++)
+		for (int j = (object->getPosition().y - object->getMicroBlockCheckAreaBounds().y) / microSize.y; j < (object->getPosition().y + object->getMicroBlockCheckAreaBounds().y) / microSize.y; j++)
+			if (!(i < 0 || i > width / microSize.x || j < 0 || j > height / microSize.y) && !microBlockMatrix[i][j])
+				checkBlocks[{i, j}] = true;
+
+	return object->isLockedPlace(checkBlocks);
 }
 
 void GridList::setLockedMicroBlocks(WorldObject* item, bool value, bool dynamicMatrix)

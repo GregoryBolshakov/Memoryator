@@ -13,7 +13,7 @@ using namespace sf;
 enum class Tag {
 	hero1 = 101, hare = 102, owl = 103, deer = 104, fox = 105, bear = 106, wolf = 107, monster = 108, owlBoss = 109, nightmare1 = 110, nightmare2 = 111, nightmare3 = 112,
 	heroBag = 201, noose = 202, totem = 211, hareTrap = 216, fence = 218, inkyBlackPen = 219, 
-	unknownWreath = 251, hareWreath = 252, owlWreath = 253, tree = 301, grass = 302, spawn = 303, bonefireOfInsight = 304, homeCosiness = 305,
+	unknownWreath = 251, hareWreath = 252, owlWreath = 253, tree = 301, grass = 302, spawn = 303,
 	ground = 311, groundConnection = 312, brazier = 314, wreathTable = 315, rock = 317, 
 	stump = 319, droppedLoot = 320, mushroom = 321, log = 322, bush = 323, roof = 324, 
 	chamomile = 401, yarrow = 402, fern = 403, mugwort = 404, poppy = 405, buildObject = 501, dropPoint = 502, emptyDraft = 503, emptyPage = 504, emptyCell = 505, selectedCell = 506, clapWhirl = 507, emptyObject = 508

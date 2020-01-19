@@ -96,11 +96,10 @@ void BuildSystemMaker::draw(RenderWindow &window, float elapsedTime, std::unorde
 
 	if (showPositioning && selectedObject != Tag::emptyCell)
 	{
-		//initialize spriteSilhouette	
+		//initialize spriteSilhouette
 		StaticObject* terrain = nullptr;
-		int type = 1;
 		if (droppedLootIdList.count(selectedObject) > 0)
-			terrain = ObjectInitializer::initializeStaticItem(Tag::droppedLoot, Vector2f(0, 0), int(selectedObject), "", 1, DarkWoods, &spriteMap);
+			terrain = ObjectInitializer::initializeStaticItem(Tag::droppedLoot, mouseWorldPos, int(selectedObject), "", 1, DarkWoods, &spriteMap);
 		else
 		{
 			if (selectedObject == Tag::totem)
@@ -122,20 +121,20 @@ void BuildSystemMaker::draw(RenderWindow &window, float elapsedTime, std::unorde
 					}
 					if (match)
 					{
-						type = 2;
+						buildType = 2;
 						break;
 					}
 				}
 			}
-			terrain = ObjectInitializer::initializeStaticItem(selectedObject, Vector2f(0, 0), type, "", 1, DarkWoods, &spriteMap);
-		}		
+			terrain = ObjectInitializer::initializeStaticItem(selectedObject, mouseWorldPos, buildType, "", 1, DarkWoods, &spriteMap, false);
+		}
 
 		const Vector2f terrainPos = terrain->getBuildPosition(visibleItems, scaleFactor, cameraPosition);		
 
-		terrain->prepareSpriteNames(0);
+		terrain->prepareSpriteNames(0);		
 		auto sprite = (&spriteMap[(terrain->additionalSprites)[0].path])->sprite;
 		sprite.setOrigin(float(sprite.getTextureRect().left), float(sprite.getTextureRect().top + sprite.getTextureRect().height));
-		sprite.setScale(terrain->getScaleRatio().x*scaleFactor, terrain->getScaleRatio().y*scaleFactor*sqrt(sqrt(scaleFactor)));
+		sprite.setScale(terrain->getScaleRatio().x * scaleFactor, terrain->getScaleRatio().y * scaleFactor * sqrt(sqrt(scaleFactor)));
 
 		if (terrainPos != Vector2f (-1, -1))
 		{
@@ -147,10 +146,11 @@ void BuildSystemMaker::draw(RenderWindow &window, float elapsedTime, std::unorde
 			spriteBuildPos = Vector2f(mouseWorldPos);
 			sprite.setPosition(Vector2f (mousePos.x - terrain->getTextureOffset().x*scaleFactor, mousePos.y + (terrain->getTextureSize().y - terrain->getTextureOffset().y)*scaleFactor));
 		}
-
+		terrain->setPosition(spriteBuildPos);
+		//terrain->initMicroBlocks();
 		canBePlaced = true;
 
-		if (staticGrid.isIntersectWithOthers(spriteBuildPos, float(terrain->getRadius()), visibleItems, terrain->isDotsAdjusted))
+		if (staticGrid.isIntersectWithOthers(terrain, visibleItems, terrain->isDotsAdjusted))
 		{
 			sprite.setColor(Color(255,99,71));
 			canBePlaced = false;
@@ -158,26 +158,16 @@ void BuildSystemMaker::draw(RenderWindow &window, float elapsedTime, std::unorde
 		else
 			sprite.setColor(Color(127, 255, 0));
 
-		buildType = terrain->getType();
+		/*buildType = terrain->getType();
 		delete terrain;
 		if (!canBePlaced)
 		{
 			buildType = 1;
 			spriteBuildPos = Vector2f (-1, -1);
-		}
+		}*/
 
 		window.draw(sprite);
 	}
-
-	//window.draw(buildStopButton);	
-
-	//draw icons
-	for (int i = 0; i < builtObjects.size(); i++)
-	{
-		window.draw(builtObjects[i].iconSprite);
-	}
-
-	drawRecipeFrame(window);
 }
 
 void BuildSystemMaker::drawRecipeFrame(RenderWindow &window)

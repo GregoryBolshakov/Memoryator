@@ -16,7 +16,7 @@ ClapWhirl::ClapWhirl(const std::string objectName, Vector2f centerPosition, Worl
 	animationSpeed = 10;
 	animationLength = 8;
 	radius = 120;
-	currentAction = move;
+	currentAction = relax;
 	routeGenerationAbility = false;
 	canCrashIntoDynamic = false;
 	jerk(2, 1);
@@ -133,10 +133,13 @@ void ClapWhirl::jerkInteract(float elapsedTime)
 		if (jerkTime > 0)
 		{
 			jerkTime -= elapsedTime;
-			speed = Helper::getDist(startPos, movePosition) / jerkDuration;
+			speed = Helper::getDist(startPos, laxMovePosition) / jerkDuration;
 		}
-		else		
-			stopping(true, true);		
+		else
+		{
+			stopping(true, true);
+			deletePromiseOn();
+		}
 	}
 }
 
@@ -155,15 +158,15 @@ void ClapWhirl::jerk(float power, float deceleration, Vector2f destinationPoint)
 	const Vector2f screenCenter = Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2);	
 
 	auto nightmare = dynamic_cast<Nightmare3*>(owner);
-	if (nightmare)
+	if (nightmare && nightmare->getBoundTarget())
 	{
-		Vector2f flightVector = Vector2f(nightmare->getVictim()->getPosition().x - nightmare->getPosition().x,
-			nightmare->getVictim()->getPosition().y - nightmare->getPosition().y);
+		Vector2f flightVector = Vector2f(nightmare->getBoundTarget()->getPosition().x - nightmare->getPosition().x,
+			nightmare->getBoundTarget()->getPosition().y - nightmare->getPosition().y);
 		float k = jerkDistance / sqrt(pow(flightVector.x, 2) + pow(flightVector.y, 2));
-		movePosition = Vector2f(owner->getPosition().x + flightVector.x * k, owner->getPosition().y + flightVector.y * k);
+		laxMovePosition = Vector2f(owner->getPosition().x + flightVector.x * k, owner->getPosition().y + flightVector.y * k);
 	}
 	else
-		movePosition = { 0, 0 };
+		laxMovePosition = { 0, 0 };
 }
 
 void ClapWhirl::fightLogic(float elapsedTime, DynamicObject* target)
@@ -204,7 +207,7 @@ void ClapWhirl::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	{
 		animationLength = 13;
 		whirlSprite.path = "Game/worldSprites/nightmare3/clap/whirl.png";
-		deletePromiseOn();
+		//deletePromiseOn();
 		break;
 	}
 	case jerking:

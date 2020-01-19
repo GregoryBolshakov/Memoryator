@@ -29,19 +29,16 @@ void Spawn::initPedestal()
 	{
 		focus1 = Vector2f (textureBox.left + int(textureBox.width / 3.8), int(position.y));
 		focus2 = Vector2f (textureBox.left + textureBox.width - int(textureBox.width / 3.8), int(position.y));
-		ellipseSize = float((focus2.x - focus1.x) * 1.08);
 	}
 	if (typeOfObject == 2)
 	{
 		focus1 = Vector2f (textureBox.left + int(textureBox.width / 2.3), int(position.y));
-		focus2 = Vector2f (textureBox.left + textureBox.width - int(textureBox.width / 3.3), int(position.y));
-		ellipseSize = float((focus2.x - focus1.x) * 1.2);
+		focus2 = Vector2f (textureBox.left + textureBox.width - int(textureBox.width / 3.3), int(position.y));	
 	}
 	if (typeOfObject == 3)
 	{
 		focus1 = Vector2f (textureBox.left + int(textureBox.width / 3.5), int(position.y + textureBox.height / 20));
 		focus2 = Vector2f (textureBox.left + textureBox.width - int(textureBox.width / 2), int(position.y + textureBox.height / 100));
-		ellipseSize = float((focus2.x - focus1.x) * 1.3);
 	}
 	ellipseSizeMultipliers = { 1.08, 1.2, 1.3 };
 }

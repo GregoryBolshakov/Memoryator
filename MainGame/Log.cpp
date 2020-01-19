@@ -67,7 +67,6 @@ void Log::initPedestal()
 		ellipseSizeMultipliers[0] = { 1.307 };
 		break;
 	}
-	ellipseSize = Helper::getDist(focus1, focus2) * ellipseSizeMultipliers[0];
 	initMicroBlocks();
 }
 

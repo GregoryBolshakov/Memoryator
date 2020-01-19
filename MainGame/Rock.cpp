@@ -58,17 +58,17 @@ Vector2i Rock::calculateTextureOffset()
 	case 2:
 		return Vector2i(textureBox.width * 0.59f, int(textureBox.height * 0.01f));
 	case 3:
-		return Vector2i(textureBox.width * 0.488f, int(textureBox.height * 0.671f));
+		return Vector2i(textureBox.width * 0.488f, int(textureBox.height * 0.664f));
 	case 4:
 		return Vector2i(textureBox.width * 0.49f, int(textureBox.height * 0.624f));
 	case 5:
 		return Vector2i(textureBox.width * 0.506f, int(textureBox.height * 0.632f));
 	case 6:
-		return Vector2i(textureBox.width * 0.59f, int(textureBox.height * 0.64f));
+		return Vector2i(textureBox.width * 0.539f, int(textureBox.height * 0.637f));
 	case 7:
-		return Vector2i(textureBox.width * 0.583f, int(textureBox.height * 0.813f));
+		return Vector2i(textureBox.width * 0.58f, int(textureBox.height * 0.764f));
 	case 8:
-		return Vector2i(textureBox.width * 0.512f, int(textureBox.height * 0.717f));
+		return Vector2i(textureBox.width * 0.5f, int(textureBox.height * 0.673f));
 	case 9:
 		return Vector2i(textureBox.width * 0.455f, int(textureBox.height * 0.68f));
 	case 10:
@@ -101,42 +101,42 @@ void Rock::initPedestal()
 	case 3:
 		focus1 = Vector2f(position.x - textureBox.width * 0.342f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.342f, position.y);
-		ellipseSizeMultipliers[0] = { 1.64 };
+		ellipseSizeMultipliers[0] = { 1.16 };
 		break;
 	case 4:
 		focus1 = Vector2f(position.x - textureBox.width * 0.311f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.311f, position.y);
-		ellipseSizeMultipliers[0] = { 1.307 };
+		ellipseSizeMultipliers[0] = { 1.15 };
 		break;
 	case 5:
 		focus1 = Vector2f(position.x - textureBox.width * 0.32f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.32f, position.y);
-		ellipseSizeMultipliers[0] = { 1.52};
+		ellipseSizeMultipliers[0] = { 1.3};
 		break;
 	case 6:
-		focus1 = Vector2f(position.x - textureBox.width * 0.452f, position.y);
-		focus2 = Vector2f(position.x + textureBox.width * 0.452f, position.y);
-		ellipseSizeMultipliers[0] = { 1.07 };
+		focus1 = Vector2f(position.x - textureBox.width * 0.36f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.36f, position.y);
+		ellipseSizeMultipliers[0] = { 1.1 };
 		break;
 	case 7:
-		focus1 = Vector2f(position.x - textureBox.width * 0.341f, position.y);
-		focus2 = Vector2f(position.x + textureBox.width * 0.341f, position.y);
-		ellipseSizeMultipliers[0] = { 1.18 };
+		focus1 = Vector2f(position.x - textureBox.width * 0.293f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.293f, position.y);
+		ellipseSizeMultipliers[0] = { 1.21 };
 		break;
 	case 8:
-		focus1 = Vector2f(position.x - textureBox.width * 0.452f, position.y);
-		focus2 = Vector2f(position.x + textureBox.width * 0.452f, position.y);
-		ellipseSizeMultipliers[0] = { 1.07 };
+		focus1 = Vector2f(position.x - textureBox.width * 0.38f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.38f, position.y);
+		ellipseSizeMultipliers[0] = { 1.11 };
 		break;
 	case 9:
 		focus1 = Vector2f(position.x - textureBox.width * 0.315f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.315f, position.y);
-		ellipseSizeMultipliers[0] = { 1.35 };
+		ellipseSizeMultipliers[0] = { 1.23 };
 		break;
 	case 10:
 		focus1 = Vector2f(position.x - textureBox.width * 0.302f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.302f, position.y);
-		ellipseSizeMultipliers[0] = { 1.307 };
+		ellipseSizeMultipliers[0] = { 1.26 };
 		break;
 	case 11:
 		focus1 = Vector2f(position.x - textureBox.width * 0.229f, position.y);
@@ -159,7 +159,6 @@ void Rock::initPedestal()
 		ellipseSizeMultipliers[0] = { 1.78 };
 		break;
 	}
-	ellipseSize = Helper::getDist(focus1, focus2) * ellipseSizeMultipliers[0];
 	initMicroBlocks();
 }
 

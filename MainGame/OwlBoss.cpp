@@ -15,8 +15,8 @@ OwlBoss::OwlBoss(std::string objectName, Vector2f centerPosition) : DynamicObjec
 	strength = 100;
 	healthPoint = 1000;
 	currentAction = rightFlap;
-	timeAfterHitself = 100000;
-	timeForNewHitself = timeAfterHitself;
+	timeAfterHitself = 0;
+	timeForNewHitself = 6e5;
 	timeForNewHit = 2000000;
 	routeGenerationAbility = false;
 	canCrashIntoDynamic = false;

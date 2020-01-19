@@ -35,7 +35,8 @@ int main() {
 		Event event;
 
 		while (mainWindow.pollEvent(event))
-		{					
+		{			
+			world.handleEvents(event);
 			if (Mouse::isButtonPressed(Mouse::Left))
 				currentMouseButton = 1;
 			else
@@ -105,7 +106,7 @@ int main() {
 			if (!console.getState())
 			{
 				world.focusedObject->handleInput(world.getInventorySystem().getUsedMouse());
-				world.interact(mainWindow, interactTime);
+				world.interact(mainWindow, interactTime, event);
 			}
 			auto hero = dynamic_cast<Deerchant*>(world.focusedObject);
 			mainBook.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().getHeldItem(), hero->nearTheTable);

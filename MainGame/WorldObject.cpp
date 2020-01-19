@@ -46,6 +46,8 @@ void WorldObject::initMicroBlocks()
 
 bool WorldObject::isLockedPlace(std::map<std::pair<int, int>, bool> checkBlocks)
 {
+	if (!checkBlocks.empty() && tag == Tag::totem)
+		int test = 123;
 	for (auto& block : lockedMicroBlocks)
 		if (checkBlocks.count({ block.x, block.y }) > 0)
 			return true;

@@ -436,7 +436,7 @@ void WorldHandler::setTransparent(std::vector<WorldObject*> visibleItems, float 
 
 				auto terrain = dynamic_cast<TerrainObject*>(visibleItem);
 				if (terrain && pedestalController.readyToStart)				
-					mouseDisplayName = "Set ellipse";
+					mouseDisplayName = "Set pedestal";
 				else
 					switch (visibleItem->tag)
 					{
@@ -544,17 +544,18 @@ void WorldHandler::setItemFromBuildSystem()
 		if (buildSystem.droppedLootIdList.count(buildSystem.selectedObject) > 0)
 			worldGenerator.initializeStaticItem(Tag::droppedLoot, buildSystem.buildingPosition, int(buildSystem.selectedObject), "", 1);
 		else
-			worldGenerator.initializeStaticItem(buildSystem.selectedObject, buildSystem.buildingPosition, buildSystem.getBuildType(), "", 1);
+			worldGenerator.initializeStaticItem(buildSystem.selectedObject, buildSystem.buildingPosition, buildSystem.buildType, "", 1);
 
 		if (buildSystem.selectedObject == Tag::totem)
 		{
-			if (buildSystem.getBuildType() == 2)
+			if (buildSystem.buildType == 2)
 				buildSystem.clearHareBags(staticGrid.getIndexByPoint(buildSystem.buildingPosition.x, buildSystem.buildingPosition.y), staticGrid, &localTerrain);
 		}
 		buildSystem.wasPlaced();
 
 		buildSystem.buildingPosition = Vector2f(-1, -1);
-		brazier->clearCurrentCraft();		
+		buildSystem.buildType = 1;
+		brazier->clearCurrentCraft();
 	}
 }
 
@@ -580,7 +581,7 @@ void WorldHandler::cameraShakeInteract(float elapsedTime)
 
 void WorldHandler::onMouseUp(int currentMouseButton)
 {	
-	if (mouseDisplayName == "Set ellipse")
+	if (mouseDisplayName == "Set pedestal")
 	{
 		auto terrain = dynamic_cast<TerrainObject*>(selectedObject);
 		pedestalController.start(terrain);
@@ -604,7 +605,12 @@ void WorldHandler::onMouseUp(int currentMouseButton)
 	inventorySystem.inventoryBounding(&hero->bags);
 }
 
-void WorldHandler::interact(RenderWindow& window, long long elapsedTime)
+void WorldHandler::handleEvents(Event& event)
+{
+	pedestalController.handleEvents(event);
+}
+
+void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event event)
 {
 	scaleSmoothing();
 	birthObjects();
@@ -636,9 +642,8 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime)
 		{
 			//staticGrid.setLockedMicroBlocks(dynamicItem, true, true);
 			//dynamicItem->initMicroBlocks();
-			if (dynamicItem->laxMovePosition != Vector2f(-1, -1) && dynamicItem->getCurrentAction() != jerking)
+			if (dynamicItem->getRouteGenerationAbility() && dynamicItem->laxMovePosition != Vector2f(-1, -1) && dynamicItem->getCurrentAction() != jerking && dynamicItem->tag != Tag::hero1)
 			{
-
 				int permissibleDistance = 0;
 				if (dynamicItem->getBoundTarget())
 					permissibleDistance = dynamicItem->getBoundTarget()->getPermissibleDistance();
@@ -652,7 +657,7 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime)
 				staticGrid.setLockedMicroBlocks(dynamicItem, false, true);
 			}
 			else			
-				dynamicItem->changeMovePositionToRoute(dynamicItem->laxMovePosition);			
+				dynamicItem->changeMovePositionToRoute(dynamicItem->laxMovePosition);
 			//staticGrid.setLockedMicroBlocks(dynamicItem, false, true);
 		}
 	}
@@ -702,21 +707,16 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime)
 			dynamicItem->doShake = false;
 		}
 
-		auto intersects = false;
 		auto newPosition = dynamicItem->doMove(elapsedTime);
 
 		fixedClimbingBeyond(newPosition);
 
 		newPosition = dynamicItem->doSlip(newPosition, localStaticItems, height, elapsedTime);
-		newPosition = dynamicItem->doSlipOffDynamic(newPosition, localDynamicItems, height, elapsedTime);
+		//newPosition = dynamicItem->doSlipOffDynamic(newPosition, localDynamicItems, height, elapsedTime);
 
 		if (!fixedClimbingBeyond(newPosition))
 			newPosition = dynamicItem->getPosition();				
-
-		if (!intersects)
-			dynamicItem->setPosition(newPosition);
-		else
-			newPosition = dynamicItem->getPosition();
+		dynamicItem->setPosition(newPosition);
 		dynamicGrid.updateItemPosition(dynamicItem->getName(), newPosition.x, newPosition.y);
 
 		dynamicItem->behavior(elapsedTime); // the last because of position changes
@@ -730,7 +730,7 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime)
 	//buildSystem.setHeldItem(inventorySystem.getHeldItem()->lootInfo);
 	buildSystem.interact();
 	inventorySystem.interact(elapsedTime);
-	pedestalController.interact(elapsedTime);
+	pedestalController.interact(elapsedTime, event);
 	//-------------------
 
 	//deleting items

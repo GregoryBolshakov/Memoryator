@@ -10,7 +10,7 @@ Nightmare1::Nightmare1(std::string objectName, Vector2f centerPosition) : Monste
 	strength = 10;
 	healthPoint = 100;
 	currentAction = relax;	
-	timeForNewHitself = 10e4;
+	timeForNewHitself = 2e5;
 	timeAfterHitself = timeForNewHitself;
 	timeForNewHit = 1e6;
 	timeAfterHit = timeForNewHit;
@@ -93,6 +93,7 @@ void Nightmare1::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 			animationLength = 1;
 			fullSprite.path = "Game/worldSprites/nightmare1/stand/down/1.png";
 			currentSprite[0] = 1;
+			deletePromiseOn();
 			break;
 		}
 		case move:

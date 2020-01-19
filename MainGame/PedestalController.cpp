@@ -8,12 +8,10 @@ PedestalController::PedestalController()
 {
 	filedFigure.setSize(Vector2f(size));
 	filedFigure.setFillColor(Color(255, 255, 255, 80));
-	focusFigures.resize(2);
-	focusFigures[0].setRadius(size.x);
-	focusFigures[0].setFillColor(Color(255, 71, 71, 180));
-	focusFigures[1].setRadius(size.x);
-	focusFigures[1].setFillColor(Color(255, 71, 71, 180));
-	focuses.resize(2);
+	focusFigure.setRadius(size.x);
+	focusFigure.setFillColor(Color(255, 71, 71, 180));
+	centerFigure.setRadius(size.x);
+	centerFigure.setFillColor(Color(60, 80, 176, 180));
 	lastMousePos = Vector2f(Mouse::getPosition());
 }
 
@@ -25,8 +23,19 @@ void PedestalController::start(TerrainObject* object)
 {
 	readyToStart = false;
 	boundObject = object;
-	focuses[0] = boundObject->getFocus1();
-	focuses[1] = boundObject->getFocus2();
+	focuses.clear();
+	if (boundObject->isMultiellipse)	
+		for (auto& internalEllipse : boundObject->internalEllipses)
+		{
+			focuses.push_back(internalEllipse.first);
+			focuses.push_back(internalEllipse.second);
+		}	
+	else
+	{
+		focuses.push_back(boundObject->getFocus1());
+		focuses.push_back(boundObject->getFocus2());
+	}
+	centerPosition = boundObject->getPosition();
 	running = true;
 }
 
@@ -42,25 +51,51 @@ void PedestalController::writeToFile()
 {
 	if (!boundObject)
 		return;
-
-	Vector2f center = Vector2f((focuses[0].x + focuses[1].x) / 2, (focuses[0].y + focuses[1].y) / 2);
-	Vector2f offset = { (boundObject->getTextureOffset().x + center.x - boundObject->getPosition().x) / boundObject->getTextureSize().x,
-		(boundObject->getTextureOffset().y + center.y - boundObject->getPosition().y) / boundObject->getTextureSize().y };
-	Vector2f focus1 = { (focuses[0].x - center.x) / boundObject->getTextureSize().x, (focuses[0].y - center.y) / boundObject->getTextureSize().y };
-	Vector2f focus2 = { (focuses[1].x - center.x) / boundObject->getTextureSize().x , (focuses[1].y - center.y) / boundObject->getTextureSize().y };
+	
+	Vector2f offset = { (boundObject->getTextureOffset().x + centerPosition.x - boundObject->getPosition().x) / boundObject->getTextureSize().x,
+		(boundObject->getTextureOffset().y + centerPosition.y - boundObject->getPosition().y) / boundObject->getTextureSize().y };
 	std::ofstream fout("Game/pedestalsInfo.txt");
 	fout.clear();
 	fout << std::setprecision(3) << "Tag: " << ObjectInitializer::mappedTags.at(boundObject->tag) + " " << '\n';
 	fout << std::setprecision(3) << "Type: " << boundObject->getType() << '\n';
-	fout << std::setprecision(3) << "OffsetX: " << offset.x << " " << "OffsetY: " << offset.y << '\n';
-	fout << std::setprecision(3) << "Focus1 X: " << focus1.x << " " << "Focus1 Y: " << focus1.y << '\n';
-	fout << std::setprecision(3) << "Focus2 X: " << focus2.x << " " << "Focus2 Y: " << focus2.y << '\n';
-	fout << std::setprecision(3) << "Ellipse size: " << boundObject->ellipseSizeMultipliers[0] << '\n';
+	fout << std::setprecision(3) << "Mirrored: " << boundObject->getMirroredState() << '\n';
+	if (boundObject->getMirroredState())
+		fout << std::setprecision(3) << "OffsetX: " << 1 - offset.x << " " << "OffsetY: " << offset.y << '\n' << '\n';		
+	else
+		fout << std::setprecision(3) << "OffsetX: " << offset.x << " " << "OffsetY: " << offset.y << '\n' << '\n';
+	for (int i = 0; i < focuses.size() / 2; i++)
+	{
+		fout << std::setprecision(3) << "Focus" << i * 2 << " X: " << (focuses[i * 2].x - centerPosition.x) / boundObject->getTextureSize().x << " " << "Focus" << i * 2 << " Y: " << (focuses[i * 2].y - centerPosition.y) / boundObject->getTextureSize().y << '\n';
+		fout << std::setprecision(3) << "Focus" << i * 2 + 1 << " X: " << (focuses[i * 2 + 1].x - centerPosition.x) / boundObject->getTextureSize().x << " " << "Focus" << i * 2 + 1 << " Y: " << (focuses[i * 2 + 1].y - centerPosition.y) / boundObject->getTextureSize().y << '\n';
+		fout << std::setprecision(3) << "Ellipse size: " << boundObject->ellipseSizeMultipliers[i] << '\n' << '\n';
+	}
 	fout.close();
 }
 
-void PedestalController::interact(float elapsedTime)
+void PedestalController::handleEvents(Event& event)
 {
+	if (!boundObject)
+		return;
+	// double click to reset center
+	if (event.type == Event::MouseButtonReleased)
+	{
+		if (doubleClickTimer <= 2e5)
+		{
+			if (boundObject->isMultiellipse)
+				centerPosition = boundObject->getPosition();
+			else
+				centerPosition = { (focuses[0].x + focuses[1].x) / 2, (focuses[0].y + focuses[1].y) / 2 };
+		}
+		doubleClickTimer = 0;
+
+		selectedEllipse = -1;
+	}	
+	//------------------------------
+}
+
+void PedestalController::interact(float elapsedTime, Event event)
+{
+	this->elapsedTime = elapsedTime;
 	if (!boundObject || !running)
 		return;
 
@@ -68,43 +103,99 @@ void PedestalController::interact(float elapsedTime)
 	const Vector2f mousePos = Vector2f(Mouse::getPosition());
 	const Vector2f worldMousePos = Vector2f((mousePos.x - Helper::GetScreenSize().x / 2 + cameraPosition.x * scaleFactor) / scaleFactor,
 		(mousePos.y - Helper::GetScreenSize().y / 2 + cameraPosition.y*scaleFactor) / scaleFactor);
-	for (int i = 0; i < focuses.size(); i++)
+
+	// selecting focus to move
+	if (!selectedCenter && selectedFocus == -1 && (Mouse::isButtonPressed(Mouse::Left) || Mouse::isButtonPressed(Mouse::Right)))
 	{
-		if (Helper::getDist(worldMousePos, focuses[i]) <= focusFigures[i].getRadius())
+		for (int i = 0; i < focuses.size(); i++)
+			if (Helper::getDist(worldMousePos, focuses[i]) <= focusFigure.getRadius())
+			{
+				selectedFocus = i;
+				break;
+			}
+	}
+	else
+		if (!(Mouse::isButtonPressed(Mouse::Left) || Mouse::isButtonPressed(Mouse::Right)))
+			selectedFocus = -1;
+	//------------------------
+
+	// moving selected focus
+	if (selectedFocus != -1)
+	{
+		if (Mouse::isButtonPressed(Mouse::Left))
 		{
-			if (Mouse::isButtonPressed(Mouse::Left))
-			{
-				focuses[i].x = worldMousePos.x;
-				focusFigures[i].setPosition(mousePos.x, focusFigures[i].getPosition().y);
-			}
-			if (Mouse::isButtonPressed(Mouse::Right))
-			{
-				focuses[i].y = worldMousePos.y;
-				focusFigures[i].setPosition(focusFigures[i].getPosition().x, mousePos.y);
-			}
+			focuses[selectedFocus].x = worldMousePos.x;
+			focusFigure.setPosition(mousePos.x, focusFigure.getPosition().y);
+		}
+		if (Mouse::isButtonPressed(Mouse::Right))
+		{
+			focuses[selectedFocus].y = worldMousePos.y;
+			focusFigure.setPosition(focusFigure.getPosition().x, mousePos.y);
 		}
 		// alignment
-		if (focuses.size() == 2)
-		{
-			if (abs(focuses[0].x - focuses[1].x) < size.x / 2.0f)
-				focuses[i].x = focuses[(i + 1) % 2].x;
-			if (abs(focuses[0].y - focuses[1].y) < size.y / 2.0f)
-				focuses[i].y = focuses[(i + 1) % 2].y;
-		}
+		if (selectedFocus % 2 == 0 && abs(focuses[selectedFocus].x - focuses[selectedFocus + 1].x) < size.x / 2.0f)
+			focuses[selectedFocus].x = focuses[selectedFocus + 1].x;
+		if (selectedFocus % 2 == 0 && abs(focuses[selectedFocus].y - focuses[selectedFocus + 1].y) < size.y / 2.0f)
+			focuses[selectedFocus].y = focuses[selectedFocus + 1].y;
+		if (selectedFocus % 2 == 1 && abs(focuses[selectedFocus].x - focuses[selectedFocus - 1].x) < size.x / 2.0f)
+			focuses[selectedFocus].x = focuses[selectedFocus - 1].x;
+		if (selectedFocus % 2 == 1 && abs(focuses[selectedFocus].y - focuses[selectedFocus - 1].y) < size.y / 2.0f)
+			focuses[selectedFocus].y = focuses[selectedFocus - 1].y;
 		//----------
 	}
-	//---------------
+	//----------------------
+
+	// selecting center
+	if (selectedFocus == -1 && !selectedCenter && (Mouse::isButtonPressed(Mouse::Left) || Mouse::isButtonPressed(Mouse::Right)))
+	{		
+		if (Helper::getDist(worldMousePos, centerPosition) <= focusFigure.getRadius())
+			selectedCenter = true;
+	}
+	else
+		if (!(Mouse::isButtonPressed(Mouse::Left) || Mouse::isButtonPressed(Mouse::Right)))
+			selectedCenter = false;
+	//-----------------
+
+	// moving center
+	if (selectedCenter)
+	{
+		if (Mouse::isButtonPressed(Mouse::Left))
+		{
+			centerPosition.x = worldMousePos.x;
+			centerFigure.setPosition(mousePos.x, centerFigure.getPosition().y);
+		}
+		if (Mouse::isButtonPressed(Mouse::Right))
+		{
+			centerPosition.y = worldMousePos.y;
+			centerFigure.setPosition(centerFigure.getPosition().x, mousePos.y);
+		}
+	}
+	//----------------------
 
 	// resize ellipse
 	if (Mouse::isButtonPressed(Mouse::Middle))
 	{
-		Vector2f center = Vector2f((focuses[0].x + focuses[1].x) / 2, (focuses[0].y + focuses[1].y) / 2);
-		boundObject->ellipseSizeMultipliers[0] += (Helper::getDist(mousePos, center) - Helper::getDist(lastMousePos, center)) / 30;		
+		if (selectedEllipse == -1)
+		{
+			float minDist = 1e5;
+			for (int i = 0; i < focuses.size() / 2; i++)
+			{
+				if (Helper::getDist(worldMousePos, focuses[i * 2]) + Helper::getDist(worldMousePos, focuses[i * 2 + 1]) <= minDist)
+				{
+					minDist = Helper::getDist(worldMousePos, focuses[i * 2]) + Helper::getDist(worldMousePos, focuses[i * 2 + 1]);
+					selectedEllipse = i;
+				}
+			}
+		}
+		const Vector2f center = Vector2f((focuses[selectedEllipse * 2].x + focuses[selectedEllipse * 2 + 1].x) / 2,
+		                           (focuses[selectedEllipse * 2].y + focuses[selectedEllipse * 2 + 1].y) / 2);
+		boundObject->ellipseSizeMultipliers[selectedEllipse] += boundObject->ellipseSizeMultipliers[selectedEllipse] * (Helper::getDist(mousePos, center) - Helper::getDist(lastMousePos, center)) / 100;
 	}
 	lastMousePos = mousePos;
 	//---------------
 
-	boundObject->setFocuses(focuses[0], focuses[1], Helper::getDist(focuses[0], focuses[1]) * boundObject->ellipseSizeMultipliers[0]);
+	doubleClickTimer += elapsedTime;
+	boundObject->setFocuses(focuses);
 }
 
 void PedestalController::draw(RenderWindow* window, Vector2f cameraPosition, float scaleFactor)
@@ -114,21 +205,32 @@ void PedestalController::draw(RenderWindow* window, Vector2f cameraPosition, flo
 	if (!boundObject || !running)
 		return;
 
-	const Vector2i upperLeft = Vector2i(std::min(focuses[0].x, focuses[1].x) - boundObject->getMicroBlockCheckAreaBounds().x, std::min(focuses[0].y, focuses[1].y) - boundObject->getMicroBlockCheckAreaBounds().y);
-	const Vector2i bottomRight = Vector2i(std::max(focuses[0].x, focuses[1].x) + boundObject->getMicroBlockCheckAreaBounds().x, std::max(focuses[0].y, focuses[1].y) + boundObject->getMicroBlockCheckAreaBounds().y);
+	Vector2f areaBounds = { 0, 0 };
+	for (int i = 0; i < focuses.size() / 2; i++)
+	{
+		areaBounds.x += Helper::getDist(focuses[i * 2], focuses[i * 2 + 1]) * boundObject->ellipseSizeMultipliers[i] / 2;
+		areaBounds.y += Helper::getDist(focuses[i * 2], focuses[i * 2 + 1]) * boundObject->ellipseSizeMultipliers[i] / 2;
+	}
+	const Vector2i upperLeft = Vector2i(std::min(focuses[0].x, focuses[1].x) - areaBounds.x, std::min(focuses[0].y, focuses[1].y) - areaBounds.y);
+	const Vector2i bottomRight = Vector2i(std::max(focuses[0].x, focuses[1].x) + areaBounds.x, std::max(focuses[0].y, focuses[1].y) + areaBounds.y);
 	for (int x = upperLeft.x / size.x; x <= bottomRight.x / size.x; x++)
 		for (int y = upperLeft.y / size.y; y <= bottomRight.y / size.y; y++)
-			{
-				if (sqrt(pow(x * size.x - focuses[0].x, 2) + pow(y * size.x - focuses[0].y, 2)) + sqrt(pow(x * size.x - focuses[1].x, 2) + pow(y * size.x - focuses[1].y, 2)) <= Helper::getDist(focuses[0], focuses[1]) * boundObject->ellipseSizeMultipliers[0])
+			for (auto i = 0; i < focuses.size() / 2; i++)
+			{			
+				if (sqrt(pow(x * size.x - focuses[i * 2].x, 2) + pow(y * size.x - focuses[i * 2].y, 2)) + sqrt(pow(x * size.x - focuses[i * 2 + 1].x, 2) + pow(y * size.x - focuses[i * 2 + 1].y, 2)) <= Helper::getDist(focuses[i * 2], focuses[i * 2 + 1]) * boundObject->ellipseSizeMultipliers[i])
 				{
 					filedFigure.setPosition((x * size.x - cameraPosition.x - size.x / 2.0f) * scaleFactor + Helper::GetScreenSize().x / 2, (y * size.y - cameraPosition.y - size.y / 2.0f) * scaleFactor + Helper::GetScreenSize().y / 2);
 					window->draw(filedFigure);
 				}
 			}
-	for (int i = 0; i < focuses.size(); i++)
+	for (auto& focus : focuses)
 	{
-		focusFigures[i].setPosition((focuses[i].x - cameraPosition.x - size.x) * scaleFactor + Helper::GetScreenSize().x / 2, (focuses[i].y - cameraPosition.y - size.y) * scaleFactor + Helper::GetScreenSize().y / 2);
-		window->draw(focusFigures[i]);
+		focusFigure.setPosition((focus.x - cameraPosition.x - size.x) * scaleFactor + Helper::GetScreenSize().x / 2, (
+			                        focus.y - cameraPosition.y - size.y) * scaleFactor + Helper::GetScreenSize().y / 2);
+		window->draw(focusFigure);
 	}
+	centerFigure.setPosition((centerPosition.x - cameraPosition.x - size.x) * scaleFactor + Helper::GetScreenSize().x / 2, (
+		centerPosition.y - cameraPosition.y - size.y) * scaleFactor + Helper::GetScreenSize().y / 2);
+	window->draw(centerFigure);
 }
 

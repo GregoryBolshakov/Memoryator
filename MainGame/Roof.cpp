@@ -31,15 +31,14 @@ Vector2i Roof::calculateTextureOffset()
 	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
 	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
 
-	return Vector2i(textureBox.width / 2, int(textureBox.height / 1.2));
+	return Vector2i(textureBox.width * 0.293, int(textureBox.height * 0.914));
 }
 
 void Roof::initPedestal()
 {
-	focus1 = Vector2f(position.x - textureBox.width / 2.5, position.y);
-	focus2 = Vector2f(position.x + textureBox.width / 2.5, position.y);
+	focus1 = Vector2f(position.x - textureBox.width * 0.287, position.y);
+	focus2 = Vector2f(position.x + textureBox.width * 0.287, position.y);
 	ellipseSizeMultipliers[0] = 1.1;
-	ellipseSize = float((focus2.x - focus1.x) * ellipseSizeMultipliers[0]);
 	initMicroBlocks();
 }
 

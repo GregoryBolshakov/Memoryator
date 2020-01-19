@@ -168,7 +168,7 @@ void Noose::jerk(float power, float deceleration, Vector2f destinationPoint)
 	const Vector2f mousePos = Vector2f(Mouse::getPosition());
 	const Vector2f screenCenter = Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2);
 	const float coeff = jerkDistance / Helper::getDist(mousePos, screenCenter);
-	movePosition = Vector2f(owner->getPosition().x + (mousePos.x - screenCenter.x) * coeff, owner->getPosition().y + (mousePos.y - screenCenter.y) * coeff);
+	laxMovePosition = Vector2f(owner->getPosition().x + (mousePos.x - screenCenter.x) * coeff, owner->getPosition().y + (mousePos.y - screenCenter.y) * coeff);
 }
 
 void Noose::fightLogic(float elapsedTime, DynamicObject* target)
@@ -252,7 +252,7 @@ void Noose::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 			animationSpeed = 0.0005f;					
 
 			ropeSprite.path = "Game/worldSprites/noose/nooseRope/thrown.png";
-			loopSprite.path = "Game/worldSprites/noose/nooseLoop/1.png";
+			loopSprite.path = "Game/worldSprites/noose/nooseLoop/12.png";
 
 			rotateAndExtend(&ropeSprite, &loopSprite);
 

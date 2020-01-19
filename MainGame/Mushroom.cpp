@@ -5,6 +5,7 @@ Mushroom::Mushroom(std::string objectName, Vector2f centerPosition, int typeOfOb
 {
 	varietyOfTypes = 12;
 	this->typeOfObject = typeOfObject;
+	this->intangible = true;
 	toSaveName = "mushroom";
 	setType(typeOfObject);
 	tag = Tag::mushroom;

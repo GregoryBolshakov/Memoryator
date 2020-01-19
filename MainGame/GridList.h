@@ -44,7 +44,7 @@ public:
 	int getSize() { return items.size(); }
 	std::vector<int> getBlocksAround(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY, int offset);
 	std::vector<int> GridList::getBlocksInSight(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY);
-	bool isIntersectWithOthers(Vector2f position1, float radius1, std::vector<WorldObject*> visibleTerrain, bool isDotAdjustded = false) const;
+	bool isIntersectWithOthers(WorldObject* object, std::vector<WorldObject*> visibleTerrain, bool isDotAdjustded = false) const;
 
 	std::vector<std::vector<bool>> microBlockMatrix;
 	std::vector<std::vector<bool>>* dynamicMicroBlockMatrix = nullptr;

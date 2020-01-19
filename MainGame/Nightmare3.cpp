@@ -10,12 +10,12 @@ Nightmare3::Nightmare3(std::string objectName, Vector2f centerPosition) : Monste
 	strength = 25;
 	healthPoint = 300;
 	currentAction = relax;
-	timeForNewHitself = 10e4;
+	timeForNewHitself = 6e5;
 	timeAfterHitself = timeForNewHitself;
 	timeForNewHit = 1e6;
 	timeAfterHit = timeForNewHit;
-	toSaveName = "nightmare2_";
-	tag = Tag::nightmare2;
+	toSaveName = "nightmare3_";
+	tag = Tag::nightmare3;
 }
 
 
@@ -133,6 +133,7 @@ void Nightmare3::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		animationLength = 1;
 		fullSprite.path = "Game/worldSprites/nightmare3/stand/down/1.png";
 		currentSprite[0] = 1;
+		deletePromiseOn();
 		break;
 	}
 	case move:

@@ -63,11 +63,11 @@ Vector2i ForestTree::calculateTextureOffset()
 		case 4:
 			return Vector2i(textureBox.width * 0.409f, int(textureBox.height * 0.945f));
 		case 5:
-			return Vector2i(textureBox.width * 0.388f, int(textureBox.height * 0.935f));
+			return Vector2i(textureBox.width * 0.41f, int(textureBox.height * 0.935f));
 		case 6:
-			return Vector2i(textureBox.width * 0.530f, int(textureBox.height * 0.94f));
+			return Vector2i(textureBox.width * 0.536f, int(textureBox.height * 0.94f));
 		case 7:
-			return Vector2i(textureBox.width * 0.536f, int(textureBox.height * 0.936f));
+			return Vector2i(textureBox.width * 0.526f, int(textureBox.height * 0.936f));
 		case 8:
 			return Vector2i(textureBox.width * 0.560f, int(textureBox.height * 0.96f));
 		case 9:
@@ -79,7 +79,7 @@ Vector2i ForestTree::calculateTextureOffset()
 		case 12:
 			return Vector2i(textureBox.width * 0.327f, int(textureBox.height * 0.93f));
 		case 13:
-			return Vector2i(textureBox.width * 0.377f, int(textureBox.height * 0.614f));
+			return Vector2i(textureBox.width * 0.736f, int(textureBox.height * 0.51f));
 		default:
 			return Vector2i(textureBox.width * 0.45f, int(textureBox.height * 0.96f));
 	}
@@ -92,12 +92,12 @@ void ForestTree::initPedestal()
 		case 1:		
 			focus1 = Vector2f(position.x - textureBox.width * 0.158f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.158f, position.y);
-			ellipseSizeMultipliers[0] = { 1.82 };
+			ellipseSizeMultipliers[0] = { 1.44 };
 			break;		
 		case 2:		
-			focus1 = Vector2f(position.x - textureBox.width * 0.106f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.106f, position.y);
-			ellipseSizeMultipliers[0] = { 1.42 };
+			focus1 = Vector2f(position.x - textureBox.width * 0.07f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.07f, position.y);
+			ellipseSizeMultipliers[0] = { 1.58 };
 			break;		
 		case 3:		
 			focus1 = Vector2f(position.x - textureBox.width * 0.184f, position.y);
@@ -105,30 +105,30 @@ void ForestTree::initPedestal()
 			ellipseSizeMultipliers[0] = { 1.42 };
 			break;		
 		case 4:		
-			focus1 = Vector2f(position.x - textureBox.width * 0.095f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.095f, position.y);
+			focus1 = Vector2f(position.x - textureBox.width * 0.082f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.082f, position.y);
 			ellipseSizeMultipliers[0] = { 1.42 };
 			break;		
 		case 5:		
-			focus1 = Vector2f(position.x - textureBox.width * 0.111f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.111f, position.y);
-			ellipseSizeMultipliers[0] = { 1.38 };
+			focus1 = Vector2f(position.x - textureBox.width * 0.088f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.088f, position.y);
+			ellipseSizeMultipliers[0] = { 1.57 };
 			break;		
 		case 6:		
-			focus1 = Vector2f(position.x - textureBox.width * 0.162f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.162f, position.y);
-			ellipseSizeMultipliers[0] = { 1.18 };
+			focus1 = Vector2f(position.x - textureBox.width * 0.084f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.084f, position.y);
+			ellipseSizeMultipliers[0] = { 1.31 };
 			break;		
 		case 7:		
-			focus1 = Vector2f(position.x - textureBox.width * 0.175f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.175f, position.y);
+			focus1 = Vector2f(position.x - textureBox.width * 0.131f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.131f, position.y);
 			ellipseSizeMultipliers[0] = { 1.28 };
 			break;		
 		case 8:		
 			focus1 = Vector2f(position.x - textureBox.width * 0.118f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.118f, position.y);
 			ellipseSizeMultipliers[0] = { 1.42 };
-			break;		
+			break;
 		case 9:		
 			focus1 = Vector2f(position.x - textureBox.width * 0.124f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.124f, position.y);
@@ -150,9 +150,9 @@ void ForestTree::initPedestal()
 			ellipseSizeMultipliers[0] = { 1.25 };
 			break;		
 		case 13:		
-			focus1 = Vector2f(position.x - textureBox.width * 0.297f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.297f, position.y);
-			ellipseSizeMultipliers[0] = { 1.03 };
+			focus1 = Vector2f(position.x - textureBox.width * 0.195f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.195f, position.y);
+			ellipseSizeMultipliers[0] = { 1.05 };
 			break;		
 		default:		
 			focus1 = Vector2f(position.x - textureBox.width * 0.106f, position.y);
@@ -160,7 +160,6 @@ void ForestTree::initPedestal()
 			ellipseSizeMultipliers[0] = { 1.82 };
 			break;		
 	}
-	ellipseSize = Helper::getDist(focus1, focus2) * ellipseSizeMultipliers[0];
 	initMicroBlocks();
 }
 

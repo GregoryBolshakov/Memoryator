@@ -17,9 +17,9 @@ Deer::Deer(const std::string objectName, Vector2f centerPosition) : NeutralMob(o
 	morality = 5; // from 1 to 10
 	fear = 0;
 	healthPoint = 50;
-	currentAction = relax;
-	timeAfterHitself = 10e5;
-	timeForNewHitself = timeAfterHitself;
+	currentAction = relax;	
+	timeForNewHitself = 6e5;
+	timeAfterHitself = timeForNewHitself;
 	timeForNewHit = 10e6;
 	toSaveName = "deer";
 	tag = Tag::deer;

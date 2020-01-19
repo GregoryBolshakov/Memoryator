@@ -36,18 +36,65 @@ void Bush::setType(int typeOfObject)
 
 Vector2i Bush::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-
-	return Vector2i(textureBox.width / 2, int(textureBox.height / 1.5));
+	switch (typeOfObject)
+	{
+	case 1:
+		return Vector2i(textureBox.width * 0.551f, int(textureBox.height * 0.01f));
+	case 2:
+		return Vector2i(textureBox.width * 0.59f, int(textureBox.height * 0.01f));
+	case 3:
+		return Vector2i(textureBox.width * 0.553f, int(textureBox.height * 0.908f));
+	case 4:
+		return Vector2i(textureBox.width * 0.49f, int(textureBox.height * 0.624f));
+	case 5:
+		return Vector2i(textureBox.width * 0.506f, int(textureBox.height * 0.632f));
+	case 6:
+		return Vector2i(textureBox.width * 0.495f, int(textureBox.height * 0.734f));
+	default:
+		return Vector2i(textureBox.width * 0.409f, int(textureBox.height * 0.945f));
+	}
 }
 
 void Bush::initPedestal()
 {
-	focus1 = Vector2f(position.x - textureBox.width / 2, position.y);
-	focus2 = Vector2f(position.x + textureBox.width / 3, position.y);
-	ellipseSizeMultipliers = { 1.2 };
-	ellipseSize = float((focus2.x - focus1.x) * ellipseSizeMultipliers[0]);
+	switch (typeOfObject)
+	{
+		case 1:
+			focus1 = Vector2f(position.x, position.y);
+			focus2 = Vector2f(position.x, position.y);
+			ellipseSizeMultipliers[0] = { 0 };
+			break;
+		case 2:
+			focus1 = Vector2f(position.x, position.y);
+			focus2 = Vector2f(position.x, position.y);
+			ellipseSizeMultipliers[0] = { 0 };
+			break;
+		case 3:
+			focus1 = Vector2f(position.x - textureBox.width * 0.289f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.289f, position.y);
+			ellipseSizeMultipliers[0] = { 1.29 };
+			break;
+		case 4:
+			focus1 = Vector2f(position.x - textureBox.width * 0.311f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.311f, position.y);
+			ellipseSizeMultipliers[0] = { 1.307 };
+			break;
+		case 5:
+			focus1 = Vector2f(position.x - textureBox.width * 0.32f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.32f, position.y);
+			ellipseSizeMultipliers[0] = { 1.3 };
+			break;
+		case 6:
+			focus1 = Vector2f(position.x - textureBox.width * 0.319f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.319f, position.y);
+			ellipseSizeMultipliers[0] = { 1.17 };
+			break;
+		default:
+			focus1 = Vector2f(position.x - textureBox.width * 0.341f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.341f, position.y);
+			ellipseSizeMultipliers[0] = { 1.18 };
+			break;
+	}
 	initMicroBlocks();
 }
 

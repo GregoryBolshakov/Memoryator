@@ -17,8 +17,8 @@ Hare::Hare(const std::string objectName, Vector2f centerPosition) : NeutralMob(o
 	sightRange = Helper::GetScreenSize().y * 1 / 2;
 	healthPoint = 50;
 	currentAction = relax;
-	timeAfterHitself = 100000;
-	timeForNewHitself = timeAfterHitself;
+	timeAfterHitself = 0;
+	timeForNewHitself = 6e5;
 	timeForNewHit = 1000000;
 	toSaveName = "hare";
 	tag = Tag::hare;

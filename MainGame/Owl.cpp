@@ -18,8 +18,8 @@ Owl::Owl(const std::string objectName, Vector2f centerPosition) : NeutralMob(obj
 	sightRange = Helper::GetScreenSize().y * 1 / 2;
 	healthPoint = 50;
 	currentAction = relax;
-	timeAfterHitself = 100000;
-	timeForNewHitself = timeAfterHitself;
+	timeAfterHitself = 0;
+	timeForNewHitself = 6e5;
 	timeForNewHit = 1000000;
 	toSaveName = "owl";
 	tag = Tag::owl;

@@ -70,18 +70,16 @@ void Monster::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
 
 	// fight with player	
 	doAttack(boundTarget);
-	if (Helper::getDist(position, boundTarget->getPosition()) <= (this->radius + boundTarget->getRadius() + hitDistance * 1.3) &&
-		isAttack.count(currentAction) > 0 && currentSprite[0] == strikingSprite && !wasHit)
+	if (Helper::getDist(position, boundTarget->getPosition()) <= (this->radius + boundTarget->getRadius() + hitDistance) &&
+		isAttack.count(currentAction) > 0 && currentSprite[0] == strikingSprite)
 	{
 		boundTarget->takeDamage(this->strength, position);
-		wasHit = true;
 	}
 
 	if (isAttack.count(currentAction) == 0 && Helper::getDist(position, boundTarget->getPosition()) <= (this->radius + boundTarget->getRadius() + hitDistance / 5))
 	{
 		stopping(true, false);
-		changeAction(combatState, false, false);
-		wasHit = false;									
+		changeAction(combatState, false, false);								
 	}
 	//---------------------
 	
@@ -95,7 +93,7 @@ void Monster::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
 		}
 	}
 	else	
-		stopping(true, false);	
+		stopping(true, false);
 	//---------------
 }
 

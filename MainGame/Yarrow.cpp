@@ -44,7 +44,6 @@ void Yarrow::initPedestal()
 	focus1 = position;
 	focus2 = position;
 	ellipseSizeMultipliers[0] = { 0 };
-	ellipseSize = 0;
 	initMicroBlocks();
 }
 

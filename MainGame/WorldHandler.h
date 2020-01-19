@@ -52,10 +52,10 @@ public:
 	void Load();
 	void Save();
 	
-
 	//base (draw, interact)	
 	std::unordered_map<std::string, BoardSprite> spriteMap;
-	void interact(RenderWindow& window, long long elapsedTime);
+	void interact(RenderWindow& window, long long elapsedTime, Event event);
+	void handleEvents(Event& event);
 	void draw(RenderWindow& window, long long elapsedTime);
 	void setItemFromBuildSystem();
 	void drawVisibleItems(RenderWindow& window, long long elapsedTime, std::vector<spriteChainElement> sprites);
@@ -83,6 +83,7 @@ public:
 	bool getHeroBookVisability() { return isHeroBookVisible; }
 	void changeBookVisability() { isHeroBookVisible = !isHeroBookVisible; }
 
+	void setObjectToBuild(Tag tag, int type = 1) { buildSystem.selectedObject = tag; buildSystem.buildType = type; }
 	Vector2i currentTransparentPos = Vector2i(0, 0);
 	std::string debugInfo = "";
 private:

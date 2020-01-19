@@ -266,8 +266,7 @@ Vector2f DynamicObject::doSlip(Vector2f newPosition, std::vector<StaticObject*> 
 						return Vector2f(-1, -1);
 
 					crashed = true;
-					Vector2f ellipsePos = terrain->internalEllipses[curEllipse].first.second;
-					motionAfterSlipping = this->EllipceSlip(this, newPosition, this->movePosition, terrain->internalEllipses[curEllipse].second.first, terrain->internalEllipses[curEllipse].second.second, terrain->internalEllipses[curEllipse].first.first, height, elapsedTime);
+					motionAfterSlipping = this->EllipceSlip(this, newPosition, this->movePosition, terrain->internalEllipses[curEllipse].first, terrain->internalEllipses[curEllipse].second, terrain->getEllipseSize(curEllipse), height, elapsedTime);
 
 					if (motionAfterSlipping != Vector2f(-1, -1))
 					{
@@ -347,19 +346,43 @@ void DynamicObject::changeAction(Actions newAction, bool resetSpriteNumber, bool
 			number = 1;
 }
 
-void DynamicObject::pushByBumping(WorldObject* object)
+void DynamicObject::pushByBumping(DynamicObject* object)
 {
-	if (pushDamage != 0)
+	/*if (pushRestDuration > 0)
 		return;
-	pushDuration = 1e3;
-	pushPower = 2;
+	if (!this->canCrashIntoDynamic || pushDamage != 0)
+		return;
+	pushDuration = 1e4;
+	pushRestDuration = pushDuration;
+	pushDistance = (this->radius + object->getRadius()) - Helper::getDist(this->getPosition(), object->getPosition());
 	if (object->getPosition() != Vector2f(-1, -1))
-		pushDirection = Vector2f(this->position.x - object->getPosition().x, this->position.y - object->getPosition().y);
+		pushDirection = Vector2f(this->position.x - object->getPosition().x, this->position.y - object->getPosition().y);*/
+	if (!this->canCrashIntoDynamic || !object->canCrashIntoDynamic || pushDamage != 0)
+		return;
+	bumpedPositions.push_back(object->getPosition());
+	bumpDistance += object->getRadius();
 }
 
 void DynamicObject::pushAway(float elapsedTime)
 {
-	if (pushDuration <= 0 || currentAction == dead)
+	timeAfterHitself += elapsedTime;
+	if (!bumpedPositions.empty() && this->canCrashIntoDynamic && pushDamage == 0)
+	{
+		Vector2f bumpCenter = { 0, 0 };
+		for (const auto pos : bumpedPositions)
+		{
+			bumpCenter.x += pos.x;
+			bumpCenter.y += pos.y;
+		}
+		bumpCenter.x /= bumpedPositions.size();
+		bumpCenter.y /= bumpedPositions.size();
+		pushDistance = (this->radius + bumpDistance) - Helper::getDist(this->getPosition(), bumpCenter);
+		pushDirection = Vector2f(this->position.x - bumpCenter.x, this->position.y - bumpCenter.y);
+		pushDuration = pushDistance / pushShift;
+		pushRestDuration = pushDuration;		
+	}
+
+	if (pushRestDuration <= 0 || currentAction == dead)
 	{
 		pushDirection = { 0, 0 };
 		pushDuration = 0;
@@ -369,23 +392,28 @@ void DynamicObject::pushAway(float elapsedTime)
 		return;
 	}
 
-	pushDuration -= elapsedTime;
+	pushRestDuration -= elapsedTime;
 	if (pushDamage > 0)
 		color = Color(255, 100, 100, 255);
 
 	const float elongationCoefficient = pushShift * elapsedTime / sqrt(pow(pushDirection.x, 2) + pow(pushDirection.y, 2));
-	//position.x += elongationCoefficient * pushDirection.x; position.y += elongationCoefficient * pushDirection.y;
 	pushVector = { elongationCoefficient * pushDirection.x, elongationCoefficient * pushDirection.y };
-	pushPower--;
+
+	bumpedPositions.clear();
+	bumpDistance = 0;
 }
 
 void DynamicObject::takeDamage(float damage, Vector2f attackerPos)
 {
-	this->timeForNewHitself = 0;
+	if (timeAfterHitself < timeForNewHitself)	
+		return;	
+	this->timeAfterHitself = 0;
 	this->healthPoint -= damage / this->armor;
-	pushPower = damage;
+
 	pushDamage = damage;
 	pushDuration = defaultPushDuration;
+	pushRestDuration = pushDuration;
+	pushDistance = Helper::getDist(this->getPosition(), attackerPos);
 	if (attackerPos != Vector2f(-1, -1))
 		pushDirection = Vector2f(this->position.x - attackerPos.x, this->position.y - attackerPos.y);
 }
@@ -397,7 +425,7 @@ std::string DynamicObject::sideToString(Side side)
 		case up:
 			return "up";
 		case right:
-			return "right";
+			return "left";
 		case down:
 			return "down";
 		case  left:
@@ -413,11 +441,11 @@ std::string DynamicObject::directionToString(Direction direction)
 	case UP:
 		return "up";
 	case UPRIGHT:
-		return "right";
+		return "left";
 	case RIGHT:
-		return "right";
+		return "left";
 	case DOWNRIGHT:
-		return "right";
+		return "left";
 	case DOWN:
 		return "down";
 	case DOWNLEFT:
@@ -429,4 +457,22 @@ std::string DynamicObject::directionToString(Direction direction)
 	}
 	return "";
 }
+
+Direction DynamicObject::sideToDirection(Side side)
+{
+	switch (side)
+	{
+	case up:
+		return UP;
+	case right:
+		return RIGHT;
+	case down:
+		return DOWN;
+	case  left:
+		return LEFT;
+	}
+	return DOWN;
+}
+
+
 

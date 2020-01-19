@@ -4,7 +4,8 @@
 TerrainObject::TerrainObject(std::string objectName, Vector2f centerPosition) : StaticObject(objectName, centerPosition)
 {	
 	isTerrain = true;
-	mirrored = bool(rand() % 2);
+	if (!isMultiellipse)
+		mirrored = bool(rand() % 2);
 }
 
 TerrainObject::~TerrainObject()
@@ -13,36 +14,34 @@ TerrainObject::~TerrainObject()
 }
 
 void TerrainObject::initMicroBlocks()
-{
+{	
 	const Vector2i currentMicroBlock = Vector2i(position.x / microBlockSize.x, position.y / microBlockSize.y);
 	if (mirrored)
-	{
-		focus1.x -= 2 * textureBoxOffset.x - conditionalSizeUnits.x;
-		focus2.x -= 2 * textureBoxOffset.x - conditionalSizeUnits.x;
-	}
+		textureBoxOffset.x = conditionalSizeUnits.x - textureBoxOffset.x;
+	
 	if (isMultiellipse)
 	{
-		for (auto& ellipse : internalEllipses)
+		for (int i = 0; i < internalEllipses.size(); i++)
 		{
-			microBlockCheckAreaBounds.x += ellipse.first.first / 2;
-			microBlockCheckAreaBounds.y += ellipse.first.first / 2;
+			microBlockCheckAreaBounds.x += getEllipseSize(i) / 2;
+			microBlockCheckAreaBounds.y += getEllipseSize(i) / 2;
 		}
-		for (auto& ellipse : internalEllipses)
+		for (int cnt = 0; cnt < internalEllipses.size(); cnt++)
 		{
 			for (int i = -microBlockCheckAreaBounds.x / microBlockSize.x; i <= int(microBlockCheckAreaBounds.x / microBlockSize.x); i++)
 				for (int j = -microBlockCheckAreaBounds.y / microBlockSize.y; j <= int(microBlockCheckAreaBounds.y / microBlockSize.y); j++)
 				{
 					Vector2f pos = Vector2f(position.x + i * microBlockSize.x, position.y + j * microBlockSize.y);
-					auto const f1 = ellipse.second.first;
-					auto const f2 = ellipse.second.second;
-					if (Helper::getDist(pos, f1) + Helper::getDist(pos, f2) < ellipse.first.first - sqrt(2 * microBlockSize.x) * 1.2)
+					auto const f1 = internalEllipses[cnt].first;
+					auto const f2 = internalEllipses[cnt].second;
+					if (Helper::getDist(pos, f1) + Helper::getDist(pos, f2) < getEllipseSize(cnt) - sqrt(2 * microBlockSize.x) * 1.2)
 						lockedMicroBlocks.emplace_back(currentMicroBlock.x + i, currentMicroBlock.y + j);
 				}
 		}	
 	}
 	else
 	{
-		microBlockCheckAreaBounds = Vector2i(ellipseSize / 2, ellipseSize / 2);
+		microBlockCheckAreaBounds = Vector2i(getEllipseSize() / 2, getEllipseSize() / 2);
 		for (int i = -microBlockCheckAreaBounds.x / microBlockSize.x; i <= int(microBlockCheckAreaBounds.x / microBlockSize.x); i++)
 			for (int j = -microBlockCheckAreaBounds.y / microBlockSize.y; j <= int(microBlockCheckAreaBounds.y / microBlockSize.y); j++)
 			{
@@ -52,6 +51,31 @@ void TerrainObject::initMicroBlocks()
 				if (Helper::getDist(pos, f1) + Helper::getDist(pos, f2) < this->getEllipseSize() - sqrt(2 * microBlockSize.x) * 1.2)
 					lockedMicroBlocks.emplace_back(currentMicroBlock.x + i, currentMicroBlock.y + j);
 			}		
+	}
+}
+
+int TerrainObject::getEllipseSize(int i)
+{
+	if (isMultiellipse)
+		return Helper::getDist(internalEllipses[i].first, internalEllipses[i].second) * ellipseSizeMultipliers[i];
+
+	return Helper::getDist(focus1, focus2) * ellipseSizeMultipliers[0];
+}
+
+void TerrainObject::setFocuses(std::vector<Vector2f> focuses)
+{
+	if (isMultiellipse)
+	{
+		for (int i = 0; i < focuses.size() / 2; i++)
+		{
+			internalEllipses[i].first = focuses[i * 2];
+			internalEllipses[i].second = focuses[i * 2 + 1];
+		}
+	}
+	else
+	{
+		focus1 = focuses[0];
+		focus2 = focuses[1];
 	}
 }
 
@@ -78,7 +102,7 @@ bool TerrainObject::isIntersected(Vector2f curPosition, Vector2f newPosition) //
 
 	Vector2f const position = newPosition;
 
-	return sqrt(pow(position.x - f1.x, 2) + pow(position.y - f1.y, 2)) + sqrt(pow(position.x - f2.x, 2) + pow(position.y - f2.y, 2)) <= this->getEllipseSize();
+	return sqrt(pow(position.x - f1.x, 2) + pow(position.y - f1.y, 2)) + sqrt(pow(position.x - f2.x, 2) + pow(position.y - f2.y, 2)) <= Helper::getDist(f1, f2) * ellipseSizeMultipliers[0];
 }
 
 std::vector<int> TerrainObject::getMultiellipseIntersect(Vector2f position) const
@@ -89,10 +113,10 @@ std::vector<int> TerrainObject::getMultiellipseIntersect(Vector2f position) cons
 
 	for (int i = 0; i < this->internalEllipses.size(); i++)
 	{
-		auto const f1 = this->internalEllipses[i].second.first;
-		auto const f2 = this->internalEllipses[i].second.second;
+		auto const f1 = this->internalEllipses[i].first;
+		auto const f2 = this->internalEllipses[i].second;
 
-		if (sqrt(pow(position.x - f1.x, 2) + pow(position.y - f1.y, 2)) + sqrt(pow(position.x - f2.x, 2) + pow(position.y - f2.y, 2)/* - dynamic.radius*/) <= this->internalEllipses[i].first.first)
+		if (sqrt(pow(position.x - f1.x, 2) + pow(position.y - f1.y, 2)) + sqrt(pow(position.x - f2.x, 2) + pow(position.y - f2.y, 2)/* - dynamic.radius*/) <= Helper::getDist(f1, f2) * ellipseSizeMultipliers[i])
 			ans.push_back(i);
 	}
 

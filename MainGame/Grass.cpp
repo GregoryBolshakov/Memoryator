@@ -5,6 +5,7 @@ Grass::Grass(std::string objectName, Vector2f centerPosition, int typeOfObject) 
 {
 	varietyOfTypes = 21;
 	this->typeOfObject = typeOfObject;
+	this->intangible = true;
 	toSaveName = "grass";
 	setType(typeOfObject);
 	tag = Tag::grass;

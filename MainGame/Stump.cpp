@@ -46,9 +46,9 @@ Vector2i Stump::calculateTextureOffset()
 	switch (typeOfObject)
 	{
 	case 1:
-		return Vector2i(textureBox.width * 0.551f, int(textureBox.height * 0.68f));
+		return Vector2i(textureBox.width * 0.551f, int(textureBox.height * 0.645f));
 	case 2:
-		return Vector2i(textureBox.width * 0.59f, int(textureBox.height * 0.64f));
+		return Vector2i(textureBox.width * 0.542f, int(textureBox.height * 0.64f));
 	case 3:
 		return Vector2i(textureBox.width * 0.518f, int(textureBox.height * 0.446f));
 	case 4:
@@ -60,7 +60,7 @@ Vector2i Stump::calculateTextureOffset()
 	case 7:
 		return Vector2i(textureBox.width * 0.497, int(textureBox.height * 0.859f));
 	case 8:
-		return Vector2i(textureBox.width * 0.513f, int(textureBox.height * 0.868f));
+		return Vector2i(textureBox.width * 0.525f, int(textureBox.height * 0.889f));
 	case 9:
 		return Vector2i(textureBox.width * 0.501f, int(textureBox.height * 0.659f));
 	case 10:
@@ -77,11 +77,11 @@ void Stump::initPedestal()
 	case 1:
 		focus1 = Vector2f(position.x - textureBox.width * 0.167f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.167f, position.y);
-		ellipseSizeMultipliers[0] = { 1.64 };
+		ellipseSizeMultipliers[0] = { 1.4 };
 		break;
 	case 2:
-		focus1 = Vector2f(position.x - textureBox.width * 0.401f, position.y);
-		focus2 = Vector2f(position.x + textureBox.width * 0.401f, position.y);
+		focus1 = Vector2f(position.x - textureBox.width * 0.353f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.353f, position.y);
 		ellipseSizeMultipliers[0] = { 1.15 };
 		break;
 	case 3:
@@ -110,9 +110,9 @@ void Stump::initPedestal()
 		ellipseSizeMultipliers[0] = { 1.388 };
 		break;
 	case 8:
-		focus1 = Vector2f(position.x - textureBox.width * 0.189f, position.y);
-		focus2 = Vector2f(position.x + textureBox.width * 0.189f, position.y);
-		ellipseSizeMultipliers[0] = { 1.448 };
+		focus1 = Vector2f(position.x - textureBox.width * 0.142f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.142f, position.y);
+		ellipseSizeMultipliers[0] = { 1.62 };
 		break;
 	case 9:
 		focus1 = Vector2f(position.x - textureBox.width * 0.314f, position.y);
@@ -130,7 +130,6 @@ void Stump::initPedestal()
 		ellipseSizeMultipliers[0] = { 1.78 };
 		break;
 	}
-	ellipseSize = Helper::getDist(focus1, focus2) * ellipseSizeMultipliers[0];
 	initMicroBlocks();
 }
 

@@ -35,7 +35,6 @@ public:
 	void buildHeldItem(Vector2f focusedObjectPosition, float scaleFactor);
 	void interact();
 	int getCurrentObject() { return currentObject; }
-	int getBuildType() { return buildType; }
 	void setCurrentObject(int n) { currentObject = n; }
 	void wasPlaced();
 	Vector2f buildingPosition = {-1, -1};
@@ -47,12 +46,12 @@ public:
 	void setHeldItem(std::pair<Tag, int>& heldItem) { if (nullptr != &heldItem) this->heldItem = &heldItem; }
 	void clearHareBags(int block, GridList& staticGrid, std::vector<WorldObject*>* visibleItems);
 	std::map<Tag, bool> droppedLootIdList = { {Tag::heroBag, 1} };
+	int buildType = 1;
 private:	
 	std::unordered_map<Tag, CellSprite> craftIngredientsSpriteList;
 	std::pair<Tag, int> *heldItem = nullptr;
 	Vector2f mouseWorldPos = { 0, 0 };
 	Vector2f spriteBuildPos = Vector2f (-1, -1);
-	int buildType = 1;
 	void initializeButtons();
 	void inicializeObjectsInfo();
 	void animator(float elapsedTime);

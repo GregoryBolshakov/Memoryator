@@ -102,14 +102,24 @@ void Console::doCommand()
 	for (auto& command : commands)
 		std::transform(command.begin(), command.end(), command.begin(), ::tolower);
 	if (commands.size() >= 2)
-	{	
+	{
 		if (commands[0] == "spawn" && ObjectInitializer::mappedStrings.count(commands[1]) > 0)
 		{
 			auto object = ObjectInitializer::mappedStrings.at(commands[1]);
 			if (int(object) >= 102 && int(object) <= 112)
 				world->getWorldGenerator().initializeDynamicItem(object, { world->focusedObject->getPosition().x + 50, world->focusedObject->getPosition().y + 50 }, "");
 		}
-		if (commands[0] == "set" && commands[1] == "ellipse")		
+		if (commands[0] == "build" && ObjectInitializer::mappedStrings.count(commands[1]) > 0)
+		{
+			int typeOfObject = 1;
+			if (commands.size() >= 3 && std::stoi(commands[2]) >= 1 && std::stoi(commands[2]) <= 1000)
+				typeOfObject = std::stoi(commands[2]);
+			auto object = ObjectInitializer::mappedStrings.at(commands[1]);
+
+			if (int(object) >= 211 || int(object) >= 216 || int(object) >= 218 || (int(object) >= 301 && int(object) <= 405))
+				world->setObjectToBuild(object, typeOfObject);	
+		}
+		if (commands[0] == "set" && commands[1] == "pedestal")
 			world->pedestalController.readyToStart = true;		
 	}
 

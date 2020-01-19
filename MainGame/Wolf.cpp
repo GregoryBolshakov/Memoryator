@@ -17,8 +17,8 @@ Wolf::Wolf(std::string objectName, Vector2f centerPosition) : NeutralMob(objectN
 	fear = 0;
 	healthPoint = 0;
 	currentAction = relax;
-	timeAfterHitself = 100000;
-	timeForNewHitself = timeAfterHitself;
+	timeAfterHitself = 0;
+	timeForNewHitself = 6e5;
 	timeForNewHit = 1000000;
 
 	toSaveName = "wolf";

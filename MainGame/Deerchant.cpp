@@ -85,6 +85,8 @@ void Deerchant::handleInput(bool usedMouse)
 		direction = DOWNLEFT;
 	if (Keyboard::isKeyPressed(Keyboard::D) && Keyboard::isKeyPressed(Keyboard::S))
 		direction = DOWNRIGHT;
+	if (direction != STAND)
+		lastDirection = direction;
 
 	if (currentAction != throwNoose) //second priority actions, interact while moving
 	{
@@ -103,6 +105,7 @@ void Deerchant::handleInput(bool usedMouse)
 			{
 				if (boundTarget && Helper::getDist(position, laxMovePosition) > (this->radius + boundTarget->getRadius()))
 				{
+					direction = calculateDirection();
 					setMoveOffset(0);
 					changeAction(move, currentAction != move, false);
 				}
@@ -146,7 +149,7 @@ void Deerchant::handleInput(bool usedMouse)
 			if (direction != STAND)			
 				changeAction(moveHit, !(currentAction == moveHit || currentAction == commonHit), false);			
 			else
-				changeAction(commonHit, !(currentAction == moveHit || currentAction == commonHit), false);
+				changeAction(commonHit, !(currentAction == moveHit || currentAction == commonHit), false);			
 		}
 }
 
@@ -177,7 +180,7 @@ void Deerchant::setHitDirection()
 				side = down;
 			else
 				if (mouseX <= xPos && abs(alpha) >= 0 && abs(alpha) <= 45)
-					side = left;
+					side = left;	
 }
 
 void Deerchant::setTarget(DynamicObject& object)
@@ -195,19 +198,12 @@ void Deerchant::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
 
 	if (isIntersect && calculateSide(target->getPosition(), elapsedTime) != invertSide(side))
 	{
-		if (target->timeForNewHitself >= target->getTimeAfterHitself())
+		if ((this->currentAction == commonHit || this->currentAction == moveHit) && (this->getSpriteNumber() == 4 || this->getSpriteNumber() == 5 || this->getSpriteNumber() == 8))
 		{
-			if ((this->currentAction == commonHit || this->currentAction == moveHit) && (this->getSpriteNumber() == 4 || this->getSpriteNumber() == 5 || this->getSpriteNumber() == 8))
-			{
-				this->addEnergy(5);
-				target->takeDamage(this->getStrength(), position);
-				target->timeForNewHitself = 0;
-			}
+			this->addEnergy(5);
+			target->takeDamage(this->getStrength(), position);
 		}
-
-	}
-
-	target->timeForNewHitself += elapsedTime;
+	}	
 }
 
 void Deerchant::behaviorWithStatic(WorldObject* target, float elapsedTime)
@@ -389,21 +385,32 @@ void Deerchant::onMouseUp(int currentMouseButton, WorldObject *mouseSelectedObje
 void Deerchant::endingPreviousAction()
 {
 	if (lastAction == commonHit && !Mouse::isButtonPressed(Mouse::Left))
+	{
+		lastDirection = sideToDirection(side);
 		changeAction(relax, true, false);
+	}
 	if (lastAction == moveHit && !Mouse::isButtonPressed(Mouse::Left))
+	{
+		lastDirection = sideToDirection(side);
 		changeAction(relax, true, false);
+	}
 	if (lastAction == open)
 		changeAction(relax, true, false);
 	if (lastAction == absorbs)
 	{
+		lastDirection = sideToDirection(side);
 		boundTarget->isProcessed = false;
 		boundTarget = nullptr;
-		changeAction(relax, true, false);
+		changeAction(relax, true, false);		
 	}
 	if (lastAction == builds)
+	{
+		lastDirection = sideToDirection(side);
 		changeAction(relax, true, false);
+	}
 	if (lastAction == dropping)
 	{
+		lastDirection = sideToDirection(side);
 		stopping(true, true);
 		changeAction(relax, true, false);
 		if (heldItem->content.first != Tag::emptyCell)
@@ -459,10 +466,12 @@ void Deerchant::endingPreviousAction()
 	}
     if (lastAction == throwNoose)
     {
+		lastDirection = sideToDirection(side);
 		changeAction(relax, true, false);
     }
 	if (lastAction == open)
 	{
+		lastDirection = sideToDirection(side);
 		if (unsealInventoryOwner)
 		{
 			unsealInventoryOwner->isVisibleInventory = true;
@@ -471,6 +480,7 @@ void Deerchant::endingPreviousAction()
 	}
 	if (lastAction == grab)
 	{
+		lastDirection = sideToDirection(side);
 		if (boundTarget)
 		{
 			auto pickedItem = dynamic_cast<PickedObject*>(boundTarget);
@@ -598,14 +608,16 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	bodySprite.offset = Vector2f(this->textureBoxOffset);
 	bodySprite.size = Vector2f(this->conditionalSizeUnits);
 	fullSprite.offset = Vector2f(this->textureBoxOffset);
-	fullSprite.size = Vector2f(this->conditionalSizeUnits);
+	fullSprite.size = Vector2f(this->conditionalSizeUnits);	
 	std::string sideStr = DynamicObject::sideToString(side), directionStr = DynamicObject::directionToString(direction);
+	
 	animationSpeed = 12;
 	if (direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT)
 	{
 		directionStr = "left";
 		legsSprite.mirrored = true;
 	}
+
 	if (side == right && currentAction != move && currentAction != jerking)
 	{
 		sideStr = "left";
@@ -655,9 +667,12 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		bodySprite.path = "Game/worldSprites/hero/pick/" + sideStr + '/';
 		break;
 	case relax:
+		bodySprite.mirrored = false;
 		animationLength = 16;
 		animationSpeed = 13;
-		bodySprite.path = "Game/worldSprites/hero/stand/" + sideStr + '/';
+		if (lastDirection == RIGHT || lastDirection == UPRIGHT || lastDirection == DOWNRIGHT)		
+			bodySprite.mirrored = true;		
+		bodySprite.path = "Game/worldSprites/hero/stand/" + directionToString(lastDirection) + '/';
 		break;
 	}
 

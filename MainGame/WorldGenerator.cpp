@@ -33,8 +33,8 @@ void WorldGenerator::initializeStaticItem(Tag itemClass, Vector2f itemPosition, 
 	if (terrain)
 	{
 		std::map<std::pair<int, int>, bool> checkBlocks = {};
-		for (int i = (item->getPosition().x - item->getMicroBlockCheckAreaBounds().x) / microBlockSize.x; i < (item->getPosition().x + item->getMicroBlockCheckAreaBounds().x) / microBlockSize.x; i++)
-			for (int j = (item->getPosition().y - item->getMicroBlockCheckAreaBounds().y) / microBlockSize.y; j < (item->getPosition().y + item->getMicroBlockCheckAreaBounds().y) / microBlockSize.y; j++)
+		for (int i = (item->getPosition().x - item->getMicroBlockCheckAreaBounds().x) / microBlockSize.x; i <= (item->getPosition().x + item->getMicroBlockCheckAreaBounds().x) / microBlockSize.x; i++)
+			for (int j = (item->getPosition().y - item->getMicroBlockCheckAreaBounds().y) / microBlockSize.y; j <= (item->getPosition().y + item->getMicroBlockCheckAreaBounds().y) / microBlockSize.y; j++)
 				if (!(i < 0 || i > width / microBlockSize.x || j < 0 || j > height / microBlockSize.y) && !staticGrid->microBlockMatrix[i][j])
 					checkBlocks[{i, j}] = true;
 
@@ -64,9 +64,9 @@ void WorldGenerator::generate()
 	staticGrid->boundDynamicMatrix(&dynamicGrid->microBlockMatrix);	
 	const int blocksCount = ceil(width / blockSize.x) * ceil(height / blockSize.y);
 
-	initializeDynamicItem(Tag::hero1, Vector2f(15000, 15000), "hero1");
+	initializeDynamicItem(Tag::hero1, Vector2f(15800, 15800), "hero1");
 	initializeStaticItem(Tag::brazier, Vector2f(16300, 16300), 1, "brazier");
-	initializeStaticItem(Tag::stump, Vector2f(15500, 15000), 10, "stump", 1, DarkWoods, false);
+	//initializeStaticItem(Tag::tree, Vector2f(15500, 15000), 5, "stump", 1, DarkWoods);
 
 	// world generation
 	initBiomesGenerationInfo();
@@ -95,7 +95,7 @@ void WorldGenerator::inBlockGenerate(int blockIndex)
 			roomedBlocksContent = { {Tag::roof, 10}, {Tag::rock, 2}, {Tag::stump, 2}, {Tag::tree, 7} };
 		else
 			if (blockTypeProbablilty <= 30) // block with yarrow
-				roomedBlocksContent = { {Tag::yarrow, 20}, {Tag::rock, 2}, {Tag::stump, 2}, {Tag::tree, 7} };
+				roomedBlocksContent = { {Tag::yarrow, 0}, {Tag::rock, 2}, {Tag::stump, 2}, {Tag::tree, 7} };
 			else
 				if (blockTypeProbablilty <= 99) // common block				
 					roomedBlocksContent = { {Tag::rock, 2}, {Tag::stump, 2}, {Tag::tree, 7} };
@@ -105,7 +105,7 @@ void WorldGenerator::inBlockGenerate(int blockIndex)
 		if (biomeMatrix[groundIndX][groundIndY].biomeCell == BirchGrove)
 		{
 			if (blockTypeProbablilty <= 30) // block with chamomile
-				roomedBlocksContent = { {Tag::chamomile, 20}, {Tag::rock, 2}, {Tag::stump, 2}, {Tag::log, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
+				roomedBlocksContent = { {Tag::chamomile, 0}, {Tag::rock, 2}, {Tag::stump, 2}, {Tag::log, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
 			else
 				if (blockTypeProbablilty <= 99) // common block
 					roomedBlocksContent = { {Tag::rock, 5}, {Tag::stump, 2}, {Tag::log, 2}, {Tag::bush, 5}, {Tag::tree, 7} };

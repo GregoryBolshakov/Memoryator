@@ -26,7 +26,7 @@ public:
 protected:
 	WorldObject* victim = nullptr;
 	std::map<Actions, bool> isAttack = { {commonHit, true}, {directHit, true} };
-	float hitDistance = 0;
+	float hitDistance = 30;
 	int animationLength;
 	bool wasHit = false;
 

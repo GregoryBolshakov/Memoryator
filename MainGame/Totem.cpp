@@ -9,7 +9,7 @@ Totem::Totem(std::string objectName, Vector2f centerPosition, int typeOfObject) 
 	radius = 20;
 	toSaveName = "totem";
 	setType(typeOfObject);
-	tag = Tag::rock;
+	tag = Tag::totem;
 }
 
 void Totem::setType(int typeOfObject)
@@ -58,10 +58,8 @@ void Totem::initPedestal()
 		focus1 = Vector2f(position.x - textureBox.width / 4, position.y);
 		focus2 = Vector2f(position.x + textureBox.width / 4, position.y);
 		ellipseSizeMultipliers[0] = { 1.8 };
-		ellipseSize = float((focus2.x - focus1.x) * ellipseSizeMultipliers[0]);
-	}
-	
-	//textureBoxOffset = Vector2f ((focus1.x + focus2.x) / 2 - textureBox.left, focus1.y - textureBox.top);
+	}	
+	initMicroBlocks();
 }
 
 Vector2f Totem::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
