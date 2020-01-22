@@ -3,7 +3,7 @@
 
 Rock::Rock(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(objectName, centerPosition)
 {
-	varietyOfTypes = 13;
+	varietyOfTypes = 18; // BirchGrove: 1-8; DarkWoods: 9-13; SwampyTrees: 14-18
 	this->typeOfObject = typeOfObject;
 	strength = 0;
 	radius = 50;
@@ -42,6 +42,16 @@ void Rock::setType(int typeOfObject)
 		conditionalSizeUnits = Vector2i(238, 139);
 	if (typeOfObject == 13)
 		conditionalSizeUnits = Vector2i(319, 311);
+	if (typeOfObject == 14)
+		conditionalSizeUnits = Vector2i(278, 190);
+	if (typeOfObject == 15)
+		conditionalSizeUnits = Vector2i(300, 175);
+	if (typeOfObject == 16)
+		conditionalSizeUnits = Vector2i(173, 154);
+	if (typeOfObject == 17)
+		conditionalSizeUnits = Vector2i(406, 208);
+	if (typeOfObject == 18)
+		conditionalSizeUnits = Vector2i(254, 173);
 
 	radius = std::max(conditionalSizeUnits.x, conditionalSizeUnits.y) / 2;
 }
@@ -79,6 +89,16 @@ Vector2i Rock::calculateTextureOffset()
 		return Vector2i(textureBox.width * 0.478f, int(textureBox.height * 0.633f));
 	case 13:
 		return Vector2i(textureBox.width * 0.491f, int(textureBox.height * 0.569f));
+	case 14:
+		return Vector2i(textureBox.width * 0.5f, int(textureBox.height * 0.673f));
+	case 15:
+		return Vector2i(textureBox.width * 0.491f, int(textureBox.height * 0.634f));
+	case 16:
+		return Vector2i(textureBox.width * 0.515f, int(textureBox.height * 0.714f));
+	case 17:
+		return Vector2i(textureBox.width * 0.559f, int(textureBox.height * 0.68f));
+	case 18:
+		return Vector2i(textureBox.width * 0.478f, int(textureBox.height * 0.633f));
 	default:
 		return Vector2i(textureBox.width * 0.409f, int(textureBox.height * 0.945f));
 	}
@@ -153,6 +173,31 @@ void Rock::initPedestal()
 		focus2 = Vector2f(position.x + textureBox.width * 0.273f, position.y);
 		ellipseSizeMultipliers[0] = { 1.64 };
 		break;
+	case 14:
+		focus1 = Vector2f(position.x - textureBox.width * 0.315f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.315f, position.y);
+		ellipseSizeMultipliers[0] = { 1.23 };
+		break;
+	case 15:
+		focus1 = Vector2f(position.x - textureBox.width * 0.354f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.354f, position.y);
+		ellipseSizeMultipliers[0] = { 1.14 };
+		break;
+	case 16:
+		focus1 = Vector2f(position.x - textureBox.width * 0.378f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.378f, position.y);
+		ellipseSizeMultipliers[0] = { 1.3 };
+		break;
+	case 17:
+		focus1 = Vector2f(position.x - textureBox.width * 0.386f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.386f, position.y);
+		ellipseSizeMultipliers[0] = { 1.15 };
+		break;
+	case 18:
+		focus1 = Vector2f(position.x - textureBox.width * 0.38f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.38f, position.y);
+		ellipseSizeMultipliers[0] = { 1.08 };
+		break;
 	default:
 		focus1 = Vector2f(position.x - textureBox.width * 0.111f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.111f, position.y);
@@ -186,6 +231,8 @@ void Rock::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		rockBody.path = "Game/worldSprites/BirchGrove/hill" + std::to_string(typeOfObject - 6) + ".png";
 	if (typeOfObject >= 9 && typeOfObject <= 13)
 		rockBody.path = "Game/worldSprites/DarkWoods/rock" + std::to_string(typeOfObject - 8) + ".png";
+	if (typeOfObject >= 14 && typeOfObject <= 18)
+		rockBody.path = "Game/worldSprites/SwampyTrees/rock" + std::to_string(typeOfObject - 13) + ".png";
 
 	additionalSprites.push_back(rockBody);
 

@@ -10,6 +10,7 @@
 #include "EffectsSystemMaker.h"
 #include "WorldGenerator.h"
 #include "PedestalController.h"
+//#include "SpritePack.h"
 
 #include "DynamicObject.h"
 #include "EmptyObject.h"
@@ -83,7 +84,7 @@ public:
 	bool getHeroBookVisability() { return isHeroBookVisible; }
 	void changeBookVisability() { isHeroBookVisible = !isHeroBookVisible; }
 
-	void setObjectToBuild(Tag tag, int type = 1) { buildSystem.selectedObject = tag; buildSystem.buildType = type; }
+	void setObjectToBuild(Tag tag, int type = 1, bool instantBuild = false) { buildSystem.selectedObject = tag; buildSystem.buildType = type; buildSystem.instantBuild = instantBuild; }
 	Vector2i currentTransparentPos = Vector2i(0, 0);
 	std::string debugInfo = "";
 private:

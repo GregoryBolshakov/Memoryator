@@ -47,6 +47,7 @@ public:
 	void clearHareBags(int block, GridList& staticGrid, std::vector<WorldObject*>* visibleItems);
 	std::map<Tag, bool> droppedLootIdList = { {Tag::heroBag, 1} };
 	int buildType = 1;
+	bool instantBuild = false;
 private:	
 	std::unordered_map<Tag, CellSprite> craftIngredientsSpriteList;
 	std::pair<Tag, int> *heldItem = nullptr;
@@ -54,7 +55,7 @@ private:
 	Vector2f spriteBuildPos = Vector2f (-1, -1);
 	void initializeButtons();
 	void inicializeObjectsInfo();
-	void animator(float elapsedTime);
+	void animator(float elapsedTime);	
 	float originalAnimationSpeed = 0.001f, animationSpeed = 0.001f;
 	bool isPressed = false, isRecipeFrame, usedMouse = false;
 	Sprite buildStartButton, buildStopButton, recipeFrame;

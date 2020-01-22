@@ -72,8 +72,12 @@ void WorldGenerator::generate()
 	initBiomesGenerationInfo();
 	const Vector2f upperLeft(int(focusedObject->getPosition().x - Helper::GetScreenSize().x / 2 / (*scaleFactor) - blockSize.x / (*scaleFactor)), int(focusedObject->getPosition().y - Helper::GetScreenSize().y / 2 / (*scaleFactor) - blockSize.x / (*scaleFactor)));
 	const Vector2f bottomRight(int(focusedObject->getPosition().x + Helper::GetScreenSize().x / 2 / (*scaleFactor) + blockSize.x / (*scaleFactor)), int(focusedObject->getPosition().y + Helper::GetScreenSize().y / 2 / (*scaleFactor) + blockSize.x / (*scaleFactor)));
+	int test = 0;
 	for (auto& block : staticGrid->getBlocksInSight(upperLeft.x, upperLeft.y, bottomRight.x, bottomRight.y))
+	{
+		test = block;
 		inBlockGenerate(block);
+	}
 	//---------------
 }
 
@@ -111,7 +115,16 @@ void WorldGenerator::inBlockGenerate(int blockIndex)
 					roomedBlocksContent = { {Tag::rock, 5}, {Tag::stump, 2}, {Tag::log, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
 			otherBlocksContent = { {Tag::grass, 6} , {Tag::mushroom, 3} };
 		}
-
+		else
+			if (biomeMatrix[groundIndX][groundIndY].biomeCell == SwampyTrees)
+			{
+				if (blockTypeProbablilty <= 30) // block with chamomile
+					roomedBlocksContent = { {Tag::rock, 2}, {Tag::lake, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
+				else
+					if (blockTypeProbablilty <= 99) // common block
+						roomedBlocksContent = { {Tag::rock, 2}, {Tag::lake, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
+				otherBlocksContent = { {Tag::grass, 6} , {Tag::mushroom, 0} };
+			}
 
 	std::sort(roomedBlocksContent.begin(), roomedBlocksContent.end(), cmpByChance);
 	
@@ -119,7 +132,7 @@ void WorldGenerator::inBlockGenerate(int blockIndex)
 	generateGround(blockIndex);
 
 	//block filling
-	//return;
+	return;
 
 	for (int x = blockTransform.left; x < blockTransform.left + blockTransform.width; x += 100)
 	{

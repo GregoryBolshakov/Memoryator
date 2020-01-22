@@ -25,6 +25,7 @@
 #include "Mushroom.h"
 #include "Log.h"
 #include "Bush.h"
+#include "Lake.h"
 #include  "Roof.h"
 
 #include "Monster.h"

@@ -40,7 +40,7 @@ void WorldHandler::runWorldGenerator()
 	dynamicGrid = GridList(this->width, this->height, blockSize, microblockSize);
 	for (auto& i : worldGenerator.biomeMatrix)
 		for (auto& j : i)
-			j.biomeCell = DarkWoods;
+			j.biomeCell = SwampyTrees;
 	worldGenerator.generate();
 	this->focusedObject = worldGenerator.focusedObject;
 	brazier = dynamic_cast<Brazier*>(staticGrid.getItemByName("brazier"));
@@ -226,6 +226,11 @@ void putImageToMap(LPCTSTR lpszFileName, std::unordered_map<std::string, BoardSp
 
 void WorldHandler::initSpriteMap()
 {
+	//std::ifstream i("Game/worldSprites/hero/hero_absorb.json");
+	//json j;
+	//i >> j;
+	//auto sp = j.get<sprite_pack::pack>();
+
 	int objectsNumber;
 	std::string name;
 
@@ -539,6 +544,9 @@ bool WorldHandler::fixedClimbingBeyond(Vector2f &pos)
 
 void WorldHandler::setItemFromBuildSystem()
 {
+	if (!(buildSystem.instantBuild || focusedObject->getCurrentAction() == builds))
+		return;
+
 	if (buildSystem.selectedObject != Tag::emptyCell && buildSystem.buildingPosition != Vector2f(-1, -1))
 	{
 		if (buildSystem.droppedLootIdList.count(buildSystem.selectedObject) > 0)
@@ -552,6 +560,7 @@ void WorldHandler::setItemFromBuildSystem()
 				buildSystem.clearHareBags(staticGrid.getIndexByPoint(buildSystem.buildingPosition.x, buildSystem.buildingPosition.y), staticGrid, &localTerrain);
 		}
 		buildSystem.wasPlaced();
+		buildSystem.instantBuild = false;
 
 		buildSystem.buildingPosition = Vector2f(-1, -1);
 		buildSystem.buildType = 1;
@@ -601,7 +610,7 @@ void WorldHandler::onMouseUp(int currentMouseButton)
 		selectedObject = nullptr;
 
 	auto hero = dynamic_cast<Deerchant*>(dynamicGrid.getItemByName(focusedObject->getName()));
-	hero->onMouseUp(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.buildingPosition != Vector2f(-1, -1)));
+	hero->onMouseUp(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.buildingPosition != Vector2f(-1, -1) && !buildSystem.instantBuild));
 	inventorySystem.inventoryBounding(&hero->bags);
 }
 
@@ -725,8 +734,9 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event e
 	//lightSystemInteract
 	//brightner->_emissionSprite.setPosition(Vector2f(focusedObject->getPosition().x - cameraPosition.x + Helper::GetScreenSize().x / 2, focusedObject->getPosition().y - cameraPosition.y + Helper::GetScreenSize().y / 2));
 
-	if (focusedObject->getCurrentAction() == builds)
+	//if (focusedObject->getCurrentAction() == builds)
 		setItemFromBuildSystem();
+
 	//buildSystem.setHeldItem(inventorySystem.getHeldItem()->lootInfo);
 	buildSystem.interact();
 	inventorySystem.interact(elapsedTime);

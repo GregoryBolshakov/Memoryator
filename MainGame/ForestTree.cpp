@@ -3,7 +3,7 @@
 
 ForestTree::ForestTree(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(objectName, centerPosition)
 {
-	varietyOfTypes = 13;
+	varietyOfTypes = 18; // BirchGrove: 1-7; DarkWoods: 8-13; SwampyTrees: 14-18
 	this->typeOfObject = typeOfObject;
 	strength = 0;
 	radius = 50;
@@ -42,6 +42,16 @@ void ForestTree::setType(int typeOfObject)
 		conditionalSizeUnits = Vector2i(795, 1190);
 	if (typeOfObject == 13)
 		conditionalSizeUnits = Vector2i(1221, 386);
+	if (typeOfObject == 14)
+		conditionalSizeUnits = Vector2i(952, 962);
+	if (typeOfObject == 15)
+		conditionalSizeUnits = Vector2i(565, 1261);
+	if (typeOfObject == 16)
+		conditionalSizeUnits = Vector2i(914, 1108);
+	if (typeOfObject == 17)
+		conditionalSizeUnits = Vector2i(652, 1359);
+	if (typeOfObject == 18)
+		conditionalSizeUnits = Vector2i(667, 717);
 
 	const float extension = int(90 + rand() % 20) / 100.0f; // in percents
 	//conditionalSizeUnits.x *= extension; conditionalSizeUnits.y *= extension;
@@ -80,6 +90,16 @@ Vector2i ForestTree::calculateTextureOffset()
 			return Vector2i(textureBox.width * 0.327f, int(textureBox.height * 0.93f));
 		case 13:
 			return Vector2i(textureBox.width * 0.736f, int(textureBox.height * 0.51f));
+		case 14:
+			return Vector2i(textureBox.width * 0.521f, int(textureBox.height * 0.883f));
+		case 15:
+			return Vector2i(textureBox.width * 0.509f, int(textureBox.height * 0.857f));
+		case 16:
+			return Vector2i(textureBox.width * 0.537f, int(textureBox.height * 0.83f));
+		case 17:
+			return Vector2i(textureBox.width * 0.349f, int(textureBox.height * 0.861f));
+		case 18:
+			return Vector2i(textureBox.width * 0.439f, int(textureBox.height * 0.857f));
 		default:
 			return Vector2i(textureBox.width * 0.45f, int(textureBox.height * 0.96f));
 	}
@@ -153,7 +173,32 @@ void ForestTree::initPedestal()
 			focus1 = Vector2f(position.x - textureBox.width * 0.195f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.195f, position.y);
 			ellipseSizeMultipliers[0] = { 1.05 };
-			break;		
+			break;
+		case 14:
+			focus1 = Vector2f(position.x - textureBox.width * 0.079f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.079f, position.y);
+			ellipseSizeMultipliers[0] = { 1.42 };
+			break;
+		case 15:
+			focus1 = Vector2f(position.x - textureBox.width * 0.09f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.09f, position.y);
+			ellipseSizeMultipliers[0] = { 1.55 };
+			break;
+		case 16:
+			focus1 = Vector2f(position.x - textureBox.width * 0.066f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.066f, position.y);
+			ellipseSizeMultipliers[0] = { 1.46 };
+			break;
+		case 17:
+			focus1 = Vector2f(position.x - textureBox.width * 0.162f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.162f, position.y);
+			ellipseSizeMultipliers[0] = { 1.25 };
+			break;
+		case 18:
+			focus1 = Vector2f(position.x - textureBox.width * 0.109f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.109f, position.y);
+			ellipseSizeMultipliers[0] = { 1.25 };
+			break;
 		default:		
 			focus1 = Vector2f(position.x - textureBox.width * 0.106f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.106f, position.y);
@@ -194,6 +239,11 @@ void ForestTree::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	{
 		animationLength = 1;
 		treeBody.path = "Game/worldSprites/DarkWoods/tree" + std::to_string(typeOfObject - 7) + "/" + std::to_string(currentSprite[0]) + ".png";
+	}
+	if (typeOfObject >= 14 && typeOfObject <= 18)
+	{
+		animationLength = 1;
+		treeBody.path = "Game/worldSprites/SwampyTrees/tree" + std::to_string(typeOfObject - 13) + ".png";
 	}
 
 	if (state == absorbed)

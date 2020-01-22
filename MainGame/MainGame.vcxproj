@@ -141,6 +141,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
   <ItemGroup>
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="InputBox.cpp" />
+    <ClCompile Include="Lake.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="Bear.cpp" />
     <ClCompile Include="Brazier.cpp" />
@@ -189,6 +190,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="Rock.cpp" />
     <ClCompile Include="Roof.cpp" />
     <ClCompile Include="Spawn.cpp" />
+    <ClCompile Include="SpritePack.cpp" />
     <ClCompile Include="StaticObject.cpp" />
     <ClCompile Include="Stump.cpp" />
     <ClCompile Include="TerrainObject.cpp" />
@@ -207,6 +209,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
   <ItemGroup>
     <ClInclude Include="Console.h" />
     <ClInclude Include="InputBox.h" />
+    <ClInclude Include="Lake.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="Bear.h" />
     <ClInclude Include="Bush.h" />
@@ -220,6 +223,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="Owl.h" />
     <ClInclude Include="PedestalController.h" />
     <ClInclude Include="Roof.h" />
+    <ClInclude Include="SpritePack.h" />
     <ClInclude Include="SpriteStructures.h" />
     <ClInclude Include="Brazier.h" />
     <ClInclude Include="BuildSystemMaker.h" />
@@ -271,6 +275,17 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="WreathTable.h" />
     <ClInclude Include="Yarrow.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\nlohmann.json.3.7.3\build\native\nlohmann.json.targets" Condition="Exists('..\packages\nlohmann.json.3.7.3\build\native\nlohmann.json.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\nlohmann.json.3.7.3\build\native\nlohmann.json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nlohmann.json.3.7.3\build\native\nlohmann.json.targets'))" />
+  </Target>
 </Project>

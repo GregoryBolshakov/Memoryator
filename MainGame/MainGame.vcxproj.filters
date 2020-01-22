@@ -173,6 +173,10 @@
     <ClCompile Include="PedestalController.cpp">
       <Filter>UISystems</Filter>
     </ClCompile>
+    <ClCompile Include="SpritePack.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="Lake.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DynamicObject.h" />
@@ -348,6 +352,10 @@
     <ClInclude Include="PedestalController.h">
       <Filter>UISystems</Filter>
     </ClInclude>
+    <ClInclude Include="SpritePack.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="Lake.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Terrain">
@@ -371,5 +379,8 @@
     <Filter Include="World">
       <UniqueIdentifier>{46674957-3cb2-43f1-a993-abf764803eae}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

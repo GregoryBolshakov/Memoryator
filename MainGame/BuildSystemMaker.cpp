@@ -209,23 +209,6 @@ void BuildSystemMaker::drawRecipeFrame(RenderWindow &window)
 void BuildSystemMaker::interact()
 {
 	Vector2f mousePos = (Vector2f )Mouse::getPosition();
-	bool f = false;
-	for (int i = 0; i < builtObjects.size(); i++)
-	{
-		if (Helper::isIntersects(mousePos, IntRect(builtObjects[i].iconSprite.getPosition().x, builtObjects[i].iconSprite.getPosition().y, builtObjects[i].iconSprite.getGlobalBounds().width, builtObjects[i].iconSprite.getGlobalBounds().height)))
-		{
-			currentObject = i;
-			isRecipeFrame = true;
-			recipeFrame.setPosition(float(builtObjects[i].iconSprite.getPosition().x + builtObjects[i].iconSprite.getGlobalBounds().width*1.25f), float(builtObjects[i].iconSprite.getPosition().y));
-			f = true;
-			break;
-		}
-	}
-	if (!f)
-	{
-		isRecipeFrame = false;
-		currentObject = -1;
-	}	
 }
 
 void BuildSystemMaker::onMouseUp(Vector2f focusedObjectPosition, float scaleFactor)
@@ -234,26 +217,8 @@ void BuildSystemMaker::onMouseUp(Vector2f focusedObjectPosition, float scaleFact
 
 	usedMouse = false;
 
-	if (Helper::isIntersects(mousePos, sf::IntRect(buildStartButton.getGlobalBounds())))
-	{
-		currentObject = -1;
-		usedMouse = true;
-	}
-	else
-		if (Helper::isIntersects(mousePos, sf::IntRect(buildStopButton.getGlobalBounds())))
-		{
-			animationSpeed = 0.001f;
-			for (int i = 0; i < builtObjects.size(); i++)
-			{
-				builtObjects[i].iconSprite.setPosition(float(builtObjects[0].iconSprite.getGlobalBounds().width*-1), float((i + 1)*builtObjects[i].iconSprite.getGlobalBounds().height * 1.25f));
-			}
-			usedMouse = true;
-			return;
-		}
-
 	if (selectedObject != Tag::emptyCell || currentObject != -1)
 		usedMouse = true;
-	//return;
 
 	if (selectedObject != Tag::emptyCell && currentObject == -1 && canBePlaced)
 	{

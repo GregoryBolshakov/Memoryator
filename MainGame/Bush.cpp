@@ -3,7 +3,7 @@
 
 Bush::Bush(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(objectName, centerPosition)
 {
-	varietyOfTypes = 8;
+	varietyOfTypes = 15; // BrichGrove: 1-8; SwampyTrees: 9-15
 	this->typeOfObject = typeOfObject;
 	strength = 0;
 	radius = 50;
@@ -32,6 +32,20 @@ void Bush::setType(int typeOfObject)
 		conditionalSizeUnits = Vector2i(231, 424);
 	if (typeOfObject == 8)
 		conditionalSizeUnits = Vector2i(405, 315);
+	if (typeOfObject == 9)
+		conditionalSizeUnits = Vector2i(642, 311);
+	if (typeOfObject == 10)
+		conditionalSizeUnits = Vector2i(289, 279);
+	if (typeOfObject == 11)
+		conditionalSizeUnits = Vector2i(396, 409);
+	if (typeOfObject == 12)
+		conditionalSizeUnits = Vector2i(385, 285);
+	if (typeOfObject == 13)
+		conditionalSizeUnits = Vector2i(450, 283);
+	if (typeOfObject == 14)
+		conditionalSizeUnits = Vector2i(462, 290);
+	if (typeOfObject == 15)
+		conditionalSizeUnits = Vector2i(189, 188);
 }
 
 Vector2i Bush::calculateTextureOffset()
@@ -43,12 +57,30 @@ Vector2i Bush::calculateTextureOffset()
 	case 2:
 		return Vector2i(textureBox.width * 0.59f, int(textureBox.height * 0.01f));
 	case 3:
-		return Vector2i(textureBox.width * 0.553f, int(textureBox.height * 0.908f));
+		return Vector2i(textureBox.width * 0.5f, int(textureBox.height * 0.929f));
 	case 4:
 		return Vector2i(textureBox.width * 0.49f, int(textureBox.height * 0.624f));
 	case 5:
 		return Vector2i(textureBox.width * 0.506f, int(textureBox.height * 0.632f));
 	case 6:
+		return Vector2i(textureBox.width * 0.495f, int(textureBox.height * 0.734f));
+	case 7:
+		return Vector2i(textureBox.width * 0.551f, int(textureBox.height * 0.01f));
+	case 8:
+		return Vector2i(textureBox.width * 0.59f, int(textureBox.height * 0.01f));
+	case 9:
+		return Vector2i(textureBox.width * 0.553f, int(textureBox.height * 0.908f));
+	case 10:
+		return Vector2i(textureBox.width * 0.525f, int(textureBox.height * 0.9f));
+	case 11:
+		return Vector2i(textureBox.width * 0.578f, int(textureBox.height * 0.931f));
+	case 12:
+		return Vector2i(textureBox.width * 0.506f, int(textureBox.height * 0.853f));
+	case 13:
+		return Vector2i(textureBox.width * 0.542f, int(textureBox.height * 0.83f));
+	case 14:
+		return Vector2i(textureBox.width * 0.519f, int(textureBox.height * 0.863f));
+	case 15:
 		return Vector2i(textureBox.width * 0.495f, int(textureBox.height * 0.734f));
 	default:
 		return Vector2i(textureBox.width * 0.409f, int(textureBox.height * 0.945f));
@@ -70,8 +102,8 @@ void Bush::initPedestal()
 			ellipseSizeMultipliers[0] = { 0 };
 			break;
 		case 3:
-			focus1 = Vector2f(position.x - textureBox.width * 0.289f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.289f, position.y);
+			focus1 = Vector2f(position.x - textureBox.width * 0.224f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.224f, position.y);
 			ellipseSizeMultipliers[0] = { 1.29 };
 			break;
 		case 4:
@@ -88,6 +120,51 @@ void Bush::initPedestal()
 			focus1 = Vector2f(position.x - textureBox.width * 0.319f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.319f, position.y);
 			ellipseSizeMultipliers[0] = { 1.17 };
+			break;
+		case 7:
+			focus1 = Vector2f(position.x, position.y);
+			focus2 = Vector2f(position.x, position.y);
+			ellipseSizeMultipliers[0] = { 0 };
+			break;
+		case 8:
+			focus1 = Vector2f(position.x, position.y);
+			focus2 = Vector2f(position.x, position.y);
+			ellipseSizeMultipliers[0] = { 0 };
+			break;
+		case 9:
+			focus1 = Vector2f(position.x - textureBox.width * 0.119f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.119f, position.y);
+			ellipseSizeMultipliers[0] = { 1.29 };
+			break;
+		case 10:
+			focus1 = Vector2f(position.x - textureBox.width * 0.196f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.196f, position.y);
+			ellipseSizeMultipliers[0] = { 1.31 };
+			break;
+		case 11:
+			focus1 = Vector2f(position.x - textureBox.width * 0.123f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.123f, position.y);
+			ellipseSizeMultipliers[0] = { 1.26 };
+			break;
+		case 12:
+			focus1 = Vector2f(position.x - textureBox.width * 0.174f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.174f, position.y);
+			ellipseSizeMultipliers[0] = { 1.18 };
+			break;
+		case 13:
+			focus1 = Vector2f(position.x - textureBox.width * 0.165f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.165f, position.y);
+			ellipseSizeMultipliers[0] = { 1.24 };
+			break;
+		case 14:
+			focus1 = Vector2f(position.x - textureBox.width * 0.238f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.238f, position.y);
+			ellipseSizeMultipliers[0] = { 1.09 };
+			break;
+		case 15:
+			focus1 = Vector2f(position.x - textureBox.width * 0.289f, position.y);
+			focus2 = Vector2f(position.x + textureBox.width * 0.289f, position.y);
+			ellipseSizeMultipliers[0] = { 1.29 };
 			break;
 		default:
 			focus1 = Vector2f(position.x - textureBox.width * 0.341f, position.y);
@@ -111,14 +188,23 @@ int Bush::getBuildType(Vector2f ounPos, Vector2f otherPos)
 void Bush::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 {
 	additionalSprites.clear();
-	spriteChainElement stumpBody;
-	stumpBody.size = Vector2f(conditionalSizeUnits);
-	stumpBody.offset = Vector2f(textureBoxOffset);
+	spriteChainElement body;
+	body.size = Vector2f(conditionalSizeUnits);
+	body.offset = Vector2f(textureBoxOffset);
 
-	animationLength = 1;
-	stumpBody.path = "Game/worldSprites/BirchGrove/bush" + std::to_string(typeOfObject) + ".png";
+	if (typeOfObject >= 1 && typeOfObject <= 8)
+	{
+		animationLength = 1;
+		body.path = "Game/worldSprites/BirchGrove/bush" + std::to_string(typeOfObject) + ".png";
+	}
+	else
+		if (typeOfObject >= 9 && typeOfObject <= 15)
+		{
+			animationLength = 1;
+			body.path = "Game/worldSprites/SwampyTrees/bush" + std::to_string(typeOfObject - 8) + ".png";
+		}
 
-	additionalSprites.push_back(stumpBody);
+	additionalSprites.push_back(body);
 
 	timeForNewSprite += elapsedTime;
 

@@ -3,7 +3,7 @@
 
 Grass::Grass(std::string objectName, Vector2f centerPosition, int typeOfObject) : StaticObject(objectName, centerPosition)
 {
-	varietyOfTypes = 21;
+	varietyOfTypes = 30; // BirchGrove: 1-7; DarkWoods: 8-21; SwampyTrees: 22-30
 	this->typeOfObject = typeOfObject;
 	this->intangible = true;
 	toSaveName = "grass";
@@ -60,6 +60,24 @@ void Grass::setType(int typeOfObject)
 		conditionalSizeUnits = Vector2i(357, 330);
 	if (typeOfObject == 21)
 		conditionalSizeUnits = Vector2i(425, 287);
+	if (typeOfObject == 22)
+		conditionalSizeUnits = Vector2i(469, 209);
+	if (typeOfObject == 23)
+		conditionalSizeUnits = Vector2i(166, 124);
+	if (typeOfObject == 24)
+		conditionalSizeUnits = Vector2i(78, 255);
+	if (typeOfObject == 25)
+		conditionalSizeUnits = Vector2i(171, 173);
+	if (typeOfObject == 26)
+		conditionalSizeUnits = Vector2i(123, 137);
+	if (typeOfObject == 27)
+		conditionalSizeUnits = Vector2i(133, 136);
+	if (typeOfObject == 28)
+		conditionalSizeUnits = Vector2i(91, 112);
+	if (typeOfObject == 29)
+		conditionalSizeUnits = Vector2i(119, 125);
+	if (typeOfObject == 30)
+		conditionalSizeUnits = Vector2i(134, 84);
 }
 
 Vector2i Grass::calculateTextureOffset()
@@ -85,16 +103,15 @@ void Grass::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	animationSpeed = 10;
 	additionalSprites.clear();
 	spriteChainElement grassBody;
+		
+	animationLength = 1;
 	if (typeOfObject >= 1 && typeOfObject <= 8)
-	{
-		animationLength = 1;
-		grassBody.path = "Game/worldSprites/BirchGrove/plant" + std::to_string(typeOfObject) + ".png";
-	}
-	if (typeOfObject >= 9 && typeOfObject <= 21)
-	{
-		animationLength = 1;
+		grassBody.path = "Game/worldSprites/BirchGrove/plant" + std::to_string(typeOfObject) + ".png";	
+	if (typeOfObject >= 9 && typeOfObject <= 21)	
 		grassBody.path = "Game/worldSprites/DarkWoods/plant" + std::to_string(typeOfObject - 8) + "/" + std::to_string(currentSprite[0]) + ".png";
-	}
+	if (typeOfObject >= 22 && typeOfObject <= 30)
+		grassBody.path = "Game/worldSprites/SwampyTrees/plant" + std::to_string(typeOfObject - 21) + ".png";
+	
 	grassBody.size = Vector2f(conditionalSizeUnits);
 	grassBody.offset = Vector2f(textureBoxOffset);
 	additionalSprites.push_back(grassBody);
