@@ -89,7 +89,7 @@ Vector2i ForestTree::calculateTextureOffset()
 		case 12:
 			return Vector2i(textureBox.width * 0.327f, int(textureBox.height * 0.93f));
 		case 13:
-			return Vector2i(textureBox.width * 0.736f, int(textureBox.height * 0.51f));
+			return Vector2i(textureBox.width * 0.574f, int(textureBox.height * 0.508f));
 		case 14:
 			return Vector2i(textureBox.width * 0.521f, int(textureBox.height * 0.883f));
 		case 15:
@@ -107,6 +107,7 @@ Vector2i ForestTree::calculateTextureOffset()
 
 void ForestTree::initPedestal()
 {
+	std::pair<Vector2f, Vector2f> microEllipse;
 	switch (typeOfObject)
 	{
 		case 1:		
@@ -169,10 +170,27 @@ void ForestTree::initPedestal()
 			focus2 = Vector2f(position.x + textureBox.width * 0.137f, position.y);
 			ellipseSizeMultipliers[0] = { 1.25 };
 			break;		
-		case 13:		
-			focus1 = Vector2f(position.x - textureBox.width * 0.195f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.195f, position.y);
-			ellipseSizeMultipliers[0] = { 1.05 };
+		case 13:
+			this->isMultiellipse = true;
+			focus1 = Vector2f(position.x, position.y);
+			focus2 = Vector2f(position.x, position.y);
+
+			microEllipse.first = Vector2f(position.x - textureBox.width * 0.42, position.y + textureBox.height * 0.247);
+			microEllipse.second = Vector2f(position.x - textureBox.width * 0.178, position.y + textureBox.height * 0.247);
+			internalEllipses.push_back(microEllipse);
+
+			microEllipse.first = Vector2f(position.x - textureBox.width * 0.235, position.y + textureBox.height * 0.171);
+			microEllipse.second = Vector2f(position.x - textureBox.width * 0.026, position.y + textureBox.height * 0.171);
+			internalEllipses.push_back(microEllipse);
+
+			microEllipse.first = Vector2f(position.x - textureBox.width * 0.044, position.y + textureBox.height * 0.047);
+			microEllipse.second = Vector2f(position.x + textureBox.width * 0.132, position.y + textureBox.height * 0.047);
+			internalEllipses.push_back(microEllipse);
+
+			microEllipse.first = Vector2f(position.x + textureBox.width * 0.14, position.y - textureBox.height * 0.012);
+			microEllipse.second = Vector2f(position.x + textureBox.width * 0.385, position.y - textureBox.height * 0.012);
+			internalEllipses.push_back(microEllipse);
+			ellipseSizeMultipliers = { 1.03, 1.09, 1.27, 1.12 };
 			break;
 		case 14:
 			focus1 = Vector2f(position.x - textureBox.width * 0.079f, position.y);

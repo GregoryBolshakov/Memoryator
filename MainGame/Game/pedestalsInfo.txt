@@ -1,25 +1,17 @@
-Tag: lake 
-Type: 1
-Mirrored: 0
-OffsetX: 0.549 OffsetY: 0.727
+Tag: rock 
+Type: 5
+Mirrored: 1
+OffsetX: 3.02 OffsetY: -0.353
 
-Focus0 X: -0.49 Focus0 Y: 0.0475
-Focus1 X: -0.0158 Focus1 Y: 0.0475
-Ellipse size: 1.06
+Focus0 X: -1.04 Focus0 Y: -0.0124
+Focus1 X: 0.134 Focus1 Y: -0.0124
+Ellipse size: 1.3
 
-Focus2 X: -0.184 Focus2 Y: -0.0677
-Focus3 X: 0.096 Focus3 Y: -0.0677
-Ellipse size: 1.13
+Focus2 X: -0.232 Focus2 Y: -0.105
+Focus3 X: 0.418 Focus3 Y: -0.105
+Ellipse size: 1.17e-42
 
-Focus4 X: -0.102 Focus4 Y: 0.0916
-Focus5 X: 0.0549 Focus5 Y: 0.0916
-Ellipse size: 1.26
-
-Focus6 X: 0.0222 Focus6 Y: -0.177
-Focus7 X: 0.352 Focus7 Y: -0.177
-Ellipse size: 1.07
-
-Focus8 X: 0.0222 Focus8 Y: -0.177
-Focus9 X: 0.352 Focus9 Y: -0.177
-Ellipse size: 1.16
+Focus4 X: 0.0815 Focus4 Y: -0.00769
+Focus5 X: 1.01 Focus5 Y: -0.00769
+Ellipse size: 1.1e+23
 

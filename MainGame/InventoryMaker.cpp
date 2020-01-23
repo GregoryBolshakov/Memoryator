@@ -103,7 +103,6 @@ void InventoryMaker::moveOtherBags(int cur, std::vector<int> ancestors)
 				Vector2f tempNewPos = Vector2f(anotherBag.getPosition().x + anotherBag.shiftVector.x, anotherBag.getPosition().y + (anotherBag.shiftVector.y));
 				anotherBag.movePosition = tempNewPos;
 				anotherBag.shiftVector.x = 0; anotherBag.shiftVector.y = 0;
-
 				//break;
 			}
 		}
@@ -132,33 +131,44 @@ void InventoryMaker::interact(float elapsedTime)
 		moveOtherBags(cnt);
 		//-----------------------------
 
-		// bag auto-moving		
-		if (bag.movePosition != Vector2f(0, 0) && Helper::getDist(bag.getPosition(), bag.movePosition) > bag.speed * 10000)
+		// bag auto-moving			
+		bag.fixPos();
+		Vector2f newPos = bag.getPosition(), shift = { bag.movePosition.x - bag.getPosition().x, bag.movePosition.y - bag.getPosition().y };
+		if (bag.movePosition.x != -1 && bag.movePosition.y != -1)
 		{
-			bag.fixPos();
-			const float k = bag.speed * elapsedTime / Helper::getDist(bag.getPosition(), bag.movePosition);
-			Vector2f newPos = bag.getPosition();
-			if (bag.movePosition.x != 0)
-				newPos.x = bag.getPosition().x + (bag.movePosition.x - bag.getPosition().x) * k;
-			if (bag.movePosition.y != 0)
-				newPos.y = bag.getPosition().y + (bag.movePosition.y - bag.getPosition().y) * k;
-			bag.setPosition(newPos);
-			bag.fixCells();
+			const float k = bag.speed * elapsedTime / Helper::getDist(bag.getPosition(), bag.movePosition);			
+			newPos.x = bag.getPosition().x + shift.x * k;
+			newPos.y = bag.getPosition().y + shift.y * k;
 		}
 		else
-			bag.movePosition = Vector2f(0, 0);
+		{
+			if (bag.movePosition.x == -1 && bag.movePosition.y != -1)
+			{
+				newPos.y += bag.speed * elapsedTime / shift.y * abs(shift.y) / 2;
+				bag.movePosition.x = bag.getPosition().x;
+			}
+			if (bag.movePosition.y == -1 && bag.movePosition.x != -1)
+			{
+				newPos.x += bag.speed * elapsedTime / shift.x * abs(shift.x) / 2;
+				bag.movePosition.y = bag.getPosition().y;
+			}
+		}
+		if (Helper::getDist(bag.getPosition(), bag.movePosition) <= bag.speed * elapsedTime)
+			newPos = bag.movePosition;
+		bag.setPosition(newPos);
+		bag.fixCells();
 		//----------------
 
 		// bag selection
 		if (bag.currentState == bagClosed)
 		{
 			const Vector2f selectionPos = Vector2f(bag.getPosition().x + bag.selectionZoneClosedOffset.x, bag.getPosition().y + bag.selectionZoneClosedOffset.y);
-			bag.readyToChangeState = (Helper::getDist(mousePos, selectionPos) <= bag.selectionZoneRadiusClosed);
+			bag.readyToChangeState = (Helper::getDist(mousePos, selectionPos) <= bag.minDistToBorder);
 		} else
 		if (bag.currentState == bagOpen)
 		{
 			const Vector2f selectionPos = Vector2f(bag.getPosition().x + bag.selectionZoneOpenOffset.x, bag.getPosition().y + bag.selectionZoneOpenOffset.y);
-			bag.readyToChangeState = (Helper::getDist(mousePos, selectionPos) <= bag.selectionZoneRadiusOpen);
+			bag.readyToChangeState = (Helper::getDist(mousePos, selectionPos) <= bag.minDistToBorder);
 		}
 		//--------------
 	}

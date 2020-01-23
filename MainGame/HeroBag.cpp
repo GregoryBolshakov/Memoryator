@@ -23,7 +23,6 @@ void HeroBag::cleanTextureReferences()
 	textureOpenBagSelected = nullptr;
 }
 
-
 std::unordered_map<Tag, int> HeroBag::itemsMaxCount = std::unordered_map<Tag, int>();
 float HeroBag::itemCommonRadius = Helper::GetScreenSize().y / 36;
 
@@ -65,13 +64,11 @@ void HeroBag::initialize(Vector2f position, bool isSelectable, std::vector<std::
 	this->position = position;
 	lastMousePos = position;
 
-	this->isSelectable = isSelectable;
-
-	this->selectionZoneRadiusClosed = sizeClosed.x / 2;
-	this->selectionZoneRadiusOpen = sizeOpen.x / 5;
+	this->isSelectable = isSelectable;	
 
 	this->textureClosedOffset = Vector2f(sizeClosed.x / 2, sizeClosed.y / 1.7);
 	this->textureOpenOffset = Vector2f(sizeOpen.x / 2, sizeOpen.y / 1.7);
+	this->minDistToBorder = std::max(sizeClosed.y - textureClosedOffset.y, textureClosedOffset.y);
 
 	this->selectionZoneClosedOffset = Vector2f(0, 0);
 	this->selectionZoneOpenOffset = Vector2f(0, -textureOpenOffset.y + sizeOpen.y * 0.2f);
@@ -144,19 +141,22 @@ void HeroBag::fixCells()
 
 void HeroBag::fixPos()
 {
-	if (movePosition.x < selectionZoneRadiusOpen)		
-		movePosition.x = 0; else
-	if (movePosition.x > Helper::GetScreenSize().x - selectionZoneRadiusOpen)
-		movePosition.x = Helper::GetScreenSize().x - selectionZoneRadiusOpen;
+	if (movePosition == position)
+		movePosition = { -1, -1 };
 
-	if (movePosition.y < selectionZoneRadiusOpen)
-		movePosition.y = 0; else
-	if (movePosition.y > Helper::GetScreenSize().y - selectionZoneRadiusOpen)
-		movePosition.y = Helper::GetScreenSize().y - selectionZoneRadiusOpen;
+	if (movePosition.x < minDistToBorder)
+		movePosition.x = -1;
+	if (movePosition.x > Helper::GetScreenSize().x - minDistToBorder)
+		movePosition.x = -1;
 
-	if (position.x + shiftVector.x < selectionZoneRadiusOpen || position.x + shiftVector.x > Helper::GetScreenSize().x - selectionZoneRadiusOpen)
+	if (movePosition.y < minDistToBorder)
+		movePosition.y = -1;
+	if (movePosition.y > Helper::GetScreenSize().y - minDistToBorder)
+		movePosition.y = -1;
+
+	if (position.x + shiftVector.x < minDistToBorder || position.x + shiftVector.x > Helper::GetScreenSize().x - minDistToBorder)
 		shiftVector.x = 0;
-	if (position.y + shiftVector.y < selectionZoneRadiusOpen || position.y + shiftVector.y > Helper::GetScreenSize().y - selectionZoneRadiusOpen)
+	if (position.y + shiftVector.y < minDistToBorder || position.y + shiftVector.y > Helper::GetScreenSize().y - minDistToBorder)
 		shiftVector.y = 0;
 }
 

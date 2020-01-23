@@ -66,14 +66,12 @@ public:
 	void runWorldGenerator();
 	PedestalController pedestalController;
 
-	//zoom
-	float scaleFactor;
-	float mainScale;
+	//zoom	
 	void setScaleFactor(int delta);
 	void scaleSmoothing();
 	float scaleDecrease, timeForScaleDecrease = 0;
 	Clock scaleDecreaseClock;
-	std::map<Tag, bool> unscaledObjects = {{Tag::hero1, true}, {Tag::nightmare1, true}, {Tag::nightmare2, true}, {Tag::nightmare3, true}, {Tag::grass, true} };
+	std::map<Tag, bool> unscaledObjects = {{Tag::hero1, true}, {Tag::nightmare1, true}, {Tag::nightmare2, true}, {Tag::nightmare3, true}, {Tag::grass, true}, {Tag::lake, true} };
 
 	//hero
 	DynamicObject* focusedObject = nullptr;

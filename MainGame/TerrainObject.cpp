@@ -4,8 +4,7 @@
 TerrainObject::TerrainObject(std::string objectName, Vector2f centerPosition) : StaticObject(objectName, centerPosition)
 {	
 	isTerrain = true;
-	if (!isMultiellipse)
-		mirrored = bool(rand() % 2);
+	mirrored = bool(rand() % 2);
 }
 
 TerrainObject::~TerrainObject()

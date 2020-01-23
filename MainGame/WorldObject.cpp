@@ -30,10 +30,14 @@ Vector2f WorldObject::getScaleRatio()
 	return Vector2f (float(conditionalSizeUnits.x) / originalTextureBox.width, float(conditionalSizeUnits.y) / originalTextureBox.height);
 }
 
-/*Vector2i WorldObject::calculateTextureOffset()
+void WorldObject::cancelMirroring()
 {
-	return Vector2i(0, 0);
-}*/
+	if (!mirrored)
+		return;
+
+	textureBoxOffset.x = conditionalSizeUnits.x - textureBoxOffset.x;
+	mirrored = false;
+}
 
 void WorldObject::initPedestal()
 {

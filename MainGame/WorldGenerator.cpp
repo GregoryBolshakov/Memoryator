@@ -7,7 +7,7 @@ WorldGenerator::WorldGenerator()
 {
 }
 
-void WorldGenerator::init(int width, int height, Vector2i blockSize, Vector2i microBlockSize, GridList* staticGrid, GridList* dynamicGrid, std::unordered_map<std::string, BoardSprite>* spriteMap, float* scaleFactor)
+void WorldGenerator::init(int width, int height, Vector2i blockSize, Vector2i microBlockSize, GridList* staticGrid, GridList* dynamicGrid, std::unordered_map<std::string, BoardSprite>* spriteMap)
 {
 	this->width = width;
 	this->height = height;
@@ -70,14 +70,11 @@ void WorldGenerator::generate()
 
 	// world generation
 	initBiomesGenerationInfo();
-	const Vector2f upperLeft(int(focusedObject->getPosition().x - Helper::GetScreenSize().x / 2 / (*scaleFactor) - blockSize.x / (*scaleFactor)), int(focusedObject->getPosition().y - Helper::GetScreenSize().y / 2 / (*scaleFactor) - blockSize.x / (*scaleFactor)));
-	const Vector2f bottomRight(int(focusedObject->getPosition().x + Helper::GetScreenSize().x / 2 / (*scaleFactor) + blockSize.x / (*scaleFactor)), int(focusedObject->getPosition().y + Helper::GetScreenSize().y / 2 / (*scaleFactor) + blockSize.x / (*scaleFactor)));
-	int test = 0;
-	for (auto& block : staticGrid->getBlocksInSight(upperLeft.x, upperLeft.y, bottomRight.x, bottomRight.y))
-	{
-		test = block;
-		inBlockGenerate(block);
-	}
+	const Vector2f upperLeft(int(focusedObject->getPosition().x - (Helper::GetScreenSize().x / 2 + blockSize.x) / (farthestScale * mainScale)), int(focusedObject->getPosition().y - (Helper::GetScreenSize().y / 2 + blockSize.x) / (farthestScale * mainScale)));
+	const Vector2f bottomRight(int(focusedObject->getPosition().x + (Helper::GetScreenSize().x / 2 + blockSize.y) / (farthestScale * mainScale)), int(focusedObject->getPosition().y + (Helper::GetScreenSize().y / 2 + blockSize.y) / (farthestScale * mainScale)));
+
+	for (auto& block : staticGrid->getBlocksInSight(upperLeft.x, upperLeft.y, bottomRight.x, bottomRight.y))	
+		inBlockGenerate(block);	
 	//---------------
 }
 
@@ -119,11 +116,11 @@ void WorldGenerator::inBlockGenerate(int blockIndex)
 			if (biomeMatrix[groundIndX][groundIndY].biomeCell == SwampyTrees)
 			{
 				if (blockTypeProbablilty <= 30) // block with chamomile
-					roomedBlocksContent = { {Tag::rock, 2}, {Tag::lake, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
+					roomedBlocksContent = { {Tag::rock, 2}, {Tag::lake, 2}, {Tag::stump, 2}, {Tag::root, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
 				else
 					if (blockTypeProbablilty <= 99) // common block
-						roomedBlocksContent = { {Tag::rock, 2}, {Tag::lake, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
-				otherBlocksContent = { {Tag::grass, 6} , {Tag::mushroom, 0} };
+						roomedBlocksContent = { {Tag::rock, 2}, {Tag::lake, 2}, {Tag::stump, 2}, {Tag::root, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
+				otherBlocksContent = { {Tag::grass, 6} , {Tag::mushroom, 2} };
 			}
 
 	std::sort(roomedBlocksContent.begin(), roomedBlocksContent.end(), cmpByChance);
@@ -132,7 +129,7 @@ void WorldGenerator::inBlockGenerate(int blockIndex)
 	generateGround(blockIndex);
 
 	//block filling
-	return;
+	//return;
 
 	for (int x = blockTransform.left; x < blockTransform.left + blockTransform.width; x += 100)
 	{
@@ -246,12 +243,12 @@ void WorldGenerator::perimeterGeneration(int offset)
 {
 	const auto screenSize = Helper::GetScreenSize();
 	const auto characterPosition = focusedObject->getPosition();
-	const Vector2f worldUpperLeft(int(characterPosition.x - screenSize.x / 2 / (*scaleFactor)), int(characterPosition.y - screenSize.y / 2 / (*scaleFactor)));
-	const Vector2f worldBottomRight(int(characterPosition.x + screenSize.x / 2 / (*scaleFactor)), int(characterPosition.y + screenSize.y / 2 / (*scaleFactor)));
+	const Vector2f worldUpperLeft(int(characterPosition.x - (screenSize.x / 2 + blockSize.x) / (farthestScale * mainScale)), int(characterPosition.y - (screenSize.y / 2 + blockSize.y) / (farthestScale * mainScale)));
+	const Vector2f worldBottomRight(int(characterPosition.x + (screenSize.x / 2 + blockSize.x) / (farthestScale * mainScale)), int(characterPosition.y + (screenSize.y / 2 + blockSize.y) / (farthestScale * mainScale)));
 
 	if (focusedObject->getDirection() != STAND)
 	{
-		for (auto& block : staticGrid->getBlocksAround(worldUpperLeft.x - blockSize.x / (*scaleFactor), worldUpperLeft.y - blockSize.y / (*scaleFactor), worldBottomRight.x + blockSize.x / (*scaleFactor), worldBottomRight.y + blockSize.y / (*scaleFactor), offset))
+		for (auto& block : staticGrid->getBlocksAround(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y, offset))
 		{
 			if (canBeRegenerated(block))
 			{

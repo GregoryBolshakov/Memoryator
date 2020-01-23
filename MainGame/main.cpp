@@ -131,7 +131,7 @@ int main() {
 		auto hero = dynamic_cast<DynamicObject*>(world.focusedObject);
 		console.interact(interactTime);
 		console.draw(mainWindow);
-		TextWriter::drawString(std::to_string(Helper::getFps()), NormalFont, 30, 200, 200, &mainWindow, Color::Black);	
+		TextWriter::drawString(std::to_string(world.getWorldGenerator().scaleFactor * world.getWorldGenerator().mainScale), NormalFont, 30, 200, 200, &mainWindow, Color::Black);	
 
 		mainWindow.display();
 	}

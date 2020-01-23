@@ -6,7 +6,7 @@ std::map<Tag, std::string> ObjectInitializer::mappedTags = { {Tag::hero1, "hero1
 {Tag::heroBag, "heroBag"}, {Tag::noose, "noose"}, {Tag::totem, "totem"}, {Tag::hareTrap, "hareTrap"}, {Tag::fence, "fence"}, {Tag::inkyBlackPen, "inkyBlackPen"},
 	{Tag::unknownWreath, "inknownWreath"}, {Tag::hareWreath, "hareWreath"}, {Tag::owlWreath, "owlWreath"}, {Tag::tree, "tree"}, {Tag::grass, "grass"}, {Tag::spawn, "spawn"},
 	{Tag::ground, "ground"}, {Tag::groundConnection, "groundConnection"}, {Tag::brazier, "brazier"}, {Tag::wreathTable, "wreathTable"}, {Tag::rock, "rock"},
-	{Tag::stump, "stump"}, {Tag::droppedLoot, "droppedLoot"}, {Tag::mushroom, "mushroom"}, {Tag::log, "log"}, {Tag::bush, "bush"}, {Tag::roof, "roof"}, {Tag::lake, "lake"},
+	{Tag::stump, "stump"}, {Tag::droppedLoot, "droppedLoot"}, {Tag::mushroom, "mushroom"}, {Tag::log, "log"}, {Tag::bush, "bush"}, {Tag::roof, "roof"}, {Tag::lake, "lake"}, {Tag::root, "root"},
 	{Tag::chamomile, "chamomile"}, {Tag::yarrow, "yarrow"}, {Tag::fern, "fern"}, {Tag::mugwort, "mugwort"}, {Tag::poppy, "poppy"}, {Tag::buildObject, "buildObject"}, {Tag::dropPoint, "dropPoint"},
 	{Tag::emptyDraft, "emptyDraft"}, {Tag::emptyPage, "emptyPage"}, {Tag::emptyCell, "emptyCell"}, {Tag::selectedCell, "selectedCell"}, {Tag::clapWhirl, "clapWhirl"}, {Tag::emptyObject, "emptyObject"} };
 
@@ -15,7 +15,7 @@ std::map<std::string, Tag> ObjectInitializer::mappedStrings = { {"hero1", Tag::h
 {"heroBag", Tag::heroBag}, {"noose", Tag::noose}, {"totem", Tag::totem}, {"hareTrap", Tag::hareTrap}, {"fence", Tag::fence}, {"inkyBlackPen", Tag::inkyBlackPen},
 	{"unknownWreath", Tag::unknownWreath}, {"hareWreath", Tag::hareWreath}, {"owlWreath", Tag::owlWreath}, {"tree", Tag::tree}, {"grass", Tag::grass}, {"spawn", Tag::spawn},
 	{"ground", Tag::ground}, {"groundConnection", Tag::groundConnection}, {"brazier", Tag::brazier}, {"wreathTable", Tag::wreathTable}, {"rock", Tag::rock},
-	{"stump", Tag::stump}, {"droppedLoot", Tag::droppedLoot}, {"mushroom", Tag::mushroom}, {"log", Tag::log}, {"bush", Tag::bush}, {"roof", Tag::roof}, {"lake", Tag::lake},
+	{"stump", Tag::stump}, {"droppedLoot", Tag::droppedLoot}, {"mushroom", Tag::mushroom}, {"log", Tag::log}, {"bush", Tag::bush}, {"roof", Tag::roof}, {"lake", Tag::lake}, {"root", Tag::root},
 	{"chamomile", Tag::chamomile}, {"yarrow", Tag::yarrow}, {"fern", Tag::fern}, {"mugwort", Tag::mugwort}, {"poppy", Tag::poppy}, {"buildObject", Tag::buildObject}, {"dropPoint", Tag::dropPoint},
 	{"emptyDraft", Tag::emptyDraft}, {"emptyPage", Tag::emptyPage}, {"emptyCell", Tag::emptyCell}, {"selectedCell", Tag::selectedCell}, {"clapWhirl", Tag::clapWhirl}, {"emptyObject", Tag::emptyObject} };
 
@@ -149,6 +149,11 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 			item = new Lake("item", Vector2f(0, 0), -1);
 			break;
 		}
+		case Tag::root:
+		{
+			item = new Root("item", Vector2f(0, 0), -1);
+			break;
+		}
 		case Tag::roof:
 		{
 			item = new Roof("item", Vector2f(0, 0), -1);
@@ -159,10 +164,7 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 			item = new Spawn("item", Vector2f(0, 0), -1);
 			break;
 		}
-	}
-
-	if (!mirrored)
-		item->manuallyDisableMirroring();
+	}	
 
 	int currentType = itemType == -1
 		? currentType = getRandomTypeByBiome(item, biome)
@@ -183,7 +185,11 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 		: itemName;
 	item->setName(name);
 	if (!inventory.empty())
-		item->inventory = inventory;	
+		item->inventory = inventory;
+
+	if (!mirrored || item->isMultiellipse)
+		item->cancelMirroring();
+
 	return item;
 }
 
@@ -333,6 +339,8 @@ int ObjectInitializer::getRandomTypeByBiome(WorldObject* object, Biomes biome)
 				return rand() % 4 + 1;
 			if (biome == DarkWoods)
 				return rand() % 6 + 5;
+			if (biome == SwampyTrees)
+				return rand() % 3 + 11;
 			break;
 		}
 		case Tag::bush:
@@ -349,6 +357,8 @@ int ObjectInitializer::getRandomTypeByBiome(WorldObject* object, Biomes biome)
 				return rand() % 3 + 1;
 			if (biome == DarkWoods)
 				return rand() % 9 + 4;
+			if (biome == SwampyTrees)
+				return rand() % 4 + 13;
 			break;
 		}
 		default: return rand() % object->getVarietyOfTypes() + 1;

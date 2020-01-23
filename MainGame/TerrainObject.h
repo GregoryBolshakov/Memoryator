@@ -23,7 +23,7 @@ public:
 	int getEllipseSize(int i = 0);
 	bool isIntersected(Vector2f curPosition, Vector2f newPosition); //const;
 	std::vector<int> getMultiellipseIntersect(Vector2f position) const;
-	Vector2f newSlippingPositionForDotsAdjusted(Vector2f position, Vector2f motionVector, float speed, float elapsedTime);
+	Vector2f newSlippingPositionForDotsAdjusted(Vector2f position, Vector2f motionVector, float speed, float elapsedTime);	
 
 	std::vector<std::pair<Vector2f, Vector2f>> internalEllipses; // focus1 - focus2
 };

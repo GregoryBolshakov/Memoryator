@@ -32,7 +32,7 @@ Vector2i Log::calculateTextureOffset()
 	switch (typeOfObject)
 	{
 	case 1:
-		return Vector2i(textureBox.width * 0.492f, int(textureBox.height * 0.726f));
+		return Vector2i(textureBox.width * 0.492f, int(textureBox.height * 0.721f));
 	case 2:
 		return Vector2i(textureBox.width * 0.479f, int(textureBox.height * 0.735f));
 	case 3:
@@ -44,12 +44,26 @@ Vector2i Log::calculateTextureOffset()
 
 void Log::initPedestal()
 {
+	std::pair<Vector2f, Vector2f> microEllipse;
 	switch (typeOfObject)
 	{
 	case 1:
-		focus1 = Vector2f(position.x - textureBox.width * 0.383f, position.y);
-		focus2 = Vector2f(position.x + textureBox.width * 0.383f, position.y);
-		ellipseSizeMultipliers[0] = { 1.04 };
+		this->isMultiellipse = true;
+		focus1 = Vector2f(position.x, position.y);
+		focus2 = Vector2f(position.x, position.y);
+
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.42, position.y + textureBox.height * 0.15);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.073, position.y - textureBox.height * 0.26);
+		internalEllipses.push_back(microEllipse);
+
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.107, position.y - textureBox.height * 0.197);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.169, position.y - textureBox.height * 0.197);
+		internalEllipses.push_back(microEllipse);
+
+		microEllipse.first = Vector2f(position.x + textureBox.width * 0.033, position.y - textureBox.height * 0.2);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.407, position.y + textureBox.height * 0.103);
+		internalEllipses.push_back(microEllipse);
+		ellipseSizeMultipliers = { 1.03, 1.11, 1.05 };
 		break;
 	case 2:
 		focus1 = Vector2f(position.x - textureBox.width * 0.399f, position.y);

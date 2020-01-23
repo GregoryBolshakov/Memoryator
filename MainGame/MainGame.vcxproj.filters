@@ -177,6 +177,9 @@
       <Filter>World</Filter>
     </ClCompile>
     <ClCompile Include="Lake.cpp" />
+    <ClCompile Include="Root.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DynamicObject.h" />
@@ -356,6 +359,9 @@
       <Filter>World</Filter>
     </ClInclude>
     <ClInclude Include="Lake.h" />
+    <ClInclude Include="Root.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Terrain">

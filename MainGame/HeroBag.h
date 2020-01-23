@@ -52,10 +52,10 @@ public:
 	void drawCircuit(RenderWindow* window);
 	void cleanTextureReferences();
 
-	float stateChangeTime = 100000, stateChangingTime = 0, speed = 0.0012f;
+	float stateChangeTime = 100000, stateChangingTime = 0, speed = 0.001f;
 	BagState currentState = bagClosed;
-	float selectionZoneRadiusClosed, selectionZoneRadiusOpen;
-	Vector2f selectionZoneClosedOffset, selectionZoneOpenOffset, shiftVector = { 0, 0 }, movePosition = { 0, 0 };
+	float minDistToBorder = 0;
+	Vector2f selectionZoneClosedOffset, selectionZoneOpenOffset, shiftVector = { 0, 0 }, movePosition = { -1, -1 };
 	bool readyToChangeState = false, readyToEject = false, wasMoved = false, wasBounded = false;
 	//---------
 private:

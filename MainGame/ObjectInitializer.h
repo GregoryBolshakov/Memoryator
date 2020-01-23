@@ -26,6 +26,7 @@
 #include "Log.h"
 #include "Bush.h"
 #include "Lake.h"
+#include "Root.h"
 #include  "Roof.h"
 
 #include "Monster.h"

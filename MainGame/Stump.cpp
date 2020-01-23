@@ -3,7 +3,7 @@
 
 Stump::Stump(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(objectName, centerPosition)
 {
-	varietyOfTypes = 10;
+	varietyOfTypes = 13; // BirchGrove: 1-4; DarkWoods: 5-10; SwampyTrees: 11-13
 	this->typeOfObject = typeOfObject;
 	strength = 0;
 	radius = 50;
@@ -36,6 +36,12 @@ void Stump::setType(int typeOfObject)
 		conditionalSizeUnits = Vector2i(335, 266);
 	if (typeOfObject == 10)
 		conditionalSizeUnits = Vector2i(186, 412);
+	if (typeOfObject == 11)
+		conditionalSizeUnits = Vector2i(250, 663);
+	if (typeOfObject == 12)
+		conditionalSizeUnits = Vector2i(526, 441);
+	if (typeOfObject == 13)
+		conditionalSizeUnits = Vector2i(267, 434);
 }
 
 Vector2i Stump::calculateTextureOffset()
@@ -54,7 +60,7 @@ Vector2i Stump::calculateTextureOffset()
 	case 4:
 		return Vector2i(textureBox.width * 0.485f, int(textureBox.height * 0.591f));
 	case 5:
-		return Vector2i(textureBox.width * 0.551f, int(textureBox.height * 0.68f));
+		return Vector2i(textureBox.width * 0.551f, int(textureBox.height * 0.771f));
 	case 6:
 		return Vector2i(textureBox.width * 0.468f, int(textureBox.height * 0.796f));
 	case 7:
@@ -62,8 +68,14 @@ Vector2i Stump::calculateTextureOffset()
 	case 8:
 		return Vector2i(textureBox.width * 0.525f, int(textureBox.height * 0.889f));
 	case 9:
-		return Vector2i(textureBox.width * 0.501f, int(textureBox.height * 0.659f));
+		return Vector2i(textureBox.width * 0.501f, int(textureBox.height * 0.728f));
 	case 10:
+		return Vector2i(textureBox.width * 0.46f, int(textureBox.height * 0.83f));
+	case 11:
+		return Vector2i(textureBox.width * 0.467f, int(textureBox.height * 0.868f));
+	case 12:
+		return Vector2i(textureBox.width * 0.554f, int(textureBox.height * 0.758f));
+	case 13:
 		return Vector2i(textureBox.width * 0.46f, int(textureBox.height * 0.83f));
 	default:
 		return Vector2i(textureBox.width * 0.409f, int(textureBox.height * 0.945f));
@@ -95,8 +107,8 @@ void Stump::initPedestal()
 		ellipseSizeMultipliers[0] = { 1.307 };
 		break;
 	case 5:
-		focus1 = Vector2f(position.x - textureBox.width * 0.167f, position.y);
-		focus2 = Vector2f(position.x + textureBox.width * 0.167f, position.y);
+		focus1 = Vector2f(position.x - textureBox.width * 0.167f, position.y - textureBox.height * 0.091f);
+		focus2 = Vector2f(position.x + textureBox.width * 0.167f, position.y - textureBox.height * 0.091f);
 		ellipseSizeMultipliers[0] = { 1.64 };
 		break;
 	case 6:
@@ -115,14 +127,29 @@ void Stump::initPedestal()
 		ellipseSizeMultipliers[0] = { 1.62 };
 		break;
 	case 9:
-		focus1 = Vector2f(position.x - textureBox.width * 0.314f, position.y);
-		focus2 = Vector2f(position.x + textureBox.width * 0.314f, position.y);
+		focus1 = Vector2f(position.x - textureBox.width * 0.314f, position.y - textureBox.height * 0.07f);
+		focus2 = Vector2f(position.x + textureBox.width * 0.314f, position.y - textureBox.height * 0.07f);
 		ellipseSizeMultipliers[0] = { 1.24 };
 		break;
 	case 10:
 		focus1 = Vector2f(position.x - textureBox.width * 0.335f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.335f, position.y);
 		ellipseSizeMultipliers[0] = { 1.43};
+		break;
+	case 11:
+		focus1 = Vector2f(position.x - textureBox.width * 0.236f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.236f, position.y);
+		ellipseSizeMultipliers[0] = { 1.62 };
+		break;
+	case 12:
+		focus1 = Vector2f(position.x - textureBox.width * 0.223f, position.y - textureBox.height * 0.062f);
+		focus2 = Vector2f(position.x + textureBox.width * 0.223f, position.y - textureBox.height * 0.062f);
+		ellipseSizeMultipliers[0] = { 1.19 };
+		break;
+	case 13:
+		focus1 = Vector2f(position.x - textureBox.width * 0.335f, position.y);
+		focus2 = Vector2f(position.x + textureBox.width * 0.335f, position.y);
+		ellipseSizeMultipliers[0] = { 1.43 };
 		break;
 	default:
 		focus1 = Vector2f(position.x - textureBox.width * 0.111f, position.y);
@@ -149,12 +176,15 @@ void Stump::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	spriteChainElement body;
 	body.size = Vector2f(conditionalSizeUnits);
 	body.offset = Vector2f(textureBoxOffset);
+	body.antiTransparent = true;
 
 	animationLength = 1;
 	if (typeOfObject >= 1 && typeOfObject <= 4)
 		body.path = "Game/worldSprites/BirchGrove/stump" + std::to_string(typeOfObject) + ".png";
 	if (typeOfObject >= 5 && typeOfObject <= 10)
 		body.path = "Game/worldSprites/DarkWoods/stump" + std::to_string(typeOfObject - 4) + ".png";
+	if (typeOfObject >= 11 && typeOfObject <= 13)
+		body.path = "Game/worldSprites/SwampyTrees/stump" + std::to_string(typeOfObject - 10) + ".png";
 
 	additionalSprites.push_back(body);
 

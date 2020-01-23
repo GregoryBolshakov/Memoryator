@@ -84,7 +84,7 @@ Vector2i Rock::calculateTextureOffset()
 	case 10:
 		return Vector2i(textureBox.width * 0.512f, int(textureBox.height * 0.717f));
 	case 11:
-		return Vector2i(textureBox.width * 0.488f, int(textureBox.height * 0.68f));
+		return Vector2i(textureBox.width * 0.488f, int(textureBox.height * 0.772f));
 	case 12:
 		return Vector2i(textureBox.width * 0.478f, int(textureBox.height * 0.633f));
 	case 13:
@@ -94,7 +94,7 @@ Vector2i Rock::calculateTextureOffset()
 	case 15:
 		return Vector2i(textureBox.width * 0.491f, int(textureBox.height * 0.634f));
 	case 16:
-		return Vector2i(textureBox.width * 0.515f, int(textureBox.height * 0.714f));
+		return Vector2i(textureBox.width * 0.515f, int(textureBox.height * 0.809f));
 	case 17:
 		return Vector2i(textureBox.width * 0.559f, int(textureBox.height * 0.68f));
 	case 18:
@@ -159,8 +159,8 @@ void Rock::initPedestal()
 		ellipseSizeMultipliers[0] = { 1.26 };
 		break;
 	case 11:
-		focus1 = Vector2f(position.x - textureBox.width * 0.229f, position.y);
-		focus2 = Vector2f(position.x + textureBox.width * 0.229f, position.y);
+		focus1 = Vector2f(position.x - textureBox.width * 0.229f, position.y - textureBox.height * 0.092f);
+		focus2 = Vector2f(position.x + textureBox.width * 0.229f, position.y - textureBox.height * 0.092f);
 		ellipseSizeMultipliers[0] = { 1.64 };
 		break;
 	case 12:
@@ -184,8 +184,8 @@ void Rock::initPedestal()
 		ellipseSizeMultipliers[0] = { 1.14 };
 		break;
 	case 16:
-		focus1 = Vector2f(position.x - textureBox.width * 0.378f, position.y);
-		focus2 = Vector2f(position.x + textureBox.width * 0.378f, position.y);
+		focus1 = Vector2f(position.x - textureBox.width * 0.378f, position.y - textureBox.height * 0.101f);
+		focus2 = Vector2f(position.x + textureBox.width * 0.378f, position.y - textureBox.height * 0.101f);
 		ellipseSizeMultipliers[0] = { 1.3 };
 		break;
 	case 17:
@@ -220,21 +220,23 @@ int Rock::getBuildType(Vector2f ounPos, Vector2f otherPos)
 void Rock::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 {
 	additionalSprites.clear();
-	spriteChainElement rockBody;
-	rockBody.size = Vector2f(conditionalSizeUnits);
-	rockBody.offset = Vector2f(textureBoxOffset);
+	spriteChainElement body;
+	body.size = Vector2f(conditionalSizeUnits);
+	body.offset = Vector2f(textureBoxOffset);
+	body.antiTransparent = true;
+
 	animationLength = 1;
 
 	if (typeOfObject >= 1 && typeOfObject <= 6)
-		rockBody.path = "Game/worldSprites/BirchGrove/rock" + std::to_string(typeOfObject) + ".png";
+		body.path = "Game/worldSprites/BirchGrove/rock" + std::to_string(typeOfObject) + ".png";
 	if (typeOfObject >= 7 && typeOfObject <= 8)
-		rockBody.path = "Game/worldSprites/BirchGrove/hill" + std::to_string(typeOfObject - 6) + ".png";
+		body.path = "Game/worldSprites/BirchGrove/hill" + std::to_string(typeOfObject - 6) + ".png";
 	if (typeOfObject >= 9 && typeOfObject <= 13)
-		rockBody.path = "Game/worldSprites/DarkWoods/rock" + std::to_string(typeOfObject - 8) + ".png";
+		body.path = "Game/worldSprites/DarkWoods/rock" + std::to_string(typeOfObject - 8) + ".png";
 	if (typeOfObject >= 14 && typeOfObject <= 18)
-		rockBody.path = "Game/worldSprites/SwampyTrees/rock" + std::to_string(typeOfObject - 13) + ".png";
+		body.path = "Game/worldSprites/SwampyTrees/rock" + std::to_string(typeOfObject - 13) + ".png";
 
-	additionalSprites.push_back(rockBody);
+	additionalSprites.push_back(body);
 
 	timeForNewSprite += elapsedTime;
 

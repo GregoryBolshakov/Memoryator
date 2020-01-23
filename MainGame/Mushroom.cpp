@@ -3,7 +3,7 @@
 
 Mushroom::Mushroom(std::string objectName, Vector2f centerPosition, int typeOfObject) : StaticObject(objectName, centerPosition)
 {
-	varietyOfTypes = 12;
+	varietyOfTypes = 16; // BirchGrove: 1-3; DarkWoods: 4-12; SwampyTrees: 13-16
 	this->typeOfObject = typeOfObject;
 	this->intangible = true;
 	toSaveName = "mushroom";
@@ -42,6 +42,14 @@ void Mushroom::setType(int typeOfObject)
 		conditionalSizeUnits = Vector2i(144, 120);
 	if (typeOfObject == 12)
 		conditionalSizeUnits = Vector2i(154, 199);
+	if (typeOfObject == 13)
+		conditionalSizeUnits = Vector2i(54, 60);
+	if (typeOfObject == 14)
+		conditionalSizeUnits = Vector2i(80, 74);
+	if (typeOfObject == 15)
+		conditionalSizeUnits = Vector2i(80, 80);
+	if (typeOfObject == 16)
+		conditionalSizeUnits = Vector2i(77, 53);
 }
 
 Vector2i Mushroom::calculateTextureOffset()
@@ -73,6 +81,8 @@ void Mushroom::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		grassBody.path = "Game/worldSprites/BirchGrove/mushroom" + std::to_string(typeOfObject) + ".png";
 	if (typeOfObject >= 4 && typeOfObject <= 12)
 		grassBody.path = "Game/worldSprites/DarkWoods/amanita" + std::to_string(typeOfObject - 3) + ".png";
+	if (typeOfObject >= 13 && typeOfObject <= 16)
+		grassBody.path = "Game/worldSprites/SwampyTrees/mushroom" + std::to_string(typeOfObject - 12) + ".png";
 	grassBody.size = Vector2f(conditionalSizeUnits);
 	grassBody.offset = Vector2f(textureBoxOffset);
 	additionalSprites.push_back(grassBody);

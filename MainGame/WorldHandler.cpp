@@ -9,14 +9,14 @@ WorldHandler::WorldHandler(int width, int height) : focusedObject(nullptr)
 {
 	WorldObject::microBlockSize = microblockSize;
 	initSpriteMap();
-	scaleFactor = getScaleFactor();
+	worldGenerator.scaleFactor = getScaleFactor();
 	this->width = width;
 	this->height = height;
 	staticGrid = GridList(this->width, this->height, blockSize, microblockSize);
 	dynamicGrid = GridList(this->width, this->height, blockSize, microblockSize);
 
 	initShaders();
-	worldGenerator.init(width, height, blockSize, microblockSize, &staticGrid, &dynamicGrid, &spriteMap, &scaleFactor);
+	worldGenerator.init(width, height, blockSize, microblockSize, &staticGrid, &dynamicGrid, &spriteMap);
 	inventorySystem.init();
 	buildSystem.Init(inventorySystem.getSpriteList());
 }
@@ -76,34 +76,36 @@ void WorldHandler::initShaders()
 
 void WorldHandler::setScaleFactor(int delta)
 {
-	if (delta == -1 && scaleFactor >= 0.998 * mainScale)
+	if (delta == -1 && worldGenerator.scaleFactor > worldGenerator.farthestScale * worldGenerator.mainScale)
 	{
-		scaleFactor -= 0.01;
+		worldGenerator.scaleFactor -= 0.01;
 		scaleDecrease = -0.03;
 	}
 	else
-		if (delta == 1 && scaleFactor <= 1.7 * mainScale)
+		if (delta == 1 && worldGenerator.scaleFactor < worldGenerator.closestScale * worldGenerator.mainScale)
 		{
-			scaleFactor += 0.01;
+			worldGenerator.scaleFactor += 0.01;
 			scaleDecrease = 0.03;
 		}
 
-	if (scaleDecrease < 0 && scaleFactor <= 0.998 * mainScale)
-		scaleFactor = 0.998 * mainScale;
-	if (scaleDecrease > 0 && scaleFactor >= 1.7 * mainScale)
-		scaleFactor = 1.7 * mainScale;
+	if (scaleDecrease < 0 && worldGenerator.scaleFactor < worldGenerator.farthestScale * worldGenerator.mainScale)
+		worldGenerator.scaleFactor = worldGenerator.farthestScale * worldGenerator.mainScale;
+	if (scaleDecrease > 0 && worldGenerator.scaleFactor > worldGenerator.closestScale * worldGenerator.mainScale)
+		worldGenerator.scaleFactor = worldGenerator.closestScale * worldGenerator.mainScale;
+
+	worldGenerator.scale = worldGenerator.scaleFactor * worldGenerator.mainScale;
 }
 
 void WorldHandler::scaleSmoothing()
 {
 	if (abs(scaleDecrease) >= 0.02 && timeForScaleDecrease >= 30000)
 	{
-		if (scaleFactor != 0.998 * mainScale && scaleFactor != 1.7 * mainScale)
-			scaleFactor += scaleDecrease;
-		if (scaleDecrease < 0 && scaleFactor <= 0.998 * mainScale)
-			scaleFactor = 0.998 * mainScale;
-		if (scaleDecrease > 0 && scaleFactor >= 1.7 * mainScale)
-			scaleFactor = 1.7 * mainScale;
+		if (worldGenerator.scaleFactor != worldGenerator.farthestScale * worldGenerator.mainScale && worldGenerator.scaleFactor != worldGenerator.closestScale * worldGenerator.mainScale)
+			worldGenerator.scaleFactor += scaleDecrease;
+		if (scaleDecrease < 0 && worldGenerator.scaleFactor <= worldGenerator.farthestScale * worldGenerator.mainScale)
+			worldGenerator.scaleFactor = worldGenerator.farthestScale * worldGenerator.mainScale;
+		if (scaleDecrease > 0 && worldGenerator.scaleFactor >= worldGenerator.closestScale * worldGenerator.mainScale)
+			worldGenerator.scaleFactor = worldGenerator.closestScale * worldGenerator.mainScale;
 
 		if (scaleDecrease < 0)
 		{
@@ -118,6 +120,7 @@ void WorldHandler::scaleSmoothing()
 
 		timeForScaleDecrease = 0;
 	}
+	worldGenerator.scale = worldGenerator.scaleFactor * worldGenerator.mainScale;
 }
 
 float WorldHandler::getScaleFactor()
@@ -128,9 +131,9 @@ float WorldHandler::getScaleFactor()
 
 	auto mainObject = Deerchant("loadInit", Vector2f(0, 0));
 	mainObject.calculateTextureOffset();
-	mainScale = screenHeight / (5 * mainObject.getConditionalSizeUnits().y);
-	mainScale = round(mainScale * 100) / 100;
-	return mainScale;
+	worldGenerator.mainScale = screenHeight / (5 * mainObject.getConditionalSizeUnits().y);
+	worldGenerator.mainScale = round(worldGenerator.mainScale * 100) / 100;
+	return worldGenerator.mainScale;
 	//return 1;
 }
 
@@ -397,8 +400,8 @@ void WorldHandler::clearWorld()
 void WorldHandler::setTransparent(std::vector<WorldObject*> visibleItems, float elapsedTime)
 {
 	mouseDisplayName = "";
-	Vector2f mousePos = Vector2f((Mouse::getPosition().x - Helper::GetScreenSize().x / 2 + cameraPosition.x*scaleFactor) / scaleFactor,
-		(Mouse::getPosition().y - Helper::GetScreenSize().y / 2 + cameraPosition.y*scaleFactor) / scaleFactor);
+	Vector2f mousePos = Vector2f((Mouse::getPosition().x - Helper::GetScreenSize().x / 2 + cameraPosition.x*worldGenerator.scaleFactor) / worldGenerator.scaleFactor,
+		(Mouse::getPosition().y - Helper::GetScreenSize().y / 2 + cameraPosition.y*worldGenerator.scaleFactor) / worldGenerator.scaleFactor);
 
 	float minCapacity = 10e8f, minDistance = 10e8f;
 
@@ -598,13 +601,13 @@ void WorldHandler::onMouseUp(int currentMouseButton)
 	if (pedestalController.isRunning())
 		return;
 	Vector2i mousePos = Mouse::getPosition();
-	Vector2f mouseWorldPos = Vector2f((mousePos.x - Helper::GetScreenSize().x / 2 + cameraPosition.x*scaleFactor) / scaleFactor,
-		(mousePos.y - Helper::GetScreenSize().y / 2 + cameraPosition.y*scaleFactor) / scaleFactor);
+	Vector2f mouseWorldPos = Vector2f((mousePos.x - Helper::GetScreenSize().x / 2 + cameraPosition.x*worldGenerator.scaleFactor) / worldGenerator.scaleFactor,
+		(mousePos.y - Helper::GetScreenSize().y / 2 + cameraPosition.y*worldGenerator.scaleFactor) / worldGenerator.scaleFactor);
 	
 	inventorySystem.onMouseUp();
 
 	if (buildSystem.succesInit /* && inventorySystem.getHeldItem()->first == -1*/)
-		buildSystem.onMouseUp(focusedObject->getPosition(), scaleFactor);
+		buildSystem.onMouseUp(focusedObject->getPosition(), worldGenerator.scaleFactor);
 
 	if (mouseDisplayName == "")
 		selectedObject = nullptr;
@@ -658,10 +661,10 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event e
 					permissibleDistance = dynamicItem->getBoundTarget()->getPermissibleDistance();
 				timeAfterNewRoute = 0;
 				staticGrid.makeRoute(dynamicItem->getPosition(), dynamicItem->laxMovePosition,
-					dynamicItem->getPosition().x - dynamicItem->sightRange / scaleFactor,
-					dynamicItem->getPosition().y - dynamicItem->sightRange / scaleFactor,
-					dynamicItem->getPosition().x + dynamicItem->sightRange / scaleFactor,
-					dynamicItem->getPosition().y + dynamicItem->sightRange / scaleFactor, permissibleDistance);
+					dynamicItem->getPosition().x - dynamicItem->sightRange / worldGenerator.scaleFactor,
+					dynamicItem->getPosition().y - dynamicItem->sightRange / worldGenerator.scaleFactor,
+					dynamicItem->getPosition().x + dynamicItem->sightRange / worldGenerator.scaleFactor,
+					dynamicItem->getPosition().y + dynamicItem->sightRange / worldGenerator.scaleFactor, permissibleDistance);
 				dynamicItem->setRoute(staticGrid.route);
 				staticGrid.setLockedMicroBlocks(dynamicItem, false, true);
 			}
@@ -777,8 +780,8 @@ void WorldHandler::draw(RenderWindow& window, long long elapsedTime)
 	cameraPosition.y += (focusedObject->getPosition().y + Helper::GetScreenSize().y * camOffset.y - cameraPosition.y) * (focusedObject->getSpeed() * elapsedTime) / maxCameraDistance.y;
 	cameraShakeInteract(elapsedTime);
 
-	worldUpperLeft = Vector2f(int(cameraPosition.x - (screenCenter.x + extra.x) / scaleFactor), int(cameraPosition.y - (screenCenter.y + extra.y) / scaleFactor));
-	worldBottomRight = Vector2f(int(cameraPosition.x + (screenCenter.x + extra.x) / scaleFactor), int(cameraPosition.y + (screenCenter.y + extra.y) / scaleFactor));
+	worldUpperLeft = Vector2f(int(cameraPosition.x - (screenCenter.x + extra.x) / worldGenerator.scaleFactor), int(cameraPosition.y - (screenCenter.y + extra.y) / worldGenerator.scaleFactor));
+	worldBottomRight = Vector2f(int(cameraPosition.x + (screenCenter.x + extra.x) / worldGenerator.scaleFactor), int(cameraPosition.y + (screenCenter.y + extra.y) / worldGenerator.scaleFactor));
 
 	if (worldUpperLeft.x < 0)
 		worldUpperLeft.x = 0;
@@ -798,7 +801,7 @@ void WorldHandler::draw(RenderWindow& window, long long elapsedTime)
 
 	for (auto& item : localStaticItems)
 	{
-        item->prepareSpriteNames(elapsedTime, scaleFactor);
+        item->prepareSpriteNames(elapsedTime, worldGenerator.scaleFactor);
         for (auto& sprite : item->additionalSprites)
         {
 			if (sprite.position == Vector2f(0, 0))
@@ -821,7 +824,7 @@ void WorldHandler::draw(RenderWindow& window, long long elapsedTime)
 	}
     for (auto& item : localDynamicItems)
     {
-        item->prepareSpriteNames(elapsedTime, scaleFactor);
+        item->prepareSpriteNames(elapsedTime, worldGenerator.scaleFactor);
         for (auto& sprite : item->additionalSprites)
         {
 			if (sprite.position == Vector2f(0, 0))
@@ -848,20 +851,20 @@ void WorldHandler::draw(RenderWindow& window, long long elapsedTime)
 	RectangleShape rec, rec2, rec3;
 	rec.setSize(Vector2f(microblockSize));
 	rec.setFillColor(Color(240, 128, 128, 200));
-	rec.setSize(Vector2f((microblockSize.x - 1) * scaleFactor, (microblockSize.y - 1) * scaleFactor));
+	rec.setSize(Vector2f((microblockSize.x - 1) * worldGenerator.scaleFactor, (microblockSize.y - 1) * worldGenerator.scaleFactor));
 	rec2.setSize(Vector2f(microblockSize));
 	rec2.setFillColor(Color(65, 105, 225, 200));
-	rec2.setSize(Vector2f((microblockSize.x - 1) * scaleFactor, (microblockSize.y - 1) * scaleFactor));
+	rec2.setSize(Vector2f((microblockSize.x - 1) * worldGenerator.scaleFactor, (microblockSize.y - 1) * worldGenerator.scaleFactor));
 	rec3.setSize(Vector2f(microblockSize));
 	rec3.setFillColor(Color::Green);
-	rec3.setSize(Vector2f((microblockSize.x - 1) * scaleFactor, (microblockSize.y - 1) * scaleFactor));
-	pedestalController.draw(&window, cameraPosition, scaleFactor);
+	rec3.setSize(Vector2f((microblockSize.x - 1) * worldGenerator.scaleFactor, (microblockSize.y - 1) * worldGenerator.scaleFactor));
+	pedestalController.draw(&window, cameraPosition, worldGenerator.scaleFactor);
 	/*for (int i = (focusedObject->getPosition().x - 500) / microblockSize.x; i <= (focusedObject->getPosition().x + 500) / microblockSize.x; i++)
 		for (int j = (focusedObject->getPosition().y - 500) / microblockSize.y; j <= (focusedObject->getPosition().y + 500) / microblockSize.y; j++)
 		{
 			if (!staticGrid.microBlockMatrix[i][j])
 			{
-				rec.setPosition((i * microblockSize.x - cameraPosition.x - microblockSize.x / 2) * scaleFactor + Helper::GetScreenSize().x / 2, (j * microblockSize.y - cameraPosition.y - microblockSize.y / 2) * scaleFactor + Helper::GetScreenSize().y / 2);
+				rec.setPosition((i * microblockSize.x - cameraPosition.x - microblockSize.x / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().x / 2, (j * microblockSize.y - cameraPosition.y - microblockSize.y / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().y / 2);
 				window.draw(rec);
 			}
 		}*/
@@ -870,19 +873,19 @@ void WorldHandler::draw(RenderWindow& window, long long elapsedTime)
 		{
 			if (!staticGrid.dynamicMicroBlockMatrix->at(i)[j])
 			{
-				rec2.setPosition((i * microblockSize.x - cameraPosition.x - microblockSize.x / 2) * scaleFactor + Helper::GetScreenSize().x / 2, (j * microblockSize.y - cameraPosition.y - microblockSize.y / 2) * scaleFactor + Helper::GetScreenSize().y / 2);
+				rec2.setPosition((i * microblockSize.x - cameraPosition.x - microblockSize.x / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().x / 2, (j * microblockSize.y - cameraPosition.y - microblockSize.y / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().y / 2);
 				window.draw(rec2);
 			}
 		}*/
 	/*for (auto&cell : dynamic_cast<DynamicObject*>(dynamicGrid.getItemByName("testEnemy1"))->route)
 	{		
 		Vector2f recPos = Vector2f(cell.first * microblockSize.x, cell.second * microblockSize.y);
-		rec2.setPosition((recPos.x - cameraPosition.x - microblockSize.x / 2) * scaleFactor + Helper::GetScreenSize().x / 2, (recPos.y - cameraPosition.y - microblockSize.y / 2) * scaleFactor + Helper::GetScreenSize().y / 2);
+		rec2.setPosition((recPos.x - cameraPosition.x - microblockSize.x / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().x / 2, (recPos.y - cameraPosition.y - microblockSize.y / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().y / 2);
 		window.draw(rec2);
 	}*/
 	/*const Vector2i rec3Pos = Vector2i(dynamicGrid.getItemByName("hero1")->getPosition().x / microblockSize.x, dynamicGrid.getItemByName("hero1")->getPosition().y / microblockSize.y);
-	rec3.setPosition((rec3Pos.x * microblockSize.x - cameraPosition.x - microblockSize.x / 2) * scaleFactor + Helper::GetScreenSize().x / 2,
-		(rec3Pos.y * microblockSize.y - cameraPosition.y - microblockSize.y / 2) * scaleFactor + Helper::GetScreenSize().y / 2);
+	rec3.setPosition((rec3Pos.x * microblockSize.x - cameraPosition.x - microblockSize.x / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().x / 2,
+		(rec3Pos.y * microblockSize.y - cameraPosition.y - microblockSize.y / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().y / 2);
 	window.draw(rec3);*/
 }
 
@@ -892,7 +895,7 @@ void WorldHandler::runBuildSystemDrawing(RenderWindow& window, float elapsedTime
 	if (focusedObject->getBoundTarget() != nullptr)
 		showBuildedObj = focusedObject->getBoundTarget()->tag != Tag::buildObject;
 
-	buildSystem.draw(window, elapsedTime, spriteMap, staticGrid, scaleFactor, cameraPosition, localTerrain, showBuildedObj);
+	buildSystem.draw(window, elapsedTime, spriteMap, staticGrid, worldGenerator.scaleFactor, cameraPosition, localTerrain, showBuildedObj);
 }
 
 void WorldHandler::runInventorySystemDrawing(RenderWindow& window, float elapsedTime)
@@ -901,8 +904,8 @@ void WorldHandler::runInventorySystemDrawing(RenderWindow& window, float elapsed
 	const auto screenCenter = Vector2f(screenSize.x / 2, screenSize.y / 2);
 
 	const Vector2i mousePos = Mouse::getPosition();
-	const Vector2f mouseWorldPos = Vector2f((mousePos.x - Helper::GetScreenSize().x / 2 + cameraPosition.x*scaleFactor) / scaleFactor,
-		(mousePos.y - Helper::GetScreenSize().y / 2 + cameraPosition.y*scaleFactor) / scaleFactor);
+	const Vector2f mouseWorldPos = Vector2f((mousePos.x - Helper::GetScreenSize().x / 2 + cameraPosition.x*worldGenerator.scaleFactor) / worldGenerator.scaleFactor,
+		(mousePos.y - Helper::GetScreenSize().y / 2 + cameraPosition.y*worldGenerator.scaleFactor) / worldGenerator.scaleFactor);
 
 	inventorySystem.drawHeroInventory(elapsedTime, window);
 
@@ -925,8 +928,8 @@ void WorldHandler::drawVisibleItems(RenderWindow& window, long long elapsedTime,
 		auto sprite = (&spriteMap[spriteChainItem.path])->sprite;
 		const auto worldItemPosition = spriteChainItem.position;
 
-		const auto spriteLeft = float((worldItemPosition.x - cameraPosition.x - spriteChainItem.offset.x) * scaleFactor + screenCenter.x);
-		auto spriteTop = float((worldItemPosition.y - cameraPosition.y - spriteChainItem.offset.y) * scaleFactor + screenCenter.y);
+		const auto spriteLeft = float((worldItemPosition.x - cameraPosition.x - spriteChainItem.offset.x) * worldGenerator.scaleFactor + screenCenter.x);
+		auto spriteTop = float((worldItemPosition.y - cameraPosition.y - spriteChainItem.offset.y) * worldGenerator.scaleFactor + screenCenter.y);
 		
 		//sprite.setOrigin(sprite.getTextureRect().left, sprite.getTextureRect().top + sprite.getTextureRect().height);
 		if (spriteChainItem.antiTransparent)
@@ -936,11 +939,11 @@ void WorldHandler::drawVisibleItems(RenderWindow& window, long long elapsedTime,
 		
 		if (!spriteChainItem.isBackground && unscaledObjects.count(spriteChainItem.tag) == 0 && spriteChainItem.tag != Tag::noose)
 		{
-			sprite.setScale(spriteChainItem.size.x / sprite.getGlobalBounds().width * scaleFactor, spriteChainItem.size.y / sprite.getGlobalBounds().height * scaleFactor * pow(scaleFactor, double(1) / 6));
-			spriteTop -= (pow(scaleFactor, double(1) / 6) - 1) * sprite.getGlobalBounds().height;
+			sprite.setScale(spriteChainItem.size.x / sprite.getGlobalBounds().width * worldGenerator.scaleFactor, spriteChainItem.size.y / sprite.getGlobalBounds().height * worldGenerator.scaleFactor * pow(worldGenerator.scaleFactor, double(1) / 6));
+			spriteTop -= (pow(worldGenerator.scaleFactor, double(1) / 6) - 1) * sprite.getGlobalBounds().height;
 		}
 		else
-			sprite.setScale(spriteChainItem.size.x / sprite.getGlobalBounds().width * scaleFactor, spriteChainItem.size.y / sprite.getGlobalBounds().height * scaleFactor);
+			sprite.setScale(spriteChainItem.size.x / sprite.getGlobalBounds().width * worldGenerator.scaleFactor, spriteChainItem.size.y / sprite.getGlobalBounds().height * worldGenerator.scaleFactor);
 		sprite.setRotation(spriteChainItem.rotation);
 		sprite.setPosition(Vector2f(spriteLeft, spriteTop));
 

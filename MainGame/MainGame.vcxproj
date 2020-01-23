@@ -189,6 +189,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="PickedObject.cpp" />
     <ClCompile Include="Rock.cpp" />
     <ClCompile Include="Roof.cpp" />
+    <ClCompile Include="Root.cpp" />
     <ClCompile Include="Spawn.cpp" />
     <ClCompile Include="SpritePack.cpp" />
     <ClCompile Include="StaticObject.cpp" />
@@ -223,6 +224,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="Owl.h" />
     <ClInclude Include="PedestalController.h" />
     <ClInclude Include="Roof.h" />
+    <ClInclude Include="Root.h" />
     <ClInclude Include="SpritePack.h" />
     <ClInclude Include="SpriteStructures.h" />
     <ClInclude Include="Brazier.h" />
