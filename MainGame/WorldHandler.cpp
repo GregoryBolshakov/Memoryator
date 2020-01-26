@@ -656,19 +656,20 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event e
 			//dynamicItem->initMicroBlocks();
 			if (dynamicItem->getRouteGenerationAbility() && dynamicItem->laxMovePosition != Vector2f(-1, -1) && dynamicItem->getCurrentAction() != jerking && dynamicItem->tag != Tag::hero1)
 			{
-				int permissibleDistance = 0;
-				if (dynamicItem->getBoundTarget())
-					permissibleDistance = dynamicItem->getBoundTarget()->getPermissibleDistance();
+				const int permissibleDistance = 10;			
 				timeAfterNewRoute = 0;
 				staticGrid.makeRoute(dynamicItem->getPosition(), dynamicItem->laxMovePosition,
-					dynamicItem->getPosition().x - dynamicItem->sightRange / worldGenerator.scaleFactor,
-					dynamicItem->getPosition().y - dynamicItem->sightRange / worldGenerator.scaleFactor,
-					dynamicItem->getPosition().x + dynamicItem->sightRange / worldGenerator.scaleFactor,
-					dynamicItem->getPosition().y + dynamicItem->sightRange / worldGenerator.scaleFactor, permissibleDistance);
+					dynamicItem->getPosition().x - dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale),
+					dynamicItem->getPosition().y - dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale),
+					dynamicItem->getPosition().x + dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale),
+					dynamicItem->getPosition().y + dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale), permissibleDistance);
 				dynamicItem->setRoute(staticGrid.route);
 				staticGrid.setLockedMicroBlocks(dynamicItem, false, true);
 			}
 			else			
+				dynamicItem->changeMovePositionToRoute(dynamicItem->laxMovePosition);
+
+			if (dynamicItem->route.empty())
 				dynamicItem->changeMovePositionToRoute(dynamicItem->laxMovePosition);
 			//staticGrid.setLockedMicroBlocks(dynamicItem, false, true);
 		}
@@ -852,13 +853,7 @@ void WorldHandler::draw(RenderWindow& window, long long elapsedTime)
 	rec.setSize(Vector2f(microblockSize));
 	rec.setFillColor(Color(240, 128, 128, 200));
 	rec.setSize(Vector2f((microblockSize.x - 1) * worldGenerator.scaleFactor, (microblockSize.y - 1) * worldGenerator.scaleFactor));
-	rec2.setSize(Vector2f(microblockSize));
-	rec2.setFillColor(Color(65, 105, 225, 200));
-	rec2.setSize(Vector2f((microblockSize.x - 1) * worldGenerator.scaleFactor, (microblockSize.y - 1) * worldGenerator.scaleFactor));
-	rec3.setSize(Vector2f(microblockSize));
-	rec3.setFillColor(Color::Green);
-	rec3.setSize(Vector2f((microblockSize.x - 1) * worldGenerator.scaleFactor, (microblockSize.y - 1) * worldGenerator.scaleFactor));
-	pedestalController.draw(&window, cameraPosition, worldGenerator.scaleFactor);
+
 	/*for (int i = (focusedObject->getPosition().x - 500) / microblockSize.x; i <= (focusedObject->getPosition().x + 500) / microblockSize.x; i++)
 		for (int j = (focusedObject->getPosition().y - 500) / microblockSize.y; j <= (focusedObject->getPosition().y + 500) / microblockSize.y; j++)
 		{
@@ -868,25 +863,18 @@ void WorldHandler::draw(RenderWindow& window, long long elapsedTime)
 				window.draw(rec);
 			}
 		}*/
-	/*for (int i = (dynamicGrid.getItemByName("testEnemy1")->getPosition().x - 500) / microblockSize.x; i <= (dynamicGrid.getItemByName("testEnemy1")->getPosition().x + 500) / microblockSize.x; i++)
-		for (int j = (dynamicGrid.getItemByName("testEnemy1")->getPosition().y - 500) / microblockSize.y; j <= (dynamicGrid.getItemByName("testEnemy1")->getPosition().y + 500) / microblockSize.y; j++)
-		{
-			if (!staticGrid.dynamicMicroBlockMatrix->at(i)[j])
-			{
-				rec2.setPosition((i * microblockSize.x - cameraPosition.x - microblockSize.x / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().x / 2, (j * microblockSize.y - cameraPosition.y - microblockSize.y / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().y / 2);
-				window.draw(rec2);
-			}
-		}*/
+	for (auto block : staticGrid.route)
+	{
+		Vector2f recPos = Vector2f(block.first * microblockSize.x, block.second * microblockSize.y);
+		rec.setPosition((recPos.x - cameraPosition.x - microblockSize.x / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().x / 2, (recPos.y - cameraPosition.y - microblockSize.y / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().y / 2);
+		window.draw(rec);
+	}
 	/*for (auto&cell : dynamic_cast<DynamicObject*>(dynamicGrid.getItemByName("testEnemy1"))->route)
 	{		
 		Vector2f recPos = Vector2f(cell.first * microblockSize.x, cell.second * microblockSize.y);
 		rec2.setPosition((recPos.x - cameraPosition.x - microblockSize.x / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().x / 2, (recPos.y - cameraPosition.y - microblockSize.y / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().y / 2);
 		window.draw(rec2);
 	}*/
-	/*const Vector2i rec3Pos = Vector2i(dynamicGrid.getItemByName("hero1")->getPosition().x / microblockSize.x, dynamicGrid.getItemByName("hero1")->getPosition().y / microblockSize.y);
-	rec3.setPosition((rec3Pos.x * microblockSize.x - cameraPosition.x - microblockSize.x / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().x / 2,
-		(rec3Pos.y * microblockSize.y - cameraPosition.y - microblockSize.y / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().y / 2);
-	window.draw(rec3);*/
 }
 
 void WorldHandler::runBuildSystemDrawing(RenderWindow& window, float elapsedTime)

@@ -10,7 +10,6 @@ using namespace sf;
 class NeutralMob : public DynamicObject
 {
 protected:
-	int sightRange;
 	int morality;
 	int fear;
 	float distanceToNearest = 10e6;

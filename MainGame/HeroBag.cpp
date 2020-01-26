@@ -69,9 +69,11 @@ void HeroBag::initialize(Vector2f position, bool isSelectable, std::vector<std::
 	this->textureClosedOffset = Vector2f(sizeClosed.x / 2, sizeClosed.y / 1.7);
 	this->textureOpenOffset = Vector2f(sizeOpen.x / 2, sizeOpen.y / 1.7);
 	this->minDistToBorder = std::max(sizeClosed.y - textureClosedOffset.y, textureClosedOffset.y);
+	closedRadius = (sizeClosed.x + sizeClosed.y) / 4;
+	openedRadius = (sizeOpen.x + sizeOpen.y) / 10;
 
-	this->selectionZoneClosedOffset = Vector2f(0, 0);
-	this->selectionZoneOpenOffset = Vector2f(0, -textureOpenOffset.y + sizeOpen.y * 0.2f);
+	this->selectionZoneClosedOffset = Vector2f(0, -sizeClosed.y * 0.15f);
+	this->selectionZoneOpenedOffset = Vector2f(0, -textureOpenOffset.y + sizeOpen.y * 0.15f);
 
 	if (inventory.empty())
 		inventory = emptyInventory;	

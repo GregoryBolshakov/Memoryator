@@ -9,7 +9,7 @@ Deer::Deer(const std::string objectName, Vector2f centerPosition) : NeutralMob(o
 	timeForNewSprite = 0;
 	defaultSpeed = 0.00045f;
 	speed = 0.00045f;
-	animationSpeed = 5e-4;
+	animationSpeed = 10;
 	animationLength = 8;
 	radius = 70;
 	strength = 10;
@@ -57,25 +57,25 @@ void Deer::behavior(float elapsedTime)
 		speed = defaultSpeed;
 		if (currentAction == commonHit)
 		{
-			movePosition = position;
+			laxMovePosition = { -1, -1 };
 			return;			
 		}
 		side = calculateSide(owner->getPosition(), elapsedTime);
 		if (Helper::getDist(position, owner->getPosition()) > sightRange / 2)
 		{
 			changeAction(grab, false, false);
-			movePosition = owner->getPosition();
+			laxMovePosition = owner->getPosition();
 		}
 		else
 			if (Helper::getDist(position, owner->getPosition()) <= sightRange / 2.5 && currentAction != relax)
 			{
 				changeAction(relax, true, false);
-				movePosition = position;		
+				laxMovePosition = { -1, -1 };
 			}
 		return;
 	}
 
-	side = calculateSide(movePosition, elapsedTime);
+	side = calculateSide(laxMovePosition, elapsedTime);
 
 	if (boundTarget == nullptr)
 		return;
@@ -86,7 +86,7 @@ void Deer::behavior(float elapsedTime)
 	if (distanceToTarget <= sightRange)
 	{
 		changeAction(move, false, true);
-		movePosition = Vector2f(position.x - (boundTarget->getPosition().x - position.x), position.y - (boundTarget->getPosition().y - position.y));
+		laxMovePosition = Vector2f(position.x - (boundTarget->getPosition().x - position.x), position.y - (boundTarget->getPosition().y - position.y));
 	}
 	else
 	{
@@ -96,10 +96,10 @@ void Deer::behavior(float elapsedTime)
 			{
 				changeAction(relax, true, true);
 				direction = STAND;
-				movePosition = { -1, -1 };
+				laxMovePosition = { -1, -1 };
 			}
 			else
-				movePosition = Vector2f(position.x - (boundTarget->getPosition().x - position.x), position.y - (boundTarget->getPosition().y - position.y));
+				laxMovePosition = Vector2f(position.x - (boundTarget->getPosition().x - position.x), position.y - (boundTarget->getPosition().y - position.y));
 		}
 	}
 	distanceToNearest = 10e6;
@@ -133,7 +133,7 @@ Vector2f Deer::getHeadPosition()
 {
 	Vector2f upperLeft = Vector2f(position.x - textureBoxOffset.x, position.y - textureBoxOffset.y);
 
-	if ((side == up && movePosition == position) || (movePosition != position && direction == UP))
+	if ((side == up && laxMovePosition == position) || (laxMovePosition != position && direction == UP))
 	{
 		if (currentSprite[0] == 1)
 			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.569, upperLeft.y + conditionalSizeUnits.y * 0.111);
@@ -150,7 +150,7 @@ Vector2f Deer::getHeadPosition()
 		if (currentSprite[0] == 7)
 			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.575, upperLeft.y + conditionalSizeUnits.y * 0.075);
 	}
-	if ((side == down && movePosition == position) || (movePosition != position && direction == DOWN))
+	if ((side == down && laxMovePosition == position) || (laxMovePosition != position && direction == DOWN))
 	{
 		if (currentSprite[0] == 1)
 			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.446, upperLeft.y + conditionalSizeUnits.y * 0.222);
@@ -167,7 +167,7 @@ Vector2f Deer::getHeadPosition()
 		if (currentSprite[0] == 7)
 			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.445, upperLeft.y + conditionalSizeUnits.y * 0.182);
 	}
-	if ((side == left && movePosition == position) || (movePosition != position && direction == LEFT || direction == UPLEFT || direction == DOWNLEFT))
+	if ((side == left && laxMovePosition == position) || (laxMovePosition != position && direction == LEFT || direction == UPLEFT || direction == DOWNLEFT))
 	{
 		if (currentSprite[0] == 1)
 			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.313, upperLeft.y + conditionalSizeUnits.y * 0.147);
@@ -184,9 +184,9 @@ Vector2f Deer::getHeadPosition()
 		if (currentSprite[0] == 7)
 			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.277, upperLeft.y + conditionalSizeUnits.y * 0.138);
 	}
-	if ((side == right && movePosition == position) || (movePosition != position && direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT))
-	{	
-		if (currentSprite[0] == 1)		
+	if ((side == right && laxMovePosition == position) || (laxMovePosition != position && direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT))
+	{
+		if (currentSprite[0] == 1)
 			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.6, upperLeft.y + conditionalSizeUnits.y * 0.17);
 		if (currentSprite[0] == 2)
 			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.59, upperLeft.y + conditionalSizeUnits.y * 0.19);
@@ -210,29 +210,40 @@ void Deer::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	fullSprite.offset = Vector2f(this->textureBoxOffset);
 	fullSprite.size = Vector2f(this->conditionalSizeUnits);
 	additionalSprites.clear();
+	std::string sideStr = DynamicObject::sideToString(side), directionStr = DynamicObject::directionToString(direction);
+	if (side == right)
+	{
+		sideStr = "left";
+		fullSprite.mirrored = true;
+	}
+	if (direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT)
+	{
+		directionStr = "left";
+		fullSprite.mirrored = true;
+	}
 
 	switch (currentAction)
 	{
 		case relax:
 		{
 			animationLength = 1;
-			animationSpeed = 5e-4;
-			fullSprite.path = "Game/worldSprites/deer/stand/" + DynamicObject::sideToString(side) + '/';
+			animationSpeed = 10;
+			fullSprite.path = "Game/worldSprites/deer/stand/" + sideStr + '/';
 			fullSprite.path += std::to_string(currentSprite[0]) + ".png";
 			break;
 		}
 		case commonHit:
 		{
 			animationLength = 6;
-			animationSpeed = 25e-5;
-			fullSprite.path = "Game/worldSprites/deer/hunt/" + DynamicObject::sideToString(side) + '/';
+			animationSpeed = 10;
+			fullSprite.path = "Game/worldSprites/deer/hunt/" + sideStr + '/';
 			fullSprite.path += std::to_string(currentSprite[0]) + ".png";
 			break;
 		}
 		case dead:
 		{
 			animationLength = 1;
-			animationSpeed = 5e-4;
+			animationSpeed = 10;
 			fullSprite.path = "Game/worldSprites/deer/stand/down/1.png";
 			currentSprite[0] = 1;
 		}
@@ -242,8 +253,8 @@ void Deer::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	if (currentAction == move || currentAction == grab)
 	{
 		animationLength = 7;
-		animationSpeed = 5e-4;
-		fullSprite.path = "Game/worldSprites/deer/move/" + DynamicObject::directionToString(direction) + '/';
+		animationSpeed = 10;
+		fullSprite.path = "Game/worldSprites/deer/move/" + sideStr + '/';
 		fullSprite.path += std::to_string(currentSprite[0]) + ".png";
 	}
 
@@ -251,7 +262,7 @@ void Deer::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 
 	timeForNewSprite += elapsedTime;
 
-	if (timeForNewSprite >= 40 / animationSpeed)
+	if (timeForNewSprite >= 1e6 / animationSpeed)
 	{
 		timeForNewSprite = 0;
 

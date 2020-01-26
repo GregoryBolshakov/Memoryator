@@ -137,7 +137,14 @@ void GridList::makeRoute(Vector2f startPos, Vector2f finishPos, int upperLeftX, 
 			if (isBreak)
 				break;
 		}
-	}	
+	}
+
+	if (!microBlockMatrix[lastMicroblockX][lastMicroblockY])
+	{
+		route.clear();
+		return;
+	}
+
 	for (int i = startXInd; i < startXInd + xMicroblocksCount; i++)	
 		for (int j = startYInd; j < startYInd + yMicroblocksCount; j++)		
 			distances[i][j] = inf;
@@ -149,7 +156,7 @@ void GridList::makeRoute(Vector2f startPos, Vector2f finishPos, int upperLeftX, 
 void GridList::bfs(int xBorder, int yBorder, int startX, int startY, int finishX, int finishY, int permissibleDistance)
 {
 	std::queue<std::pair<int, int>> q;
-	q.push(std::make_pair(startX, startY));	
+	q.push(std::make_pair(startX, startY));
 
 	int minDistToFinish = 1000;
 	float step = 1;

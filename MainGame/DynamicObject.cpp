@@ -187,7 +187,10 @@ Direction DynamicObject::calculateDirection() const
 {
 	Vector2f curPos = this->getPosition();
 	Vector2f tarPos = movePosition;
-	Direction direction = STAND;
+	if (tarPos == Vector2f(-1, -1))
+		return STAND;
+
+	const Direction direction = STAND;
 
 	if (abs(curPos.x - tarPos.x) < (this->radius))
 	{
@@ -441,19 +444,19 @@ std::string DynamicObject::directionToString(Direction direction)
 	case UP:
 		return "up";
 	case UPRIGHT:
-		return "left";
+		return "up-left";
 	case RIGHT:
 		return "left";
 	case DOWNRIGHT:
-		return "left";
+		return "down-left";
 	case DOWN:
 		return "down";
 	case DOWNLEFT:
-		return "left";
+		return "down-left";
 	case LEFT:
 		return "left";	
 	case UPLEFT:
-		return "left";		
+		return "up-left";		
 	}
 	return "";
 }
@@ -474,5 +477,27 @@ Direction DynamicObject::sideToDirection(Side side)
 	return DOWN;
 }
 
+Direction DynamicObject::invertDirection(Direction dir)
+{
+	switch (dir)
+	{
+	case UP:
+		return DOWN;
+	case DOWN:
+		return UP;
+	case LEFT:
+		return RIGHT;
+	case RIGHT:
+		return LEFT;
+	case UPLEFT: 
+		return DOWNRIGHT;
+	case UPRIGHT:
+		return DOWNLEFT;
+	case DOWNLEFT:
+		return UPRIGHT;
+	case DOWNRIGHT:
+		return UPLEFT;
+	}
+}
 
 

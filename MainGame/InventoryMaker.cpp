@@ -163,12 +163,12 @@ void InventoryMaker::interact(float elapsedTime)
 		if (bag.currentState == bagClosed)
 		{
 			const Vector2f selectionPos = Vector2f(bag.getPosition().x + bag.selectionZoneClosedOffset.x, bag.getPosition().y + bag.selectionZoneClosedOffset.y);
-			bag.readyToChangeState = (Helper::getDist(mousePos, selectionPos) <= bag.minDistToBorder);
+			bag.readyToChangeState = (Helper::getDist(mousePos, selectionPos) <= bag.closedRadius);
 		} else
 		if (bag.currentState == bagOpen)
 		{
-			const Vector2f selectionPos = Vector2f(bag.getPosition().x + bag.selectionZoneOpenOffset.x, bag.getPosition().y + bag.selectionZoneOpenOffset.y);
-			bag.readyToChangeState = (Helper::getDist(mousePos, selectionPos) <= bag.minDistToBorder);
+			const Vector2f selectionPos = Vector2f(bag.getPosition().x + bag.selectionZoneOpenedOffset.x, bag.getPosition().y + bag.selectionZoneOpenedOffset.y);
+			bag.readyToChangeState = (Helper::getDist(mousePos, selectionPos) <= bag.openedRadius);
 		}
 		//--------------
 	}

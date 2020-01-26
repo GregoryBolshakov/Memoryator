@@ -9,12 +9,10 @@ Hare::Hare(const std::string objectName, Vector2f centerPosition) : NeutralMob(o
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
 	defaultSpeed = 0.0003f;
-	speed = 0.0003f;
-	animationSpeed = 0.0003f;
-	animationLength = 8;
+	speed = 0.0003f;	
 	radius = 70;
 	strength = 10;
-	sightRange = Helper::GetScreenSize().y * 1 / 2;
+	sightRange = 720;
 	healthPoint = 50;
 	currentAction = relax;
 	timeAfterHitself = 0;
@@ -65,7 +63,7 @@ void Hare::behaviorWithStatic(WorldObject* target, float elapsedTime)
 }
 
 void Hare::behavior(float elapsedTime)
-{
+{	
 	endingPreviousAction();
 	fightLogic(elapsedTime);
 	if (healthPoint <= 0)
@@ -74,6 +72,10 @@ void Hare::behavior(float elapsedTime)
 		direction = STAND;
 		return;
 	}
+
+	direction = calculateDirection();
+	if (direction != STAND)
+		lastDirection = direction;
 
 	// first-priority actions
 	if (boundTarget)
@@ -86,17 +88,17 @@ void Hare::behavior(float elapsedTime)
 
 	if (currentAction == absorbs)
 	{
-		movePosition = position;
+		laxMovePosition = { -1, -1 };
 		return;
 	}
 	//-----------------------	
 
 	if (boundTarget == nullptr)
 	{
-		if (Helper::getDist(position, movePosition) <= radius)
+		if (Helper::getDist(position, laxMovePosition) <= radius)
 		{
 			changeAction(relax, true, true);
-			movePosition = position;
+			laxMovePosition = { -1, -1 };
 		}
 		return;
 	}
@@ -112,12 +114,12 @@ void Hare::behavior(float elapsedTime)
 			const auto trap = dynamic_cast<HareTrap*>(boundTarget);
 			position = trap->getEnterPosition();
 			changeAction(absorbs, true, false);
-			movePosition = position;
+			laxMovePosition = { -1, -1 };
 		}
 		else
 		{
 			changeAction(move, false, true);
-			movePosition = boundTarget->getPosition();
+			laxMovePosition = boundTarget->getPosition();
 		}
 	}
 	//-------------------
@@ -125,14 +127,14 @@ void Hare::behavior(float elapsedTime)
 	// runaway from enemy
 	if (boundTarget->tag == Tag::hero1)
 	{
-		side = calculateSide(movePosition, elapsedTime);
+		side = calculateSide(laxMovePosition, elapsedTime);
 		speed = std::max(defaultSpeed, (defaultSpeed * 10) * (1 - (Helper::getDist(position, boundTarget->getPosition()) / sightRange * 1.5f)));
 		animationSpeed = std::max(0.0004f, 0.0003f * speed / defaultSpeed);
 		if (distanceToTarget <= sightRange)
 		{
 			changeAction(move, false, true);
-			float k = (sightRange * 1.5f - Helper::getDist(position, boundTarget->getPosition())) / Helper::getDist(position, boundTarget->getPosition());
-			movePosition = Vector2f(position.x - (boundTarget->getPosition().x - position.x) * k, position.y - (boundTarget->getPosition().y - position.y) * k);
+			float k = (sightRange/* * 1.5f - Helper::getDist(position, boundTarget->getPosition())*/) / Helper::getDist(position, boundTarget->getPosition());
+			laxMovePosition = Vector2f(position.x - (boundTarget->getPosition().x - position.x) * k, position.y - (boundTarget->getPosition().y - position.y) * k);
 		}
 		else
 		{
@@ -142,12 +144,12 @@ void Hare::behavior(float elapsedTime)
 				{
 					changeAction(relax, true, true);
 					direction = STAND;
-					movePosition = position;
+					laxMovePosition = { -1, -1 };
 				}
 				else
 				{
-					float k = (sightRange * 1.5f - Helper::getDist(position, boundTarget->getPosition())) / Helper::getDist(position, boundTarget->getPosition());
-					movePosition = Vector2f(position.x - (boundTarget->getPosition().x - position.x) * k, position.y - (boundTarget->getPosition().y - position.y) * k);
+					float k = (sightRange/* * 1.5f - Helper::getDist(position, boundTarget->getPosition())*/) / Helper::getDist(position, boundTarget->getPosition());
+					laxMovePosition = Vector2f(position.x - (boundTarget->getPosition().x - position.x) * k, position.y - (boundTarget->getPosition().y - position.y) * k);
 				}
 			}
 		}
@@ -196,13 +198,25 @@ void Hare::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	fullSprite.offset = Vector2f(this->textureBoxOffset);
 	fullSprite.size = Vector2f(this->conditionalSizeUnits);
 	additionalSprites.clear();
+	animationSpeed = 10;
+	std::string sideStr = DynamicObject::sideToString(side), directionStr = DynamicObject::directionToString(lastDirection);
+	if (side == right)
+	{
+		sideStr = "left";
+		fullSprite.mirrored = true;
+	}
+	if (lastDirection == RIGHT || lastDirection == UPRIGHT || lastDirection == DOWNRIGHT)
+	{
+		directionStr = "left";
+		fullSprite.mirrored = true;
+	}
 
 	switch (currentAction)
 	{
 		case relax:
 		{
 			animationLength = 1;
-			fullSprite.path = "Game/worldSprites/hare/stand/" + DynamicObject::sideToString(side) + '/' + std::to_string(currentSprite[0]) + ".png";
+			fullSprite.path = "Game/worldSprites/hare/stand/" + directionStr + "/1.png";
 			break;
 		}
 		case absorbs:
@@ -218,20 +232,20 @@ void Hare::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 			currentSprite[0] = 1;
 			break;
 		}
+		case move:
+		{
+			animationLength = 5;			
+			fullSprite.path = "Game/worldSprites/hare/move/" + sideStr + '/' + std::to_string(currentSprite[0]) + ".png";
+			break;
+		}
 	default:;
-	}
-
-	if (currentAction == move)
-	{
-		animationLength = 5; 
-		fullSprite.path = "Game/worldSprites/hare/move/" + DynamicObject::sideToString(side) + '/' + std::to_string(currentSprite[0]) + ".png";
 	}
 
 	additionalSprites.push_back(fullSprite);
 
 	timeForNewSprite += elapsedTime;
 
-	if (timeForNewSprite >= 40 / animationSpeed)
+	if (timeForNewSprite >= 1e6 / animationSpeed)
 	{
 		timeForNewSprite = 0;
 

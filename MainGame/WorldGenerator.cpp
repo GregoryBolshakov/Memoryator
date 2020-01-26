@@ -65,6 +65,7 @@ void WorldGenerator::generate()
 	const int blocksCount = ceil(width / blockSize.x) * ceil(height / blockSize.y);
 
 	initializeDynamicItem(Tag::hero1, Vector2f(15800, 15800), "hero1");
+	initializeDynamicItem(Tag::hare, Vector2f(14500, 14500), "mob");
 	initializeStaticItem(Tag::brazier, Vector2f(16300, 16300), 1, "brazier");
 	//initializeStaticItem(Tag::tree, Vector2f(15500, 15000), 5, "stump", 1, DarkWoods);
 

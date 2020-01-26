@@ -20,7 +20,7 @@ Noose::Noose(const std::string objectName, Vector2f centerPosition, WorldObject*
 	canCrashIntoDynamic = false;
 	jerk(2, 1);
 	toSaveName = "noose";
-	tag = Tag::noose;
+	tag = Tag::noose;	
 }
 
 Noose::~Noose()
@@ -72,7 +72,11 @@ void Noose::behaviorWithStatic(WorldObject* target, float elapsedTime)
 void Noose::behavior(float elapsedTime)
 {
 	if (currentAction == dead)
+	{
+		zCoord = 0;
 		return;
+	}
+	zCoord = 2;
 
 	endingPreviousAction();
 	jerkInteract(elapsedTime);

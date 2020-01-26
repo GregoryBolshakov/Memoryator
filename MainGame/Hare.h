@@ -14,7 +14,7 @@ private:
 
 	int animationLength;
 	bool wasHit = false;
-	float timeAfterHit = 0, timeForNewHit = 10e5, timeAfterFear = 0, fearTime = 2 * 10e5;
+	float timeAfterFear = 0, fearTime = 2 * 10e5;
 	int strikingSprite = 4;
 	WorldObject* owner = nullptr;
 public:

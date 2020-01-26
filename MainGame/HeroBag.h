@@ -54,8 +54,8 @@ public:
 
 	float stateChangeTime = 100000, stateChangingTime = 0, speed = 0.001f;
 	BagState currentState = bagClosed;
-	float minDistToBorder = 0;
-	Vector2f selectionZoneClosedOffset, selectionZoneOpenOffset, shiftVector = { 0, 0 }, movePosition = { -1, -1 };
+	float minDistToBorder = 0, closedRadius = 0, openedRadius = 0;
+	Vector2f selectionZoneClosedOffset, selectionZoneOpenedOffset, shiftVector = { 0, 0 }, movePosition = { -1, -1 };
 	bool readyToChangeState = false, readyToEject = false, wasMoved = false, wasBounded = false;
 	//---------
 private:

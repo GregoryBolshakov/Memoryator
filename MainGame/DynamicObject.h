@@ -24,9 +24,9 @@ protected:
 	Side calculateSide(Vector2f otherObjectPosition, float elapsedTime);
 	Direction calculateDirection() const;
 	static Side invertSide(Side side);	
-	Side side;	
+	Side side = down;	
 	Actions currentAction, lastAction = relax;
-	Direction direction, lastDirection = DOWN;
+	Direction direction = STAND, lastDirection = DOWN;
 	Vector2f moveOffset = Vector2f (-1, -1);
 	WorldObject *boundTarget = nullptr;
 	bool routeGenerationAbility = true;
@@ -68,6 +68,7 @@ public:
 	static std::string sideToString(Side side);
 	static std::string directionToString(Direction direction);
 	Direction DynamicObject::sideToDirection(Side side);
+	Direction invertDirection(Direction dir);
 
 	void setCurrentAction(Actions action) { this->currentAction = action; }	
 	void changeMovePositionToRoute(Vector2f newPosition) { movePosition = newPosition; }

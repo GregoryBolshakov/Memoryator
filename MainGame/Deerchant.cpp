@@ -612,9 +612,23 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	std::string sideStr = DynamicObject::sideToString(side), directionStr = DynamicObject::directionToString(direction);
 	
 	animationSpeed = 12;
-	if (direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT)
+	if (direction == UPLEFT)
+		directionStr = "up-left";
+	if (direction == DOWNLEFT)
+		directionStr = "down-left";
+	if (direction == RIGHT)
 	{
 		directionStr = "left";
+		legsSprite.mirrored = true;
+	}
+	if (direction == UPRIGHT)
+	{
+		directionStr = "up-left";
+		legsSprite.mirrored = true;
+	}
+	if (direction == DOWNRIGHT)
+	{
+		directionStr = "down-left";
 		legsSprite.mirrored = true;
 	}
 
@@ -660,7 +674,11 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		animationSpeed = 11;
 		if (direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT)
 			bodySprite.mirrored = true;
-		bodySprite.path = "Game/worldSprites/hero/roll/" + directionStr + '/';		
+		if (directionStr == "up-left")
+			directionStr = "left";
+		if (directionStr == "down-left")
+			directionStr = "left";
+		bodySprite.path = "Game/worldSprites/hero/roll/" + directionStr + '/';
 		break;
 	case open:
 		animationLength = 12;
@@ -682,7 +700,7 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		if (direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT)
 			bodySprite.mirrored = true;
 		bodySprite.path = "Game/worldSprites/hero/move/body/" + directionStr + '/';
-		legsSprite.path = "Game/worldSprites/hero/move/legs/" + directionStr + '/';		
+		legsSprite.path = "Game/worldSprites/hero/move/legs/" + directionStr + '/';
 	}
 
 	if (currentAction == moveHit)
@@ -695,10 +713,13 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 			directionStr = sideStr;			
 		}
 		if ((direction == LEFT || direction == UPLEFT || direction == DOWNLEFT) && side == right ||
-			(direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT) && side == left)
+			(direction == UP || direction == UPLEFT || direction == UPRIGHT) && side == down ||
+			(direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT) && side == left ||
+			(direction == DOWN || direction == DOWNLEFT || direction == DOWNRIGHT) && side == up)
 		{
 			isInverse = true;
 			legsSprite.mirrored = !legsSprite.mirrored;
+			directionStr = directionToString(invertDirection(direction));
 		}
 
 		legsSprite.path = "Game/worldSprites/hero/move/legs/" + directionStr + '/';
