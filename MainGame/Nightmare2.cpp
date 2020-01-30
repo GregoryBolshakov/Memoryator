@@ -58,7 +58,7 @@ void Nightmare2::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		sideStr = "left";
 		fullSprite.mirrored = true;
 	}
-	if (direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT)
+	if (direction == Direction::RIGHT || direction == Direction::UPRIGHT || direction == Direction::DOWNRIGHT)
 	{
 		directionStr = "left";
 		fullSprite.mirrored = true;

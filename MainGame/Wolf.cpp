@@ -212,42 +212,42 @@ void Wolf::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		animationLength = 8;
 		switch (direction)
 		{
-		case LEFT:
+		case Direction::LEFT:
 			spriteName = "Game/worldSprites/wolf/move/left/";
 			spriteName += std::to_string(currentSprite[0]);
 			spriteName += ".png";
 			break;
-		case RIGHT:
+		case Direction::RIGHT:
 			spriteName = "Game/worldSprites/wolf/move/right/";
 			spriteName += std::to_string(currentSprite[0]);
 			spriteName += ".png";
 			break;
-		case UP:
+		case Direction::UP:
 			spriteName = "Game/worldSprites/wolf/move/up/";
 			spriteName += std::to_string(currentSprite[0]);
 			spriteName += ".png";
 			break;
-		case DOWN:
+		case Direction::DOWN:
 			spriteName = "Game/worldSprites/wolf/move/down/";
 			spriteName += std::to_string(currentSprite[0]);
 			spriteName += ".png";
 			break;
-		case UPLEFT:
+		case Direction::UPLEFT:
 			spriteName = "Game/worldSprites/wolf/move/left/";
 			spriteName += std::to_string(currentSprite[0]);
 			spriteName += ".png";
 			break;
-		case UPRIGHT:
+		case Direction::UPRIGHT:
 			spriteName = "Game/worldSprites/wolf/move/right/";
 			spriteName += std::to_string(currentSprite[0]);
 			spriteName += ".png";
 			break;
-		case DOWNLEFT:
+		case Direction::DOWNLEFT:
 			spriteName = "Game/worldSprites/wolf/move/left/";
 			spriteName += std::to_string(currentSprite[0]);
 			spriteName += ".png";
 			break;
-		case DOWNRIGHT:
+		case Direction::DOWNRIGHT:
 			spriteName = "Game/worldSprites/wolf/move/right/";
 			spriteName += std::to_string(currentSprite[0]);
 			spriteName += ".png";

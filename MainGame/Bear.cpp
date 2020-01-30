@@ -48,7 +48,7 @@ void Bear::behavior(float elapsedTime)
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);
-		direction = STAND;
+		direction = Direction::STAND;
 		return;
 	}
 
@@ -95,7 +95,7 @@ void Bear::behavior(float elapsedTime)
 			if (distanceToTarget >= sightRange * 1.5)
 			{
 				changeAction(relax, true, true);
-				direction = STAND;
+				direction = Direction::STAND;
 				movePosition = { -1, -1 };
 			}
 			else
@@ -137,7 +137,7 @@ void Bear::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	fullSprite.size = Vector2f(this->conditionalSizeUnits);
 	additionalSprites.clear();
 	std::string sideStr = DynamicObject::sideToString(side), directionStr = DynamicObject::directionToString(direction);
-	if (direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT)
+	if (direction == Direction::RIGHT || direction == Direction::UPRIGHT || direction == Direction::DOWNRIGHT)
 	{
 		directionStr = "left";
 		fullSprite.mirrored = true;

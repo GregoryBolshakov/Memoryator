@@ -87,6 +87,7 @@ public:
 	IntRect getOriginalTextureBox() const { return originalTextureBox; }
 	State getState() const { return state; }	
 	std::pair<std::stack<birthStaticInfo>, std::stack<birthDynamicInfo>> getBirthObjects() { return std::make_pair(birthStatics, birthDynamics); }
+	
 
 	void clearBirthStack() { birthStatics = std::stack<birthStaticInfo>(); birthDynamics = std::stack<birthDynamicInfo>(); }
 	void setPosition(Vector2f newPosition);

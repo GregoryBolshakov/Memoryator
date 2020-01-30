@@ -86,7 +86,7 @@ void Owl::behavior(float elapsedTime)
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);
-		direction = STAND;
+		direction = Direction::STAND;
 		return;
 	}
 
@@ -115,7 +115,7 @@ void Owl::behavior(float elapsedTime)
 			}
 
 		changeAction(relax, true, true);
-		direction = STAND;
+		direction = Direction::STAND;
 		movePosition = position;
 		return;
 	}

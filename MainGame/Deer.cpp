@@ -48,7 +48,7 @@ void Deer::behavior(float elapsedTime)
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);
-		direction = STAND;
+		direction = Direction::STAND;
 		return;
 	}
 	
@@ -95,7 +95,7 @@ void Deer::behavior(float elapsedTime)
 			if (distanceToTarget >= sightRange * 1.5)
 			{
 				changeAction(relax, true, true);
-				direction = STAND;
+				direction = Direction::STAND;
 				laxMovePosition = { -1, -1 };
 			}
 			else
@@ -133,7 +133,7 @@ Vector2f Deer::getHeadPosition()
 {
 	Vector2f upperLeft = Vector2f(position.x - textureBoxOffset.x, position.y - textureBoxOffset.y);
 
-	if ((side == up && laxMovePosition == position) || (laxMovePosition != position && direction == UP))
+	if ((side == up && laxMovePosition == position) || (laxMovePosition != position && direction == Direction::UP))
 	{
 		if (currentSprite[0] == 1)
 			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.569, upperLeft.y + conditionalSizeUnits.y * 0.111);
@@ -150,7 +150,7 @@ Vector2f Deer::getHeadPosition()
 		if (currentSprite[0] == 7)
 			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.575, upperLeft.y + conditionalSizeUnits.y * 0.075);
 	}
-	if ((side == down && laxMovePosition == position) || (laxMovePosition != position && direction == DOWN))
+	if ((side == down && laxMovePosition == position) || (laxMovePosition != position && direction == Direction::DOWN))
 	{
 		if (currentSprite[0] == 1)
 			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.446, upperLeft.y + conditionalSizeUnits.y * 0.222);
@@ -167,7 +167,7 @@ Vector2f Deer::getHeadPosition()
 		if (currentSprite[0] == 7)
 			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.445, upperLeft.y + conditionalSizeUnits.y * 0.182);
 	}
-	if ((side == left && laxMovePosition == position) || (laxMovePosition != position && direction == LEFT || direction == UPLEFT || direction == DOWNLEFT))
+	if ((side == left && laxMovePosition == position) || (laxMovePosition != position && direction == Direction::LEFT || direction == Direction::UPLEFT || direction == Direction::DOWNLEFT))
 	{
 		if (currentSprite[0] == 1)
 			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.313, upperLeft.y + conditionalSizeUnits.y * 0.147);
@@ -184,7 +184,7 @@ Vector2f Deer::getHeadPosition()
 		if (currentSprite[0] == 7)
 			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.277, upperLeft.y + conditionalSizeUnits.y * 0.138);
 	}
-	if ((side == right && laxMovePosition == position) || (laxMovePosition != position && direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT))
+	if ((side == right && laxMovePosition == position) || (laxMovePosition != position && direction == Direction::RIGHT || direction == Direction::UPRIGHT || direction == Direction::DOWNRIGHT))
 	{
 		if (currentSprite[0] == 1)
 			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.6, upperLeft.y + conditionalSizeUnits.y * 0.17);
@@ -216,7 +216,7 @@ void Deer::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		sideStr = "left";
 		fullSprite.mirrored = true;
 	}
-	if (direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT)
+	if (direction == Direction::RIGHT || direction == Direction::UPRIGHT || direction == Direction::DOWNRIGHT)
 	{
 		directionStr = "left";
 		fullSprite.mirrored = true;

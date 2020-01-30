@@ -97,7 +97,7 @@ void OwlBoss::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true, false);
-		direction = STAND;
+		direction = Direction::STAND;
 		return;
 	}
 

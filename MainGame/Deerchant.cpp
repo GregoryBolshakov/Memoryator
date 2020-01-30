@@ -9,8 +9,9 @@ using namespace sf;
 
 Deerchant::Deerchant(std::string objectName, Vector2f centerPosition) : DynamicObject(objectName, centerPosition)
 {
-	currentSprite[0] = 1;
-	currentSprite.resize(2);
+	currentSprite.resize(3);
+	for (auto& number : currentSprite)
+		number = 1;	
 	timeForNewSprite = 0;
 	defaultSpeed = 0.0006f;
 	speed = defaultSpeed;
@@ -33,8 +34,8 @@ Deerchant::Deerchant(std::string objectName, Vector2f centerPosition) : DynamicO
 	const Vector2f openBagSize = Vector2f(Helper::GetScreenSize().x / 6, Helper::GetScreenSize().y / 3),
 		closedBagSize = Vector2f(Helper::GetScreenSize().x / 12, Helper::GetScreenSize().y / 6);
 	bags[0].initialize(Vector2f(Helper::GetScreenSize().x - closedBagSize.x, closedBagSize.y), true);
-	bags[1].initialize(Vector2f(Helper::GetScreenSize().x - closedBagSize.x, Helper::GetScreenSize().y - closedBagSize.y), true);
-	bags[2].initialize(Vector2f(Helper::GetScreenSize().x / 3 - closedBagSize.x, Helper::GetScreenSize().y / 2 - closedBagSize.y), true);
+	bags[1].initialize(Vector2f(Helper::GetScreenSize().x - closedBagSize.x, 2 * closedBagSize.y), true);
+	bags[2].initialize(Vector2f(Helper::GetScreenSize().x - closedBagSize.x * 1.5f, 1.5 * closedBagSize.y), true);
 }
 
 Deerchant::~Deerchant()
@@ -59,7 +60,7 @@ void Deerchant::handleInput(bool usedMouse)
 	//if (currentAction == throwNoose && heldItem->content != std::make_pair(Tag::noose, 1))
 		//changeAction(relax, true, false);
 
-	if (Keyboard::isKeyPressed(Keyboard::Space) && currentAction != jerking && direction != STAND)
+	if (Keyboard::isKeyPressed(Keyboard::Space) && currentAction != jerking && direction != Direction::STAND)
 	{
 		jerk(3, 2);
 		return;
@@ -68,25 +69,32 @@ void Deerchant::handleInput(bool usedMouse)
 
 	setHitDirection();
 	moveOffset = Vector2f(-1, -1);
-	direction = STAND;
+	direction = Direction::STAND;
 	if (Keyboard::isKeyPressed(Keyboard::A))					
-		direction = LEFT;					
+		direction = Direction::LEFT;					
 	if (Keyboard::isKeyPressed(Keyboard::D))						
-		direction = RIGHT;						
+		direction = Direction::RIGHT;						
 	if (Keyboard::isKeyPressed(Keyboard::W))							
-		direction = UP;							
+		direction = Direction::UP;							
 	if (Keyboard::isKeyPressed(Keyboard::S))								
-		direction = DOWN;
+		direction = Direction::DOWN;
 	if (Keyboard::isKeyPressed(Keyboard::A) && Keyboard::isKeyPressed(Keyboard::W))
-		direction = UPLEFT;
+		direction = Direction::UPLEFT;
 	if (Keyboard::isKeyPressed(Keyboard::D) && Keyboard::isKeyPressed(Keyboard::W))
-		direction = UPRIGHT;
+		direction = Direction::UPRIGHT;
 	if (Keyboard::isKeyPressed(Keyboard::A) && Keyboard::isKeyPressed(Keyboard::S))
-		direction = DOWNLEFT;
+		direction = Direction::DOWNLEFT;
 	if (Keyboard::isKeyPressed(Keyboard::D) && Keyboard::isKeyPressed(Keyboard::S))
-		direction = DOWNRIGHT;
-	if (direction != STAND)
+		direction = Direction::DOWNRIGHT;
+	if (direction != Direction::STAND)
+	{
+		if (direction != lastDirection)
+		{
+			speedLineDirection = getSpeedLineDirection(lastDirection, direction);
+			currentSprite[2] = 1;
+		}
 		lastDirection = direction;
+	}
 
 	if (currentAction != throwNoose) //second priority actions, interact while moving
 	{
@@ -97,7 +105,7 @@ void Deerchant::handleInput(bool usedMouse)
 				isIntersect = (sqrt(pow(this->position.x - laxMovePosition.x, 2) + pow(this->position.y - laxMovePosition.y, 2)) <= (this->radius + boundTarget->getRadius()));
 			if (isIntersect || !boundTarget)
 			{
-				direction = STAND;
+				direction = Direction::STAND;
 				if (currentAction == move)
 					changeAction(relax, true, false);
 			}
@@ -122,7 +130,7 @@ void Deerchant::handleInput(bool usedMouse)
 		return;
 	}
 
-	if (direction != STAND && currentAction != moveHit && !Mouse::isButtonPressed(Mouse::Left))
+	if (direction != Direction::STAND && currentAction != moveHit && !Mouse::isButtonPressed(Mouse::Left))
 		changeAction(move, currentAction == relax, currentAction != move);
 
 	if (Keyboard::isKeyPressed(Keyboard::A) || Keyboard::isKeyPressed(Keyboard::W) || Keyboard::isKeyPressed(Keyboard::D) || Keyboard::isKeyPressed(Keyboard::S) ||
@@ -146,7 +154,7 @@ void Deerchant::handleInput(bool usedMouse)
 	else
 		if (Mouse::isButtonPressed(Mouse::Left) && !usedMouse)
 		{
-			if (direction != STAND)			
+			if (direction != Direction::STAND)			
 				changeAction(moveHit, !(currentAction == moveHit || currentAction == commonHit), false);			
 			else
 				changeAction(commonHit, !(currentAction == moveHit || currentAction == commonHit), false);			
@@ -544,7 +552,7 @@ void Deerchant::stopping(bool doStand, bool forgetBoundTarget, bool offUnsealInv
 	{
 		this->laxMovePosition = { -1, -1 };
 		moveOffset = { -1, -1 };
-		this->direction = STAND;
+		this->direction = Direction::STAND;
 	}
 
 	if (forgetBoundTarget && boundTarget != nullptr)
@@ -590,7 +598,7 @@ void Deerchant::jerk(float power, float deceleration, Vector2f destinationPoint)
 	jerkDistance = 500;
 	currentSprite[0] = 1;
 
-	laxMovePosition = Vector2f(position.x + cos(direction * pi / 180) * jerkDistance, position.y - sin(direction * pi / 180) * jerkDistance);
+	laxMovePosition = Vector2f(position.x + cos(int(direction) * pi / 180) * jerkDistance, position.y - sin(int(direction) * pi / 180) * jerkDistance);
 }
 
 void Deerchant::fightLogic(float elapsedTime, DynamicObject* target)
@@ -598,9 +606,89 @@ void Deerchant::fightLogic(float elapsedTime, DynamicObject* target)
 	pushAway(elapsedTime);
 }
 
+spriteChainElement Deerchant::prepareSpeedLine(SpeedLineDirection direction)
+{
+	spriteChainElement speedLine;
+	bool isInverse = false;
+	speedLine.offset = Vector2f(this->textureBoxOffset);
+	speedLine.size = Vector2f(this->conditionalSizeUnits);
+	speedLine.animationLength = 3;
+	speedLine.path = "";
+	if (direction == SpeedLineDirection::stand || currentSprite[2] > speedLine.animationLength)
+		return speedLine;
+
+	switch (direction)
+	{
+	case SpeedLineDirection::downleft_down:
+		speedLine.path = "Game/worldSprites/hero/move/speed_lines/downLeft_down/";
+		break;
+	case SpeedLineDirection::left_downleft:
+		speedLine.path = "Game/worldSprites/hero/move/speed_lines/left_downLeft/";
+		break;
+	case SpeedLineDirection::upleft_left:
+		speedLine.path = "Game/worldSprites/hero/move/speed_lines/upLeft_left/";
+		break;
+	case SpeedLineDirection::down_downleft:
+		isInverse = true;
+		speedLine.path = "Game/worldSprites/hero/move/speed_lines/downLeft_down/";
+		break;
+	case SpeedLineDirection::downleft_left:
+		isInverse = true;
+		speedLine.path = "Game/worldSprites/hero/move/speed_lines/left_downLeft/";
+		break;
+	case SpeedLineDirection::left_upleft:
+		isInverse = true;
+		speedLine.path = "Game/worldSprites/hero/move/speed_lines/upLeft_left/";
+		break;
+
+	case SpeedLineDirection::downright_down:
+		speedLine.mirrored = true;
+		speedLine.path = "Game/worldSprites/hero/move/speed_lines/downLeft_down/";
+		break;
+	case SpeedLineDirection::right_downright:
+		speedLine.mirrored = true;
+		speedLine.path = "Game/worldSprites/hero/move/speed_lines/left_downLeft/";
+		break;
+	case SpeedLineDirection::upright_right:
+		speedLine.mirrored = true;
+		speedLine.path = "Game/worldSprites/hero/move/speed_lines/upLeft_left/";
+		break;
+	case SpeedLineDirection::down_downright:
+		speedLine.mirrored = true;
+		isInverse = true;
+		speedLine.path = "Game/worldSprites/hero/move/speed_lines/downLeft_down/";
+		break;
+	case SpeedLineDirection::downright_right:
+		speedLine.mirrored = true;
+		isInverse = true;
+		speedLine.path = "Game/worldSprites/hero/move/speed_lines/left_downLeft/";
+		break;
+	case SpeedLineDirection::right_upright:
+		speedLine.mirrored = true;
+		isInverse = true;
+		speedLine.path = "Game/worldSprites/hero/move/speed_lines/upLeft_left/";
+		break;
+	default:
+		speedLine.path = "";
+		return speedLine;		
+	}
+
+	if (!speedLine.path.empty())
+	{
+		speedLine.offset.y += conditionalSizeUnits.y / 9.0f;
+		speedLine.position = Vector2f(position.x, position.y + conditionalSizeUnits.y / 9.0f);
+		if (isInverse)
+			speedLine.path += std::to_string(speedLine.animationLength + 1 - currentSprite[2]) + ".png";
+		else
+			speedLine.path += std::to_string(currentSprite[2]) + ".png";
+		additionalSprites.push_back(speedLine);
+	}
+	return speedLine;
+}
+
 void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 {
-	spriteChainElement legsSprite, bodySprite, fullSprite;
+	spriteChainElement legsSprite, bodySprite, fullSprite, speedLine = prepareSpeedLine(speedLineDirection);
 	bool isInverse = false;
 	legsSprite.offset = Vector2f(this->textureBoxOffset);
 	legsSprite.size = Vector2f(this->conditionalSizeUnits);
@@ -608,25 +696,26 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	bodySprite.offset = Vector2f(this->textureBoxOffset);
 	bodySprite.size = Vector2f(this->conditionalSizeUnits);
 	fullSprite.offset = Vector2f(this->textureBoxOffset);
-	fullSprite.size = Vector2f(this->conditionalSizeUnits);	
+	fullSprite.size = Vector2f(this->conditionalSizeUnits);
+
 	std::string sideStr = DynamicObject::sideToString(side), directionStr = DynamicObject::directionToString(direction);
 	
 	animationSpeed = 12;
-	if (direction == UPLEFT)
+	if (direction == Direction::UPLEFT)
 		directionStr = "up-left";
-	if (direction == DOWNLEFT)
+	if (direction == Direction::DOWNLEFT)
 		directionStr = "down-left";
-	if (direction == RIGHT)
+	if (direction == Direction::RIGHT)
 	{
 		directionStr = "left";
 		legsSprite.mirrored = true;
 	}
-	if (direction == UPRIGHT)
+	if (direction == Direction::UPRIGHT)
 	{
 		directionStr = "up-left";
 		legsSprite.mirrored = true;
 	}
-	if (direction == DOWNRIGHT)
+	if (direction == Direction::DOWNRIGHT)
 	{
 		directionStr = "down-left";
 		legsSprite.mirrored = true;
@@ -672,7 +761,7 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	case jerking:
 		animationLength = 8;
 		animationSpeed = 11;
-		if (direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT)
+		if (direction == Direction::RIGHT || direction == Direction::UPRIGHT || direction == Direction::DOWNRIGHT)
 			bodySprite.mirrored = true;
 		if (directionStr == "up-left")
 			directionStr = "left";
@@ -688,7 +777,7 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		bodySprite.mirrored = false;
 		animationLength = 16;
 		animationSpeed = 13;
-		if (lastDirection == RIGHT || lastDirection == UPRIGHT || lastDirection == DOWNRIGHT)		
+		if (lastDirection == Direction::RIGHT || lastDirection == Direction::UPRIGHT || lastDirection == Direction::DOWNRIGHT)		
 			bodySprite.mirrored = true;		
 		bodySprite.path = "Game/worldSprites/hero/stand/" + directionToString(lastDirection) + '/';
 		break;
@@ -697,7 +786,7 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	if (currentAction == move)
 	{
 		animationLength = 8;
-		if (direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT)
+		if (direction == Direction::RIGHT || direction == Direction::UPRIGHT || direction == Direction::DOWNRIGHT)
 			bodySprite.mirrored = true;
 		bodySprite.path = "Game/worldSprites/hero/move/body/" + directionStr + '/';
 		legsSprite.path = "Game/worldSprites/hero/move/legs/" + directionStr + '/';
@@ -707,15 +796,15 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	{
 		animationLength = 8;		
 
-		if (direction == UP && side == down || direction == DOWN && side == up )
+		if (direction == Direction::UP && side == down || direction == Direction::DOWN && side == up )
 		{
 			isInverse = true;
 			directionStr = sideStr;			
 		}
-		if ((direction == LEFT || direction == UPLEFT || direction == DOWNLEFT) && side == right ||
-			(direction == UP || direction == UPLEFT || direction == UPRIGHT) && side == down ||
-			(direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT) && side == left ||
-			(direction == DOWN || direction == DOWNLEFT || direction == DOWNRIGHT) && side == up)
+		if ((direction == Direction::LEFT || direction == Direction::UPLEFT || direction == Direction::DOWNLEFT) && side == right ||
+			(direction == Direction::UP || direction == Direction::UPLEFT || direction == Direction::UPRIGHT) && side == down ||
+			(direction == Direction::RIGHT || direction == Direction::UPRIGHT || direction == Direction::DOWNRIGHT) && side == left ||
+			(direction == Direction::DOWN || direction == Direction::DOWNLEFT || direction == Direction::DOWNRIGHT) && side == up)
 		{
 			isInverse = true;
 			legsSprite.mirrored = !legsSprite.mirrored;
@@ -725,7 +814,7 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		legsSprite.path = "Game/worldSprites/hero/move/legs/" + directionStr + '/';
 		bodySprite.path = "Game/worldSprites/hero/hit/body/" + sideStr + '/';
 
-		if (direction == STAND)
+		if (direction == Direction::STAND)
 		{
 			if (side == right)
 				legsSprite.mirrored = true;
@@ -737,13 +826,13 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	if (currentAction == throwNoose)
 	{
 		animationLength = 14;
-		if (direction == UP && side == down || direction == DOWN && side == up)
+		if (direction == Direction::UP && side == down || direction == Direction::DOWN && side == up)
 		{
 			isInverse = true;
 			directionStr = sideStr;
 		}
-		if ((direction == LEFT || direction == UPLEFT || direction == DOWNLEFT) && side == right ||
-			(direction == RIGHT || direction == UPRIGHT || direction == DOWNRIGHT) && side == left)
+		if ((direction == Direction::LEFT || direction == Direction::UPLEFT || direction == Direction::DOWNLEFT) && side == right ||
+			(direction == Direction::RIGHT || direction == Direction::UPRIGHT || direction == Direction::DOWNRIGHT) && side == left)
 		{
 			isInverse = true;
 			legsSprite.mirrored = !legsSprite.mirrored;
@@ -751,7 +840,7 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		legsSprite.path = "Game/worldSprites/hero/move/legs/" + directionStr + '/';
 		bodySprite.path = "Game/worldSprites/hero/throw/body/" + sideStr + '/';
 
-		if (direction == STAND)
+		if (direction == Direction::STAND)
 		{
 			if (side == right)
 				legsSprite.mirrored = true;
@@ -760,6 +849,8 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		}
 	}
 
+	if (!speedLine.path.empty())
+		additionalSprites.push_back(speedLine);
 	if (!legsSprite.path.empty())
 	{
 		if (isInverse)
@@ -787,7 +878,11 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 			lastAction = currentAction;
 			currentSprite[0] = 1;
 		}
-		if (++currentSprite[1] > legsSprite.animationLength)		
-			currentSprite[1] = 1;		
+		if (++currentSprite[1] > legsSprite.animationLength)
+			currentSprite[1] = 1;
+		if (currentSprite[2] > legsSprite.animationLength)
+			speedLineDirection = SpeedLineDirection::stand;
+		else
+			currentSprite[2]++;
 	}
 }

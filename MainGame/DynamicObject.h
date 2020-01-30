@@ -7,10 +7,16 @@
 
 const float pi = 3.14159265358979323846f;
 
-enum Direction { RIGHT = 0, UPRIGHT = 45, UP = 90, UPLEFT = 135, LEFT = 180, DOWNLEFT = 225, DOWN = 270, DOWNRIGHT = 315, STAND = 360 };
+enum class Direction { RIGHT = 0, UPRIGHT = 45, UP = 90, UPLEFT = 135, LEFT = 180, DOWNLEFT = 225, DOWN = 270, DOWNRIGHT = 315, STAND = 360 };
 enum Actions { directHit = 2, relax = 3, combatState = 4, move = 5, dead = 6, commonHit = 9, moveHit = 10, dropping = 11, transitionToEnotherWorld = 12,
 	open = 13, absorbs = 14, grab = 15, builds = 16, jerking = 17, upFlap = 30, leftFlap = 31, rightFlap = 32, startFlap = 33, stopFlap = 34, throwNoose = 35 };
 enum Side { up = 1, right = 2, down = 3, left = 4 };
+enum class SpeedLineDirection
+{
+	stand = 0,
+	up_upright = 1, upright_right = 2, right_downright = 3, downright_down = 4, down_downleft = 5, downleft_left = 6, left_upleft = 7, upleft_up = 8,
+	upright_up = 9, right_upright = 10, downright_right = 11, down_downright = 12, downleft_down = 13, left_downleft = 14, upleft_left = 15, up_upleft = 16
+};
 
 class DynamicObject : public WorldObject
 {
@@ -26,7 +32,7 @@ protected:
 	static Side invertSide(Side side);	
 	Side side = down;	
 	Actions currentAction, lastAction = relax;
-	Direction direction = STAND, lastDirection = DOWN;
+	Direction direction = Direction::STAND, lastDirection = Direction::DOWN;
 	Vector2f moveOffset = Vector2f (-1, -1);
 	WorldObject *boundTarget = nullptr;
 	bool routeGenerationAbility = true;
@@ -69,6 +75,7 @@ public:
 	static std::string directionToString(Direction direction);
 	Direction DynamicObject::sideToDirection(Side side);
 	Direction invertDirection(Direction dir);
+	static SpeedLineDirection getSpeedLineDirection(Direction from, Direction to);
 
 	void setCurrentAction(Actions action) { this->currentAction = action; }	
 	void changeMovePositionToRoute(Vector2f newPosition) { movePosition = newPosition; }

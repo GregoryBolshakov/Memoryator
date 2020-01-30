@@ -39,7 +39,7 @@ void NeutralMob::behavior(float elapsedTime)
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);
-		direction = STAND;
+		direction = Direction::STAND;
 		return;
 	}
 	fightLogic(elapsedTime);
@@ -62,7 +62,7 @@ void NeutralMob::behavior(float elapsedTime)
 			if (distanceToTarget >= sightRange * 1.5)
 			{
 				changeAction(relax, true, true);
-				direction = STAND;
+				direction = Direction::STAND;
 				movePosition = { -1, -1 };
 			}
 			else

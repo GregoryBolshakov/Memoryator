@@ -69,12 +69,12 @@ void Hare::behavior(float elapsedTime)
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);
-		direction = STAND;
+		direction = Direction::STAND;
 		return;
 	}
 
 	direction = calculateDirection();
-	if (direction != STAND)
+	if (direction != Direction::STAND)
 		lastDirection = direction;
 
 	// first-priority actions
@@ -143,7 +143,7 @@ void Hare::behavior(float elapsedTime)
 				if (distanceToTarget >= sightRange * 1.5f)
 				{
 					changeAction(relax, true, true);
-					direction = STAND;
+					direction = Direction::STAND;
 					laxMovePosition = { -1, -1 };
 				}
 				else
@@ -205,7 +205,7 @@ void Hare::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		sideStr = "left";
 		fullSprite.mirrored = true;
 	}
-	if (lastDirection == RIGHT || lastDirection == UPRIGHT || lastDirection == DOWNRIGHT)
+	if (lastDirection == Direction::RIGHT || lastDirection == Direction::UPRIGHT || lastDirection == Direction::DOWNRIGHT)
 	{
 		directionStr = "left";
 		fullSprite.mirrored = true;

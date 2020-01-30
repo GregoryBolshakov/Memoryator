@@ -5,7 +5,7 @@
 DynamicObject::DynamicObject(std::string objectName, Vector2f centerPosition) : WorldObject(objectName, centerPosition)
 {
 	speed = 0;
-	direction = STAND;
+	direction = Direction::STAND;
 }
 
 DynamicObject::~DynamicObject()
@@ -155,9 +155,9 @@ void DynamicObject::setMoveOffset(float elapsedTime)
 {
 	if (movePosition == Vector2f(-1, -1))
 	{
-		if (direction != STAND)
+		if (direction != Direction::STAND)
 		{
-			auto angle = this->getDirection() * pi / 180;
+			auto angle = int(this->getDirection()) * pi / 180;
 			const float k = speed * elapsedTime / sqrt(pow(cos(angle), 2) + pow(sin(angle), 2));
 			moveOffset.x = float(k * cos(angle));
 			moveOffset.y = float(k * -sin(angle));
@@ -188,38 +188,38 @@ Direction DynamicObject::calculateDirection() const
 	Vector2f curPos = this->getPosition();
 	Vector2f tarPos = movePosition;
 	if (tarPos == Vector2f(-1, -1))
-		return STAND;
+		return Direction::STAND;
 
-	const Direction direction = STAND;
+	const Direction direction = Direction::STAND;
 
 	if (abs(curPos.x - tarPos.x) < (this->radius))
 	{
 		if (curPos.y < tarPos.y)		
-			return DOWN;		
-		return UP;
+			return Direction::DOWN;		
+		return Direction::UP;
 	}
 	if (abs(curPos.y - tarPos.y) < (this->radius))
 	{
 		if (curPos.x < tarPos.x)
-			return RIGHT;
-		return LEFT;
+			return Direction::RIGHT;
+		return Direction::LEFT;
 	}
 	if (curPos.x < tarPos.x)
 	{
 		if (curPos.y < tarPos.y)		
-			return DOWNRIGHT;		
+			return Direction::DOWNRIGHT;		
 		else
 			if (curPos.y > tarPos.y)			
-				return UPRIGHT;
+				return Direction::UPRIGHT;
 	}
 	else
 		if (curPos.x > tarPos.x)
 		{
 			if (curPos.y < tarPos.y)			
-				return DOWNLEFT;			
+				return Direction::DOWNLEFT;			
 			else
 				if (curPos.y > tarPos.y)				
-					return UPLEFT;				
+					return Direction::UPLEFT;				
 		}
 	return direction;
 }
@@ -230,7 +230,7 @@ Vector2f DynamicObject::doMove(long long elapsedTime)
 	auto position = this->position;
 	position.x += pushVector.x; position.y += pushVector.y;
 
-	//if (this->direction == STAND)
+	//if (this->direction == Direction::STAND)
 		//return position;		
 
 	if (moveOffset != Vector2f(-1, -1))
@@ -421,6 +421,45 @@ void DynamicObject::takeDamage(float damage, Vector2f attackerPos)
 		pushDirection = Vector2f(this->position.x - attackerPos.x, this->position.y - attackerPos.y);
 }
 
+SpeedLineDirection DynamicObject::getSpeedLineDirection(Direction from, Direction to)
+{
+	if (from == Direction::UP && to == Direction::UPRIGHT)
+		return SpeedLineDirection::up_upright;
+	if (from == Direction::UPRIGHT && to == Direction::RIGHT)
+		return SpeedLineDirection::upright_right;
+	if (from == Direction::RIGHT && to == Direction::DOWNRIGHT)
+		return SpeedLineDirection::right_downright;
+	if (from == Direction::DOWNRIGHT && to == Direction::DOWN)
+		return SpeedLineDirection::downright_down;
+	if (from == Direction::DOWN && to == Direction::DOWNLEFT)
+		return SpeedLineDirection::down_downleft;
+	if (from == Direction::DOWNLEFT && to == Direction::LEFT)
+		return SpeedLineDirection::downleft_left;
+	if (from == Direction::LEFT && to == Direction::UPLEFT)
+		return SpeedLineDirection::left_upleft;
+	if (from == Direction::UPLEFT && to == Direction::UP)
+		return SpeedLineDirection::upleft_up;
+
+	if (from == Direction::UPRIGHT && to == Direction::UP)
+		return SpeedLineDirection::upright_up;
+	if (from == Direction::RIGHT && to == Direction::UPRIGHT)
+		return SpeedLineDirection::right_upright;
+	if (from == Direction::DOWNRIGHT && to == Direction::RIGHT)
+		return SpeedLineDirection::downright_right;
+	if (from == Direction::DOWN && to == Direction::DOWNRIGHT)
+		return SpeedLineDirection::down_downright;
+	if (from == Direction::DOWNLEFT && to == Direction::DOWN)
+		return SpeedLineDirection::downleft_down;
+	if (from == Direction::LEFT && to == Direction::DOWNLEFT)
+		return SpeedLineDirection::left_downleft;
+	if (from == Direction::UPLEFT && to == Direction::LEFT)
+		return SpeedLineDirection::upleft_left;
+	if (from == Direction::UP && to == Direction::UPLEFT)
+		return SpeedLineDirection::up_upleft;
+
+	return SpeedLineDirection::stand;
+}
+
 std::string DynamicObject::sideToString(Side side)
 {
 	switch (side)
@@ -441,21 +480,21 @@ std::string DynamicObject::directionToString(Direction direction)
 {
 	switch (direction)
 	{
-	case UP:
+	case Direction::UP:
 		return "up";
-	case UPRIGHT:
+	case Direction::UPRIGHT:
 		return "up-left";
-	case RIGHT:
+	case Direction::RIGHT:
 		return "left";
-	case DOWNRIGHT:
+	case Direction::DOWNRIGHT:
 		return "down-left";
-	case DOWN:
+	case Direction::DOWN:
 		return "down";
-	case DOWNLEFT:
+	case Direction::DOWNLEFT:
 		return "down-left";
-	case LEFT:
+	case Direction::LEFT:
 		return "left";	
-	case UPLEFT:
+	case Direction::UPLEFT:
 		return "up-left";		
 	}
 	return "";
@@ -466,37 +505,37 @@ Direction DynamicObject::sideToDirection(Side side)
 	switch (side)
 	{
 	case up:
-		return UP;
+		return Direction::UP;
 	case right:
-		return RIGHT;
+		return Direction::RIGHT;
 	case down:
-		return DOWN;
+		return Direction::DOWN;
 	case  left:
-		return LEFT;
+		return Direction::LEFT;
 	}
-	return DOWN;
+	return Direction::DOWN;
 }
 
 Direction DynamicObject::invertDirection(Direction dir)
 {
 	switch (dir)
 	{
-	case UP:
-		return DOWN;
-	case DOWN:
-		return UP;
-	case LEFT:
-		return RIGHT;
-	case RIGHT:
-		return LEFT;
-	case UPLEFT: 
-		return DOWNRIGHT;
-	case UPRIGHT:
-		return DOWNLEFT;
-	case DOWNLEFT:
-		return UPRIGHT;
-	case DOWNRIGHT:
-		return UPLEFT;
+	case Direction::UP:
+		return Direction::DOWN;
+	case Direction::DOWN:
+		return Direction::UP;
+	case Direction::LEFT:
+		return Direction::RIGHT;
+	case Direction::RIGHT:
+		return Direction::LEFT;
+	case Direction::UPLEFT: 
+		return Direction::DOWNRIGHT;
+	case Direction::UPRIGHT:
+		return Direction::DOWNLEFT;
+	case Direction::DOWNLEFT:
+		return Direction::UPRIGHT;
+	case Direction::DOWNRIGHT:
+		return Direction::UPLEFT;
 	}
 }
 

@@ -130,7 +130,7 @@ void WorldGenerator::inBlockGenerate(int blockIndex)
 	generateGround(blockIndex);
 
 	//block filling
-	//return;
+	return;
 
 	for (int x = blockTransform.left; x < blockTransform.left + blockTransform.width; x += 100)
 	{
@@ -247,7 +247,7 @@ void WorldGenerator::perimeterGeneration(int offset)
 	const Vector2f worldUpperLeft(int(characterPosition.x - (screenSize.x / 2 + blockSize.x) / (farthestScale * mainScale)), int(characterPosition.y - (screenSize.y / 2 + blockSize.y) / (farthestScale * mainScale)));
 	const Vector2f worldBottomRight(int(characterPosition.x + (screenSize.x / 2 + blockSize.x) / (farthestScale * mainScale)), int(characterPosition.y + (screenSize.y / 2 + blockSize.y) / (farthestScale * mainScale)));
 
-	if (focusedObject->getDirection() != STAND)
+	if (focusedObject->getDirection() != Direction::STAND)
 	{
 		for (auto& block : staticGrid->getBlocksAround(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y, offset))
 		{

@@ -48,10 +48,12 @@ public:
 	bool nearTheTable = false;
 private:
 	void setHitDirection();
+	spriteChainElement prepareSpeedLine(SpeedLineDirection direction);
 
 	float energy = 0, maxEnergyValue = 0, energyForSpecial = 0, hitDistance = 0;
 	WorldObject* owner = nullptr, *unsealInventoryOwner = nullptr;
 	int strikingSprite = 0;
+	SpeedLineDirection speedLineDirection = SpeedLineDirection::stand;
 };
 
 #endif

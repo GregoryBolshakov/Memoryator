@@ -3,7 +3,13 @@
 #define SPRITEPACK_H
 
 #include <nlohmann/json.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include "DynamicObject.h"
 using json = nlohmann::json;
+using Sprite = sf::Sprite;
+
+enum class PackTag { hero_absorb = 1, hero_hit = 2, hero_move = 3, hero_pick = 4, hero_roll = 5, hero_stand = 6, hero_throw = 7 };
+enum class PackPart { full = 1, body = 2, legs = 3, loop = 4, rope = 5 };
 
 namespace sprite_pack
 {
@@ -69,6 +75,12 @@ class SpritePack
 public:
 	SpritePack();
 	~SpritePack();
+	void init(std::string path);
+	Sprite getSprite(PackPart part, Direction direction, int number);
+
+	PackTag tag;
+	static std::map<std::string, PackTag> mappedPackTag;
+	std::map<PackPart, std::map<Direction, std::map<int, Texture>>> pack;
 };
 
 #endif

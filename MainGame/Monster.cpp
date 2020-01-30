@@ -41,7 +41,7 @@ void Monster::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);
-		direction = STAND;
+		direction = Direction::STAND;
 		return;
 	}
 
@@ -114,7 +114,7 @@ void Monster::stopping(bool doStand, bool forgetBoundTarget)
 	{
 		this->laxMovePosition = { -1, -1 };
 		moveOffset = { 0, 0 };
-		this->direction = STAND;
+		this->direction = Direction::STAND;
 	}
 
 	if (forgetBoundTarget && boundTarget != nullptr)

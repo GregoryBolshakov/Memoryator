@@ -53,8 +53,9 @@ public:
 	void Load();
 	void Save();
 	
-	//base (draw, interact)	
+	//base (draw, interact)
 	std::unordered_map<std::string, BoardSprite> spriteMap;
+	//std::map<PackTag, SpritePack> packs_map;
 	void interact(RenderWindow& window, long long elapsedTime, Event event);
 	void handleEvents(Event& event);
 	void draw(RenderWindow& window, long long elapsedTime);

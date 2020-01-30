@@ -122,7 +122,7 @@ void Noose::stopping(bool doStand, bool forgetBoundTarget)
 	if (doStand)
 	{
 		this->movePosition = { -1, -1 };
-		this->direction = STAND;
+		this->direction = Direction::STAND;
 	}
 
 	if (forgetBoundTarget && boundTarget != nullptr)
