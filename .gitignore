@@ -4,3 +4,4 @@ MainGame/x64/
 .vs
 /MainGame/*.TMP
 /Vendors/LTBL2/LTBL2/build
+packages/
