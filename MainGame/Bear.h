@@ -21,7 +21,7 @@ public:
 	Bear(std::string objectName, Vector2f centerPosition);
 	~Bear();
 	Vector2i calculateTextureOffset() override;
-	void prepareSpriteNames(long long elapsedTime, float scaleFactor) override;
+	std::vector<SpriteChainElement> prepareSprites(long long elapsedTime) override;
 	void behaviorWithStatic(WorldObject* target, float elapsedTime) override;
 	void behavior(float elapsedTime) override;
 	void endingPreviousAction();

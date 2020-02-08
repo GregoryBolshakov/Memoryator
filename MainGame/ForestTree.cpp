@@ -241,9 +241,10 @@ int ForestTree::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-void ForestTree::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> ForestTree::prepareSprites(long long elapsedTime)
 {
-    additionalSprites.clear();
+    return {};
+    /*additionalSprites.clear();
     spriteChainElement treeBody;
 	treeBody.size = Vector2f(conditionalSizeUnits);
 	treeBody.offset = Vector2f(textureBoxOffset);
@@ -287,5 +288,5 @@ void ForestTree::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 			}
 			currentSprite[0] = 1;
 		}
-	}
+	}*/
 }

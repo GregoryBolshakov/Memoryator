@@ -56,12 +56,13 @@ int Chamomile::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-void Chamomile::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> Chamomile::prepareSprites(long long elapsedTime)
 {
-    additionalSprites.clear();
+    return {};
+    /*additionalSprites.clear();
 	spriteChainElement body;
 	body.path = "Game/worldSprites/terrainObjects/chamomile/chamomile" + std::to_string(typeOfObject) + ".png";
 	body.size = Vector2f(conditionalSizeUnits);
 	body.offset = Vector2f(textureBoxOffset);
-	additionalSprites.push_back(body);
+	additionalSprites.push_back(body);*/
 }

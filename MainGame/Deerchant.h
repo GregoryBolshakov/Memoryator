@@ -24,7 +24,7 @@ public:
 	//draw
 	std::string nameOfFile;
 	Vector2i calculateTextureOffset() override;
-	void prepareSpriteNames(long long elapsedTime, float scaleFactor) override;
+	std::vector<SpriteChainElement> prepareSprites(long long elapsedTime) override;
 	//control
 	void handleInput(bool usedMouse = false) override;
 	void behaviorWithDynamic(DynamicObject* target, float elapsedTime) override;
@@ -48,7 +48,7 @@ public:
 	bool nearTheTable = false;
 private:
 	void setHitDirection();
-	spriteChainElement prepareSpeedLine(SpeedLineDirection direction);
+	SpriteChainElement prepareSpeedLine(SpeedLineDirection direction);
 
 	float energy = 0, maxEnergyValue = 0, energyForSpecial = 0, hitDistance = 0;
 	WorldObject* owner = nullptr, *unsealInventoryOwner = nullptr;

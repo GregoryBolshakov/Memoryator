@@ -153,3 +153,17 @@ RectangleShape Helper::makeLine(Vector2f point1, Vector2f point2, Color color)
 	return result;
 }
 
+std::vector<std::string> Helper::split(std::string line, char delimiter)
+{
+    std::vector<std::string> commands;
+	std::string temp = line;
+	if (temp[temp.size() - 1] != delimiter)
+		temp.push_back(delimiter);
+	while (!temp.empty())
+	{
+		auto token = temp.substr(0, temp.find(delimiter));
+		commands.push_back(token);
+		temp.erase(0, token.size() + 1);
+	}
+    return commands;
+}

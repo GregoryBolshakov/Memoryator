@@ -43,9 +43,10 @@ void Nightmare2::doAttack(WorldObject* target)
 	}
 }
 
-void Nightmare2::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> Nightmare2::prepareSprites(long long elapsedTime)
 {
-	spriteChainElement fullSprite;
+    return {};
+	/*spriteChainElement fullSprite;
 
 	fullSprite.offset = Vector2f(this->textureBoxOffset);
 	fullSprite.size = Vector2f(this->conditionalSizeUnits);
@@ -121,6 +122,6 @@ void Nightmare2::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 			lastAction = currentAction;
 			currentSprite[0] = 1;
 		}
-	}
+	}*/
 }
 

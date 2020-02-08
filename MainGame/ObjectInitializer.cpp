@@ -36,7 +36,7 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 	std::string itemName,
 	int count,
 	Biomes biome,	
-	std::unordered_map<std::string, BoardSprite>* spriteMap,
+	std::map<PackTag, SpritePack>* packsMap,
 	bool mirrored,
 	std::vector<std::pair<Tag, int>> inventory)
 {
@@ -174,14 +174,13 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 
 	item->setPosition(Vector2f(itemPosition));
 	item->setType(currentType);
-	item->prepareSpriteNames(0);
+	auto sprites = item->prepareSprites(0);
 	FloatRect textureBounds = FloatRect(0, 0, 0, 0);
-	if (spriteMap->count(item->additionalSprites[0].path) > 0)
-	textureBounds = spriteMap->at(item->additionalSprites[0].path).sprite.getGlobalBounds();
-	const auto textureSize = Vector2f(int(textureBounds.width), int(textureBounds.height));
+    auto size = packsMap->at(sprites[0].packTag).getOriginalInfo(sprites[0].packPart, sprites[0].direction, sprites[0].number).source_size;
+	const Vector2f textureSize = Vector2f(size.w, size.h);
 	item->setTextureSize(textureSize);
 	const std::string name = itemName.empty()
-		? item->additionalSprites[0].path + "_" + std::to_string(newNameId)
+		? std::to_string(newNameId)
 		: itemName;
 	item->setName(name);
 	if (!inventory.empty())
@@ -197,7 +196,7 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 	Tag itemClass,
 	Vector2f itemPosition,
 	std::string itemName,
-	std::unordered_map<std::string, BoardSprite>* spriteMap,
+	std::map<PackTag, SpritePack>* packsMap,
 	WorldObject* owner)
 {
 	DynamicObject* item;
@@ -241,18 +240,18 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 		nameOfImage = "Game/worldSprites/deer/stand/down/1";
 		break;
 	}
-	case Tag::noose:
+	/*case Tag::noose:
 	{
 		item = new Noose("item", Vector2f(0, 0), owner);
 		nameOfImage = "Game/worldSprites/noose/nooseLoop/1";
 		break;
-	}
-	case Tag::clapWhirl:
+	}*/
+	/*case Tag::clapWhirl:
 	{
 		item = new ClapWhirl("item", Vector2f(0, 0), owner);
 		nameOfImage = "Game/worldSprites/nightmare3/clap/whirl";
 		break;
-	}
+	}*/
 	case Tag::owlBoss:
 	{
 		item = new OwlBoss("item", Vector2f(0, 0));
@@ -294,7 +293,9 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 
 	item->setName(name);
 	item->setPosition(Vector2f(itemPosition));
-	const Vector2f textureSize = Vector2f(spriteMap->at(nameOfImage).texture.getSize());
+    auto sprites = item->prepareSprites(0);
+    auto size = packsMap->at(sprites[0].packTag).getOriginalInfo(sprites[0].packPart, sprites[0].direction, sprites[0].number).source_size;
+	const Vector2f textureSize = Vector2f(size.w, size.h);
 	item->setTextureSize(textureSize);
 	return item;
 }

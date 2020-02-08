@@ -57,12 +57,13 @@ int Yarrow::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-void Yarrow::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> Yarrow::prepareSprites(long long elapsedTime)
 {
-	additionalSprites.clear();
+    return {};
+	/*additionalSprites.clear();
 	spriteChainElement yarrowBody;
 	yarrowBody.path = "Game/worldSprites/terrainObjects/yarrow/yarrow" + std::to_string(typeOfObject) + ".png";
 	yarrowBody.size = Vector2f(conditionalSizeUnits);
 	yarrowBody.offset = Vector2f(textureBoxOffset);
-	additionalSprites.push_back(yarrowBody);
+	additionalSprites.push_back(yarrowBody);*/
 }

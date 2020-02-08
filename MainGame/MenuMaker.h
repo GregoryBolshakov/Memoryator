@@ -19,20 +19,17 @@ public:
 	MenuMaker();
 	~MenuMaker();
 	void interact(WorldHandler &world, RenderWindow &window);
-	void drawButtons(RenderWindow &window);	
+	std::vector<SpriteChainElement> prepareSprites();
 	MenuStates getState() { return menuState; }
 	void setState(MenuStates state) { menuState = state; }
 	void onKeyDown(Event event, WorldHandler &world);
 	bool getActivity() { return wasActive; }
-private:	
+private:
 	MenuStates menuState = mainMenu;
 	std::unordered_map<ButtonTag, ButtonMaker> buttonList;
 	std::string buttonsInfoFileDirectory = "Game/MenuMaker/buttonsInfo.txt";
 	void initButtons();
 	bool wasActive;
 	Vector2f screenSize;
-	/*typedef World datatype;
-	datatype blankref;
-	std::reference_wrapper<datatype> world = blankref;*/
 };
 #endif

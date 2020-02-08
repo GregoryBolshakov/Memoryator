@@ -73,9 +73,10 @@ void Nightmare3::onSpriteChange()
 	}
 }
 
-void Nightmare3::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> Nightmare3::prepareSprites(long long elapsedTime)
 {
-	spriteChainElement fullSprite;
+    return {};
+	/*spriteChainElement fullSprite;
 
 	fullSprite.offset = Vector2f(this->textureBoxOffset);
 	fullSprite.size = Vector2f(this->conditionalSizeUnits);
@@ -164,6 +165,6 @@ void Nightmare3::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 			else
 				currentSprite[0] = 1;
 		}
-	}
+	}*/
 }
 

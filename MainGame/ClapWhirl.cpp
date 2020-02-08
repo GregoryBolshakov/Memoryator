@@ -1,4 +1,4 @@
-#include "ClapWhirl.h"
+/*#include "ClapWhirl.h"
 #include "Deerchant.h"
 #include "Nightmare3.h"
 
@@ -61,9 +61,6 @@ void ClapWhirl::behaviorWithStatic(WorldObject* target, float elapsedTime)
 {
 	if (currentAction == dead)
 		return;
-	/*const auto terrain = dynamic_cast<TerrainObject*>(target);
-	if (terrain && Helper::getDist(position, target->getPosition()) <= radius + target->getRadius() && cantStopMe.count(target->tag) == 0)	
-		currentAction = dead;*/
 }
 
 void ClapWhirl::behavior(float elapsedTime)
@@ -192,7 +189,7 @@ void ClapWhirl::rotateAndExtend(spriteChainElement* whirl)
 	}
 }
 
-void ClapWhirl::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+void ClapWhirl::prepareSprites(long long elapsedTime)
 {
 	spriteChainElement whirlSprite;
 
@@ -247,4 +244,4 @@ void ClapWhirl::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 			currentSprite[0] = 1;
 		}
 	}
-}
+}*/

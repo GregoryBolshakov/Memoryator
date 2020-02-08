@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #ifndef NOOSE_H
 #define NOOSE_H
 
@@ -12,13 +12,13 @@ class Noose : public DynamicObject
 private:
     void stopping(bool doStand = false, bool forgetBoundTarget = false);
     void endingPreviousAction();
-	void rotateAndExtend(spriteChainElement* rope, spriteChainElement* loop);
+	void rotateAndExtend(SpriteChainElement* rope, SpriteChainElement* loop);
 
 	float timeForNewSprite, timeAfterHit = 0, timeForNewHit = 100000;
 	float ropeElongation = 0, maximumLength = 1500;
 	int animationLength, strikingSprite = 4;
 	bool wasHit = false;
-	spriteChainElement stillRope, stillLoop;
+	SpriteChainElement stillRope, stillLoop;
 	WorldObject* owner;
 	Vector2f ownerPos = { 0, 0 };
 	Vector2i ownerGlobalBounds = { 0, 0 };
@@ -26,7 +26,7 @@ public:
 	Noose(std::string objectName, Vector2f centerPosition, WorldObject* owner);
 	~Noose();
 	Vector2i calculateTextureOffset() override;
-	void prepareSpriteNames(long long elapsedTime, float scaleFactor) override;
+	std::vector<SpriteChainElement> prepareSprites(long long elapsedTime) override;
     void behaviorWithDynamic(DynamicObject* target, float elapsedTime) override;
 	void behaviorWithStatic(WorldObject* target, float elapsedTime) override;
 	void behavior(float elapsedTime) override;
@@ -39,4 +39,4 @@ public:
 	void fightLogic(float elapsedTime, DynamicObject* target = nullptr) override;
 };
 
-#endif
+#endif*/

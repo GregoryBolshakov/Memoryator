@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #ifndef CLAPWHILR_H
 #define CLAPWHILR_H
 
@@ -13,7 +13,7 @@ public:
 	ClapWhirl(std::string objectName, Vector2f centerPosition, WorldObject* owner);
 	~ClapWhirl();
 	Vector2i calculateTextureOffset() override;
-	void prepareSpriteNames(long long elapsedTime, float scaleFactor) override;
+	std::vector<SpriteChainElement> prepareSprites(long long elapsedTime) override;
 	void behaviorWithDynamic(DynamicObject* target, float elapsedTime) override;
 	void behaviorWithStatic(WorldObject* target, float elapsedTime) override;
 	void behavior(float elapsedTime) override;
@@ -39,4 +39,4 @@ private:
 	Vector2i ownerGlobalBounds = { 0, 0 };
 };
 
-#endif
+#endif*/

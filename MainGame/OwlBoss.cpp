@@ -181,11 +181,10 @@ void OwlBoss::fightLogic(float elapsedTime, DynamicObject* target)
 	pushAway(elapsedTime);
 }
 
-void OwlBoss::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> OwlBoss::prepareSprites(long long elapsedTime)
 {
-	std::string spriteName;
-
-	spriteChainElement legsSprite, bodySprite, fullSprite;
+    return {};
+	/*spriteChainElement legsSprite, bodySprite, fullSprite;
 	additionalSprites.clear();
 	legsSprite.offset = Vector2f(this->textureBoxOffset);
 	legsSprite.size = Vector2f(this->conditionalSizeUnits);
@@ -298,5 +297,5 @@ void OwlBoss::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 			lastAction = currentAction;
 			currentSprite[0] = 1;
 		}
-	}
+	}*/
 }

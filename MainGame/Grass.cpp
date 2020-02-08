@@ -98,9 +98,10 @@ int Grass::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-void Grass::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> Grass::prepareSprites(long long elapsedTime)
 {
-	animationSpeed = 10;
+    return {};
+	/*animationSpeed = 10;
 	additionalSprites.clear();
 	spriteChainElement grassBody;
 		
@@ -131,5 +132,5 @@ void Grass::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 			}
 			currentSprite[0] = 1;
 		}
-	}
+	}*/
 }

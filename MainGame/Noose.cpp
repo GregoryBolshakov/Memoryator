@@ -1,4 +1,4 @@
-#include "Noose.h"
+/*#include "Noose.h"
 #include "Deer.h"
 #include "Deerchant.h"
 
@@ -184,7 +184,7 @@ void Noose::rotateAndExtend(spriteChainElement* rope, spriteChainElement* loop)
 {
 	if (ownerPos != Vector2f(0, 0))
 	{
-		const Vector2f beginPoint = Vector2f(ownerPos.x/* + ownerGlobalBounds.x / 12.0f*/, ownerPos.y - ownerGlobalBounds.y / 13.0f);
+		const Vector2f beginPoint = Vector2f(ownerPos.x, ownerPos.y - ownerGlobalBounds.y / 13.0f);
 		rope->size = Vector2f(Helper::getDist(beginPoint, position) + ropeElongation, rope->size.y); // a little bit longer rope for sprite joining		
 		if (position.y <= beginPoint.y)
 			rope->rotation = acos((beginPoint.x - position.x) / sqrt(pow(beginPoint.x - position.x, 2) + pow(beginPoint.y - position.y, 2))) / pi * 180;
@@ -214,7 +214,7 @@ void Noose::rotateAndExtend(spriteChainElement* rope, spriteChainElement* loop)
 	}
 }
 
-void Noose::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+void Noose::prepareSprites(long long elapsedTime)
 {
 	spriteChainElement ropeSprite, loopSprite;
 
@@ -292,4 +292,4 @@ void Noose::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 			currentSprite[0] = 1;
 		}
 	}
-}
+}*/

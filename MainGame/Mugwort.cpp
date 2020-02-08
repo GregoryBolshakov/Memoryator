@@ -52,12 +52,13 @@ int Mugwort::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-void Mugwort::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> Mugwort::prepareSprites(long long elapsedTime)
 {
-	additionalSprites.clear();
+    return {};
+	/*additionalSprites.clear();
 	spriteChainElement mugwortBody;
 	mugwortBody.path = "Game/worldSprites/terrainObjects/mugwort/mugwort" + std::to_string(typeOfObject) + ".png";
 	mugwortBody.size = Vector2f(conditionalSizeUnits);
 	mugwortBody.offset = Vector2f(textureBoxOffset);
-	additionalSprites.push_back(mugwortBody);
+	additionalSprites.push_back(mugwortBody);*/
 }

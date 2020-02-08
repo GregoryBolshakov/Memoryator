@@ -3,6 +3,7 @@
 #define WORLDGENERATOR_H
 
 #include "ObjectInitializer.h"
+#include "GridList.h"
 
 struct BiomesMapCell
 {
@@ -14,7 +15,8 @@ class WorldGenerator
 {
 public:
 	void generate();
-	void init(int width, int height, Vector2i blockSize, Vector2i microBlockSize, GridList* staticGrid, GridList* dynamicGrid, std::unordered_map<std::string, BoardSprite>* spriteMap);
+	void init(int width, int height, Vector2i blockSize, Vector2i microBlockSize, GridList* staticGrid, GridList* dynamicGrid, std::map<PackTag, SpritePack>* packsMap);
+    void initMainScale();
 
 	void initializeStaticItem(Tag itemClass, Vector2f itemPosition, int itemType, std::string itemName, int count = 1, Biomes biome = DarkWoods, bool mirrored = true, std::vector<std::pair<Tag, int>> inventory = {});
 	void initializeDynamicItem(Tag itemClass, Vector2f itemPosition, std::string itemName, WorldObject* owner = nullptr);
@@ -32,12 +34,12 @@ public:
 	BiomesMapCell biomeMatrix[100][100];
 	std::map<int, bool> rememberedBlocks = { {0, true} };
 	DynamicObject* focusedObject = nullptr;
-	const float closestScale = 1.7, farthestScale = 0.998;
-	float scaleFactor = 1, mainScale = 1, scale = 1;
+	const float CLOSEST_SCALE = 1.7, FARTHEST_SCALE = 0.998;
+	float scaleFactor = 1, mainScale = 1;
 private:
 	GridList* staticGrid = nullptr;
 	GridList* dynamicGrid = nullptr;	
-	std::unordered_map<std::string, BoardSprite>* spriteMap;
+	std::map<PackTag, SpritePack>* packsMap;
 	int biomeGenerateDistance = 4, width = 0, height = 0;
 	Vector2i blockSize = { 0, 0 }, microBlockSize = { 0, 0 };
 	Vector2i focusedObjectBlock = { 0, 0 };

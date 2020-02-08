@@ -1,4 +1,4 @@
-#include "BuildSystemMaker.h"
+/*#include "BuildSystemMaker.h"
 #include "ObjectInitializer.h"
 #include "DroppedLoot.h"
 
@@ -158,14 +158,6 @@ void BuildSystemMaker::draw(RenderWindow &window, float elapsedTime, std::unorde
 		else
 			sprite.setColor(Color(127, 255, 0));
 
-		/*buildType = terrain->getType();
-		delete terrain;
-		if (!canBePlaced)
-		{
-			buildType = 1;
-			spriteBuildPos = Vector2f (-1, -1);
-		}*/
-
 		window.draw(sprite);
 	}
 }
@@ -286,34 +278,6 @@ bool BuildSystemMaker::canAfford()
 
 void BuildSystemMaker::wasPlaced()
 {
-	//std::vector<std::pair <Tag, int>> temporaryInventory = builtObjects[selectedObject].recipe;
-
-	/*for (auto&curRecipeItem = temporaryInventory.begin(); curRecipeItem != temporaryInventory.end(); ++curRecipeItem)
-	{
-		for (auto bag = boundBags->begin(); bag != boundBags->end(); bag++)
-		{
-			for (auto& item : bag->cells)
-			{
-				if (curRecipeItem->first == item.content.first)
-				{
-					if (item.content.second >= curRecipeItem->second)
-					{
-						item.content.second -= curRecipeItem->second;
-						if (item.content.second == 0)
-							item.content.first = Tag::emptyCell;
-						curRecipeItem->second = 0;
-					}
-					else
-					{
-						curRecipeItem->second -= item.content.second;
-						item.content.second = 0;
-						item.content.first = Tag::emptyCell;
-					}
-				}
-			}
-		}
-	}*/
-
 	selectedObject = Tag::emptyCell;
 	buildingPosition = Vector2f (-1, -1);
 }
@@ -359,4 +323,4 @@ void BuildSystemMaker::animator(float elapsedTime)
 	{
 		builtObjects[i].iconSprite.setPosition(builtObjects[i].iconSprite.getPosition().x + animationSpeed * elapsedTime, builtObjects[i].iconSprite.getPosition().y);
 	}
-}
+}*/

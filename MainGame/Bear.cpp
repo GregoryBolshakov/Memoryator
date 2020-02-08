@@ -129,9 +129,10 @@ void Bear::jerk(float power, float deceleration, Vector2f destinationPoint)
 	return;
 }
 
-void Bear::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> Bear::prepareSprites(long long elapsedTime)
 {
-	spriteChainElement fullSprite;
+    return {};
+	/*spriteChainElement fullSprite;
 
 	fullSprite.offset = Vector2f(this->textureBoxOffset);
 	fullSprite.size = Vector2f(this->conditionalSizeUnits);
@@ -192,5 +193,5 @@ void Bear::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 			lastAction = currentAction;
 			currentSprite[0] = 1;
 		}
-	}
+	}*/
 }

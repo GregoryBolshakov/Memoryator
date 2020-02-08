@@ -191,9 +191,10 @@ void Hare::jerk(float power, float deceleration, Vector2f destinationPoint)
 	return;
 }
 
-void Hare::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> Hare::prepareSprites(long long elapsedTime)
 {
-	spriteChainElement fullSprite;
+    return {};
+	/*spriteChainElement fullSprite;
 
 	fullSprite.offset = Vector2f(this->textureBoxOffset);
 	fullSprite.size = Vector2f(this->conditionalSizeUnits);
@@ -254,5 +255,5 @@ void Hare::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 			lastAction = currentAction;
 			currentSprite[0] = 1;
 		}
-	}
+	}*/
 }

@@ -1,3 +1,4 @@
+#include "DrawSystem.h"
 #include "MenuMaker.h"
 #include "HeroBook.h"
 #include "Deerchant.h"
@@ -11,10 +12,11 @@ using namespace std;
 int main() {	
 	srand(time(0));
 	auto screenSize = Helper::GetScreenSize();
-	RenderWindow mainWindow(VideoMode(static_cast<unsigned int>(screenSize.x), static_cast<unsigned int>(screenSize.y), 32), "game", Style::Fullscreen);
-	
+	RenderWindow mainWindow(VideoMode(static_cast<unsigned int>(screenSize.x), static_cast<unsigned int>(screenSize.y), 32), "game"/*, Style::Fullscreen*/);
+
+    DrawSystem drawSystem;
 	MenuMaker menuSystem;
-	WorldHandler world(40000, 40000);
+	WorldHandler world(40000, 40000, &drawSystem.packsMap);
 	world.initLightSystem(mainWindow);
 	bool windowFocus = true;
 	Console console(IntRect(Helper::GetScreenSize().x * 0.2, Helper::GetScreenSize().y * 0.8, Helper::GetScreenSize().x * 0.6, Helper::GetScreenSize().y * 0.03), &world);
@@ -51,11 +53,11 @@ int main() {
 
 			if (event.type == Event::MouseButtonReleased)
 			{			
-				if (menuSystem.getState() == closed && world.getBuildSystem().succesInit)
+				/*if (menuSystem.getState() == closed && world.getBuildSystem().succesInit)
 				{
 					world.onMouseUp(currentMouseButton);					
 					mainBook.onMouseUp();
-				}
+				}*/
 					
 				if (currentMouseButton == 1)
 					menuSystem.interact(world, mainWindow);
@@ -82,12 +84,12 @@ int main() {
 				break;
 			}
 			console.handleEvents(event);
-		}		
+		}
 
 		if (menuSystem.getState() == mainMenu)
 		{		
 			mainWindow.clear(Color::White);
-			menuSystem.drawButtons(mainWindow);
+			drawSystem.draw(mainWindow, menuSystem.prepareSprites());
 			mainWindow.display();
 
 			interactClock.restart();
@@ -95,7 +97,7 @@ int main() {
 			continue;
 		}
 
-		if (windowFocus && menuSystem.getState() != gameMenu)
+		if (/*windowFocus && */menuSystem.getState() != gameMenu)
 		{
 			interactTime = interactClock.getElapsedTime().asMicroseconds();
 			interactClock.restart();
@@ -109,29 +111,31 @@ int main() {
 				world.interact(mainWindow, interactTime, event);
 			}
 			auto hero = dynamic_cast<Deerchant*>(world.focusedObject);
-			mainBook.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().getHeldItem(), hero->nearTheTable);
-			mainBook.interact(interactTime);
+			//mainBook.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().getHeldItem(), hero->nearTheTable);
+			//mainBook.interact(interactTime);
 
 			mainWindow.clear(Color::White);
 
-			world.draw(mainWindow, drawTime);
-			world.runBuildSystemDrawing(mainWindow, drawTime);
-			mainBook.draw(&mainWindow, world.focusedObject->getHealthPoint() / world.focusedObject->getMaxHealthPointValue(), drawTime);
-			world.runInventorySystemDrawing(mainWindow, drawTime);
+            drawSystem.drawToWorld(mainWindow, world.prepareSprites(drawTime, true), world.getWorldGenerator().mainScale, world.getCameraPosition());
+            drawSystem.drawToWorld(mainWindow, world.prepareSprites(drawTime, false), world.getWorldGenerator().mainScale, world.getCameraPosition());
+		    //world.draw(mainWindow, drawTime);
+			//world.runBuildSystemDrawing(mainWindow, drawTime);
+			//mainBook.draw(&mainWindow, world.focusedObject->getHealthPoint() / world.focusedObject->getMaxHealthPointValue(), drawTime);
+			//world.runInventorySystemDrawing(mainWindow, drawTime);
 		}
 		else
 		{
-			world.draw(mainWindow, 0);
+			//world.draw(mainWindow, 0);
 			interactClock.restart();
 			drawClock.restart();
 		}
 
-		menuSystem.drawButtons(mainWindow);
+		drawSystem.draw(mainWindow, menuSystem.prepareSprites());
 
 		auto hero = dynamic_cast<DynamicObject*>(world.focusedObject);
 		console.interact(interactTime);
 		console.draw(mainWindow);
-		TextWriter::drawString(std::to_string(world.getWorldGenerator().scaleFactor * world.getWorldGenerator().mainScale), NormalFont, 30, 200, 200, &mainWindow, Color::Black);	
+		TextWriter::drawString(std::to_string(world.getWorldGenerator().mainScale), NormalFont, 30, 200, 200, &mainWindow, Color::Black);	
 
 		mainWindow.display();
 	}

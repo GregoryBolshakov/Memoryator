@@ -73,9 +73,10 @@ int Mushroom::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-void Mushroom::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> Mushroom::prepareSprites(long long elapsedTime)
 {
-	additionalSprites.clear();
+    return {};
+	/*additionalSprites.clear();
 	spriteChainElement grassBody;
 	if (typeOfObject >= 1 && typeOfObject <= 3)
 		grassBody.path = "Game/worldSprites/BirchGrove/mushroom" + std::to_string(typeOfObject) + ".png";
@@ -85,5 +86,5 @@ void Mushroom::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		grassBody.path = "Game/worldSprites/SwampyTrees/mushroom" + std::to_string(typeOfObject - 12) + ".png";
 	grassBody.size = Vector2f(conditionalSizeUnits);
 	grassBody.offset = Vector2f(textureBoxOffset);
-	additionalSprites.push_back(grassBody);
+	additionalSprites.push_back(grassBody);*/
 }

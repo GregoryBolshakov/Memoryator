@@ -36,18 +36,24 @@ int Ground::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-void Ground::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> Ground::prepareSprites(long long elapsedTime)
 {
-	additionalSprites.clear();
-	spriteChainElement groundBody;
-	groundBody.path = "Game/worldSprites/terrainObjects/ground/ground" + std::to_string(typeOfObject) + ".png";
+    SpriteChainElement body(PackTag::darkWoods, PackPart::ground, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+    return {body};
+	/*additionalSprites.clear();
+	SpriteChainElement body;
+    body.packPart = PackPart::ground;
+    body.direction = Direction::DOWN;
+    body.number = 1;
+
 	if (typeOfObject == 3)
-		groundBody.path = "Game/worldSprites/BirchGrove/ground.png";
+		body.packTag = PackTag::birchGrove;
 	if (typeOfObject == 2)
-		groundBody.path = "Game/worldSprites/DarkWoods/ground.png";
+		body.packTag = PackTag::darkWoods;
 	if (typeOfObject == 1)
-		groundBody.path = "Game/worldSprites/SwampyTrees/ground.png";
-	groundBody.size = Vector2f(conditionalSizeUnits);
-	groundBody.offset = Vector2f(textureBoxOffset);
-	additionalSprites.push_back(groundBody);
+		body.packTag = PackTag::swampyTrees;
+
+	body.size = Vector2f(conditionalSizeUnits);
+	body.offset = Vector2f(textureBoxOffset);
+	additionalSprites.push_back(body);*/
 }

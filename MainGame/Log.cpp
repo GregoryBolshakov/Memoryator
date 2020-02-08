@@ -94,9 +94,10 @@ int Log::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-void Log::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> Log::prepareSprites(long long elapsedTime)
 {
-	additionalSprites.clear();
+    return {};
+	/*additionalSprites.clear();
 	spriteChainElement stumpBody;
 	stumpBody.size = Vector2f(conditionalSizeUnits);
 	stumpBody.offset = Vector2f(textureBoxOffset);
@@ -121,5 +122,5 @@ void Log::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 			}
 			currentSprite[0] = 1;
 		}
-	}
+	}*/
 }

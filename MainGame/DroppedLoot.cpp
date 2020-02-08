@@ -46,9 +46,10 @@ int DroppedLoot::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-void DroppedLoot::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> DroppedLoot::prepareSprites(long long elapsedTime)
 {
-	additionalSprites.clear();
+    return {};
+	/*additionalSprites.clear();
 	spriteChainElement sprite;
 	switch (typeOfObject)
 	{
@@ -85,5 +86,5 @@ void DroppedLoot::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	sprite.path += ".png";
 	sprite.size = Vector2f(conditionalSizeUnits);
 	sprite.offset = Vector2f(textureBoxOffset);
-	additionalSprites.push_back(sprite);
+	additionalSprites.push_back(sprite);*/
 }

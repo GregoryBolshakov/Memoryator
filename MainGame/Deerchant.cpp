@@ -507,14 +507,14 @@ void Deerchant::endingPreviousAction()
 					pickedItem->pickUp(&this->bags);
 			}
 			
-			auto nooseItem = dynamic_cast<Noose*>(boundTarget);
+			/*auto nooseItem = dynamic_cast<Noose*>(boundTarget);
 			if (nooseItem)
 			{
 				auto placedNoose = new std::vector<std::pair<Tag, int>>({ (std::make_pair(Tag::noose, 1)) });
 				if (HeroBag::putItemsIn(placedNoose, &bags))
 					nooseItem->deletePromiseOn();
 				delete placedNoose;
-			}
+			}*/
 			stopping(true, true);
 			changeAction(relax, true, false);
 		}
@@ -576,10 +576,11 @@ Vector2f Deerchant::getBuildPosition(std::vector<WorldObject*> visibleItems, flo
 
 Vector2f Deerchant::getBeltPosition()
 {
-	if (additionalSprites.size() >= 2) return
+	/*if (additionalSprites.size() >= 2) return
 		Vector2f((4 * additionalSprites[0].position.x + additionalSprites[1].position.x) / 5.0f + conditionalSizeUnits.x / 3.0f,
 		(4 * additionalSprites[0].position.y + additionalSprites[1].position.y) / 5.0f);
-	return additionalSprites[0].position;
+	return additionalSprites[0].position;*/
+    return position;
 }
 
 int Deerchant::getBuildType(Vector2f ounPos, Vector2f otherPos)
@@ -606,10 +607,11 @@ void Deerchant::fightLogic(float elapsedTime, DynamicObject* target)
 	pushAway(elapsedTime);
 }
 
-spriteChainElement Deerchant::prepareSpeedLine(SpeedLineDirection direction)
+SpriteChainElement Deerchant::prepareSpeedLine(SpeedLineDirection direction)
 {
-	spriteChainElement speedLine;
-	bool isInverse = false;
+	SpriteChainElement speedLine;
+    return speedLine;
+	/*bool isInverse = false;
 	speedLine.offset = Vector2f(this->textureBoxOffset);
 	speedLine.size = Vector2f(this->conditionalSizeUnits);
 	speedLine.animationLength = 3;
@@ -619,58 +621,50 @@ spriteChainElement Deerchant::prepareSpeedLine(SpeedLineDirection direction)
 
 	switch (direction)
 	{
-	case SpeedLineDirection::downleft_down:
-		speedLine.path = "Game/worldSprites/hero/move/speed_lines/downLeft_down/";
-		break;
-	case SpeedLineDirection::left_downleft:
-		speedLine.path = "Game/worldSprites/hero/move/speed_lines/left_downLeft/";
-		break;
-	case SpeedLineDirection::upleft_left:
-		speedLine.path = "Game/worldSprites/hero/move/speed_lines/upLeft_left/";
-		break;
-	case SpeedLineDirection::down_downleft:
-		isInverse = true;
-		speedLine.path = "Game/worldSprites/hero/move/speed_lines/downLeft_down/";
-		break;
-	case SpeedLineDirection::downleft_left:
-		isInverse = true;
-		speedLine.path = "Game/worldSprites/hero/move/speed_lines/left_downLeft/";
-		break;
-	case SpeedLineDirection::left_upleft:
-		isInverse = true;
-		speedLine.path = "Game/worldSprites/hero/move/speed_lines/upLeft_left/";
-		break;
-
-	case SpeedLineDirection::downright_down:
-		speedLine.mirrored = true;
-		speedLine.path = "Game/worldSprites/hero/move/speed_lines/downLeft_down/";
-		break;
-	case SpeedLineDirection::right_downright:
-		speedLine.mirrored = true;
-		speedLine.path = "Game/worldSprites/hero/move/speed_lines/left_downLeft/";
-		break;
-	case SpeedLineDirection::upright_right:
-		speedLine.mirrored = true;
-		speedLine.path = "Game/worldSprites/hero/move/speed_lines/upLeft_left/";
-		break;
-	case SpeedLineDirection::down_downright:
-		speedLine.mirrored = true;
-		isInverse = true;
-		speedLine.path = "Game/worldSprites/hero/move/speed_lines/downLeft_down/";
-		break;
-	case SpeedLineDirection::downright_right:
-		speedLine.mirrored = true;
-		isInverse = true;
-		speedLine.path = "Game/worldSprites/hero/move/speed_lines/left_downLeft/";
-		break;
-	case SpeedLineDirection::right_upright:
-		speedLine.mirrored = true;
-		isInverse = true;
-		speedLine.path = "Game/worldSprites/hero/move/speed_lines/upLeft_left/";
-		break;
-	default:
-		speedLine.path = "";
-		return speedLine;		
+        case SpeedLineDirection::down_downleft:
+		    speedLine.path = "Game/worldSprites/hero/move/lines/1/";
+		    break;
+         case SpeedLineDirection::down_downright:
+            speedLine.mirrored = true;
+		    speedLine.path = "Game/worldSprites/hero/move/lines/1/";
+		    break;
+        case SpeedLineDirection::downleft_left:       
+        case SpeedLineDirection::upright_right:
+	        speedLine.path = "Game/worldSprites/hero/move/lines/2/";
+	        break;
+        case SpeedLineDirection::upleft_left:
+        case SpeedLineDirection::downright_right:
+            speedLine.mirrored = true;
+	        speedLine.path = "Game/worldSprites/hero/move/lines/2/";
+	        break;
+        case SpeedLineDirection::left_upleft:       
+        case SpeedLineDirection::right_downright:       
+	        speedLine.path = "Game/worldSprites/hero/move/lines/3/";
+	    break;
+        case SpeedLineDirection::left_downleft:
+        case SpeedLineDirection::right_upright:
+            speedLine.mirrored = true;
+	        speedLine.path = "Game/worldSprites/hero/move/lines/3/";
+	    break;        
+        case SpeedLineDirection::downright_down:
+        case SpeedLineDirection::upright_up:
+            speedLine.mirrored = true;
+	        speedLine.path = "Game/worldSprites/hero/move/lines/4/";
+	        break;
+        case SpeedLineDirection::upleft_up:
+        case SpeedLineDirection::downleft_down:        
+            speedLine.path = "Game/worldSprites/hero/move/lines/4/";
+	        break;
+        case SpeedLineDirection::up_upright:       
+	        speedLine.path = "Game/worldSprites/hero/move/lines/5/";
+	        break;
+         case SpeedLineDirection::up_upleft:
+            speedLine.mirrored = true;
+            speedLine.path = "Game/worldSprites/hero/move/lines/5/";
+	        break;
+	    default:
+		    speedLine.path = "";
+		    return speedLine;		
 	}
 
 	if (!speedLine.path.empty())
@@ -683,77 +677,72 @@ spriteChainElement Deerchant::prepareSpeedLine(SpeedLineDirection direction)
 			speedLine.path += std::to_string(currentSprite[2]) + ".png";
 		additionalSprites.push_back(speedLine);
 	}
-	return speedLine;
+	return speedLine;*/
 }
 
-void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> Deerchant::prepareSprites(long long elapsedTime)
 {
-	spriteChainElement legsSprite, bodySprite, fullSprite, speedLine = prepareSpeedLine(speedLineDirection);
+	SpriteChainElement legsSprite, bodySprite, speedLine = prepareSpeedLine(speedLineDirection);
+    std::vector<SpriteChainElement> result = {};
 	bool isInverse = false;
 	legsSprite.offset = Vector2f(this->textureBoxOffset);
-	legsSprite.size = Vector2f(this->conditionalSizeUnits);
+	legsSprite.size = Vector2i(this->conditionalSizeUnits);
 	legsSprite.animationLength = 8;
 	bodySprite.offset = Vector2f(this->textureBoxOffset);
-	bodySprite.size = Vector2f(this->conditionalSizeUnits);
-	fullSprite.offset = Vector2f(this->textureBoxOffset);
-	fullSprite.size = Vector2f(this->conditionalSizeUnits);
+	bodySprite.size = Vector2i(this->conditionalSizeUnits);
 
-	std::string sideStr = DynamicObject::sideToString(side), directionStr = DynamicObject::directionToString(direction);
-	
+    auto spriteSide = side; auto spriteDirection = direction;
+
 	animationSpeed = 12;
-	if (direction == Direction::UPLEFT)
-		directionStr = "up-left";
-	if (direction == Direction::DOWNLEFT)
-		directionStr = "down-left";
+
 	if (direction == Direction::RIGHT)
 	{
-		directionStr = "left";
+		spriteDirection = Direction::LEFT;
 		legsSprite.mirrored = true;
 	}
 	if (direction == Direction::UPRIGHT)
 	{
-		directionStr = "up-left";
+		spriteDirection = Direction::UPLEFT;
 		legsSprite.mirrored = true;
 	}
 	if (direction == Direction::DOWNRIGHT)
 	{
-		directionStr = "down-left";
+		spriteDirection = Direction::DOWNLEFT;
 		legsSprite.mirrored = true;
 	}
 
-	if (side == right && currentAction != move && currentAction != jerking)
+	if (side == right)
 	{
-		sideStr = "left";
+		spriteSide = left;
 		bodySprite.mirrored = true;
 	}
-	additionalSprites.clear();
 
 	switch (currentAction)
 	{
 	case commonHit:
 		animationLength = 8;
-		if (side == right)		
-			legsSprite.mirrored = true;	
-		bodySprite.path = "Game/worldSprites/hero/hit/body/" + sideStr + '/';
-		legsSprite.path = "Game/worldSprites/hero/hit/legs/" + sideStr + '/';
+		if (side == right)
+			legsSprite.mirrored = true;
+		bodySprite.packTag = PackTag::heroHit; bodySprite.packPart = PackPart::body; bodySprite.direction = sideToDirection(spriteSide);
+		legsSprite.packTag = PackTag::heroHit; legsSprite.packPart = PackPart::legs; legsSprite.direction = sideToDirection(spriteSide);
 		break;
 	case absorbs:
 		animationLength = 10;
-		bodySprite.path = "Game/worldSprites/hero/absorb/" + sideStr + '/';		
+		bodySprite.packTag = PackTag::heroAbsorb; bodySprite.packPart = PackPart::full; bodySprite.direction = sideToDirection(spriteSide);	
 		break;
 	case builds:
 		animationLength = 10;
-		bodySprite.path = "Game/worldSprites/hero/absorb/" + sideStr + '/';		
+		bodySprite.packTag = PackTag::heroAbsorb; bodySprite.packPart = PackPart::full; bodySprite.direction = sideToDirection(spriteSide);	
 		break;
 	case grab:
 		animationLength = 11;
 		animationSpeed = 15;
-		bodySprite.path = "Game/worldSprites/hero/pick/" + sideStr + '/';
+		bodySprite.packTag = PackTag::heroPick; bodySprite.packPart = PackPart::full; bodySprite.direction = sideToDirection(spriteSide);
 		break;
 	case dropping:
 		isInverse = true;
 		animationLength = 8;
-		bodySprite.path = "Game/worldSprites/hero/pick/" + sideStr + '/';
+		bodySprite.packTag = PackTag::heroPick; bodySprite.packPart = PackPart::full; bodySprite.direction = sideToDirection(spriteSide);
 		break;
 	case transitionToEnotherWorld:
 		animationLength = 18;
@@ -763,23 +752,21 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		animationSpeed = 11;
 		if (direction == Direction::RIGHT || direction == Direction::UPRIGHT || direction == Direction::DOWNRIGHT)
 			bodySprite.mirrored = true;
-		if (directionStr == "up-left")
-			directionStr = "left";
-		if (directionStr == "down-left")
-			directionStr = "left";
-		bodySprite.path = "Game/worldSprites/hero/roll/" + directionStr + '/';
+		if (spriteDirection == Direction::UPLEFT || spriteDirection == Direction::DOWNLEFT)
+			spriteDirection = Direction::LEFT;
+		bodySprite.packTag = PackTag::heroRoll; bodySprite.packPart = PackPart::full; bodySprite.direction = cutRights(lastDirection);
 		break;
 	case open:
 		animationLength = 12;
-		bodySprite.path = "Game/worldSprites/hero/pick/" + sideStr + '/';
+		bodySprite.packTag = PackTag::heroPick; bodySprite.packPart = PackPart::full; bodySprite.direction = sideToDirection(spriteSide);
 		break;
 	case relax:
 		bodySprite.mirrored = false;
 		animationLength = 16;
 		animationSpeed = 13;
 		if (lastDirection == Direction::RIGHT || lastDirection == Direction::UPRIGHT || lastDirection == Direction::DOWNRIGHT)		
-			bodySprite.mirrored = true;		
-		bodySprite.path = "Game/worldSprites/hero/stand/" + directionToString(lastDirection) + '/';
+			bodySprite.mirrored = true;
+		bodySprite.packTag = PackTag::heroStand; bodySprite.packPart = PackPart::full; bodySprite.direction = cutRights(lastDirection);
 		break;
 	}
 
@@ -788,8 +775,8 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		animationLength = 8;
 		if (direction == Direction::RIGHT || direction == Direction::UPRIGHT || direction == Direction::DOWNRIGHT)
 			bodySprite.mirrored = true;
-		bodySprite.path = "Game/worldSprites/hero/move/body/" + directionStr + '/';
-		legsSprite.path = "Game/worldSprites/hero/move/legs/" + directionStr + '/';
+		bodySprite.packTag = PackTag::heroMove; bodySprite.packPart = PackPart::body; bodySprite.direction = spriteDirection;
+		legsSprite.packTag = PackTag::heroMove; legsSprite.packPart = PackPart::legs; legsSprite.direction = spriteDirection;
 	}
 
 	if (currentAction == moveHit)
@@ -799,7 +786,7 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		if (direction == Direction::UP && side == down || direction == Direction::DOWN && side == up )
 		{
 			isInverse = true;
-			directionStr = sideStr;			
+			spriteDirection = sideToDirection(spriteSide);		
 		}
 		if ((direction == Direction::LEFT || direction == Direction::UPLEFT || direction == Direction::DOWNLEFT) && side == right ||
 			(direction == Direction::UP || direction == Direction::UPLEFT || direction == Direction::UPRIGHT) && side == down ||
@@ -808,22 +795,22 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		{
 			isInverse = true;
 			legsSprite.mirrored = !legsSprite.mirrored;
-			directionStr = directionToString(invertDirection(direction));
+			spriteDirection = invertDirection(spriteDirection);
 		}
 
-		legsSprite.path = "Game/worldSprites/hero/move/legs/" + directionStr + '/';
-		bodySprite.path = "Game/worldSprites/hero/hit/body/" + sideStr + '/';
+		legsSprite.packTag = PackTag::heroMove; legsSprite.packPart = PackPart::legs; legsSprite.direction = cutRights(spriteDirection);
+		bodySprite.packTag = PackTag::heroHit; bodySprite.packPart = PackPart::body; bodySprite.direction = sideToDirection(spriteSide);
 
 		if (direction == Direction::STAND)
 		{
 			if (side == right)
 				legsSprite.mirrored = true;
-			legsSprite.path = "Game/worldSprites/hero/hit/legs/" + sideStr + "/";
+			legsSprite.packTag = PackTag::heroMove; legsSprite.packPart = PackPart::legs; legsSprite.direction = sideToDirection(spriteSide);
 			legsSprite.animationLength = 14;
 		}
 	}
 
-	if (currentAction == throwNoose)
+	/*if (currentAction == throwNoose)
 	{
 		animationLength = 14;
 		if (direction == Direction::UP && side == down || direction == Direction::DOWN && side == up)
@@ -850,21 +837,21 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 	}
 
 	if (!speedLine.path.empty())
-		additionalSprites.push_back(speedLine);
-	if (!legsSprite.path.empty())
+		additionalSprites.push_back(speedLine);*/
+	if (legsSprite.packTag != PackTag::empty)
 	{
 		if (isInverse)
-			legsSprite.path += std::to_string(legsSprite.animationLength + 1 - currentSprite[1]) + ".png";
+			legsSprite.number = legsSprite.animationLength + 1 - currentSprite[1];
 		else
-			legsSprite.path += std::to_string(currentSprite[1]) + ".png";
-		additionalSprites.push_back(legsSprite);
+			legsSprite.number = currentSprite[1];
+		result.push_back(legsSprite);
 	}
-	if (!bodySprite.path.empty())
+	if (bodySprite.packTag != PackTag::empty)
 	{
-		bodySprite.path += std::to_string(currentSprite[0]) + ".png";
+		bodySprite.number = currentSprite[0];
 		bodySprite.offset.y += conditionalSizeUnits.y / 10.0f;
 		bodySprite.position = Vector2f(position.x, position.y + conditionalSizeUnits.y / 10.0f);
-		additionalSprites.push_back(bodySprite);
+		result.push_back(bodySprite);
 	}
 
 	timeForNewSprite += elapsedTime;
@@ -885,4 +872,7 @@ void Deerchant::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 		else
 			currentSprite[2]++;
 	}
+    for (auto& sprite : result)
+        sprite.tag = tag;
+    return result;
 }

@@ -10,28 +10,22 @@
 #include "EffectsSystemMaker.h"
 #include "WorldGenerator.h"
 #include "PedestalController.h"
-//#include "SpritePack.h"
-
 #include "DynamicObject.h"
 #include "EmptyObject.h"
-
-#include "ForestTree.h"
 #include "Brazier.h"
+#include "InventoryMaker.h"
 
 using namespace sf;
-
-typedef void(*LPSEARCHFUNC)(LPCTSTR lpszFileName, std::unordered_map<std::string, BoardSprite> &spriteMap);
-typedef bool(*func)(Vector2f &pos);
 
 class WorldHandler
 {
 public:
-	WorldHandler(int width, int height);
+	WorldHandler(int width, int height, std::map<PackTag, SpritePack>* packsMap);
 	~WorldHandler();
 
 	//lightSystem
 	void initLightSystem(RenderWindow &window);
-	void renderLightSystem(View view, RenderWindow &window);
+	//void renderLightSystem(View view, RenderWindow &window);
 
 	//adding to the grid
 	void birthObjects();
@@ -42,7 +36,7 @@ public:
 	GridList getDynamicGrid() { return dynamicGrid; }
 	Vector2f getCameraPosition() { return cameraPosition; }
 	InventoryMaker& getInventorySystem() { return inventorySystem; }
-	BuildSystemMaker& getBuildSystem() { return buildSystem; }
+	//BuildSystemMaker& getBuildSystem() { return buildSystem; }
 	WorldGenerator& getWorldGenerator() { return worldGenerator; }
 	ltbl::LightSystem& getLightSystem() { return ls; }
 	std::string getMouseDisplayName() const { return mouseDisplayName; }
@@ -54,16 +48,16 @@ public:
 	void Save();
 	
 	//base (draw, interact)
-	std::unordered_map<std::string, BoardSprite> spriteMap;
-	//std::map<PackTag, SpritePack> packs_map;
+	std::map<PackTag, SpritePack>* packsMap;
 	void interact(RenderWindow& window, long long elapsedTime, Event event);
 	void handleEvents(Event& event);
-	void draw(RenderWindow& window, long long elapsedTime);
+    std::vector<SpriteChainElement> prepareSprites(long long elapsedTime, bool onlyBackground = false);
+	//void draw(RenderWindow& window, long long elapsedTime);
 	void setItemFromBuildSystem();
-	void drawVisibleItems(RenderWindow& window, long long elapsedTime, std::vector<spriteChainElement> sprites);
+	//void drawVisibleItems(RenderWindow& window, long long elapsedTime, std::vector<SpriteChainElement> sprites);
 	Vector2f worldUpperLeft, worldBottomRight;
-	void runBuildSystemDrawing(RenderWindow& window, float elapsedTime);
-	void runInventorySystemDrawing(RenderWindow& window, float elapsedTime);
+	//void runBuildSystemDrawing(RenderWindow& window, float elapsedTime);
+	//void runInventorySystemDrawing(RenderWindow& window, float elapsedTime);
 	void runWorldGenerator();
 	PedestalController pedestalController;
 
@@ -72,8 +66,6 @@ public:
 	void scaleSmoothing();
 	float scaleDecrease, timeForScaleDecrease = 0;
 	Clock scaleDecreaseClock;
-	std::map<Tag, bool> unscaledObjects = {{Tag::hero1, true}, {Tag::nightmare1, true}, {Tag::nightmare2, true}, {Tag::nightmare3, true}, {Tag::grass, true}, {Tag::lake, true} };
-
 	//hero
 	DynamicObject* focusedObject = nullptr;
 	Brazier* brazier;
@@ -83,7 +75,7 @@ public:
 	bool getHeroBookVisability() { return isHeroBookVisible; }
 	void changeBookVisability() { isHeroBookVisible = !isHeroBookVisible; }
 
-	void setObjectToBuild(Tag tag, int type = 1, bool instantBuild = false) { buildSystem.selectedObject = tag; buildSystem.buildType = type; buildSystem.instantBuild = instantBuild; }
+	//void setObjectToBuild(Tag tag, int type = 1, bool instantBuild = false) { buildSystem.selectedObject = tag; buildSystem.buildType = type; buildSystem.instantBuild = instantBuild; }
 	Vector2i currentTransparentPos = Vector2i(0, 0);
 	std::string debugInfo = "";
 private:
@@ -111,9 +103,6 @@ private:
 	float width, height;
 	Vector2i blockSize = { 1000, 1000 }, microblockSize = { 20, 20 };
 	Vector2f cameraPosition, maxCameraDistance = Vector2f(100, 100), camOffset = { 0, -0.04f};
-	void initSpriteMap();
-	bool searchFiles(LPCTSTR lpszFileName, LPSEARCHFUNC lpSearchFunc, bool bInnerFolders = true);
-	float WorldHandler::getScaleFactor();
 	std::string spriteNameFileDirectory = "Game/objects.txt";
 	const float heroToScreenRatio = 0.25f;
 	bool fixedClimbingBeyond(Vector2f &pos);
@@ -143,12 +132,12 @@ private:
 
 	//inventorySystem
 	InventoryMaker inventorySystem;
-	BuildSystemMaker buildSystem;
+	//BuildSystemMaker buildSystem;
 
 	//grids
 	GridList staticGrid;
 	GridList dynamicGrid;
-	std::vector<spriteChainElement> visibleBackground, visibleTerrain;
+	std::vector<SpriteChainElement> visibleBackground, visibleTerrain;
 	std::vector<WorldObject*> localTerrain;
 
 	//test

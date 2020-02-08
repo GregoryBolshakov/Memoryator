@@ -72,9 +72,10 @@ int Totem::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-void Totem::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> Totem::prepareSprites(long long elapsedTime)
 {
-	additionalSprites.clear();
+    return {};
+	/*additionalSprites.clear();
 	spriteChainElement body;
 	body.size = Vector2f(conditionalSizeUnits);
 	body.offset = Vector2f(textureBoxOffset);
@@ -123,5 +124,5 @@ void Totem::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 			}
 			currentSprite[0] = 1;
 		}
-	}
+	}*/
 }

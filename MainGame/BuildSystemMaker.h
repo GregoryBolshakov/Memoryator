@@ -16,7 +16,7 @@ struct objectInfo {
 	Texture iconTexture;
 	std::vector<std::pair<Tag, int>> recipe;
 };
-
+/*
 class BuildSystemMaker
 {
 protected:
@@ -66,5 +66,5 @@ private:
 	Text numberOfObjects;
 	Font font;
 };
-
+*/
 #endif

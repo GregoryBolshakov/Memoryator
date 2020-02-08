@@ -4,31 +4,26 @@ ButtonMaker::ButtonMaker()
 {
 }
 
-void ButtonMaker::initialize(Texture &textureD, Texture &textureS, Texture &textureP, Vector2f position, Vector2f size, bool isSelectable, ButtonTag tag, Vector2f offset)
+void ButtonMaker::initialize(
+    PackTag pack,
+    PackPart part, 
+    int defaultSpriteNumber,
+    int selectedSpriteNumber, 
+    int pressedSpriteNumber,
+    Vector2f position,
+    Vector2i size,
+    bool isSelectable, 
+    ButtonTag tag, 
+    Vector2f offset)
 {
 	this->tag = tag;	
-	this->textureDefault = textureD;
-	this->texturePressed = textureP;
-	this->textureSelected = textureS;
-	this->isSelectable = isSelectable;
-
-	this->spriteDefault.setTexture(this->textureDefault);
-	this->spritePressed.setTexture(this->texturePressed);
-	this->spriteSelected.setTexture(this->textureSelected);
-	originColor = spriteDefault.getColor();
-	const Vector2f textureSize = Vector2f(this->textureDefault.getSize());
-	this->spriteDefault.setScale(size.x / textureSize.x, size.y / textureSize.y);
-	this->spritePressed.setScale(size.x / textureSize.x, size.y / textureSize.y);
-	this->spriteSelected.setScale(size.x / textureSize.x, size.y / textureSize.y);
-
-	this->offset = offset;
-	position.x -= offset.x * spriteDefault.getGlobalBounds().width;
-	position.y -= offset.y * spriteDefault.getGlobalBounds().height;
-
-	this->spriteDefault.setPosition(position);
-	this->spritePressed.setPosition(position);
-	this->spriteSelected.setPosition(position);
-	
+	this->button.packTag = pack; this->buttonSelected.packTag = pack; this->buttonPressed.packTag = pack;
+    this->button.packPart = part; this->buttonSelected.packPart = part; this->buttonPressed.packPart = part;
+    this->button.number = defaultSpriteNumber; this->buttonSelected.number = selectedSpriteNumber; this->buttonPressed.number = pressedSpriteNumber;
+    this->button.position = position; this->buttonSelected.position = position; this->buttonPressed.position = position;
+    this->button.size = size; this->buttonSelected.size = size; this->buttonPressed.size = size;
+    this->button.offset = offset; this->buttonSelected.offset = offset; this->buttonPressed.offset = offset;
+	this->isSelectable = isSelectable;	
 }
 
 bool ButtonMaker::isSelected(Vector2f mousePos)
@@ -38,7 +33,7 @@ bool ButtonMaker::isSelected(Vector2f mousePos)
 
 	//isActive = false;
 
-	FloatRect rect = spriteDefault.getGlobalBounds();
+	FloatRect rect = FloatRect(button.position.x, button.position.y, button.size.x, button.size.y);
 	if (rect.contains(Vector2f(mousePos)))
 	{
 		selected = true;
@@ -56,49 +51,32 @@ bool ButtonMaker::isSelected(Vector2f mousePos)
 
 void ButtonMaker::setPosition(Vector2f position) 
 {
-	position.x -= offset.x * spriteDefault.getGlobalBounds().width;
-	position.y -= offset.y * spriteDefault.getGlobalBounds().height;
-	spriteDefault.setPosition(position);
-	spritePressed.setPosition(position);
-	spriteSelected.setPosition(position);
+	this->button.position = {position.x - button.offset.x, position.y - button.offset.y};
 }
 
-void ButtonMaker::setSize(Vector2f size)
+void ButtonMaker::setSize(Vector2i size)
 {
-	this->spriteDefault.setScale(size.x / textureDefault.getSize().x, size.y / textureDefault.getSize().y);
-	this->spritePressed.setScale(size.x / texturePressed.getSize().x, size.y / texturePressed.getSize().y);
-	this->spriteSelected.setScale(size.x / textureSelected.getSize().x, size.y / textureSelected.getSize().y);
+	this->button.size = size;
 }
 
 void ButtonMaker::bekomeGray()
 {
 	isGray = true;
-	spriteDefault.setColor(Color(128, 128, 128, 128));
-	spritePressed.setColor(Color(128, 128, 128, 128));
-	spriteSelected.setColor(Color(128, 128, 128, 128));
 }
 
 void ButtonMaker::stopBeingGray()
 {
 	isGray = false;
-	spriteDefault.setColor(originColor);
-	spritePressed.setColor(originColor);
-	spriteSelected.setColor(originColor);
 }
 
-
-void ButtonMaker::draw(RenderWindow &window)
+SpriteChainElement& ButtonMaker::prepareSprite()
 {
 	isActive = true;
-
-	Color spriteColor = this->spriteDefault.getColor();
 	if (isSelected(Vector2f(Mouse::getPosition())) && isSelectable)
 	{
 		if (Mouse::isButtonPressed(Mouse::Left) || Mouse::isButtonPressed(Mouse::Right))
-			window.draw(this->spritePressed);
-		else
-			window.draw(this->spriteSelected);
+			return buttonPressed;
+		return buttonSelected;
 	}
-	else
-		window.draw(this->spriteDefault);
+	return button;
 }

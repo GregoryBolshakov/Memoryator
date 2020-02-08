@@ -17,25 +17,25 @@ void GroundConnection::setType(int typeOfObject)
 		return;
 
 	this->typeOfObject = typeOfObject;
-	if ((typeOfObject - 1) % 4 == 0)
-	{
-		this->conditionalSizeUnits = Vector2i (250, 1000);
-	}
-	else
-		if ((typeOfObject - 1) % 4 == 1)
-		{
-			this->conditionalSizeUnits = Vector2i (250, 1000);
-		}
-		else
-			if ((typeOfObject - 1) % 4 == 2)
+    if ((typeOfObject - 1) % 4 == 0)
 			{
 				this->conditionalSizeUnits = Vector2i (1000, 250);
 			}
 			else
-				if ((typeOfObject - 1) % 4 == 3)
+				if ((typeOfObject - 1) % 4 == 1)
 				{
 					this->conditionalSizeUnits = Vector2i (1000, 250);
 				}
+                else
+	                if ((typeOfObject - 1) % 4 == 2)
+	                {
+		                this->conditionalSizeUnits = Vector2i (250, 1000);
+	                }
+	                else
+		                if ((typeOfObject - 1) % 4 == 3)
+		                {
+			                this->conditionalSizeUnits = Vector2i (250, 1000);
+		                }
 	
 	if (typeOfObject >= 1 && typeOfObject <= 4)
 		this->zCoord = 1;
@@ -56,17 +56,17 @@ void GroundConnection::setType(int typeOfObject)
 
 Vector2i GroundConnection::calculateTextureOffset()
 {
-	if ((typeOfObject - 1) % 4 == 0)
-		return Vector2i (textureBox.width, 0);
-	else
-		if ((typeOfObject - 1) % 4 == 1)
-			return Vector2i (0, 0);
-		else
-			if ((typeOfObject - 1) % 4 == 2)
+    if ((typeOfObject - 1) % 4 == 0)
 				return Vector2i (0, textureBox.height);
 			else
-				if ((typeOfObject - 1) % 4 == 3)
+				if ((typeOfObject - 1) % 4 == 1)
 					return Vector2i (0, 0);
+                else
+	                if ((typeOfObject - 1) % 4 == 2)
+		                return Vector2i (textureBox.width, 0);
+	                else
+		                if ((typeOfObject - 1) % 4 == 3)
+			                return Vector2i (0, 0);
 
 	return Vector2i (0, 0);
 }
@@ -81,17 +81,29 @@ int GroundConnection::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-void GroundConnection::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> GroundConnection::prepareSprites(long long elapsedTime)
 {
-	additionalSprites.clear();
-	spriteChainElement groundConnectionBody;
+    int spriteType = typeOfObject % 4;
+    if (spriteType == 0)
+        spriteType = 4;
+    spriteType++;
+
+    SpriteChainElement body(PackTag::darkWoods, PackPart::ground, Direction::DOWN, spriteType, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+    return {body};
+    /*additionalSprites.clear();
+	SpriteChainElement body;
+    body.packPart = PackPart::ground;
+    body.direction = Direction::DOWN;
+    body.number = typeOfObject % 4 + 1;
+
 	if (typeOfObject >= 1 && typeOfObject <= 4)
-		groundConnectionBody.path = "Game/worldSprites/SwampyTrees/connection" + std::to_string(typeOfObject) + ".png";
+		body.packTag = PackTag::birchGrove;
 	if (typeOfObject >= 5 && typeOfObject <= 8)
-		groundConnectionBody.path = "Game/worldSprites/DarkWoods/connection" + std::to_string(typeOfObject) + ".png";
+		body.packTag = PackTag::darkWoods;
 	if (typeOfObject >= 9 && typeOfObject <= 12)
-		groundConnectionBody.path = "Game/worldSprites/BirchGrove/connection" + std::to_string(typeOfObject) + ".png";
-	groundConnectionBody.size = Vector2f(conditionalSizeUnits);
-	groundConnectionBody.offset = Vector2f(textureBoxOffset);
-	additionalSprites.push_back(groundConnectionBody);
+		body.packTag = PackTag::swampyTrees;
+
+	body.size = Vector2f(conditionalSizeUnits);
+	body.offset = Vector2f(textureBoxOffset);
+	additionalSprites.push_back(body);*/
 }

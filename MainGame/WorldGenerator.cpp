@@ -7,7 +7,15 @@ WorldGenerator::WorldGenerator()
 {
 }
 
-void WorldGenerator::init(int width, int height, Vector2i blockSize, Vector2i microBlockSize, GridList* staticGrid, GridList* dynamicGrid, std::unordered_map<std::string, BoardSprite>* spriteMap)
+void WorldGenerator::initMainScale()
+{
+	auto mainObject = Deerchant("loadInit", Vector2f(0, 0));
+	mainObject.calculateTextureOffset();
+	mainScale = Helper::GetScreenSize().y / (5 * mainObject.getConditionalSizeUnits().y);
+	mainScale = round(mainScale * 100) / 100;
+}
+
+void WorldGenerator::init(int width, int height, Vector2i blockSize, Vector2i microBlockSize, GridList* staticGrid, GridList* dynamicGrid, std::map<PackTag, SpritePack>* packsMap)
 {
 	this->width = width;
 	this->height = height;
@@ -15,7 +23,7 @@ void WorldGenerator::init(int width, int height, Vector2i blockSize, Vector2i mi
 	this->microBlockSize = microBlockSize;
 	this->staticGrid = staticGrid;
 	this->dynamicGrid = dynamicGrid;
-	this->spriteMap = spriteMap;
+	this->packsMap = packsMap;
 	this->scaleFactor = scaleFactor;
 	stepSize = { blockSize.x / 10, blockSize.y / 10 };
 }
@@ -26,7 +34,7 @@ WorldGenerator::~WorldGenerator()
 
 void WorldGenerator::initializeStaticItem(Tag itemClass, Vector2f itemPosition, int itemType, std::string itemName, int count, Biomes biome, bool mirrored, std::vector<std::pair<Tag, int>> inventory)
 {
-	StaticObject* item = ObjectInitializer::initializeStaticItem(itemClass, itemPosition, itemType, itemName, count, biome, spriteMap, mirrored, inventory);
+	StaticObject* item = ObjectInitializer::initializeStaticItem(itemClass, itemPosition, itemType, itemName, count, biome, packsMap, mirrored, inventory);
 
 	// locked place check
 	const auto terrain = dynamic_cast<TerrainObject*>(item);
@@ -52,7 +60,7 @@ void WorldGenerator::initializeStaticItem(Tag itemClass, Vector2f itemPosition, 
 
 void WorldGenerator::initializeDynamicItem(Tag itemClass, Vector2f itemPosition, std::string itemName, WorldObject* owner)
 {
-	DynamicObject* item = ObjectInitializer::initializeDynamicItem(itemClass, itemPosition, itemName, spriteMap, owner);
+	DynamicObject* item = ObjectInitializer::initializeDynamicItem(itemClass, itemPosition, itemName, packsMap, owner);
 	if (itemClass == Tag::hero1)	
 		focusedObject = item;			
 
@@ -64,15 +72,14 @@ void WorldGenerator::generate()
 	staticGrid->boundDynamicMatrix(&dynamicGrid->microBlockMatrix);	
 	const int blocksCount = ceil(width / blockSize.x) * ceil(height / blockSize.y);
 
-	initializeDynamicItem(Tag::hero1, Vector2f(15800, 15800), "hero1");
-	initializeDynamicItem(Tag::hare, Vector2f(14500, 14500), "mob");
+	initializeDynamicItem(Tag::hero1, Vector2f(15800, 15800), "hero1");	
 	initializeStaticItem(Tag::brazier, Vector2f(16300, 16300), 1, "brazier");
 	//initializeStaticItem(Tag::tree, Vector2f(15500, 15000), 5, "stump", 1, DarkWoods);
 
 	// world generation
 	initBiomesGenerationInfo();
-	const Vector2f upperLeft(int(focusedObject->getPosition().x - (Helper::GetScreenSize().x / 2 + blockSize.x) / (farthestScale * mainScale)), int(focusedObject->getPosition().y - (Helper::GetScreenSize().y / 2 + blockSize.x) / (farthestScale * mainScale)));
-	const Vector2f bottomRight(int(focusedObject->getPosition().x + (Helper::GetScreenSize().x / 2 + blockSize.y) / (farthestScale * mainScale)), int(focusedObject->getPosition().y + (Helper::GetScreenSize().y / 2 + blockSize.y) / (farthestScale * mainScale)));
+	const Vector2f upperLeft(int(focusedObject->getPosition().x - (Helper::GetScreenSize().x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)), int(focusedObject->getPosition().y - (Helper::GetScreenSize().y / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)));
+	const Vector2f bottomRight(int(focusedObject->getPosition().x + (Helper::GetScreenSize().x / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)), int(focusedObject->getPosition().y + (Helper::GetScreenSize().y / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)));
 
 	for (auto& block : staticGrid->getBlocksInSight(upperLeft.x, upperLeft.y, bottomRight.x, bottomRight.y))	
 		inBlockGenerate(block);	
@@ -169,7 +176,7 @@ void WorldGenerator::generateGround(int blockIndex)
 
 	const int groundType = int(biomeMatrix[groundIndX][groundIndY].biomeCell);
 	biomeMatrix[groundIndX][groundIndY].groundCell = new Ground("ground" + std::to_string(blockIndex), Vector2f(groundIndX * blockSize.x, groundIndY * blockSize.y), groundType);
-	const auto textureBounds = spriteMap->at("Game/worldSprites/terrainObjects/ground/ground1.png").sprite.getGlobalBounds();
+	const auto textureBounds = packsMap->at(PackTag::darkWoods).getSprite(PackPart::ground, Direction::DOWN, 1).getGlobalBounds();
 	const auto textureSize = Vector2f(int(textureBounds.width), int(textureBounds.height));
 	biomeMatrix[groundIndX][groundIndY].groundCell->setTextureSize(textureSize);
 	staticGrid->addItem(biomeMatrix[groundIndX][groundIndY].groundCell, biomeMatrix[groundIndX][groundIndY].groundCell->getName(), biomeMatrix[groundIndX][groundIndY].groundCell->getPosition().x, biomeMatrix[groundIndX][groundIndY].groundCell->getPosition().y);
@@ -244,8 +251,8 @@ void WorldGenerator::perimeterGeneration(int offset)
 {
 	const auto screenSize = Helper::GetScreenSize();
 	const auto characterPosition = focusedObject->getPosition();
-	const Vector2f worldUpperLeft(int(characterPosition.x - (screenSize.x / 2 + blockSize.x) / (farthestScale * mainScale)), int(characterPosition.y - (screenSize.y / 2 + blockSize.y) / (farthestScale * mainScale)));
-	const Vector2f worldBottomRight(int(characterPosition.x + (screenSize.x / 2 + blockSize.x) / (farthestScale * mainScale)), int(characterPosition.y + (screenSize.y / 2 + blockSize.y) / (farthestScale * mainScale)));
+	const Vector2f worldUpperLeft(int(characterPosition.x - (screenSize.x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)), int(characterPosition.y - (screenSize.y / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)));
+	const Vector2f worldBottomRight(int(characterPosition.x + (screenSize.x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)), int(characterPosition.y + (screenSize.y / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)));
 
 	if (focusedObject->getDirection() != Direction::STAND)
 	{

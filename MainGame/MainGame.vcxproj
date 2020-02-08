@@ -140,6 +140,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="DrawSystem.cpp" />
     <ClCompile Include="InputBox.cpp" />
     <ClCompile Include="Lake.cpp" />
     <ClCompile Include="Mushroom.cpp" />
@@ -150,7 +151,6 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="ButtonMaker.cpp" />
     <ClCompile Include="Chamomile.cpp" />
     <ClCompile Include="ClapWhirl.cpp" />
-    <ClCompile Include="ComplexIdInterpreter.cpp" />
     <ClCompile Include="Deer.cpp" />
     <ClCompile Include="Deerchant.cpp" />
     <ClCompile Include="DroppedLoot.cpp" />
@@ -191,6 +191,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="Roof.cpp" />
     <ClCompile Include="Root.cpp" />
     <ClCompile Include="Spawn.cpp" />
+    <ClCompile Include="SpriteChainElement.cpp" />
     <ClCompile Include="SpritePack.cpp" />
     <ClCompile Include="StaticObject.cpp" />
     <ClCompile Include="Stump.cpp" />
@@ -209,6 +210,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console.h" />
+    <ClInclude Include="DrawSystem.h" />
     <ClInclude Include="InputBox.h" />
     <ClInclude Include="Lake.h" />
     <ClInclude Include="Mushroom.h" />
@@ -225,13 +227,13 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="PedestalController.h" />
     <ClInclude Include="Roof.h" />
     <ClInclude Include="Root.h" />
+    <ClInclude Include="SpriteChainElement.h" />
     <ClInclude Include="SpritePack.h" />
     <ClInclude Include="SpriteStructures.h" />
     <ClInclude Include="Brazier.h" />
     <ClInclude Include="BuildSystemMaker.h" />
     <ClInclude Include="ButtonMaker.h" />
     <ClInclude Include="Chamomile.h" />
-    <ClInclude Include="ComplexIdInterpreter.h" />
     <ClInclude Include="Deer.h" />
     <ClInclude Include="Deerchant.h" />
     <ClInclude Include="DroppedLoot.h" />
@@ -264,6 +266,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="StaticObject.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="Stump.h" />
+    <ClInclude Include="Tags.h" />
     <ClInclude Include="TerrainObject.h" />
     <ClInclude Include="NeutralMob.h" />
     <ClInclude Include="TextWriter.h" />

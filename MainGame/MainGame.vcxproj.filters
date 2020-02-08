@@ -1,14 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="DynamicObject.cpp" />
     <ClCompile Include="EventHandler.cpp" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PickedObject.cpp" />
-    <ClCompile Include="StaticObject.cpp" />
-    <ClCompile Include="TerrainObject.cpp" />
-    <ClCompile Include="WorldObject.cpp" />
     <ClCompile Include="Chamomile.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
@@ -37,16 +32,16 @@
       <Filter>Ground</Filter>
     </ClCompile>
     <ClCompile Include="ButtonMaker.cpp">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="BuildSystemMaker.cpp">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="InventoryMaker.cpp">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="MenuMaker.cpp">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="Brazier.cpp">
       <Filter>Terrain</Filter>
@@ -70,7 +65,6 @@
     <ClCompile Include="Fence.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="EmptyObject.cpp" />
     <ClCompile Include="HeroBook.cpp">
       <Filter>HeroBook</Filter>
     </ClCompile>
@@ -78,7 +72,7 @@
       <Filter>HeroBook</Filter>
     </ClCompile>
     <ClCompile Include="TextWriter.cpp">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="OwlBoss.cpp">
       <Filter>Creatures</Filter>
@@ -96,25 +90,22 @@
       <Filter>Creatures</Filter>
     </ClCompile>
     <ClCompile Include="HeroBag.cpp">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="DroppedLoot.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
     <ClCompile Include="EffectsSystemMaker.cpp">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="WreathDraft.cpp">
       <Filter>HeroBook</Filter>
     </ClCompile>
-    <ClCompile Include="ComplexIdInterpreter.cpp">
-      <Filter>UISystems</Filter>
-    </ClCompile>
     <ClCompile Include="HeroBagSpriteSystem.cpp">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="UIEffectsSystemMaker.cpp">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="Fern.cpp">
       <Filter>Terrain</Filter>
@@ -129,7 +120,7 @@
       <Filter>Terrain</Filter>
     </ClCompile>
     <ClCompile Include="ObjectInitializer.cpp">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="Bear.cpp">
       <Filter>Creatures</Filter>
@@ -165,31 +156,52 @@
       <Filter>Terrain</Filter>
     </ClCompile>
     <ClCompile Include="Console.cpp">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="InputBox.cpp">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="PedestalController.cpp">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Lake.cpp" />
     <ClCompile Include="Root.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
+    <ClCompile Include="SpriteChainElement.cpp">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicObject.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="EmptyObject.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="PickedObject.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticObject.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainObject.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldObject.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawSystem.cpp">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Lake.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
     <ClCompile Include="SpritePack.cpp">
-      <Filter>UISystems</Filter>
+      <Filter>Systems\DrawSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DynamicObject.h" />
     <ClInclude Include="EventHandler.h" />
     <ClInclude Include="Helper.h" />
-    <ClInclude Include="PickedObject.h" />
-    <ClInclude Include="StaticObject.h" />
     <ClInclude Include="Structs.h" />
-    <ClInclude Include="TerrainObject.h" />
-    <ClInclude Include="WorldObject.h" />
     <ClInclude Include="Chamomile.h">
       <Filter>Terrain</Filter>
     </ClInclude>
@@ -218,16 +230,16 @@
       <Filter>Ground</Filter>
     </ClInclude>
     <ClInclude Include="ButtonMaker.h">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="BuildSystemMaker.h">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="InventoryMaker.h">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="MenuMaker.h">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="Brazier.h">
       <Filter>Terrain</Filter>
@@ -251,7 +263,6 @@
     <ClInclude Include="Fence.h">
       <Filter>Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="EmptyObject.h" />
     <ClInclude Include="HeroBook.h">
       <Filter>HeroBook</Filter>
     </ClInclude>
@@ -259,7 +270,7 @@
       <Filter>HeroBook</Filter>
     </ClInclude>
     <ClInclude Include="TextWriter.h">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="OwlBoss.h">
       <Filter>Creatures</Filter>
@@ -277,25 +288,22 @@
       <Filter>Creatures</Filter>
     </ClInclude>
     <ClInclude Include="HeroBag.h">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="DroppedLoot.h">
       <Filter>Terrain</Filter>
     </ClInclude>
     <ClInclude Include="EffectsSystemMaker.h">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="WreathDraft.h">
       <Filter>HeroBook</Filter>
     </ClInclude>
-    <ClInclude Include="ComplexIdInterpreter.h">
-      <Filter>UISystems</Filter>
-    </ClInclude>
     <ClInclude Include="HeroBagSpriteSystem.h">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="UIEffectsSystemMaker.h">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="SpriteStructures.h" />
     <ClInclude Include="Fern.h">
@@ -311,7 +319,7 @@
       <Filter>Terrain</Filter>
     </ClInclude>
     <ClInclude Include="ObjectInitializer.h">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="Bear.h">
       <Filter>Creatures</Filter>
@@ -347,20 +355,49 @@
       <Filter>Terrain</Filter>
     </ClInclude>
     <ClInclude Include="Console.h">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="InputBox.h">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="PedestalController.h">
-      <Filter>UISystems</Filter>
+      <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Lake.h" />
     <ClInclude Include="Root.h">
       <Filter>Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="SpriteChainElement.h">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicObject.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="EmptyObject.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="PickedObject.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticObject.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainObject.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldObject.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="Tags.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawSystem.h">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Lake.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
     <ClInclude Include="SpritePack.h">
-      <Filter>UISystems</Filter>
+      <Filter>Systems\DrawSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -373,9 +410,6 @@
     <Filter Include="Ground">
       <UniqueIdentifier>{a1bcb01a-242c-4aa6-8715-2f1282b507c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UISystems">
-      <UniqueIdentifier>{c6d0f57c-5b1e-44be-9b32-415010cac4ed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="HeroBook">
       <UniqueIdentifier>{d8cc7afb-4b70-412c-9813-73ad35d11e13}</UniqueIdentifier>
     </Filter>
@@ -384,6 +418,12 @@
     </Filter>
     <Filter Include="World">
       <UniqueIdentifier>{46674957-3cb2-43f1-a993-abf764803eae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems">
+      <UniqueIdentifier>{c6d0f57c-5b1e-44be-9b32-415010cac4ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\DrawSystem">
+      <UniqueIdentifier>{969d9f18-507a-4244-b5eb-e0aa540d6e67}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

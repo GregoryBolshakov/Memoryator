@@ -1,7 +1,51 @@
 #include "SpritePack.h"
+#include <fstream>
+#include "Helper.h"
 
-std::map<std::string, PackTag> SpritePack::mappedPackTag = { {"hero_absorb", PackTag::hero_absorb}, {"hero_hit", PackTag::hero_hit}, {"hero_move", PackTag::hero_move},
-	{"hero_pick", PackTag::hero_pick}, {"hero_roll", PackTag::hero_roll}, {"hero_stand", PackTag::hero_stand}, {"hero_throw", PackTag::hero_throw} };
+std::map<std::string, PackTag> SpritePack::mappedPackTag = {
+    {"empty", PackTag::empty},
+    {"heroAbsorb", PackTag::heroAbsorb},
+    {"heroHit", PackTag::heroHit},
+    {"heroMove", PackTag::heroMove},
+    {"heroPick", PackTag::heroPick},
+    {"heroRoll", PackTag::heroRoll},
+    {"heroStand", PackTag::heroStand},
+    {"heroThrow", PackTag::heroThrow},
+    {"interfaceElements", PackTag::interfaceElements},
+    {"locations", PackTag::locations},
+    {"darkWoods", PackTag::darkWoods},
+    {"birchGrove", PackTag::birchGrove},
+    {"swampyTrees", PackTag::swampyTrees}
+};
+
+std::map<std::string, PackPart> SpritePack::mappedPackPart = {
+    {"full", PackPart::full},
+    {"body", PackPart::body},
+    {"legs", PackPart::legs},
+    {"lines", PackPart::lines}, // creature's parts
+    {"ground", PackPart::ground},
+    {"tree", PackPart::tree},
+    {"bush", PackPart::bush},
+    {"log", PackPart::log},
+    {"mushroom", PackPart::mushroom},
+    {"path", PackPart::path},
+    {"plant", PackPart::plant},
+    {"rock", PackPart::rock},
+    {"stump", PackPart::stump},
+    {"decor", PackPart::decor},
+    {"roof", PackPart::roof},
+    {"lake", PackPart::lake},
+    {"root", PackPart::root},
+    {"flower", PackPart::flower}, // biome's parts
+    {"bookLittle", PackPart::bookLittle},
+    {"crossButton", PackPart::crossButton},
+    {"menu", PackPart::menu}, // interface's parts
+    {"brazier", PackPart::brazier},
+    {"wreathTable", PackPart::wreathTable} // location's parts
+};
+
+std::map<std::string, Direction> SpritePack::mappedDirection = { {"up", Direction::UP}, {"up-right", Direction::UPRIGHT}, {"right", Direction::RIGHT}, {"down-right", Direction::DOWNRIGHT},
+{"down", Direction::DOWN}, {"down-left", Direction::DOWNLEFT}, {"left", Direction::LEFT}, {"up-left", Direction::UPLEFT} };
 
 SpritePack::SpritePack()
 {
@@ -11,12 +55,88 @@ SpritePack::~SpritePack()
 {
 }
 
-void SpritePack::init(std::string path)
+void SpritePack::init(std::string path, std::string jsonPath, PackTag tag)
 {
-	
+    this->tag = tag;
+    this->texture.loadFromFile(path);
+
+    std::ifstream file(jsonPath);
+    json jsonFile;
+    file >> jsonFile;
+    auto sp = jsonFile.get<sprite_pack::pack>();
+
+    for (auto& frame : sp.frames)
+    {
+        const int pngExtensionWithDotLength = 4;
+        frame.frame_name.erase(frame.frame_name.size() - pngExtensionWithDotLength, pngExtensionWithDotLength);
+        auto keyWords = Helper::split(frame.frame_name, '/');
+
+        PackPart part = PackPart::full; Direction direction = Direction::DOWN; int number = 1;
+        if (!keyWords.empty() && mappedPackPart.count(keyWords[0]) > 0)
+        {
+            part = mappedPackPart.at(keyWords[0]);
+            keyWords.erase(keyWords.begin() + 0);
+        }
+        if (!keyWords.empty() && mappedDirection.count(keyWords[0]) > 0)
+        {
+            direction = mappedDirection.at(keyWords[0]);
+            keyWords.erase(keyWords.begin() + 0);
+        }
+        if (!keyWords.empty() && std::stoi(keyWords[0]) >= 1)
+            number = std::stoi(keyWords[0]);
+        else
+            continue;
+        pack[part][direction][number] = frame;
+    }
 }
 
-Sprite SpritePack::getSprite(PackPart part, Direction direction, int number)
+Sprite SpritePack::getSprite(PackPart part, Direction direction, int number, bool mirrored)
 {
-	return Sprite();
+    Sprite result;
+    if (pack.count(part) <= 0 || pack.at(part).count(direction) <= 0 || pack.at(part).at(direction).count(number) <= 0)
+        return result;
+
+    result.setTexture(texture);
+
+    const auto spriteInfo = pack.at(part).at(direction).at(number);
+    const Vector2f offset(spriteInfo.sprite_source_size.x, spriteInfo.sprite_source_size.y);
+
+    if (!spriteInfo.rotated && !mirrored)
+    {
+        result.setTextureRect(IntRect(spriteInfo.frame.x, spriteInfo.frame.y, spriteInfo.frame.w, spriteInfo.frame.h));
+        result.setOrigin(-offset.x, -offset.y);
+    }
+    if (!spriteInfo.rotated && mirrored)
+    {
+        result.setTextureRect(IntRect(spriteInfo.frame.x + spriteInfo.frame.w, spriteInfo.frame.y, -spriteInfo.frame.w, spriteInfo.frame.h));
+        result.setOrigin(-offset.x - spriteInfo.frame.w, -offset.y);
+    }
+    if (spriteInfo.rotated && !mirrored)
+    {
+        result.setTextureRect(IntRect(spriteInfo.frame.x, spriteInfo.frame.y, spriteInfo.frame.h, spriteInfo.frame.w));
+        result.rotate(-90);
+        result.setOrigin(offset.y + spriteInfo.frame.h, -offset.x);
+    }
+    if (spriteInfo.rotated && mirrored)
+    {
+        result.setTextureRect(IntRect(spriteInfo.frame.x, spriteInfo.frame.y + spriteInfo.frame.w, spriteInfo.frame.h, -spriteInfo.frame.w));
+        result.rotate(-90);
+        result.setOrigin(offset.y + spriteInfo.frame.h, -offset.x - spriteInfo.frame.w);
+    }
+    result.~Sprite();
+
+    /*if (!spriteInfo.rotated)
+        result.setTextureRect(IntRect(spriteInfo.frame.x, spriteInfo.frame.y, spriteInfo.frame.w, spriteInfo.frame.h));
+    else
+        result.setTextureRect(IntRect(spriteInfo.frame.x, spriteInfo.frame.y, spriteInfo.frame.h, spriteInfo.frame.w));
+
+    if (spriteInfo.rotated)
+    {
+        result.rotate(-90);
+        result.setOrigin(spriteInfo.frame.h + spriteInfo.sprite_source_size.y, -spriteInfo.sprite_source_size.x);
+    }
+    else
+        result.setOrigin(-spriteInfo.sprite_source_size.x, -spriteInfo.sprite_source_size.y);*/
+
+    return result;
 }

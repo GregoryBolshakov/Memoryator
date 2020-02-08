@@ -114,7 +114,7 @@ Tag Brazier::checkCraftResult()
 				}
 			if (match)
 			{
-				buildSystem->selectedObject = recipes.first;
+				//buildSystem->selectedObject = recipes.first;
 				return recipes.first;
 			}
 		}
@@ -142,29 +142,33 @@ int Brazier::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-void Brazier::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> Brazier::prepareSprites(long long elapsedTime)
 {
-	additionalSprites.clear();
-	spriteChainElement brazierBack, brazierFront, fire, craftIcon;
-	brazierBack.path = "Game/worldSprites/terrainObjects/brazier/brazier2.png";
+    const Vector2f frontPosition(position.x, position.y + 1), frontOffset(textureBoxOffset.x, textureBoxOffset.y - 1);
+    SpriteChainElement back(PackTag::locations, PackPart::brazier, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+    SpriteChainElement front(PackTag::locations, PackPart::brazier, Direction::DOWN, 2, frontPosition, conditionalSizeUnits, frontOffset);
+    return {back, front};
+	/*additionalSprites.clear();
+	SpriteChainElement brazierBack, brazierFront, fire, craftIcon;
+	brazierBack.packTag = PackTag::locations; brazierBack.packPart = PackPart::brazier, brazierBack.number = 1;
 	brazierBack.size = Vector2f(conditionalSizeUnits);	
 	brazierBack.offset = Vector2f(textureBoxOffset.x, textureBoxOffset.y - conditionalSizeUnits.y * 0.2f);
 	brazierBack.position = { position.x, position.y - conditionalSizeUnits.y * 0.2f };
-	brazierBack.antiTransparent = true;
-	if (!currentCraft.empty())
+	brazierBack.antiTransparent = true;*/
+	/*if (!currentCraft.empty())
 	{
 		fire.path = "Game/worldSprites/terrainObjects/brazier/fire.png";
 		fire.size = Vector2f(conditionalSizeUnits.x * 0.22f, conditionalSizeUnits.y * 0.22f);
 		fire.offset = Vector2f(conditionalSizeUnits.x * 0.06f, textureBoxOffset.y - conditionalSizeUnits.y * 0.555f + scaleFactor * conditionalSizeUnits.y / 20);
 		fire.position = { position.x, position.y };
 		fire.antiTransparent = true;
-	}
-    brazierFront.path = "Game/worldSprites/terrainObjects/brazier/brazier1.png";
+	}*/
+    /*brazierFront.packTag = PackTag::locations; brazierFront.packPart = PackPart::brazier, brazierFront.number = 2;
 	brazierFront.size = Vector2f(conditionalSizeUnits);
 	brazierFront.offset = Vector2f(textureBoxOffset.x, textureBoxOffset.y + conditionalSizeUnits.y * 0.2f);
 	brazierFront.position = { position.x, position.y + conditionalSizeUnits.y * 0.2f };
 	brazierFront.antiTransparent = true;
 	additionalSprites.push_back(brazierBack);
 	additionalSprites.push_back(fire);
-    additionalSprites.push_back(brazierFront);
+    additionalSprites.push_back(brazierFront);*/
 }

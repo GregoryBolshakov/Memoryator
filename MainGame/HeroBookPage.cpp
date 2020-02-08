@@ -1,12 +1,10 @@
 #include "HeroBookPage.h"
-#include "ComplexIdInterpreter.h"
 #include "Helper.h"
 #include "GridList.h"
 
-
 HeroBookPage::HeroBookPage()
 {
-	initDrafts();
+	/*initDrafts();
 
 	wreathMatrix.resize(17, std::vector<Tag>(5));
 	wreathMatrixPositions.resize(17, std::vector<Vector2f>(5));
@@ -27,14 +25,14 @@ HeroBookPage::HeroBookPage()
 	plantsConnections[Tag::yarrow] = { Tag::chamomile, Tag::fern };
 	plantsConnections[Tag::fern] = { Tag::yarrow, Tag::mugwort };
 	plantsConnections[Tag::mugwort] = { Tag::fern, Tag::poppy };
-	plantsConnections[Tag::poppy] = { Tag::mugwort, Tag::chamomile };	
+	plantsConnections[Tag::poppy] = { Tag::mugwort, Tag::chamomile };*/
 }
 
 HeroBookPage::~HeroBookPage()
 {
 }
 
-void HeroBookPage::setBookmarkPosition()
+/*void HeroBookPage::setBookmarkPosition()
 {
 	FloatRect pageGlobalBounds, bookmarkGlobalBounds = buttonList->at(ButtonTag::bookmarkMobs).getGlobalBounds();
 	if (currentPage == 0)
@@ -733,4 +731,4 @@ pageContent HeroBookPage::getPreparedContent(int pageNumber, Tag currentDraft)
 		buttonList->at(button).isActive = true;	
 	//-----------------------------
 	return  result;
-}
+}*/

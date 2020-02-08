@@ -29,6 +29,7 @@ public:
 	static bool checkSigns(float a, float b) { return ((a > 0 && b > 0) || (a < 0 && b < 0)); }
 	static RectangleShape makeLine(Vector2f point1, Vector2f point2, Color color = Color(255, 240, 134, 255));
 	static std::pair<float, float> solveSqr(float a, float b, float c);
+    static std::vector<std::string> split(std::string line, char delimiter = ' ');
 };
 
 #endif

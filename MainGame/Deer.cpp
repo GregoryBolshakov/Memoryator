@@ -203,9 +203,10 @@ Vector2f Deer::getHeadPosition()
 	}
 }
 
-void Deer::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> Deer::prepareSprites(long long elapsedTime)
 {
-	spriteChainElement fullSprite;
+    return {};
+	/*spriteChainElement fullSprite;
 
 	fullSprite.offset = Vector2f(this->textureBoxOffset);
 	fullSprite.size = Vector2f(this->conditionalSizeUnits);
@@ -271,5 +272,5 @@ void Deer::prepareSpriteNames(long long elapsedTime, float scaleFactor)
 			lastAction = currentAction;
 			currentSprite[0] = 1;
 		}
-	}
+	}*/
 }

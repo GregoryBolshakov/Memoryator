@@ -12,13 +12,13 @@ public:
 	Vector2i calculateTextureOffset() override;
 	void initPedestal() override;
 	void initCraftRecipes();
-	void prepareSpriteNames(long long elapsedTime, float scaleFactor) override;
+	std::vector<SpriteChainElement> prepareSprites(long long elapsedTime) override;
 	void setType(int typeOfObject) override;
 	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
 
 	// craft
-	void linkWithBuildSystem(BuildSystemMaker* buildSystem) { this->buildSystem = buildSystem; }
+	//void linkWithBuildSystem(BuildSystemMaker* buildSystem) { this->buildSystem = buildSystem; }
 	void putItemToCraft(Tag id);
 	void clearCurrentCraft() { currentCraft.clear(); }
 	Vector2f getPlatePosition() const { return { position.x + conditionalSizeUnits.x * 0.06f, position.y - conditionalSizeUnits.x * 0.025f }; }
@@ -26,7 +26,7 @@ public:
 
 	int getPlateRadius() const { return plateRadius; }
 
-	BuildSystemMaker* buildSystem = nullptr;
+	//BuildSystemMaker* buildSystem = nullptr;
 	//------
 private:
 	void resultAnalysis();

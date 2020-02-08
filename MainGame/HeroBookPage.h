@@ -45,7 +45,7 @@ class HeroBookPage
 public:
 	HeroBookPage();
 	~HeroBookPage();
-	void initAuxiliarySpriteMap();
+	/*void initAuxiliarySpriteMap();
 	void buttonListBounding(std::unordered_map<ButtonTag, ButtonMaker>* buttonList);
 	void setPage(int page) { this->currentPage = page; }
 	void onMouseDown();
@@ -121,6 +121,6 @@ private:
 
 	std::unordered_map<Tag, DraftInfo> originalSetups;
 	std::vector<std::vector<int>> coloredMatrix;	
-	//--------
+	//--------*/
 };
 

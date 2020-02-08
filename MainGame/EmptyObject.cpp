@@ -12,9 +12,9 @@ EmptyObject::~EmptyObject()
 {
 }
 
-void EmptyObject::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> EmptyObject::prepareSprites(long long elapsedTime)
 {
-	return;
+    return {};
 }
 
 int EmptyObject::getSpriteNumber()

@@ -5,16 +5,16 @@
 
 HeroBook::HeroBook()
 {
-	initButtons();
+	/*initButtons();
 	initContent();
-	somePage.initAuxiliarySpriteMap();
+	somePage.initAuxiliarySpriteMap();*/
 }
 
 HeroBook::~HeroBook()
 {
 }
 
-void HeroBook::initButtons()
+/*void HeroBook::initButtons()
 {
 	Vector2f screenSize = Helper::GetScreenSize();
 
@@ -214,7 +214,7 @@ void HeroBook::drawPlantsList(RenderWindow* window)
 	{
 		for (int column = 0; column < somePage.plantsMatrix[raw].size(); column++)
 		{
-			if (somePage.plantsMatrix[raw][column].first == Tag::emptyCell/* || somePage.plantsMatrix[raw][column].second == 0*/)
+			if (somePage.plantsMatrix[raw][column].first == Tag::emptyCell)
 				continue;
 			auto curFlower = ButtonTag(somePage.plantsMatrix[raw][column].first);
 			Vector2f size = Vector2f(buttonList.at(curFlower).getGlobalBounds().width, buttonList.at(curFlower).getGlobalBounds().height);			
@@ -447,5 +447,5 @@ void HeroBook::WhileMouseDown()
 		}
 	}
 	//--------------------------
-}
+}*/
 

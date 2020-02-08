@@ -5,20 +5,21 @@
 
 using namespace sf;
 
-WorldHandler::WorldHandler(int width, int height) : focusedObject(nullptr)
+WorldHandler::WorldHandler(int width, int height, std::map<PackTag, SpritePack>* packsMap) : focusedObject(nullptr)
 {
+    this->packsMap = packsMap;
 	WorldObject::microBlockSize = microblockSize;
-	initSpriteMap();
-	worldGenerator.scaleFactor = getScaleFactor();
+    worldGenerator.initMainScale();
+	worldGenerator.scaleFactor = worldGenerator.mainScale;
 	this->width = width;
 	this->height = height;
 	staticGrid = GridList(this->width, this->height, blockSize, microblockSize);
 	dynamicGrid = GridList(this->width, this->height, blockSize, microblockSize);
 
 	initShaders();
-	worldGenerator.init(width, height, blockSize, microblockSize, &staticGrid, &dynamicGrid, &spriteMap);
-	inventorySystem.init();
-	buildSystem.Init(inventorySystem.getSpriteList());
+	worldGenerator.init(width, height, blockSize, microblockSize, &staticGrid, &dynamicGrid, packsMap);
+	//inventorySystem.init();
+	//buildSystem.Init(inventorySystem.getSpriteList());
 }
 
 WorldHandler::~WorldHandler()
@@ -44,14 +45,14 @@ void WorldHandler::runWorldGenerator()
 	worldGenerator.generate();
 	this->focusedObject = worldGenerator.focusedObject;
 	brazier = dynamic_cast<Brazier*>(staticGrid.getItemByName("brazier"));
-	brazier->linkWithBuildSystem(&buildSystem);
+	//brazier->linkWithBuildSystem(&buildSystem);
 	worldGenerator.rememberedBlocks = { { staticGrid.getIndexByPoint(brazier->getPosition().x, brazier->getPosition().y), true } };
 	cameraPosition = Vector2f(focusedObject->getPosition().x + Helper::GetScreenSize().x * camOffset.x, focusedObject->getPosition().y + Helper::GetScreenSize().y * camOffset.y);
 
 	const auto hero = dynamic_cast<Deerchant*>(focusedObject);
 	inventorySystem.inventoryBounding(&(hero->bags));
-	buildSystem.inventoryBounding(&(hero->bags));
-	buildSystem.succesInit = true;
+	//buildSystem.inventoryBounding(&(hero->bags));
+	//buildSystem.succesInit = true;
 }
 
 void WorldHandler::initShaders()
@@ -76,36 +77,34 @@ void WorldHandler::initShaders()
 
 void WorldHandler::setScaleFactor(int delta)
 {
-	if (delta == -1 && worldGenerator.scaleFactor > worldGenerator.farthestScale * worldGenerator.mainScale)
+	if (delta == -1 && worldGenerator.scaleFactor > worldGenerator.FARTHEST_SCALE * worldGenerator.mainScale)
 	{
 		worldGenerator.scaleFactor -= 0.01;
 		scaleDecrease = -0.03;
 	}
 	else
-		if (delta == 1 && worldGenerator.scaleFactor < worldGenerator.closestScale * worldGenerator.mainScale)
+		if (delta == 1 && worldGenerator.scaleFactor < worldGenerator.CLOSEST_SCALE * worldGenerator.mainScale)
 		{
 			worldGenerator.scaleFactor += 0.01;
 			scaleDecrease = 0.03;
 		}
 
-	if (scaleDecrease < 0 && worldGenerator.scaleFactor < worldGenerator.farthestScale * worldGenerator.mainScale)
-		worldGenerator.scaleFactor = worldGenerator.farthestScale * worldGenerator.mainScale;
-	if (scaleDecrease > 0 && worldGenerator.scaleFactor > worldGenerator.closestScale * worldGenerator.mainScale)
-		worldGenerator.scaleFactor = worldGenerator.closestScale * worldGenerator.mainScale;
-
-	worldGenerator.scale = worldGenerator.scaleFactor * worldGenerator.mainScale;
+	if (scaleDecrease < 0 && worldGenerator.scaleFactor < worldGenerator.FARTHEST_SCALE * worldGenerator.mainScale)
+		worldGenerator.scaleFactor = worldGenerator.FARTHEST_SCALE * worldGenerator.mainScale;
+	if (scaleDecrease > 0 && worldGenerator.scaleFactor > worldGenerator.CLOSEST_SCALE * worldGenerator.mainScale)
+		worldGenerator.scaleFactor = worldGenerator.CLOSEST_SCALE * worldGenerator.mainScale;
 }
 
 void WorldHandler::scaleSmoothing()
 {
 	if (abs(scaleDecrease) >= 0.02 && timeForScaleDecrease >= 30000)
 	{
-		if (worldGenerator.scaleFactor != worldGenerator.farthestScale * worldGenerator.mainScale && worldGenerator.scaleFactor != worldGenerator.closestScale * worldGenerator.mainScale)
+		if (worldGenerator.scaleFactor != worldGenerator.FARTHEST_SCALE * worldGenerator.mainScale && worldGenerator.scaleFactor != worldGenerator.CLOSEST_SCALE * worldGenerator.mainScale)
 			worldGenerator.scaleFactor += scaleDecrease;
-		if (scaleDecrease < 0 && worldGenerator.scaleFactor <= worldGenerator.farthestScale * worldGenerator.mainScale)
-			worldGenerator.scaleFactor = worldGenerator.farthestScale * worldGenerator.mainScale;
-		if (scaleDecrease > 0 && worldGenerator.scaleFactor >= worldGenerator.closestScale * worldGenerator.mainScale)
-			worldGenerator.scaleFactor = worldGenerator.closestScale * worldGenerator.mainScale;
+		if (scaleDecrease < 0 && worldGenerator.scaleFactor <= worldGenerator.FARTHEST_SCALE * worldGenerator.mainScale)
+			worldGenerator.scaleFactor = worldGenerator.FARTHEST_SCALE * worldGenerator.mainScale;
+		if (scaleDecrease > 0 && worldGenerator.scaleFactor >= worldGenerator.CLOSEST_SCALE * worldGenerator.mainScale)
+			worldGenerator.scaleFactor = worldGenerator.CLOSEST_SCALE * worldGenerator.mainScale;
 
 		if (scaleDecrease < 0)
 		{
@@ -120,132 +119,13 @@ void WorldHandler::scaleSmoothing()
 
 		timeForScaleDecrease = 0;
 	}
-	worldGenerator.scale = worldGenerator.scaleFactor * worldGenerator.mainScale;
-}
-
-float WorldHandler::getScaleFactor()
-{
-	auto heroHeight = Vector2f(spriteMap[heroTextureName].texture.getSize()).y;
-	auto screenHeight = Helper::GetScreenSize().y;
-	auto ratio = heroHeight / float(screenHeight);
-
-	auto mainObject = Deerchant("loadInit", Vector2f(0, 0));
-	mainObject.calculateTextureOffset();
-	worldGenerator.mainScale = screenHeight / (5 * mainObject.getConditionalSizeUnits().y);
-	worldGenerator.mainScale = round(worldGenerator.mainScale * 100) / 100;
-	return worldGenerator.mainScale;
-	//return 1;
-}
-
-bool cmpImgDraw(spriteChainElement first, spriteChainElement second)
-{
-	if (first.zCoord == second.zCoord)
-	{
-		if (first.position.y == second.position.y)
-		{
-			if (first.position.x == second.position.x)
-				return first.size.x * first.size.y < second.size.x * second.size.y;
-			return first.position.x < second.position.x;
-		}
-		return first.position.y < second.position.y;
-	}
-
-	return first.zCoord < second.zCoord;
-}
-
-bool WorldHandler::searchFiles(LPCTSTR lpszFileName, LPSEARCHFUNC lpSearchFunc, bool bInnerFolders)
-{
-	LPTSTR part;
-	char tmp[MAX_PATH]; // временный массив
-	char name[MAX_PATH];
-
-	HANDLE hSearch = NULL;
-	WIN32_FIND_DATA wfd;
-	memset(&wfd, 0, sizeof(WIN32_FIND_DATA));
-
-	// сначала поиск внутри вложенных папок ...
-	if (bInnerFolders)
-	{
-		if (GetFullPathName(lpszFileName, MAX_PATH, tmp, &part) == 0) return FALSE;
-		strcpy(name, part);
-		strcpy(part, "*.*");
-
-		// если папки существуют, делаем поиск
-		wfd.dwFileAttributes = FILE_ATTRIBUTE_DIRECTORY;
-		if (!((hSearch = FindFirstFile(tmp, &wfd)) == INVALID_HANDLE_VALUE))
-			do
-			{
-				// в каждой папке есть две папки с именами "." и ".."
-				// и эти папки мы не трогаем
-
-				// пропускаем папки "." и ".."
-				if (!strncmp(wfd.cFileName, ".", 1) || !strncmp(wfd.cFileName, "..", 2))
-					continue;
-
-				if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) // если мы нашли папку
-				{
-					char next[MAX_PATH];
-					if (GetFullPathName(lpszFileName, MAX_PATH, next, &part) == 0) return FALSE;
-					strcpy(part, wfd.cFileName);
-					strcat(next, "\\");
-					strcat(next, name);
-
-					searchFiles(next, lpSearchFunc, 1);
-				}
-			} while (FindNextFile(hSearch, &wfd)); // ищем следующий файл
-
-			FindClose(hSearch); // заканчиваем поиск
-	}
-
-	if ((hSearch = FindFirstFile(lpszFileName, &wfd)) == INVALID_HANDLE_VALUE)
-		return TRUE; // в противном случае выходим
-	do
-		if (!(wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) // если мы нашли файл
-		{
-			char file[MAX_PATH];
-			if (GetFullPathName(lpszFileName, MAX_PATH, file, &part) == 0) return FALSE;
-			strcpy(part, wfd.cFileName);
-
-			lpSearchFunc(file, spriteMap);
-		}
-	while (FindNextFile(hSearch, &wfd)); // ищем следующий файл
-	FindClose(hSearch); // заканчиваем поиск
-
-	return TRUE;
-}
-
-void putImageToMap(LPCTSTR lpszFileName, std::unordered_map<std::string, BoardSprite> &spriteMap)
-{
-	//std::string filePath = std::to_string(*lpszFileName);
-	std::string filePath = lpszFileName;
-	filePath.erase(0, filePath.find("\\Game") + 1);
-	std::replace(filePath.begin(), filePath.end(), '\\', '/');
-	spriteMap.insert({ filePath, BoardSprite{} });
-	auto sprite = &spriteMap[filePath];
-	sprite->texture.loadFromFile(filePath);
-	sprite->texture.setSmooth(true);
-	sprite->sprite.setTexture(sprite->texture);
-}
-
-void WorldHandler::initSpriteMap()
-{
-	//std::ifstream i("Game/worldSprites/hero/hero_absorb.json");
-	//json j;
-	//i >> j;
-	//auto sp = j.get<sprite_pack::pack>();
-
-	int objectsNumber;
-	std::string name;
-
-	searchFiles("Game/*.png", putImageToMap, 1);	
-	effectSystem.init(&spriteMap);
 }
 
 void WorldHandler::initLightSystem(RenderWindow &window)
 {
 	view = window.getDefaultView();
 
-	contextSettings.antialiasingLevel = 8;// ¬ключить сглаживание.
+	contextSettings.antialiasingLevel = 8;
 
 	penumbraTexture.loadFromFile("data/penumbraTexture.png");
 	penumbraTexture.setSmooth(true);
@@ -282,13 +162,13 @@ void WorldHandler::initLightSystem(RenderWindow &window)
 	
 }
 
-void WorldHandler::renderLightSystem(View view, RenderWindow &window)
+/*void WorldHandler::renderLightSystem(View view, RenderWindow &window)
 {
 	ls.render(view, unshadowShader, lightOverShapeShader);
 	Lsprite.setTexture(ls.getLightingTexture());
 	lightRenderStates.blendMode = sf::BlendMultiply;
 	window.draw(Lsprite, lightRenderStates);
-}
+}*/
 
 void WorldHandler::birthObjects()
 {
@@ -362,9 +242,9 @@ void WorldHandler::Load()
 
 	inventorySystem.inventoryBounding(&hero->bags);
 	//------------------------------------
-	buildSystem.inventoryBounding(&hero->bags);
-	buildSystem.succesInit = true;
-	buildSystem.succesInit = true;
+	//buildSystem.inventoryBounding(&hero->bags);
+	//buildSystem.succesInit = true;
+	//buildSystem.succesInit = true;
 
 	Save();
 }
@@ -547,7 +427,7 @@ bool WorldHandler::fixedClimbingBeyond(Vector2f &pos)
 
 void WorldHandler::setItemFromBuildSystem()
 {
-	if (!(buildSystem.instantBuild || focusedObject->getCurrentAction() == builds))
+	/*if (!(buildSystem.instantBuild || focusedObject->getCurrentAction() == builds))
 		return;
 
 	if (buildSystem.selectedObject != Tag::emptyCell && buildSystem.buildingPosition != Vector2f(-1, -1))
@@ -568,7 +448,7 @@ void WorldHandler::setItemFromBuildSystem()
 		buildSystem.buildingPosition = Vector2f(-1, -1);
 		buildSystem.buildType = 1;
 		brazier->clearCurrentCraft();
-	}
+	}*/
 }
 
 void WorldHandler::makeCameraShake(float power)
@@ -606,14 +486,14 @@ void WorldHandler::onMouseUp(int currentMouseButton)
 	
 	inventorySystem.onMouseUp();
 
-	if (buildSystem.succesInit /* && inventorySystem.getHeldItem()->first == -1*/)
-		buildSystem.onMouseUp(focusedObject->getPosition(), worldGenerator.scaleFactor);
+	//if (buildSystem.succesInit /* && inventorySystem.getHeldItem()->first == -1*/)
+		//buildSystem.onMouseUp(focusedObject->getPosition(), worldGenerator.scaleFactor);
 
 	if (mouseDisplayName == "")
 		selectedObject = nullptr;
 
 	auto hero = dynamic_cast<Deerchant*>(dynamicGrid.getItemByName(focusedObject->getName()));
-	hero->onMouseUp(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.buildingPosition != Vector2f(-1, -1) && !buildSystem.instantBuild));
+	//hero->onMouseUp(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.buildingPosition != Vector2f(-1, -1) && !buildSystem.instantBuild));
 	inventorySystem.inventoryBounding(&hero->bags);
 }
 
@@ -742,7 +622,7 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event e
 		setItemFromBuildSystem();
 
 	//buildSystem.setHeldItem(inventorySystem.getHeldItem()->lootInfo);
-	buildSystem.interact();
+	//buildSystem.interact();
 	inventorySystem.interact(elapsedTime);
 	pedestalController.interact(elapsedTime, event);
 	//-------------------
@@ -765,7 +645,69 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event e
 	}
 }
 
-void WorldHandler::draw(RenderWindow& window, long long elapsedTime)
+bool cmpImgDraw(SpriteChainElement first, SpriteChainElement second)
+{
+	if (first.zCoord == second.zCoord)
+	{
+		if (first.position.y == second.position.y)
+		{
+			if (first.position.x == second.position.x)
+				return first.size.x * first.size.y < second.size.x * second.size.y;
+			return first.position.x < second.position.x;
+		}
+		return first.position.y < second.position.y;
+	}
+
+	return first.zCoord < second.zCoord;
+}
+
+std::vector<SpriteChainElement> WorldHandler::prepareSprites(long long elapsedTime, bool onlyBackground)
+{
+    std::vector<SpriteChainElement> result = {};
+
+    const auto extra = staticGrid.getBlockSize();
+
+	const auto screenSize = Helper::GetScreenSize();
+	const auto screenCenter = Vector2f(screenSize.x / 2, screenSize.y / 2);
+	cameraPosition.x += (focusedObject->getPosition().x + Helper::GetScreenSize().x * camOffset.x - cameraPosition.x) * (focusedObject->getSpeed() * elapsedTime) / maxCameraDistance.x;
+	cameraPosition.y += (focusedObject->getPosition().y + Helper::GetScreenSize().y * camOffset.y - cameraPosition.y) * (focusedObject->getSpeed() * elapsedTime) / maxCameraDistance.y;
+	cameraShakeInteract(elapsedTime);
+    worldUpperLeft = Vector2f(int(cameraPosition.x - (screenCenter.x + extra.x) / worldGenerator.scaleFactor), int(cameraPosition.y - (screenCenter.y + extra.y) / worldGenerator.scaleFactor));
+	worldBottomRight = Vector2f(int(cameraPosition.x + (screenCenter.x + extra.x) / worldGenerator.scaleFactor), int(cameraPosition.y + (screenCenter.y + extra.y) / worldGenerator.scaleFactor));
+    if (worldUpperLeft.x < 0)
+		worldUpperLeft.x = 0;
+	if (worldUpperLeft.y < 0)
+		worldUpperLeft.y = 0;
+	if (worldBottomRight.x > width)
+		worldBottomRight.x = width;
+	if (worldBottomRight.y > height)
+		worldBottomRight.y = height;
+    auto localStaticItems = staticGrid.getItems(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y);
+	auto localDynamicItems = dynamicGrid.getItems(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y);
+
+	for (auto& item : localStaticItems)
+	{
+        if ((onlyBackground && item->isBackground) || (!onlyBackground && !item->isBackground))
+        {
+            auto sprites = item->prepareSprites(elapsedTime);
+            result.insert(result.end(), sprites.begin(), sprites.end());
+        }
+    }
+    for (auto& item : localDynamicItems)
+	{
+        if (!onlyBackground)
+        {
+            auto sprites = item->prepareSprites(elapsedTime);
+            result.insert(result.end(), sprites.begin(), sprites.end());
+        }
+    }
+
+    sort(result.begin(), result.end(), cmpImgDraw);
+
+    return result;
+}
+
+/*void WorldHandler::draw(RenderWindow& window, long long elapsedTime)
 {
 	inventorySystem.wasDrawing = false;
 
@@ -863,7 +805,7 @@ void WorldHandler::draw(RenderWindow& window, long long elapsedTime)
 				window.draw(rec);
 			}
 		}*/
-	for (auto block : staticGrid.route)
+	/*for (auto block : staticGrid.route)
 	{
 		Vector2f recPos = Vector2f(block.first * microblockSize.x, block.second * microblockSize.y);
 		rec.setPosition((recPos.x - cameraPosition.x - microblockSize.x / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().x / 2, (recPos.y - cameraPosition.y - microblockSize.y / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().y / 2);
@@ -875,9 +817,9 @@ void WorldHandler::draw(RenderWindow& window, long long elapsedTime)
 		rec2.setPosition((recPos.x - cameraPosition.x - microblockSize.x / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().x / 2, (recPos.y - cameraPosition.y - microblockSize.y / 2) * worldGenerator.scaleFactor + Helper::GetScreenSize().y / 2);
 		window.draw(rec2);
 	}*/
-}
+//}
 
-void WorldHandler::runBuildSystemDrawing(RenderWindow& window, float elapsedTime)
+/*void WorldHandler::runBuildSystemDrawing(RenderWindow& window, float elapsedTime)
 {
 	bool showBuildedObj = true;
 	if (focusedObject->getBoundTarget() != nullptr)
@@ -906,7 +848,7 @@ void WorldHandler::runInventorySystemDrawing(RenderWindow& window, float elapsed
 		Helper::drawText(mouseDisplayName, 30, Mouse::getPosition().x, Mouse::getPosition().y, &window);
 }
 
-void WorldHandler::drawVisibleItems(RenderWindow& window, long long elapsedTime, std::vector<spriteChainElement> sprites)
+/*void WorldHandler::drawVisibleItems(RenderWindow& window, long long elapsedTime, std::vector<SpriteChainElement> sprites)
 {
 	const auto screenSize = window.getSize();
 	const auto screenCenter = Vector2f(screenSize.x / 2, screenSize.y / 2);
@@ -941,5 +883,5 @@ void WorldHandler::drawVisibleItems(RenderWindow& window, long long elapsedTime,
 		window.draw(sprite);
 	}
 
-}
+}*/
 

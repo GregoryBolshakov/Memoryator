@@ -1,50 +1,22 @@
 #include "MenuMaker.h"
 
+const Vector2f NEW_RUN_BUTTON_POSITION(Helper::GetScreenSize().x * 0.06f, Helper::GetScreenSize().y * 0.06f);
+const Vector2f CONTINUE_BUTTON_POSITION(Helper::GetScreenSize().x * 0.06f, Helper::GetScreenSize().y * 0.21f);
+const Vector2f EXIT_BUTTON_POSITION(Helper::GetScreenSize().x * 0.06f, Helper::GetScreenSize().y * 0.36f);
+const Vector2i BUTTON_SIZE(Helper::GetScreenSize().x * 0.2f, Helper::GetScreenSize().y * 0.14f);
+
 MenuMaker::MenuMaker()
 {
 	initButtons();
 }
 
-/*void MenuMaker::worldBounding(World &world)
-{
-	this->world = world;
-}*/
-
 void MenuMaker::initButtons()
 {
 	Vector2f screenSize = Helper::GetScreenSize();
 
-	std::string buttonImagePathDefault, buttonImagePathPressed, buttonImagePathSelected;
-	Vector2f buttonPosition, buttonSize; // in percents
-	int tag;
-	bool isSelectable;
-
-	std::ifstream fin(buttonsInfoFileDirectory);
-
-
-	while (fin >> isSelectable)
-	{
-		if (isSelectable)
-			fin >> buttonImagePathDefault >> buttonImagePathPressed >> buttonImagePathSelected;
-		else
-			fin >> buttonImagePathDefault;
-
-		fin >> buttonPosition.x >> buttonPosition.y >> buttonSize.y >> tag;
-
-		Texture buttonTextureDefault, buttonTexturePressed, buttonTextureSelected;
-		buttonTextureDefault.loadFromFile(buttonImagePathDefault);
-		buttonTexturePressed.loadFromFile(buttonImagePathPressed);
-		buttonTextureSelected.loadFromFile(buttonImagePathSelected);
-
-		buttonPosition.x = buttonPosition.x * screenSize.x / 100;
-		buttonPosition.y = buttonPosition.y * screenSize.y / 100;
-		buttonSize.y = buttonSize.y * screenSize.y / 100;
-		buttonSize.x = buttonTextureDefault.getSize().x * buttonSize.y / buttonTextureDefault.getSize().y;
-
-		buttonList[ButtonTag(tag)].initialize(buttonTextureDefault, buttonTexturePressed, buttonTextureSelected, buttonPosition, buttonSize, isSelectable, ButtonTag(tag), {0, 0});
-	}
-
-	fin.close();
+    buttonList[ButtonTag::newRunTag].initialize(PackTag::interfaceElements, PackPart::menu, 1, 1, 1, NEW_RUN_BUTTON_POSITION, BUTTON_SIZE, true, ButtonTag::newRunTag);
+    buttonList[ButtonTag::continueTag].initialize(PackTag::interfaceElements, PackPart::menu, 2, 2, 2, CONTINUE_BUTTON_POSITION, BUTTON_SIZE, true, ButtonTag::continueTag);
+    buttonList[ButtonTag::exitTag].initialize(PackTag::interfaceElements, PackPart::menu, 4, 4, 4, EXIT_BUTTON_POSITION, BUTTON_SIZE, true, ButtonTag::exitTag);
 }
 
 MenuMaker::~MenuMaker()
@@ -86,7 +58,8 @@ void MenuMaker::interact(WorldHandler &world, RenderWindow &window)
 
 		if (buttonList[ButtonTag::continueTag].isSelected(mousePos))
 		{
-			world.Load();
+			//world.Load();
+            world.runWorldGenerator();
 			menuState = closed;
 			wasActive = true;
 			return;
@@ -133,39 +106,35 @@ void MenuMaker::interact(WorldHandler &world, RenderWindow &window)
 
 	if (menuState == closed)
 	{
-		if (buttonList.at(ButtonTag::openMenu).isSelected(mousePos))
+		/*if (buttonList.at(ButtonTag::openMenu).isSelected(mousePos))
 		{
 			menuState = gameMenu;
 			wasActive = true;
 			return;
-		}
+		}*/
 	}
 }
 
-void MenuMaker::drawButtons(RenderWindow &window)
+std::vector<SpriteChainElement> MenuMaker::prepareSprites()
 {
+    std::vector<SpriteChainElement> result = {};
 	if (menuState == mainMenu)
 	{
-		buttonList.at(ButtonTag::newRunTag).draw(window);
-		buttonList.at(ButtonTag::continueTag).draw(window);
-		buttonList.at(ButtonTag::settingsTag).draw(window);
-		buttonList.at(ButtonTag::exitTag).draw(window);
-		return;
+        result.push_back(buttonList.at(ButtonTag::newRunTag).prepareSprite());
+		result.push_back(buttonList.at(ButtonTag::continueTag).prepareSprite());
+		result.push_back(buttonList.at(ButtonTag::exitTag).prepareSprite());		
 	}
 
 	if (menuState == gameMenu)
 	{
-		buttonList.at(ButtonTag::newRunTag).draw(window);
-		buttonList.at(ButtonTag::continueTag).draw(window);
-		buttonList.at(ButtonTag::settingsTag).draw(window);
-		buttonList.at(ButtonTag::menuTag).draw(window);
-		return;
+
 	}
 
 	if (menuState == closed)
 	{
-		buttonList.at(ButtonTag::openMenu).draw(window);
-		return;
+		
 	}
+
+    return result;
 }
 	

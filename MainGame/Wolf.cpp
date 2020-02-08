@@ -65,8 +65,9 @@ void Wolf::jerk(float power, float deceleration, Vector2f destinationPoint)
 	return;
 }
 
-void Wolf::prepareSpriteNames(long long elapsedTime, float scaleFactor)
+std::vector<SpriteChainElement> Wolf::prepareSprites(long long elapsedTime)
 {
+    return {};
 	/*std::string spriteName;
 
 	switch (currentAction)

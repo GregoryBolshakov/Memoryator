@@ -16,7 +16,7 @@ class HeroBook
 public:
 	HeroBook();
 	~HeroBook();
-	void draw(sf::RenderWindow* window, float hpRatio, float elapsedTime);
+	/*void draw(sf::RenderWindow* window, float hpRatio, float elapsedTime);
 	void interact(float elapsedTime);
 	void onMouseUp();
 	void getAllOuterInfo(
@@ -64,6 +64,6 @@ private:
 	std::string worldMouseName = "";
 	Vector2f blockDescriptionPoint = Vector2f(0.53f, 0.104f); // as a percentage of the size of the page markup
 	Vector2f pageDescriptionPoint = Vector2f(0.53f, 0.395f); // as a percentage of the size of the page markup
-	std::vector<HeroBag>* boundBags;
+	std::vector<HeroBag>* boundBags;*/
 };
 

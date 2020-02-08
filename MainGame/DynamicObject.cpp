@@ -539,4 +539,25 @@ Direction DynamicObject::invertDirection(Direction dir)
 	}
 }
 
+Direction DynamicObject::cutRights(Direction direction)
+{
+    switch (direction)
+	{
+	case Direction::UPRIGHT:
+		return Direction::UPLEFT;
+	case Direction::RIGHT:
+		return Direction::LEFT;
+	case Direction::DOWNRIGHT:
+		return Direction::DOWNLEFT;
+    default: return direction;
+    }
+}
+
+Side DynamicObject::cutRights(Side side)
+{
+    if (side == right)
+        return left;
+    return side;
+}
+
 
