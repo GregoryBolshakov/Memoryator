@@ -35,7 +35,6 @@ public:
 	WorldObject(std::string objectName, Vector2f centerPosition);
 	virtual ~WorldObject();
 	int getZCoords() { return zCoord; }
-	int getAnimationLength() { return animationLength; }
 	int getType() { return typeOfObject; }
 	int getVarietyOfTypes() { return varietyOfTypes; }
 	float getHealthPoint() { return healthPoint; }
@@ -90,7 +89,6 @@ public:
 	Tag tag;
 protected:
 	int typeOfObject{};
-	int animationLength{};
 	int zCoord = 1;
 	std::vector<int> currentSprite;
 	int varietyOfTypes{};

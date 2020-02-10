@@ -13,9 +13,15 @@ namespace sprite_pack
 {
     struct size
     {
-        int w;
-        int h;
+		size(int w = 0, int h = 0) { this->w = w; this->h = h; }
+        int w = 0;
+        int h = 0;
     };
+
+	inline bool operator == (sprite_pack::size a, sprite_pack::size b)
+	{
+		return (a.w == b.w && a.h == b.h);
+	}
 
     struct rect
     {
@@ -77,7 +83,7 @@ public:
     ~SpritePack();
     void init(std::string path, std::string jsonPath, PackTag tag);
     Sprite getSprite(PackPart part, Direction direction, int number, bool mirrored = false);
-    sprite_pack::sprite getOriginalInfo(PackPart part, Direction direction, int number) { return pack.at(part).at(direction).at(number); }
+	sprite_pack::sprite getOriginalInfo(PackPart part, Direction direction, int number);
 
     PackTag tag;
     static std::map<std::string, PackTag> mappedPackTag;

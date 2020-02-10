@@ -176,8 +176,14 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 	item->setType(currentType);
 	auto sprites = item->prepareSprites(0);
 	FloatRect textureBounds = FloatRect(0, 0, 0, 0);
-    auto size = packsMap->at(sprites[0].packTag).getOriginalInfo(sprites[0].packPart, sprites[0].direction, sprites[0].number).source_size;
-	const Vector2f textureSize = Vector2f(size.w, size.h);
+	if (packsMap->count(sprites[0].packTag) <= 0 || 
+		packsMap->at(sprites[0].packTag).getOriginalInfo(sprites[0].packPart, sprites[0].direction, sprites[0].number).source_size == sprite_pack::size(0, 0))
+	{
+		item->~StaticObject();
+		return nullptr;
+	}
+	const auto info = packsMap->at(sprites[0].packTag).getOriginalInfo(sprites[0].packPart, sprites[0].direction, sprites[0].number);
+	const Vector2f textureSize = Vector2f(info.source_size.w, info.source_size.h);
 	item->setTextureSize(textureSize);
 	const std::string name = itemName.empty()
 		? std::to_string(newNameId)
@@ -294,8 +300,14 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 	item->setName(name);
 	item->setPosition(Vector2f(itemPosition));
     auto sprites = item->prepareSprites(0);
-    auto size = packsMap->at(sprites[0].packTag).getOriginalInfo(sprites[0].packPart, sprites[0].direction, sprites[0].number).source_size;
-	const Vector2f textureSize = Vector2f(size.w, size.h);
+	if (packsMap->count(sprites[0].packTag) <= 0 || 
+		packsMap->at(sprites[0].packTag).getOriginalInfo(sprites[0].packPart, sprites[0].direction, sprites[0].number).source_size == sprite_pack::size(0, 0))
+	{
+		item->~DynamicObject();
+		return nullptr;
+	}
+	const auto info = packsMap->at(sprites[0].packTag).getOriginalInfo(sprites[0].packPart, sprites[0].direction, sprites[0].number);
+	const Vector2f textureSize = Vector2f(info.source_size.w, info.source_size.h);
 	item->setTextureSize(textureSize);
 	return item;
 }

@@ -51,11 +51,8 @@ int HareTrap::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement> HareTrap::prepareSprites(long long elapsedTime)
 {
-    return {};
-	/*additionalSprites.clear();
-	spriteChainElement trapBody;
-	trapBody.path = "Game/worldSprites/terrainObjects/hareTrap/hareTrap" + std::to_string(currentSprite[0]) + ".png";
-	trapBody.size = Vector2f(conditionalSizeUnits);
-	trapBody.offset = Vector2f(textureBoxOffset);
-	additionalSprites.push_back(trapBody);*/
+	SpriteChainElement body(PackTag::craftObjects, PackPart::hareTrap, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	body.isBackground = true;
+
+	return { body };
 }

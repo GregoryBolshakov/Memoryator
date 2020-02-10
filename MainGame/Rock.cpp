@@ -17,31 +17,31 @@ void Rock::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = Vector2i (343, 95);
-	if (typeOfObject == 2)
-		conditionalSizeUnits = Vector2i (236, 106);
-	if (typeOfObject == 3)
-		conditionalSizeUnits = Vector2i (269, 116);
-	if (typeOfObject == 4)
-		conditionalSizeUnits = Vector2i (349, 113);
-	if (typeOfObject == 5)
-		conditionalSizeUnits = Vector2i (278, 204);
-	if (typeOfObject == 6)
-		conditionalSizeUnits = Vector2i (417, 113);
-	if (typeOfObject == 7)
 		conditionalSizeUnits = Vector2i(395, 231);
-	if (typeOfObject == 8)
+	if (typeOfObject == 2)
 		conditionalSizeUnits = Vector2i(579, 294);
+	if (typeOfObject == 3)
+		conditionalSizeUnits = Vector2i (343, 95);
+	if (typeOfObject == 4)
+		conditionalSizeUnits = Vector2i (236, 106);
+	if (typeOfObject == 5)
+		conditionalSizeUnits = Vector2i (269, 116);
+	if (typeOfObject == 6)
+		conditionalSizeUnits = Vector2i (349, 113);
+	if (typeOfObject == 7)
+		conditionalSizeUnits = Vector2i (278, 204);
+	if (typeOfObject == 8)
+		conditionalSizeUnits = Vector2i (417, 113);	
 	if (typeOfObject == 9)
-		conditionalSizeUnits = Vector2i(434, 266);
+		conditionalSizeUnits = Vector2i(428, 259);
 	if (typeOfObject == 10)
-		conditionalSizeUnits = Vector2i(475, 437);
+		conditionalSizeUnits = Vector2i(474, 463);
 	if (typeOfObject == 11)
-		conditionalSizeUnits = Vector2i(269, 125);
+		conditionalSizeUnits = Vector2i(314, 116);
 	if (typeOfObject == 12)
-		conditionalSizeUnits = Vector2i(238, 139);
+		conditionalSizeUnits = Vector2i(371, 205);
 	if (typeOfObject == 13)
-		conditionalSizeUnits = Vector2i(319, 311);
+		conditionalSizeUnits = Vector2i(259, 144);
 	if (typeOfObject == 14)
 		conditionalSizeUnits = Vector2i(278, 190);
 	if (typeOfObject == 15)
@@ -219,40 +219,20 @@ int Rock::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement> Rock::prepareSprites(long long elapsedTime)
 {
-    return {};
-	/*additionalSprites.clear();
-	spriteChainElement body;
-	body.size = Vector2f(conditionalSizeUnits);
-	body.offset = Vector2f(textureBoxOffset);
-	body.antiTransparent = true;
+	SpriteChainElement body(PackTag::darkWoods, PackPart::rock, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 
-	animationLength = 1;
-
-	if (typeOfObject >= 1 && typeOfObject <= 6)
-		body.path = "Game/worldSprites/BirchGrove/rock" + std::to_string(typeOfObject) + ".png";
-	if (typeOfObject >= 7 && typeOfObject <= 8)
-		body.path = "Game/worldSprites/BirchGrove/hill" + std::to_string(typeOfObject - 6) + ".png";
+	if (typeOfObject >= 1 && typeOfObject <= 8)
+		body.packTag = PackTag::birchGrove;
 	if (typeOfObject >= 9 && typeOfObject <= 13)
-		body.path = "Game/worldSprites/DarkWoods/rock" + std::to_string(typeOfObject - 8) + ".png";
-	if (typeOfObject >= 14 && typeOfObject <= 18)
-		body.path = "Game/worldSprites/SwampyTrees/rock" + std::to_string(typeOfObject - 13) + ".png";
-
-	additionalSprites.push_back(body);
-
-	timeForNewSprite += elapsedTime;
-
-	if (timeForNewSprite >= 1e6 / animationSpeed)
 	{
-		timeForNewSprite = 0;
+		body.packTag = PackTag::darkWoods;
+		body.number -= 8;
+	}
+	if (typeOfObject >= 14 && typeOfObject <= 18)
+	{
+		body.packTag = PackTag::swampyTrees;
+		body.number -= 13;
+	}
 
-		if (++currentSprite[0] > animationLength)
-		{
-			if (state == absorbed)
-			{
-				state = common;
-				deletePromiseOn();
-			}
-			currentSprite[0] = 1;
-		}
-	}*/
+	return { body };
 }

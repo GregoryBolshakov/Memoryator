@@ -149,31 +149,7 @@ int Lake::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement> Lake::prepareSprites(long long elapsedTime)
 {
-    return {};
-	/*additionalSprites.clear();
-	spriteChainElement body;
-	body.size = Vector2f(conditionalSizeUnits);
-	body.offset = Vector2f(textureBoxOffset);
-	body.antiTransparent = true;
-	animationLength = 1;
-	body.path = "Game/worldSprites/SwampyTrees/lake" + std::to_string(typeOfObject) + ".png";
+	SpriteChainElement body(PackTag::swampyTrees, PackPart::lake, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 
-	additionalSprites.push_back(body);
-
-	timeForNewSprite += elapsedTime;
-
-	if (timeForNewSprite >= 1e6 / animationSpeed)
-	{
-		timeForNewSprite = 0;
-
-		if (++currentSprite[0] > animationLength)
-		{
-			if (state == absorbed)
-			{
-				state = common;
-				deletePromiseOn();
-			}
-			currentSprite[0] = 1;
-		}
-	}*/
+	return { body };
 }

@@ -187,40 +187,15 @@ int Bush::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement> Bush::prepareSprites(long long elapsedTime)
 {
-    return {};
-	/*additionalSprites.clear();
-	spriteChainElement body;
-	body.size = Vector2f(conditionalSizeUnits);
-	body.offset = Vector2f(textureBoxOffset);
+	SpriteChainElement body(PackTag::darkWoods, PackPart::bush, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 
 	if (typeOfObject >= 1 && typeOfObject <= 8)
+		body.packTag = PackTag::birchGrove;
+	if (typeOfObject >= 9 && typeOfObject <= 15)
 	{
-		animationLength = 1;
-		body.path = "Game/worldSprites/BirchGrove/bush" + std::to_string(typeOfObject) + ".png";
+		body.packTag = PackTag::swampyTrees;
+		body.number -= 8;
 	}
-	else
-		if (typeOfObject >= 9 && typeOfObject <= 15)
-		{
-			animationLength = 1;
-			body.path = "Game/worldSprites/SwampyTrees/bush" + std::to_string(typeOfObject - 8) + ".png";
-		}
 
-	additionalSprites.push_back(body);
-
-	timeForNewSprite += elapsedTime;
-
-	if (timeForNewSprite >= 1e6 / animationSpeed)
-	{
-		timeForNewSprite = 0;
-
-		if (++currentSprite[0] > animationLength)
-		{
-			if (state == absorbed)
-			{
-				state = common;
-				deletePromiseOn();
-			}
-			currentSprite[0] = 1;
-		}
-	}*/
+	return { body };
 }

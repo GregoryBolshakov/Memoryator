@@ -113,11 +113,8 @@ int WreathTable::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement> WreathTable::prepareSprites(long long elapsedTime)
 {
-    return {};
-	/*additionalSprites.clear();
-	spriteChainElement body;
-	body.path = "Game/worldSprites/terrainObjects/wreathTable/wreathTable.png";
-	body.size = Vector2f(conditionalSizeUnits);
-	body.offset = Vector2f(textureBoxOffset);
-	additionalSprites.push_back(body);*/
+	SpriteChainElement body(PackTag::locations, PackPart::wreathTable, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	body.isBackground = true;
+
+	return { body };
 }

@@ -91,32 +91,7 @@ int Roof::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement> Roof::prepareSprites(long long elapsedTime)
 {
-    return {};
-	/*additionalSprites.clear();
-	spriteChainElement body;
-	body.size = Vector2f(conditionalSizeUnits);
-	body.offset = Vector2f(textureBoxOffset);
-	body.antiTransparent = true;
+	SpriteChainElement body(PackTag::darkWoods, PackPart::roof, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 
-	animationLength = 1;
-	body.path = "Game/worldSprites/DarkWoods/roof" + std::to_string(typeOfObject) + ".png";
-
-	additionalSprites.push_back(body);
-
-	timeForNewSprite += elapsedTime;
-
-	if (timeForNewSprite >= 1e6 / animationSpeed)
-	{
-		timeForNewSprite = 0;
-
-		if (++currentSprite[0] > animationLength)
-		{
-			if (state == absorbed)
-			{
-				state = common;
-				deletePromiseOn();
-			}
-			currentSprite[0] = 1;
-		}
-	}*/
+	return { body };
 }

@@ -55,7 +55,8 @@ void WorldGenerator::initializeStaticItem(Tag itemClass, Vector2f itemPosition, 
 	}
 	//-------------------
 
-	staticGrid->addItem(item, item->getName(), int(itemPosition.x), int(itemPosition.y));
+	if (item)
+		staticGrid->addItem(item, item->getName(), int(itemPosition.x), int(itemPosition.y));
 }
 
 void WorldGenerator::initializeDynamicItem(Tag itemClass, Vector2f itemPosition, std::string itemName, WorldObject* owner)
@@ -64,7 +65,8 @@ void WorldGenerator::initializeDynamicItem(Tag itemClass, Vector2f itemPosition,
 	if (itemClass == Tag::hero1)	
 		focusedObject = item;			
 
-	dynamicGrid->addItem(item, item->getName(), int(itemPosition.x), int(itemPosition.y));
+	if (item)
+		dynamicGrid->addItem(item, item->getName(), int(itemPosition.x), int(itemPosition.y));
 }
 
 void WorldGenerator::generate()
@@ -137,7 +139,7 @@ void WorldGenerator::inBlockGenerate(int blockIndex)
 	generateGround(blockIndex);
 
 	//block filling
-	return;
+	//return;
 
 	for (int x = blockTransform.left; x < blockTransform.left + blockTransform.width; x += 100)
 	{
@@ -182,14 +184,14 @@ void WorldGenerator::generateGround(int blockIndex)
 	staticGrid->addItem(biomeMatrix[groundIndX][groundIndY].groundCell, biomeMatrix[groundIndX][groundIndY].groundCell->getName(), biomeMatrix[groundIndX][groundIndY].groundCell->getPosition().x, biomeMatrix[groundIndX][groundIndY].groundCell->getPosition().y);
 
 	const auto connectionPos = biomeMatrix[groundIndX][groundIndY].groundCell->getPosition();
-	const auto currentType = biomeMatrix[groundIndX][groundIndY].groundCell->getType();
+	const auto currentBiome = biomeMatrix[groundIndX][groundIndY].groundCell->getType();
 
 	if (biomeMatrix[groundIndX][groundIndY].biomeCell == BirchGrove)
 		auto test = 1;
-	initializeStaticItem(Tag::groundConnection, Vector2f(connectionPos), (currentType - 1) * 4 + 1, "", 1);
-	initializeStaticItem(Tag::groundConnection, Vector2f(connectionPos.x + blockSize.x - 1, connectionPos.y), (currentType - 1) * 4 + 2, "", 1);
-	initializeStaticItem(Tag::groundConnection, Vector2f(connectionPos), (currentType - 1) * 4 + 3, "", 1);
-	initializeStaticItem(Tag::groundConnection, Vector2f(connectionPos.x, connectionPos.y + blockSize.y - 1), (currentType - 1) * 4 + 4, "", 1);
+	initializeStaticItem(Tag::groundConnection, Vector2f(connectionPos), (currentBiome - 1) * 4 + 1, "", 1);
+	initializeStaticItem(Tag::groundConnection, Vector2f(connectionPos.x, connectionPos.y + blockSize.y - 1), (currentBiome - 1) * 4 + 2, "", 1);
+	initializeStaticItem(Tag::groundConnection, Vector2f(connectionPos), (currentBiome - 1) * 4 + 3, "", 1);
+	initializeStaticItem(Tag::groundConnection, Vector2f(connectionPos.x + blockSize.x - 1, connectionPos.y), (currentBiome - 1) * 4 + 4, "", 1);	
 }
 
 bool WorldGenerator::isRoomyStepBlock(int x, int y) const

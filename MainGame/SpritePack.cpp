@@ -15,7 +15,8 @@ std::map<std::string, PackTag> SpritePack::mappedPackTag = {
     {"locations", PackTag::locations},
     {"darkWoods", PackTag::darkWoods},
     {"birchGrove", PackTag::birchGrove},
-    {"swampyTrees", PackTag::swampyTrees}
+    {"swampyTrees", PackTag::swampyTrees},
+	{"craftObjects", PackTag::craftObjects}
 };
 
 std::map<std::string, PackPart> SpritePack::mappedPackPart = {
@@ -41,7 +42,13 @@ std::map<std::string, PackPart> SpritePack::mappedPackPart = {
     {"crossButton", PackPart::crossButton},
     {"menu", PackPart::menu}, // interface's parts
     {"brazier", PackPart::brazier},
-    {"wreathTable", PackPart::wreathTable} // location's parts
+    {"wreathTable", PackPart::wreathTable}, // location's parts
+	{"cageBear", PackPart::cageBear},
+	{"cageOwl", PackPart::cageOwl},
+	{"fence", PackPart::fence}, 
+	{"hareTrap", PackPart::hareTrap},
+	{"noose", PackPart::noose}, 
+	{"totem", PackPart::totem} // craftObject's parts
 };
 
 std::map<std::string, Direction> SpritePack::mappedDirection = { {"up", Direction::UP}, {"up-right", Direction::UPRIGHT}, {"right", Direction::RIGHT}, {"down-right", Direction::DOWNRIGHT},
@@ -90,6 +97,14 @@ void SpritePack::init(std::string path, std::string jsonPath, PackTag tag)
     }
 }
 
+sprite_pack::sprite SpritePack::getOriginalInfo(PackPart part, Direction direction, int number)
+{
+	if (pack.count(part) <= 0 || pack.at(part).count(direction) <= 0 || pack.at(part).at(direction).count(number) <= 0)
+		return sprite_pack::sprite();
+
+	return pack.at(part).at(direction).at(number);
+}
+
 Sprite SpritePack::getSprite(PackPart part, Direction direction, int number, bool mirrored)
 {
     Sprite result;
@@ -99,7 +114,9 @@ Sprite SpritePack::getSprite(PackPart part, Direction direction, int number, boo
     result.setTexture(texture);
 
     const auto spriteInfo = pack.at(part).at(direction).at(number);
-    const Vector2f offset(spriteInfo.sprite_source_size.x, spriteInfo.sprite_source_size.y);
+    const Vector2f offset(spriteInfo.sprite_source_size.x, spriteInfo.sprite_source_size.y), 
+	invertedOffset(spriteInfo.source_size.w - spriteInfo.sprite_source_size.w - spriteInfo.sprite_source_size.x, 
+		offset.y);
 
     if (!spriteInfo.rotated && !mirrored)
     {
@@ -109,7 +126,7 @@ Sprite SpritePack::getSprite(PackPart part, Direction direction, int number, boo
     if (!spriteInfo.rotated && mirrored)
     {
         result.setTextureRect(IntRect(spriteInfo.frame.x + spriteInfo.frame.w, spriteInfo.frame.y, -spriteInfo.frame.w, spriteInfo.frame.h));
-        result.setOrigin(-offset.x - spriteInfo.frame.w, -offset.y);
+        result.setOrigin(-invertedOffset.x, -invertedOffset.y);
     }
     if (spriteInfo.rotated && !mirrored)
     {
@@ -121,22 +138,9 @@ Sprite SpritePack::getSprite(PackPart part, Direction direction, int number, boo
     {
         result.setTextureRect(IntRect(spriteInfo.frame.x, spriteInfo.frame.y + spriteInfo.frame.w, spriteInfo.frame.h, -spriteInfo.frame.w));
         result.rotate(-90);
-        result.setOrigin(offset.y + spriteInfo.frame.h, -offset.x - spriteInfo.frame.w);
+        result.setOrigin(invertedOffset.y + spriteInfo.frame.h, -invertedOffset.x);
     }
     result.~Sprite();
-
-    /*if (!spriteInfo.rotated)
-        result.setTextureRect(IntRect(spriteInfo.frame.x, spriteInfo.frame.y, spriteInfo.frame.w, spriteInfo.frame.h));
-    else
-        result.setTextureRect(IntRect(spriteInfo.frame.x, spriteInfo.frame.y, spriteInfo.frame.h, spriteInfo.frame.w));
-
-    if (spriteInfo.rotated)
-    {
-        result.rotate(-90);
-        result.setOrigin(spriteInfo.frame.h + spriteInfo.sprite_source_size.y, -spriteInfo.sprite_source_size.x);
-    }
-    else
-        result.setOrigin(-spriteInfo.sprite_source_size.x, -spriteInfo.sprite_source_size.y);*/
 
     return result;
 }

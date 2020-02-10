@@ -96,31 +96,7 @@ int Log::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement> Log::prepareSprites(long long elapsedTime)
 {
-    return {};
-	/*additionalSprites.clear();
-	spriteChainElement stumpBody;
-	stumpBody.size = Vector2f(conditionalSizeUnits);
-	stumpBody.offset = Vector2f(textureBoxOffset);
+	SpriteChainElement body(PackTag::birchGrove, PackPart::log, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));	
 
-	animationLength = 1;
-	stumpBody.path = "Game/worldSprites/BirchGrove/log" + std::to_string(typeOfObject) + ".png";
-
-	additionalSprites.push_back(stumpBody);
-
-	timeForNewSprite += elapsedTime;
-
-	if (timeForNewSprite >= 1e6 / animationSpeed)
-	{
-		timeForNewSprite = 0;
-
-		if (++currentSprite[0] > animationLength)
-		{
-			if (state == absorbed)
-			{
-				state = common;
-				deletePromiseOn();
-			}
-			currentSprite[0] = 1;
-		}
-	}*/
+	return { body };
 }

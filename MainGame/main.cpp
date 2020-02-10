@@ -116,8 +116,8 @@ int main() {
 
 			mainWindow.clear(Color::White);
 
-            drawSystem.drawToWorld(mainWindow, world.prepareSprites(drawTime, true), world.getWorldGenerator().mainScale, world.getCameraPosition());
-            drawSystem.drawToWorld(mainWindow, world.prepareSprites(drawTime, false), world.getWorldGenerator().mainScale, world.getCameraPosition());
+            drawSystem.drawToWorld(mainWindow, world.prepareSprites(drawTime, true), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+            drawSystem.drawToWorld(mainWindow, world.prepareSprites(drawTime, false), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
 		    //world.draw(mainWindow, drawTime);
 			//world.runBuildSystemDrawing(mainWindow, drawTime);
 			//mainBook.draw(&mainWindow, world.focusedObject->getHealthPoint() / world.focusedObject->getMaxHealthPointValue(), drawTime);

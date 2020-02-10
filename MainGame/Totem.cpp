@@ -74,55 +74,7 @@ int Totem::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement> Totem::prepareSprites(long long elapsedTime)
 {
-    return {};
-	/*additionalSprites.clear();
-	spriteChainElement body;
-	body.size = Vector2f(conditionalSizeUnits);
-	body.offset = Vector2f(textureBoxOffset);
+	SpriteChainElement body(PackTag::craftObjects, PackPart::totem, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 
-	switch (state)
-	{
-		case common:
-		{
-			animationLength = 1;
-			std::string totemName = "";
-			switch (typeOfObject)
-			{
-			case 1:
-				{
-				totemName = "unknown";
-				break;
-				}
-			case 2:
-				{
-				totemName = "hare";
-				break;
-				}
-			default:
-				totemName = "unknown";
-			}
-
-			body.path = "Game/worldSprites/terrainObjects/totems/" + totemName + ".png";
-			break;
-		}	
-	}
-
-	additionalSprites.push_back(body);
-
-	timeForNewSprite += elapsedTime;	
-
-	if (timeForNewSprite >= 40 / animationSpeed)
-	{
-		timeForNewSprite = 0;
-
-		if (++currentSprite[0] > animationLength)
-		{
-			if (state == absorbed)
-			{
-				state = common;
-				deletePromiseOn();
-			}
-			currentSprite[0] = 1;
-		}
-	}*/
+	return { body };
 }

@@ -172,37 +172,20 @@ int Stump::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement> Stump::prepareSprites(long long elapsedTime)
 {
-    return {};
-	/*additionalSprites.clear();
-	spriteChainElement body;
-	body.size = Vector2f(conditionalSizeUnits);
-	body.offset = Vector2f(textureBoxOffset);
-	body.antiTransparent = true;
+	SpriteChainElement body(PackTag::darkWoods, PackPart::stump, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 
-	animationLength = 1;
 	if (typeOfObject >= 1 && typeOfObject <= 4)
-		body.path = "Game/worldSprites/BirchGrove/stump" + std::to_string(typeOfObject) + ".png";
+		body.packTag = PackTag::birchGrove;
 	if (typeOfObject >= 5 && typeOfObject <= 10)
-		body.path = "Game/worldSprites/DarkWoods/stump" + std::to_string(typeOfObject - 4) + ".png";
-	if (typeOfObject >= 11 && typeOfObject <= 13)
-		body.path = "Game/worldSprites/SwampyTrees/stump" + std::to_string(typeOfObject - 10) + ".png";
-
-	additionalSprites.push_back(body);
-
-	timeForNewSprite += elapsedTime;
-
-	if (timeForNewSprite >= 1e6 / animationSpeed)
 	{
-		timeForNewSprite = 0;
+		body.packTag = PackTag::darkWoods;
+		body.number -= 4;
+	}
+	if (typeOfObject >= 11 && typeOfObject <= 13)
+	{
+		body.packTag = PackTag::swampyTrees;
+		body.number -= 10;
+	}
 
-		if (++currentSprite[0] > animationLength)
-		{
-			if (state == absorbed)
-			{
-				state = common;
-				deletePromiseOn();
-			}
-			currentSprite[0] = 1;
-		}
-	}*/
+	return { body };
 }

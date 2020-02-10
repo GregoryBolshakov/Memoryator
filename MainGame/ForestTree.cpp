@@ -243,35 +243,26 @@ int ForestTree::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement> ForestTree::prepareSprites(long long elapsedTime)
 {
-    return {};
-    /*additionalSprites.clear();
-    spriteChainElement treeBody;
-	treeBody.size = Vector2f(conditionalSizeUnits);
-	treeBody.offset = Vector2f(textureBoxOffset);
+	SpriteChainElement body(PackTag::darkWoods, PackPart::tree, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 
 	if (typeOfObject >= 1 && typeOfObject <= 7)
-	{
-		animationLength = 1;
-		treeBody.path = "Game/worldSprites/BirchGrove/birch" + std::to_string(typeOfObject) + ".png";
-	}
+		body.packTag = PackTag::birchGrove;
 	if (typeOfObject >= 8 && typeOfObject <= 13)
 	{
-		animationLength = 1;
-		treeBody.path = "Game/worldSprites/DarkWoods/tree" + std::to_string(typeOfObject - 7) + "/" + std::to_string(currentSprite[0]) + ".png";
+		body.packTag = PackTag::darkWoods;
+		body.number -= 7;
 	}
 	if (typeOfObject >= 14 && typeOfObject <= 18)
 	{
-		animationLength = 1;
-		treeBody.path = "Game/worldSprites/SwampyTrees/tree" + std::to_string(typeOfObject - 13) + ".png";
+		body.packTag = PackTag::swampyTrees;
+		body.number -= 13;
 	}
 
 	if (state == absorbed)
 	{
-		animationLength = 15;
-		color.a = 255 - currentSprite[0] * 255 / animationLength;
+		body.animationLength = 15;
+		color.a = 255 - currentSprite[0] * 255 / body.animationLength;
 	}
-
-    additionalSprites.push_back(treeBody);
 
 	timeForNewSprite += elapsedTime;
 
@@ -279,7 +270,7 @@ std::vector<SpriteChainElement> ForestTree::prepareSprites(long long elapsedTime
 	{
 		timeForNewSprite = 0;
 
-		if (++currentSprite[0] > animationLength)
+		if (++currentSprite[0] > body.animationLength)
 		{
 			if (state == absorbed)
 			{
@@ -288,5 +279,7 @@ std::vector<SpriteChainElement> ForestTree::prepareSprites(long long elapsedTime
 			}
 			currentSprite[0] = 1;
 		}
-	}*/
+	}
+
+	return { body };
 }

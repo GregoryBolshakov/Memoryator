@@ -3,7 +3,7 @@
 
 Grass::Grass(std::string objectName, Vector2f centerPosition, int typeOfObject) : StaticObject(objectName, centerPosition)
 {
-	varietyOfTypes = 30; // BirchGrove: 1-7; DarkWoods: 8-21; SwampyTrees: 22-30
+	varietyOfTypes = 30; // BirchGrove: 1-8; DarkWoods: 9-21; SwampyTrees: 22-30
 	this->typeOfObject = typeOfObject;
 	this->intangible = true;
 	toSaveName = "grass";
@@ -35,33 +35,33 @@ void Grass::setType(int typeOfObject)
 	if (typeOfObject == 8)
 		conditionalSizeUnits = Vector2i(220, 264);
 	if (typeOfObject == 9)
-		conditionalSizeUnits = Vector2i(57, 150);
+		conditionalSizeUnits = Vector2i(251, 120);
 	if (typeOfObject == 10)
-		conditionalSizeUnits = Vector2i(75, 185);
+		conditionalSizeUnits = Vector2i(222, 343);
 	if (typeOfObject == 11)
-		conditionalSizeUnits = Vector2i(85, 200);
-	if (typeOfObject == 12)
-		conditionalSizeUnits = Vector2i(119, 172);
-	if (typeOfObject == 13)
-		conditionalSizeUnits = Vector2i(178, 171);
-	if (typeOfObject == 14)
-		conditionalSizeUnits = Vector2i(200, 114);
-	if (typeOfObject == 15)
-		conditionalSizeUnits = Vector2i(249, 117);
-	if (typeOfObject == 16)
-		conditionalSizeUnits = Vector2i(136, 167);
-	if (typeOfObject == 17)
-		conditionalSizeUnits = Vector2i(171, 285);
-	if (typeOfObject == 18)
-		conditionalSizeUnits = Vector2i(222, 342);
-	if (typeOfObject == 19)
-		conditionalSizeUnits = Vector2i(389, 429);
-	if (typeOfObject == 20)
 		conditionalSizeUnits = Vector2i(357, 330);
+	if (typeOfObject == 12)
+		conditionalSizeUnits = Vector2i(386, 428);
+	if (typeOfObject == 13)
+		conditionalSizeUnits = Vector2i(425, 291);
+	if (typeOfObject == 14)
+		conditionalSizeUnits = Vector2i(87, 183);
+	if (typeOfObject == 15)
+		conditionalSizeUnits = Vector2i(113, 202);
+	if (typeOfObject == 16)
+		conditionalSizeUnits = Vector2i(67, 158);
+	if (typeOfObject == 17)
+		conditionalSizeUnits = Vector2i(119, 171);
+	if (typeOfObject == 18)
+		conditionalSizeUnits = Vector2i(178, 170);
+	if (typeOfObject == 19)
+		conditionalSizeUnits = Vector2i(188, 129);
+	if (typeOfObject == 20)
+		conditionalSizeUnits = Vector2i(136, 171);
 	if (typeOfObject == 21)
-		conditionalSizeUnits = Vector2i(425, 287);
+		conditionalSizeUnits = Vector2i(171, 288);
 	if (typeOfObject == 22)
-		conditionalSizeUnits = Vector2i(469, 209);
+		conditionalSizeUnits = Vector2i(491, 209);
 	if (typeOfObject == 23)
 		conditionalSizeUnits = Vector2i(166, 124);
 	if (typeOfObject == 24)
@@ -100,37 +100,21 @@ int Grass::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement> Grass::prepareSprites(long long elapsedTime)
 {
-    return {};
-	/*animationSpeed = 10;
-	additionalSprites.clear();
-	spriteChainElement grassBody;
-		
-	animationLength = 1;
+	SpriteChainElement body(PackTag::darkWoods, PackPart::plant, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	body.isBackground = true;
+
 	if (typeOfObject >= 1 && typeOfObject <= 8)
-		grassBody.path = "Game/worldSprites/BirchGrove/plant" + std::to_string(typeOfObject) + ".png";	
-	if (typeOfObject >= 9 && typeOfObject <= 21)	
-		grassBody.path = "Game/worldSprites/DarkWoods/plant" + std::to_string(typeOfObject - 8) + "/" + std::to_string(currentSprite[0]) + ".png";
-	if (typeOfObject >= 22 && typeOfObject <= 30)
-		grassBody.path = "Game/worldSprites/SwampyTrees/plant" + std::to_string(typeOfObject - 21) + ".png";
-	
-	grassBody.size = Vector2f(conditionalSizeUnits);
-	grassBody.offset = Vector2f(textureBoxOffset);
-	additionalSprites.push_back(grassBody);
-
-	timeForNewSprite += elapsedTime;
-
-	if (timeForNewSprite >= 1e6 / animationSpeed)
+		body.packTag = PackTag::birchGrove;
+	if (typeOfObject >= 9 && typeOfObject <= 21)
 	{
-		timeForNewSprite = 0;
+		body.packTag = PackTag::darkWoods;
+		body.number -= 8;
+	}
+	if (typeOfObject >= 22 && typeOfObject <= 30)
+	{
+		body.packTag = PackTag::swampyTrees;
+		body.number -= 21;
+	}
 
-		if (++currentSprite[0] > animationLength)
-		{
-			if (state == absorbed)
-			{
-				state = common;
-				deletePromiseOn();
-			}
-			currentSprite[0] = 1;
-		}
-	}*/
+	return { body };
 }

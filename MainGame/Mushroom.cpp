@@ -25,23 +25,23 @@ void Mushroom::setType(int typeOfObject)
 	if (typeOfObject == 3)
 		conditionalSizeUnits = Vector2i(82, 94);
 	if (typeOfObject == 4)
-		conditionalSizeUnits = Vector2i(120, 134);
+		conditionalSizeUnits = Vector2i(143, 203);
 	if (typeOfObject == 5)
-		conditionalSizeUnits = Vector2i(109, 151);
+		conditionalSizeUnits = Vector2i(120, 134);
 	if (typeOfObject == 6)
-		conditionalSizeUnits = Vector2i(55, 130);
+		conditionalSizeUnits = Vector2i(173, 161);
 	if (typeOfObject == 7)
-		conditionalSizeUnits = Vector2i(90, 80);
+		conditionalSizeUnits = Vector2i(70, 134);
 	if (typeOfObject == 8)
-		conditionalSizeUnits = Vector2i(86, 75);
+		conditionalSizeUnits = Vector2i(91, 81);
 	if (typeOfObject == 9)
-		conditionalSizeUnits = Vector2i(96, 135);
+		conditionalSizeUnits = Vector2i(94, 78);
 	if (typeOfObject == 10)
-		conditionalSizeUnits = Vector2i(75, 62);
+		conditionalSizeUnits = Vector2i(103, 137);
 	if (typeOfObject == 11)
-		conditionalSizeUnits = Vector2i(144, 120);
+		conditionalSizeUnits = Vector2i(89, 71);
 	if (typeOfObject == 12)
-		conditionalSizeUnits = Vector2i(154, 199);
+		conditionalSizeUnits = Vector2i(144, 122);
 	if (typeOfObject == 13)
 		conditionalSizeUnits = Vector2i(54, 60);
 	if (typeOfObject == 14)
@@ -75,16 +75,21 @@ int Mushroom::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement> Mushroom::prepareSprites(long long elapsedTime)
 {
-    return {};
-	/*additionalSprites.clear();
-	spriteChainElement grassBody;
+	SpriteChainElement body(PackTag::darkWoods, PackPart::mushroom, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	body.isBackground = true;
+
 	if (typeOfObject >= 1 && typeOfObject <= 3)
-		grassBody.path = "Game/worldSprites/BirchGrove/mushroom" + std::to_string(typeOfObject) + ".png";
+		body.packTag = PackTag::birchGrove;
 	if (typeOfObject >= 4 && typeOfObject <= 12)
-		grassBody.path = "Game/worldSprites/DarkWoods/amanita" + std::to_string(typeOfObject - 3) + ".png";
+	{
+		body.packTag = PackTag::darkWoods;
+		body.number -= 3;
+	}
 	if (typeOfObject >= 13 && typeOfObject <= 16)
-		grassBody.path = "Game/worldSprites/SwampyTrees/mushroom" + std::to_string(typeOfObject - 12) + ".png";
-	grassBody.size = Vector2f(conditionalSizeUnits);
-	grassBody.offset = Vector2f(textureBoxOffset);
-	additionalSprites.push_back(grassBody);*/
+	{
+		body.packTag = PackTag::swampyTrees;
+		body.number -= 12;
+	}
+
+	return { body };
 }

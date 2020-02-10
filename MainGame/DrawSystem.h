@@ -20,6 +20,6 @@ public:
 private:
     void initPacksMap();
 	bool searchFiles(LPCTSTR lpszFileName, LPSEARCHFUNC lpSearchFunc, bool bInnerFolders = true);
-
+	void advancedScale(SpriteChainElement& item, Sprite& sprite, sprite_pack::sprite originalInfo, float scale = 1) const;
 };
 

@@ -1,6 +1,6 @@
 #include "DrawSystem.h"
 
-std::map<Tag, bool> DrawSystem::unscaledObjects = {{Tag::hero1, true}, {Tag::nightmare1, true}, {Tag::nightmare2, true}, {Tag::nightmare3, true}, {Tag::grass, true}, {Tag::lake, true} };
+std::map<Tag, bool> DrawSystem::unscaledObjects = {{Tag::hero1, true}, {Tag::nightmare1, true}, {Tag::nightmare2, true}, {Tag::nightmare3, true}, {Tag::grass, true}, {Tag::lake, true}, {Tag::noose, true} };
 
 DrawSystem::DrawSystem()
 {
@@ -101,6 +101,30 @@ void DrawSystem::initPacksMap()
 	//effectSystem.init(&spriteMap);
 }
 
+void DrawSystem::advancedScale(SpriteChainElement& item, Sprite& sprite, sprite_pack::sprite originalInfo, float scale) const
+{
+	if (!originalInfo.rotated)
+		sprite.setScale(scale * item.size.x / originalInfo.source_size.w,
+			scale * item.size.y / originalInfo.source_size.h);
+	else
+		sprite.setScale(scale * item.size.y / originalInfo.source_size.h,
+			scale * item.size.x / originalInfo.source_size.w);
+
+	if (!item.isBackground && unscaledObjects.count(item.tag) == 0)
+	{
+		if (!originalInfo.rotated)
+		{
+			sprite.scale(1, pow(scale, double(1) / 6));
+			sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - (pow(scale, double(1) / 6) - 1) * originalInfo.source_size.h);
+		}
+		else
+		{
+			sprite.scale(pow(scale, double(1) / 6), 1);
+			sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - (pow(scale, double(1) / 6) - 1) * originalInfo.source_size.w);
+		}
+	}
+}
+
 void DrawSystem::draw(RenderTarget& target, std::vector<SpriteChainElement> sprites)
 {
     if (sprites.empty())
@@ -122,20 +146,12 @@ void DrawSystem::draw(RenderTarget& target, std::vector<SpriteChainElement> spri
         else
             sprite.setScale(spriteChainItem.size.y / sprite.getGlobalBounds().height, spriteChainItem.size.x / sprite.getGlobalBounds().width);
 
-		/*if (spriteChainItem.mirrored)
-        {
-            if (!originalInfo.rotated)
-			    sprite.setTextureRect(IntRect(sprite.getTextureRect().left + sprite.getTextureRect().width, sprite.getTextureRect().top, -sprite.getTextureRect().width, sprite.getTextureRect().height));		
-            else
-                sprite.setTextureRect(IntRect(sprite.getTextureRect().left, sprite.getTextureRect().top + sprite.getTextureRect().height, sprite.getTextureRect().width, -sprite.getTextureRect().height));
-        }*/
 		target.draw(sprite);
 	}
 }
 
 void DrawSystem::drawToWorld(RenderTarget& target, std::vector<SpriteChainElement> sprites, float scale, Vector2f cameraPosition)
 {
-    scale = 1;
     if (sprites.empty())
         return;
     const auto screenSize = target.getSize();
@@ -144,6 +160,8 @@ void DrawSystem::drawToWorld(RenderTarget& target, std::vector<SpriteChainElemen
 	for (auto& spriteChainItem : sprites)
 	{
 		auto sprite = packsMap.at(spriteChainItem.packTag).getSprite(spriteChainItem.packPart, spriteChainItem.direction, spriteChainItem.number, spriteChainItem.mirrored);
+		if (sprite.getTextureRect() == IntRect())
+			continue;
         const auto originalInfo = packsMap.at(spriteChainItem.packTag).getOriginalInfo(spriteChainItem.packPart, spriteChainItem.direction, spriteChainItem.number);
         Vector2f spritePos = {(spriteChainItem.position.x - cameraPosition.x - spriteChainItem.offset.x) * scale + screenCenter.x,
 		(spriteChainItem.position.y - cameraPosition.y - spriteChainItem.offset.y) * scale + screenCenter.y};
@@ -151,53 +169,14 @@ void DrawSystem::drawToWorld(RenderTarget& target, std::vector<SpriteChainElemen
 		if (spriteChainItem.antiTransparent)
 			spriteChainItem.color.a = 255;
 
-         if (spriteChainItem.tag == Tag::hero1 && (spriteChainItem.packPart == PackPart::body || spriteChainItem.packPart == PackPart::full))
+         if (spriteChainItem.tag == Tag::hero1 && spriteChainItem.packPart == PackPart::legs)
             auto test = 1;
 
 		sprite.setColor(spriteChainItem.color);
         sprite.rotate(spriteChainItem.rotation);
 		sprite.setPosition(spritePos);        
 
-        if (!originalInfo.rotated)
-            sprite.setScale(scale * spriteChainItem.size.x / originalInfo.source_size.w,
-                            scale * spriteChainItem.size.y / originalInfo.source_size.h);
-        else
-            sprite.setScale(scale * spriteChainItem.size.y / originalInfo.source_size.h,
-                            scale * spriteChainItem.size.x / originalInfo.source_size.w);
-		/*if (!spriteChainItem.isBackground && unscaledObjects.count(spriteChainItem.tag) == 0 && spriteChainItem.tag != Tag::noose)
-		{
-			sprite.setScale(spriteChainItem.size.x / sprite.getGlobalBounds().width * scaleFactor, spriteChainItem.size.y / sprite.getGlobalBounds().height * scaleFactor * pow(scaleFactor, double(1) / 6));
-			spritePos.y -= (pow(scaleFactor, double(1) / 6) - 1) * sprite.getGlobalBounds().height;
-		}
-		else
-			sprite.setScale(spriteChainItem.size.x / sprite.getGlobalBounds().width * scaleFactor, spriteChainItem.size.y / sprite.getGlobalBounds().height * scaleFactor);*/
-
-        if (spriteChainItem.tag == Tag::hero1 && (spriteChainItem.packPart == PackPart::body || spriteChainItem.packPart == PackPart::full))
-        {
-            RectangleShape rec1(Vector2f(spriteChainItem.size.x * scale, spriteChainItem.size.y * scale));
-            rec1.setFillColor(Color::White);
-            rec1.setPosition(sprite.getPosition());
-            target.draw(rec1);
-
-            RectangleShape rec2(Vector2f(sprite.getGlobalBounds().width, sprite.getGlobalBounds().height));
-            Vector2f originOffset;
-            if (!originalInfo.rotated)
-                originOffset = {-sprite.getOrigin().x * localScale.x, -sprite.getOrigin().y * localScale.y};
-            else
-                originOffset = {-sprite.getOrigin().y * localScale.x, (sprite.getOrigin().x - originalInfo.frame.h) * localScale.y};
-            rec2.setFillColor(Color::Green);
-            rec2.setPosition(sprite.getPosition() + originOffset);
-            target.draw(rec2);
-        }
-
-		//if (spriteChainItem.mirrored)
-        /*{
-            const auto rect = sprite.getTextureRect();
-            if (!originalInfo.rotated)
-                sprite.setTextureRect(IntRect(rect.left + rect.width, rect.top, -rect.width, rect.height));                           
-            else            
-                sprite.setTextureRect(IntRect(rect.left, rect.top + rect.height, rect.width, -rect.height));
-        }*/
+		advancedScale(spriteChainItem, sprite, originalInfo, scale);
 
 		target.draw(sprite);
 	}

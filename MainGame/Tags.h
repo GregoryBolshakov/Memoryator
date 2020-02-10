@@ -13,7 +13,7 @@ enum class Tag {
 enum class PackTag
 {
     empty = 0, heroAbsorb = 1, heroHit = 2, heroMove = 3, heroPick = 4, heroRoll = 5, heroStand = 6, heroThrow = 7,
-    interfaceElements = 8, locations = 9, darkWoods = 10, birchGrove = 11, swampyTrees = 12
+    interfaceElements = 8, locations = 9, darkWoods = 10, birchGrove = 11, swampyTrees = 12, craftObjects = 13
 };
 
 enum class PackPart
@@ -22,7 +22,8 @@ enum class PackPart
     ground = 201, tree = 202, bush = 203, log = 204, mushroom = 205, path = 206, plant = 207, rock = 208, stump = 209,
     decor = 210, roof = 211, lake = 212, root = 213, flower = 213,// biome's parts
     bookLittle = 301, crossButton = 302, menu = 303, // interface's parts
-    brazier = 401, wreathTable = 402 // location's parts
+    brazier = 401, wreathTable = 402, // location's parts
+	cageBear = 501, cageOwl = 502, fence = 503, hareTrap = 504, noose = 505, totem = 506 // craftObject's parts
 };
 
 enum class Direction { RIGHT = 0, UPRIGHT = 45, UP = 90, UPLEFT = 135, LEFT = 180, DOWNLEFT = 225, DOWN = 270, DOWNRIGHT = 315, STAND = 360 };

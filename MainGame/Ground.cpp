@@ -18,7 +18,7 @@ void Ground::setType(int typeOfObject)
 
 	this->typeOfObject = typeOfObject;
 	this->conditionalSizeUnits = Vector2i (1000, 1000);
-	this->zCoord = typeOfObject * 10 + 5;
+	this->zCoord = typeOfObject * 10 + 1;
 }
 
 Vector2i Ground::calculateTextureOffset()
@@ -39,21 +39,16 @@ int Ground::getBuildType(Vector2f ounPos, Vector2f otherPos)
 std::vector<SpriteChainElement> Ground::prepareSprites(long long elapsedTime)
 {
     SpriteChainElement body(PackTag::darkWoods, PackPart::ground, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
-    return {body};
-	/*additionalSprites.clear();
-	SpriteChainElement body;
-    body.packPart = PackPart::ground;
-    body.direction = Direction::DOWN;
-    body.number = 1;
+	
+	body.zCoord = zCoord;
+	body.isBackground = true;
 
-	if (typeOfObject == 3)
-		body.packTag = PackTag::birchGrove;
+	if (typeOfObject == 1)
+		body.packTag = PackTag::swampyTrees;	
 	if (typeOfObject == 2)
 		body.packTag = PackTag::darkWoods;
-	if (typeOfObject == 1)
-		body.packTag = PackTag::swampyTrees;
+	if (typeOfObject == 3)
+		body.packTag = PackTag::birchGrove;
 
-	body.size = Vector2f(conditionalSizeUnits);
-	body.offset = Vector2f(textureBoxOffset);
-	additionalSprites.push_back(body);*/
+    return {body};
 }
