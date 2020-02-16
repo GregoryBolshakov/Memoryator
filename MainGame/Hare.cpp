@@ -39,7 +39,7 @@ void Hare::setTarget(DynamicObject& object)
 		return;
 	if (Helper::getDist(position, object.getPosition()) <= sightRange)
 	{
-		if (object.tag == Tag::hero1)
+		if (object.tag == Tag::hero)
 		{
 			boundTarget = &object;
 			distanceToNearest = Helper::getDist(position, object.getPosition());
@@ -47,7 +47,7 @@ void Hare::setTarget(DynamicObject& object)
 	}
 }
 
-void Hare::behaviorWithStatic(WorldObject* target, float elapsedTime)
+void Hare::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
 	if (currentAction == absorbs)
 		return;
@@ -62,7 +62,7 @@ void Hare::behaviorWithStatic(WorldObject* target, float elapsedTime)
 		}
 }
 
-void Hare::behavior(float elapsedTime)
+void Hare::behavior(long long elapsedTime)
 {	
 	endingPreviousAction();
 	fightLogic(elapsedTime);
@@ -80,7 +80,7 @@ void Hare::behavior(float elapsedTime)
 	// first-priority actions
 	if (boundTarget)
 	{
-		if (boundTarget->tag == Tag::hero1)
+		if (boundTarget->tag == Tag::hero)
 			timeAfterFear = 0;
 	}
 	else
@@ -125,7 +125,7 @@ void Hare::behavior(float elapsedTime)
 	//-------------------
 
 	// runaway from enemy
-	if (boundTarget->tag == Tag::hero1)
+	if (boundTarget->tag == Tag::hero)
 	{
 		side = calculateSide(laxMovePosition, elapsedTime);
 		speed = std::max(defaultSpeed, (defaultSpeed * 10) * (1 - (Helper::getDist(position, boundTarget->getPosition()) / sightRange * 1.5f)));

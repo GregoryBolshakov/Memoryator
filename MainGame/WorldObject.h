@@ -86,7 +86,7 @@ public:
 	Color color = Color(255, 255, 255);
 	std::vector<std::pair<Tag, int>> inventory = {};
 	static Vector2i microBlockSize;
-	Tag tag;
+	Tag tag = Tag::emptyObject;
 protected:
 	int typeOfObject{};
 	int zCoord = 1;

@@ -1,11 +1,11 @@
 #pragma once
-#ifndef INVENTORYMAKER_H
-#define INVENTORYMAKER_H
+#ifndef INVENTORYSYSTEM_H
+#define INVENTORYSYSTEM_H
 
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
 #include<fstream>
-#include "TextWriter.h"
+#include "TextSystem.h"
 #include "UIEffectsSystemMaker.h"
 #include "WorldObject.h"
 #include "HeroBag.h"
@@ -13,41 +13,40 @@
 
 using namespace sf;
 
-class InventoryMaker
+class InventorySystem
 {
 public:
-	InventoryMaker();
-	~InventoryMaker();
+	InventorySystem();
+	~InventorySystem();
 	void init();
-	void drawHeroInventory(float elapsedTime, RenderWindow& window);
+	void drawHeroInventory(long long elapsedTime, RenderWindow& window);
 	void drawInventory(std::vector<std::pair<Tag, int>>* inventory, Vector2f position, RenderWindow& window);
 	void resetAnimationValues();
 	void onMouseUp();
 	void inventoryBounding(std::vector<HeroBag>* bags);
-	void interact(float elapsedTime);
+	void interact(long long elapsedTime);
 	void resetPickedCell() { pickedCell = nullptr; }
-	bool getUsedMouse() { return usedMouse; }	
+	bool getUsedMouse() const { return usedMouse; }	
 	Cell &getHeldItem() { return heldItem; }
-	std::unordered_map<Tag, CellSprite> getSpriteList() { return cellsSpriteList; }
+	std::unordered_map<Tag, CellSprite> getSpriteList() const { return cellsSpriteList; }
 
 	bool wasDrawing = false;
 	std::string debugInfo = "", cursorText = "";
 
-	Sprite *selectedCellBackground, dropZone;
+	Sprite *selectedCellBackground{}, dropZone;
 	CircleShape bagPosDot;
 	Texture dropZoneTexture;
 private:
 	//hero bags
-	std::vector<HeroBag>* boundBags;
+	std::vector<HeroBag>* boundBags{};
 	int currentMovingBag = -1;
 	float minDistToClosed = 10e4, minDistToOpen = 10e4;
 
 	//another inventories 
 	int animationCounter = 1;
-	float timeForAnimationEffect = 50000, timeAfterAnimationEffect;
 	//held item
 	Cell heldItem;
-	float heldItemSpeed = 0, dropZoneRadius;
+	float heldItemSpeed = 0, dropZoneRadius{};
 	std::pair <Tag, int>* pickedCell = nullptr; 
 	//drawing
 	std::string cellsFileDirectory = "Game/inventorySprites/cellsPath.txt", 
@@ -63,7 +62,7 @@ private:
 	std::vector<bool> visitedInDisplacement;
 	bool usedMouse = false, cursorBlurUsing = false;
 	Vector2f cursorTextPos = {0, 0};
-	TextWriter textWriter;
+	TextSystem textWriter;
 	UIEffectsSystemMaker uiEffectsSystem;
 	//std::vector<std::pair<Vector2f, std::string>> temporaryPositions;
 };

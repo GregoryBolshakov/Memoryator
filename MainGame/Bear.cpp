@@ -36,12 +36,12 @@ Vector2i Bear::calculateTextureOffset()
 	return Vector2i(textureBox.width / 2, textureBox.height * 7 / 8);
 }
 
-void Bear::behaviorWithStatic(WorldObject* target, float elapsedTime)
+void Bear::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
 
 }
 
-void Bear::behavior(float elapsedTime)
+void Bear::behavior(long long elapsedTime)
 {
 	endingPreviousAction();
 	fightLogic(elapsedTime);

@@ -1,19 +1,17 @@
-#include "InventoryMaker.h"
+#include "InventorySystem.h"
 #include "Helper.h"
 #include <math.h>
 #include <algorithm>
 
-InventoryMaker::InventoryMaker()
+InventorySystem::InventorySystem(): selectedCellBackground(nullptr), boundBags(nullptr), dropZoneRadius(0)
 {
 	heldItemSpeed = 0.00005f;
 }
 
-InventoryMaker::~InventoryMaker()
-{
+InventorySystem::~InventorySystem()
+= default;
 
-}
-
-void InventoryMaker::init()
+void InventorySystem::init()
 {
 	dropZoneRadius = Helper::GetScreenSize().y * 2 / 7;
 	heldItem.content = { Tag::emptyCell, 0 };
@@ -26,7 +24,7 @@ void InventoryMaker::init()
 	initSpriteLists();		
 }
 
-void InventoryMaker::initBags()
+void InventorySystem::initBags()
 {
 	std::string textureOBag, textureOBagS, textureCBag, textureCBagS;
 	int id;
@@ -47,7 +45,7 @@ void InventoryMaker::initBags()
 	fin.close();
 }
 
-void InventoryMaker::initCells()
+void InventorySystem::initCells()
 {
 	std::string spriteName;
 	int id, maxCount;
@@ -68,7 +66,7 @@ void InventoryMaker::initCells()
 	fin.close();
 }
 
-void InventoryMaker::initSpriteLists()
+void InventorySystem::initSpriteLists()
 {
 	initBags();
 	initCells();
@@ -78,12 +76,12 @@ void InventoryMaker::initSpriteLists()
 	selectedCellBackground->setColor(Color(selectedCellBackground->getColor().r, selectedCellBackground->getColor().g, selectedCellBackground->getColor().b, 125));
 }
 
-void InventoryMaker::inventoryBounding(std::vector<HeroBag>* bags)
+void InventorySystem::inventoryBounding(std::vector<HeroBag>* bags)
 {
 	boundBags = bags;
 }
 
-void InventoryMaker::moveOtherBags(int cur, std::vector<int> ancestors)
+void InventorySystem::moveOtherBags(int cur, std::vector<int> ancestors)
 {
 	const int lapsCount = 20;
 	//if (boundBags->at(cur).currentState != bagClosed)
@@ -109,7 +107,7 @@ void InventoryMaker::moveOtherBags(int cur, std::vector<int> ancestors)
 	//}
 }
 
-void InventoryMaker::interact(float elapsedTime)
+void InventorySystem::interact(long long elapsedTime)
 {
 	const Vector2f mousePos = Vector2f(Mouse::getPosition());
 
@@ -201,7 +199,7 @@ void InventoryMaker::interact(float elapsedTime)
 	uiEffectsSystem.interact(elapsedTime);
 }
 
-void InventoryMaker::crashIntoOtherBags(int cnt)
+void InventorySystem::crashIntoOtherBags(int cnt)
 {
 	int lapsCount = 20;
 	while (true)
@@ -234,7 +232,7 @@ void InventoryMaker::crashIntoOtherBags(int cnt)
 	boundBags->at(cnt).shiftVector.x = 0; boundBags->at(cnt).shiftVector.y = 0;
 }
 
-void InventoryMaker::onMouseUp()
+void InventorySystem::onMouseUp()
 {
 	usedMouse = false;
 	const Vector2f mousePos = Vector2f(Mouse::getPosition());
@@ -325,7 +323,7 @@ void InventoryMaker::onMouseUp()
 	currentMovingBag = -1;
 }
 
-void InventoryMaker::drawHeroInventory(float elapsedTime, RenderWindow& window)
+void InventorySystem::drawHeroInventory(long long elapsedTime, RenderWindow& window)
 {
 	usedMouse = false;
 	const Vector2f mousePos = Vector2f(Mouse::getPosition());
@@ -416,7 +414,7 @@ void InventoryMaker::drawHeroInventory(float elapsedTime, RenderWindow& window)
 	}
 	if (cursorText == "  throw away")
 	{
-		TextWriter::drawString(cursorText, NormalFont, 35 * Helper::GetScreenSize().y / 1440, cursorTextPos.x - Helper::GetScreenSize().x / 26, cursorTextPos.y - Helper::GetScreenSize().y / 30,
+		TextSystem::drawString(cursorText, NormalFont, 35 * Helper::GetScreenSize().y / 1440, cursorTextPos.x - Helper::GetScreenSize().x / 26, cursorTextPos.y - Helper::GetScreenSize().y / 30,
 			&window, Color(53, 53, 53, 255));
 		window.draw(dropZone);
 	}
@@ -424,7 +422,7 @@ void InventoryMaker::drawHeroInventory(float elapsedTime, RenderWindow& window)
 		window.draw(bagPosDot);
 }
 
-void InventoryMaker::drawInventory(std::vector<std::pair<Tag, int>>* inventory, Vector2f position, RenderWindow& window)
+void InventorySystem::drawInventory(std::vector<std::pair<Tag, int>>* inventory, Vector2f position, RenderWindow& window)
 {
 	for (int i = 0; i < inventory->size(); i++)
 		if (inventory->at(i).first == Tag::emptyCell || inventory->at(i).second == 0)
@@ -476,8 +474,7 @@ void InventoryMaker::drawInventory(std::vector<std::pair<Tag, int>>* inventory, 
 	}
 }
 
-void InventoryMaker::resetAnimationValues()
+void InventorySystem::resetAnimationValues()
 {
 	animationCounter = 0;
-	timeAfterAnimationEffect = 0;
 }

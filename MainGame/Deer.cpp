@@ -36,12 +36,12 @@ Vector2i Deer::calculateTextureOffset()
 	return Vector2i(textureBox.width / 2, textureBox.height * 7 / 8);
 }
 
-void Deer::behaviorWithStatic(WorldObject* target, float elapsedTime)
+void Deer::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
 
 }
 
-void Deer::behavior(float elapsedTime)
+void Deer::behavior(long long elapsedTime)
 {
 	endingPreviousAction();
 	fightLogic(elapsedTime);

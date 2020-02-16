@@ -12,24 +12,18 @@ class Deerchant : public DynamicObject
 public:	
 	Deerchant(std::string objectName, Vector2f centerPosition);
 	~Deerchant();
-	//BuildSystemMaker
-	bool isBuildSystemMaker = false;
-	//fight
-	bool isFightWithBoss = false;
-	float getEnergy() { return energy;  }
-	float getMaxEnergyValue() { return maxEnergyValue; }
-	float getEnergyForSpecial() { return energyForSpecial; }
-	void setEnergy(float energy) { this->energy = energy; }
-	void addEnergy(float energy) { this->energy += energy; if (this->energy > this->maxEnergyValue) this->energy = this->maxEnergyValue; }
+	//BuildSystem
+	bool isBuildSystem = false;
 	//draw
 	std::string nameOfFile;
 	Vector2i calculateTextureOffset() override;
 	std::vector<SpriteChainElement> prepareSprites(long long elapsedTime) override;
 	//control
 	void handleInput(bool usedMouse = false) override;
-	void behaviorWithDynamic(DynamicObject* target, float elapsedTime) override;
-	void behaviorWithStatic(WorldObject* target, float elapsedTime) override;
-	void behavior(float elapsedTime) override;
+	void moveEnd(bool animate = false, float distance = 0, float speed = 0, bool invertDirection = false);
+	void behaviorWithDynamic(DynamicObject* target, long long elapsedTime) override;
+	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
+	void behavior(long long elapsedTime) override;
 	void onMouseUp(int currentMouseButton, WorldObject *mouseSelectedObject, Vector2f mouseWorldPos, bool isBuilding = false);
 	void setTarget(DynamicObject& object) override;
 	void endingPreviousAction();
@@ -38,8 +32,8 @@ public:
 	Vector2f getBeltPosition();
 	//jerk
 	void jerk(float power, float deceleration, Vector2f destinationPoint = Vector2f(-1, -1)) override;
-	void jerkInteract(float elapsedTime);
-	void fightLogic(float elapsedTime, DynamicObject* target = nullptr) override;
+	void jerkInteract(long long elapsedTime);
+	void fightLogic(long long elapsedTime, DynamicObject* target = nullptr) override;
 
 	Cell* heldItem = nullptr;
 	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
@@ -52,8 +46,10 @@ private:
 
 	float energy = 0, maxEnergyValue = 0, energyForSpecial = 0, hitDistance = 0;
 	WorldObject* owner = nullptr, *unsealInventoryOwner = nullptr;
-	int strikingSprite = 0;
+	int strikingSprite = 0, moveEndSprite = 0;
+	Vector2f lastPosition = { 0, 0 };
 	SpeedLineDirection speedLineDirection = SpeedLineDirection::stand;
+	bool wasPushedAfterMovement = false;
 };
 
 #endif

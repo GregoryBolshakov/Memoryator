@@ -13,7 +13,7 @@ public:
 	void stop();
 	void draw(RenderWindow* window, Vector2f cameraPosition, float scaleFactor);
 	void handleEvents(Event& event);
-	void interact(float elapsedTime, Event event);
+	void interact(long long elapsedTime, Event event);
 	bool isRunning() { return running; }
 	bool readyToStart = false;
 private:
@@ -24,7 +24,7 @@ private:
 	CircleShape focusFigure, centerFigure;
 	std::vector<Vector2f> focuses;
 	Vector2f cameraPosition = { 0, 0 }, lastMousePos = { 0, 0 }, centerPosition = { 0, 0 };
-	float scaleFactor = 0, doubleClickTimer = 1e6, elapsedTime = 0;
+	float scaleFactor = 1, doubleClickTimer = 1e6, elapsedTime = 0;
 	void writeToFile();
 	int selectedFocus = -1, selectedEllipse = -1;
 	bool selectedCenter = false;

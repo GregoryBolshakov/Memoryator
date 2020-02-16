@@ -9,7 +9,7 @@ Brazier::Brazier(std::string objectName, Vector2f centerPosition, int typeOfObje
 	radius = 450;
 	plateRadius = 100;
 	toSaveName = "brazier";
-	setType(typeOfObject);
+	Brazier::setType(typeOfObject);
 	isMultiellipse = true;
 	mirrored = false;
 	initCraftRecipes();

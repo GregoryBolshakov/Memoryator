@@ -143,10 +143,11 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="DrawSystem.cpp" />
     <ClCompile Include="InputBox.cpp" />
     <ClCompile Include="Lake.cpp" />
+    <ClCompile Include="LightSystem.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="Bear.cpp" />
     <ClCompile Include="Brazier.cpp" />
-    <ClCompile Include="BuildSystemMaker.cpp" />
+    <ClCompile Include="BuildSystem.cpp" />
     <ClCompile Include="Bush.cpp" />
     <ClCompile Include="ButtonMaker.cpp" />
     <ClCompile Include="Chamomile.cpp" />
@@ -171,7 +172,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="HeroBagSpriteSystem.cpp" />
     <ClCompile Include="HeroBook.cpp" />
     <ClCompile Include="HeroBookPage.cpp" />
-    <ClCompile Include="InventoryMaker.cpp" />
+    <ClCompile Include="InventorySystem.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuMaker.cpp" />
@@ -197,7 +198,8 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="Stump.cpp" />
     <ClCompile Include="TerrainObject.cpp" />
     <ClCompile Include="NeutralMob.cpp" />
-    <ClCompile Include="TextWriter.cpp" />
+    <ClCompile Include="TextSystem.cpp" />
+    <ClCompile Include="TimeSystem.cpp" />
     <ClCompile Include="Totem.cpp" />
     <ClCompile Include="UIEffectsSystemMaker.cpp" />
     <ClCompile Include="Wolf.cpp" />
@@ -213,6 +215,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="DrawSystem.h" />
     <ClInclude Include="InputBox.h" />
     <ClInclude Include="Lake.h" />
+    <ClInclude Include="LightSystem.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="Bear.h" />
     <ClInclude Include="Bush.h" />
@@ -231,7 +234,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="SpritePack.h" />
     <ClInclude Include="SpriteStructures.h" />
     <ClInclude Include="Brazier.h" />
-    <ClInclude Include="BuildSystemMaker.h" />
+    <ClInclude Include="BuildSystem.h" />
     <ClInclude Include="ButtonMaker.h" />
     <ClInclude Include="Chamomile.h" />
     <ClInclude Include="Deer.h" />
@@ -253,7 +256,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="HeroBagSpriteSystem.h" />
     <ClInclude Include="HeroBook.h" />
     <ClInclude Include="HeroBookPage.h" />
-    <ClInclude Include="InventoryMaker.h" />
+    <ClInclude Include="InventorySystem.h" />
     <ClInclude Include="MenuMaker.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Mugwort.h" />
@@ -269,7 +272,8 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="Tags.h" />
     <ClInclude Include="TerrainObject.h" />
     <ClInclude Include="NeutralMob.h" />
-    <ClInclude Include="TextWriter.h" />
+    <ClInclude Include="TextSystem.h" />
+    <ClInclude Include="TimeSystem.h" />
     <ClInclude Include="Totem.h" />
     <ClInclude Include="UIEffectsSystemMaker.h" />
     <ClInclude Include="Wolf.h" />

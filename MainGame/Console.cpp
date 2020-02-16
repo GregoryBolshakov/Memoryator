@@ -116,8 +116,8 @@ void Console::doCommand()
 				typeOfObject = std::stoi(commands[2]);
 			auto object = ObjectInitializer::mappedStrings.at(commands[1]);
 
-			//if (int(object) >= 211 || int(object) >= 216 || int(object) >= 218 || (int(object) >= 301 && int(object) <= 405))
-				//world->setObjectToBuild(object, typeOfObject, true);	
+			if (int(object) >= 211 || int(object) >= 216 || int(object) >= 218 || (int(object) >= 301 && int(object) <= 405))
+				world->setObjectToBuild(object, typeOfObject, true);	
 		}
 		if (commands[0] == "set" && commands[1] == "pedestal")
 			world->pedestalController.readyToStart = true;		

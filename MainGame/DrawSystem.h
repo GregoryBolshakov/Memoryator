@@ -12,8 +12,8 @@ class DrawSystem
 public:
     DrawSystem();
     ~DrawSystem();
-    void draw(RenderTarget& target, std::vector<SpriteChainElement> sprites);
-    void drawToWorld(RenderTarget& target, std::vector<SpriteChainElement> sprites, float scale = 1, Vector2f cameraPosition = {0, 0});
+    //void draw(RenderTarget& target, std::vector<SpriteChainElement> sprites);
+    void draw(RenderTarget& target, std::vector<SpriteChainElement> sprites, float scale = 1, Vector2f cameraPosition = {0, 0});
 
     std::map<PackTag, SpritePack> packsMap;
     static std::map<Tag, bool> unscaledObjects;

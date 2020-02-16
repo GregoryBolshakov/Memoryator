@@ -6,7 +6,7 @@
 
 #include "WreathDraft.h"
 #include "SpriteStructures.h"
-#include "TextWriter.h"
+#include "TextSystem.h"
 #include "HeroBag.h"
 
 enum class AuxiliarySpriteTag { line1 = 1, line2 = 2, line3 = 3, line4 = 4, line5 = 5, line6 = 6, line7 = 7 };
@@ -103,7 +103,7 @@ private:
 	Vector2f leftPagePosition, rightPagePosition;
 
 	std::unordered_map<AuxiliarySpriteTag, BoardSprite> auxiliarySpriteMap;
-	TextWriter textWriter;
+	TextSystem textWriter;
 
 	// object information (creatures, craft, plants, wreaths, nightmare)
 	Vector2f getConnectionPosition(int numberInOrder);	

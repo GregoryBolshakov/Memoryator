@@ -24,17 +24,17 @@ void NeutralMob::setTarget(DynamicObject& object)
 	}
 }
 
-void NeutralMob::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
+void NeutralMob::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
 {
 	
 }
 
-void NeutralMob::behaviorWithStatic(WorldObject* target, float elapsedTime)
+void NeutralMob::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
 
 }
 
-void NeutralMob::behavior(float elapsedTime)
+void NeutralMob::behavior(long long elapsedTime)
 {
 	if (healthPoint <= 0)
 	{
@@ -74,7 +74,7 @@ void NeutralMob::behavior(float elapsedTime)
 	boundTarget = nullptr;
 }
 
-void NeutralMob::fightLogic(float elapsedTime, DynamicObject* target)
+void NeutralMob::fightLogic(long long elapsedTime, DynamicObject* target)
 {
 	pushAway(elapsedTime);
 }

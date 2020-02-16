@@ -16,12 +16,12 @@ protected:
 public:
 	NeutralMob(std::string objectName, Vector2f centerPosition);
 	~NeutralMob();
-	void behaviorWithDynamic(DynamicObject* target, float elapsedTime) override;
-	void behaviorWithStatic(WorldObject* target, float elapsedTime) override;
-	void behavior(float elapsedTime) override;
+	void behaviorWithDynamic(DynamicObject* target, long long elapsedTime) override;
+	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
+	void behavior(long long elapsedTime) override;
 	void setTarget(DynamicObject& object) override;
 protected:
-	void fightLogic(float elapsedTime, DynamicObject* target = nullptr) override;
+	void fightLogic(long long elapsedTime, DynamicObject* target = nullptr) override;
 };
 
 #endif

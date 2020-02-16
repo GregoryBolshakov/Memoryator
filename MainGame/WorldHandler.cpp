@@ -18,16 +18,18 @@ WorldHandler::WorldHandler(int width, int height, std::map<PackTag, SpritePack>*
 
 	initShaders();
 	worldGenerator.init(width, height, blockSize, microblockSize, &staticGrid, &dynamicGrid, packsMap);
-	//inventorySystem.init();
-	//buildSystem.Init(inventorySystem.getSpriteList());
+	buildSystem.init(inventorySystem.getSpriteList());
+	timeSystem.init(1, 0);
+	lightSystem.init({0, 0, Helper::GetScreenSize().x, Helper::GetScreenSize().y});
+	lightSystem.setHorizontalScale(0.5f);
 }
 
 WorldHandler::~WorldHandler()
 {
 	/*staticGrid.~GridList();
 	dynamicGrid.~GridList();
-	inventorySystem.~InventoryMaker();
-	buildSystem.~BuildSystemMaker();
+	inventorySystem.~InventorySystem();
+	buildSystem.~BuildSystem();
 	focusedObject->~DynamicObject();
 	for (auto&item : staticItems)
 		item->~StaticObject();
@@ -41,7 +43,7 @@ void WorldHandler::runWorldGenerator()
 	dynamicGrid = GridList(this->width, this->height, blockSize, microblockSize);
 	for (auto& i : worldGenerator.biomeMatrix)
 		for (auto& j : i)
-			j.biomeCell = SwampyTrees;
+			j = SwampyTrees;
 	worldGenerator.generate();
 	this->focusedObject = worldGenerator.focusedObject;
 	brazier = dynamic_cast<Brazier*>(staticGrid.getItemByName("brazier"));
@@ -121,55 +123,6 @@ void WorldHandler::scaleSmoothing()
 	}
 }
 
-void WorldHandler::initLightSystem(RenderWindow &window)
-{
-	view = window.getDefaultView();
-
-	contextSettings.antialiasingLevel = 8;
-
-	penumbraTexture.loadFromFile("data/penumbraTexture.png");
-	penumbraTexture.setSmooth(true);
-
-	pointLightTexture.loadFromFile("data/pointLightTexture.png");
-	pointLightTexture.setSmooth(true);
-
-	directionLightTexture.loadFromFile("data/directionLightTexture.jpg");
-	directionLightTexture.setSmooth(true);
-
-	unshadowShader.loadFromFile("data/unshadowShader.vert", "data/unshadowShader.frag");
-	lightOverShapeShader.loadFromFile("data/lightOverShapeShader.vert", "data/lightOverShapeShader.frag");
-	ls.create(ltbl::rectFromBounds(Vector2f(-1000.0f, -1000.0f), Vector2f(1000.0f, 1000.0f)), window.getSize(), penumbraTexture, unshadowShader, lightOverShapeShader);
-
-	std::shared_ptr<ltbl::LightPointEmission> light1 = std::make_shared<ltbl::LightPointEmission>();
-	light1->_emissionSprite.setOrigin(Vector2f(directionLightTexture.getSize().x * 0.5f, directionLightTexture.getSize().y * 0.5f));
-	light1->_emissionSprite.setTexture(directionLightTexture);
-	light1->_emissionSprite.setScale(Vector2f(Helper::GetScreenSize().x * 1.5f / light1->_emissionSprite.getTexture()->getSize().x, Helper::GetScreenSize().y * 1.5f / light1->_emissionSprite.getTexture()->getSize().y));
-	light1->_emissionSprite.setColor(commonWorldColorOutfill);
-	light1->_sourceRadius = 6;
-	light1->_emissionSprite.setPosition(Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2));
-	ls.addLight(light1);
-
-	/*brightner = std::make_shared<ltbl::LightPointEmission>();
-	brightner->_emissionSprite.setOrigin(Vector2f(pointLightTexture.getSize().x * 0.5f, pointLightTexture.getSize().y * 0.5f));
-	brightner->_emissionSprite.setTexture(pointLightTexture);
-	brightner->_emissionSprite.setScale(Vector2f(float(Helper::GetScreenSize().x * 0.5f / brightner->_emissionSprite.getTexture()->getSize().x), float(Helper::GetScreenSize().y * 0.5f / brightner->_emissionSprite.getTexture()->getSize().y)));
-	brightner->_emissionSprite.setColor(Color(240, 220, 220));
-	brightner->_sourceRadius = 6;
-	brightner->_emissionSprite.setPosition(Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2));
-	ls.addLight(brightner);*/
-
-	ls._ambientColor = commonWorldColor;
-	
-}
-
-/*void WorldHandler::renderLightSystem(View view, RenderWindow &window)
-{
-	ls.render(view, unshadowShader, lightOverShapeShader);
-	Lsprite.setTexture(ls.getLightingTexture());
-	lightRenderStates.blendMode = sf::BlendMultiply;
-	window.draw(Lsprite, lightRenderStates);
-}*/
-
 void WorldHandler::birthObjects()
 {
 	for (auto& object : localTerrain)
@@ -179,7 +132,7 @@ void WorldHandler::birthObjects()
 
 		while (!birthStaticStack.empty())
 		{
-			Biomes biome = worldGenerator.biomeMatrix[int(birthStaticStack.top().position.x / blockSize.x)][int(birthStaticStack.top().position.y / blockSize.y)].biomeCell;
+			Biomes biome = worldGenerator.biomeMatrix[int(birthStaticStack.top().position.x / blockSize.x)][int(birthStaticStack.top().position.y / blockSize.y)];
 			worldGenerator.initializeStaticItem(birthStaticStack.top().tag, birthStaticStack.top().position, birthStaticStack.top().typeOfObject, "", birthStaticStack.top().count, biome, true, birthStaticStack.top().inventory);
 			birthStaticStack.pop();
 		}
@@ -211,7 +164,7 @@ void WorldHandler::Load()
 			worldGenerator.initializeDynamicItem(Tag::monster, Vector2f(posX, posY), "");
 		else
 			if (saveName == Deerchant("loadInit", Vector2f(0, 0)).getToSaveName())
-				worldGenerator.initializeDynamicItem(Tag::hero1, Vector2f(posX, posY), "");
+				worldGenerator.initializeDynamicItem(Tag::hero, Vector2f(posX, posY), "");
 			else
 				if (saveName == Wolf("loadInit", Vector2f(0, 0)).getToSaveName())
 					worldGenerator.initializeDynamicItem(Tag::wolf, Vector2f(posX, posY), "");
@@ -277,17 +230,17 @@ void WorldHandler::clearWorld()
 	dynamicGrid.~GridList();
 }
 
-void WorldHandler::setTransparent(std::vector<WorldObject*> visibleItems, float elapsedTime)
+void WorldHandler::setTransparent(std::vector<WorldObject*>& visibleItems, long long elapsedTime)
 {
 	mouseDisplayName = "";
 	Vector2f mousePos = Vector2f((Mouse::getPosition().x - Helper::GetScreenSize().x / 2 + cameraPosition.x*worldGenerator.scaleFactor) / worldGenerator.scaleFactor,
 		(Mouse::getPosition().y - Helper::GetScreenSize().y / 2 + cameraPosition.y*worldGenerator.scaleFactor) / worldGenerator.scaleFactor);
 
-	float minCapacity = 10e8f, minDistance = 10e8f;
+	float minCapacity = 1e6f, minDistance = 1e6f;
 
 	for (auto& visibleItem : visibleItems)
 	{
-		if (visibleItem->getName() == focusedObject->getName() || visibleItem->intangible)
+		if (!visibleItem || visibleItem->getName() == focusedObject->getName() || visibleItem->intangible)
 			continue;
 
 		visibleItem->isTransparent = false;
@@ -427,7 +380,7 @@ bool WorldHandler::fixedClimbingBeyond(Vector2f &pos)
 
 void WorldHandler::setItemFromBuildSystem()
 {
-	/*if (!(buildSystem.instantBuild || focusedObject->getCurrentAction() == builds))
+	if (!(buildSystem.instantBuild || focusedObject->getCurrentAction() == builds))
 		return;
 
 	if (buildSystem.selectedObject != Tag::emptyCell && buildSystem.buildingPosition != Vector2f(-1, -1))
@@ -448,7 +401,7 @@ void WorldHandler::setItemFromBuildSystem()
 		buildSystem.buildingPosition = Vector2f(-1, -1);
 		buildSystem.buildType = 1;
 		brazier->clearCurrentCraft();
-	}*/
+	}
 }
 
 void WorldHandler::makeCameraShake(float power)
@@ -459,7 +412,7 @@ void WorldHandler::makeCameraShake(float power)
 	cameraShakeDuration = 2e5;
 }
 
-void WorldHandler::cameraShakeInteract(float elapsedTime)
+void WorldHandler::cameraShakeInteract(long long elapsedTime)
 {
 	if (cameraShakeDuration > 0)
 	{
@@ -480,16 +433,16 @@ void WorldHandler::onMouseUp(int currentMouseButton)
 	}
 	if (pedestalController.isRunning())
 		return;
-	Vector2i mousePos = Mouse::getPosition();
+	const Vector2i mousePos = Mouse::getPosition();
 	Vector2f mouseWorldPos = Vector2f((mousePos.x - Helper::GetScreenSize().x / 2 + cameraPosition.x*worldGenerator.scaleFactor) / worldGenerator.scaleFactor,
 		(mousePos.y - Helper::GetScreenSize().y / 2 + cameraPosition.y*worldGenerator.scaleFactor) / worldGenerator.scaleFactor);
 	
 	inventorySystem.onMouseUp();
 
-	//if (buildSystem.succesInit /* && inventorySystem.getHeldItem()->first == -1*/)
-		//buildSystem.onMouseUp(focusedObject->getPosition(), worldGenerator.scaleFactor);
+	if (buildSystem.getSuccessInit() /* && inventorySystem.getHeldItem()->first == -1*/)
+		buildSystem.onMouseUp();
 
-	if (mouseDisplayName == "")
+	if (mouseDisplayName.empty())
 		selectedObject = nullptr;
 
 	auto hero = dynamic_cast<Deerchant*>(dynamicGrid.getItemByName(focusedObject->getName()));
@@ -506,24 +459,28 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event e
 {
 	scaleSmoothing();
 	birthObjects();
+	timeSystem.interact(elapsedTime);
+
 	timeForScaleDecrease += scaleDecreaseClock.getElapsedTime().asMicroseconds();
 	scaleDecreaseClock.restart();
 
 	const auto extra = staticGrid.getBlockSize();
-	auto screenSize = window.getSize();
-	auto characterPosition = focusedObject->getPosition();
+	const auto screenSize = window.getSize();
+	const auto characterPosition = focusedObject->getPosition();
 
-	Vector2f worldUpperLeft(int(characterPosition.x - screenSize.x / 2), int(characterPosition.y - screenSize.y / 2));
-	Vector2f worldBottomRight(int(characterPosition.x + screenSize.x / 2), int(characterPosition.y + screenSize.y / 2));
+	const Vector2f worldUpperLeft(int(characterPosition.x - screenSize.x / 2), int(characterPosition.y - screenSize.y / 2));
+	const Vector2f worldBottomRight(int(characterPosition.x + screenSize.x / 2), int(characterPosition.y + screenSize.y / 2));
 
 	worldGenerator.beyondScreenGeneration();
 
-	std::vector<StaticObject*> localStaticItems = ObjectInitializer::vectorCastToStatic(staticGrid.getItems(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y));
+	std::vector<WorldObject*> localItems = staticGrid.getItems(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y);
+	std::vector<StaticObject*> localStaticItems = ObjectInitializer::vectorCastToStatic(localItems);
 	std::vector<DynamicObject*> localDynamicItems = ObjectInitializer::vectorCastToDynamic(dynamicGrid.getItems(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y));
+
+	setTransparent(localItems, elapsedTime);
 
 	const auto hero = dynamic_cast<Deerchant*>(dynamicGrid.getItemByName(focusedObject->getName()));
 	hero->heldItem = &inventorySystem.getHeldItem();
-
 
 	//making route to the desire position
 	timeAfterNewRoute += elapsedTime;
@@ -534,7 +491,7 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event e
 		{
 			//staticGrid.setLockedMicroBlocks(dynamicItem, true, true);
 			//dynamicItem->initMicroBlocks();
-			if (dynamicItem->getRouteGenerationAbility() && dynamicItem->laxMovePosition != Vector2f(-1, -1) && dynamicItem->getCurrentAction() != jerking && dynamicItem->tag != Tag::hero1)
+			if (dynamicItem->getRouteGenerationAbility() && dynamicItem->laxMovePosition != Vector2f(-1, -1) && dynamicItem->getCurrentAction() != jerking && dynamicItem->tag != Tag::hero)
 			{
 				const int permissibleDistance = 10;			
 				timeAfterNewRoute = 0;
@@ -554,7 +511,7 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event e
 			//staticGrid.setLockedMicroBlocks(dynamicItem, false, true);
 		}
 	}
-
+	//-----------------------------------
 
 	for (auto& dynamicItem : localDynamicItems)
 	{		
@@ -577,6 +534,7 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event e
 			dynamicItem->changeMovePositionToRoute(dynamicItem->laxMovePosition);
 		//------------------------------------
 
+		dynamicItem->behavior(elapsedTime); // the last because of position changes
 		//interaction with other objects		
 		for (auto& otherDynamicItem : localDynamicItems)
 		{
@@ -610,19 +568,14 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event e
 		if (!fixedClimbingBeyond(newPosition))
 			newPosition = dynamicItem->getPosition();				
 		dynamicItem->setPosition(newPosition);
-		dynamicGrid.updateItemPosition(dynamicItem->getName(), newPosition.x, newPosition.y);
-
-		dynamicItem->behavior(elapsedTime); // the last because of position changes
+		dynamicGrid.updateItemPosition(dynamicItem->getName(), newPosition.x, newPosition.y);		
 	}
-
-	//lightSystemInteract
-	//brightner->_emissionSprite.setPosition(Vector2f(focusedObject->getPosition().x - cameraPosition.x + Helper::GetScreenSize().x / 2, focusedObject->getPosition().y - cameraPosition.y + Helper::GetScreenSize().y / 2));
 
 	//if (focusedObject->getCurrentAction() == builds)
 		setItemFromBuildSystem();
 
 	//buildSystem.setHeldItem(inventorySystem.getHeldItem()->lootInfo);
-	//buildSystem.interact();
+	buildSystem.interact(cameraPosition, worldGenerator.scaleFactor);
 	inventorySystem.interact(elapsedTime);
 	pedestalController.interact(elapsedTime, event);
 	//-------------------

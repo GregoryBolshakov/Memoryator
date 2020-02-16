@@ -23,8 +23,8 @@ public:
 	Vector2i calculateTextureOffset() override;
 	std::vector<SpriteChainElement> prepareSprites(long long elapsedTime) override;
 	void setTarget(DynamicObject& object) override;
-	void behaviorWithStatic(WorldObject* target, float elapsedTime) override;
-	void behavior(float elapsedTime) override;
+	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
+	void behavior(long long elapsedTime) override;
 	void endingPreviousAction();
 	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;

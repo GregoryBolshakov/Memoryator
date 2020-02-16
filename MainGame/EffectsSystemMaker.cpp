@@ -21,7 +21,7 @@ void EffectsSystemMaker::init(std::unordered_map<std::string, BoardSprite>* spri
 	this->spriteNames[Effects::fog] = "Game/shaders/fog/fog";
 }
 
-void EffectsSystemMaker::drawFog(RenderWindow* window, float elapsedTime)
+void EffectsSystemMaker::drawFog(RenderWindow* window, long long elapsedTime)
 {
 	if (this->timers[Effects::fog] >= 10e6 / this->animationSpeed[Effects::fog])
 	{
@@ -40,7 +40,7 @@ void EffectsSystemMaker::drawFog(RenderWindow* window, float elapsedTime)
 	window->draw(sprite);
 }
 
-void EffectsSystemMaker::draw(RenderWindow* window, float elapsedTime)
+void EffectsSystemMaker::draw(RenderWindow* window, long long elapsedTime)
 {
 	drawFog(window, elapsedTime);
 }

@@ -96,7 +96,7 @@ int Log::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement> Log::prepareSprites(long long elapsedTime)
 {
-	SpriteChainElement body(PackTag::birchGrove, PackPart::log, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));	
+	SpriteChainElement body(PackTag::birchGrove, PackPart::log, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);	
 
 	return { body };
 }

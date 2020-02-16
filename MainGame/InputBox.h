@@ -3,7 +3,7 @@
 #define INPUTBOX_H
 #include <SFML/Graphics.hpp>
 #include <string>
-#include "TextWriter.h"
+#include "TextSystem.h"
 
 using namespace sf;
 

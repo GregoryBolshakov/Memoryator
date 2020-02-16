@@ -11,26 +11,22 @@ using namespace std;
 
 int main() {	
 	srand(time(0));
-	auto screenSize = Helper::GetScreenSize();
-	RenderWindow mainWindow(VideoMode(static_cast<unsigned int>(screenSize.x), static_cast<unsigned int>(screenSize.y), 32), "game"/*, Style::Fullscreen*/);
+	const auto screenSize = Helper::GetScreenSize();
+	RenderWindow mainWindow(VideoMode(static_cast<unsigned int>(screenSize.x), static_cast<unsigned int>(screenSize.y), 32), "game", Style::Fullscreen);
 
     DrawSystem drawSystem;
 	MenuMaker menuSystem;
 	WorldHandler world(40000, 40000, &drawSystem.packsMap);
-	world.initLightSystem(mainWindow);
 	bool windowFocus = true;
 	Console console(IntRect(Helper::GetScreenSize().x * 0.2, Helper::GetScreenSize().y * 0.8, Helper::GetScreenSize().x * 0.6, Helper::GetScreenSize().y * 0.03), &world);
 
-	Clock interactClock;
-	Clock drawClock;
-	Clock scaleDecreaseClock;	
-
-	float interactTime = 0, drawTime = 0;
+	Clock clock;
+	float time = 0;
 	int currentMouseButton = 0;
 
 	HeroBook mainBook;
 
-	TextWriter textWriter;
+	TextSystem textWriter;
 
 	while (mainWindow.isOpen())
 	{
@@ -53,11 +49,11 @@ int main() {
 
 			if (event.type == Event::MouseButtonReleased)
 			{			
-				/*if (menuSystem.getState() == closed && world.getBuildSystem().succesInit)
+				if (menuSystem.getState() == closed && world.getBuildSystem().getSuccessInit())
 				{
 					world.onMouseUp(currentMouseButton);					
-					mainBook.onMouseUp();
-				}*/
+					//mainBook.onMouseUp();
+				}
 					
 				if (currentMouseButton == 1)
 					menuSystem.interact(world, mainWindow);
@@ -88,61 +84,52 @@ int main() {
 
 		if (menuSystem.getState() == mainMenu)
 		{		
-			mainWindow.clear(Color::White);
+			mainWindow.clear(sf::Color::White);
 			drawSystem.draw(mainWindow, menuSystem.prepareSprites());
 			mainWindow.display();
 
-			interactClock.restart();
-			drawClock.restart();
+			clock.restart();
 			continue;
 		}
 
-		if (/*windowFocus && */menuSystem.getState() != gameMenu)
+		if (windowFocus && menuSystem.getState() != gameMenu)
 		{
-			interactTime = interactClock.getElapsedTime().asMicroseconds();
-			interactClock.restart();
-			
-			drawTime = drawClock.getElapsedTime().asMicroseconds();
-			drawClock.restart();
+			time = clock.getElapsedTime().asMicroseconds();
+			clock.restart();
 
 			if (!console.getState())
 			{
-				world.focusedObject->handleInput(world.getInventorySystem().getUsedMouse());
-				world.interact(mainWindow, interactTime, event);
+				world.focusedObject->handleInput(/*world.getInventorySystem().getUsedMouse()*/ false);
+				world.interact(mainWindow, time, event);
 			}
-			auto hero = dynamic_cast<Deerchant*>(world.focusedObject);
+
 			//mainBook.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().getHeldItem(), hero->nearTheTable);
-			//mainBook.interact(interactTime);
+			//mainBook.interact(time);
 
-			mainWindow.clear(Color::White);
+			mainWindow.clear(sf::Color::White);
 
-            drawSystem.drawToWorld(mainWindow, world.prepareSprites(drawTime, true), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
-            drawSystem.drawToWorld(mainWindow, world.prepareSprites(drawTime, false), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
-		    //world.draw(mainWindow, drawTime);
-			//world.runBuildSystemDrawing(mainWindow, drawTime);
-			//mainBook.draw(&mainWindow, world.focusedObject->getHealthPoint() / world.focusedObject->getMaxHealthPointValue(), drawTime);
-			//world.runInventorySystemDrawing(mainWindow, drawTime);
+            drawSystem.draw(mainWindow, world.prepareSprites(time, true), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+            drawSystem.draw(mainWindow, world.prepareSprites(time, false), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+			drawSystem.draw(mainWindow, world.getBuildSystem().prepareSprites(world.getStaticGrid(), world.getLocalTerrain(), &drawSystem.packsMap), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+			TextSystem::drawString(world.getMouseDisplayName(), NormalFont, 30, Mouse::getPosition().x, Mouse::getPosition().y, &mainWindow, sf::Color(255, 255, 255, 180));
+			world.pedestalController.draw(&mainWindow, world.getCameraPosition(), world.getWorldGenerator().scaleFactor);
+			//mainBook.draw(&mainWindow, world.focusedObject->getHealthPoint() / world.focusedObject->getMaxHealthPointValue(), time);
+			//world.runInventorySystemDrawing(mainWindow, time);
 		}
 		else
-		{
-			//world.draw(mainWindow, 0);
-			interactClock.restart();
-			drawClock.restart();
-		}
+			clock.restart();
 
 		drawSystem.draw(mainWindow, menuSystem.prepareSprites());
 
-		auto hero = dynamic_cast<DynamicObject*>(world.focusedObject);
-		console.interact(interactTime);
+		console.interact(time);
 		console.draw(mainWindow);
-		TextWriter::drawString(std::to_string(world.getWorldGenerator().mainScale), NormalFont, 30, 200, 200, &mainWindow, Color::Black);	
-
+		auto debugSunPos = world.getLightSystem().calculateSunPosition(world.getTimeSystem().getDayPart());
+		//TextSystem::drawString(std::to_string(debugSunPos.x) + " " + std::to_string(debugSunPos.y), NormalFont, 30, 200, 200, &mainWindow, sf::Color::Black);
+		TextSystem::drawString(std::to_string(world.getTimeSystem().getDayPart()), NormalFont, 30, 200, 300, &mainWindow, sf::Color::Black);
+		CircleShape debugCircle(30);
+		debugCircle.setPosition(debugSunPos + Vector2f(-15, 735));
+		mainWindow.draw(debugCircle);
+	
 		mainWindow.display();
 	}
 }
-
-
-
-
-
-

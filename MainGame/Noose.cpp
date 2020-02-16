@@ -41,7 +41,7 @@ void Noose::setTarget(DynamicObject& object)
 	return;
 }
 
-void Noose::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
+void Noose::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
 {
 	if (currentAction == dead)
 		return;
@@ -63,13 +63,13 @@ void Noose::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
     return;
 }
 
-void Noose::behaviorWithStatic(WorldObject* target, float elapsedTime)
+void Noose::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
 	if (currentAction == dead)
 		return;
 }
 
-void Noose::behavior(float elapsedTime)
+void Noose::behavior(long long elapsedTime)
 {
 	if (currentAction == dead)
 	{
@@ -143,7 +143,7 @@ void Noose::endingPreviousAction()
 	lastAction = relax;
 }
 
-void Noose::jerkInteract(float elapsedTime)
+void Noose::jerkInteract(long long elapsedTime)
 {
 	if (currentAction == jerking)
 	{
@@ -175,7 +175,7 @@ void Noose::jerk(float power, float deceleration, Vector2f destinationPoint)
 	laxMovePosition = Vector2f(owner->getPosition().x + (mousePos.x - screenCenter.x) * coeff, owner->getPosition().y + (mousePos.y - screenCenter.y) * coeff);
 }
 
-void Noose::fightLogic(float elapsedTime, DynamicObject* target)
+void Noose::fightLogic(long long elapsedTime, DynamicObject* target)
 {
 	return;
 }

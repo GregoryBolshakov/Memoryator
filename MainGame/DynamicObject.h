@@ -7,6 +7,13 @@
 
 const float pi = 3.14159265358979323846f;
 
+struct BumpChainElement
+{
+	BumpChainElement(Vector2f position, bool cancelable) : position{ position } , cancelable{ cancelable } {};
+	Vector2f position;
+	bool cancelable = true;
+};
+
 class DynamicObject : public WorldObject
 {
 protected:
@@ -16,7 +23,7 @@ protected:
 	float strength = 0;
 	float defaultSpeed, speed;
 	float timeAfterHitself = 0;
-	Side calculateSide(Vector2f otherObjectPosition, float elapsedTime);
+	Side calculateSide(Vector2f otherObjectPosition, long long elapsedTime);
 	Direction calculateDirection() const;
 	static Side invertSide(Side side);	
 	Side side = down;	
@@ -27,14 +34,15 @@ protected:
 	bool routeGenerationAbility = true;
 
 	//fight logic
-	virtual void fightLogic(float elapsedTime, DynamicObject* target = nullptr) = 0;
-	void pushAway(float elapsedTime);
+	virtual void fightLogic(long long elapsedTime, DynamicObject* target = nullptr) = 0;
+	void pushAway(long long elapsedTime, float pushSpeed = 0);
 	virtual void pushByBumping(DynamicObject* object);
-	std::vector<Vector2f> bumpedPositions = {};
+	std::vector<BumpChainElement> bumpedPositions = {};
 	float bumpDistance = 0;
 	float pushDamage = 0, pushDistance = 0;
 	Vector2f pushDirection = { 0, 0 }, pushVector = {0, 0};
-	float defaultPushDuration = 2e5, pushDuration = 0, pushRestDuration = 0, pushShift = 0.0004f;
+	float pushDuration = 0, pushRestDuration = 0;
+	const float DEFAULT_PUSH_DURATION = 2e5, DEFAULT_PUSH_SPEED = 0.0004f;
 	//-----------
 
 	//jerk logic
@@ -71,14 +79,14 @@ public:
 	void setCurrentAction(Actions action) { this->currentAction = action; }	
 	void changeMovePositionToRoute(Vector2f newPosition) { movePosition = newPosition; }
 	void takeDamage(float damage, Vector2f attackerPos = {-1, -1}) override;
-	void setMoveOffset(float elapsedTime);
+	void setMoveOffset(long long elapsedTime);
 	void setRoute(std::vector<std::pair<int, int>> route) { this->route = route; }
 	void initMicroBlocks() override;
 	virtual void changeAction(Actions newAction, bool resetSpriteNumber = false, bool rememberLastAction = false);
 	virtual void handleInput(bool usedMouse = false);
-	virtual void behaviorWithDynamic(DynamicObject* target, float elapsedTime) = 0;
-	virtual void behaviorWithStatic(WorldObject* target, float elapsedTime) = 0;
-	virtual void behavior(float elapsedTime) = 0;
+	virtual void behaviorWithDynamic(DynamicObject* target, long long elapsedTime) = 0;
+	virtual void behaviorWithStatic(WorldObject* target, long long elapsedTime) = 0;
+	virtual void behavior(long long elapsedTime) = 0;
 	virtual void setTarget(DynamicObject &object) = 0;
 	virtual void jerk(float power, float deceleration, Vector2f destinationPoint) = 0;
 
@@ -86,10 +94,10 @@ public:
 	float timeAfterHit = 0, timeForNewHit = 100000, sightRange = 0;
 	bool isIntersectDynamic(Vector2f newPosition, DynamicObject& otherDynamic);
 	bool canCrashIntoDynamic = true, canCrashIntoStatic = false, doShake = false;
-	Vector2f EllipceSlip(DynamicObject *dynamic, Vector2f newPos, Vector2f destination, Vector2f f1, Vector2f f2, float ellipseSize, float height, float elapsedTime);
+	Vector2f EllipceSlip(DynamicObject *dynamic, Vector2f newPos, Vector2f destination, Vector2f f1, Vector2f f2, float ellipseSize, float height, long long elapsedTime);
 	Vector2f doMove(long long elapsedTime);
-	Vector2f doSlip(Vector2f newPosition, std::vector<StaticObject*> localStaticItems, float height, float elapsedTime);
-	Vector2f doSlipOffDynamic(Vector2f newPosition, std::vector<DynamicObject*> localDynamicItems, float height, float elapsedTime);
+	Vector2f doSlip(Vector2f newPosition, std::vector<StaticObject*> localStaticItems, float height, long long elapsedTime);
+	Vector2f doSlipOffDynamic(Vector2f newPosition, std::vector<DynamicObject*> localDynamicItems, float height, long long elapsedTime);
 	Vector2f laxMovePosition = { -1, -1 };
 	std::string lastIntersected = "";
 	std::vector<std::pair<int, int>> route = { {} };

@@ -20,14 +20,14 @@ public:
 	~OwlBoss();
 	Vector2i calculateTextureOffset() override;
 	std::vector<SpriteChainElement> prepareSprites(long long elapsedTime) override;
-	void behaviorWithDynamic(DynamicObject* target, float elapsedTime) override;
-	void behaviorWithStatic(WorldObject* target, float elapsedTime) override;
-	void behavior(float elapsedTime) override;
+	void behaviorWithDynamic(DynamicObject* target, long long elapsedTime) override;
+	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
+	void behavior(long long elapsedTime) override;
 	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
 	void setTarget(DynamicObject& object) override;
 	void jerk(float power, float deceleration, Vector2f destinationPoint) override;
-	void fightLogic(float elapsedTime, DynamicObject* target = nullptr) override;
+	void fightLogic(long long elapsedTime, DynamicObject* target = nullptr) override;
 };
 
 #endif

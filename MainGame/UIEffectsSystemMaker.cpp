@@ -64,7 +64,7 @@ void UIEffectsSystemMaker::addEffect(UIEffects effect, Drawable* elem, std::stri
 }
 
 
-void UIEffectsSystemMaker::interact(float elapsedTime)
+void UIEffectsSystemMaker::interact(long long elapsedTime)
 {
 	int cnt = -1;
 	for (const auto& name : names)

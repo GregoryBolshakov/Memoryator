@@ -1,6 +1,6 @@
 #include "DrawSystem.h"
 
-std::map<Tag, bool> DrawSystem::unscaledObjects = {{Tag::hero1, true}, {Tag::nightmare1, true}, {Tag::nightmare2, true}, {Tag::nightmare3, true}, {Tag::grass, true}, {Tag::lake, true}, {Tag::noose, true} };
+std::map<Tag, bool> DrawSystem::unscaledObjects = {{Tag::hero, true}, {Tag::nightmare1, true}, {Tag::nightmare2, true}, {Tag::nightmare3, true}, {Tag::grass, true}, {Tag::lake, true}, {Tag::noose, true} };
 
 DrawSystem::DrawSystem()
 {
@@ -125,7 +125,7 @@ void DrawSystem::advancedScale(SpriteChainElement& item, Sprite& sprite, sprite_
 	}
 }
 
-void DrawSystem::draw(RenderTarget& target, std::vector<SpriteChainElement> sprites)
+/*void DrawSystem::draw(RenderTarget& target, std::vector<SpriteChainElement> sprites)
 {
     if (sprites.empty())
         return;
@@ -148,14 +148,18 @@ void DrawSystem::draw(RenderTarget& target, std::vector<SpriteChainElement> spri
 
 		target.draw(sprite);
 	}
-}
+}*/
 
-void DrawSystem::drawToWorld(RenderTarget& target, std::vector<SpriteChainElement> sprites, float scale, Vector2f cameraPosition)
+void DrawSystem::draw(RenderTarget& target, std::vector<SpriteChainElement> sprites, float scale, Vector2f cameraPosition)
 {
     if (sprites.empty())
         return;
     const auto screenSize = target.getSize();
-	const auto screenCenter = Vector2f(screenSize.x / 2, screenSize.y / 2);
+	Vector2f screenCenter;
+	if (cameraPosition != Vector2f(0, 0))
+		screenCenter = Vector2f(screenSize.x / 2, screenSize.y / 2);
+	else
+		screenCenter = { 0, 0 };
 
 	for (auto& spriteChainItem : sprites)
 	{
@@ -169,7 +173,7 @@ void DrawSystem::drawToWorld(RenderTarget& target, std::vector<SpriteChainElemen
 		if (spriteChainItem.antiTransparent)
 			spriteChainItem.color.a = 255;
 
-         if (spriteChainItem.tag == Tag::hero1 && spriteChainItem.packPart == PackPart::legs)
+         if (spriteChainItem.tag == Tag::hero && spriteChainItem.packPart == PackPart::legs)
             auto test = 1;
 
 		sprite.setColor(spriteChainItem.color);

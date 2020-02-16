@@ -122,7 +122,7 @@ std::vector<int> TerrainObject::getMultiellipseIntersect(Vector2f position) cons
 	return ans;
 }
 
-Vector2f TerrainObject::newSlippingPositionForDotsAdjusted(Vector2f position, Vector2f motionVector, float speed, float elapsedTime)
+Vector2f TerrainObject::newSlippingPositionForDotsAdjusted(Vector2f position, Vector2f motionVector, float speed, long long elapsedTime)
 {
 	Vector2f const dynamicPos = position;
 	Vector2f dot1 = Vector2f(this->getDot1()), dot2 = Vector2f(this->getDot2());

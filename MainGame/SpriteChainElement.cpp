@@ -13,6 +13,8 @@ SpriteChainElement::SpriteChainElement(
     Vector2f position,
     Vector2i size,
     Vector2f offset,
+	Color color,
+	bool mirrored,
     float rotation)
 {
     this->packTag = tag;
@@ -22,6 +24,8 @@ SpriteChainElement::SpriteChainElement(
     this->position = position;
     this->size = size;
     this->offset = offset;
+	this->color = color;
+	this->mirrored = mirrored;
     this->rotation = rotation;
 }
 

@@ -40,12 +40,12 @@ void ClapWhirl::setTarget(DynamicObject& object)
 	return;
 }
 
-void ClapWhirl::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
+void ClapWhirl::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
 {
 	if (currentAction == dead)
 		return;	
 
-	if (target->tag == Tag::hero1)
+	if (target->tag == Tag::hero)
 	{		
 		if (Helper::getDist(position, target->getPosition()) <= radius + target->getRadius() && color.a >= 40)
 		{
@@ -57,13 +57,13 @@ void ClapWhirl::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
 	return;
 }
 
-void ClapWhirl::behaviorWithStatic(WorldObject* target, float elapsedTime)
+void ClapWhirl::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
 	if (currentAction == dead)
 		return;
 }
 
-void ClapWhirl::behavior(float elapsedTime)
+void ClapWhirl::behavior(long long elapsedTime)
 {
 	if (currentAction == dead)
 	{
@@ -123,7 +123,7 @@ void ClapWhirl::endingPreviousAction()
 	lastAction = relax;
 }
 
-void ClapWhirl::jerkInteract(float elapsedTime)
+void ClapWhirl::jerkInteract(long long elapsedTime)
 {
 	if (currentAction == jerking)
 	{
@@ -166,7 +166,7 @@ void ClapWhirl::jerk(float power, float deceleration, Vector2f destinationPoint)
 		laxMovePosition = { 0, 0 };
 }
 
-void ClapWhirl::fightLogic(float elapsedTime, DynamicObject* target)
+void ClapWhirl::fightLogic(long long elapsedTime, DynamicObject* target)
 {
 	return;
 }

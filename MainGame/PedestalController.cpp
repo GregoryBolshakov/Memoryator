@@ -93,7 +93,7 @@ void PedestalController::handleEvents(Event& event)
 	//------------------------------
 }
 
-void PedestalController::interact(float elapsedTime, Event event)
+void PedestalController::interact(long long elapsedTime, Event event)
 {
 	this->elapsedTime = elapsedTime;
 	if (!boundObject || !running)
@@ -101,18 +101,20 @@ void PedestalController::interact(float elapsedTime, Event event)
 
 	// moving focuses
 	const Vector2f mousePos = Vector2f(Mouse::getPosition());
-	const Vector2f worldMousePos = Vector2f((mousePos.x - Helper::GetScreenSize().x / 2 + cameraPosition.x * scaleFactor) / scaleFactor,
-		(mousePos.y - Helper::GetScreenSize().y / 2 + cameraPosition.y*scaleFactor) / scaleFactor);
+	const Vector2f mouseWorldPos = Vector2f((mousePos.x - Helper::GetScreenSize().x / 2 + cameraPosition.x * scaleFactor) / scaleFactor,
+		(mousePos.y - Helper::GetScreenSize().y / 2 + cameraPosition.y * scaleFactor) / scaleFactor);
 
 	// selecting focus to move
 	if (!selectedCenter && selectedFocus == -1 && (Mouse::isButtonPressed(Mouse::Left) || Mouse::isButtonPressed(Mouse::Right)))
 	{
 		for (int i = 0; i < focuses.size(); i++)
-			if (Helper::getDist(worldMousePos, focuses[i]) <= focusFigure.getRadius())
+		{
+			if (Helper::getDist(mouseWorldPos, focuses[i]) * scaleFactor <= focusFigure.getRadius())
 			{
 				selectedFocus = i;
 				break;
 			}
+		}
 	}
 	else
 		if (!(Mouse::isButtonPressed(Mouse::Left) || Mouse::isButtonPressed(Mouse::Right)))
@@ -124,12 +126,12 @@ void PedestalController::interact(float elapsedTime, Event event)
 	{
 		if (Mouse::isButtonPressed(Mouse::Left))
 		{
-			focuses[selectedFocus].x = worldMousePos.x;
+			focuses[selectedFocus].x = mouseWorldPos.x;
 			focusFigure.setPosition(mousePos.x, focusFigure.getPosition().y);
 		}
 		if (Mouse::isButtonPressed(Mouse::Right))
 		{
-			focuses[selectedFocus].y = worldMousePos.y;
+			focuses[selectedFocus].y = mouseWorldPos.y;
 			focusFigure.setPosition(focusFigure.getPosition().x, mousePos.y);
 		}
 		// alignment
@@ -148,7 +150,7 @@ void PedestalController::interact(float elapsedTime, Event event)
 	// selecting center
 	if (selectedFocus == -1 && !selectedCenter && (Mouse::isButtonPressed(Mouse::Left) || Mouse::isButtonPressed(Mouse::Right)))
 	{		
-		if (Helper::getDist(worldMousePos, centerPosition) <= focusFigure.getRadius())
+		if (Helper::getDist(mouseWorldPos, centerPosition) <= focusFigure.getRadius())
 			selectedCenter = true;
 	}
 	else
@@ -161,12 +163,12 @@ void PedestalController::interact(float elapsedTime, Event event)
 	{
 		if (Mouse::isButtonPressed(Mouse::Left))
 		{
-			centerPosition.x = worldMousePos.x;
+			centerPosition.x = mouseWorldPos.x;
 			centerFigure.setPosition(mousePos.x, centerFigure.getPosition().y);
 		}
 		if (Mouse::isButtonPressed(Mouse::Right))
 		{
-			centerPosition.y = worldMousePos.y;
+			centerPosition.y = mouseWorldPos.y;
 			centerFigure.setPosition(centerFigure.getPosition().x, mousePos.y);
 		}
 	}
@@ -180,9 +182,9 @@ void PedestalController::interact(float elapsedTime, Event event)
 			float minDist = 1e5;
 			for (int i = 0; i < focuses.size() / 2; i++)
 			{
-				if (Helper::getDist(worldMousePos, focuses[i * 2]) + Helper::getDist(worldMousePos, focuses[i * 2 + 1]) <= minDist)
+				if (Helper::getDist(mouseWorldPos, focuses[i * 2]) + Helper::getDist(mouseWorldPos, focuses[i * 2 + 1]) <= minDist)
 				{
-					minDist = Helper::getDist(worldMousePos, focuses[i * 2]) + Helper::getDist(worldMousePos, focuses[i * 2 + 1]);
+					minDist = Helper::getDist(mouseWorldPos, focuses[i * 2]) + Helper::getDist(mouseWorldPos, focuses[i * 2 + 1]);
 					selectedEllipse = i;
 				}
 			}
@@ -225,12 +227,12 @@ void PedestalController::draw(RenderWindow* window, Vector2f cameraPosition, flo
 			}
 	for (auto& focus : focuses)
 	{
-		focusFigure.setPosition((focus.x - cameraPosition.x - size.x) * scaleFactor + Helper::GetScreenSize().x / 2, (
-			                        focus.y - cameraPosition.y - size.y) * scaleFactor + Helper::GetScreenSize().y / 2);
+		focusFigure.setPosition((focus.x - cameraPosition.x - size.x) * scaleFactor + Helper::GetScreenSize().x / 2,
+			(focus.y - cameraPosition.y - size.y) * scaleFactor + Helper::GetScreenSize().y / 2);
 		window->draw(focusFigure);
 	}
-	centerFigure.setPosition((centerPosition.x - cameraPosition.x - size.x) * scaleFactor + Helper::GetScreenSize().x / 2, (
-		centerPosition.y - cameraPosition.y - size.y) * scaleFactor + Helper::GetScreenSize().y / 2);
+	centerFigure.setPosition((centerPosition.x - cameraPosition.x - size.x) * scaleFactor + Helper::GetScreenSize().x / 2, 
+		(centerPosition.y - cameraPosition.y - size.y) * scaleFactor + Helper::GetScreenSize().y / 2);
 	window->draw(centerFigure);
 }
 

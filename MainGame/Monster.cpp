@@ -18,12 +18,12 @@ Monster::~Monster()
 
 }
 
-void Monster::behaviorWithStatic(WorldObject* target, float elapsedTime)
+void Monster::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
 
 }
 
-void Monster::behavior(float elapsedTime)
+void Monster::behavior(long long elapsedTime)
 {
 	endingPreviousAction();
 	fightLogic(elapsedTime);
@@ -32,11 +32,11 @@ void Monster::behavior(float elapsedTime)
 void Monster::setTarget(DynamicObject& object)
 {
 	boundTarget = nullptr;
-	if (object.tag == Tag::hero1)
+	if (object.tag == Tag::hero)
 		return; //targetPosition = object.getPosition();
 }
 
-void Monster::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
+void Monster::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
 {
 	if (healthPoint <= 0)
 	{
@@ -48,7 +48,7 @@ void Monster::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
 	if (Helper::getDist(position, target->getPosition()) <= radius + target->getRadius())
 		pushByBumping(target);
 
-	if (target->tag != Tag::hero1)
+	if (target->tag != Tag::hero)
 		return;
 
 	if (Helper::getDist(target->getPosition(), position) > sightRange)
@@ -139,7 +139,7 @@ void Monster::jerk(float power, float deceleration, Vector2f destinationPoint)
 	return;
 }
 
-void Monster::fightLogic(float elapsedTime, DynamicObject* target)
+void Monster::fightLogic(long long elapsedTime, DynamicObject* target)
 {	
 	pushAway(elapsedTime);
 }

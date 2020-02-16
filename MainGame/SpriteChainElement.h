@@ -19,6 +19,8 @@ public:
         Vector2f position = {0, 0},
         Vector2i size = {0, 0},
         Vector2f offset = {0, 0},
+		Color color = Color(255, 255, 255, 255),
+		bool mirrored = false,
         float rotation = 0);
     ~SpriteChainElement();
 
@@ -26,7 +28,7 @@ public:
 	Vector2f offset = { 0, 0 }, position = { 0, 0 };
     Vector2i size = {0, 0};
 	float rotation = 0;
-	int number = 1, animationLength = 1; int zCoord = 1;
+	int number = 1, animationLength = 1; int zCoord = 1, finishSprite = 0;
     bool isBackground = false, mirrored = false, antiTransparent = false;
 	Tag tag = Tag::emptyCell;
 	Color color = Color(255, 255, 255);

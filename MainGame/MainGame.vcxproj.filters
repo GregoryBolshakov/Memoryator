@@ -34,12 +34,6 @@
     <ClCompile Include="ButtonMaker.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="BuildSystemMaker.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="InventoryMaker.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="MenuMaker.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -70,9 +64,6 @@
     </ClCompile>
     <ClCompile Include="HeroBookPage.cpp">
       <Filter>HeroBook</Filter>
-    </ClCompile>
-    <ClCompile Include="TextWriter.cpp">
-      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="OwlBoss.cpp">
       <Filter>Creatures</Filter>
@@ -197,6 +188,19 @@
     <ClCompile Include="SpritePack.cpp">
       <Filter>Systems\DrawSystem</Filter>
     </ClCompile>
+    <ClCompile Include="BuildSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="InventorySystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="TextSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="LightSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EventHandler.h" />
@@ -232,12 +236,6 @@
     <ClInclude Include="ButtonMaker.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="BuildSystemMaker.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="InventoryMaker.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="MenuMaker.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -268,9 +266,6 @@
     </ClInclude>
     <ClInclude Include="HeroBookPage.h">
       <Filter>HeroBook</Filter>
-    </ClInclude>
-    <ClInclude Include="TextWriter.h">
-      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="OwlBoss.h">
       <Filter>Creatures</Filter>
@@ -399,6 +394,19 @@
     <ClInclude Include="SpritePack.h">
       <Filter>Systems\DrawSystem</Filter>
     </ClInclude>
+    <ClInclude Include="BuildSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="InventorySystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="TextSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="LightSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Terrain">

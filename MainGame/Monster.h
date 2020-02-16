@@ -11,9 +11,9 @@ class Monster : public DynamicObject
 public:
 	Monster(std::string objectName, Vector2f centerPosition);
 	~Monster();
-	void behaviorWithDynamic(DynamicObject* target, float elapsedTime) override;
-	void behaviorWithStatic(WorldObject* target, float elapsedTime) override;
-	void behavior(float elapsedTime) override;
+	void behaviorWithDynamic(DynamicObject* target, long long elapsedTime) override;
+	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
+	void behavior(long long elapsedTime) override;
 	virtual void endingPreviousAction();
 	void stopping(bool doStand, bool forgetBoundTarget);
 	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
@@ -21,7 +21,7 @@ public:
 	WorldObject* getVictim() const { return victim; }
 	void setTarget(DynamicObject& object) override;
 	void jerk(float power, float deceleration, Vector2f destinationPoint) override;
-	void fightLogic(float elapsedTime, DynamicObject* target = nullptr) override;
+	void fightLogic(long long elapsedTime, DynamicObject* target = nullptr) override;
 	virtual void doAttack(WorldObject* target) = 0;
 protected:
 	WorldObject* victim = nullptr;

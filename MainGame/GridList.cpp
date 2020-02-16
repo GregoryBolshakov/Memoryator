@@ -262,7 +262,7 @@ bool GridList::isIntersectWithOthers(WorldObject* object, std::vector<WorldObjec
 		if (!anotherObject)
 			continue;
 
-		if (anotherObject->isBackground || anotherObject->tag == Tag::hero1 || anotherObject->intangible)
+		if (anotherObject->isBackground || anotherObject->tag == Tag::hero || anotherObject->intangible)
 			continue;
 
 		if (anotherItem->isDotsAdjusted && isDotAdjustded)
@@ -309,8 +309,6 @@ void GridList::addItem(WorldObject* item, const std::string& name, int x, int y)
 
 	auto position = std::make_pair(index, int(cells[index].size()));
 
-	
-
 	cells[index].push_back(item);
 	items.insert({ name, position });
 }
@@ -319,10 +317,8 @@ void GridList::clearCell(int cellIndex)
 {
 	for (auto& item : cells[cellIndex])
 	{
-		setLockedMicroBlocks(item, true);		
-		items.erase(items.find(item->getName()));
-		item->~WorldObject();
-		delete item;
+		setLockedMicroBlocks(item, true);
+		items.erase(items.find(item->getName()));		
 	}
 	cells[cellIndex].clear();
 }
@@ -336,9 +332,7 @@ void GridList::deleteItem(std::string name)
 		auto itemToUpdate = dynamic_cast<WorldObject*>(cells[position.first][i]);
 		auto itemName = itemToUpdate->getName();
 		items.at(itemName).second -= 1;
-	}
-	auto itemObject = dynamic_cast<WorldObject*>(cells[position.first][position.second]);
-	itemObject->~WorldObject();
+	}	
 	cells[position.first].erase(cells[position.first].begin() + position.second);
 	items.erase(items.find(name));
 }
@@ -356,7 +350,7 @@ std::vector<WorldObject*> GridList::getItems(int blockIndex)
 
 std::vector<WorldObject*> GridList::getItems(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY)
 {
-	std::vector<WorldObject*> result;
+	std::vector<WorldObject*> result = {};
 	if (upperLeftX <= 0)
 	{
 		upperLeftX = 0;
@@ -381,19 +375,16 @@ std::vector<WorldObject*> GridList::getItems(int upperLeftX, int upperLeftY, int
 
 	for (auto i = 0; i <= rowsCount; i++)
 	{
-		
 		if (lastColumn >= maxColumn)
 			lastColumn = maxColumn;
 
 		for (int j = firstColumn; j <= lastColumn; j++)
-		{
 			result.insert(result.end(), cells[j].begin(), cells[j].end());
-		}
 
 		firstColumn += columnsPerRow;
 		lastColumn += columnsPerRow;
-		
 	}
+
 	return result;
 }
 

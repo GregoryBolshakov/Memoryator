@@ -1,7 +1,7 @@
 #include "ObjectInitializer.h"
 #include "Helper.h"
 
-std::map<Tag, std::string> ObjectInitializer::mappedTags = { {Tag::hero1, "hero1"}, {Tag::hare, "hare"}, {Tag::owl, "owl"}, {Tag::deer, "deer"}, {Tag::fox, "fox"}, {Tag::bear, "beer"}, {Tag::wolf, "wolf"},
+std::map<Tag, std::string> ObjectInitializer::mappedTags = { {Tag::hero, "hero"}, {Tag::hare, "hare"}, {Tag::owl, "owl"}, {Tag::deer, "deer"}, {Tag::fox, "fox"}, {Tag::bear, "beer"}, {Tag::wolf, "wolf"},
 {Tag::monster, "monster"}, {Tag::owlBoss, "owlBoss"}, {Tag::nightmare1, "nightmare1"}, {Tag::nightmare2, "nightmare2"}, {Tag::nightmare3, "nightmare3"},
 {Tag::heroBag, "heroBag"}, {Tag::noose, "noose"}, {Tag::totem, "totem"}, {Tag::hareTrap, "hareTrap"}, {Tag::fence, "fence"}, {Tag::inkyBlackPen, "inkyBlackPen"},
 	{Tag::unknownWreath, "inknownWreath"}, {Tag::hareWreath, "hareWreath"}, {Tag::owlWreath, "owlWreath"}, {Tag::tree, "tree"}, {Tag::grass, "grass"}, {Tag::spawn, "spawn"},
@@ -10,7 +10,7 @@ std::map<Tag, std::string> ObjectInitializer::mappedTags = { {Tag::hero1, "hero1
 	{Tag::chamomile, "chamomile"}, {Tag::yarrow, "yarrow"}, {Tag::fern, "fern"}, {Tag::mugwort, "mugwort"}, {Tag::poppy, "poppy"}, {Tag::buildObject, "buildObject"}, {Tag::dropPoint, "dropPoint"},
 	{Tag::emptyDraft, "emptyDraft"}, {Tag::emptyPage, "emptyPage"}, {Tag::emptyCell, "emptyCell"}, {Tag::selectedCell, "selectedCell"}, {Tag::clapWhirl, "clapWhirl"}, {Tag::emptyObject, "emptyObject"} };
 
-std::map<std::string, Tag> ObjectInitializer::mappedStrings = { {"hero1", Tag::hero1}, {"hare", Tag::hare}, {"owl", Tag::owl}, {"deer", Tag::deer}, {"fox", Tag::fox}, {"bear", Tag::bear}, {"wolf", Tag::wolf},
+std::map<std::string, Tag> ObjectInitializer::mappedStrings = { {"hero", Tag::hero}, {"hare", Tag::hare}, {"owl", Tag::owl}, {"deer", Tag::deer}, {"fox", Tag::fox}, {"bear", Tag::bear}, {"wolf", Tag::wolf},
 {"monster", Tag::monster}, {"owlBoss", Tag::owlBoss}, {"nightmare1", Tag::nightmare1}, {"nightmare2", Tag::nightmare2}, {"nightmare3", Tag::nightmare3},
 {"heroBag", Tag::heroBag}, {"noose", Tag::noose}, {"totem", Tag::totem}, {"hareTrap", Tag::hareTrap}, {"fence", Tag::fence}, {"inkyBlackPen", Tag::inkyBlackPen},
 	{"unknownWreath", Tag::unknownWreath}, {"hareWreath", Tag::hareWreath}, {"owlWreath", Tag::owlWreath}, {"tree", Tag::tree}, {"grass", Tag::grass}, {"spawn", Tag::spawn},
@@ -176,10 +176,10 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 	item->setType(currentType);
 	auto sprites = item->prepareSprites(0);
 	FloatRect textureBounds = FloatRect(0, 0, 0, 0);
-	if (packsMap->count(sprites[0].packTag) <= 0 || 
+	if (packsMap->count(sprites[0].packTag) <= 0 ||
 		packsMap->at(sprites[0].packTag).getOriginalInfo(sprites[0].packPart, sprites[0].direction, sprites[0].number).source_size == sprite_pack::size(0, 0))
 	{
-		item->~StaticObject();
+		delete item;
 		return nullptr;
 	}
 	const auto info = packsMap->at(sprites[0].packTag).getOriginalInfo(sprites[0].packPart, sprites[0].direction, sprites[0].number);
@@ -210,7 +210,7 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 
 	switch (itemClass)
 	{
-	case Tag::hero1:
+	case Tag::hero:
 	{
 		item = new Deerchant("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/hero/stand/down/1";		
@@ -303,7 +303,7 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 	if (packsMap->count(sprites[0].packTag) <= 0 || 
 		packsMap->at(sprites[0].packTag).getOriginalInfo(sprites[0].packPart, sprites[0].direction, sprites[0].number).source_size == sprite_pack::size(0, 0))
 	{
-		item->~DynamicObject();
+		delete item;
 		return nullptr;
 	}
 	const auto info = packsMap->at(sprites[0].packTag).getOriginalInfo(sprites[0].packPart, sprites[0].direction, sprites[0].number);
@@ -380,8 +380,8 @@ int ObjectInitializer::getRandomTypeByBiome(WorldObject* object, Biomes biome)
 
 std::vector<StaticObject*> ObjectInitializer::vectorCastToStatic(std::vector<WorldObject*> items)
 {
-	std::vector<StaticObject*> staticItems = *(new std::vector<StaticObject*>());
-	for (auto& item : items)
+	std::vector<StaticObject*> staticItems = {};
+	for (auto item : items)
 		staticItems.push_back(dynamic_cast<StaticObject*>(item));
 	return staticItems;
 }

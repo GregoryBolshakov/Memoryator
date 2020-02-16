@@ -30,7 +30,7 @@ void MenuMaker::onKeyDown(Event event, WorldHandler &world)
 	{
 		if (menuState == closed)
 		{
-			menuState = gameMenu;	
+			menuState = gameMenu;
 		}
 		else
 			if (menuState == gameMenu)
@@ -93,7 +93,7 @@ void MenuMaker::interact(WorldHandler &world, RenderWindow &window)
 			return;
 		}
 
-		if (buttonList[ButtonTag::menuTag].isSelected(mousePos))
+		if (buttonList[ButtonTag::exitTag].isSelected(mousePos))
 		{
 			world.Save();
 			menuState = mainMenu;
@@ -127,7 +127,9 @@ std::vector<SpriteChainElement> MenuMaker::prepareSprites()
 
 	if (menuState == gameMenu)
 	{
-
+		result.push_back(buttonList.at(ButtonTag::newRunTag).prepareSprite());
+		result.push_back(buttonList.at(ButtonTag::continueTag).prepareSprite());
+		result.push_back(buttonList.at(ButtonTag::exitTag).prepareSprite());
 	}
 
 	if (menuState == closed)

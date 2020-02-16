@@ -6,7 +6,7 @@
 #include "HeroBookPage.h"
 #include "ButtonMaker.h"
 #include "HeroBag.h"
-#include "TextWriter.h"
+#include "TextSystem.h"
 #include "WorldObject.h"
 
 using namespace sf;
@@ -16,8 +16,8 @@ class HeroBook
 public:
 	HeroBook();
 	~HeroBook();
-	/*void draw(sf::RenderWindow* window, float hpRatio, float elapsedTime);
-	void interact(float elapsedTime);
+	/*void draw(sf::RenderWindow* window, float hpRatio, long long elapsedTime);
+	void interact(long long elapsedTime);
 	void onMouseUp();
 	void getAllOuterInfo(
 		std::vector<HeroBag>* bags,

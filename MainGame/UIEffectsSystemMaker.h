@@ -32,7 +32,7 @@ public:
 	void init();
 	void resetEffects(std::vector<std::string> removeList);
 	void addEffect(UIEffects effect, Drawable* elem, std::string name, float duration = defaultDuration);
-	void interact(float elapsedTime);
+	void interact(long long elapsedTime);
 
 	static float defaultDuration;
 };

@@ -22,7 +22,7 @@ void DynamicObject::initMicroBlocks()
 	lockedMicroBlocks = { Vector2i(position.x / microBlockSize.x, position.y / microBlockSize.y) };
 }
 
-Side DynamicObject::calculateSide(Vector2f otherObjectPosition, float elapsedTime)
+Side DynamicObject::calculateSide(Vector2f otherObjectPosition, long long elapsedTime)
 {
 	Side answer = down;
 
@@ -66,7 +66,7 @@ bool DynamicObject::isIntersectDynamic(Vector2f newPosition, DynamicObject& othe
 	return sqrt(pow(position1.x - position2.x, 2) + pow(position1.y - position2.y, 2)) <= /*this->radius + */otherDynamic.radius;
 }
 
-Vector2f DynamicObject::EllipceSlip(DynamicObject *dynamic, Vector2f newPos, Vector2f destination, Vector2f f1, Vector2f f2, float ellipseSize, float height, float elapsedTime)
+Vector2f DynamicObject::EllipceSlip(DynamicObject *dynamic, Vector2f newPos, Vector2f destination, Vector2f f1, Vector2f f2, float ellipseSize, float height, long long elapsedTime)
 {
 	Vector2f terrainPos = Vector2f((f1.x + f2.x) / 2, ((height - f1.y) + (height - f2.y)) / 2);
 	Vector2f dynamicPos = Vector2f(dynamic->getPosition().x, height - dynamic->getPosition().y);
@@ -151,7 +151,7 @@ Vector2f DynamicObject::EllipceSlip(DynamicObject *dynamic, Vector2f newPos, Vec
 	return { -1, -1 };
 }
 
-void DynamicObject::setMoveOffset(float elapsedTime)
+void DynamicObject::setMoveOffset(long long elapsedTime)
 {
 	if (movePosition == Vector2f(-1, -1))
 	{
@@ -231,7 +231,7 @@ Vector2f DynamicObject::doMove(long long elapsedTime)
 	position.x += pushVector.x; position.y += pushVector.y;
 
 	//if (this->direction == Direction::STAND)
-		//return position;		
+		//return position;
 
 	if (moveOffset != Vector2f(-1, -1))
 	{
@@ -242,7 +242,7 @@ Vector2f DynamicObject::doMove(long long elapsedTime)
 	return Vector2f(position);
 }
 
-Vector2f DynamicObject::doSlip(Vector2f newPosition, std::vector<StaticObject*> localStaticItems, float height, float elapsedTime)
+Vector2f DynamicObject::doSlip(Vector2f newPosition, std::vector<StaticObject*> localStaticItems, float height, long long elapsedTime)
 {
 	bool crashed = false;
 	if (!canCrashIntoStatic)
@@ -254,7 +254,7 @@ Vector2f DynamicObject::doSlip(Vector2f newPosition, std::vector<StaticObject*> 
 		if (!terrain || staticItem->isBackground || staticItem->getRadius() == 0)
 			continue;
 
-		if (tag != Tag::hero1 && staticItem->isMultiellipse)
+		if (tag != Tag::hero && staticItem->isMultiellipse)
 			continue;
 
 		if (terrain->isMultiellipse)
@@ -307,7 +307,7 @@ Vector2f DynamicObject::doSlip(Vector2f newPosition, std::vector<StaticObject*> 
 	return newPosition;
 }
 
-Vector2f DynamicObject::doSlipOffDynamic(Vector2f newPosition, std::vector<DynamicObject*> localDynamicItems, float height, float elapsedTime)
+Vector2f DynamicObject::doSlipOffDynamic(Vector2f newPosition, std::vector<DynamicObject*> localDynamicItems, float height, long long elapsedTime)
 {
 	if (!canCrashIntoDynamic)
 		return newPosition;
@@ -351,38 +351,35 @@ void DynamicObject::changeAction(Actions newAction, bool resetSpriteNumber, bool
 
 void DynamicObject::pushByBumping(DynamicObject* object)
 {
-	/*if (pushRestDuration > 0)
-		return;
-	if (!this->canCrashIntoDynamic || pushDamage != 0)
-		return;
-	pushDuration = 1e4;
-	pushRestDuration = pushDuration;
-	pushDistance = (this->radius + object->getRadius()) - Helper::getDist(this->getPosition(), object->getPosition());
-	if (object->getPosition() != Vector2f(-1, -1))
-		pushDirection = Vector2f(this->position.x - object->getPosition().x, this->position.y - object->getPosition().y);*/
 	if (!this->canCrashIntoDynamic || !object->canCrashIntoDynamic || pushDamage != 0)
 		return;
-	bumpedPositions.push_back(object->getPosition());
+	bumpedPositions.push_back({ object->getPosition(), false });
 	bumpDistance += object->getRadius();
 }
 
-void DynamicObject::pushAway(float elapsedTime)
+void DynamicObject::pushAway(long long elapsedTime, float pushSpeed)
 {
+	if (pushSpeed == 0)
+		pushSpeed = DEFAULT_PUSH_SPEED;
 	timeAfterHitself += elapsedTime;
 	if (!bumpedPositions.empty() && this->canCrashIntoDynamic && pushDamage == 0)
 	{
 		Vector2f bumpCenter = { 0, 0 };
-		for (const auto pos : bumpedPositions)
+		int bumpCount = 0;
+		for (const auto bump : bumpedPositions)
 		{
-			bumpCenter.x += pos.x;
-			bumpCenter.y += pos.y;
+			bumpCount++;
+			bumpCenter.x += bump.position.x;
+			bumpCenter.y += bump.position.y;
 		}
-		bumpCenter.x /= bumpedPositions.size();
-		bumpCenter.y /= bumpedPositions.size();
+		if (bumpCount == 0 || pushSpeed == 0)
+			return;
+		bumpCenter.x /= bumpCount;
+		bumpCenter.y /= bumpCount;
 		pushDistance = (this->radius + bumpDistance) - Helper::getDist(this->getPosition(), bumpCenter);
 		pushDirection = Vector2f(this->position.x - bumpCenter.x, this->position.y - bumpCenter.y);
-		pushDuration = pushDistance / pushShift;
-		pushRestDuration = pushDuration;		
+		pushDuration = pushDistance / pushSpeed;
+		pushRestDuration = pushDuration;
 	}
 
 	if (pushRestDuration <= 0 || currentAction == dead)
@@ -391,6 +388,7 @@ void DynamicObject::pushAway(float elapsedTime)
 		pushDuration = 0;
 		pushVector = { 0, 0 };
 		pushDamage = 0;
+		pushSpeed = DEFAULT_PUSH_SPEED;
 		color = Color(255, std::min(color.g + int(ceil(elapsedTime / 3000)), 255), std::min(color.b + int(ceil(elapsedTime / 3000)), 255), 255);
 		return;
 	}
@@ -399,8 +397,11 @@ void DynamicObject::pushAway(float elapsedTime)
 	if (pushDamage > 0)
 		color = Color(255, 100, 100, 255);
 
-	const float elongationCoefficient = pushShift * elapsedTime / sqrt(pow(pushDirection.x, 2) + pow(pushDirection.y, 2));
-	pushVector = { elongationCoefficient * pushDirection.x, elongationCoefficient * pushDirection.y };
+	const float elongationCoefficient = pushSpeed * elapsedTime / sqrt(pow(pushDirection.x, 2) + pow(pushDirection.y, 2));
+	if (pushDirection != Vector2f(0, 0))
+		pushVector = { elongationCoefficient * pushDirection.x, elongationCoefficient * pushDirection.y };
+	else
+		pushVector = { 0, 0 };
 
 	bumpedPositions.clear();
 	bumpDistance = 0;
@@ -414,7 +415,7 @@ void DynamicObject::takeDamage(float damage, Vector2f attackerPos)
 	this->healthPoint -= damage / this->armor;
 
 	pushDamage = damage;
-	pushDuration = defaultPushDuration;
+	pushDuration = DEFAULT_PUSH_DURATION;
 	pushRestDuration = pushDuration;
 	pushDistance = Helper::getDist(this->getPosition(), attackerPos);
 	if (attackerPos != Vector2f(-1, -1))

@@ -33,12 +33,12 @@ void Wolf::setTarget(DynamicObject& object)
 	return;
 }
 
-void Wolf::behaviorWithStatic(WorldObject* target, float elapsedTime)
+void Wolf::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
 
 }
 
-void Wolf::behavior(float elapsedTime)
+void Wolf::behavior(long long elapsedTime)
 {
 	fightLogic(elapsedTime);
 }

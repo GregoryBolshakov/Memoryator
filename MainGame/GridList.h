@@ -22,7 +22,7 @@ private:
 public:
 	std::unordered_map<std::string, std::pair<int, int>> getItemsOfGreed() { return items; }
 	GridList();
-	GridList(int width, int height, Vector2i size, Vector2i microsize);
+	GridList(int width, int height, Vector2i size, Vector2i microSize);
 	~GridList();
 	Vector2i getBlockSize() const;
 	int getBlockItemsAmount(int index) { return cells[index].size(); }
@@ -41,7 +41,7 @@ public:
 	void deleteItem(std::string name);
 	void setLockedMicroBlocks(WorldObject* item, bool value = false, bool dynamicMatrix = false);
 	void boundDynamicMatrix(std::vector<std::vector<bool>>* matrix) { this->dynamicMicroBlockMatrix = matrix; };
-	int getSize() { return items.size(); }
+	int getSize() const { return items.size(); }
 	std::vector<int> getBlocksAround(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY, int offset);
 	std::vector<int> GridList::getBlocksInSight(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY);
 	bool isIntersectWithOthers(WorldObject* object, std::vector<WorldObject*> visibleTerrain, bool isDotAdjustded = false) const;

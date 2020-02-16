@@ -3,7 +3,7 @@
 #define BRAZIER_H
 
 #include "TerrainObject.h"
-#include "BuildSystemMaker.h"
+#include "BuildSystem.h"
 
 class Brazier : public TerrainObject
 {
@@ -18,7 +18,7 @@ public:
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
 
 	// craft
-	//void linkWithBuildSystem(BuildSystemMaker* buildSystem) { this->buildSystem = buildSystem; }
+	//void linkWithBuildSystem(BuildSystem* buildSystem) { this->buildSystem = buildSystem; }
 	void putItemToCraft(Tag id);
 	void clearCurrentCraft() { currentCraft.clear(); }
 	Vector2f getPlatePosition() const { return { position.x + conditionalSizeUnits.x * 0.06f, position.y - conditionalSizeUnits.x * 0.025f }; }
@@ -26,7 +26,7 @@ public:
 
 	int getPlateRadius() const { return plateRadius; }
 
-	//BuildSystemMaker* buildSystem = nullptr;
+	//BuildSystem* buildSystem = nullptr;
 	//------
 private:
 	void resultAnalysis();

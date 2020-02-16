@@ -5,12 +5,6 @@
 #include "ObjectInitializer.h"
 #include "GridList.h"
 
-struct BiomesMapCell
-{
-	StaticObject* groundCell;
-	Biomes biomeCell;
-};
-
 class WorldGenerator
 {
 public:
@@ -31,7 +25,7 @@ public:
 	WorldGenerator();
 	~WorldGenerator();
 
-	BiomesMapCell biomeMatrix[100][100];
+	Biomes biomeMatrix[100][100];
 	std::map<int, bool> rememberedBlocks = { {0, true} };
 	DynamicObject* focusedObject = nullptr;
 	const float CLOSEST_SCALE = 1.7, FARTHEST_SCALE = 0.998;

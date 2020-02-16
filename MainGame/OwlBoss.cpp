@@ -29,12 +29,12 @@ OwlBoss::~OwlBoss()
 
 }
 
-void OwlBoss::behaviorWithStatic(WorldObject* target, float elapsedTime)
+void OwlBoss::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
 
 }
 
-void OwlBoss::behavior(float elapsedTime)
+void OwlBoss::behavior(long long elapsedTime)
 {
 	fightLogic(elapsedTime);
 	//jerk interaction
@@ -87,11 +87,11 @@ Vector2i OwlBoss::calculateTextureOffset()
 
 void OwlBoss::setTarget(DynamicObject& object)
 {
-	if (object.tag == Tag::hero1)
+	if (object.tag == Tag::hero)
 		return; //targetPosition = object.getPosition();
 }
 
-void OwlBoss::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
+void OwlBoss::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
 {
 	debugInfo = Helper::getDist(this->position, movePosition) / jerkDistance * 1000;
 	if (healthPoint <= 0)
@@ -101,7 +101,7 @@ void OwlBoss::behaviorWithDynamic(DynamicObject* target, float elapsedTime)
 		return;
 	}
 
-	if (target->tag != Tag::hero1)
+	if (target->tag != Tag::hero)
 		return;
 
 	side = calculateSide(movePosition, elapsedTime);
@@ -176,7 +176,7 @@ void OwlBoss::jerk(float power, float deceleration, Vector2f destinationPoint)
 	movePosition = Vector2f(destinationPoint);
 }
 
-void OwlBoss::fightLogic(float elapsedTime, DynamicObject* target)
+void OwlBoss::fightLogic(long long elapsedTime, DynamicObject* target)
 {
 	pushAway(elapsedTime);
 }

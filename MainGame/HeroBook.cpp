@@ -245,13 +245,13 @@ void HeroBook::drawWreathCost(Vector2f pos, RenderWindow* window)
 		{
 			buttonList.at(flowerButton).setPosition(drawPos);
 			buttonList.at(flowerButton).draw(*window);
-			TextWriter::drawNumberOfItems(drawPos, item.second, *window);
+			TextSystem::drawNumberOfItems(drawPos, item.second, *window);
 			drawPos.x += buttonList.at(flowerButton).getGlobalBounds().width;
 		}
 	}
 }
 
-void HeroBook::draw(RenderWindow* window, float hpRatio, float elapsedTime)
+void HeroBook::draw(RenderWindow* window, float hpRatio, long long elapsedTime)
 {
 	drawHpLine(window, hpRatio);
 	buttonList.at(ButtonTag::bookStandTag).draw(*window);
@@ -293,9 +293,9 @@ void HeroBook::draw(RenderWindow* window, float hpRatio, float elapsedTime)
 	if (currentFlower != Tag::emptyCell)
 		somePage.drawConnectableFlowers(currentFlower, window);
 
-	TextWriter::drawTextBox(pageContent.blockDescription, NormalFont, 25, pageGlobalBounds.left + pageGlobalBounds.width * blockDescriptionPoint.x,
+	TextSystem::drawTextBox(pageContent.blockDescription, NormalFont, 25, pageGlobalBounds.left + pageGlobalBounds.width * blockDescriptionPoint.x,
 		pageGlobalBounds.top + pageGlobalBounds.height * blockDescriptionPoint.y, pageGlobalBounds.width * 0.4, pageGlobalBounds.height * 0.24, window, Color(100, 68, 34, 180));
-	TextWriter::drawTextBox(pageContent.pageDescription, NormalFont, 25, pageGlobalBounds.left + pageGlobalBounds.width * pageDescriptionPoint.x,
+	TextSystem::drawTextBox(pageContent.pageDescription, NormalFont, 25, pageGlobalBounds.left + pageGlobalBounds.width * pageDescriptionPoint.x,
 		pageGlobalBounds.top + pageGlobalBounds.height * pageDescriptionPoint.y, pageGlobalBounds.width * 0.4, pageGlobalBounds.height * 0.24, window, Color(100, 68, 34, 180));
 
 	somePage.drawHeadingText(window);
@@ -334,7 +334,7 @@ void HeroBook::draw(RenderWindow* window, float hpRatio, float elapsedTime)
 	//--------------
 }
 
-void HeroBook::interact(float elapsedTime)
+void HeroBook::interact(long long elapsedTime)
 {
 	if (Mouse::isButtonPressed(Mouse::Left))
 		WhileMouseDown();

@@ -23,8 +23,8 @@ public:
 	EffectsSystemMaker();
 	~EffectsSystemMaker();
 	void init(std::unordered_map<std::string, BoardSprite>* spriteMap);
-	void draw(RenderWindow* window, float elapsedTime);
-	void drawFog(RenderWindow* window, float elapsedTime);
+	void draw(RenderWindow* window, long long elapsedTime);
+	void drawFog(RenderWindow* window, long long elapsedTime);
 };
 
 #endif

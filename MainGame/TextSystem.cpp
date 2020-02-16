@@ -1,13 +1,13 @@
 #pragma once
-#include "TextWriter.h"
+#include "TextSystem.h"
 #include "HeroBag.h"
 
-int TextWriter::characterSize = 30 * Helper::GetScreenSize().y / 1440;
-std::unordered_map<FontName, Font> TextWriter::fonts = {};
-std::unordered_map<FontName, Text> TextWriter::textBoxes = {};
-Text TextWriter::numberOfItems;
+int TextSystem::characterSize = 30 * Helper::GetScreenSize().y / 1440;
+std::unordered_map<FontName, Font> TextSystem::fonts = {};
+std::unordered_map<FontName, Text> TextSystem::textBoxes = {};
+Text TextSystem::numberOfItems;
 
-TextWriter::TextWriter()
+TextSystem::TextSystem()
 {
 	initFonts();
 	initTextBoxes();
@@ -16,11 +16,11 @@ TextWriter::TextWriter()
 	numberOfItems.setFillColor(Color::White);
 }
 
-TextWriter::~TextWriter()
+TextSystem::~TextSystem()
 {
 }
 
-void TextWriter::initFonts()
+void TextSystem::initFonts()
 {
 	Font currentFont;
 	currentFont.loadFromFile("fonts/Bebas.ttf");
@@ -31,7 +31,7 @@ void TextWriter::initFonts()
 	fonts.insert({ ConsoleFont, currentFont });
 }
 
-void TextWriter::initTextBoxes()
+void TextSystem::initTextBoxes()
 {
 	Text currentText;
 	currentText.setFont(fonts[BebasFont]);
@@ -42,7 +42,7 @@ void TextWriter::initTextBoxes()
 	textBoxes.insert({ ConsoleFont, currentText });
 }
 
-void TextWriter::drawString(std::string str, FontName font, int size, float posX, float posY, RenderWindow* window, Color color)
+void TextSystem::drawString(std::string str, FontName font, int size, float posX, float posY, RenderWindow* window, Color color)
 {
 	textBoxes.at(font).setPosition(posX, posY);
 	textBoxes.at(font).setCharacterSize(size);
@@ -51,7 +51,7 @@ void TextWriter::drawString(std::string str, FontName font, int size, float posX
 	window->draw(textBoxes.at(font));
 }
 
-void TextWriter::drawTextBox(std::string str, FontName font, int size, float posX, float posY, float width, float height, RenderWindow* window, Color color)
+void TextSystem::drawTextBox(std::string str, FontName font, int size, float posX, float posY, float width, float height, RenderWindow* window, Color color)
 {
 	auto curText = textBoxes.at(font);
 	curText.setString(str);
@@ -89,7 +89,7 @@ void TextWriter::drawTextBox(std::string str, FontName font, int size, float pos
 	}
 }
 
-void TextWriter::drawNumberOfItems(Vector2f pos, int itemsCount, RenderWindow &window)
+void TextSystem::drawNumberOfItems(Vector2f pos, int itemsCount, RenderWindow &window)
 {
 	numberOfItems.setString(std::to_string(itemsCount));
 	numberOfItems.setOrigin(numberOfItems.getGlobalBounds().width, numberOfItems.getGlobalBounds().height);

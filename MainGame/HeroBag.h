@@ -48,7 +48,7 @@ public:
 
 	//animation
 	void boundSprites(BagSprite* drawInfo);
-	void draw(RenderWindow* window, float elapsedTime);
+	void draw(RenderWindow* window, long long elapsedTime);
 	void drawCircuit(RenderWindow* window);
 	void cleanTextureReferences();
 

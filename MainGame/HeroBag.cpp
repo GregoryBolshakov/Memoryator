@@ -323,7 +323,7 @@ void HeroBag::mouseMove()
 	lastMousePos = Vector2f(Mouse::getPosition());
 }
 
-void HeroBag::draw(RenderWindow* window, float elapsedTime)
+void HeroBag::draw(RenderWindow* window, long long elapsedTime)
 {	
 	Vector2f screenCenter = Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2);
 	
