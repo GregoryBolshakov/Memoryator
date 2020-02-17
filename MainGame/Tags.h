@@ -41,10 +41,3 @@ enum Actions { directHit = 2, relax = 3, combatState = 4, move = 5, dead = 6, co
 	open = 13, absorbs = 14, grab = 15, builds = 16, jerking = 17, moveEnd = 18, upFlap = 30, leftFlap = 31, rightFlap = 32, startFlap = 33, stopFlap = 34, throwNoose = 35 };
 
 enum Side { up = 1, right = 2, down = 3, left = 4 };
-
-enum class SpeedLineDirection
-{
-	stand = 0,
-	up_upright = 1, upright_right = 2, right_downright = 3, downright_down = 4, down_downleft = 5, downleft_left = 6, left_upleft = 7, upleft_up = 8,
-	upright_up = 9, right_upright = 10, downright_right = 11, down_downright = 12, downleft_down = 13, left_downleft = 14, upleft_left = 15, up_upleft = 16
-};

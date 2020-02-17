@@ -21,7 +21,6 @@ WorldHandler::WorldHandler(int width, int height, std::map<PackTag, SpritePack>*
 	buildSystem.init(inventorySystem.getSpriteList());
 	timeSystem.init(1, 0);
 	lightSystem.init({0, 0, Helper::GetScreenSize().x, Helper::GetScreenSize().y});
-	lightSystem.setHorizontalScale(0.5f);
 }
 
 WorldHandler::~WorldHandler()
@@ -534,7 +533,7 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event e
 			dynamicItem->changeMovePositionToRoute(dynamicItem->laxMovePosition);
 		//------------------------------------
 
-		dynamicItem->behavior(elapsedTime); // the last because of position changes
+		dynamicItem->behavior(elapsedTime);
 		//interaction with other objects		
 		for (auto& otherDynamicItem : localDynamicItems)
 		{

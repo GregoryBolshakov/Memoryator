@@ -166,7 +166,7 @@ void ClapWhirl::jerk(float power, float deceleration, Vector2f destinationPoint)
 		laxMovePosition = { 0, 0 };
 }
 
-void ClapWhirl::fightLogic(long long elapsedTime, DynamicObject* target)
+void ClapWhirl::fightInteract(long long elapsedTime, DynamicObject* target)
 {
 	return;
 }

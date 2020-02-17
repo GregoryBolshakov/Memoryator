@@ -98,9 +98,9 @@ int main() {
 			clock.restart();
 
 			if (!console.getState())
-			{
-				world.focusedObject->handleInput(/*world.getInventorySystem().getUsedMouse()*/ false);
+			{				
 				world.interact(mainWindow, time, event);
+				world.focusedObject->handleInput(/*world.getInventorySystem().getUsedMouse()*/ false);
 			}
 
 			//mainBook.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().getHeldItem(), hero->nearTheTable);
@@ -123,13 +123,7 @@ int main() {
 
 		console.interact(time);
 		console.draw(mainWindow);
-		auto debugSunPos = world.getLightSystem().calculateSunPosition(world.getTimeSystem().getDayPart());
-		//TextSystem::drawString(std::to_string(debugSunPos.x) + " " + std::to_string(debugSunPos.y), NormalFont, 30, 200, 200, &mainWindow, sf::Color::Black);
-		TextSystem::drawString(std::to_string(world.getTimeSystem().getDayPart()), NormalFont, 30, 200, 300, &mainWindow, sf::Color::Black);
-		CircleShape debugCircle(30);
-		debugCircle.setPosition(debugSunPos + Vector2f(-15, 735));
-		mainWindow.draw(debugCircle);
-	
+
 		mainWindow.display();
 	}
 }

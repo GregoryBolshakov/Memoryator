@@ -36,7 +36,7 @@ public:
 	void setTarget(DynamicObject& object) override;
 	void jerkInteract(long long elapsedTime);
 	void jerk(float power, float deceleration, Vector2f destinationPoint = Vector2f(-1, -1)) override;
-	void fightLogic(long long elapsedTime, DynamicObject* target = nullptr) override;
+	void fightInteract(long long elapsedTime, DynamicObject* target = nullptr) override;
 };
 
 #endif*/

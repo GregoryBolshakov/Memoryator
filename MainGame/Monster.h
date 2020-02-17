@@ -21,7 +21,7 @@ public:
 	WorldObject* getVictim() const { return victim; }
 	void setTarget(DynamicObject& object) override;
 	void jerk(float power, float deceleration, Vector2f destinationPoint) override;
-	void fightLogic(long long elapsedTime, DynamicObject* target = nullptr) override;
+	void fightInteract(long long elapsedTime, DynamicObject* target = nullptr) override;
 	virtual void doAttack(WorldObject* target) = 0;
 protected:
 	WorldObject* victim = nullptr;

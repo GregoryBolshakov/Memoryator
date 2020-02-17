@@ -42,7 +42,7 @@ void NeutralMob::behavior(long long elapsedTime)
 		direction = Direction::STAND;
 		return;
 	}
-	fightLogic(elapsedTime);
+	fightInteract(elapsedTime);
 
 	side = calculateSide(movePosition, elapsedTime);
 	//return;
@@ -74,7 +74,7 @@ void NeutralMob::behavior(long long elapsedTime)
 	boundTarget = nullptr;
 }
 
-void NeutralMob::fightLogic(long long elapsedTime, DynamicObject* target)
+void NeutralMob::fightInteract(long long elapsedTime, DynamicObject* target)
 {
 	pushAway(elapsedTime);
 }

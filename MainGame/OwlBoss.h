@@ -27,7 +27,7 @@ public:
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
 	void setTarget(DynamicObject& object) override;
 	void jerk(float power, float deceleration, Vector2f destinationPoint) override;
-	void fightLogic(long long elapsedTime, DynamicObject* target = nullptr) override;
+	void fightInteract(long long elapsedTime, DynamicObject* target = nullptr) override;
 };
 
 #endif

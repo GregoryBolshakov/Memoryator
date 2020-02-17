@@ -21,7 +21,7 @@ public:
 	void behavior(long long elapsedTime) override;
 	void setTarget(DynamicObject& object) override;
 protected:
-	void fightLogic(long long elapsedTime, DynamicObject* target = nullptr) override;
+	void fightInteract(long long elapsedTime, DynamicObject* target = nullptr) override;
 };
 
 #endif

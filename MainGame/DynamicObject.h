@@ -34,8 +34,9 @@ protected:
 	bool routeGenerationAbility = true;
 
 	//fight logic
-	virtual void fightLogic(long long elapsedTime, DynamicObject* target = nullptr) = 0;
+	virtual void fightInteract(long long elapsedTime, DynamicObject* target = nullptr) = 0;
 	void pushAway(long long elapsedTime, float pushSpeed = 0);
+	void endPush(long long elapsedTime);
 	virtual void pushByBumping(DynamicObject* object);
 	std::vector<BumpChainElement> bumpedPositions = {};
 	float bumpDistance = 0;
@@ -47,7 +48,7 @@ protected:
 
 	//jerk logic
 	float jerkPower, jerkDeceleration = 0, jerkDistance = 0;
-	float jerkDuration = 1000000, jerkTime = 0;
+	float jerkDuration = 1e6, jerkTime = 0;
 	bool isJerking = false;
 	//----------
 public:
@@ -74,7 +75,6 @@ public:
     static Side cutRights(Side side);
 	Direction DynamicObject::sideToDirection(Side side);
 	Direction invertDirection(Direction dir);
-	static SpeedLineDirection getSpeedLineDirection(Direction from, Direction to);
 
 	void setCurrentAction(Actions action) { this->currentAction = action; }	
 	void changeMovePositionToRoute(Vector2f newPosition) { movePosition = newPosition; }

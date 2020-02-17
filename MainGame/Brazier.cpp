@@ -26,7 +26,7 @@ Vector2i Brazier::calculateTextureOffset()
 {
 	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
 	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-	return Vector2i (textureBox.width * 0.5, int(textureBox.height * 0.762));
+	return Vector2i(textureBox.width * 0.5, int(textureBox.height * 0.762));
 }
 
 void Brazier::initPedestal()
@@ -52,19 +52,19 @@ void Brazier::initPedestal()
 		microEllipse.second = Vector2f(position.x + textureBox.width * 0.25, position.y - textureBox.height * 0.02);		
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x + textureBox.width * 0.124, position.y + textureBox.height * 0.04);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.4, position.y + textureBox.height * 0.04);		
+		microEllipse.first = Vector2f(position.x + textureBox.width * 0.191, position.y + textureBox.height * 0.0211);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.335, position.y + textureBox.height * 0.0211);		
 		internalEllipses.push_back(microEllipse);
 
 		microEllipse.first = Vector2f(position.x - textureBox.width * 0.045, position.y + textureBox.height * 0.19);
 		microEllipse.second = Vector2f(position.x + textureBox.width * 0.0698, position.y + textureBox.height * 0.19);		
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x + textureBox.width * 0.155, position.y + textureBox.height * 0.151);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.327, position.y + textureBox.height * 0.151);		
+		microEllipse.first = Vector2f(position.x + textureBox.width * 0.155, position.y + textureBox.height * 0.126);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.327, position.y + textureBox.height * 0.126);		
 		internalEllipses.push_back(microEllipse);
 	}
-	ellipseSizeMultipliers = { 1.2, 1.2, 1.17, 1.17, 1.25, 1.16 };
+	ellipseSizeMultipliers = { 1.2, 1.25, 1.17, 1.58, 1.25, 1.43 };
 	initMicroBlocks();
 }
 
@@ -144,8 +144,8 @@ int Brazier::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement> Brazier::prepareSprites(long long elapsedTime)
 {
-    const Vector2f frontPosition(position.x, position.y + 1), frontOffset(textureBoxOffset.x, textureBoxOffset.y - 1);
-    SpriteChainElement back(PackTag::locations, PackPart::brazier, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+    const Vector2f frontOffset(textureBox.width * 0.506, int(textureBox.height * 0.949)), frontPosition(position.x - textureBoxOffset.x + frontOffset.x, position.y - textureBoxOffset.y + frontOffset.y);
+    SpriteChainElement back(PackTag::locations, PackPart::brazier, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));	
     SpriteChainElement front(PackTag::locations, PackPart::brazier, Direction::DOWN, 2, frontPosition, conditionalSizeUnits, frontOffset);
     return {back, front};
 	/*additionalSprites.clear();

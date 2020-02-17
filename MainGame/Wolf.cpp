@@ -40,7 +40,7 @@ void Wolf::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 
 void Wolf::behavior(long long elapsedTime)
 {
-	fightLogic(elapsedTime);
+	fightInteract(elapsedTime);
 }
 
 Vector2i Wolf::calculateTextureOffset()

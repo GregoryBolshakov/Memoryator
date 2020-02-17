@@ -65,7 +65,7 @@ void Hare::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 void Hare::behavior(long long elapsedTime)
 {	
 	endingPreviousAction();
-	fightLogic(elapsedTime);
+	fightInteract(elapsedTime);
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);

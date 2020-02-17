@@ -175,7 +175,7 @@ void Noose::jerk(float power, float deceleration, Vector2f destinationPoint)
 	laxMovePosition = Vector2f(owner->getPosition().x + (mousePos.x - screenCenter.x) * coeff, owner->getPosition().y + (mousePos.y - screenCenter.y) * coeff);
 }
 
-void Noose::fightLogic(long long elapsedTime, DynamicObject* target)
+void Noose::fightInteract(long long elapsedTime, DynamicObject* target)
 {
 	return;
 }

@@ -87,7 +87,8 @@ private:
 	// World base
 	float width, height;
 	Vector2i blockSize = { 1000, 1000 }, microblockSize = { 20, 20 };
-	Vector2f cameraPosition, maxCameraDistance = Vector2f(100, 100), camOffset = { 0, -0.04f};
+	Vector2f cameraPosition;
+	const Vector2f maxCameraDistance = Vector2f(250, 250), camOffset = { 0, -0.04f };
 	std::string spriteNameFileDirectory = "Game/objects.txt";
 	const float heroToScreenRatio = 0.25f;
 	bool fixedClimbingBeyond(Vector2f &pos);

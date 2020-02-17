@@ -26,7 +26,7 @@ void Monster::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 void Monster::behavior(long long elapsedTime)
 {
 	endingPreviousAction();
-	fightLogic(elapsedTime);
+	fightInteract(elapsedTime);
 }
 
 void Monster::setTarget(DynamicObject& object)
@@ -139,7 +139,7 @@ void Monster::jerk(float power, float deceleration, Vector2f destinationPoint)
 	return;
 }
 
-void Monster::fightLogic(long long elapsedTime, DynamicObject* target)
+void Monster::fightInteract(long long elapsedTime, DynamicObject* target)
 {	
 	pushAway(elapsedTime);
 }

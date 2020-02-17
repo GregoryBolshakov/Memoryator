@@ -36,7 +36,7 @@ void OwlBoss::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 
 void OwlBoss::behavior(long long elapsedTime)
 {
-	fightLogic(elapsedTime);
+	fightInteract(elapsedTime);
 	//jerk interaction
 	if (isJerking)
 	{
@@ -176,7 +176,7 @@ void OwlBoss::jerk(float power, float deceleration, Vector2f destinationPoint)
 	movePosition = Vector2f(destinationPoint);
 }
 
-void OwlBoss::fightLogic(long long elapsedTime, DynamicObject* target)
+void OwlBoss::fightInteract(long long elapsedTime, DynamicObject* target)
 {
 	pushAway(elapsedTime);
 }

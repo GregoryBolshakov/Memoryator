@@ -357,6 +357,17 @@ void DynamicObject::pushByBumping(DynamicObject* object)
 	bumpDistance += object->getRadius();
 }
 
+void DynamicObject::endPush(long long elapsedTime)
+{
+	pushDirection = { 0, 0 };
+	pushDuration = 0;
+	pushVector = { 0, 0 };
+	pushDamage = 0;	
+	color = Color(255, std::min(color.g + int(ceil(elapsedTime / 3000)), 255), std::min(color.b + int(ceil(elapsedTime / 3000)), 255), 255);
+	bumpedPositions.clear();
+	bumpDistance = 0;
+}
+
 void DynamicObject::pushAway(long long elapsedTime, float pushSpeed)
 {
 	if (pushSpeed == 0)
@@ -382,14 +393,9 @@ void DynamicObject::pushAway(long long elapsedTime, float pushSpeed)
 		pushRestDuration = pushDuration;
 	}
 
-	if (pushRestDuration <= 0 || currentAction == dead)
+	if (bumpedPositions.empty() || pushRestDuration <= 0 || currentAction == dead)
 	{
-		pushDirection = { 0, 0 };
-		pushDuration = 0;
-		pushVector = { 0, 0 };
-		pushDamage = 0;
-		pushSpeed = DEFAULT_PUSH_SPEED;
-		color = Color(255, std::min(color.g + int(ceil(elapsedTime / 3000)), 255), std::min(color.b + int(ceil(elapsedTime / 3000)), 255), 255);
+		endPush(elapsedTime);
 		return;
 	}
 
@@ -402,9 +408,6 @@ void DynamicObject::pushAway(long long elapsedTime, float pushSpeed)
 		pushVector = { elongationCoefficient * pushDirection.x, elongationCoefficient * pushDirection.y };
 	else
 		pushVector = { 0, 0 };
-
-	bumpedPositions.clear();
-	bumpDistance = 0;
 }
 
 void DynamicObject::takeDamage(float damage, Vector2f attackerPos)
@@ -420,45 +423,6 @@ void DynamicObject::takeDamage(float damage, Vector2f attackerPos)
 	pushDistance = Helper::getDist(this->getPosition(), attackerPos);
 	if (attackerPos != Vector2f(-1, -1))
 		pushDirection = Vector2f(this->position.x - attackerPos.x, this->position.y - attackerPos.y);
-}
-
-SpeedLineDirection DynamicObject::getSpeedLineDirection(Direction from, Direction to)
-{
-	if (from == Direction::UP && to == Direction::UPRIGHT)
-		return SpeedLineDirection::up_upright;
-	if (from == Direction::UPRIGHT && to == Direction::RIGHT)
-		return SpeedLineDirection::upright_right;
-	if (from == Direction::RIGHT && to == Direction::DOWNRIGHT)
-		return SpeedLineDirection::right_downright;
-	if (from == Direction::DOWNRIGHT && to == Direction::DOWN)
-		return SpeedLineDirection::downright_down;
-	if (from == Direction::DOWN && to == Direction::DOWNLEFT)
-		return SpeedLineDirection::down_downleft;
-	if (from == Direction::DOWNLEFT && to == Direction::LEFT)
-		return SpeedLineDirection::downleft_left;
-	if (from == Direction::LEFT && to == Direction::UPLEFT)
-		return SpeedLineDirection::left_upleft;
-	if (from == Direction::UPLEFT && to == Direction::UP)
-		return SpeedLineDirection::upleft_up;
-
-	if (from == Direction::UPRIGHT && to == Direction::UP)
-		return SpeedLineDirection::upright_up;
-	if (from == Direction::RIGHT && to == Direction::UPRIGHT)
-		return SpeedLineDirection::right_upright;
-	if (from == Direction::DOWNRIGHT && to == Direction::RIGHT)
-		return SpeedLineDirection::downright_right;
-	if (from == Direction::DOWN && to == Direction::DOWNRIGHT)
-		return SpeedLineDirection::down_downright;
-	if (from == Direction::DOWNLEFT && to == Direction::DOWN)
-		return SpeedLineDirection::downleft_down;
-	if (from == Direction::LEFT && to == Direction::DOWNLEFT)
-		return SpeedLineDirection::left_downleft;
-	if (from == Direction::UPLEFT && to == Direction::LEFT)
-		return SpeedLineDirection::upleft_left;
-	if (from == Direction::UP && to == Direction::UPLEFT)
-		return SpeedLineDirection::up_upleft;
-
-	return SpeedLineDirection::stand;
 }
 
 std::string DynamicObject::sideToString(Side side)
