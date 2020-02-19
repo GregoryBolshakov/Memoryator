@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 #include "HeroBookPage.h"
-#include "ButtonMaker.h"
+#include "Button.h"
 #include "HeroBag.h"
 #include "TextSystem.h"
 #include "WorldObject.h"
@@ -48,7 +48,7 @@ private:
 	std::string buttonsInfoFileDirectory = "Game/heroBook/buttonsInfo.txt",
 		pagesInfoFileDirectory = "Game/heroBook/pagesInfo.txt",
 		contentInfoFileDirectory = "Game/heroBook/bookContent.txt";
-	std::unordered_map<ButtonTag, ButtonMaker> buttonList;
+	std::unordered_map<ButtonTag, Button> buttonList;
 	int currentPage = 0;
 	/////////////////////////
 	// creatures 101 - 199 //

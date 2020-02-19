@@ -19,14 +19,14 @@ Brazier::Brazier(std::string objectName, Vector2f centerPosition, int typeOfObje
 void Brazier::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
-	this->conditionalSizeUnits = Vector2i (900, 900);
+	this->conditionalSizeUnits = {900, 900};
 }
 
-Vector2i Brazier::calculateTextureOffset()
+Vector2f Brazier::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-	return Vector2i(textureBox.width * 0.5, int(textureBox.height * 0.762));
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
+	return { textureBox.width * 0.5f, textureBox.height * 0.762f };
 }
 
 void Brazier::initPedestal()
@@ -142,11 +142,11 @@ int Brazier::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> Brazier::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Brazier::prepareSprites(long long elapsedTime)
 {
-    const Vector2f frontOffset(textureBox.width * 0.506, int(textureBox.height * 0.949)), frontPosition(position.x - textureBoxOffset.x + frontOffset.x, position.y - textureBoxOffset.y + frontOffset.y);
-    SpriteChainElement back(PackTag::locations, PackPart::brazier, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));	
-    SpriteChainElement front(PackTag::locations, PackPart::brazier, Direction::DOWN, 2, frontPosition, conditionalSizeUnits, frontOffset);
+    const Vector2f frontOffset(textureBox.width * 0.506, textureBox.height * 0.949), frontPosition(position.x - textureBoxOffset.x + frontOffset.x, position.y - textureBoxOffset.y + frontOffset.y);
+    SpriteChainElement* back = new SpriteChainElement(PackTag::locations, PackPart::brazier, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));	
+    SpriteChainElement* front = new SpriteChainElement(PackTag::locations, PackPart::brazier, Direction::DOWN, 2, frontPosition, conditionalSizeUnits, frontOffset);
     return {back, front};
 	/*additionalSprites.clear();
 	SpriteChainElement brazierBack, brazierFront, fire, craftIcon;

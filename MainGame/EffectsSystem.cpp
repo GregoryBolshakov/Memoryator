@@ -1,23 +1,23 @@
-#include "UIEffectsSystemMaker.h"
+#include "EffectsSystem.h"
 
-float UIEffectsSystemMaker::defaultDuration = 10e5;
+float EffectsSystem::defaultDuration = 10e5;
 
-UIEffectsSystemMaker::UIEffectsSystemMaker()
+EffectsSystem::EffectsSystem()
 {
 }
 
 
-UIEffectsSystemMaker::~UIEffectsSystemMaker()
+EffectsSystem::~EffectsSystem()
 {
 }
 
-void UIEffectsSystemMaker::init()
+void EffectsSystem::init()
 {
 	//for (auto& item : names)	
 		//item.second = false;	
 }
 
-void UIEffectsSystemMaker::resetEffects(std::vector<std::string> removeList)
+void EffectsSystem::resetEffects(std::vector<std::string> removeList)
 {
 	int cnt = -1;
 	for (const auto& name : removeList)
@@ -43,15 +43,15 @@ void UIEffectsSystemMaker::resetEffects(std::vector<std::string> removeList)
 }
 
 
-void UIEffectsSystemMaker::addEffect(UIEffects effect, Drawable* elem, std::string name, float duration)
+void EffectsSystem::addEffect(Effects effect, Drawable* elem, std::string name, float duration)
 {
 	switch (effect)
 	{
-		case UIEffects::transparencyRemoval:
+		case Effects::transparencyRemoval:
 			if (names.count(name) == 0)
 			{
 				names.insert(name);
-				transparencyRemoval[name] = uiEffect(elem, duration);
+				transparencyRemoval[name] = Effect(elem, duration);
 				auto sprite = dynamic_cast<Sprite*>(transparencyRemoval.at(name).body);
 				if (sprite)
 					sprite->setColor(Color(sprite->getColor().r, sprite->getColor().g, sprite->getColor().b, 0));
@@ -64,7 +64,7 @@ void UIEffectsSystemMaker::addEffect(UIEffects effect, Drawable* elem, std::stri
 }
 
 
-void UIEffectsSystemMaker::interact(long long elapsedTime)
+void EffectsSystem::interact(long long elapsedTime)
 {
 	int cnt = -1;
 	for (const auto& name : names)

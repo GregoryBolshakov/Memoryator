@@ -6,7 +6,7 @@ using namespace sf;
 
 Owl::Owl(const std::string objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
 {
-	conditionalSizeUnits = Vector2i(280, 200);
+	conditionalSizeUnits = { 280, 200 };
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
 	defaultSpeed = 0.0006f;
@@ -31,11 +31,11 @@ Owl::~Owl()
 {
 }
 
-Vector2i Owl::calculateTextureOffset()
+Vector2f Owl::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-	return Vector2i(textureBox.width / 2, textureBox.height * 7 / 8);
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
+	return { textureBox.width / 2, textureBox.height * 7 / 8 };
 }
 
 void Owl::setTarget(DynamicObject& object)
@@ -195,7 +195,7 @@ void Owl::jerk(float power, float deceleration, Vector2f destinationPoint)
 	return;
 }
 
-std::vector<SpriteChainElement> Owl::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Owl::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*spriteChainElement fullSprite;

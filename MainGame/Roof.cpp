@@ -17,32 +17,32 @@ void Roof::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = Vector2i(248, 373);
+		conditionalSizeUnits = { 248, 373 };
 	if (typeOfObject == 2)
-		conditionalSizeUnits = Vector2i(254, 555);
+		conditionalSizeUnits = { 254, 555 };
 	if (typeOfObject == 3)
-		conditionalSizeUnits = Vector2i(255, 485);
+		conditionalSizeUnits = { 255, 485 };
 	if (typeOfObject == 4)
-		conditionalSizeUnits = Vector2i(239, 474);
+		conditionalSizeUnits = {239, 474};
 }
 
-Vector2i Roof::calculateTextureOffset()
+Vector2f Roof::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
 
 	switch (typeOfObject)
 	{
 	case 1:
-		return Vector2i(textureBox.width * 0.501f, int(textureBox.height * 0.993f));
+		return { textureBox.width * 0.501f, textureBox.height * 0.993f };
 	case 2:
-		return Vector2i(textureBox.width * 0.655f, int(textureBox.height * 0.934f));
+		return { textureBox.width * 0.655f, textureBox.height * 0.934f };
 	case 3:
-		return Vector2i(textureBox.width * 0.561f, int(textureBox.height * 0.96f));
+		return { textureBox.width * 0.561f, textureBox.height * 0.96f };
 	case 4:
-		return Vector2i(textureBox.width * 0.245f, int(textureBox.height * 0.944f));
+		return { textureBox.width * 0.245f, textureBox.height * 0.944f };
 	default:
-		return Vector2i(textureBox.width * 0.506f, int(textureBox.height * 0.632f));
+		return { textureBox.width * 0.506f, textureBox.height * 0.632f };
 	}
 }
 
@@ -89,9 +89,9 @@ int Roof::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> Roof::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Roof::prepareSprites(long long elapsedTime)
 {
-	SpriteChainElement body(PackTag::darkWoods, PackPart::roof, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::roof, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	return { body };
 }

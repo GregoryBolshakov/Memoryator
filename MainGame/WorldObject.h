@@ -5,7 +5,6 @@
 #include <SFML/Graphics.hpp>
 #include <ltbl/lighting/LightSystem.h>
 #include <stack>
-#include "UIEffectsSystemMaker.h"
 #include "SpriteChainElement.h"
 
 class WorldObject;
@@ -43,24 +42,24 @@ public:
 	bool getMirroredState() const { return mirrored; }
 	void manuallyDisableMirroring() { mirrored = false; }
 	void cancelMirroring();
-	int getRadius() const { return radius; }
+	float getRadius() const { return radius; }
 	int getPermissibleDistance() const { return permissibleDistance; }
 	std::string getToSaveName() const { return toSaveName; }
 	std::string getName() const { return name; }
-	virtual std::vector<SpriteChainElement> prepareSprites(long long elapsedTime) = 0;
+	virtual std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) = 0;
 	virtual void onSpriteChange();
 	virtual int getSpriteNumber() = 0;
 	Vector2f getPosition() const { return position; }
 	Vector2f *getPtrPosition() { return &position; }
-	Vector2i getTextureSize() const { return  Vector2i(textureBox.width, textureBox.height); }
-	Vector2i getTextureOffset() const { return Vector2i(textureBoxOffset.x, textureBoxOffset.y); }
+	Vector2f getTextureSize() const { return  Vector2f(textureBox.width, textureBox.height); }
+	Vector2f getTextureOffset() const { return Vector2f(textureBoxOffset.x, textureBoxOffset.y); }
 	Vector2f getScaleRatio();
-	Vector2i getConditionalSizeUnits() const { return conditionalSizeUnits; }
-	Vector2i getMicroBlockCheckAreaBounds() { return microBlockCheckAreaBounds; }
+	Vector2f getConditionalSizeUnits() const { return conditionalSizeUnits; }
+	Vector2f getMicroBlockCheckAreaBounds() { return microBlockCheckAreaBounds; }
 	std::vector<Vector2i> getLockedMicroBlocks() const { return lockedMicroBlocks; }
 	virtual Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) = 0;
 	virtual int getBuildType(Vector2f ounPos, Vector2f otherPos) = 0;
-	IntRect getOriginalTextureBox() const { return originalTextureBox; }
+	FloatRect getOriginalTextureBox() const { return originalTextureBox; }
 	State getState() const { return state; }	
 	std::pair<std::stack<birthStaticInfo>, std::stack<birthDynamicInfo>> getBirthObjects() { return std::make_pair(birthStatics, birthDynamics); }
 	
@@ -70,6 +69,7 @@ public:
 	void setHealthPoint(float healthPoint) { this->healthPoint = healthPoint; }
 	void setName(std::string name) { this->name = name; }
 	void deletePromiseOn() { deletePromise = true; }
+	static void setUnscaled(std::vector<SpriteChainElement*> items) { for (auto& item : items) item->unscaled = true; }
 	virtual void setTextureSize(Vector2f textureSize);
 	void setState(State state) { this->state = state; }
 	virtual void takeDamage(float damage, Vector2f attackerPos = { -1, -1 });
@@ -80,12 +80,12 @@ public:
 	bool isProcessed = false;
 	bool isBackground = false, isTerrain = false, isDotsAdjusted = false, isMultiellipse = false, intangible = false;
 
-	virtual Vector2i calculateTextureOffset() = 0;
+	virtual Vector2f calculateTextureOffset() = 0;
 	virtual void initPedestal();
 
 	Color color = Color(255, 255, 255);
 	std::vector<std::pair<Tag, int>> inventory = {};
-	static Vector2i microBlockSize;
+	static Vector2f microBlockSize;
 	Tag tag = Tag::emptyObject;
 protected:
 	int typeOfObject{};
@@ -97,12 +97,12 @@ protected:
 	float timeForNewSprite{}, animationSpeed{};
 	float healthPoint = 0, armor = 1, maxHealthPointValue = 0;
 	std::string name, toSaveName = "";
-	IntRect textureBox, originalTextureBox;
-	Vector2i textureBoxOffset;
-	Vector2i conditionalSizeUnits;	
-	Vector2i microBlockCheckAreaBounds = { 0, 0 };
+	FloatRect textureBox, originalTextureBox;
+	Vector2f textureBoxOffset;
+	Vector2f conditionalSizeUnits;	
+	Vector2f microBlockCheckAreaBounds = { 0, 0 };
 	Vector2f position = { 0, 0 };
-	int radius, permissibleDistance = 0;
+	float radius, permissibleDistance = 0;
 	State state = common;
 	std::stack<birthStaticInfo> birthStatics;
 	std::stack<birthDynamicInfo> birthDynamics;

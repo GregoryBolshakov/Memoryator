@@ -11,6 +11,17 @@ InventorySystem::InventorySystem(): selectedCellBackground(nullptr), boundBags(n
 InventorySystem::~InventorySystem()
 = default;
 
+void InventorySystem::initMaxCounts(std::string filePath)
+{
+	std::ifstream file(filePath);
+
+	int tagNumber = 508, maxCount = 1;
+	while (file >> tagNumber >> maxCount)	
+		HeroBag::itemsMaxCount[Tag(tagNumber)] = maxCount;
+
+	file.close();
+}
+
 void InventorySystem::init()
 {
 	dropZoneRadius = Helper::GetScreenSize().y * 2 / 7;
@@ -18,67 +29,9 @@ void InventorySystem::init()
 	dropZoneTexture.loadFromFile("Game/inventorySprites/dropZone.png");
 	dropZone.setTexture(dropZoneTexture); dropZone.setScale(Helper::GetScreenSize().x / dropZoneTexture.getSize().x, Helper::GetScreenSize().y / dropZoneTexture.getSize().y);
 	bagPosDot.setRadius(Helper::GetScreenSize().y / 288);
-	bagPosDot.setFillColor(Color(53, 53, 53, 200));
-
-	//itemsMaxCount.resize(1000);
-	initSpriteLists();		
-}
-
-void InventorySystem::initBags()
-{
-	std::string textureOBag, textureOBagS, textureCBag, textureCBagS;
-	int id;
-	std::ifstream fin(bagsFileDirectory);
-	while (fin >> id)
-	{
-		fin >> textureCBag >> textureCBagS >> textureOBag >> textureOBagS;
-		bagsSpriteList.insert({ Tag(id), BagSprite() });
-		bagsSpriteList.at(Tag(id)).TextureCBag.loadFromFile(textureCBag);
-		bagsSpriteList.at(Tag(id)).TextureCBagS.loadFromFile(textureCBagS);
-		bagsSpriteList.at(Tag(id)).TextureOBag.loadFromFile(textureOBag);
-		bagsSpriteList.at(Tag(id)).TextureOBagS.loadFromFile(textureOBagS);
-		bagsSpriteList.at(Tag(id)).CBag.setTexture(bagsSpriteList.at(Tag(id)).TextureCBag);
-		bagsSpriteList.at(Tag(id)).CBagS.setTexture(bagsSpriteList.at(Tag(id)).TextureCBagS);
-		bagsSpriteList.at(Tag(id)).OBag.setTexture(bagsSpriteList.at(Tag(id)).TextureOBag);
-		bagsSpriteList.at(Tag(id)).OBagS.setTexture(bagsSpriteList.at(Tag(id)).TextureOBagS);
-	}
-	fin.close();
-}
-
-void InventorySystem::initCells()
-{
-	std::string spriteName;
-	int id, maxCount;
-	Vector2f offset;
-	std::ifstream fin(cellsFileDirectory);
-	while (fin >> spriteName >> offset.x >> offset.y >> id >> maxCount)
-	{
-		cellsSpriteList.insert({ Tag(id), CellSprite() });
-		auto itemSprite = &cellsSpriteList[Tag(id)].sprite;
-		auto itemTexture = &cellsSpriteList[Tag(id)].texture;
-		itemTexture->loadFromFile("Game/inventorySprites/" + spriteName + ".png");
-		itemSprite->setTexture(*itemTexture);
-		offset.x *= HeroBag::itemCommonRadius * 2;
-		offset.y *= HeroBag::itemCommonRadius * 2;
-		cellsSpriteList[Tag(id)].offset = offset;
-		HeroBag::itemsMaxCount[Tag(id)] = maxCount;
-	}
-	fin.close();
-}
-
-void InventorySystem::initSpriteLists()
-{
-	initBags();
-	initCells();
-
-	selectedCellBackground = &cellsSpriteList.at(Tag::emptyCell).sprite;
-	selectedCellBackground->setScale(HeroBag::itemCommonRadius * 2.6 / cellsSpriteList.at(Tag::emptyCell).texture.getSize().x, HeroBag::itemCommonRadius * 2.6 / cellsSpriteList.at(Tag::emptyCell).texture.getSize().y);
-	selectedCellBackground->setColor(Color(selectedCellBackground->getColor().r, selectedCellBackground->getColor().g, selectedCellBackground->getColor().b, 125));
-}
-
-void InventorySystem::inventoryBounding(std::vector<HeroBag>* bags)
-{
-	boundBags = bags;
+	bagPosDot.setFillColor(sf::Color(53, 53, 53, 200));
+	initMaxCounts();
+	successInit = true;
 }
 
 void InventorySystem::moveOtherBags(int cur, std::vector<int> ancestors)
@@ -117,9 +70,6 @@ void InventorySystem::interact(long long elapsedTime)
 	{
 		cnt++;
 
-		if (!bag.wasBounded && bagsSpriteList.count(Tag::heroBag) > 0)
-			bag.boundSprites(&(bagsSpriteList.at(Tag::heroBag)));
-
 		if (cursorText == "  throw away" && Helper::getDist(bag.getPosition(), Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2)) <= dropZoneRadius ||
 			cursorText == "")
 			if (cnt == currentMovingBag || currentMovingBag == -1)
@@ -129,7 +79,7 @@ void InventorySystem::interact(long long elapsedTime)
 		moveOtherBags(cnt);
 		//-----------------------------
 
-		// bag auto-moving			
+		// bag auto-moving
 		bag.fixPos();
 		Vector2f newPos = bag.getPosition(), shift = { bag.movePosition.x - bag.getPosition().x, bag.movePosition.y - bag.getPosition().y };
 		if (bag.movePosition.x != -1 && bag.movePosition.y != -1)
@@ -196,7 +146,7 @@ void InventorySystem::interact(long long elapsedTime)
 		heldItem.position.x += shiftVector.x; heldItem.position.y += shiftVector.y;
 	}
 
-	uiEffectsSystem.interact(elapsedTime);
+	effectsSystem.interact(elapsedTime);
 }
 
 void InventorySystem::crashIntoOtherBags(int cnt)
@@ -323,8 +273,9 @@ void InventorySystem::onMouseUp()
 	currentMovingBag = -1;
 }
 
-void InventorySystem::drawHeroInventory(long long elapsedTime, RenderWindow& window)
+std::vector<DrawableChainElement*> InventorySystem::prepareSprites(long long elapsedTime, std::map<PackTag, SpritePack>* packsMap)
 {
+	std::vector<DrawableChainElement*> result = {};
 	usedMouse = false;
 	const Vector2f mousePos = Vector2f(Mouse::getPosition());
 	// draw bags
@@ -335,7 +286,7 @@ void InventorySystem::drawHeroInventory(long long elapsedTime, RenderWindow& win
 	for (auto& bag : *boundBags)
 	{
 		cnt++;
-		bag.draw(&window, elapsedTime);
+		result.push_back(bag.prepareSprite(elapsedTime, packsMap));
 		bag.readyToEject = false;
 		if (bag.wasMoved)
 			currentMovingBag = cnt;
@@ -350,7 +301,7 @@ void InventorySystem::drawHeroInventory(long long elapsedTime, RenderWindow& win
 			cursorTurnedOn = true;
 			if (cursorText.empty())
 			{
-				uiEffectsSystem.addEffect(UIEffects::transparencyRemoval, &dropZone, "dropZone", 3 * 10e4);
+				effectsSystem.addEffect(Effects::transparencyRemoval, &dropZone, "dropZone", 3 * 10e4);
 			}
 			cursorText = "  throw away";
 			cursorTextPos = bag.getPosition();
@@ -365,30 +316,30 @@ void InventorySystem::drawHeroInventory(long long elapsedTime, RenderWindow& win
 		// drawing bag content
 		if (bag.currentState != bagOpen)
 			continue;
-		for (int cnt2 = 0; cnt2 < bag.cells.size(); cnt2++)
+		for (auto& cell : bag.cells)
 		{
-			auto item = bag.cells[cnt2];
+			const auto item = cell;
+
 			//drawing cell background
-			if (bag.getSelectedCell(Vector2f(Mouse::getPosition())) == cnt2)
-			{
-				const Vector2f backgroundOffset = cellsSpriteList.at(Tag::emptyCell).offset;
-				selectedCellBackground->setPosition(item.position.x - HeroBag::itemCommonRadius - backgroundOffset.x, item.position.y - HeroBag::itemCommonRadius - backgroundOffset.y);
-				window.draw(*selectedCellBackground);
-			}
+			SpriteChainElement* iconBackground = SpritePack::tagToIcon(Tag::emptyObject, false);
+			iconBackground->position = item.position;
+			result.push_back(iconBackground);
 			//-----------------------
 
-			if (bag.cells[cnt2].content.first == Tag::emptyCell)
+			if (cell.content.first == Tag::emptyCell)
 				continue;
 
-			auto sprite = cellsSpriteList.at(Tag(item.content.first)).sprite;
-			sprite.setScale(HeroBag::itemCommonRadius * 2.6 / sprite.getGlobalBounds().width, HeroBag::itemCommonRadius * 2.6 / sprite.getGlobalBounds().height);
-			const Vector2f offset = cellsSpriteList.at(Tag(item.content.first)).offset;
-			sprite.setPosition(Vector2f(item.position.x - HeroBag::itemCommonRadius - offset.x, item.position.y - HeroBag::itemCommonRadius - offset.y));
-			sprite.setColor(Color(sprite.getColor().r, sprite.getColor().g, sprite.getColor().b, 255));
-			window.draw(sprite);
+			SpriteChainElement* icon = SpritePack::tagToIcon(item.content.first, Helper::isIntersects(mousePos, cell.position, SpritePack::iconSize.x / 2), 1);			
+			icon->position = item.position;
+			result.push_back(icon);
 
 			if (HeroBag::itemsMaxCount.at(item.content.first) != 1)
-				textWriter.drawNumberOfItems(sprite.getPosition(), item.content.second, window);
+				result.push_back((new TextChainElement(
+					icon->position,
+					/*{ -SpritePack::iconWithoutSpaceSize.x / 2, -SpritePack::iconWithoutSpaceSize.y / 2 },*/ { 0, 0 },
+					sf::Color(255, 255, 255, 180),
+					std::to_string(item.content.second),
+					TextChainElement::defaultCharacterSize * 1.5)));
 		}
 		//--------------------
 	}
@@ -397,39 +348,47 @@ void InventorySystem::drawHeroInventory(long long elapsedTime, RenderWindow& win
 	//drawing held item
 	if (heldItem.content.first != Tag::emptyCell)
 	{
-		auto sprite = cellsSpriteList.at(Tag(heldItem.content.first)).sprite;
-		sprite.setScale(HeroBag::itemCommonRadius * 2.6 / sprite.getGlobalBounds().width, HeroBag::itemCommonRadius * 2.6 / sprite.getGlobalBounds().height);
-		sprite.setPosition(Vector2f(heldItem.position.x - HeroBag::itemCommonRadius, heldItem.position.y - HeroBag::itemCommonRadius));
-		window.draw(sprite);
+		SpriteChainElement* heldItemIcon = SpritePack::tagToIcon(heldItem.content.first, true, 1);
+		heldItemIcon->position = heldItem.position;
+		result.push_back(heldItemIcon);
+		result.push_back(heldItemIcon);
 		if (HeroBag::itemsMaxCount.at(heldItem.content.first) != 1)
-			textWriter.drawNumberOfItems(sprite.getPosition(), heldItem.content.second, window);
-	}
+			result.push_back((new TextChainElement(heldItemIcon->position,
+				/*{ -SpritePack::iconWithoutSpaceSize.x / 2, -SpritePack::iconWithoutSpaceSize.y / 2 },*/ { 0, 0 },
+				sf::Color(255, 255, 255, 180),
+				std::to_string(heldItem.content.second),
+				TextChainElement::defaultCharacterSize * 1.5)));
+;	}
 	//-----------------
 
 	// draw cursor text
 	if (!cursorTurnedOn)
 	{
 		cursorText = "";
-		uiEffectsSystem.resetEffects({ "dropZone" });
+		effectsSystem.resetEffects({ "dropZone" });
 	}
 	if (cursorText == "  throw away")
 	{
-		TextSystem::drawString(cursorText, NormalFont, 35 * Helper::GetScreenSize().y / 1440, cursorTextPos.x - Helper::GetScreenSize().x / 26, cursorTextPos.y - Helper::GetScreenSize().y / 30,
-			&window, Color(53, 53, 53, 255));
-		window.draw(dropZone);
+		result.push_back((new TextChainElement(cursorTextPos,
+			{ 0, 0 }, 
+			sf::Color(0, 0, 0, 180),
+			cursorText, 
+			TextChainElement::defaultCharacterSize * 1.5)));
+		result.push_back(new SpriteChainElement(PackTag::inventory, PackPart::areas, Direction::DOWN, 2, { 0, 0 }, Helper::GetScreenSize()));
 	}
-	if (bagPosDot.getPosition() != Vector2f(0, 0))
-		window.draw(bagPosDot);
+	//if (bagPosDot.getPosition() != Vector2f(0, 0))
+		//window.draw(bagPosDot);
+	return result;
 }
 
-void InventorySystem::drawInventory(std::vector<std::pair<Tag, int>>* inventory, Vector2f position, RenderWindow& window)
+/*void InventorySystem::drawInventory(std::vector<std::pair<Tag, int>>* inventory, Vector2f position, RenderWindow& window)
 {
 	for (int i = 0; i < inventory->size(); i++)
 		if (inventory->at(i).first == Tag::emptyCell || inventory->at(i).second == 0)
 			inventory->erase(inventory->begin() + i);
 
 	const Vector2f mousePos = Vector2f(Mouse::getPosition());
-	const FloatRect cellRect = cellsSpriteList.at(Tag::chamomile).sprite.getGlobalBounds();	
+	//const FloatRect cellRect = cellsSpriteList.at(Tag::chamomile).sprite.getGlobalBounds();	
 	int maxInRaw;
 	if (inventory->size() > 3)
 		maxInRaw = sqrt(inventory->size());
@@ -472,7 +431,7 @@ void InventorySystem::drawInventory(std::vector<std::pair<Tag, int>>* inventory,
 			column = 0;
 		}
 	}
-}
+}*/
 
 void InventorySystem::resetAnimationValues()
 {

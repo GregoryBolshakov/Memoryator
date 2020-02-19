@@ -18,7 +18,8 @@ WorldHandler::WorldHandler(int width, int height, std::map<PackTag, SpritePack>*
 
 	initShaders();
 	worldGenerator.init(width, height, blockSize, microblockSize, &staticGrid, &dynamicGrid, packsMap);
-	buildSystem.init(inventorySystem.getSpriteList());
+	buildSystem.init();
+	inventorySystem.init();
 	timeSystem.init(1, 0);
 	lightSystem.init({0, 0, Helper::GetScreenSize().x, Helper::GetScreenSize().y});
 }
@@ -51,9 +52,7 @@ void WorldHandler::runWorldGenerator()
 	cameraPosition = Vector2f(focusedObject->getPosition().x + Helper::GetScreenSize().x * camOffset.x, focusedObject->getPosition().y + Helper::GetScreenSize().y * camOffset.y);
 
 	const auto hero = dynamic_cast<Deerchant*>(focusedObject);
-	inventorySystem.inventoryBounding(&(hero->bags));
-	//buildSystem.inventoryBounding(&(hero->bags));
-	//buildSystem.succesInit = true;
+	inventorySystem.inventoryBounding(&hero->bags);
 }
 
 void WorldHandler::initShaders()
@@ -446,7 +445,6 @@ void WorldHandler::onMouseUp(int currentMouseButton)
 
 	auto hero = dynamic_cast<Deerchant*>(dynamicGrid.getItemByName(focusedObject->getName()));
 	//hero->onMouseUp(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.buildingPosition != Vector2f(-1, -1) && !buildSystem.instantBuild));
-	inventorySystem.inventoryBounding(&hero->bags);
 }
 
 void WorldHandler::handleEvents(Event& event)
@@ -597,25 +595,25 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event e
 	}
 }
 
-bool cmpImgDraw(SpriteChainElement first, SpriteChainElement second)
+bool cmpImgDraw(SpriteChainElement* first, SpriteChainElement* second)
 {
-	if (first.zCoord == second.zCoord)
+	if (first->zCoord == second->zCoord)
 	{
-		if (first.position.y == second.position.y)
+		if (first->position.y == second->position.y)
 		{
-			if (first.position.x == second.position.x)
-				return first.size.x * first.size.y < second.size.x * second.size.y;
-			return first.position.x < second.position.x;
+			if (first->position.x == second->position.x)
+				return first->size.x * first->size.y < second->size.x * second->size.y;
+			return first->position.x < second->position.x;
 		}
-		return first.position.y < second.position.y;
+		return first->position.y < second->position.y;
 	}
 
-	return first.zCoord < second.zCoord;
+	return first->zCoord < second->zCoord;
 }
 
-std::vector<SpriteChainElement> WorldHandler::prepareSprites(long long elapsedTime, bool onlyBackground)
+std::vector<SpriteChainElement*> WorldHandler::prepareSprites(long long elapsedTime, bool onlyBackground)
 {
-    std::vector<SpriteChainElement> result = {};
+    std::vector<SpriteChainElement*> result = {};
 
     const auto extra = staticGrid.getBlockSize();
 

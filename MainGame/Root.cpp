@@ -17,36 +17,36 @@ void Root::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = Vector2i(544, 138);
+		conditionalSizeUnits = { 544, 138 };
 	if (typeOfObject == 2)
-		conditionalSizeUnits = Vector2i(468, 208);
+		conditionalSizeUnits = { 468, 208 };
 	if (typeOfObject == 3)
-		conditionalSizeUnits = Vector2i(333, 228);
+		conditionalSizeUnits = { 333, 228 };
 	if (typeOfObject == 4)
-		conditionalSizeUnits = Vector2i(406, 137);
+		conditionalSizeUnits = { 406, 137 };
 	if (typeOfObject == 5)
-		conditionalSizeUnits = Vector2i(339, 132);
+		conditionalSizeUnits = { 339, 132 };
 }
 
-Vector2i Root::calculateTextureOffset()
+Vector2f Root::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
 
 	switch (typeOfObject)
 	{	
 	case 1:
-		return Vector2i(textureBox.width * 0.698f, int(textureBox.height * 0.47f));
+		return { textureBox.width * 0.698f, textureBox.height * 0.47f };
 	case 2:
-		return Vector2i(textureBox.width * 0.313f, int(textureBox.height * 0.671f));
+		return { textureBox.width * 0.313f, textureBox.height * 0.671f };
 	case 3:
-		return Vector2i(textureBox.width * 0.429f, int(textureBox.height * 0.508f));
+		return { textureBox.width * 0.429f, textureBox.height * 0.508f };
 	case 4:
-		return Vector2i(textureBox.width * 0.485f, int(textureBox.height * 0.01f));
+		return { textureBox.width * 0.485f, textureBox.height * 0.01f };
 	case 5:
-		return Vector2i(textureBox.width * 0.551f, int(textureBox.height * 0.01f));
+		return { textureBox.width * 0.551f, textureBox.height * 0.01f };
 	default:
-		return Vector2i(textureBox.width * 0.409f, int(textureBox.height * 0.01f));
+		return { textureBox.width * 0.409f, textureBox.height * 0.01f };
 	}
 }
 
@@ -98,9 +98,9 @@ int Root::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> Root::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Root::prepareSprites(long long elapsedTime)
 {
-	SpriteChainElement body(PackTag::swampyTrees, PackPart::root, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	SpriteChainElement* body = new SpriteChainElement(PackTag::swampyTrees, PackPart::root, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	return { body };
 }

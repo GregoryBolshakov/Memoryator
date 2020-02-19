@@ -19,14 +19,14 @@ void DroppedLoot::setType(int typeOfObject)
 
 	this->typeOfObject = typeOfObject;
 	id = Tag(typeOfObject);
-	conditionalSizeUnits = Vector2i(radius * 3, radius * 3);
+	conditionalSizeUnits = { radius * 3, radius * 3 };
 }
 
-Vector2i DroppedLoot::calculateTextureOffset()
+Vector2f DroppedLoot::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-	return Vector2i(textureBox.width / 2, int(textureBox.height / 1.2));
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
+	return { textureBox.width / 2.0f, textureBox.height / 1.2f };
 }
 
 void DroppedLoot::initPedestal()
@@ -46,7 +46,7 @@ int DroppedLoot::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> DroppedLoot::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> DroppedLoot::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*additionalSprites.clear();

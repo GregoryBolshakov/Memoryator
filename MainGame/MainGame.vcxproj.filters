@@ -31,12 +31,6 @@
     <ClCompile Include="GroundConnection.cpp">
       <Filter>Ground</Filter>
     </ClCompile>
-    <ClCompile Include="ButtonMaker.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="MenuMaker.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="Brazier.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
@@ -86,17 +80,8 @@
     <ClCompile Include="DroppedLoot.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="EffectsSystemMaker.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="WreathDraft.cpp">
       <Filter>HeroBook</Filter>
-    </ClCompile>
-    <ClCompile Include="HeroBagSpriteSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="UIEffectsSystemMaker.cpp">
-      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="Fern.cpp">
       <Filter>Terrain</Filter>
@@ -201,6 +186,21 @@
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="LightSystem.cpp" />
+    <ClCompile Include="Button.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectsSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawableChainElement.cpp">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="TextChainElement.cpp">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EventHandler.h" />
@@ -232,12 +232,6 @@
     </ClInclude>
     <ClInclude Include="GroundConnection.h">
       <Filter>Ground</Filter>
-    </ClInclude>
-    <ClInclude Include="ButtonMaker.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="MenuMaker.h">
-      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="Brazier.h">
       <Filter>Terrain</Filter>
@@ -288,17 +282,8 @@
     <ClInclude Include="DroppedLoot.h">
       <Filter>Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="EffectsSystemMaker.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="WreathDraft.h">
       <Filter>HeroBook</Filter>
-    </ClInclude>
-    <ClInclude Include="HeroBagSpriteSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="UIEffectsSystemMaker.h">
-      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="SpriteStructures.h" />
     <ClInclude Include="Fern.h">
@@ -407,6 +392,21 @@
       <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="LightSystem.h" />
+    <ClInclude Include="Button.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectsSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawableChainElement.h">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="TextChainElement.h">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Terrain">

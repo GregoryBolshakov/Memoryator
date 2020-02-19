@@ -22,7 +22,7 @@ void Console::interact(long long elapsedTime)
 {
 	if (!state)
 		return;
-	//body.line = commandStack[commandStackIterator];
+	//body->line = commandStack[commandStackIterator];
 	body.interact(elapsedTime);	
 }
 

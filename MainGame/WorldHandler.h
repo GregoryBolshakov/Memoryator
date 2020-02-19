@@ -7,7 +7,7 @@
 #include <windows.h>
 
 #include "Helper.h"
-#include "EffectsSystemMaker.h"
+#include "EffectsSystem.h"
 #include "WorldGenerator.h"
 #include "PedestalController.h"
 #include "DynamicObject.h"
@@ -51,10 +51,10 @@ public:
 	std::map<PackTag, SpritePack>* packsMap;
 	void interact(RenderWindow& window, long long elapsedTime, Event event);
 	void handleEvents(Event& event);
-    std::vector<SpriteChainElement> prepareSprites(long long elapsedTime, bool onlyBackground = false);
+    std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime, bool onlyBackground = false);
 	//void draw(RenderWindow& window, long long elapsedTime);
 	void setItemFromBuildSystem();
-	//void drawVisibleItems(RenderWindow& window, long long elapsedTime, std::vector<SpriteChainElement> sprites);
+	//void drawVisibleItems(RenderWindow& window, long long elapsedTime, std::vector<SpriteChainElement*> sprites);
 	Vector2f worldUpperLeft, worldBottomRight;
 	//void runBuildSystemDrawing(RenderWindow& window, long long elapsedTime);
 	//void runInventorySystemDrawing(RenderWindow& window, long long elapsedTime);
@@ -86,7 +86,7 @@ private:
 
 	// World base
 	float width, height;
-	Vector2i blockSize = { 1000, 1000 }, microblockSize = { 20, 20 };
+	Vector2f blockSize = { 1000, 1000 }, microblockSize = { 20, 20 };
 	Vector2f cameraPosition;
 	const Vector2f maxCameraDistance = Vector2f(250, 250), camOffset = { 0, -0.04f };
 	std::string spriteNameFileDirectory = "Game/objects.txt";
@@ -113,8 +113,8 @@ private:
 	sf::Shader spiritWorldShader;
 	sf::Texture distortionMap;
 	void initShaders();
-	EffectsSystemMaker effectSystem;
-	UIEffectsSystemMaker uiEffectSystem;
+
+	EffectsSystem effectSystem;
 
 	// Systems
 	InventorySystem inventorySystem;
@@ -125,7 +125,7 @@ private:
 	// Grids
 	GridList staticGrid;
 	GridList dynamicGrid;
-	std::vector<SpriteChainElement> visibleBackground, visibleTerrain;
+	std::vector<SpriteChainElement*> visibleBackground, visibleTerrain;
 	std::vector<WorldObject*> localTerrain;
 
 	// Test

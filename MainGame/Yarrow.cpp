@@ -21,22 +21,22 @@ void Yarrow::setType(int typeOfObject)
 
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = Vector2i(234, 358);
+		conditionalSizeUnits = { 234, 358 };
 	if (typeOfObject == 2)
-		conditionalSizeUnits = Vector2i(294, 410);
+		conditionalSizeUnits = { 294, 410 };
 	if (typeOfObject == 3)
-		conditionalSizeUnits = Vector2i(315, 351);
+		conditionalSizeUnits = { 315, 351 };
 	if (typeOfObject == 4)
-		conditionalSizeUnits = Vector2i(320, 337);
+		conditionalSizeUnits = { 320, 337 };
 	if (typeOfObject == 5)
-		conditionalSizeUnits = Vector2i(212, 531);
+		conditionalSizeUnits = { 212, 531 };
 }
 
-Vector2i Yarrow::calculateTextureOffset()
+Vector2f Yarrow::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-	return Vector2i (textureBox.width / 2, int(textureBox.height / 1.2));
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
+	return { textureBox.width / 2.0f, textureBox.height / 1.2f };
 }
 
 void Yarrow::initPedestal()
@@ -57,7 +57,7 @@ int Yarrow::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> Yarrow::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Yarrow::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*additionalSprites.clear();

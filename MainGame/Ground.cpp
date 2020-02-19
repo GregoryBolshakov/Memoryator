@@ -17,11 +17,11 @@ void Ground::setType(int typeOfObject)
 		return;
 
 	this->typeOfObject = typeOfObject;
-	this->conditionalSizeUnits = Vector2i (1000, 1000);
+	this->conditionalSizeUnits = { 1000, 1000 };
 	this->zCoord = typeOfObject * 10 + 1;
 }
 
-Vector2i Ground::calculateTextureOffset()
+Vector2f Ground::calculateTextureOffset()
 {
 	return {0, 0};
 }
@@ -36,19 +36,19 @@ int Ground::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> Ground::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Ground::prepareSprites(long long elapsedTime)
 {
-    SpriteChainElement body(PackTag::darkWoods, PackPart::ground, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+    SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::ground, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	
-	body.zCoord = zCoord;
-	body.isBackground = true;
+	body->zCoord = zCoord;
+	body->isBackground = true;
 
 	if (typeOfObject == 1)
-		body.packTag = PackTag::swampyTrees;	
+		body->packTag = PackTag::swampyTrees;
 	if (typeOfObject == 2)
-		body.packTag = PackTag::darkWoods;
+		body->packTag = PackTag::darkWoods;
 	if (typeOfObject == 3)
-		body.packTag = PackTag::birchGrove;
+		body->packTag = PackTag::birchGrove;
 
-    return {body};
+    return { body };
 }

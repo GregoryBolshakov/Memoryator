@@ -11,47 +11,46 @@ TextSystem::TextSystem()
 {
 	initFonts();
 	initTextBoxes();
-	numberOfItems.setFont(fonts[BebasFont]);
+	numberOfItems.setFont(fonts[FontName::BebasFont]);
 	numberOfItems.setCharacterSize(30);
-	numberOfItems.setFillColor(Color::White);
+	numberOfItems.setFillColor(sf::Color::White);
 }
 
 TextSystem::~TextSystem()
-{
-}
+= default;
 
 void TextSystem::initFonts()
 {
 	Font currentFont;
 	currentFont.loadFromFile("fonts/Bebas.ttf");
-	fonts.insert({BebasFont, currentFont});
+	fonts.insert({FontName::BebasFont, currentFont});
 	currentFont.loadFromFile("fonts/normal.ttf");
-	fonts.insert({ NormalFont, currentFont });
+	fonts.insert({ FontName::NormalFont, currentFont });
 	currentFont.loadFromFile("fonts/Console.ttf");
-	fonts.insert({ ConsoleFont, currentFont });
+	fonts.insert({ FontName::ConsoleFont, currentFont });
 }
 
 void TextSystem::initTextBoxes()
 {
 	Text currentText;
-	currentText.setFont(fonts[BebasFont]);
-	textBoxes.insert({ BebasFont, currentText });
-	currentText.setFont(fonts[NormalFont]);
-	textBoxes.insert({ NormalFont, currentText });
-	currentText.setFont(fonts[ConsoleFont]);
-	textBoxes.insert({ ConsoleFont, currentText });
+	currentText.setFont(fonts[FontName::BebasFont]);
+	textBoxes.insert({ FontName::BebasFont, currentText });
+	currentText.setFont(fonts[FontName::NormalFont]);
+	textBoxes.insert({ FontName::NormalFont, currentText });
+	currentText.setFont(fonts[FontName::ConsoleFont]);
+	textBoxes.insert({ FontName::ConsoleFont, currentText });
 }
 
-void TextSystem::drawString(std::string str, FontName font, int size, float posX, float posY, RenderWindow* window, Color color)
+void TextSystem::drawString(const std::string& str, FontName font, int size, float posX, float posY, RenderTarget& target, sf::Color color)
 {
 	textBoxes.at(font).setPosition(posX, posY);
 	textBoxes.at(font).setCharacterSize(size);
 	textBoxes.at(font).setFillColor(color);
 	textBoxes.at(font).setString(str);
-	window->draw(textBoxes.at(font));
+	target.draw(textBoxes.at(font));
 }
 
-void TextSystem::drawTextBox(std::string str, FontName font, int size, float posX, float posY, float width, float height, RenderWindow* window, Color color)
+void TextSystem::drawTextBox(std::string str, FontName font, int size, float posX, float posY, float width, float height, RenderTarget& target, sf::Color color)
 {
 	auto curText = textBoxes.at(font);
 	curText.setString(str);
@@ -60,7 +59,7 @@ void TextSystem::drawTextBox(std::string str, FontName font, int size, float pos
 
 	if (curText.getGlobalBounds().width <= width)
 	{
-		drawString(str, font, size, posX, curPosY, window, color);
+		drawString(str, font, size, posX, curPosY, target, color);
 		return;
 	}
 
@@ -83,16 +82,16 @@ void TextSystem::drawTextBox(std::string str, FontName font, int size, float pos
 		else
 			spacePos = lineLength;
 
-		drawString(str.substr(0, spacePos), font, size, posX, curPosY, window, color);
+		drawString(str.substr(0, spacePos), font, size, posX, curPosY, target, color);
 		curPosY += curText.getGlobalBounds().height;
 		str.erase(0, spacePos);
 	}
 }
 
-void TextSystem::drawNumberOfItems(Vector2f pos, int itemsCount, RenderWindow &window)
+void TextSystem::drawNumberOfItems(Vector2f pos, int itemsCount, RenderTarget& target)
 {
 	numberOfItems.setString(std::to_string(itemsCount));
 	numberOfItems.setOrigin(numberOfItems.getGlobalBounds().width, numberOfItems.getGlobalBounds().height);
-	numberOfItems.setPosition(pos.x + HeroBag::itemCommonRadius * 2, pos.y + HeroBag::itemCommonRadius * 2);
-	window.draw(numberOfItems);
+	numberOfItems.setPosition(pos.x + SpritePack::iconSize.x, pos.y + SpritePack::iconSize.x);
+	target.draw(numberOfItems);
 }

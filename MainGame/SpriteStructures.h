@@ -3,6 +3,7 @@
 #define SPRITETEXTURES_H
 
 #include <SFML/Graphics.hpp>
+#include "SpritePack.h"
 
 using namespace sf;
 
@@ -16,12 +17,6 @@ struct CellSprite {
 	Sprite sprite;
 	Texture texture;
 	Vector2f offset;
-};
-
-struct BagSprite
-{
-	Sprite CBag, CBagS, OBag, OBagS;
-	Texture TextureCBag, TextureCBagS, TextureOBag, TextureOBagS;
 };
 
 #endif

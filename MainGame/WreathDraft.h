@@ -2,7 +2,7 @@
 #define WREATHDRAFT_H
 
 #include <SFML/Graphics.hpp>
-#include "ButtonMaker.h"
+#include "Button.h"
 #include "WorldObject.h"
 
 using namespace sf;

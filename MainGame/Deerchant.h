@@ -16,8 +16,8 @@ public:
 	bool isBuildSystem = false;
 	//draw
 	std::string nameOfFile;
-	Vector2i calculateTextureOffset() override;
-	std::vector<SpriteChainElement> prepareSprites(long long elapsedTime) override;
+	Vector2f calculateTextureOffset() override;
+	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;
 	//control
 	void handleInput(bool usedMouse = false) override;
 	void moveEnd(bool animate = false, float distance = 0, float speed = 0, bool invertDirection = false);
@@ -46,7 +46,7 @@ public:
 	bool nearTheTable = false;
 private:
 	void setHitDirection();
-	SpriteChainElement prepareSpeedLine();
+	SpriteChainElement* prepareSpeedLine();
 
 	float hitDistance = 0, moveEndDistance = 0, moveTime = 0, smoothMoveTime = 0;
 	Direction smoothDirection = Direction::STAND;

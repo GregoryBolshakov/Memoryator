@@ -12,8 +12,8 @@ class ClapWhirl : public DynamicObject
 public:
 	ClapWhirl(std::string objectName, Vector2f centerPosition, WorldObject* owner);
 	~ClapWhirl();
-	Vector2i calculateTextureOffset() override;
-	std::vector<SpriteChainElement> prepareSprites(long long elapsedTime) override;
+	Vector2f calculateTextureOffset() override;
+	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;
 	void behaviorWithDynamic(DynamicObject* target, long long elapsedTime) override;
 	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;

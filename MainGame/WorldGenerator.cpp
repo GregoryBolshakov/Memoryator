@@ -15,7 +15,7 @@ void WorldGenerator::initMainScale()
 	mainScale = round(mainScale * 100) / 100;
 }
 
-void WorldGenerator::init(int width, int height, Vector2i blockSize, Vector2i microBlockSize, GridList* staticGrid, GridList* dynamicGrid, std::map<PackTag, SpritePack>* packsMap)
+void WorldGenerator::init(int width, int height, Vector2f blockSize, Vector2f microBlockSize, GridList* staticGrid, GridList* dynamicGrid, std::map<PackTag, SpritePack>* packsMap)
 {
 	this->width = width;
 	this->height = height;
@@ -192,7 +192,7 @@ void WorldGenerator::generateGround(int blockIndex)
 
 bool WorldGenerator::isRoomyStepBlock(int x, int y) const
 {
-	return (roomyStepBlocks.count(std::make_pair(int((x % blockSize.x) / stepSize.x), int((y % blockSize.y) / stepSize.y))) > 0);
+	return (roomyStepBlocks.count(std::make_pair((x % int(blockSize.x) / stepSize.x), (y % int(blockSize.y) / stepSize.y))) > 0);
 }
 
 bool WorldGenerator::isTriggerBlock(int x, int y)

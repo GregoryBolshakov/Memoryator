@@ -7,11 +7,11 @@
 PedestalController::PedestalController()
 {
 	filedFigure.setSize(Vector2f(size));
-	filedFigure.setFillColor(Color(255, 255, 255, 80));
+	filedFigure.setFillColor(sf::Color(255, 255, 255, 80));
 	focusFigure.setRadius(size.x);
-	focusFigure.setFillColor(Color(255, 71, 71, 180));
+	focusFigure.setFillColor(sf::Color(255, 71, 71, 180));
 	centerFigure.setRadius(size.x);
-	centerFigure.setFillColor(Color(60, 80, 176, 180));
+	centerFigure.setFillColor(sf::Color(60, 80, 176, 180));
 	lastMousePos = Vector2f(Mouse::getPosition());
 }
 

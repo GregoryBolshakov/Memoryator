@@ -109,6 +109,11 @@ bool Helper::isIntersects(Vector2f pos, IntRect shape)
 	return false;
 }
 
+bool Helper::isIntersects(Vector2f pos, Vector2f circlePos, float radius)
+{
+	return getDist(pos, circlePos) <= radius;
+}
+
 bool Helper::isIntersectTerrain(Vector2f position, TerrainObject& terrain, float radius)
 {
 	auto f1 = terrain.getFocus1();

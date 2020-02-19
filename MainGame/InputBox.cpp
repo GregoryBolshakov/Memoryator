@@ -25,7 +25,7 @@ void InputBox::init(IntRect rect)
 	cursor.setPosition(innerPart.getPosition().x + microOffset, innerPart.getPosition().y + microOffset * 3.0f / 4);
 	cursor.setFillColor(textColor);
 
-	text.setFont(TextSystem::fonts.at(ConsoleFont));
+	text.setFont(TextSystem::fonts.at(FontName::ConsoleFont));
 	text.setCharacterSize(TextSystem::characterSize);
 	text.setFillColor(textColor);
 	text.setPosition(innerPart.getPosition().x + microOffset * 2, innerPart.getPosition().y - microOffset / 2.0f);
@@ -51,14 +51,14 @@ void InputBox::draw(sf::RenderWindow& window)
 {
 	window.draw(body);
 	window.draw(innerPart);
-	TextSystem::drawString(line, ConsoleFont, characterSize, innerPart.getPosition().x + microOffset * 2, innerPart.getPosition().y - microOffset / 2.0f, &window, textColor);
+	TextSystem::drawString(line, FontName::ConsoleFont, characterSize, innerPart.getPosition().x + microOffset * 2, innerPart.getPosition().y - microOffset / 2.0f, window, textColor);
 	window.draw(cursor);
 }
 
 void InputBox::animateCursor()
 {
 	if (cursor.getFillColor() == textColor)
-		cursor.setFillColor(Color(textColor.r, textColor.g, textColor.b, 10));
+		cursor.setFillColor(sf::Color(textColor.r, textColor.g, textColor.b, 10));
 	else
 		cursor.setFillColor(textColor);
 }

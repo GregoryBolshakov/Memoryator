@@ -8,66 +8,35 @@ HeroBag::HeroBag()
 }
 
 HeroBag::~HeroBag()
-{
-	spriteClosedBag.~Sprite();
-	spriteClosedBagSelected.~Sprite();
-	spriteOpenBag.~Sprite();
-	spriteOpenBagSelected.~Sprite();	
-}
-
-void HeroBag::cleanTextureReferences()
-{
-	textureClosedBag = nullptr;
-	textureClosedBagSelected = nullptr;
-	textureOpenBag = nullptr;
-	textureOpenBagSelected = nullptr;
-}
+= default;
 
 std::unordered_map<Tag, int> HeroBag::itemsMaxCount = std::unordered_map<Tag, int>();
-float HeroBag::itemCommonRadius = Helper::GetScreenSize().y / 36;
 
 std::vector<std::pair<Tag, int>> HeroBag::testInventory =
 { {Tag::noose, 1}, {Tag::yarrow, 3}, {Tag::emptyCell, 0}, {Tag::inkyBlackPen, 1}, {Tag::hare, 1}, {Tag::chamomile, 2}, {Tag::emptyCell, 0} };
 std::vector<std::pair<Tag, int>> HeroBag::emptyInventory =
 { {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0} };
 
-void HeroBag::boundSprites(BagSprite* drawInfo)
-{
-	wasBounded = true;
-
-	this->textureClosedBag = &(drawInfo->TextureCBag);
-	this->textureClosedBagSelected = &(drawInfo->TextureCBagS);
-	this->textureOpenBag = &(drawInfo->TextureOBag);
-	this->textureOpenBagSelected = &(drawInfo->TextureOBagS);
-
-	this->spriteClosedBag.setTexture(drawInfo->TextureCBag);
-	this->spriteClosedBagSelected.setTexture(drawInfo->TextureCBagS);
-	this->spriteOpenBag.setTexture(drawInfo->TextureOBag);
-	this->spriteOpenBagSelected.setTexture(drawInfo->TextureOBagS);
-
-	this->spriteClosedBag.setScale(sizeClosed.x / this->textureClosedBag->getSize().x, sizeClosed.y / this->textureClosedBag->getSize().y);
-	this->spriteOpenBag.setScale(sizeOpen.x / this->textureOpenBag->getSize().x, sizeOpen.y / this->textureOpenBag->getSize().y);
-	this->spriteClosedBagSelected.setScale(sizeClosed.x / this->textureClosedBagSelected->getSize().x, sizeClosed.y / this->textureClosedBagSelected->getSize().y);
-	this->spriteOpenBagSelected.setScale(sizeOpen.x / this->textureOpenBagSelected->getSize().x, sizeOpen.y / this->textureOpenBagSelected->getSize().y);
-
-	this->spriteClosedBag.setPosition(Vector2f(position.x - textureClosedOffset.x, position.y - textureClosedOffset.y));
-	this->spriteClosedBagSelected.setPosition(Vector2f(position.x - textureClosedOffset.x, position.y - textureClosedOffset.y));
-	this->spriteOpenBag.setPosition(Vector2f(position.x - textureOpenOffset.x, position.y - textureOpenOffset.y));
-	this->spriteOpenBagSelected.setPosition(Vector2f(position.x - textureOpenOffset.x, position.y - textureOpenOffset.y));
-}
-
 void HeroBag::initialize(Vector2f position, bool isSelectable, std::vector<std::pair<Tag, int>> inventory)
 {
-	this->sizeClosed = Vector2f(Helper::GetScreenSize().x / 12, Helper::GetScreenSize().y / 6);
-	this->sizeOpen = Vector2f(Helper::GetScreenSize().x / 6, Helper::GetScreenSize().y / 3);
+	sizeClosed = Vector2f(Helper::GetScreenSize().x / 12, Helper::GetScreenSize().y / 6);
+	sizeOpen = Vector2f(Helper::GetScreenSize().x / 6, Helper::GetScreenSize().y / 3);
 
 	this->position = position;
 	lastMousePos = position;
 
 	this->isSelectable = isSelectable;	
 
-	this->textureClosedOffset = Vector2f(sizeClosed.x / 2, sizeClosed.y / 1.7);
-	this->textureOpenOffset = Vector2f(sizeOpen.x / 2, sizeOpen.y / 1.7);
+	textureClosedOffset = Vector2f(sizeClosed.x / 2, sizeClosed.y / 1.7);
+	textureOpenOffset = Vector2f(sizeOpen.x / 2, sizeOpen.y / 1.7);
+
+	bagSpriteChain.ClosedBag->size = sizeClosed; bagSpriteChain.ClosedBagSelected->size = sizeClosed; bagSpriteChain.ClosedBagBig->size = sizeClosed;
+	bagSpriteChain.OpenedBag->size = sizeOpen; bagSpriteChain.OpenedBagSelected->size = sizeOpen;
+	bagSpriteChain.ClosedBag->offset = textureClosedOffset; bagSpriteChain.ClosedBagSelected->offset = textureClosedOffset; bagSpriteChain.ClosedBagBig->offset = textureClosedOffset;
+	bagSpriteChain.OpenedBag->offset = textureOpenOffset; bagSpriteChain.OpenedBagSelected->offset = textureOpenOffset;
+	bagSpriteChain.ClosedBag->position = position; bagSpriteChain.ClosedBagSelected->position = position; bagSpriteChain.ClosedBagBig->position = position;
+	bagSpriteChain.OpenedBag->position = position; bagSpriteChain.OpenedBagSelected->position = position;
+
 	this->minDistToBorder = std::max(sizeClosed.y - textureClosedOffset.y, textureClosedOffset.y);
 	closedRadius = (sizeClosed.x + sizeClosed.y) / 4;
 	openedRadius = (sizeOpen.x + sizeOpen.y) / 10;
@@ -81,8 +50,21 @@ void HeroBag::initialize(Vector2f position, bool isSelectable, std::vector<std::
 	for (int i = 0; i < 7; i++)
 	{
 		cellsPos[i].x *= sizeOpen.x; cellsPos[i].y *= sizeOpen.y;
-		cells.push_back(createCell(Vector2f(position.x + cellsPos[i].x, position.y + cellsPos[i].y), inventory[i], itemCommonRadius));
+		cells.push_back(createCell(Vector2f(position.x + cellsPos[i].x, position.y + cellsPos[i].y), inventory[i], SpritePack::iconSize.x / 2));
 	}
+
+	// set sprites from pack
+	if (bagSpriteChain.ClosedBag->packTag == PackTag::empty)
+		bagSpriteChain.ClosedBag->setDrawInfo(PackTag::inventory, PackPart::bag1, Direction::DOWN, 1);
+	if (bagSpriteChain.ClosedBagSelected->packTag == PackTag::empty)
+		bagSpriteChain.ClosedBagSelected->setDrawInfo(PackTag::inventory, PackPart::bag1, Direction::DOWN, 2);
+	if (bagSpriteChain.ClosedBagBig->packTag == PackTag::empty)
+		bagSpriteChain.ClosedBagBig->setDrawInfo(PackTag::inventory, PackPart::bag1, Direction::DOWN, 3);
+	if (bagSpriteChain.OpenedBag->packTag == PackTag::empty)
+		bagSpriteChain.OpenedBag->setDrawInfo(PackTag::inventory, PackPart::bag1, Direction::DOWN, 4);
+	if (bagSpriteChain.OpenedBagSelected->packTag == PackTag::empty)
+		bagSpriteChain.OpenedBagSelected->setDrawInfo(PackTag::inventory, PackPart::bag1, Direction::DOWN, 5);
+	//----------------------
 }
 
 Cell HeroBag::createCell(Vector2f position, std::pair<Tag, int> content, float radius)
@@ -97,7 +79,7 @@ int HeroBag::getSelectedCell(Vector2f position)
 {
 	for (int i = 0; i < cells.size(); i++)
 	{
-		if (Helper::getDist(position, cells[i].position) <= itemCommonRadius)
+		if (Helper::getDist(position, cells[i].position) <= SpritePack::iconSize.x / 2)
 			return i;
 	}
 	return -1;
@@ -105,23 +87,20 @@ int HeroBag::getSelectedCell(Vector2f position)
 
 float HeroBag::getRadius()
 {
-	if (!wasBounded)
-		return 0;
-
 	if (currentState == bagClosed)
-		return spriteClosedBag.getGlobalBounds().width / 2;
+		return bagSpriteChain.ClosedBag->size.x / 2;
 	if (currentState == bagOpening)
-		return spriteClosedBagSelected.getGlobalBounds().width / 2;
+		return bagSpriteChain.ClosedBagSelected->size.x / 2;
 	if (currentState == bagOpen)
-		return spriteOpenBag.getGlobalBounds().width / 2;
+		return bagSpriteChain.OpenedBag->size.x / 2;
 	return 0;
 }
 
 void HeroBag::drawCircuit(RenderWindow* window)
 {
-	for (int i = spriteOpenBag.getGlobalBounds().left; i <= spriteOpenBag.getGlobalBounds().left + spriteOpenBag.getGlobalBounds().width; i += 5)
+	for (int i = bagSpriteChain.OpenedBag->position.x; i <= bagSpriteChain.OpenedBag->position.x + bagSpriteChain.OpenedBag->size.x; i += 5)
 	{
-		for (int j = spriteOpenBag.getGlobalBounds().top; j <= spriteOpenBag.getGlobalBounds().top + spriteOpenBag.getGlobalBounds().height; j += 5)
+		for (int j = bagSpriteChain.OpenedBag->position.y; j <= bagSpriteChain.OpenedBag->position.y + bagSpriteChain.OpenedBag->size.y; j += 5)
 		{
 			if (getSelectedCell(Vector2f(i, j)) != -1)
 			{
@@ -323,41 +302,32 @@ void HeroBag::mouseMove()
 	lastMousePos = Vector2f(Mouse::getPosition());
 }
 
-void HeroBag::draw(RenderWindow* window, long long elapsedTime)
-{	
-	Vector2f screenCenter = Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2);
-	
+SpriteChainElement* HeroBag::prepareSprite(long long elapsedTime, std::map<PackTag, SpritePack>* packsMap)
+{
+	const Vector2f screenCenter = Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2);
+	bagSpriteChain.ClosedBag->size = sizeClosed; bagSpriteChain.ClosedBagSelected->size = sizeClosed; bagSpriteChain.ClosedBagBig->size = sizeClosed;
+	bagSpriteChain.OpenedBag->size = sizeOpen; bagSpriteChain.OpenedBagSelected->size = sizeOpen;
+	bagSpriteChain.ClosedBag->offset = textureClosedOffset; bagSpriteChain.ClosedBagSelected->offset = textureClosedOffset; bagSpriteChain.ClosedBagBig->offset = textureClosedOffset;
+	bagSpriteChain.OpenedBag->offset = textureOpenOffset; bagSpriteChain.OpenedBagSelected->offset = textureOpenOffset;
+	bagSpriteChain.ClosedBag->position = position; bagSpriteChain.ClosedBagSelected->position = position; bagSpriteChain.ClosedBagBig->position = position;
+	bagSpriteChain.OpenedBag->position = position; bagSpriteChain.OpenedBagSelected->position = position;
 
 	if (currentState == bagOpen)
 	{
-		textureOpenOffset = Vector2f(sizeOpen.x / 2, sizeOpen.y / 1.7);
-		if (readyToChangeState)
-		{
-			spriteOpenBagSelected.setPosition(position.x - textureOpenOffset.x, position.y - textureOpenOffset.y);
-			window->draw(spriteOpenBagSelected);
-		}
-		else
-		{
-			spriteOpenBag.setPosition(position.x - textureOpenOffset.x, position.y - textureOpenOffset.y);
-			window->draw(spriteOpenBag);
-		}
-		return;
+		bagSpriteChain.OpenedBag->offset = textureOpenOffset;
+		bagSpriteChain.OpenedBagSelected->offset = textureOpenOffset;
+		if (readyToChangeState)			
+			return bagSpriteChain.OpenedBagSelected;		
+		return bagSpriteChain.OpenedBag;		
 	}
 
 	if (currentState == bagClosed)
 	{
-		textureClosedOffset = Vector2f(sizeClosed.x / 2, sizeClosed.y / 1.7);
+		bagSpriteChain.ClosedBag->offset = textureClosedOffset;
+		bagSpriteChain.ClosedBagSelected->offset = textureClosedOffset;
 		if (readyToChangeState)
-		{
-			spriteClosedBagSelected.setPosition(position.x - textureClosedOffset.x, position.y - textureClosedOffset.y);
-			window->draw(spriteClosedBagSelected);
-		}
-		else
-		{
-			spriteClosedBag.setPosition(position.x - textureClosedOffset.x, position.y - textureClosedOffset.y);
-			window->draw(spriteClosedBag);
-		}
-		return;
+			return bagSpriteChain.ClosedBagSelected;		
+		return bagSpriteChain.ClosedBag;		
 	}
 
 	if (currentState == bagOpening)
@@ -377,16 +347,16 @@ void HeroBag::draw(RenderWindow* window, long long elapsedTime)
 			fixPos();
 			position.x += shiftVector.x; position.y += shiftVector.y;
 
-			const Vector2f scaleValue = { (sizeClosed.x + ((sizeOpen.x - sizeClosed.x) * stateChangingTime / stateChangeTime)) / textureOpenBag->getSize().x, (sizeClosed.y + ((sizeOpen.y - sizeClosed.y) * stateChangingTime / stateChangeTime)) / textureOpenBag->getSize().y };
-			spriteOpenBag.setScale(scaleValue);
+			const auto textureSize = packsMap->at(PackTag::inventory).getOriginalInfo(PackPart::bag1, Direction::DOWN, 4).source_size;
+			const Vector2f scaleValue = { (sizeClosed.x + ((sizeOpen.x - sizeClosed.x) * stateChangingTime / stateChangeTime)) / textureSize.w, (sizeClosed.y + ((sizeOpen.y - sizeClosed.y) * stateChangingTime / stateChangeTime)) / textureSize.h };
+			bagSpriteChain.OpenedBag->size.x *= scaleValue.x; bagSpriteChain.OpenedBag->size.y *= scaleValue.y;
 
-			textureClosedOffset = Vector2f(spriteOpenBag.getGlobalBounds().width / 2, spriteOpenBag.getGlobalBounds().height / 1.7);
-			spriteOpenBag.setPosition(position.x - textureClosedOffset.x, position.y - textureClosedOffset.y);
+			bagSpriteChain.OpenedBag->offset = Vector2f(bagSpriteChain.OpenedBag->size.x / 2, bagSpriteChain.OpenedBag->size.y / 1.7);
+			bagSpriteChain.OpenedBag->position = position;
 
 			fixCells();
 		}
-		window->draw(spriteOpenBag);
-		return;
+		return bagSpriteChain.OpenedBag;
 	}
 
 	if (currentState == bagClosing)
@@ -404,17 +374,19 @@ void HeroBag::draw(RenderWindow* window, long long elapsedTime)
 				sqrt(pow(fromCenterVector.x, 2) + pow(fromCenterVector.y, 2));
 			shiftVector = Vector2f(fromCenterVector.x * cutCoefficient, fromCenterVector.y * cutCoefficient);
 			fixPos();
-			position.x += shiftVector.x; position.y += shiftVector.y;			
+			position.x += shiftVector.x; position.y += shiftVector.y;
 
-			const Vector2f scaleValue = { (sizeClosed.x + ((sizeOpen.x - sizeClosed.x) * (stateChangeTime - stateChangingTime) / stateChangeTime)) / textureClosedBag->getSize().x, (sizeClosed.y + ((sizeOpen.y - sizeClosed.y) * (stateChangeTime - stateChangingTime) / stateChangeTime)) / textureClosedBag->getSize().y };
-			spriteClosedBag.setScale(scaleValue);
+			const auto textureSize = packsMap->at(PackTag::inventory).getOriginalInfo(PackPart::bag1, Direction::DOWN, 1).source_size;
+			const Vector2f scaleValue = { (sizeClosed.x + (sizeOpen.x - sizeClosed.x) * (stateChangeTime - stateChangingTime) / stateChangeTime) / bagSpriteChain.ClosedBag->size.x,
+				(sizeClosed.y + (sizeOpen.y - sizeClosed.y) * (stateChangeTime - stateChangingTime) / stateChangeTime) / bagSpriteChain.ClosedBag->size.y };
+			bagSpriteChain.ClosedBag->size = sizeClosed;
+			bagSpriteChain.ClosedBag->size.x *= scaleValue.x; bagSpriteChain.ClosedBag->size.y *= scaleValue.y;
 
-			textureOpenOffset = Vector2f(spriteClosedBag.getGlobalBounds().width / 2, spriteClosedBag.getGlobalBounds().height / 1.7);
-			spriteClosedBag.setPosition(position.x - textureOpenOffset.x, position.y - textureOpenOffset.y);
+			bagSpriteChain.ClosedBag->offset = Vector2f(bagSpriteChain.ClosedBag->size.x / 2, bagSpriteChain.ClosedBag->size.y / 1.7);
+			bagSpriteChain.ClosedBag->position = position;
 
 			fixCells();
 		}
-		window->draw(spriteClosedBag);
-		return;
+		return  bagSpriteChain.ClosedBag;
 	}
 }

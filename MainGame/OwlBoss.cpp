@@ -4,7 +4,7 @@ using namespace sf;
 
 OwlBoss::OwlBoss(std::string objectName, Vector2f centerPosition) : DynamicObject(objectName, centerPosition)
 {
-	conditionalSizeUnits = Vector2i(600, 600);
+	conditionalSizeUnits = { 600, 600 };
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
 	defaultSpeed = 0.0005f;
@@ -78,11 +78,11 @@ void OwlBoss::behavior(long long elapsedTime)
 	//--------------------------
 }
 
-Vector2i OwlBoss::calculateTextureOffset()
+Vector2f OwlBoss::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-	return Vector2i(textureBox.width / 2, textureBox.height * 7 / 8);
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
+	return { textureBox.width / 2, textureBox.height * 7 / 8 };
 }
 
 void OwlBoss::setTarget(DynamicObject& object)
@@ -181,7 +181,7 @@ void OwlBoss::fightInteract(long long elapsedTime, DynamicObject* target)
 	pushAway(elapsedTime);
 }
 
-std::vector<SpriteChainElement> OwlBoss::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> OwlBoss::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*spriteChainElement legsSprite, bodySprite, fullSprite;

@@ -6,7 +6,7 @@ using namespace sf;
 
 ClapWhirl::ClapWhirl(const std::string objectName, Vector2f centerPosition, WorldObject* owner) : DynamicObject(objectName, centerPosition)
 {
-	conditionalSizeUnits = Vector2i(250, 500);
+	conditionalSizeUnits = {250, 500);
 	startPos = owner->getPosition();
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
@@ -30,9 +30,9 @@ ClapWhirl::~ClapWhirl()
 
 Vector2i ClapWhirl::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-	return Vector2i(0, int(textureBox.height / 2));
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
+	return Vector2i(0, textureBox.height / 2));
 }
 
 void ClapWhirl::setTarget(DynamicObject& object)

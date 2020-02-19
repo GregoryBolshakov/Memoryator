@@ -17,68 +17,68 @@ void Stump::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = Vector2i (412, 256);
+		conditionalSizeUnits = { 412, 256 };
 	if (typeOfObject == 2)
-		conditionalSizeUnits = Vector2i (507, 337);
+		conditionalSizeUnits = { 507, 337 };
 	if (typeOfObject == 3)
-		conditionalSizeUnits = Vector2i (647, 312);
+		conditionalSizeUnits = { 647, 312 };
 	if (typeOfObject == 4)
-		conditionalSizeUnits = Vector2i (462, 269);
+		conditionalSizeUnits = { 462, 269 };
 	if (typeOfObject == 5)
-		conditionalSizeUnits = Vector2i(243, 203);
+		conditionalSizeUnits = { 243, 203 };
 	if (typeOfObject == 6)
-		conditionalSizeUnits = Vector2i(236, 315);
+		conditionalSizeUnits = { 236, 315 };
 	if (typeOfObject == 7)
-		conditionalSizeUnits = Vector2i(286, 576);
+		conditionalSizeUnits = { 286, 576 };
 	if (typeOfObject == 8)
-		conditionalSizeUnits = Vector2i(354, 570);
+		conditionalSizeUnits = { 354, 570 };
 	if (typeOfObject == 9)
-		conditionalSizeUnits = Vector2i(335, 266);
+		conditionalSizeUnits = { 335, 266 };
 	if (typeOfObject == 10)
-		conditionalSizeUnits = Vector2i(186, 412);
+		conditionalSizeUnits = { 186, 412 };
 	if (typeOfObject == 11)
-		conditionalSizeUnits = Vector2i(250, 663);
+		conditionalSizeUnits = { 250, 663 };
 	if (typeOfObject == 12)
-		conditionalSizeUnits = Vector2i(526, 441);
+		conditionalSizeUnits = { 526, 441 };
 	if (typeOfObject == 13)
-		conditionalSizeUnits = Vector2i(267, 434);
+		conditionalSizeUnits = { 267, 434 };
 }
 
-Vector2i Stump::calculateTextureOffset()
+Vector2f Stump::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
 
 	switch (typeOfObject)
 	{
 	case 1:
-		return Vector2i(textureBox.width * 0.551f, int(textureBox.height * 0.645f));
+		return { textureBox.width * 0.551f, textureBox.height * 0.645f };
 	case 2:
-		return Vector2i(textureBox.width * 0.542f, int(textureBox.height * 0.64f));
+		return { textureBox.width * 0.542f, textureBox.height * 0.64f };
 	case 3:
-		return Vector2i(textureBox.width * 0.518f, int(textureBox.height * 0.446f));
+		return { textureBox.width * 0.518f, textureBox.height * 0.446f };
 	case 4:
-		return Vector2i(textureBox.width * 0.485f, int(textureBox.height * 0.591f));
+		return { textureBox.width * 0.485f, textureBox.height * 0.591f };
 	case 5:
-		return Vector2i(textureBox.width * 0.551f, int(textureBox.height * 0.771f));
+		return { textureBox.width * 0.551f, textureBox.height * 0.771f };
 	case 6:
-		return Vector2i(textureBox.width * 0.468f, int(textureBox.height * 0.796f));
+		return { textureBox.width * 0.468f, textureBox.height * 0.796f };
 	case 7:
-		return Vector2i(textureBox.width * 0.497, int(textureBox.height * 0.859f));
+		return { textureBox.width * 0.497f, textureBox.height * 0.859f };
 	case 8:
-		return Vector2i(textureBox.width * 0.525f, int(textureBox.height * 0.889f));
+		return { textureBox.width * 0.525f, textureBox.height * 0.889f };
 	case 9:
-		return Vector2i(textureBox.width * 0.501f, int(textureBox.height * 0.728f));
+		return { textureBox.width * 0.501f, textureBox.height * 0.728f };
 	case 10:
-		return Vector2i(textureBox.width * 0.46f, int(textureBox.height * 0.83f));
+		return { textureBox.width * 0.46f, textureBox.height * 0.83f };
 	case 11:
-		return Vector2i(textureBox.width * 0.467f, int(textureBox.height * 0.868f));
+		return { textureBox.width * 0.467f, textureBox.height * 0.868f };
 	case 12:
-		return Vector2i(textureBox.width * 0.554f, int(textureBox.height * 0.758f));
+		return { textureBox.width * 0.554f, textureBox.height * 0.758f };
 	case 13:
-		return Vector2i(textureBox.width * 0.46f, int(textureBox.height * 0.83f));
+		return { textureBox.width * 0.46f, textureBox.height * 0.83f };
 	default:
-		return Vector2i(textureBox.width * 0.409f, int(textureBox.height * 0.945f));
+		return { textureBox.width * 0.409f, textureBox.height * 0.945f };
 	}	
 }
 
@@ -170,21 +170,21 @@ int Stump::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> Stump::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Stump::prepareSprites(long long elapsedTime)
 {
-	SpriteChainElement body(PackTag::darkWoods, PackPart::stump, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::stump, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	if (typeOfObject >= 1 && typeOfObject <= 4)
-		body.packTag = PackTag::birchGrove;
+		body->packTag = PackTag::birchGrove;
 	if (typeOfObject >= 5 && typeOfObject <= 10)
 	{
-		body.packTag = PackTag::darkWoods;
-		body.number -= 4;
+		body->packTag = PackTag::darkWoods;
+		body->number -= 4;
 	}
 	if (typeOfObject >= 11 && typeOfObject <= 13)
 	{
-		body.packTag = PackTag::swampyTrees;
-		body.number -= 10;
+		body->packTag = PackTag::swampyTrees;
+		body->number -= 10;
 	}
 
 	return { body };

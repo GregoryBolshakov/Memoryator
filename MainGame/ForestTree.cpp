@@ -17,91 +17,91 @@ void ForestTree::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = Vector2i (396, 1090);
+		conditionalSizeUnits = { 396, 1090 };
 	if (typeOfObject == 2)
-		conditionalSizeUnits = Vector2i (536, 1150);
+		conditionalSizeUnits = { 536, 1150 };
 	if (typeOfObject == 3)
-		conditionalSizeUnits = Vector2i (244, 799);
+		conditionalSizeUnits = { 244, 799 };
 	if (typeOfObject == 4)
-		conditionalSizeUnits = Vector2i (623, 875);
+		conditionalSizeUnits = { 623, 875 };
 	if (typeOfObject == 5)
-		conditionalSizeUnits = Vector2i (644, 1235);
+		conditionalSizeUnits = { 644, 1235 };
 	if (typeOfObject == 6)
-		conditionalSizeUnits = Vector2i (681, 1027);
+		conditionalSizeUnits = { 681, 1027 };
 	if (typeOfObject == 7)
-		conditionalSizeUnits = Vector2i (616, 1169);
+		conditionalSizeUnits = { 616, 1169 };
 	if (typeOfObject == 8)
-		conditionalSizeUnits = Vector2i (457, 1152);
+		conditionalSizeUnits = { 457, 1152 };
 	if (typeOfObject == 9)
-		conditionalSizeUnits = Vector2i (527, 1188);
+		conditionalSizeUnits = { 527, 1188 };
 	if (typeOfObject == 10)
-		conditionalSizeUnits = Vector2i(786, 1296);
+		conditionalSizeUnits = { 786, 1296 };
 	if (typeOfObject == 11)
-		conditionalSizeUnits = Vector2i(806, 1292);
+		conditionalSizeUnits = { 806, 1292 };
 	if (typeOfObject == 12)
-		conditionalSizeUnits = Vector2i(795, 1190);
+		conditionalSizeUnits = { 795, 1190 };
 	if (typeOfObject == 13)
-		conditionalSizeUnits = Vector2i(1221, 386);
+		conditionalSizeUnits = { 1221, 386 };
 	if (typeOfObject == 14)
-		conditionalSizeUnits = Vector2i(952, 962);
+		conditionalSizeUnits = { 952, 962 };
 	if (typeOfObject == 15)
-		conditionalSizeUnits = Vector2i(565, 1261);
+		conditionalSizeUnits = { 565, 1261 };
 	if (typeOfObject == 16)
-		conditionalSizeUnits = Vector2i(914, 1108);
+		conditionalSizeUnits = { 914, 1108 };
 	if (typeOfObject == 17)
-		conditionalSizeUnits = Vector2i(652, 1359);
+		conditionalSizeUnits = { 652, 1359 };
 	if (typeOfObject == 18)
-		conditionalSizeUnits = Vector2i(667, 717);
+		conditionalSizeUnits = { 667, 717 };
 
 	const float extension = int(90 + rand() % 20) / 100.0f; // in percents
 	//conditionalSizeUnits.x *= extension; conditionalSizeUnits.y *= extension;
 }
 
-Vector2i ForestTree::calculateTextureOffset()
+Vector2f ForestTree::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
 
 	switch (typeOfObject)
 	{
 		case 1:
-			return Vector2i(textureBox.width * 0.257f, int(textureBox.height * 0.932f));
+			return { textureBox.width * 0.257f, textureBox.height * 0.932f };
 		case 2:
-			return Vector2i(textureBox.width * 0.45f, int(textureBox.height * 0.96f));
+			return { textureBox.width * 0.45f, textureBox.height * 0.96f };
 		case 3:
-			return Vector2i(textureBox.width * 0.55f, int(textureBox.height * 0.96f));
+			return { textureBox.width * 0.55f, textureBox.height * 0.96f };
 		case 4:
-			return Vector2i(textureBox.width * 0.409f, int(textureBox.height * 0.945f));
+			return { textureBox.width * 0.409f, textureBox.height * 0.945f };
 		case 5:
-			return Vector2i(textureBox.width * 0.41f, int(textureBox.height * 0.935f));
+			return { textureBox.width * 0.41f, textureBox.height * 0.935f };
 		case 6:
-			return Vector2i(textureBox.width * 0.536f, int(textureBox.height * 0.94f));
+			return { textureBox.width * 0.536f, textureBox.height * 0.94f };
 		case 7:
-			return Vector2i(textureBox.width * 0.526f, int(textureBox.height * 0.936f));
+			return { textureBox.width * 0.526f, textureBox.height * 0.936f };
 		case 8:
-			return Vector2i(textureBox.width * 0.560f, int(textureBox.height * 0.96f));
+			return { textureBox.width * 0.560f, textureBox.height * 0.96f };
 		case 9:
-			return Vector2i(textureBox.width * 0.467f, int(textureBox.height * 0.94f));
+			return { textureBox.width * 0.467f, textureBox.height * 0.94f };
 		case 10:
-			return Vector2i(textureBox.width * 0.467f, int(textureBox.height * 0.94f));
+			return { textureBox.width * 0.467f, textureBox.height * 0.94f };
 		case 11:
-			return Vector2i(textureBox.width * 0.554f, int(textureBox.height * 0.95f));
+			return { textureBox.width * 0.554f, textureBox.height * 0.95f };
 		case 12:
-			return Vector2i(textureBox.width * 0.327f, int(textureBox.height * 0.93f));
+			return { textureBox.width * 0.327f, textureBox.height * 0.93f };
 		case 13:
-			return Vector2i(textureBox.width * 0.574f, int(textureBox.height * 0.508f));
+			return { textureBox.width * 0.574f, textureBox.height * 0.508f };
 		case 14:
-			return Vector2i(textureBox.width * 0.521f, int(textureBox.height * 0.883f));
+			return { textureBox.width * 0.521f, textureBox.height * 0.883f };
 		case 15:
-			return Vector2i(textureBox.width * 0.509f, int(textureBox.height * 0.857f));
+			return { textureBox.width * 0.509f, textureBox.height * 0.857f };
 		case 16:
-			return Vector2i(textureBox.width * 0.537f, int(textureBox.height * 0.83f));
+			return { textureBox.width * 0.537f, textureBox.height * 0.83f };
 		case 17:
-			return Vector2i(textureBox.width * 0.349f, int(textureBox.height * 0.861f));
+			return { textureBox.width * 0.349f, textureBox.height * 0.861f };
 		case 18:
-			return Vector2i(textureBox.width * 0.439f, int(textureBox.height * 0.857f));
+			return { textureBox.width * 0.439f, textureBox.height * 0.857f };
 		default:
-			return Vector2i(textureBox.width * 0.45f, int(textureBox.height * 0.96f));
+			return { textureBox.width * 0.45f, textureBox.height * 0.96f };
 	}
 }
 
@@ -241,27 +241,27 @@ int ForestTree::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> ForestTree::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> ForestTree::prepareSprites(long long elapsedTime)
 {
-	SpriteChainElement body(PackTag::darkWoods, PackPart::tree, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::tree, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	if (typeOfObject >= 1 && typeOfObject <= 7)
-		body.packTag = PackTag::birchGrove;
+		body->packTag = PackTag::birchGrove;
 	if (typeOfObject >= 8 && typeOfObject <= 13)
 	{
-		body.packTag = PackTag::darkWoods;
-		body.number -= 7;
+		body->packTag = PackTag::darkWoods;
+		body->number -= 7;
 	}
 	if (typeOfObject >= 14 && typeOfObject <= 18)
 	{
-		body.packTag = PackTag::swampyTrees;
-		body.number -= 13;
+		body->packTag = PackTag::swampyTrees;
+		body->number -= 13;
 	}
 
 	if (state == absorbed)
 	{
-		body.animationLength = 15;
-		color.a = 255 - currentSprite[0] * 255 / body.animationLength;
+		body->animationLength = 15;
+		color.a = 255 - currentSprite[0] * 255 / body->animationLength;
 	}
 
 	timeForNewSprite += elapsedTime;
@@ -270,7 +270,7 @@ std::vector<SpriteChainElement> ForestTree::prepareSprites(long long elapsedTime
 	{
 		timeForNewSprite = 0;
 
-		if (++currentSprite[0] > body.animationLength)
+		if (++currentSprite[0] > body->animationLength)
 		{
 			if (state == absorbed)
 			{

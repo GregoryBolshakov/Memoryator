@@ -1,7 +1,7 @@
 #include "WorldObject.h"
 #include "Helper.h"
 
-Vector2i WorldObject::microBlockSize = {20, 20};
+Vector2f WorldObject::microBlockSize = {20, 20};
 
 WorldObject::WorldObject(std::string objectName, Vector2f centerPosition)
 {

@@ -9,7 +9,7 @@ class WorldGenerator
 {
 public:
 	void generate();
-	void init(int width, int height, Vector2i blockSize, Vector2i microBlockSize, GridList* staticGrid, GridList* dynamicGrid, std::map<PackTag, SpritePack>* packsMap);
+	void init(int width, int height, Vector2f blockSize, Vector2f microBlockSize, GridList* staticGrid, GridList* dynamicGrid, std::map<PackTag, SpritePack>* packsMap);
     void initMainScale();
 
 	void initializeStaticItem(Tag itemClass, Vector2f itemPosition, int itemType, std::string itemName, int count = 1, Biomes biome = DarkWoods, bool mirrored = true, std::vector<std::pair<Tag, int>> inventory = {});
@@ -35,7 +35,7 @@ private:
 	GridList* dynamicGrid = nullptr;	
 	std::map<PackTag, SpritePack>* packsMap;
 	int biomeGenerateDistance = 4, width = 0, height = 0;
-	Vector2i blockSize = { 0, 0 }, microBlockSize = { 0, 0 };
+	Vector2f blockSize = { 0, 0 }, microBlockSize = { 0, 0 };
 	Vector2i focusedObjectBlock = { 0, 0 };
 
 	// block generation
@@ -46,7 +46,7 @@ private:
 		{std::make_pair(2, 3), true}, { std::make_pair(4, 3), true}, { std::make_pair(6, 3), true}, { std::make_pair(8, 3), true},
 		{ std::make_pair(1, 5), true}, { std::make_pair(3, 5), true}, { std::make_pair(5, 5), true}, { std::make_pair(7, 5), true},
 		{ std::make_pair(2, 7), true}, { std::make_pair(4, 7), true}, { std::make_pair(6, 7), true}, { std::make_pair(8, 7), true} };
-	Vector2i stepSize = { 0, 0 };
+	Vector2f stepSize = { 0, 0 };
 
 	// biomes generation
 	void initBiomesGenerationInfo();

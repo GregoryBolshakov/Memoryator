@@ -1,7 +1,5 @@
 #include "DrawSystem.h"
 
-std::map<Tag, bool> DrawSystem::unscaledObjects = {{Tag::hero, true}, {Tag::nightmare1, true}, {Tag::nightmare2, true}, {Tag::nightmare3, true}, {Tag::grass, true}, {Tag::lake, true}, {Tag::noose, true} };
-
 DrawSystem::DrawSystem()
 {
     initPacksMap();
@@ -94,11 +92,9 @@ void initSpritePack(LPCTSTR lpszFileName, std::map<PackTag, SpritePack> &packs_m
 
 void DrawSystem::initPacksMap()
 {
-	int objectsNumber;
-	std::string name;
-
-	searchFiles("Game/spritePacks/*.png", initSpritePack, 1);	
-	//effectSystem.init(&spriteMap);
+	searchFiles("Game/spritePacks/*.png", initSpritePack, 1);
+	SpritePack::iconWithoutSpaceSize = Vector2f(packsMap.at(PackTag::inventory).getOriginalInfo(PackPart::areas, Direction::DOWN, 1).frame.w,
+		packsMap.at(PackTag::inventory).getOriginalInfo(PackPart::areas, Direction::DOWN, 1).frame.h);
 }
 
 void DrawSystem::advancedScale(SpriteChainElement& item, Sprite& sprite, sprite_pack::sprite originalInfo, float scale) const
@@ -110,7 +106,7 @@ void DrawSystem::advancedScale(SpriteChainElement& item, Sprite& sprite, sprite_
 		sprite.setScale(scale * item.size.y / originalInfo.source_size.h,
 			scale * item.size.x / originalInfo.source_size.w);
 
-	if (!item.isBackground && unscaledObjects.count(item.tag) == 0)
+	if (!item.isBackground && !item.unscaled)
 	{
 		if (!originalInfo.rotated)
 		{
@@ -125,34 +121,68 @@ void DrawSystem::advancedScale(SpriteChainElement& item, Sprite& sprite, sprite_
 	}
 }
 
-/*void DrawSystem::draw(RenderTarget& target, std::vector<SpriteChainElement> sprites)
+std::vector<DrawableChainElement*> DrawSystem::UpcastChain(std::vector<SpriteChainElement*> chain)
 {
-    if (sprites.empty())
-        return;
-
-	for (auto& spriteChainItem : sprites)
+	std::vector<DrawableChainElement*> result = {};
+	for (auto spriteChainItem : chain)
 	{
-		auto sprite = packsMap.at(spriteChainItem.packTag).getSprite(spriteChainItem.packPart, spriteChainItem.direction, spriteChainItem.number);
-        const auto originalInfo = packsMap.at(spriteChainItem.packTag).getOriginalInfo(spriteChainItem.packPart, spriteChainItem.direction, spriteChainItem.number);
-		if (spriteChainItem.antiTransparent)
-			spriteChainItem.color.a = 255;
-
-		sprite.setColor(spriteChainItem.color);
-		sprite.rotate(spriteChainItem.rotation);
-		sprite.setPosition(spriteChainItem.position);
-
-        if (!originalInfo.rotated)
-            sprite.setScale(spriteChainItem.size.x / sprite.getGlobalBounds().width, spriteChainItem.size.y / sprite.getGlobalBounds().height);
-        else
-            sprite.setScale(spriteChainItem.size.y / sprite.getGlobalBounds().height, spriteChainItem.size.x / sprite.getGlobalBounds().width);
-
-		target.draw(sprite);
+		auto item = static_cast<DrawableChainElement*>(spriteChainItem);
+		result.push_back(item);
 	}
-}*/
+	return result;
+}
 
-void DrawSystem::draw(RenderTarget& target, std::vector<SpriteChainElement> sprites, float scale, Vector2f cameraPosition)
+std::vector<SpriteChainElement*> DrawSystem::DowncastToSpriteChain(std::vector<DrawableChainElement*> chain)
 {
-    if (sprites.empty())
+	std::vector<SpriteChainElement*> result = {};
+	for (auto item : chain)
+	{
+		auto spriteChainItem = static_cast<SpriteChainElement*>(item);
+		result.push_back(spriteChainItem);
+	}
+	return result;
+}
+
+void DrawSystem::drawSpriteChainElement(RenderTarget& target, SpriteChainElement* spriteChainItem, Vector2f cameraPosition, Vector2f screenCenter, float scale)
+{	
+	if (spriteChainItem->packTag == PackTag::empty)
+		return;
+
+	auto sprite = packsMap.at(spriteChainItem->packTag).getSprite(spriteChainItem->packPart, spriteChainItem->direction, spriteChainItem->number, spriteChainItem->mirrored);
+	if (sprite.getTextureRect() == IntRect())
+		return;
+
+	const auto originalInfo = packsMap.at(spriteChainItem->packTag).getOriginalInfo(spriteChainItem->packPart, spriteChainItem->direction, spriteChainItem->number);
+	const Vector2f spritePos = { (spriteChainItem->position.x - cameraPosition.x - spriteChainItem->offset.x) * scale + screenCenter.x,
+	(spriteChainItem->position.y - cameraPosition.y - spriteChainItem->offset.y) * scale + screenCenter.y };
+	Vector2f localScale(float(spriteChainItem->size.x) / originalInfo.source_size.w, float(spriteChainItem->size.y) / originalInfo.source_size.h);
+	if (spriteChainItem->antiTransparent)
+		spriteChainItem->color.a = 255;
+
+	sprite.setColor(spriteChainItem->color);
+	sprite.rotate(spriteChainItem->rotation);
+	sprite.setPosition(spritePos);
+
+	advancedScale(*spriteChainItem, sprite, originalInfo, scale);
+
+	target.draw(sprite);
+}
+
+void DrawSystem::drawTextChainElement(RenderTarget& target, TextChainElement* textChainItem)
+{
+	TextSystem::drawString(
+		textChainItem->string,
+		textChainItem->font,
+		textChainItem->characterSize,
+		textChainItem->position.x - textChainItem->offset.x, 
+		textChainItem->position.y - textChainItem->offset.y,
+		target,
+		textChainItem->color);
+}
+
+void DrawSystem::draw(RenderTarget& target, std::vector<DrawableChainElement*> drawableItems, float scale, Vector2f cameraPosition)
+{
+    if (drawableItems.empty())
         return;
     const auto screenSize = target.getSize();
 	Vector2f screenCenter;
@@ -161,28 +191,15 @@ void DrawSystem::draw(RenderTarget& target, std::vector<SpriteChainElement> spri
 	else
 		screenCenter = { 0, 0 };
 
-	for (auto& spriteChainItem : sprites)
+	for (auto drawableChainItem : drawableItems)
 	{
-		auto sprite = packsMap.at(spriteChainItem.packTag).getSprite(spriteChainItem.packPart, spriteChainItem.direction, spriteChainItem.number, spriteChainItem.mirrored);
-		if (sprite.getTextureRect() == IntRect())
-			continue;
-        const auto originalInfo = packsMap.at(spriteChainItem.packTag).getOriginalInfo(spriteChainItem.packPart, spriteChainItem.direction, spriteChainItem.number);
-        Vector2f spritePos = {(spriteChainItem.position.x - cameraPosition.x - spriteChainItem.offset.x) * scale + screenCenter.x,
-		(spriteChainItem.position.y - cameraPosition.y - spriteChainItem.offset.y) * scale + screenCenter.y};
-        Vector2f localScale(float(spriteChainItem.size.x) / originalInfo.source_size.w, float(spriteChainItem.size.y) / originalInfo.source_size.h);
-		if (spriteChainItem.antiTransparent)
-			spriteChainItem.color.a = 255;
+		const auto spriteChainItem = dynamic_cast<SpriteChainElement*>(drawableChainItem);
+		if (spriteChainItem)
+			drawSpriteChainElement(target, spriteChainItem, cameraPosition, screenCenter, scale);
 
-         if (spriteChainItem.tag == Tag::hero && spriteChainItem.packPart == PackPart::legs)
-            auto test = 1;
-
-		sprite.setColor(spriteChainItem.color);
-        sprite.rotate(spriteChainItem.rotation);
-		sprite.setPosition(spritePos);        
-
-		advancedScale(spriteChainItem, sprite, originalInfo, scale);
-
-		target.draw(sprite);
+		const auto textChainItem = dynamic_cast<TextChainElement*>(drawableChainItem);
+		if (textChainItem)
+			drawTextChainElement(target, textChainItem);
 	}
 }
 

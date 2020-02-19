@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include<fstream>
 #include "TextSystem.h"
-#include "UIEffectsSystemMaker.h"
+#include "EffectsSystem.h"
 #include "WorldObject.h"
 #include "HeroBag.h"
 #include "SpriteStructures.h"
@@ -19,16 +19,15 @@ public:
 	InventorySystem();
 	~InventorySystem();
 	void init();
-	void drawHeroInventory(long long elapsedTime, RenderWindow& window);
-	void drawInventory(std::vector<std::pair<Tag, int>>* inventory, Vector2f position, RenderWindow& window);
+	std::vector<DrawableChainElement*> prepareSprites(long long elapsedTime, std::map<PackTag, SpritePack>* packsMap);
+	//void drawInventory(std::vector<std::pair<Tag, int>>* inventory, Vector2f position, RenderWindow& window);
 	void resetAnimationValues();
 	void onMouseUp();
-	void inventoryBounding(std::vector<HeroBag>* bags);
+	void inventoryBounding(std::vector<HeroBag>* bags) { boundBags = bags; }
 	void interact(long long elapsedTime);
 	void resetPickedCell() { pickedCell = nullptr; }
 	bool getUsedMouse() const { return usedMouse; }	
 	Cell &getHeldItem() { return heldItem; }
-	std::unordered_map<Tag, CellSprite> getSpriteList() const { return cellsSpriteList; }
 
 	bool wasDrawing = false;
 	std::string debugInfo = "", cursorText = "";
@@ -44,6 +43,7 @@ private:
 
 	//another inventories 
 	int animationCounter = 1;
+
 	//held item
 	Cell heldItem;
 	float heldItemSpeed = 0, dropZoneRadius{};
@@ -51,20 +51,15 @@ private:
 	//drawing
 	std::string cellsFileDirectory = "Game/inventorySprites/cellsPath.txt", 
 		bagsFileDirectory = "Game/inventorySprites/bagsPath.txt";
-	std::unordered_map<Tag, BagSprite> bagsSpriteList;
-	std::unordered_map<Tag, CellSprite> cellsSpriteList;
-	void initBags();
-	void initCells();	
-	void initSpriteLists();
 	
 	void crashIntoOtherBags(int cnt);
 	void moveOtherBags(int cur, std::vector<int> ancestors = {});
+	void initMaxCounts(std::string filePath = "Game/maxCounts.txt");
 	std::vector<bool> visitedInDisplacement;
-	bool usedMouse = false, cursorBlurUsing = false;
+	bool usedMouse = false, cursorBlurUsing = false, successInit = false;
 	Vector2f cursorTextPos = {0, 0};
 	TextSystem textWriter;
-	UIEffectsSystemMaker uiEffectsSystem;
-	//std::vector<std::pair<Vector2f, std::string>> temporaryPositions;
+	EffectsSystem effectsSystem;
 };
 
 #endif

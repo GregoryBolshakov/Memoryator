@@ -2,15 +2,13 @@
 #include "Helper.h"
 
 TerrainObject::TerrainObject(std::string objectName, Vector2f centerPosition) : StaticObject(objectName, centerPosition)
-{	
+{
 	isTerrain = true;
 	mirrored = bool(rand() % 2);
 }
 
 TerrainObject::~TerrainObject()
-{
-
-}
+= default;
 
 void TerrainObject::initMicroBlocks()
 {	
@@ -30,7 +28,7 @@ void TerrainObject::initMicroBlocks()
 			for (int i = -microBlockCheckAreaBounds.x / microBlockSize.x; i <= int(microBlockCheckAreaBounds.x / microBlockSize.x); i++)
 				for (int j = -microBlockCheckAreaBounds.y / microBlockSize.y; j <= int(microBlockCheckAreaBounds.y / microBlockSize.y); j++)
 				{
-					Vector2f pos = Vector2f(position.x + i * microBlockSize.x, position.y + j * microBlockSize.y);
+					const Vector2f pos = Vector2f(position.x + i * microBlockSize.x, position.y + j * microBlockSize.y);
 					auto const f1 = internalEllipses[cnt].first;
 					auto const f2 = internalEllipses[cnt].second;
 					if (Helper::getDist(pos, f1) + Helper::getDist(pos, f2) < getEllipseSize(cnt) - sqrt(2 * microBlockSize.x) * 1.2)
@@ -40,11 +38,11 @@ void TerrainObject::initMicroBlocks()
 	}
 	else
 	{
-		microBlockCheckAreaBounds = Vector2i(getEllipseSize() / 2, getEllipseSize() / 2);
+		microBlockCheckAreaBounds = { getEllipseSize() / 2, getEllipseSize() / 2 };
 		for (int i = -microBlockCheckAreaBounds.x / microBlockSize.x; i <= int(microBlockCheckAreaBounds.x / microBlockSize.x); i++)
 			for (int j = -microBlockCheckAreaBounds.y / microBlockSize.y; j <= int(microBlockCheckAreaBounds.y / microBlockSize.y); j++)
 			{
-				Vector2f pos = Vector2f(position.x + i * microBlockSize.x, position.y + j * microBlockSize.y);
+				const Vector2f pos = Vector2f(position.x + i * microBlockSize.x, position.y + j * microBlockSize.y);
 				auto const f1 = this->getFocus1();
 				auto const f2 = this->getFocus2();
 				if (Helper::getDist(pos, f1) + Helper::getDist(pos, f2) < this->getEllipseSize() - sqrt(2 * microBlockSize.x) * 1.2)
@@ -53,7 +51,7 @@ void TerrainObject::initMicroBlocks()
 	}
 }
 
-int TerrainObject::getEllipseSize(int i)
+float TerrainObject::getEllipseSize(int i)
 {
 	if (isMultiellipse)
 		return Helper::getDist(internalEllipses[i].first, internalEllipses[i].second) * ellipseSizeMultipliers[i];
@@ -85,8 +83,8 @@ bool TerrainObject::isIntersected(Vector2f curPosition, Vector2f newPosition) //
 
 	if (this->isDotsAdjusted)
 	{
-		auto d1 = this->getDot1();
-		auto d2 = this->getDot2();
+		const auto d1 = this->getDot1();
+		const auto d2 = this->getDot2();
 
 		auto const triangle1 = Helper::triangleArea(d1.x, d1.y, curPosition.x, curPosition.y, d2.x, d2.y);
 		auto const triangle2 = Helper::triangleArea(d1.x, d1.y, newPosition.x, newPosition.y, d2.x, d2.y);
@@ -122,19 +120,20 @@ std::vector<int> TerrainObject::getMultiellipseIntersect(Vector2f position) cons
 	return ans;
 }
 
-Vector2f TerrainObject::newSlippingPositionForDotsAdjusted(Vector2f position, Vector2f motionVector, float speed, long long elapsedTime)
+Vector2f TerrainObject::newSlippingPositionForDotsAdjusted(Vector2f position, Vector2f motionVector, float speed, long long elapsedTime) const
 {
 	Vector2f const dynamicPos = position;
-	Vector2f dot1 = Vector2f(this->getDot1()), dot2 = Vector2f(this->getDot2());
+	const Vector2f dot1 = Vector2f(this->getDot1()), dot2 = Vector2f(this->getDot2());
 
-	Vector2f directiveVector = Vector2f((dot2.x - dot1.x), (dot2.y - dot1.y));
+	const Vector2f directiveVector = Vector2f((dot2.x - dot1.x), (dot2.y - dot1.y));
 
-	float motionVectorLength = sqrt(pow(motionVector.x, 2) + pow(motionVector.y, 2)),
-	directiveVectorLength = sqrt(pow(directiveVector.x, 2) + pow(directiveVector.y, 2));
+	const float motionVectorLength = sqrt(pow(motionVector.x, 2) + pow(motionVector.y, 2)),
+		directiveVectorLength = sqrt(pow(directiveVector.x, 2) + pow(directiveVector.y, 2));
 
-	float cosAlpha = (motionVector.x * directiveVector.x + motionVector.y * directiveVector.y) / (motionVectorLength * directiveVectorLength);
+	const float cosAlpha = (motionVector.x * directiveVector.x + motionVector.y * directiveVector.y) / (motionVectorLength *
+		directiveVectorLength);
 
-	float k = (speed * elapsedTime) / sqrt(pow(directiveVector.x, 2) + pow(directiveVector.y, 2));
+	const float k = (speed * elapsedTime) / sqrt(pow(directiveVector.x, 2) + pow(directiveVector.y, 2));
 
-	return Vector2f(directiveVector.x * cosAlpha * k, directiveVector.y * cosAlpha * k);
+	return { directiveVector.x * cosAlpha * k, directiveVector.y * cosAlpha * k };
 }

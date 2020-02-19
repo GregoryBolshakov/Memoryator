@@ -12,9 +12,8 @@ BuildSystem::~BuildSystem()
 
 }
 
-void BuildSystem::init(const std::unordered_map<Tag, CellSprite>& itemsSpriteList)
+void BuildSystem::init()
 {
-	this->craftIngredientsSpriteList = itemsSpriteList;
 	initializeObjectsInfo();
 
 	font.loadFromFile("Fonts/Bebas.ttf");
@@ -52,7 +51,7 @@ void BuildSystem::initializeObjectsInfo()
 	fin.close();
 }
 
-std::vector <SpriteChainElement> BuildSystem::prepareSprites(GridList& staticGrid, std::vector<WorldObject*> visibleItems, std::map<PackTag, SpritePack>* packsMap)
+std::vector <SpriteChainElement*> BuildSystem::prepareSprites(GridList& staticGrid, std::vector<WorldObject*> visibleItems, std::map<PackTag, SpritePack>* packsMap)
 {
 	if (selectedObject == Tag::emptyCell)
 		return {};
@@ -95,12 +94,12 @@ std::vector <SpriteChainElement> BuildSystem::prepareSprites(GridList& staticGri
 	if (staticGrid.isIntersectWithOthers(terrain, visibleItems, terrain->isDotsAdjusted))
 	{
 		for (auto& sprite : sprites)
-			sprite.color = Color(255,99,71);
+			sprite->color = sf::Color(255,99,71);
 		canBePlaced = false;
 	}
 	else
 		for (auto& sprite : sprites)
-			sprite.color = Color(127, 255, 0);
+			sprite->color = sf::Color(127, 255, 0);
 
 	return sprites;
 }

@@ -5,6 +5,7 @@
 #include <nlohmann/json.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include "SpriteChainElement.h"
+#include "Helper.h"
 
 using namespace sf;
 using json = nlohmann::json;
@@ -84,11 +85,14 @@ public:
     void init(std::string path, std::string jsonPath, PackTag tag);
     Sprite getSprite(PackPart part, Direction direction, int number, bool mirrored = false);
 	sprite_pack::sprite getOriginalInfo(PackPart part, Direction direction, int number);
+	static SpriteChainElement* tagToIcon(Tag object, bool selected = false, int typeOfObject = 1);
 
     PackTag tag;
     static std::map<std::string, PackTag> mappedPackTag;
     static std::map<std::string, PackPart> mappedPackPart;
     static std::map<std::string, Direction> mappedDirection;
+	static const Vector2f iconSize;
+	static Vector2f iconWithoutSpaceSize;
 private:
     Texture texture;
     std::map<PackPart, std::map<Direction, std::map<int, sprite_pack::sprite>>> pack;

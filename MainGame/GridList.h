@@ -15,21 +15,22 @@ class GridList
 {
 private:
 	int width, height;
-	Vector2i size = { 0, 0 }, microSize = { 0, 0 };
+	Vector2f size = { 0, 0 }, microSize = { 0, 0 };
 	std::vector<std::vector<WorldObject*>> cells;
 	std::unordered_map<std::string, std::pair<int, int>> items;	
 	void GridList::bfs(int xBorder, int yBorder, int startX, int startY, int finishX, int finishY, int permissibleDistance);
 public:
 	std::unordered_map<std::string, std::pair<int, int>> getItemsOfGreed() { return items; }
 	GridList();
-	GridList(int width, int height, Vector2i size, Vector2i microSize);
+	GridList(int width, int height, Vector2f size, Vector2f microSize);
 	~GridList();
-	Vector2i getBlockSize() const;
+	Vector2f getBlockSize() const;
 	int getBlockItemsAmount(int index) { return cells[index].size(); }
 	int getIndexByPoint(int x, int y) const;
-	int getMicroblockByPoint(int x, int y) const;
-	Vector2f getPointByMicroblock(int microblockIndex) const;
 	Vector2f getPointByIndex(int index) const;
+	int getMicroBlockByPoint(int x, int y) const;
+	Vector2f getPointByMicroBlock(int microBlockIndex) const;
+	
 	void makeRoute(Vector2f startPos, Vector2f finishPos, int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY, int permissibleDistance = 1);
 	void addItem(WorldObject* item, const std::string& name, int x, int y);
 	WorldObject* getItemByName(const std::string& name);
@@ -40,7 +41,7 @@ public:
 	void clearCell(int cellIndex);
 	void deleteItem(std::string name);
 	void setLockedMicroBlocks(WorldObject* item, bool value = false, bool dynamicMatrix = false);
-	void boundDynamicMatrix(std::vector<std::vector<bool>>* matrix) { this->dynamicMicroBlockMatrix = matrix; };
+	void boundDynamicMatrix(std::vector<std::vector<bool>>* matrix) { this->dynamicMicroBlockMatrix = matrix; }
 	int getSize() const { return items.size(); }
 	std::vector<int> getBlocksAround(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY, int offset);
 	std::vector<int> GridList::getBlocksInSight(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY);

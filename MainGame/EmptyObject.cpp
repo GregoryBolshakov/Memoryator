@@ -12,7 +12,7 @@ EmptyObject::~EmptyObject()
 {
 }
 
-std::vector<SpriteChainElement> EmptyObject::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> EmptyObject::prepareSprites(long long elapsedTime)
 {
     return {};
 }
@@ -37,7 +37,7 @@ void EmptyObject::setTextureSize(Vector2f textureSize)
 	return;
 }
 
-Vector2i EmptyObject::calculateTextureOffset()
+Vector2f EmptyObject::calculateTextureOffset()
 {
 	return {0, 0};
 }
@@ -52,7 +52,7 @@ void setTextureSize(Vector2f textureSize)
 	return;
 }
 
-Vector2i calculateTextureOffset()
+Vector2f calculateTextureOffset()
 {
 	return {0, 0};
 }

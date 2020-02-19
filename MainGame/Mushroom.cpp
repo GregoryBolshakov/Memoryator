@@ -19,48 +19,48 @@ void Mushroom::setType(int typeOfObject)
 
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = Vector2i(72, 140);
+		conditionalSizeUnits = { 72, 140 };
 	if (typeOfObject == 2)
-		conditionalSizeUnits = Vector2i(67, 178);
+		conditionalSizeUnits = { 67, 178 };
 	if (typeOfObject == 3)
-		conditionalSizeUnits = Vector2i(82, 94);
+		conditionalSizeUnits = { 82, 94 };
 	if (typeOfObject == 4)
-		conditionalSizeUnits = Vector2i(143, 203);
+		conditionalSizeUnits = { 143, 203 };
 	if (typeOfObject == 5)
-		conditionalSizeUnits = Vector2i(120, 134);
+		conditionalSizeUnits = { 120, 134 };
 	if (typeOfObject == 6)
-		conditionalSizeUnits = Vector2i(173, 161);
+		conditionalSizeUnits = { 173, 161 };
 	if (typeOfObject == 7)
-		conditionalSizeUnits = Vector2i(70, 134);
+		conditionalSizeUnits = { 70, 134 };
 	if (typeOfObject == 8)
-		conditionalSizeUnits = Vector2i(91, 81);
+		conditionalSizeUnits = { 91, 81 };
 	if (typeOfObject == 9)
-		conditionalSizeUnits = Vector2i(94, 78);
+		conditionalSizeUnits = { 94, 78 };
 	if (typeOfObject == 10)
-		conditionalSizeUnits = Vector2i(103, 137);
+		conditionalSizeUnits = { 103, 137 };
 	if (typeOfObject == 11)
-		conditionalSizeUnits = Vector2i(89, 71);
+		conditionalSizeUnits = { 89, 71 };
 	if (typeOfObject == 12)
-		conditionalSizeUnits = Vector2i(144, 122);
+		conditionalSizeUnits = { 144, 122 };
 	if (typeOfObject == 13)
-		conditionalSizeUnits = Vector2i(54, 60);
+		conditionalSizeUnits = { 54, 60 };
 	if (typeOfObject == 14)
-		conditionalSizeUnits = Vector2i(80, 74);
+		conditionalSizeUnits = { 80, 74 };
 	if (typeOfObject == 15)
-		conditionalSizeUnits = Vector2i(80, 80);
+		conditionalSizeUnits = { 80, 80 };
 	if (typeOfObject == 16)
-		conditionalSizeUnits = Vector2i(77, 53);
+		conditionalSizeUnits = { 77, 53 };
 }
 
-Vector2i Mushroom::calculateTextureOffset()
+Vector2f Mushroom::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
 
 	if (typeOfObject == 0)
-		return Vector2i(0, 0);
+		return { 0, 0 };
 
-	return Vector2i(textureBox.width / 2, int(textureBox.height / 2));
+	return { textureBox.width / 2.0f, textureBox.height / 2.0f };
 }
 
 Vector2f Mushroom::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
@@ -73,22 +73,22 @@ int Mushroom::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> Mushroom::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Mushroom::prepareSprites(long long elapsedTime)
 {
-	SpriteChainElement body(PackTag::darkWoods, PackPart::mushroom, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
-	body.isBackground = true;
+	SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::mushroom, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	body->isBackground = true;
 
 	if (typeOfObject >= 1 && typeOfObject <= 3)
-		body.packTag = PackTag::birchGrove;
+		body->packTag = PackTag::birchGrove;
 	if (typeOfObject >= 4 && typeOfObject <= 12)
 	{
-		body.packTag = PackTag::darkWoods;
-		body.number -= 3;
+		body->packTag = PackTag::darkWoods;
+		body->number -= 3;
 	}
 	if (typeOfObject >= 13 && typeOfObject <= 16)
 	{
-		body.packTag = PackTag::swampyTrees;
-		body.number -= 12;
+		body->packTag = PackTag::swampyTrees;
+		body->number -= 12;
 	}
 
 	return { body };

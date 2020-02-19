@@ -20,14 +20,14 @@ void Fern::setType(int typeOfObject)
 
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = Vector2i(330, 370);
+		conditionalSizeUnits = { 330, 370 };
 }
 
-Vector2i Fern::calculateTextureOffset()
+Vector2f Fern::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-	return Vector2i(textureBox.width / 2, int(textureBox.height / 1.7));
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
+	return { textureBox.width / 2.0f, textureBox.height / 1.7f };
 }
 
 void Fern::initPedestal()
@@ -53,13 +53,13 @@ int Fern::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> Fern::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Fern::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*additionalSprites.clear();
 	spriteChainElement body;
-	body.path = "Game/worldSprites/terrainObjects/fern/fern" + std::to_string(typeOfObject) + ".png";
-	body.size = Vector2f(conditionalSizeUnits);
-	body.offset = Vector2f(textureBoxOffset);
+	body->path = "Game/worldSprites/terrainObjects/fern/fern" + std::to_string(typeOfObject) + ".png";
+	body->size = Vector2f(conditionalSizeUnits);
+	body->offset = Vector2f(textureBoxOffset);
 	additionalSprites.push_back(body);*/
 }

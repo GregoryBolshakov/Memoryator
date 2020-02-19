@@ -3,17 +3,18 @@
 // mobs 101 - 199; craft objects 201 - 299; world objects 301 - 399; flowers 401 - 499; auxiliary objects 501 - 599;
 enum class Tag {
 	hero = 101, hare = 102, owl = 103, deer = 104, fox = 105, bear = 106, wolf = 107, monster = 108, owlBoss = 109, nightmare1 = 110, nightmare2 = 111, nightmare3 = 112,
-	heroBag = 201, noose = 202, totem = 211, hareTrap = 216, fence = 218, inkyBlackPen = 219, 
-	unknownWreath = 251, hareWreath = 252, owlWreath = 253, tree = 301, grass = 302, spawn = 303,
-	ground = 311, groundConnection = 312, brazier = 314, wreathTable = 315, rock = 317,
+	heroBag = 201, noose = 202, totem = 211, hareTrap = 216, cageBear = 218, fence = 219, inkyBlackPen = 220, 
+	unknownWreath = 251, hareWreath = 252, owlWreath = 253, 
+	tree = 301, grass = 302, spawn = 303, ground = 311, groundConnection = 312, brazier = 314, wreathTable = 315, rock = 317,
 	stump = 319, droppedLoot = 320, mushroom = 321, log = 322, bush = 323, roof = 324, lake = 325, root = 326,
-	chamomile = 401, yarrow = 402, fern = 403, mugwort = 404, poppy = 405, buildObject = 501, dropPoint = 502, emptyDraft = 503, emptyPage = 504, emptyCell = 505, selectedCell = 506, clapWhirl = 507, emptyObject = 508
+	chamomile = 401, yarrow = 402, fern = 403, mugwort = 404, poppy = 405, 
+	buildObject = 501, dropPoint = 502, emptyDraft = 503, emptyPage = 504, emptyCell = 505, selectedCell = 506, clapWhirl = 507, emptyObject = 508
 };
 
 enum class PackTag
 {
     empty = 0, heroAbsorb = 1, heroHit = 2, heroMove = 3, heroPick = 4, heroRoll = 5, heroStand = 6, heroThrow = 7,
-    interfaceElements = 8, locations = 9, darkWoods = 10, birchGrove = 11, swampyTrees = 12, craftObjects = 13
+    interfaceElements = 8, locations = 9, darkWoods = 10, birchGrove = 11, swampyTrees = 12, craftObjects = 13, inventory = 14, icons = 15
 };
 
 enum class PackPart
@@ -23,7 +24,9 @@ enum class PackPart
     decor = 210, roof = 211, lake = 212, root = 213, flower = 213,// biome's parts
     bookLittle = 301, crossButton = 302, menu = 303, // interface's parts
     brazier = 401, wreathTable = 402, // location's parts
-	cageBear = 501, cageOwl = 502, fence = 503, hareTrap = 504, noose = 505, totem = 506 // craftObject's parts
+	cageBear = 501, cageOwl = 502, fence = 503, hareTrap = 504, noose = 505, totem = 506, // craftObject's parts
+	areas = 601, bag1 = 602, // inventory's parts
+	craftObjects = 701, flowers = 702, mobs = 703, notCraftObjects = 704 // icon's parts
 };
 
 enum class Direction { RIGHT = 0, UPRIGHT = 45, UP = 90, UPLEFT = 135, LEFT = 180, DOWNLEFT = 225, DOWN = 270, DOWNRIGHT = 315, STAND = 360 };

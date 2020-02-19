@@ -20,8 +20,8 @@ private:
 public:
 	Hare(std::string objectName, Vector2f centerPosition);
 	~Hare();
-	Vector2i calculateTextureOffset() override;
-	std::vector<SpriteChainElement> prepareSprites(long long elapsedTime) override;
+	Vector2f calculateTextureOffset() override;
+	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;
 	void setTarget(DynamicObject& object) override;
 	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;

@@ -13,14 +13,14 @@ Spawn::Spawn(std::string objectName, Vector2f centerPosition, int typeOfObject) 
 void Spawn::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
-	this->conditionalSizeUnits = Vector2i (1000, 1000);
+	this->conditionalSizeUnits = { 1000, 1000 };
 }
 
-Vector2i Spawn::calculateTextureOffset()
+Vector2f Spawn::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-	return Vector2i (textureBox.width / 2, int(textureBox.height / 1.6));
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
+	return { textureBox.width / 2.0f, textureBox.height / 1.6f };
 }
 
 void Spawn::initPedestal()
@@ -53,7 +53,7 @@ int Spawn::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> Spawn::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Spawn::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*additionalSprites.clear();

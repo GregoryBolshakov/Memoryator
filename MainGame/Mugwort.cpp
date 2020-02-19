@@ -20,18 +20,18 @@ void Mugwort::setType(int typeOfObject)
 
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = Vector2i(308, 371);
+		conditionalSizeUnits = { 308, 371 };
 	if (typeOfObject == 2)
-		conditionalSizeUnits = Vector2i(303, 325);
+		conditionalSizeUnits = { 303, 325 };
 	if (typeOfObject == 3)
-		conditionalSizeUnits = Vector2i(250, 271);
+		conditionalSizeUnits = { 250, 271 };
 }
 
-Vector2i Mugwort::calculateTextureOffset()
+Vector2f Mugwort::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-	return Vector2i(textureBox.width / 2, int(textureBox.height / 1.2));
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
+	return { textureBox.width / 2.0f, textureBox.height / 1.2f };
 }
 
 void Mugwort::initPedestal()
@@ -52,7 +52,7 @@ int Mugwort::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> Mugwort::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Mugwort::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*additionalSprites.clear();

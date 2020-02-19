@@ -17,14 +17,14 @@ HareTrap::HareTrap(std::string objectName, Vector2f centerPosition, int typeOfOb
 void HareTrap::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
-	this->conditionalSizeUnits = Vector2i (140, 111);
+	this->conditionalSizeUnits = { 140, 111 };
 }
 
-Vector2i HareTrap::calculateTextureOffset()
+Vector2f HareTrap::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-	return Vector2i (textureBox.width / 2, int(textureBox.height / 1.2));
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
+	return { textureBox.width / 2.0f, textureBox.height / 1.2f };
 }
 
 void HareTrap::initPedestal()
@@ -49,10 +49,10 @@ int HareTrap::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> HareTrap::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> HareTrap::prepareSprites(long long elapsedTime)
 {
-	SpriteChainElement body(PackTag::craftObjects, PackPart::hareTrap, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
-	body.isBackground = true;
+	SpriteChainElement* body = new SpriteChainElement(PackTag::craftObjects, PackPart::hareTrap, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	body->isBackground = true;
 
 	return { body };
 }

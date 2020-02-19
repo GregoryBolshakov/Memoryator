@@ -22,12 +22,13 @@ public:
 	static std::string getObjectName(std::string s);
 	static std::string getSpriteName(std::string s);
 	static bool isIntersects(Vector2f pos, IntRect shape);
+	static bool isIntersects(Vector2f pos, Vector2f circlePos, float radius);
 	static bool isIntersectTerrain(Vector2f position, TerrainObject& terrain, float radius);
 	static Side getSide(Vector2f position, Vector2f anotherPosition);
 	static float getDist(Vector2f a, Vector2f b) { return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2)); }
 	static float triangleArea(float x1, float y1, float x2, float y2, float x3, float y3) { return (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1); }
 	static bool checkSigns(float a, float b) { return ((a > 0 && b > 0) || (a < 0 && b < 0)); }
-	static RectangleShape makeLine(Vector2f point1, Vector2f point2, Color color = Color(255, 240, 134, 255));
+	static RectangleShape makeLine(Vector2f point1, Vector2f point2, sf::Color color = sf::Color(255, 240, 134, 255));
 	static std::pair<float, float> solveSqr(float a, float b, float c);
     static std::vector<std::string> split(std::string line, char delimiter = ' ');
 };

@@ -4,7 +4,7 @@ using namespace sf;
 
 Bear::Bear(const std::string objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
 {
-	conditionalSizeUnits = Vector2i(432, 384);
+	conditionalSizeUnits = { 432, 384 };
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
 	defaultSpeed = 0.0003f;
@@ -29,11 +29,11 @@ Bear::~Bear()
 {
 }
 
-Vector2i Bear::calculateTextureOffset()
+Vector2f Bear::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-	return Vector2i(textureBox.width / 2, textureBox.height * 7 / 8);
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
+	return { textureBox.width / 2, textureBox.height * 7 / 8 };
 }
 
 void Bear::behaviorWithStatic(WorldObject* target, long long elapsedTime)
@@ -129,7 +129,7 @@ void Bear::jerk(float power, float deceleration, Vector2f destinationPoint)
 	return;
 }
 
-std::vector<SpriteChainElement> Bear::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Bear::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*spriteChainElement fullSprite;

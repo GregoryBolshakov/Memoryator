@@ -24,13 +24,13 @@ public:
 	BuildSystem();
 	~BuildSystem();
 	void inventoryBounding(std::vector<HeroBag>* boundBags);
-	void init(const std::unordered_map<Tag, CellSprite>& itemsSpriteList);	
+	void init();	
 	void onMouseUp();
 	void buildHeldItem(Vector2f focusedObjectPosition, float scaleFactor);
 	void interact(Vector2f cameraPosition = {0, 0}, float scaleFactor = 1);
 	void clearHareBags(int block, GridList& staticGrid, std::vector<WorldObject*>* visibleItems);
 	void wasPlaced();
-	std::vector<SpriteChainElement> prepareSprites(GridList& staticGrid, std::vector<WorldObject*> visibleItems, std::map<PackTag, SpritePack>* packsMap);
+	std::vector<SpriteChainElement*> prepareSprites(GridList& staticGrid, std::vector<WorldObject*> visibleItems, std::map<PackTag, SpritePack>* packsMap);
 
 	int getCurrentObject() const { return currentObject; }
 	bool getUsedMouse() const { return usedMouse; }
@@ -48,7 +48,7 @@ public:
 	std::map<Tag, bool> droppedLootIdList = { {Tag::heroBag, 1} };
 	int buildType = 1;
 private:
-	std::unordered_map<Tag, CellSprite> craftIngredientsSpriteList;
+	//std::unordered_map<Tag, CellSprite> craftIngredientsSpriteList;
 	std::pair<Tag, int> *heldItem = nullptr;
 	Vector2f mouseWorldPos = { 0, 0 };
 	Vector2f spriteBuildPos = Vector2f (-1, -1);

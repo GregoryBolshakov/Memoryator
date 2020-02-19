@@ -2,7 +2,7 @@
 
 Nightmare1::Nightmare1(std::string objectName, Vector2f centerPosition) : Monster(objectName, centerPosition)
 {
-	conditionalSizeUnits = Vector2i(375, 375);
+	conditionalSizeUnits = { 375, 375 };
 	defaultSpeed = 0.0005f;
 	speed = 0.0005f;
 	radius = 90;
@@ -24,12 +24,12 @@ Nightmare1::~Nightmare1()
 }
 
 
-Vector2i Nightmare1::calculateTextureOffset()
+Vector2f Nightmare1::calculateTextureOffset()
 {	
 	initMicroBlocks();
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-	return Vector2i(textureBox.width / 2, textureBox.height * 7 / 8);
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
+	return { textureBox.width / 2, textureBox.height * 7 / 8 };
 }
 
 void Nightmare1::doAttack(WorldObject* target)
@@ -44,7 +44,7 @@ void Nightmare1::doAttack(WorldObject* target)
 	}
 }
 
-std::vector<SpriteChainElement> Nightmare1::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Nightmare1::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*spriteChainElement fullSprite;

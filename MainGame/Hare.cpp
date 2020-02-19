@@ -5,7 +5,7 @@ using namespace sf;
 
 Hare::Hare(const std::string objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
 {
-	conditionalSizeUnits = Vector2i (180, 150);
+	conditionalSizeUnits = { 180, 150 };
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
 	defaultSpeed = 0.0003f;
@@ -26,11 +26,11 @@ Hare::~Hare()
 {
 }
 
-Vector2i Hare::calculateTextureOffset()
+Vector2f Hare::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-	return Vector2i(textureBox.width / 2, textureBox.height * 7 / 8);
+	textureBox.width = float(textureBox.width)*getScaleRatio().x;
+	textureBox.height = float(textureBox.height)*getScaleRatio().y;
+	return { textureBox.width / 2, textureBox.height * 7 / 8 };
 }
 
 void Hare::setTarget(DynamicObject& object)
@@ -191,7 +191,7 @@ void Hare::jerk(float power, float deceleration, Vector2f destinationPoint)
 	return;
 }
 
-std::vector<SpriteChainElement> Hare::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Hare::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*spriteChainElement fullSprite;

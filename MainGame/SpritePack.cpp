@@ -2,6 +2,10 @@
 #include <fstream>
 #include "Helper.h"
 
+const Vector2f SpritePack::iconSize = { Helper::GetScreenSize().y / 13.8f, Helper::GetScreenSize().y / 13.8f };
+Vector2f SpritePack::iconWithoutSpaceSize = { 0, 0 };
+
+
 std::map<std::string, PackTag> SpritePack::mappedPackTag = {
     {"empty", PackTag::empty},
     {"heroAbsorb", PackTag::heroAbsorb},
@@ -16,7 +20,9 @@ std::map<std::string, PackTag> SpritePack::mappedPackTag = {
     {"darkWoods", PackTag::darkWoods},
     {"birchGrove", PackTag::birchGrove},
     {"swampyTrees", PackTag::swampyTrees},
-	{"craftObjects", PackTag::craftObjects}
+	{"craftObjects", PackTag::craftObjects},
+	{"inventory", PackTag::inventory},
+	{"icons", PackTag::icons}
 };
 
 std::map<std::string, PackPart> SpritePack::mappedPackPart = {
@@ -48,7 +54,13 @@ std::map<std::string, PackPart> SpritePack::mappedPackPart = {
 	{"fence", PackPart::fence}, 
 	{"hareTrap", PackPart::hareTrap},
 	{"noose", PackPart::noose}, 
-	{"totem", PackPart::totem} // craftObject's parts
+	{"totem", PackPart::totem}, // craftObject's parts
+	{"areas", PackPart::areas},
+	{"bag1", PackPart::bag1}, // inventory's parts
+	{"craftObjects", PackPart::craftObjects},
+	{"flowers", PackPart::flowers}, 
+	{"mobs", PackPart::mobs},
+	{"notCraftObjects", PackPart::notCraftObjects} // icon's parts
 };
 
 std::map<std::string, Direction> SpritePack::mappedDirection = { {"up", Direction::UP}, {"up-right", Direction::UPRIGHT}, {"right", Direction::RIGHT}, {"down-right", Direction::DOWNRIGHT},
@@ -103,6 +115,101 @@ sprite_pack::sprite SpritePack::getOriginalInfo(PackPart part, Direction directi
 		return sprite_pack::sprite();
 
 	return pack.at(part).at(direction).at(number);
+}
+
+SpriteChainElement* SpritePack::tagToIcon(Tag object, bool selected, int typeOfObject)
+{	
+	SpriteChainElement* result = new SpriteChainElement(PackTag::empty, PackPart::full, Direction::DOWN, 1, { 0, 0 }, iconSize, { iconSize.x / 2, iconSize.y / 2 });
+
+	int spriteNumber = int(selected);
+
+	switch (object)
+	{
+	// craftObjects
+	case Tag::cageBear:
+		spriteNumber += 1;
+		result->setDrawInfo(PackTag::icons, PackPart::craftObjects, Direction::DOWN, spriteNumber);
+		return result;
+	case Tag::noose:
+		spriteNumber += 3;
+		result->setDrawInfo(PackTag::icons, PackPart::craftObjects, Direction::DOWN, spriteNumber);
+		return result;
+	case Tag::totem:
+		if (typeOfObject == 1)
+			spriteNumber += 7;
+		if (typeOfObject == 2)
+			spriteNumber += 9;
+		if (typeOfObject == 3)
+			spriteNumber += 11;
+		result->setDrawInfo(PackTag::icons, PackPart::craftObjects, Direction::DOWN, spriteNumber);
+		return result;
+	//-------------
+	// flowers
+	case Tag::chamomile:
+		spriteNumber += 1;
+		result->setDrawInfo(PackTag::icons, PackPart::flowers, Direction::DOWN, spriteNumber);
+		return result;
+	case Tag::fern:
+		spriteNumber += 3;
+		result->setDrawInfo(PackTag::icons, PackPart::flowers, Direction::DOWN, spriteNumber);
+		return result;
+	case Tag::mugwort:
+		spriteNumber += 5;
+		result->setDrawInfo(PackTag::icons, PackPart::flowers, Direction::DOWN, spriteNumber);
+		return result;
+	case Tag::poppy:
+		spriteNumber += 7;
+		result->setDrawInfo(PackTag::icons, PackPart::flowers, Direction::DOWN, spriteNumber);
+		return result;
+	case Tag::yarrow:
+		spriteNumber += 9;
+		result->setDrawInfo(PackTag::icons, PackPart::flowers, Direction::DOWN, spriteNumber);
+		return result;
+	//-------
+	//mobs
+	case Tag::bear:
+		spriteNumber = 1;
+		result->setDrawInfo(PackTag::icons, PackPart::mobs, Direction::DOWN, spriteNumber);
+		return result;
+	case Tag::deer:
+		spriteNumber = 2;
+		result->setDrawInfo(PackTag::icons, PackPart::mobs, Direction::DOWN, spriteNumber);
+		return result;
+	case Tag::hare:
+		spriteNumber = 3;
+		result->setDrawInfo(PackTag::icons, PackPart::mobs, Direction::DOWN, spriteNumber);
+		return result;
+	case Tag::nightmare1:
+	case Tag::nightmare2:
+	case Tag::nightmare3:
+		spriteNumber = 4;
+		result->setDrawInfo(PackTag::icons, PackPart::mobs, Direction::DOWN, spriteNumber);
+		return result;
+	case Tag::owlBoss:
+		spriteNumber = 5;
+		result->setDrawInfo(PackTag::icons, PackPart::mobs, Direction::DOWN, spriteNumber);
+		return result;
+	case Tag::owl:
+		spriteNumber = 6;
+		result->setDrawInfo(PackTag::icons, PackPart::mobs, Direction::DOWN, spriteNumber);
+		return result;
+	case Tag::wolf:
+		spriteNumber = 7;
+		result->setDrawInfo(PackTag::icons, PackPart::mobs, Direction::DOWN, spriteNumber);
+		return result;
+	//----
+	// notCraftObjects
+	case Tag::inkyBlackPen:
+		spriteNumber = 1;
+		result->setDrawInfo(PackTag::icons, PackPart::notCraftObjects, Direction::DOWN, spriteNumber);
+		return result;
+	//----------------
+	case Tag::emptyObject:
+		result->setDrawInfo(PackTag::inventory, PackPart::areas, Direction::DOWN, 1);
+		return result;
+	}
+
+	return result;
 }
 
 Sprite SpritePack::getSprite(PackPart part, Direction direction, int number, bool mirrored)

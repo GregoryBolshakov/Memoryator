@@ -19,22 +19,22 @@ void GroundConnection::setType(int typeOfObject)
 	this->typeOfObject = typeOfObject;
     if (typeOfObject % 4 == 1)
 	{
-		this->conditionalSizeUnits = Vector2i (1000, 250);
+		this->conditionalSizeUnits = { 1000, 250 };
 	}
 	else
 		if (typeOfObject % 4 == 2)
 		{
-			this->conditionalSizeUnits = Vector2i (1000, 250);
+			this->conditionalSizeUnits = { 1000, 250 };
 		}
         else
             if (typeOfObject % 4 == 3)
             {
-                this->conditionalSizeUnits = Vector2i (250, 1000);
+				this->conditionalSizeUnits = { 250, 1000 };
             }
             else
                 if (typeOfObject % 4 == 0)
                 {
-	                this->conditionalSizeUnits = Vector2i (250, 1000);
+					this->conditionalSizeUnits = { 250, 1000 };
                 }
 	
 	if (typeOfObject >= 1 && typeOfObject <= 4)
@@ -53,7 +53,7 @@ void GroundConnection::setType(int typeOfObject)
 						this->zCoord = 50;
 }
 
-Vector2i GroundConnection::calculateTextureOffset()
+Vector2f GroundConnection::calculateTextureOffset()
 {
 	if (typeOfObject % 4 == 1)
 		return { 0, textureBox.height };
@@ -76,26 +76,26 @@ int GroundConnection::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> GroundConnection::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> GroundConnection::prepareSprites(long long elapsedTime)
 {	
 	if (typeOfObject >= 1 && typeOfObject <= 4)
-		return { SpriteChainElement() };
+		return { new SpriteChainElement() };
 
     int spriteType = typeOfObject % 4 + 1;
 	if (spriteType == 1)
 		spriteType = 5;
 
-    SpriteChainElement body(PackTag::darkWoods, PackPart::ground, Direction::DOWN, spriteType, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+    SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::ground, Direction::DOWN, spriteType, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	
-	body.zCoord = zCoord;
+	body->zCoord = zCoord;
 
 	//if (typeOfObject >= 1 && typeOfObject <= 4)
-		//body.packTag = PackTag::darkWoods;
+		//body->packTag = PackTag::darkWoods;
 	if (typeOfObject >= 5 && typeOfObject <= 8)
-		body.packTag = PackTag::darkWoods;
+		body->packTag = PackTag::darkWoods;
 	if (typeOfObject >= 9 && typeOfObject <= 12)
-		body.packTag = PackTag::birchGrove;
+		body->packTag = PackTag::birchGrove;
 
-	body.isBackground = true;
-    return {body};
+	body->isBackground = true;
+    return { body };
 }

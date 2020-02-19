@@ -1,16 +1,16 @@
-#include "MenuMaker.h"
+#include "MenuSystem.h"
 
 const Vector2f NEW_RUN_BUTTON_POSITION(Helper::GetScreenSize().x * 0.06f, Helper::GetScreenSize().y * 0.06f);
 const Vector2f CONTINUE_BUTTON_POSITION(Helper::GetScreenSize().x * 0.06f, Helper::GetScreenSize().y * 0.21f);
 const Vector2f EXIT_BUTTON_POSITION(Helper::GetScreenSize().x * 0.06f, Helper::GetScreenSize().y * 0.36f);
-const Vector2i BUTTON_SIZE(Helper::GetScreenSize().x * 0.2f, Helper::GetScreenSize().y * 0.14f);
+const Vector2f BUTTON_SIZE(Helper::GetScreenSize().x * 0.2f, Helper::GetScreenSize().y * 0.14f);
 
-MenuMaker::MenuMaker()
+MenuSystem::MenuSystem()
 {
 	initButtons();
 }
 
-void MenuMaker::initButtons()
+void MenuSystem::initButtons()
 {
 	Vector2f screenSize = Helper::GetScreenSize();
 
@@ -19,12 +19,12 @@ void MenuMaker::initButtons()
     buttonList[ButtonTag::exitTag].initialize(PackTag::interfaceElements, PackPart::menu, 4, 4, 4, EXIT_BUTTON_POSITION, BUTTON_SIZE, true, ButtonTag::exitTag);
 }
 
-MenuMaker::~MenuMaker()
+MenuSystem::~MenuSystem()
 {
 
 }
 
-void MenuMaker::onKeyDown(Event event, WorldHandler &world)
+void MenuSystem::onKeyDown(Event event, WorldHandler &world)
 {
 	if (event.key.code == Keyboard::Escape)
 	{
@@ -40,7 +40,7 @@ void MenuMaker::onKeyDown(Event event, WorldHandler &world)
 	}
 }
 
-void MenuMaker::interact(WorldHandler &world, RenderWindow &window)
+void MenuSystem::interact(WorldHandler &world, RenderWindow &window)
 {
 	wasActive = false;
 
@@ -115,9 +115,9 @@ void MenuMaker::interact(WorldHandler &world, RenderWindow &window)
 	}
 }
 
-std::vector<SpriteChainElement> MenuMaker::prepareSprites()
+std::vector<SpriteChainElement*> MenuSystem::prepareSprites()
 {
-    std::vector<SpriteChainElement> result = {};
+    std::vector<SpriteChainElement*> result = {};
 	if (menuState == mainMenu)
 	{
         result.push_back(buttonList.at(ButtonTag::newRunTag).prepareSprite());

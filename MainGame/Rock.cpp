@@ -17,90 +17,90 @@ void Rock::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = Vector2i(395, 231);
+		conditionalSizeUnits = { 395, 231 };
 	if (typeOfObject == 2)
-		conditionalSizeUnits = Vector2i(579, 294);
+		conditionalSizeUnits = { 579, 294 };
 	if (typeOfObject == 3)
-		conditionalSizeUnits = Vector2i (343, 95);
+		conditionalSizeUnits = { 343, 95 };
 	if (typeOfObject == 4)
-		conditionalSizeUnits = Vector2i (236, 106);
+		conditionalSizeUnits = { 236, 106 };
 	if (typeOfObject == 5)
-		conditionalSizeUnits = Vector2i (269, 116);
+		conditionalSizeUnits = { 269, 116 };
 	if (typeOfObject == 6)
-		conditionalSizeUnits = Vector2i (349, 113);
+		conditionalSizeUnits = { 349, 113 };
 	if (typeOfObject == 7)
-		conditionalSizeUnits = Vector2i (278, 204);
+		conditionalSizeUnits = { 278, 204 };
 	if (typeOfObject == 8)
-		conditionalSizeUnits = Vector2i (417, 113);	
+		conditionalSizeUnits = { 417, 113 };
 	if (typeOfObject == 9)
-		conditionalSizeUnits = Vector2i(428, 259);
+		conditionalSizeUnits = { 428, 259 };
 	if (typeOfObject == 10)
-		conditionalSizeUnits = Vector2i(474, 463);
+		conditionalSizeUnits = { 474, 463 };
 	if (typeOfObject == 11)
-		conditionalSizeUnits = Vector2i(314, 116);
+		conditionalSizeUnits = { 314, 116 };
 	if (typeOfObject == 12)
-		conditionalSizeUnits = Vector2i(371, 205);
+		conditionalSizeUnits = { 371, 205 };
 	if (typeOfObject == 13)
-		conditionalSizeUnits = Vector2i(259, 144);
+		conditionalSizeUnits = { 259, 144 };
 	if (typeOfObject == 14)
-		conditionalSizeUnits = Vector2i(278, 190);
+		conditionalSizeUnits = { 278, 190 };
 	if (typeOfObject == 15)
-		conditionalSizeUnits = Vector2i(300, 175);
+		conditionalSizeUnits = { 300, 175 };
 	if (typeOfObject == 16)
-		conditionalSizeUnits = Vector2i(173, 154);
+		conditionalSizeUnits = { 173, 154 };
 	if (typeOfObject == 17)
-		conditionalSizeUnits = Vector2i(406, 208);
+		conditionalSizeUnits = { 406, 208 };
 	if (typeOfObject == 18)
-		conditionalSizeUnits = Vector2i(254, 173);
+		conditionalSizeUnits = { 254, 173 };
 
 	radius = std::max(conditionalSizeUnits.x, conditionalSizeUnits.y) / 2;
 }
 
-Vector2i Rock::calculateTextureOffset()
+Vector2f Rock::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
 
 	switch (typeOfObject)
 	{
 	case 1:
-		return Vector2i(textureBox.width * 0.58f, int(textureBox.height * 0.764f));
+		return { textureBox.width * 0.58f, textureBox.height * 0.764f };
 	case 2:
-		return Vector2i(textureBox.width * 0.5f, int(textureBox.height * 0.673f));
+		return { textureBox.width * 0.5f, textureBox.height * 0.673f };
 	case 3:
-		return Vector2i(textureBox.width * 0.551f, int(textureBox.height * 0.01f));
+		return { textureBox.width * 0.551f, textureBox.height * 0.01f };
 	case 4:
-		return Vector2i(textureBox.width * 0.59f, int(textureBox.height * 0.01f));
+		return { textureBox.width * 0.59f, textureBox.height * 0.01f };
 	case 5:
-		return Vector2i(textureBox.width * 0.488f, int(textureBox.height * 0.664f));
+		return { textureBox.width * 0.488f, textureBox.height * 0.664f };
 	case 6:
-		return Vector2i(textureBox.width * 0.49f, int(textureBox.height * 0.624f));
+		return { textureBox.width * 0.49f, textureBox.height * 0.624f };
 	case 7:
-		return Vector2i(textureBox.width * 0.506f, int(textureBox.height * 0.632f));
+		return { textureBox.width * 0.506f, textureBox.height * 0.632f };
 	case 8:
-		return Vector2i(textureBox.width * 0.539f, int(textureBox.height * 0.637f));	
+		return { textureBox.width * 0.539f, textureBox.height * 0.637f };
 	case 9:
-		return Vector2i(textureBox.width * 0.455f, int(textureBox.height * 0.68f));
+		return { textureBox.width * 0.455f, textureBox.height * 0.68f };
 	case 10:
-		return Vector2i(textureBox.width * 0.512f, int(textureBox.height * 0.717f));
+		return { textureBox.width * 0.512f, textureBox.height * 0.717f };
 	case 11:
-		return Vector2i(textureBox.width * 0.488f, int(textureBox.height * 0.772f));
+		return { textureBox.width * 0.488f, textureBox.height * 0.772f };
 	case 12:
-		return Vector2i(textureBox.width * 0.478f, int(textureBox.height * 0.633f));
+		return { textureBox.width * 0.478f, textureBox.height * 0.633f };
 	case 13:
-		return Vector2i(textureBox.width * 0.491f, int(textureBox.height * 0.569f));
+		return { textureBox.width * 0.491f, textureBox.height * 0.569f };
 	case 14:
-		return Vector2i(textureBox.width * 0.5f, int(textureBox.height * 0.673f));
+		return { textureBox.width * 0.5f, textureBox.height * 0.673f };
 	case 15:
-		return Vector2i(textureBox.width * 0.491f, int(textureBox.height * 0.634f));
+		return { textureBox.width * 0.491f, textureBox.height * 0.634f };
 	case 16:
-		return Vector2i(textureBox.width * 0.515f, int(textureBox.height * 0.809f));
+		return { textureBox.width * 0.515f, textureBox.height * 0.809f };
 	case 17:
-		return Vector2i(textureBox.width * 0.559f, int(textureBox.height * 0.68f));
+		return { textureBox.width * 0.559f, textureBox.height * 0.68f };
 	case 18:
-		return Vector2i(textureBox.width * 0.478f, int(textureBox.height * 0.633f));
+		return { textureBox.width * 0.478f, textureBox.height * 0.633f };
 	default:
-		return Vector2i(textureBox.width * 0.409f, int(textureBox.height * 0.945f));
+		return { textureBox.width * 0.409f, textureBox.height * 0.945f };
 	}
 }
 
@@ -217,21 +217,21 @@ int Rock::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> Rock::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Rock::prepareSprites(long long elapsedTime)
 {
-	SpriteChainElement body(PackTag::darkWoods, PackPart::rock, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::rock, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	if (typeOfObject >= 1 && typeOfObject <= 8)
-		body.packTag = PackTag::birchGrove;
+		body->packTag = PackTag::birchGrove;
 	if (typeOfObject >= 9 && typeOfObject <= 13)
 	{
-		body.packTag = PackTag::darkWoods;
-		body.number -= 8;
+		body->packTag = PackTag::darkWoods;
+		body->number -= 8;
 	}
 	if (typeOfObject >= 14 && typeOfObject <= 18)
 	{
-		body.packTag = PackTag::swampyTrees;
-		body.number -= 13;
+		body->packTag = PackTag::swampyTrees;
+		body->number -= 13;
 	}
 
 	return { body };

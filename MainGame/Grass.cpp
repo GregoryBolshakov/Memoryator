@@ -19,73 +19,73 @@ void Grass::setType(int typeOfObject)
 
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = Vector2i(86, 71);
+		conditionalSizeUnits = { 86, 71 };
 	if (typeOfObject == 2)
-		conditionalSizeUnits = Vector2i(146, 182);
+		conditionalSizeUnits = { 146, 182 };
 	if (typeOfObject == 3)
-		conditionalSizeUnits = Vector2i(205, 214);
+		conditionalSizeUnits = { 205, 214 };
 	if (typeOfObject == 4)
-		conditionalSizeUnits = Vector2i(205, 137);
+		conditionalSizeUnits = { 205, 137 };
 	if (typeOfObject == 5)
-		conditionalSizeUnits = Vector2i(108, 189);
+		conditionalSizeUnits = { 108, 189 };
 	if (typeOfObject == 6)
-		conditionalSizeUnits = Vector2i(116, 211);
+		conditionalSizeUnits = { 116, 211 };
 	if (typeOfObject == 7)
-		conditionalSizeUnits = Vector2i(141, 240);
+		conditionalSizeUnits = { 141, 240 };
 	if (typeOfObject == 8)
-		conditionalSizeUnits = Vector2i(220, 264);
+		conditionalSizeUnits = { 220, 264 };
 	if (typeOfObject == 9)
-		conditionalSizeUnits = Vector2i(251, 120);
+		conditionalSizeUnits = { 251, 120 };
 	if (typeOfObject == 10)
-		conditionalSizeUnits = Vector2i(222, 343);
+		conditionalSizeUnits = { 222, 343 };
 	if (typeOfObject == 11)
-		conditionalSizeUnits = Vector2i(357, 330);
+		conditionalSizeUnits = { 357, 330 };
 	if (typeOfObject == 12)
-		conditionalSizeUnits = Vector2i(386, 428);
+		conditionalSizeUnits = { 386, 428 };
 	if (typeOfObject == 13)
-		conditionalSizeUnits = Vector2i(425, 291);
+		conditionalSizeUnits = { 425, 291 };
 	if (typeOfObject == 14)
-		conditionalSizeUnits = Vector2i(87, 183);
+		conditionalSizeUnits = { 87, 183 };
 	if (typeOfObject == 15)
-		conditionalSizeUnits = Vector2i(113, 202);
+		conditionalSizeUnits = { 113, 202 };
 	if (typeOfObject == 16)
-		conditionalSizeUnits = Vector2i(67, 158);
+		conditionalSizeUnits = { 67, 158 };
 	if (typeOfObject == 17)
-		conditionalSizeUnits = Vector2i(119, 171);
+		conditionalSizeUnits = { 119, 171 };
 	if (typeOfObject == 18)
-		conditionalSizeUnits = Vector2i(178, 170);
+		conditionalSizeUnits = { 178, 170 };
 	if (typeOfObject == 19)
-		conditionalSizeUnits = Vector2i(188, 129);
+		conditionalSizeUnits = { 188, 129 };
 	if (typeOfObject == 20)
-		conditionalSizeUnits = Vector2i(136, 171);
+		conditionalSizeUnits = { 136, 171 };
 	if (typeOfObject == 21)
-		conditionalSizeUnits = Vector2i(171, 288);
+		conditionalSizeUnits = { 171, 288 };
 	if (typeOfObject == 22)
-		conditionalSizeUnits = Vector2i(491, 209);
+		conditionalSizeUnits = { 491, 209 };
 	if (typeOfObject == 23)
-		conditionalSizeUnits = Vector2i(166, 124);
+		conditionalSizeUnits = { 166, 124 };
 	if (typeOfObject == 24)
-		conditionalSizeUnits = Vector2i(78, 255);
+		conditionalSizeUnits = { 78, 255 };
 	if (typeOfObject == 25)
-		conditionalSizeUnits = Vector2i(171, 173);
+		conditionalSizeUnits = { 171, 173 };
 	if (typeOfObject == 26)
-		conditionalSizeUnits = Vector2i(123, 137);
+		conditionalSizeUnits = { 123, 137 };
 	if (typeOfObject == 27)
-		conditionalSizeUnits = Vector2i(133, 136);
+		conditionalSizeUnits = { 133, 136 };
 	if (typeOfObject == 28)
-		conditionalSizeUnits = Vector2i(91, 112);
+		conditionalSizeUnits = { 91, 112 };
 	if (typeOfObject == 29)
-		conditionalSizeUnits = Vector2i(119, 125);
+		conditionalSizeUnits = { 119, 125 };
 	if (typeOfObject == 30)
-		conditionalSizeUnits = Vector2i(134, 84);
+		conditionalSizeUnits = { 134, 84 };
 }
 
-Vector2i Grass::calculateTextureOffset()
+Vector2f Grass::calculateTextureOffset()
 {	
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
 	
-	return Vector2i (textureBox.width / 2, int(textureBox.height / 1.2));
+	return { textureBox.width / 2.0f, textureBox.height / 1.2f };
 }
 
 Vector2f Grass::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
@@ -98,23 +98,27 @@ int Grass::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> Grass::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Grass::prepareSprites(long long elapsedTime)
 {
-	SpriteChainElement body(PackTag::darkWoods, PackPart::plant, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
-	body.isBackground = true;
+	std::vector<SpriteChainElement*> result = {};
+	SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::plant, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	body->isBackground = true;
 
 	if (typeOfObject >= 1 && typeOfObject <= 8)
-		body.packTag = PackTag::birchGrove;
+		body->packTag = PackTag::birchGrove;
 	if (typeOfObject >= 9 && typeOfObject <= 21)
 	{
-		body.packTag = PackTag::darkWoods;
-		body.number -= 8;
+		body->packTag = PackTag::darkWoods;
+		body->number -= 8;
 	}
 	if (typeOfObject >= 22 && typeOfObject <= 30)
 	{
-		body.packTag = PackTag::swampyTrees;
-		body.number -= 21;
+		body->packTag = PackTag::swampyTrees;
+		body->number -= 21;
 	}
+	result.push_back(body);
 
-	return { body };
+	setUnscaled(result);
+
+	return result;
 }

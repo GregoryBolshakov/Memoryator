@@ -19,14 +19,14 @@ WreathTable::WreathTable(std::string objectName, Vector2f centerPosition, int ty
 void WreathTable::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
-	this->conditionalSizeUnits = Vector2i(588, 523);
+	this->conditionalSizeUnits = { 588, 523 };
 }
 
-Vector2i WreathTable::calculateTextureOffset()
+Vector2f WreathTable::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
-	return Vector2i(textureBox.width / 2, int(textureBox.height / 1.3));
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
+	return { textureBox.width / 2.0f, textureBox.height / 1.3f };
 }
 
 void WreathTable::initPedestal()
@@ -111,9 +111,9 @@ int WreathTable::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> WreathTable::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> WreathTable::prepareSprites(long long elapsedTime)
 {
-	SpriteChainElement body(PackTag::locations, PackPart::wreathTable, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	SpriteChainElement* body = new SpriteChainElement(PackTag::locations, PackPart::wreathTable, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	return { body };
 }

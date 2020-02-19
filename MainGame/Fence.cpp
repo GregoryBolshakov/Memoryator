@@ -19,63 +19,48 @@ void Fence::setType(int typeOfObject)
 	{
 		case 1:
 		{
-			this->conditionalSizeUnits = Vector2i (240, 230);
+			this->conditionalSizeUnits = { 240, 230 };
 			break;
 		}
 		case 2:
 		{
-			this->conditionalSizeUnits = Vector2i (240, 230);
+			this->conditionalSizeUnits = { 240, 230 };
 			break;
 		}
 		case 3:
 		{
-			this->conditionalSizeUnits = Vector2i (95, 350);
+			this->conditionalSizeUnits = { 95, 350 };
 			break;
 		}
 		case 4:
 		{
-			this->conditionalSizeUnits = Vector2i (95, 350);
+			this->conditionalSizeUnits = { 95, 350 };
 			break;
 		}
 		default:
 		{
-			this->conditionalSizeUnits = Vector2i (300, 300);
+			this->conditionalSizeUnits = { 300, 300 };
 			break;
 		}
 	}
 }
 
-Vector2i Fence::calculateTextureOffset()
+Vector2f Fence::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
 	switch (typeOfObject)
 	{
-		case 1:
-		{
-			return Vector2i(textureBox.width / 2, int(textureBox.height / 1));
-			break;
-		}
+		case 1:		
+			return { textureBox.width / 2.0f, textureBox.height / 1.0f };
 		case 2:
-		{
-			return Vector2i(textureBox.width / 2, int(textureBox.height / 1));
-			break;
-		}
+			return { textureBox.width / 2.0f, textureBox.height / 1.0f };
 		case 3:
-		{
-			return Vector2i(textureBox.width / 2, int(textureBox.height / 1.5));
-			break;
-		}
+			return { textureBox.width / 2.0f, textureBox.height / 1.5f };
 		case 4:
-		{
-			return Vector2i(textureBox.width / 2, int(textureBox.height / 1));
-			break;
-		}
+			return { textureBox.width / 2.0f, textureBox.height / 1.0f };
 		default:
-		{
-			return Vector2i(textureBox.width / 2, int(textureBox.height / 1));
-			break;
-		}
+			return { textureBox.width / 2.0f, textureBox.height / 1.0f };
 	}
 }
 
@@ -192,7 +177,7 @@ int Fence::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> Fence::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Fence::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*additionalSprites.clear();

@@ -11,12 +11,12 @@ GridList::GridList() : width(0), height(0), size(0, 0)
 {
 }
 
-Vector2i GridList::getBlockSize() const
+Vector2f GridList::getBlockSize() const
 {
 	return size;
 }
 
-GridList::GridList(int width, int height, Vector2i size, Vector2i microSize)
+GridList::GridList(int width, int height, Vector2f size, Vector2f microSize)
 {
 	this->width = width;
 	this->height = height;
@@ -49,16 +49,16 @@ GridList::~GridList()
 
 int GridList::getIndexByPoint(int x, int y) const
 {
-	auto y1 = y / size.y;
-	auto x1 = ceil(double(width) / size.x);
-	auto result = x1 * y1 + x / size.x;
+	const int y1 = y / size.y;
+	const int x1 = ceil(double(width) / size.x);
+	const int result = x1 * y1 + x / size.x;
 	return int(result);
 }
 
 Vector2f GridList::getPointByIndex(int index) const
 {
-	int inLineNumber = ceil(double(width) / size.x);
-	int inRawNumber = (index) / inLineNumber;
+	const int inLineNumber = ceil(double(width) / size.x);
+	const int inRawNumber = (index) / inLineNumber;
 
 	Vector2f result;
 	result.x = (index % inLineNumber) * size.x;
@@ -67,15 +67,15 @@ Vector2f GridList::getPointByIndex(int index) const
 	return result;
 }
 
-int GridList::getMicroblockByPoint(int x, int y) const
+int GridList::getMicroBlockByPoint(int x, int y) const
 {
-	auto y1 = y / microSize.y;
-	auto x1 = ceil(double(width) / microSize.x);
-	auto result = x1 * y1 + x / microSize.x;
+	const int y1 = y / microSize.y;
+	const int x1 = ceil(double(width) / microSize.x);
+	const int result = x1 * y1 + x / microSize.x;
 	return int(result);
 }
 
-Vector2f GridList::getPointByMicroblock(int microBlockIndex) const
+Vector2f GridList::getPointByMicroBlock(int microBlockIndex) const
 {
 	int inLineNumber = ceil(double(width) / microSize.x);
 	int inRawNumber = (microBlockIndex) / inLineNumber;
@@ -299,6 +299,9 @@ void GridList::setLockedMicroBlocks(WorldObject* item, bool value, bool dynamicM
 
 void GridList::addItem(WorldObject* item, const std::string& name, int x, int y)
 {
+	if (item->tag == Tag::hero)
+		auto test = 123;
+
 	setLockedMicroBlocks(item);
 	int blocksCount = ceil(width / size.x) * ceil(height / size.y);
 
@@ -310,6 +313,7 @@ void GridList::addItem(WorldObject* item, const std::string& name, int x, int y)
 	auto position = std::make_pair(index, int(cells[index].size()));
 
 	cells[index].push_back(item);
+	
 	items.insert({ name, position });
 }
 
@@ -367,19 +371,24 @@ std::vector<WorldObject*> GridList::getItems(int upperLeftX, int upperLeftY, int
 	{
 		bottomRightY = height;
 	}
-	auto rowsCount = int(ceil(double(bottomRightY - upperLeftY) / size.y));
-	auto firstColumn = getIndexByPoint(upperLeftX, upperLeftY);
-	auto lastColumn = getIndexByPoint(bottomRightX, upperLeftY);
-	auto columnsPerRow = int(ceil(double(width) / size.x));
-	auto maxColumn = int(cells.size()) - 1;
+	const auto rowsCount = int(ceil(double(bottomRightY - upperLeftY) / int(size.y)));
+	auto firstColumn = int(getIndexByPoint(upperLeftX, upperLeftY));
+	auto lastColumn = int(getIndexByPoint(bottomRightX, upperLeftY));
+	const auto columnsPerRow = int(ceil(double(width) / int(size.x)));
+	const auto maxColumn = int(cells.size()) - 1;
 
 	for (auto i = 0; i <= rowsCount; i++)
 	{
 		if (lastColumn >= maxColumn)
 			lastColumn = maxColumn;
 
+
 		for (int j = firstColumn; j <= lastColumn; j++)
+		{
+			if (j == 647)
+				auto test = 123;
 			result.insert(result.end(), cells[j].begin(), cells[j].end());
+		}
 
 		firstColumn += columnsPerRow;
 		lastColumn += columnsPerRow;
@@ -465,7 +474,7 @@ std::vector<int> GridList::getBlocksInSight(int upperLeftX, int upperLeftY, int 
 void GridList::updateItemPosition(const std::string name, int x, int y)
 {
 	auto position = items.at(name);
-	auto item = cells[position.first][position.second];
+	const auto item = cells[position.first][position.second];
 	cells[position.first].erase(cells[position.first].begin() + position.second);
 
 	for (int i = position.second; i < cells[position.first].size(); i++)

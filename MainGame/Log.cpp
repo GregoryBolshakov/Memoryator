@@ -17,28 +17,28 @@ void Log::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = Vector2i(687, 179);
+		conditionalSizeUnits = { 687, 179 };
 	if (typeOfObject == 2)
-		conditionalSizeUnits = Vector2i(507, 231);
+		conditionalSizeUnits = { 507, 231 };
 	if (typeOfObject == 3)
-		conditionalSizeUnits = Vector2i(509, 246);
+		conditionalSizeUnits = { 509, 246 };
 }
 
-Vector2i Log::calculateTextureOffset()
+Vector2f Log::calculateTextureOffset()
 {
-	textureBox.width = int(float(textureBox.width)*getScaleRatio().x);
-	textureBox.height = int(float(textureBox.height)*getScaleRatio().y);
+	textureBox.width = textureBox.width * getScaleRatio().x;
+	textureBox.height = textureBox.height * getScaleRatio().y;
 
 	switch (typeOfObject)
 	{
 	case 1:
-		return Vector2i(textureBox.width * 0.492f, int(textureBox.height * 0.721f));
+		return { textureBox.width * 0.492f, textureBox.height * 0.721f };
 	case 2:
-		return Vector2i(textureBox.width * 0.479f, int(textureBox.height * 0.735f));
+		return { textureBox.width * 0.479f, textureBox.height * 0.735f };
 	case 3:
-		return Vector2i(textureBox.width * 0.502f, int(textureBox.height * 0.584f));
+		return { textureBox.width * 0.502f, textureBox.height * 0.584f };
 	default:
-		return Vector2i(textureBox.width * 0.485f, int(textureBox.height * 0.591f));
+		return { textureBox.width * 0.485f, textureBox.height * 0.591f };
 	}
 }
 
@@ -94,9 +94,9 @@ int Log::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement> Log::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Log::prepareSprites(long long elapsedTime)
 {
-	SpriteChainElement body(PackTag::birchGrove, PackPart::log, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);	
+	SpriteChainElement* body = new SpriteChainElement(PackTag::birchGrove, PackPart::log, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);	
 
 	return { body };
 }

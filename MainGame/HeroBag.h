@@ -10,6 +10,15 @@ using namespace sf;
 
 enum BagState { bagOpen = 1, bagClosed = 2, bagOpening = 3, bagClosing = 4, ejected = 5 };
 
+struct BagSpriteChain
+{
+	SpriteChainElement* ClosedBag = new SpriteChainElement();
+	SpriteChainElement* ClosedBagSelected = new SpriteChainElement();
+	SpriteChainElement* ClosedBagBig = new SpriteChainElement();
+	SpriteChainElement* OpenedBag = new SpriteChainElement();
+	SpriteChainElement* OpenedBagSelected = new SpriteChainElement();
+};
+
 struct Cell
 {
 	Vector2f position;
@@ -40,28 +49,24 @@ public:
 	void fixPos();
 
 	static std::unordered_map<Tag, int> itemsMaxCount;
-	static float itemCommonRadius;
 	static std::vector<std::pair<Tag, int>> testInventory, emptyInventory;
 
 	Vector2f textureOpenOffset, textureClosedOffset;
 	std::vector<Cell> cells;
 
 	//animation
-	void boundSprites(BagSprite* drawInfo);
-	void draw(RenderWindow* window, long long elapsedTime);
+	SpriteChainElement* prepareSprite(long long elapsedTime, std::map<PackTag, SpritePack>* packsMap);
 	void drawCircuit(RenderWindow* window);
-	void cleanTextureReferences();
 
 	float stateChangeTime = 100000, stateChangingTime = 0, speed = 0.001f;
 	BagState currentState = bagClosed;
 	float minDistToBorder = 0, closedRadius = 0, openedRadius = 0;
 	Vector2f selectionZoneClosedOffset, selectionZoneOpenedOffset, shiftVector = { 0, 0 }, movePosition = { -1, -1 };
-	bool readyToChangeState = false, readyToEject = false, wasMoved = false, wasBounded = false;
+	bool readyToChangeState = false, readyToEject = false, wasMoved = false;
 	//---------
 private:
+	BagSpriteChain bagSpriteChain;
 	Vector2f position, textureSizeClosed, textureSizeOpen, sizeClosed, sizeOpen, lastMousePos = { 0, 0 };
-	Sprite spriteClosedBag, spriteOpenBag, spriteClosedBagSelected, spriteOpenBagSelected;
-	Texture* textureClosedBag, *textureOpenBag, *textureClosedBagSelected, *textureOpenBagSelected;
 	bool isSelectable;
 	std::vector<Vector2f> cellsPos = { {-0.1f, -0.15f}, {0.135f, -0.15f}, {-0.2f, 0.014f}, {0.018f, 0.0f}, {0.241f, 0.004f}, {-0.08f, 0.150f}, {0.131f, 0.150f} };
 };

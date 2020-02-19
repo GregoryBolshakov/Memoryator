@@ -1,7 +1,5 @@
 #include "TimeSystem.h"
 
-
-
 TimeSystem::TimeSystem()
 = default;
 
