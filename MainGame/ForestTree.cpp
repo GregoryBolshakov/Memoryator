@@ -171,7 +171,7 @@ void ForestTree::initPedestal()
 			ellipseSizeMultipliers[0] = { 1.25 };
 			break;		
 		case 13:
-			this->isMultiellipse = true;
+			this->isMultiEllipse = true;
 			focus1 = Vector2f(position.x, position.y);
 			focus2 = Vector2f(position.x, position.y);
 

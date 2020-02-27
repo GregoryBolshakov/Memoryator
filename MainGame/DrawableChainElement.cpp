@@ -18,6 +18,7 @@ DrawableChainElement::DrawableChainElement(
 	this->offset = offset;
 	this->color = color;
 	this->rotation = rotation;
+	initialized = true;
 }
 
 DrawableChainElement::~DrawableChainElement()

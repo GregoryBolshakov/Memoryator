@@ -82,7 +82,7 @@ class SpritePack
 public:
     SpritePack();
     ~SpritePack();
-    void init(std::string path, std::string jsonPath, PackTag tag);
+    void init(std::string path, const std::string& jsonPath, PackTag tag);
     Sprite getSprite(PackPart part, Direction direction, int number, bool mirrored = false);
 	sprite_pack::sprite getOriginalInfo(PackPart part, Direction direction, int number);
 	static SpriteChainElement* tagToIcon(Tag object, bool selected = false, int typeOfObject = 1);

@@ -201,6 +201,9 @@
     <ClCompile Include="TextChainElement.cpp">
       <Filter>Systems\DrawSystem</Filter>
     </ClCompile>
+    <ClCompile Include="DirectionsSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EventHandler.h" />
@@ -406,6 +409,9 @@
     </ClInclude>
     <ClInclude Include="TextChainElement.h">
       <Filter>Systems\DrawSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionsSystem.h">
+      <Filter>Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

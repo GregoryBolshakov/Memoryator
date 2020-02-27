@@ -140,6 +140,6 @@ void Monster::jerk(float power, float deceleration, Vector2f destinationPoint)
 }
 
 void Monster::fightInteract(long long elapsedTime, DynamicObject* target)
-{	
+{
 	pushAway(elapsedTime);
 }

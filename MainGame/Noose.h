@@ -1,4 +1,4 @@
-/*#pragma once
+#pragma once
 #ifndef NOOSE_H
 #define NOOSE_H
 
@@ -12,16 +12,15 @@ class Noose : public DynamicObject
 private:
     void stopping(bool doStand = false, bool forgetBoundTarget = false);
     void endingPreviousAction();
-	void rotateAndExtend(SpriteChainElement* rope, SpriteChainElement* loop);
+	void rotateAndExtend(SpriteChainElement* rope, SpriteChainElement* loop) const;
 
 	float timeForNewSprite, timeAfterHit = 0, timeForNewHit = 100000;
 	float ropeElongation = 0, maximumLength = 1500;
 	int animationLength, strikingSprite = 4;
 	bool wasHit = false;
-	SpriteChainElement stillRope, stillLoop;
 	WorldObject* owner;
 	Vector2f ownerPos = { 0, 0 };
-	Vector2i ownerGlobalBounds = { 0, 0 };
+	Vector2f ownerGlobalBounds = { 0, 0 };
 public:
 	Noose(std::string objectName, Vector2f centerPosition, WorldObject* owner);
 	~Noose();
@@ -39,4 +38,4 @@ public:
 	void fightInteract(long long elapsedTime, DynamicObject* target = nullptr) override;
 };
 
-#endif*/
+#endif

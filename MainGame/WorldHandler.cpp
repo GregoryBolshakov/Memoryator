@@ -252,15 +252,14 @@ void WorldHandler::setTransparent(std::vector<WorldObject*>& visibleItems, long 
 		else
 			visibleItem->isSelected = false;
 
-		if (visibleItem->isTerrain && Helper::isIntersects(mousePos, IntRect(itemPos.x, itemPos.y, visibleItem->getConditionalSizeUnits().x, visibleItem->getConditionalSizeUnits().y)) ||
+		if (!visibleItem->isBackground && Helper::isIntersects(mousePos, IntRect(itemPos.x, itemPos.y, visibleItem->getConditionalSizeUnits().x, visibleItem->getConditionalSizeUnits().y)) ||
 			Helper::getDist(mousePos, visibleItem->getPosition()) <= visibleItem->getRadius())
 		{
-			visibleItem->isVisibleName = true;
 			float itemCapacity = visibleItem->getConditionalSizeUnits().x + visibleItem->getConditionalSizeUnits().y;
 			if (visibleItem->tag == Tag::brazier)
 				itemCapacity /= 10;
 			float distanceToItemCenter;
-			if (visibleItem->isTerrain)
+			if (!visibleItem->isBackground)
 				distanceToItemCenter = abs(mousePos.x - (itemPos.x + visibleItem->getConditionalSizeUnits().x / 2)) +
 				abs(mousePos.y - (itemPos.y + visibleItem->getConditionalSizeUnits().y / 2));
 			else
@@ -444,7 +443,7 @@ void WorldHandler::onMouseUp(int currentMouseButton)
 		selectedObject = nullptr;
 
 	auto hero = dynamic_cast<Deerchant*>(dynamicGrid.getItemByName(focusedObject->getName()));
-	//hero->onMouseUp(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.buildingPosition != Vector2f(-1, -1) && !buildSystem.instantBuild));
+	hero->onMouseUp(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.buildingPosition != Vector2f(-1, -1) && !buildSystem.instantBuild));
 }
 
 void WorldHandler::handleEvents(Event& event)
@@ -474,7 +473,14 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event e
 	std::vector<StaticObject*> localStaticItems = ObjectInitializer::vectorCastToStatic(localItems);
 	std::vector<DynamicObject*> localDynamicItems = ObjectInitializer::vectorCastToDynamic(dynamicGrid.getItems(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y));
 
-	setTransparent(localItems, elapsedTime);
+	localTerrain.clear();
+	for (auto& item : localStaticItems)
+		if (!item->isBackground)
+			localTerrain.push_back(item);
+	for (auto& item : localDynamicItems)
+		localTerrain.push_back(item);
+
+	setTransparent(localTerrain, elapsedTime);
 
 	const auto hero = dynamic_cast<Deerchant*>(dynamicGrid.getItemByName(focusedObject->getName()));
 	hero->heldItem = &inventorySystem.getHeldItem();
@@ -597,6 +603,11 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event e
 
 bool cmpImgDraw(SpriteChainElement* first, SpriteChainElement* second)
 {
+	if (first->isBackground && !second->isBackground)
+		return true;
+	if (!first->isBackground && second->isBackground)
+		return false;
+
 	if (first->zCoord == second->zCoord)
 	{
 		if (first->position.y == second->position.y)

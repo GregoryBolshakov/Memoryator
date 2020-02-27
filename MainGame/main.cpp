@@ -25,6 +25,7 @@ int main() {
 	int currentMouseButton = 0;
 
 	HeroBook mainBook;
+	mainBook.init(&drawSystem.packsMap);
 
 	TextSystem textWriter;
 
@@ -52,7 +53,7 @@ int main() {
 				if (menuSystem.getState() == closed && world.getBuildSystem().getSuccessInit())
 				{
 					world.onMouseUp(currentMouseButton);					
-					//mainBook.onMouseUp();
+					mainBook.onMouseUp();
 				}
 					
 				if (currentMouseButton == 1)
@@ -103,8 +104,9 @@ int main() {
 				world.focusedObject->handleInput(world.getInventorySystem().getUsedMouse());
 			}
 
-			//mainBook.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().getHeldItem(), hero->nearTheTable);
-			//mainBook.interact(time);
+			auto hero = dynamic_cast<Deerchant*>(world.focusedObject);
+			mainBook.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().getHeldItem(), hero->nearTheTable);
+			mainBook.interact(time);
 
 			mainWindow.clear(sf::Color::White);
 
@@ -113,8 +115,8 @@ int main() {
 			drawSystem.draw(mainWindow, DrawSystem::UpcastChain(world.getBuildSystem().prepareSprites(world.getStaticGrid(), world.getLocalTerrain(), &drawSystem.packsMap)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
 			TextSystem::drawString(world.getMouseDisplayName(), FontName::NormalFont, 30, Mouse::getPosition().x, Mouse::getPosition().y, mainWindow, sf::Color(255, 255, 255, 180));
 			world.pedestalController.draw(&mainWindow, world.getCameraPosition(), world.getWorldGenerator().scaleFactor);
-			drawSystem.draw(mainWindow, world.getInventorySystem().prepareSprites(time, world.packsMap));
-			//mainBook.draw(&mainWindow, world.focusedObject->getHealthPoint() / world.focusedObject->getMaxHealthPointValue(), time);
+			drawSystem.draw(mainWindow, mainBook.prepareSprites(world.focusedObject->getHealthPoint() / world.focusedObject->getMaxHealthPointValue(), time));
+			drawSystem.draw(mainWindow, world.getInventorySystem().prepareSprites(time, world.packsMap));			
 			//world.runInventorySystemDrawing(mainWindow, time);
 		}
 		else
@@ -122,7 +124,7 @@ int main() {
 
 		drawSystem.draw(mainWindow, DrawSystem::UpcastChain(menuSystem.prepareSprites()));
 
-		textWriter.drawString(std::to_string(world.getWorldGenerator().scaleFactor), FontName::NormalFont, TextChainElement::defaultCharacterSize, 200, 200, mainWindow);
+		//textWriter.drawString(std::to_string(world.getWorldGenerator().scaleFactor), FontName::NormalFont, TextChainElement::defaultCharacterSize, 200, 200, mainWindow);
 
 		console.interact(time);
 		console.draw(mainWindow);

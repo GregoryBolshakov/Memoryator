@@ -4,21 +4,25 @@
 #include "Helper.h"
 
 HeroBook::HeroBook()
-{
-	/*initButtons();
-	initContent();
-	somePage.initAuxiliarySpriteMap();*/
-}
+= default;
 
 HeroBook::~HeroBook()
+= default;
+
+void HeroBook::init(std::map<PackTag, SpritePack>* packsMap)
 {
+	initButtons(packsMap);
+	//initContent();
+	//somePage.initAuxiliarySpriteMap();
 }
 
-/*void HeroBook::initButtons()
+void HeroBook::initButtons(std::map<PackTag, SpritePack>* packsMap)
 {
-	Vector2f screenSize = Helper::GetScreenSize();
+	const Vector2f screenSize = Helper::GetScreenSize();
 
-	std::string buttonImagePathDefault, buttonImagePathPressed, buttonImagePathSelected;
+	//std::string buttonImagePathDefault, buttonImagePathPressed, buttonImagePathSelected;
+	std::string packTag = "empty", packPart = "full";
+	int number = 1, selectedNumber = 1, pressedNumber = 1;
 	Vector2f buttonPosition, buttonSize; // in percents
 	Vector2f offset = {0, 0};
 	int tag;
@@ -26,27 +30,22 @@ HeroBook::~HeroBook()
 
 	std::ifstream fin(buttonsInfoFileDirectory);
 
-
 	while (fin >> isSelectable)
 	{
-		if (isSelectable)
-			fin >> buttonImagePathDefault >> buttonImagePathPressed >> buttonImagePathSelected;
+		if (!isSelectable)
+			fin >> packTag >> packPart >> number;		
 		else
-			fin >> buttonImagePathDefault;
+			fin >> packTag >> packPart >> number >> selectedNumber >> pressedNumber;
 
 		fin >> buttonPosition.x >> buttonPosition.y >> buttonSize.y >> offset.x >> offset.y >> tag;
 
-		Texture buttonTextureDefault, buttonTexturePressed, buttonTextureSelected;
-		buttonTextureDefault.loadFromFile(buttonImagePathDefault);
-		buttonTexturePressed.loadFromFile(buttonImagePathPressed);
-		buttonTextureSelected.loadFromFile(buttonImagePathSelected);
-
 		buttonPosition.x = buttonPosition.x * screenSize.x / 100;
 		buttonPosition.y = buttonPosition.y * screenSize.y / 100;
+		const auto textureSize = packsMap->at(SpritePack::mappedPackTag.at(packTag)).getOriginalInfo(SpritePack::mappedPackPart.at(packPart), Direction::DOWN, number).source_size;
 		buttonSize.y = buttonSize.y * screenSize.y / 100;
-		buttonSize.x = buttonTextureDefault.getSize().x * buttonSize.y / buttonTextureDefault.getSize().y;
+		buttonSize.x = textureSize.w * buttonSize.y / textureSize.h;
 
-		buttonList[ButtonTag(tag)].initialize(buttonTextureDefault, buttonTexturePressed, buttonTextureSelected, buttonPosition, buttonSize, isSelectable, ButtonTag(tag), offset);
+		buttonList[ButtonTag(tag)].initialize(SpritePack::mappedPackTag.at(packTag), SpritePack::mappedPackPart.at(packPart), number, selectedNumber, pressedNumber, buttonPosition, buttonSize, isSelectable, ButtonTag(tag), offset);
 	}
 
 	fin.close();
@@ -83,20 +82,25 @@ void HeroBook::setPage(int page)
 	somePage.setPage(page);
 }
 
-void HeroBook::drawHpLine(RenderWindow* window, float hpRatio)
+std::vector<SpriteChainElement*> HeroBook::prepareHpLine(float hpRatio)
 {
+	std::vector<SpriteChainElement*> result = {};
 	buttonList.at(ButtonTag::hpFrameTag).setPosition(getHpLinePosition());
 	buttonList.at(ButtonTag::hpLineTag).setSize(Vector2f(hpRatio * buttonList.at(ButtonTag::hpFrameTag).getGlobalBounds().width, buttonList.at(ButtonTag::hpFrameTag).getGlobalBounds().height));
 	buttonList.at(ButtonTag::hpLineTag).setPosition(getHpLinePosition());
 
-	buttonList.at(ButtonTag::hpFrameTag).draw(*window);
-	buttonList.at(ButtonTag::hpLineTag).draw(*window);
+	result.push_back(buttonList.at(ButtonTag::hpFrameTag).prepareSprite());
+	result.push_back(buttonList.at(ButtonTag::hpLineTag).prepareSprite());
+
+	return result;
 }
 
-void HeroBook::drawWreathMatrix(RenderWindow* window, pageContent content)
-{
+std::vector<SpriteChainElement*> HeroBook::prepareWreathMatrix()
+{	
 	if (currentPage != 5 || somePage.getOriginalSetups()[currentDraft].id != currentDraft)
-		return;
+		return {};
+
+	std::vector<SpriteChainElement*> result = {};
 
 	const Vector2f upperLeftCorner = Vector2f(
 		buttonList.at(ButtonTag::sketching).getGlobalBounds().left + buttonList.at(ButtonTag::sketching).getGlobalBounds().width / 1.875,
@@ -127,18 +131,24 @@ void HeroBook::drawWreathMatrix(RenderWindow* window, pageContent content)
 			{
 				// draw cell
 				buttonList.at(currentType).setPosition(somePage.wreathMatrixPositions[raw][column]);
-				buttonList.at(currentType).draw(*window);				
+				result.push_back(buttonList.at(currentType).prepareSprite());
 				//------------------
 			}
 		}
 	}
-	drawLineMatrix(window);
+	auto lineMatrixElements = prepareLineMatrix();
+	result.insert(result.end(), lineMatrixElements.begin(), lineMatrixElements.end());
+
+	return result;
 }
 
-void HeroBook::drawLineMatrix(RenderWindow* window)
+std::vector<SpriteChainElement*> HeroBook::prepareLineMatrix()
 {
+	std::vector<SpriteChainElement*> result = {};
+
 	Vector2f distance = Vector2f(buttonList.at(ButtonTag::cell).getGlobalBounds().width * 6 / 4,
 		distance.y = buttonList.at(ButtonTag::cell).getGlobalBounds().height / 2);
+
 	for (int raw = 0; raw < somePage.wreathMatrix.size(); raw++)
 	{
 		for (int column = 0; column < somePage.wreathMatrix[raw].size(); column++)
@@ -161,17 +171,23 @@ void HeroBook::drawLineMatrix(RenderWindow* window)
 								const Vector2f firstLnDot = Vector2f(somePage.wreathMatrixPositions[raw][column].x + distance.y + contentOffset.x, somePage.wreathMatrixPositions[raw][column].y + distance.y + contentOffset.y);
 								const Vector2f secondLnDot = Vector2f(somePage.wreathMatrixPositions[cell.first][cell.second].x + distance.y + contentOffset.x, somePage.wreathMatrixPositions[cell.first][cell.second].y + distance.y + contentOffset.y);
 								auto line = Helper::makeLine(firstLnDot, secondLnDot);
-								window->draw(line);
+								//result.push_back(line);
 							}
 						}
 			}
 		}
 	}
-	drawPlantsMatrix(window);
+
+	auto plantsMatrixElements = preparePlantsMatrix();
+	result.insert(result.end(), plantsMatrixElements.begin(), plantsMatrixElements.end());
+
+	return result;
 }
 
-void HeroBook::drawPlantsMatrix(RenderWindow* window)
+std::vector<SpriteChainElement*> HeroBook::preparePlantsMatrix()
 {
+	std::vector<SpriteChainElement*> result = {};
+
 	for (int raw = 0; raw < somePage.wreathMatrix.size(); raw++)
 	{
 		for (int column = 0; column < somePage.wreathMatrix[raw].size(); column++)
@@ -193,18 +209,22 @@ void HeroBook::drawPlantsMatrix(RenderWindow* window)
 						}
 				if (HeroBookPage::checkWreathCellFit(raw, column, somePage.getOriginalSetups().at(currentDraft).rings))
 				{
-					buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).draw(*window);
 					buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).stopBeingGray();
+					result.push_back(buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).prepareSprite());					
 				}
 			}
 		}
 	}
+
+	return result;
 }
 
-void HeroBook::drawPlantsList(RenderWindow* window)
+std::vector<SpriteChainElement*> HeroBook::preparePlantsList()
 {
 	if (currentPage != 5)
-		return;
+		return {};
+
+	std::vector<SpriteChainElement*> result = {};
 
 	const Vector2f upperLeftCorner = Vector2f(
 		buttonList.at(ButtonTag::sketching).getGlobalBounds().left + buttonList.at(ButtonTag::sketching).getGlobalBounds().width * 0.066,
@@ -217,24 +237,28 @@ void HeroBook::drawPlantsList(RenderWindow* window)
 			if (somePage.plantsMatrix[raw][column].first == Tag::emptyCell)
 				continue;
 			auto curFlower = ButtonTag(somePage.plantsMatrix[raw][column].first);
-			Vector2f size = Vector2f(buttonList.at(curFlower).getGlobalBounds().width, buttonList.at(curFlower).getGlobalBounds().height);			
+			const Vector2f size = Vector2f(buttonList.at(curFlower).getGlobalBounds().width, buttonList.at(curFlower).getGlobalBounds().height);			
 
 			buttonList.at(curFlower).setPosition(Vector2f(upperLeftCorner.x + column * size.x, upperLeftCorner.y + raw * size.y));
 			if (buttonList.at(curFlower).isSelected(Vector2f(Mouse::getPosition())) && currentFlower == Tag::emptyCell)
 				this->currentFlower = Tag(int(curFlower));
 
 			buttonList.at(curFlower).stopBeingGray();
-			somePage.drawIconFrame(curFlower, window, 1);
-			buttonList.at(curFlower).draw(*window);
+			result.push_back(somePage.prepareIconFrame(curFlower, 1));
+			result.push_back(buttonList.at(curFlower).prepareSprite());
 		}
 	}
+
+	return result;
 }
 
-void HeroBook::drawWreathCost(Vector2f pos, RenderWindow* window)
+std::vector<DrawableChainElement*> HeroBook::prepareWreathCost(Vector2f pos)
 {
-	const Tag currentObject = somePage.pageToObjectId(currentPage);
+	const Tag currentObject = HeroBookPage::pageToObjectId(currentPage);
 	if (!somePage.nearTheTable || !somePage.getObjectInfo()->at(currentObject).isUnlocked || somePage.doneRecipes.count(currentObject) == 0)
-		return;
+		return {};
+
+	std::vector<DrawableChainElement*> result = {};
 
 	Vector2f drawPos = pos;
 
@@ -244,21 +268,27 @@ void HeroBook::drawWreathCost(Vector2f pos, RenderWindow* window)
 		if (buttonList.count(flowerButton) > 0)
 		{
 			buttonList.at(flowerButton).setPosition(drawPos);
-			buttonList.at(flowerButton).draw(*window);
-			TextSystem::drawNumberOfItems(drawPos, item.second, *window);
+			result.push_back(buttonList.at(flowerButton).prepareSprite());
+			result.push_back(new TextChainElement(drawPos, { 0, 0 }, sf::Color::Black, std::to_string(item.second)));
 			drawPos.x += buttonList.at(flowerButton).getGlobalBounds().width;
 		}
 	}
+
+	return result;
 }
 
-void HeroBook::draw(RenderWindow* window, float hpRatio, long long elapsedTime)
+std::vector<DrawableChainElement*> HeroBook::prepareSprites(float hpRatio, long long elapsedTime)
 {
-	drawHpLine(window, hpRatio);
-	buttonList.at(ButtonTag::bookStandTag).draw(*window);
-	buttonList.at(ButtonTag::bookButtonTag).draw(*window);
-	buttonList.at(ButtonTag::bookGlowTag).draw(*window);
+	std::vector<DrawableChainElement*> result = {};
+
+	auto hpLineElements = prepareHpLine(hpRatio);
+	result.insert(result.end(), hpLineElements.begin(), hpLineElements.end());
+
+	result.push_back(buttonList.at(ButtonTag::bookStandTag).prepareSprite());
+	result.push_back(buttonList.at(ButtonTag::bookButtonTag).prepareSprite());
+	result.push_back(buttonList.at(ButtonTag::bookGlowTag).prepareSprite());
 	if (buttonList.at(ButtonTag::bookButtonTag).isSelected(Vector2f(Mouse::getPosition())))
-		buttonList.at(ButtonTag::bookLightningTag).draw(*window);
+		result.push_back(buttonList.at(ButtonTag::bookLightningTag).prepareSprite());
 
 	// turn off all book buttons
 	for (auto& button : buttonList)
@@ -269,39 +299,54 @@ void HeroBook::draw(RenderWindow* window, float hpRatio, long long elapsedTime)
 	//-----------------------------
 
 	if (!visibility)
-		return;
+		return result;
 
 	FloatRect pageGlobalBounds;
 	
 
 	if (currentPage != 0)
 	{
-		buttonList.at(ButtonTag::pageBackground).draw(*window);		
+		result.push_back(buttonList.at(ButtonTag::pageBackground).prepareSprite());
 		pageGlobalBounds = buttonList.at(ButtonTag::pagePattern).getGlobalBounds();
 	}
 
-	auto pageContent = somePage.getPreparedContent(currentPage, currentDraft);
+	const auto pageContent = somePage.getPreparedContent(currentPage, currentDraft);
 
 	// main page content	
 	if (currentPage >= 101 && currentPage <= 499)
-		somePage.drawLines(window);
+	{
+		auto lineElements = somePage.prepareLines();
+		result.insert(result.end(), lineElements.begin(), lineElements.end());
+	}
 
-	somePage.drawAllIcons(pageContent, window);
+	auto iconElements = somePage.prepareAllIcons(pageContent);
+	result.insert(result.end(), iconElements.begin(), iconElements.end());
 
-	drawWreathMatrix(window, pageContent);
-	drawPlantsList(window);
+	auto wreathElements = prepareWreathMatrix();
+	result.insert(result.end(), wreathElements.begin(), wreathElements.end());
+
+	auto plantsElements = preparePlantsList();
+	result.insert(result.end(), plantsElements.begin(), plantsElements.end());
+
 	if (currentFlower != Tag::emptyCell)
-		somePage.drawConnectableFlowers(currentFlower, window);
+	{
+		auto connectableFlowers = somePage.prepareConnectableFlowers(currentFlower);
+		result.insert(result.end(), connectableFlowers.begin(), connectableFlowers.end());
+	}
 
-	TextSystem::drawTextBox(pageContent.blockDescription, FontName::NormalFont, 25, pageGlobalBounds.left + pageGlobalBounds.width * blockDescriptionPoint.x,
+	/*TextSystem::drawTextBox(pageContent.blockDescription, FontName::NormalFont, 25, pageGlobalBounds.left + pageGlobalBounds.width * blockDescriptionPoint.x,
 		pageGlobalBounds.top + pageGlobalBounds.height * blockDescriptionPoint.y, pageGlobalBounds.width * 0.4, pageGlobalBounds.height * 0.24, window, Color(100, 68, 34, 180));
 	TextSystem::drawTextBox(pageContent.pageDescription, FontName::NormalFont, 25, pageGlobalBounds.left + pageGlobalBounds.width * pageDescriptionPoint.x,
-		pageGlobalBounds.top + pageGlobalBounds.height * pageDescriptionPoint.y, pageGlobalBounds.width * 0.4, pageGlobalBounds.height * 0.24, window, Color(100, 68, 34, 180));
+		pageGlobalBounds.top + pageGlobalBounds.height * pageDescriptionPoint.y, pageGlobalBounds.width * 0.4, pageGlobalBounds.height * 0.24, window, Color(100, 68, 34, 180));*/
 
-	somePage.drawHeadingText(window);
+	auto headingText = somePage.prepareHeadingText();
+	result.insert(result.end(), headingText.begin(), headingText.end());
 
 	if (buttonList.at(ButtonTag::makeWreath).isSelected(Vector2f(Mouse::getPosition())))
-		drawWreathCost(buttonList.at(ButtonTag::makeWreath).getPosition(), window);
+	{
+		auto wreathCostElements = prepareWreathCost(buttonList.at(ButtonTag::makeWreath).getPosition());
+		result.insert(result.end(), wreathCostElements.begin(), wreathCostElements.end());
+	}
 	//------------------
 
 	//draw arrows
@@ -310,14 +355,14 @@ void HeroBook::draw(RenderWindow* window, float hpRatio, long long elapsedTime)
 	else
 	{
 		buttonList.at(ButtonTag::previousPage).isActive = true;
-		buttonList.at(ButtonTag::nextPage).draw(*window);
+		result.push_back(buttonList.at(ButtonTag::nextPage).prepareSprite());
 	}
 	if (currentPage <= 0)
 		buttonList.at(ButtonTag::previousPage).isActive = false;
 	else
 	{
 		buttonList.at(ButtonTag::previousPage).isActive = true;
-		buttonList.at(ButtonTag::previousPage).draw(*window);
+		result.push_back(buttonList.at(ButtonTag::previousPage).prepareSprite());
 	}
 	//------------------------------
 
@@ -329,9 +374,12 @@ void HeroBook::draw(RenderWindow* window, float hpRatio, long long elapsedTime)
 	{
 		const float offset = buttonList.at(ButtonTag(heldItem.first)).getGlobalBounds().width / 2;
 		buttonList.at(ButtonTag(heldItem.first)).setPosition(Vector2f(Mouse::getPosition().x - offset, Mouse::getPosition().y - offset));
-		buttonList.at(ButtonTag(heldItem.first)).draw(*window);
+		result.push_back(buttonList.at(ButtonTag(heldItem.first)).prepareSprite());
 	}
 	//--------------
+
+	return result;
+	return {};
 }
 
 void HeroBook::interact(long long elapsedTime)
@@ -399,7 +447,7 @@ void HeroBook::onMouseUp()
 						somePage.doneRecipes[currentDraft][column] += 1;
 
 			somePage.unlockObject(currentDraft);
-			setPage(somePage.getHeadingPage(currentDraft));
+			setPage(HeroBookPage::getHeadingPage(currentDraft));
 			somePage.clearWreathMatrix();
 			currentDraft = Tag::emptyDraft;
 			somePage.readyToFinishDraft = false;
@@ -447,5 +495,5 @@ void HeroBook::WhileMouseDown()
 		}
 	}
 	//--------------------------
-}*/
+}
 

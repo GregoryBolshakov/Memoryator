@@ -192,7 +192,7 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 	if (!inventory.empty())
 		item->inventory = inventory;
 
-	if (!mirrored || item->isMultiellipse)
+	if (!mirrored || item->isMultiEllipse)
 		item->cancelMirroring();
 
 	return item;
@@ -246,12 +246,12 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 		nameOfImage = "Game/worldSprites/deer/stand/down/1";
 		break;
 	}
-	/*case Tag::noose:
+	case Tag::noose:
 	{
 		item = new Noose("item", Vector2f(0, 0), owner);
 		nameOfImage = "Game/worldSprites/noose/nooseLoop/1";
 		break;
-	}*/
+	}
 	/*case Tag::clapWhirl:
 	{
 		item = new ClapWhirl("item", Vector2f(0, 0), owner);

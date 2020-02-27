@@ -81,7 +81,7 @@ void WorldGenerator::generate()
 
 	initializeDynamicItem(Tag::hero, Vector2f(15800, 15800), "hero");	
 	initializeStaticItem(Tag::brazier, Vector2f(16300, 16300), 1, "brazier");
-	initializeStaticItem(Tag::rock, Vector2f(15500, 15000), 5, "rock", 5, DarkWoods);
+	//initializeDynamicItem(Tag::nightmare1, Vector2f(15500, 15500), "enemy");
 
 	// world generation
 	initBiomesGenerationInfo();
@@ -144,7 +144,7 @@ void WorldGenerator::inBlockGenerate(int blockIndex)
 	generateGround(blockIndex);
 
 	//block filling
-	return;
+	//return;
 
 	for (int x = blockTransform.left; x < blockTransform.left + blockTransform.width; x += 100)
 	{

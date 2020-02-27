@@ -9,7 +9,7 @@ Lake::Lake(std::string objectName, Vector2f centerPosition, int typeOfObject) : 
 	radius = 50;
 	animationSpeed = 10;
 	toSaveName = "lake";
-	isMultiellipse = true;
+	isMultiEllipse = true;
 	setType(typeOfObject);
 	tag = Tag::lake;
 }

@@ -35,6 +35,7 @@ public:
 	Vector2f getPosition() const { return button->position; }
     Vector2f getSize() const { return button->size; }
     Vector2f getOffset() const { return button->offset; }
+	FloatRect getGlobalBounds() const { return { getPosition(), getSize() }; }
 	void setPosition(Vector2f position);
 	void setSize(Vector2f size);
 	ButtonTag getTag() const { return tag; }

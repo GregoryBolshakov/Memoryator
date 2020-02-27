@@ -51,11 +51,11 @@ public:
 	virtual int getSpriteNumber() = 0;
 	Vector2f getPosition() const { return position; }
 	Vector2f *getPtrPosition() { return &position; }
-	Vector2f getTextureSize() const { return  Vector2f(textureBox.width, textureBox.height); }
-	Vector2f getTextureOffset() const { return Vector2f(textureBoxOffset.x, textureBoxOffset.y); }
+	Vector2f getTextureSize() const { return { textureBox.width, textureBox.height }; }
+	Vector2f getTextureOffset() const { return { textureBoxOffset.x, textureBoxOffset.y }; }
 	Vector2f getScaleRatio();
 	Vector2f getConditionalSizeUnits() const { return conditionalSizeUnits; }
-	Vector2f getMicroBlockCheckAreaBounds() { return microBlockCheckAreaBounds; }
+	Vector2f getMicroBlockCheckAreaBounds() const { return microBlockCheckAreaBounds; }
 	std::vector<Vector2i> getLockedMicroBlocks() const { return lockedMicroBlocks; }
 	virtual Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) = 0;
 	virtual int getBuildType(Vector2f ounPos, Vector2f otherPos) = 0;
@@ -76,14 +76,14 @@ public:
 	virtual void initMicroBlocks();
 	virtual bool isLockedPlace(std::map<std::pair<int, int>, bool> checkBlocks);
 
-	bool isTransparent = false, isVisibleName = false, isSelected = false, isVisibleInventory = false;
+	bool isTransparent = false, isSelected = false, isVisibleInventory = false;
 	bool isProcessed = false;
-	bool isBackground = false, isTerrain = false, isDotsAdjusted = false, isMultiellipse = false, intangible = false;
+	bool isBackground = false, isTerrain = false, isDotsAdjusted = false, isMultiEllipse = false, intangible = false;
 
 	virtual Vector2f calculateTextureOffset() = 0;
 	virtual void initPedestal();
 
-	Color color = Color(255, 255, 255);
+	sf::Color color = sf::Color(255, 255, 255);
 	std::vector<std::pair<Tag, int>> inventory = {};
 	static Vector2f microBlockSize;
 	Tag tag = Tag::emptyObject;

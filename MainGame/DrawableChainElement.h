@@ -18,10 +18,12 @@ public:
 		Color color = Color(255, 255, 255, 255),		
 		float rotation = 0);
 	virtual ~DrawableChainElement();
+	void initialize() { this->initialized = true; }
 
 	Vector2f offset = { 0, 0 }, position = { 0, 0 }, size = { 0, 0 };
 	float rotation = 0;
 	Color color = Color(255, 255, 255);
+	bool initialized = false;
 };
 
 #endif

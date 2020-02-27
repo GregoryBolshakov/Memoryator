@@ -22,7 +22,7 @@ void DynamicObject::initMicroBlocks()
 	lockedMicroBlocks = { Vector2i(position.x / microBlockSize.x, position.y / microBlockSize.y) };
 }
 
-Side DynamicObject::calculateSide(Vector2f otherObjectPosition, long long elapsedTime)
+Side DynamicObject::calculateSide(Vector2f otherObjectPosition, long long elapsedTime) const
 {
 	Side answer = down;
 
@@ -39,6 +39,78 @@ Side DynamicObject::calculateSide(Vector2f otherObjectPosition, long long elapse
 				if (this->position.x >= otherObjectPosition.x && abs(alpha) >= 0 && abs(alpha) <= 45)
 					answer = left;
 	return answer;
+}
+
+void DynamicObject::calculateDirection()
+{
+	const Vector2f curPos = this->getPosition();
+	const Vector2f tarPos = movePosition;
+
+	if (tarPos == Vector2f(-1, -1))
+		direction = Direction::STAND;
+
+	auto contactDistance = radius;
+	if (boundTarget)
+		contactDistance += boundTarget->getRadius();
+
+	const float directionCorridor = 50;
+
+	if (abs(curPos.x - tarPos.x) <= directionCorridor && abs(curPos.y - tarPos.y) <= directionCorridor)
+	{
+		if (abs(curPos.x - tarPos.x) > abs(curPos.y - tarPos.y))
+		{
+			if (curPos.x >= tarPos.x)
+				direction = Direction::LEFT;
+			else
+				direction = Direction::RIGHT;
+		}
+		else
+		{
+			if (curPos.y >= tarPos.y)
+				direction = Direction::UP;
+			else
+				direction = Direction::DOWN;
+		}
+		lastDirection = direction;
+		return;
+	}
+
+	if (abs(curPos.x - tarPos.x) <= directionCorridor)
+	{
+		if (curPos.y < tarPos.y)
+			direction = Direction::DOWN;
+		else
+			direction = Direction::UP;
+	}
+	else
+		if (abs(curPos.y - tarPos.y) <= directionCorridor)
+		{
+			if (curPos.x < tarPos.x)
+				direction = Direction::RIGHT;
+			else
+				direction = Direction::LEFT;
+		}
+		else
+			if (curPos.x < tarPos.x)
+			{
+				if (curPos.y < tarPos.y)
+					direction = Direction::DOWNRIGHT;
+				else
+					if (curPos.y > tarPos.y)
+						direction = Direction::UPRIGHT;
+			}
+			else
+				if (curPos.x > tarPos.x)
+				{
+					if (curPos.y < tarPos.y)
+						direction = Direction::DOWNLEFT;
+					else
+						if (curPos.y > tarPos.y)
+							direction = Direction::UPLEFT;
+				}
+
+	if (direction != Direction::STAND)
+		lastDirection = direction;
 }
 
 Side DynamicObject::invertSide(Side side)
@@ -153,6 +225,12 @@ Vector2f DynamicObject::EllipceSlip(DynamicObject *dynamic, Vector2f newPos, Vec
 
 void DynamicObject::setMoveOffset(long long elapsedTime)
 {
+	if (!(currentAction == move || currentAction == moveHit || currentAction == moveEnd || currentAction == jerking || currentAction == throwNoose))
+	{
+		moveOffset = { -1, -1 };
+		return;
+	}
+
 	if (movePosition == Vector2f(-1, -1))
 	{
 		if (direction != Direction::STAND)
@@ -181,47 +259,6 @@ void DynamicObject::setMoveOffset(long long elapsedTime)
 		return;
 	}*/
 	moveOffset = { (movePosition.x - position.x) * k, (movePosition.y - position.y) * k };
-}
-
-Direction DynamicObject::calculateDirection() const
-{
-	Vector2f curPos = this->getPosition();
-	Vector2f tarPos = movePosition;
-	if (tarPos == Vector2f(-1, -1))
-		return Direction::STAND;
-
-	const Direction direction = Direction::STAND;
-
-	if (abs(curPos.x - tarPos.x) < (this->radius))
-	{
-		if (curPos.y < tarPos.y)		
-			return Direction::DOWN;		
-		return Direction::UP;
-	}
-	if (abs(curPos.y - tarPos.y) < (this->radius))
-	{
-		if (curPos.x < tarPos.x)
-			return Direction::RIGHT;
-		return Direction::LEFT;
-	}
-	if (curPos.x < tarPos.x)
-	{
-		if (curPos.y < tarPos.y)		
-			return Direction::DOWNRIGHT;		
-		else
-			if (curPos.y > tarPos.y)			
-				return Direction::UPRIGHT;
-	}
-	else
-		if (curPos.x > tarPos.x)
-		{
-			if (curPos.y < tarPos.y)			
-				return Direction::DOWNLEFT;			
-			else
-				if (curPos.y > tarPos.y)				
-					return Direction::UPLEFT;				
-		}
-	return direction;
 }
 
 Vector2f DynamicObject::doMove(long long elapsedTime)
@@ -254,10 +291,10 @@ Vector2f DynamicObject::doSlip(Vector2f newPosition, std::vector<StaticObject*> 
 		if (!terrain || staticItem->isBackground || staticItem->getRadius() == 0)
 			continue;
 
-		if (tag != Tag::hero && staticItem->isMultiellipse)
+		if (tag != Tag::hero && staticItem->isMultiEllipse)
 			continue;
 
-		if (terrain->isMultiellipse)
+		if (terrain->isMultiEllipse)
 		{
 			std::vector<int> curEllipses = terrain->getMultiellipseIntersect(newPosition);
 			Vector2f motionAfterSlipping;
@@ -353,7 +390,7 @@ void DynamicObject::pushByBumping(DynamicObject* object)
 {
 	if (!this->canCrashIntoDynamic || !object->canCrashIntoDynamic || pushDamage != 0)
 		return;
-	bumpedPositions.push_back({ object->getPosition(), false });
+	bumpedPositions.emplace_back(object->getPosition(), false);
 	bumpDistance += object->getRadius();
 }
 
@@ -362,10 +399,9 @@ void DynamicObject::endPush(long long elapsedTime)
 	pushDirection = { 0, 0 };
 	pushDuration = 0;
 	pushVector = { 0, 0 };
-	pushDamage = 0;	
-	color = Color(255, std::min(color.g + int(ceil(elapsedTime / 3000)), 255), std::min(color.b + int(ceil(elapsedTime / 3000)), 255), 255);
+	pushDamage = 0;		
 	bumpedPositions.clear();
-	bumpDistance = 0;
+	bumpDistance = 0;	
 }
 
 void DynamicObject::pushAway(long long elapsedTime, float pushSpeed)
@@ -373,6 +409,8 @@ void DynamicObject::pushAway(long long elapsedTime, float pushSpeed)
 	if (pushSpeed == 0)
 		pushSpeed = DEFAULT_PUSH_SPEED;
 	timeAfterHitself += elapsedTime;
+	const sf::Color pushColor = sf::Color(255, 100, 100, 255);
+
 	if (!bumpedPositions.empty() && this->canCrashIntoDynamic && pushDamage == 0)
 	{
 		Vector2f bumpCenter = { 0, 0 };
@@ -391,17 +429,32 @@ void DynamicObject::pushAway(long long elapsedTime, float pushSpeed)
 		pushDirection = Vector2f(this->position.x - bumpCenter.x, this->position.y - bumpCenter.y);
 		pushDuration = pushDistance / pushSpeed;
 		pushRestDuration = pushDuration;
+		bumpDistance = 0;
+		bumpedPositions.clear();
+		color = pushColor;
 	}
 
-	if (bumpedPositions.empty() || pushRestDuration <= 0 || currentAction == dead)
+	if (redRestDuration > 0)
+		color = sf::Color(
+			255,
+			pushColor.g + (255 - pushColor.g) * (1 - redRestDuration / redDuration),
+			pushColor.b + (255 - pushColor.b) * (1 - redRestDuration / redDuration),
+			255);
+	else
+	{
+		color = sf::Color::White;
+		redRestDuration = 0;
+	}
+
+	redRestDuration -= elapsedTime;
+
+	if (pushRestDuration <= 0 || currentAction == dead)
 	{
 		endPush(elapsedTime);
 		return;
 	}
-
-	pushRestDuration -= elapsedTime;
-	if (pushDamage > 0)
-		color = Color(255, 100, 100, 255);
+	
+	pushRestDuration -= elapsedTime;	
 
 	const float elongationCoefficient = pushSpeed * elapsedTime / sqrt(pow(pushDirection.x, 2) + pow(pushDirection.y, 2));
 	if (pushDirection != Vector2f(0, 0))
@@ -412,7 +465,7 @@ void DynamicObject::pushAway(long long elapsedTime, float pushSpeed)
 
 void DynamicObject::takeDamage(float damage, Vector2f attackerPos)
 {
-	if (timeAfterHitself < timeForNewHitself)	
+	if (timeAfterHitself < timeForNewHitself)
 		return;	
 	this->timeAfterHitself = 0;
 	this->healthPoint -= damage / this->armor;
@@ -420,109 +473,10 @@ void DynamicObject::takeDamage(float damage, Vector2f attackerPos)
 	pushDamage = damage;
 	pushDuration = DEFAULT_PUSH_DURATION;
 	pushRestDuration = pushDuration;
+	redDuration = 2 * pushDuration;
+	redRestDuration = redDuration;
+
 	pushDistance = Helper::getDist(this->getPosition(), attackerPos);
 	if (attackerPos != Vector2f(-1, -1))
 		pushDirection = Vector2f(this->position.x - attackerPos.x, this->position.y - attackerPos.y);
 }
-
-std::string DynamicObject::sideToString(Side side)
-{
-	switch (side)
-	{
-		case up:
-			return "up";
-		case right:
-			return "left";
-		case down:
-			return "down";
-		case  left:
-			return "left";
-	}
-	return "";
-}
-
-std::string DynamicObject::directionToString(Direction direction)
-{
-	switch (direction)
-	{
-	case Direction::UP:
-		return "up";
-	case Direction::UPRIGHT:
-		return "up-left";
-	case Direction::RIGHT:
-		return "left";
-	case Direction::DOWNRIGHT:
-		return "down-left";
-	case Direction::DOWN:
-		return "down";
-	case Direction::DOWNLEFT:
-		return "down-left";
-	case Direction::LEFT:
-		return "left";	
-	case Direction::UPLEFT:
-		return "up-left";		
-	}
-	return "";
-}
-
-Direction DynamicObject::sideToDirection(Side side)
-{
-	switch (side)
-	{
-	case up:
-		return Direction::UP;
-	case right:
-		return Direction::RIGHT;
-	case down:
-		return Direction::DOWN;
-	case  left:
-		return Direction::LEFT;
-	}
-	return Direction::DOWN;
-}
-
-Direction DynamicObject::invertDirection(Direction dir)
-{
-	switch (dir)
-	{
-	case Direction::UP:
-		return Direction::DOWN;
-	case Direction::DOWN:
-		return Direction::UP;
-	case Direction::LEFT:
-		return Direction::RIGHT;
-	case Direction::RIGHT:
-		return Direction::LEFT;
-	case Direction::UPLEFT: 
-		return Direction::DOWNRIGHT;
-	case Direction::UPRIGHT:
-		return Direction::DOWNLEFT;
-	case Direction::DOWNLEFT:
-		return Direction::UPRIGHT;
-	case Direction::DOWNRIGHT:
-		return Direction::UPLEFT;
-	}
-}
-
-Direction DynamicObject::cutRights(Direction direction)
-{
-    switch (direction)
-	{
-	case Direction::UPRIGHT:
-		return Direction::UPLEFT;
-	case Direction::RIGHT:
-		return Direction::LEFT;
-	case Direction::DOWNRIGHT:
-		return Direction::DOWNLEFT;
-    default: return direction;
-    }
-}
-
-Side DynamicObject::cutRights(Side side)
-{
-    if (side == right)
-        return left;
-    return side;
-}
-
-

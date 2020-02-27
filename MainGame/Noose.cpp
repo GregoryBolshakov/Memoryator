@@ -1,4 +1,4 @@
-/*#include "Noose.h"
+#include "Noose.h"
 #include "Deer.h"
 #include "Deerchant.h"
 
@@ -6,7 +6,7 @@ using namespace sf;
 
 Noose::Noose(const std::string objectName, Vector2f centerPosition, WorldObject* owner) : DynamicObject(objectName, centerPosition)
 {
-	conditionalSizeUnits = { 360, 300);
+	conditionalSizeUnits = { 360, 300 };
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
 	this->owner = owner;
@@ -20,20 +20,20 @@ Noose::Noose(const std::string objectName, Vector2f centerPosition, WorldObject*
 	canCrashIntoDynamic = false;
 	jerk(2, 1);
 	toSaveName = "noose";
-	tag = Tag::noose;	
+	tag = Tag::noose;
 }
 
 Noose::~Noose()
 {
 }
 
-Vector2i Noose::calculateTextureOffset()
+Vector2f Noose::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;	
 	ropeElongation = textureBox.width / 20.0f;
 	//ropeElongation = 0;
-	return { 0, textureBox.height / 1.8));
+	return { 0.0f, textureBox.height / 1.8f };
 }
 
 void Noose::setTarget(DynamicObject& object)
@@ -134,12 +134,8 @@ void Noose::stopping(bool doStand, bool forgetBoundTarget)
 
 void Noose::endingPreviousAction()
 {
-	if (lastAction == jerking)
-	{
-		currentAction = dead;				
-		stillRope = additionalSprites[0];
-		stillLoop = additionalSprites[1];
-	}
+	if (lastAction == jerking)	
+		currentAction = dead;
 	lastAction = relax;
 }
 
@@ -180,7 +176,7 @@ void Noose::fightInteract(long long elapsedTime, DynamicObject* target)
 	return;
 }
 
-void Noose::rotateAndExtend(spriteChainElement* rope, spriteChainElement* loop)
+void Noose::rotateAndExtend(SpriteChainElement* rope, SpriteChainElement* loop) const
 {
 	if (ownerPos != Vector2f(0, 0))
 	{
@@ -206,7 +202,7 @@ void Noose::rotateAndExtend(spriteChainElement* rope, spriteChainElement* loop)
 
 		// change position to hero belt
 		auto dynOwner = dynamic_cast<Deerchant*>(owner);
-		if (dynOwner)
+		if (dynOwner && currentAction != dead)
 		{
 			rope->position = dynOwner->getBeltPosition();
 			rope->offset = Vector2f(rope->offset.x + rope->position.x - position.x, rope->offset.y + rope->position.y - position.y);
@@ -214,17 +210,11 @@ void Noose::rotateAndExtend(spriteChainElement* rope, spriteChainElement* loop)
 	}
 }
 
-void Noose::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Noose::prepareSprites(long long elapsedTime)
 {
-	spriteChainElement ropeSprite, loopSprite;
-
-	ropeSprite.offset = Vector2f(0, 0);
-	ropeSprite.size = Vector2f(this->conditionalSizeUnits);
-    loopSprite.offset = Vector2f(this->textureBoxOffset);
-	loopSprite.size = Vector2f(this->conditionalSizeUnits);
-	ropeSprite.size.y = 30;
-
-	additionalSprites.clear();
+	std::vector<SpriteChainElement*> result = {};
+	auto ropeSprite = new SpriteChainElement(PackTag::craftObjects, PackPart::noose, Direction::DOWN, 3, position, { conditionalSizeUnits.x, 30 }, { 0, 0 }, color);
+	auto loopSprite = new SpriteChainElement(PackTag::craftObjects, PackPart::noose, Direction::UP, 1, position, conditionalSizeUnits, textureBoxOffset, color);
 
 	switch (currentAction)
 	{
@@ -232,37 +222,40 @@ void Noose::prepareSprites(long long elapsedTime)
 		{
 			animationLength = 13;
 			animationSpeed = 0.0005f;
-			ropeSprite.path = "Game/worldSprites/noose/nooseRope/caught.png";
-			ropeSprite.size.y = 60;
+			ropeSprite->number = 2;
+			ropeSprite->size.y = 60;
 			if (owner != nullptr)
 				if (owner->getPosition().x < position.x)
-					ropeSprite.size.y *= -1;
-            loopSprite.path = "Game/worldSprites/noose/nooseRope/knot.png";
-			loopSprite.size = Vector2f(40, 30);
-			loopSprite.offset = Vector2f(float(loopSprite.size.x)*getScaleRatio().x / 1.8, float(loopSprite.size.y)*getScaleRatio().y / 1.8);
+					ropeSprite->size.y *= -1;
+			loopSprite->number = 1;
+			loopSprite->size = Vector2f(40, 30);
+			loopSprite->offset = Vector2f(float(loopSprite->size.x)*getScaleRatio().x / 1.8, float(loopSprite->size.y)*getScaleRatio().y / 1.8);
 			break;
 		}
 		case jerking:
 		{
 			animationLength = 13;
-			animationSpeed = 0.0005f;			
-			ropeSprite.path = "Game/worldSprites/noose/nooseRope/thrown.png";
-			loopSprite.path = "Game/worldSprites/noose/nooseLoop/" + std::to_string(currentSprite[0]) + ".png";
+			animationSpeed = 0.0005f;
+			ropeSprite->number = 3;			
 			break;
 		}
 		case dead:
 		{
 			animationLength = 1;
-			animationSpeed = 0.0005f;					
+			animationSpeed = 0.0005f;
 
-			ropeSprite.path = "Game/worldSprites/noose/nooseRope/thrown.png";
-			loopSprite.path = "Game/worldSprites/noose/nooseLoop/12.png";
+			ropeSprite->number = 3;
+			loopSprite->number = 12;			
 
-			rotateAndExtend(&ropeSprite, &loopSprite);
+			rotateAndExtend(ropeSprite, loopSprite);
 
-			additionalSprites.push_back(ropeSprite);
-			additionalSprites.push_back(loopSprite);
-			return;
+			ropeSprite->isBackground = true;
+			loopSprite->isBackground = true;
+			isBackground = true;
+
+			result.push_back(ropeSprite);
+			result.push_back(loopSprite);
+			return result;
 		}
 	default:;
 	}
@@ -271,14 +264,15 @@ void Noose::prepareSprites(long long elapsedTime)
 	{
 		animationLength = 13;
 		animationSpeed = 0.0005f;
-		ropeSprite.path = "Game/worldSprites/noose/nooseRope/thrown.png";
-		loopSprite.path = "Game/worldSprites/noose/nooseLoop/" + std::to_string(currentSprite[0]) + ".png";
+		ropeSprite->number = 3;
 	}
 
-	rotateAndExtend(&ropeSprite, &loopSprite);
+	loopSprite->number = currentSprite[0];
 
-	additionalSprites.push_back(ropeSprite);
-    additionalSprites.push_back(loopSprite);
+	rotateAndExtend(ropeSprite, loopSprite);
+
+	result.push_back(ropeSprite);
+    result.push_back(loopSprite);
 
 	timeForNewSprite += elapsedTime;
 
@@ -292,4 +286,7 @@ void Noose::prepareSprites(long long elapsedTime)
 			currentSprite[0] = 1;
 		}
 	}
-}*/
+
+	setUnscaled(result);
+	return result;
+}

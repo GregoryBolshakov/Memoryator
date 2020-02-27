@@ -21,6 +21,7 @@ public:
 	//control
 	void handleInput(bool usedMouse = false) override;
 	void moveEnd(bool animate = false, float distance = 0, float speed = 0, bool invertDirection = false);
+	int calculateNextMoveEndSprite(int currentSprite = 1) const;
 	void behaviorWithDynamic(DynamicObject* target, long long elapsedTime) override;
 	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;
@@ -30,7 +31,7 @@ public:
 	void stopping(bool doStand = false, bool forgetBoundTarget = false, bool offUnsealInventory = false);
 	void calculateSpeedLineDirection(Direction lastDirection = Direction::STAND, Direction direction = Direction::STAND);
 	void changeAction(Actions newAction, bool resetSpriteNumber, bool rememberLastAction) override;
-	Vector2f getBeltPosition();
+	Vector2f getBeltPosition() const;
 
 	void jerk(float power, float deceleration, Vector2f destinationPoint = Vector2f(-1, -1)) override;
 	void jerkInteract(long long elapsedTime);
@@ -51,7 +52,7 @@ private:
 	float hitDistance = 0, moveEndDistance = 0, moveTime = 0, smoothMoveTime = 0;
 	Direction smoothDirection = Direction::STAND;
 	WorldObject* owner = nullptr, *unsealInventoryOwner = nullptr;
-	int strikingSprite = 0, moveEndSprite = 0;
+	int strikingSprite = 0;
 	Vector2f lastPosition = { 0, 0 };
 	Direction speedLineDirection = Direction::STAND;
 	bool wasPushedAfterMovement = false, mirroredSpeedLine = false, reverseSpeedLine = false;

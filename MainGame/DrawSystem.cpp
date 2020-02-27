@@ -154,8 +154,7 @@ void DrawSystem::drawSpriteChainElement(RenderTarget& target, SpriteChainElement
 
 	const auto originalInfo = packsMap.at(spriteChainItem->packTag).getOriginalInfo(spriteChainItem->packPart, spriteChainItem->direction, spriteChainItem->number);
 	const Vector2f spritePos = { (spriteChainItem->position.x - cameraPosition.x - spriteChainItem->offset.x) * scale + screenCenter.x,
-	(spriteChainItem->position.y - cameraPosition.y - spriteChainItem->offset.y) * scale + screenCenter.y };
-	Vector2f localScale(float(spriteChainItem->size.x) / originalInfo.source_size.w, float(spriteChainItem->size.y) / originalInfo.source_size.h);
+	(spriteChainItem->position.y - cameraPosition.y - spriteChainItem->offset.y) * scale + screenCenter.y };	
 	if (spriteChainItem->antiTransparent)
 		spriteChainItem->color.a = 255;
 
@@ -193,6 +192,9 @@ void DrawSystem::draw(RenderTarget& target, std::vector<DrawableChainElement*> d
 
 	for (auto drawableChainItem : drawableItems)
 	{
+		if (!drawableChainItem->initialized)
+			continue;
+
 		const auto spriteChainItem = dynamic_cast<SpriteChainElement*>(drawableChainItem);
 		if (spriteChainItem)
 			drawSpriteChainElement(target, spriteChainItem, cameraPosition, screenCenter, scale);

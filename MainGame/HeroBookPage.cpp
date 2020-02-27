@@ -4,7 +4,7 @@
 
 HeroBookPage::HeroBookPage()
 {
-	/*initDrafts();
+	initDrafts();
 
 	wreathMatrix.resize(17, std::vector<Tag>(5));
 	wreathMatrixPositions.resize(17, std::vector<Vector2f>(5));
@@ -25,14 +25,13 @@ HeroBookPage::HeroBookPage()
 	plantsConnections[Tag::yarrow] = { Tag::chamomile, Tag::fern };
 	plantsConnections[Tag::fern] = { Tag::yarrow, Tag::mugwort };
 	plantsConnections[Tag::mugwort] = { Tag::fern, Tag::poppy };
-	plantsConnections[Tag::poppy] = { Tag::mugwort, Tag::chamomile };*/
+	plantsConnections[Tag::poppy] = { Tag::mugwort, Tag::chamomile };
 }
 
 HeroBookPage::~HeroBookPage()
-{
-}
+= default;
 
-/*void HeroBookPage::setBookmarkPosition()
+void HeroBookPage::setBookmarkPosition() const
 {
 	FloatRect pageGlobalBounds, bookmarkGlobalBounds = buttonList->at(ButtonTag::bookmarkMobs).getGlobalBounds();
 	if (currentPage == 0)
@@ -55,12 +54,13 @@ HeroBookPage::~HeroBookPage()
 	buttonList->at(ButtonTag::makeWreath).setPosition(Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.35 / 10, pageGlobalBounds.top + pageGlobalBounds.height * 6.6 / 10));
 }
 
-void HeroBookPage::setArrowsPosition()
+void HeroBookPage::setArrowsPosition() const
 {
 	const FloatRect pagePatternGlobalBounds = buttonList->at(ButtonTag::pagePattern).getGlobalBounds();
 	Vector2f nextPagePos = Vector2f(pagePatternGlobalBounds.left + pagePatternGlobalBounds.width - arrowToPageGlobalBounds.width,
 		pagePatternGlobalBounds.top + pagePatternGlobalBounds.height - arrowToPageGlobalBounds.height);
-	Vector2f previousPagePos = Vector2f(Vector2f(pagePatternGlobalBounds.left, pagePatternGlobalBounds.top + pagePatternGlobalBounds.height - arrowToPageGlobalBounds.height));
+	const Vector2f previousPagePos = Vector2f(Vector2f(pagePatternGlobalBounds.left,
+		pagePatternGlobalBounds.top + pagePatternGlobalBounds.height - arrowToPageGlobalBounds.height));
 	
 	if (currentPage == 0)
 		nextPagePos.x -= buttonList->at(ButtonTag::bookmarksList).getGlobalBounds().width / 2;
@@ -96,16 +96,12 @@ void HeroBookPage::buttonListBounding(std::unordered_map<ButtonTag, Button>* but
 	this->buttonList = buttonList;
 }
 
-void HeroBookPage::onMouseDown()
-{
-	
-}
-
 void HeroBookPage::putHeadingsToPositions(std::vector<ButtonTag> buttons)
 {
 	const Vector2f upperLeftCorner = buttonList->at(ButtonTag::bookmarksList).getPosition();
-	float x = buttonList->at(ButtonTag::bookmarksList).getGlobalBounds().width, y = buttonList->at(ButtonTag::bookmarksList).getGlobalBounds().height;
-	
+	const float x = buttonList->at(ButtonTag::bookmarksList).getGlobalBounds().width;
+	const float y = buttonList->at(ButtonTag::bookmarksList).getGlobalBounds().height;
+
 	for (int i = 0; i < buttons.size(); i++)
 	{
 		if (i >= headingPedestals.size())
@@ -152,14 +148,14 @@ void HeroBookPage::initObjectInfo()
 	int pageNumber, blocksCount, curConnection, pedestal;
 	bool isUnlocked = false;
 	char blockDescription[1000], objectDescription[1000];
-	std::ifstream fin("Game/heroBook/bookContent.txt");
+	std::ifstream fin("Game/bookContent.txt");
 	while (fin >> pageNumber >> isUnlocked >> blocksCount)
 	{
 		for (int cnt = 0; cnt < blocksCount; cnt++)
 		{
 			fin >> curConnection >> pedestal;
 			fin.getline(blockDescription, sizeof(blockDescription));
-			objectInfo[pageToObjectId(pageNumber)].connections.push_back(Connection(curConnection, pedestal, blockDescription));
+			objectInfo[pageToObjectId(pageNumber)].connections.emplace_back(curConnection, pedestal, blockDescription);
 		}
 		fin.getline(objectDescription, sizeof(objectDescription));
 		objectInfo[pageToObjectId(pageNumber)].textDescription = objectDescription;
@@ -172,9 +168,9 @@ void HeroBookPage::initObjectInfo()
 
 Vector2f HeroBookPage::getConnectionPosition(int numberInOrder)
 {
-	Vector2f upperLeft = Vector2f(buttonList->at(ButtonTag::pagePattern).getGlobalBounds().left, buttonList->at(ButtonTag::pagePattern).getGlobalBounds().top);
-	Vector2f pageSize = Vector2f(buttonList->at(ButtonTag::pagePattern).getGlobalBounds().width, buttonList->at(ButtonTag::pagePattern).getGlobalBounds().height);
-	float frameOffset = buttonList->at(ButtonTag::iconFrame2).getGlobalBounds().height / 2;
+	const Vector2f upperLeft = Vector2f(buttonList->at(ButtonTag::pagePattern).getGlobalBounds().left, buttonList->at(ButtonTag::pagePattern).getGlobalBounds().top);
+	const Vector2f pageSize = Vector2f(buttonList->at(ButtonTag::pagePattern).getGlobalBounds().width, buttonList->at(ButtonTag::pagePattern).getGlobalBounds().height);
+	const float frameOffset = buttonList->at(ButtonTag::iconFrame2).getGlobalBounds().height / 2;
 	return { upperLeft.x + connectionPedestals[numberInOrder].x * pageSize.x - frameOffset, upperLeft.y + connectionPedestals[numberInOrder].y * pageSize.y - frameOffset };
 }
 
@@ -211,46 +207,50 @@ int HeroBookPage::buttonToPage(ButtonTag button)
 	return -1;
 }
 
-void HeroBookPage::drawHeadingText(RenderWindow* window)
+std::vector<TextChainElement*> HeroBookPage::prepareHeadingText()
 {
+	std::vector<TextChainElement*> result = {};
 	const Vector2f upperLeftCorner = buttonList->at(ButtonTag::bookmarksList).getPosition();
-	float x = buttonList->at(ButtonTag::bookmarksList).getGlobalBounds().width, y = buttonList->at(ButtonTag::bookmarksList).getGlobalBounds().height;
+	const float x = buttonList->at(ButtonTag::bookmarksList).getGlobalBounds().width;
+	const float y = buttonList->at(ButtonTag::bookmarksList).getGlobalBounds().height;
+
+	const sf::Color textColor = sf::Color(100, 68, 34, 180);
 
 	switch (currentPage)
 	{
 	case 1:
 	{
-		TextSystem::drawString("Creatures", FontName::NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.125 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		TextSystem::drawString("Hare", FontName::NormalFont, 30, headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		TextSystem::drawString("Owl", FontName::NormalFont, 30, headingTextPedestals[1].x * x + upperLeftCorner.x, headingTextPedestals[1].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		TextSystem::drawString("Deer", FontName::NormalFont, 30, headingTextPedestals[2].x * x + upperLeftCorner.x, headingTextPedestals[2].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		TextSystem::drawString("Bear", FontName::NormalFont, 30, headingTextPedestals[3].x * x + upperLeftCorner.x, headingTextPedestals[3].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		result.push_back(new TextChainElement({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Creatures", TextChainElement::defaultCharacterSize * 1.2f));
+		result.push_back(new TextChainElement({ headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Hare"));
+		result.push_back(new TextChainElement({ headingTextPedestals[1].x * x + upperLeftCorner.x, headingTextPedestals[1].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Owl"));
+		result.push_back(new TextChainElement({ headingTextPedestals[2].x * x + upperLeftCorner.x, headingTextPedestals[2].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Deer"));
+		result.push_back(new TextChainElement({ headingTextPedestals[3].x * x + upperLeftCorner.x, headingTextPedestals[3].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Bear"));
 	}
 	break;
 	case 2:
 	{
-		TextSystem::drawString("Items", FontName::NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.125 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		TextSystem::drawString("Bag", FontName::NormalFont, 30, headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		result.push_back(new TextChainElement({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Items", TextChainElement::defaultCharacterSize * 1.2f));
+		result.push_back(new TextChainElement({ headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Bag"));
 	}
 	break;
 	case 3:
 	{
-		TextSystem::drawString("World", FontName::NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.125 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		result.push_back(new TextChainElement({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "World", TextChainElement::defaultCharacterSize * 1.2f));
 	}
 	break;
 	case 4:
 	{
-		TextSystem::drawString("Flowers", FontName::NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.125 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		TextSystem::drawString("Chamomile", FontName::NormalFont, 30, headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		TextSystem::drawString("Yarrow", FontName::NormalFont, 30, headingTextPedestals[1].x * x + upperLeftCorner.x, headingTextPedestals[1].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		TextSystem::drawString("Fern", FontName::NormalFont, 30, headingTextPedestals[2].x * x + upperLeftCorner.x, headingTextPedestals[2].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		TextSystem::drawString("Mugwort", FontName::NormalFont, 30, headingTextPedestals[3].x * x + upperLeftCorner.x, headingTextPedestals[3].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
-		TextSystem::drawString("Poppy", FontName::NormalFont, 30, headingTextPedestals[4].x * x + upperLeftCorner.x, headingTextPedestals[4].y * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		result.push_back(new TextChainElement({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Flowers", TextChainElement::defaultCharacterSize * 1.2f));
+		result.push_back(new TextChainElement({ headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Chamomile"));
+		result.push_back(new TextChainElement({ headingTextPedestals[1].x * x + upperLeftCorner.x, headingTextPedestals[1].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Yarrow"));
+		result.push_back(new TextChainElement({ headingTextPedestals[2].x * x + upperLeftCorner.x, headingTextPedestals[2].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Fern"));
+		result.push_back(new TextChainElement({ headingTextPedestals[3].x * x + upperLeftCorner.x, headingTextPedestals[3].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Mugwort"));
+		result.push_back(new TextChainElement({ headingTextPedestals[4].x * x + upperLeftCorner.x, headingTextPedestals[4].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Poppy"));
 	}
 	break;
 	case 5:
 	{
-		TextSystem::drawString("Sketching", FontName::NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.125 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));
+		result.push_back(new TextChainElement({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Sketching", TextChainElement::defaultCharacterSize * 1.2f));
 	}
 	break;
 	case 102:
@@ -263,12 +263,14 @@ void HeroBookPage::drawHeadingText(RenderWindow* window)
 	case 404:
 	case 405:
 	{
-		TextSystem::drawString(buttonToString(ButtonTag(currentPage)), FontName::NormalFont, 35, 0.2 * x + upperLeftCorner.x, 0.085 * y + upperLeftCorner.y, window, Color(100, 68, 34, 180));	
+		result.push_back(new TextChainElement({ 0.2f * x + upperLeftCorner.x, 0.085f * y + upperLeftCorner.y }, { 0, 0 }, textColor, buttonToString(ButtonTag(currentPage)), TextChainElement::defaultCharacterSize * 1.2f));
 	}
 	break;
 	default:
 		break;
 	}
+
+	return result;
 }
 
 void HeroBookPage::setButtonLock(ButtonTag button, ButtonTag changedButton)
@@ -289,11 +291,11 @@ void HeroBookPage::setButtonLock(ButtonTag button, ButtonTag changedButton)
 			return;
 		}	
 
-	buttonList->at(changedButton).bekomeGray();	
+	buttonList->at(changedButton).bekomeGray();
 }
 
-void HeroBookPage::drawIconFrame(ButtonTag button, RenderWindow* window, int type)
-{
+SpriteChainElement* HeroBookPage::prepareIconFrame(ButtonTag button, int type)
+{	
 	ButtonTag currentIcon;
 	if (type == 1)
 		currentIcon = ButtonTag::iconFrame1;
@@ -302,40 +304,46 @@ void HeroBookPage::drawIconFrame(ButtonTag button, RenderWindow* window, int typ
 
 	buttonList->at(currentIcon).setPosition(buttonList->at(button).getPosition());
 	setButtonLock(button, currentIcon);
-	buttonList->at(currentIcon).draw(*window);
+	return buttonList->at(currentIcon).prepareSprite();
 }
 
-void HeroBookPage::drawAllIcons(pageContent content, RenderWindow* window)
+std::vector<SpriteChainElement*> HeroBookPage::prepareAllIcons(pageContent content)
 {
+	std::vector<SpriteChainElement*> result = {};
+
 	for (auto& item : content.buttons)
 	{
 		setButtonLock(item, item);
-		buttonList->at(item).draw(*window);
+		result.push_back(buttonList->at(item).prepareSprite());
 
 		if (int(item) >= 101 && int(item) <= 499) // items with description page
 		{
 			if (currentPage >= 1 && currentPage <= 4) // pages with headings
-				drawIconFrame(item, window, 1);
+				result.push_back(prepareIconFrame(item, 1));
 			else
-				drawIconFrame(item, window, 2);
+				result.push_back(prepareIconFrame(item, 2));
 		}
 	}
+
+	return result;
 }
 
-void HeroBookPage::drawLines(RenderWindow* window)
+std::vector<SpriteChainElement*> HeroBookPage::prepareLines()
 {
 	if (!(currentPage >= 101 && currentPage <= 499))
-		return;
+		return {};
 
 	if (objectInfo.find(pageToObjectId(currentPage)) == objectInfo.end())
-		return;
+		return {};
+
+	std::vector<SpriteChainElement*> result = {};
 
 	Vector2f upperFramePos = getConnectionPosition(0);
 	
 	const float frameOffset = buttonList->at(ButtonTag::iconFrame2).getGlobalBounds().height / 2;
 	upperFramePos.x += frameOffset; upperFramePos.y += frameOffset;
 
-	for (auto& connection : objectInfo.at(pageToObjectId(currentPage)).connections)
+	/*for (auto& connection : objectInfo.at(pageToObjectId(currentPage)).connections)
 	{
 		if (connection.pedestal == 0)
 			continue;
@@ -347,13 +355,15 @@ void HeroBookPage::drawLines(RenderWindow* window)
 
 		if (!objectInfo[pageToObjectId(connection.id)].isUnlocked)
 		{
-			auxiliarySpriteMap.at(AuxiliarySpriteTag(connection.pedestal)).sprite.setColor(Color(255, 255, 255, 100));
-			window->draw(auxiliarySpriteMap.at(AuxiliarySpriteTag(connection.pedestal)).sprite);
-			auxiliarySpriteMap.at(AuxiliarySpriteTag(connection.pedestal)).sprite.setColor(Color(255, 255, 255, 255));
+			auxiliarySpriteMap.at(AuxiliarySpriteTag(connection.pedestal)).sprite.setColor(sf::Color(255, 255, 255, 100));
+			result.push_back(auxiliarySpriteMap.at(AuxiliarySpriteTag(connection.pedestal)).sprite);
+			auxiliarySpriteMap.at(AuxiliarySpriteTag(connection.pedestal)).sprite.setColor(sf::Color(255, 255, 255, 255));
 		}
 		else
 			window->draw(auxiliarySpriteMap.at(AuxiliarySpriteTag(connection.pedestal)).sprite);
-	}
+	}*/
+
+	return result;
 }
 
 void HeroBookPage::unlockObject(Tag object)
@@ -404,7 +414,7 @@ std::string HeroBookPage::buttonToString(ButtonTag button)
 void HeroBookPage::initDrafts()
 {
 	int draftId, ringsCount, plantsCount;
-	std::ifstream fin("Game/heroBook/drafts.txt");
+	std::ifstream fin("Game/drafts.txt");
 	while (fin >> draftId >> ringsCount >> plantsCount)
 	{
 		originalSetups[Tag(draftId)].id = Tag(draftId);
@@ -420,7 +430,7 @@ void HeroBookPage::initDrafts()
 		{
 			int raw, column, plant;
 			fin >> raw >> column >> plant;
-			originalSetups[Tag(draftId)].plants.push_back(std::make_pair(Tag(plant), std::make_pair(raw, column)));
+			originalSetups[Tag(draftId)].plants.emplace_back(Tag(plant), std::make_pair(raw, column));
 		}
 	}
 
@@ -624,16 +634,18 @@ bool HeroBookPage::isCenterSurrounded()
 	return (coloredMatrix[center.first][center.second] == 1);
 }
 
-void HeroBookPage::drawConnectableFlowers(Tag currentFlower, RenderWindow* window)
+std::vector<DrawableChainElement*> HeroBookPage::prepareConnectableFlowers(Tag currentFlower)
 {
 	if (plantsConnections.find(Tag(int(currentFlower))) == plantsConnections.end())
-		return;	
+		return {};	
+
+	std::vector<DrawableChainElement*> result = {};
 
 	const Vector2f upperLeftCorner = Vector2f(buttonList->at(ButtonTag::sketching).getGlobalBounds().left, buttonList->at(ButtonTag::sketching).getGlobalBounds().top);
 	const Vector2f pageSize = Vector2f(buttonList->at(ButtonTag::sketching).getGlobalBounds().width, buttonList->at(ButtonTag::sketching).getGlobalBounds().height);
 	const Vector2f headingPos = Vector2f(upperLeftCorner.x + 0.072 * pageSize.x, upperLeftCorner.y + 0.28 * pageSize.y);
 
-	TextSystem::drawString("Connected with:", FontName::NormalFont, 30, headingPos.x, headingPos.y, window, Color(100, 68, 34, 180));
+	result.push_back(new TextChainElement({ headingPos.x, headingPos.y }, { 0, 0 }, sf::Color(100, 68, 34, 180), "Connected with:"));	
 
 	int cnt = 0;
 	for (auto& connection : plantsConnections.at(Tag(int(currentFlower))))
@@ -642,9 +654,11 @@ void HeroBookPage::drawConnectableFlowers(Tag currentFlower, RenderWindow* windo
 			continue;
 		buttonList->at(ButtonTag(int(connection))).setPosition(Vector2f(upperLeftCorner.x + flowerConnectionsPedestals[cnt].x * pageSize.x,
 			upperLeftCorner.y + flowerConnectionsPedestals[cnt].y * pageSize.y));
-		buttonList->at(ButtonTag(int(connection))).draw(*window);
+		result.push_back(buttonList->at(ButtonTag(int(connection))).prepareSprite());
 		cnt++;
 	}
+
+	return result;
 }
 
 //--------
@@ -691,7 +705,7 @@ pageContent HeroBookPage::getPreparedContent(int pageNumber, Tag currentDraft)
 		result.buttons.push_back(ButtonTag::sketching);
 		if (readyToFinishDraft)
 		{
-			Vector2f plusPos = Vector2f(wreathMatrixPositions[8][2].x - ((buttonList->at(ButtonTag::plus).getGlobalBounds().width - (buttonList->at(ButtonTag::cell).getGlobalBounds().width))) / 2,
+			const Vector2f plusPos = Vector2f(wreathMatrixPositions[8][2].x - ((buttonList->at(ButtonTag::plus).getGlobalBounds().width - (buttonList->at(ButtonTag::cell).getGlobalBounds().width))) / 2,
 				wreathMatrixPositions[8][2].y - ((buttonList->at(ButtonTag::plus).getGlobalBounds().height - (buttonList->at(ButtonTag::cell).getGlobalBounds().height))) / 2);
 			buttonList->at(ButtonTag::plus).setPosition(plusPos);
 			result.buttons.push_back(ButtonTag::plus);
@@ -711,7 +725,7 @@ pageContent HeroBookPage::getPreparedContent(int pageNumber, Tag currentDraft)
 		for (auto& connection : objectInfo.at(pageToObjectId(currentPage)).connections)
 		{
 			result.buttons.push_back(ButtonTag(connection.id));
-			buttonList->at(ButtonTag(connection.id)).setPosition(getConnectionPosition(connection.pedestal));			
+			buttonList->at(ButtonTag(connection.id)).setPosition(getConnectionPosition(connection.pedestal));
 			
 			if (buttonList->at(ButtonTag(connection.id)).isSelected(Vector2f(Mouse::getPosition())))
 				result.blockDescription = connection.description;
@@ -731,4 +745,4 @@ pageContent HeroBookPage::getPreparedContent(int pageNumber, Tag currentDraft)
 		buttonList->at(button).isActive = true;	
 	//-----------------------------
 	return  result;
-}*/
+}

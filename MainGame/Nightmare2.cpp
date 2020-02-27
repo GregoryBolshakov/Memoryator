@@ -45,54 +45,49 @@ void Nightmare2::doAttack(WorldObject* target)
 
 std::vector<SpriteChainElement*> Nightmare2::prepareSprites(long long elapsedTime)
 {
-    return {};
-	/*spriteChainElement fullSprite;
-
-	fullSprite.offset = Vector2f(this->textureBoxOffset);
-	fullSprite.size = Vector2f(this->conditionalSizeUnits);
-	additionalSprites.clear();
+	auto body = new SpriteChainElement(PackTag::nightmare2Stand, PackPart::full, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	animationSpeed = 10;
 
-	std::string sideStr = DynamicObject::sideToString(side), directionStr = DynamicObject::directionToString(direction);
+	Side spriteSide = side;
+	Direction spriteDirection = lastDirection;
+
 	if (side == right)
 	{
-		sideStr = "left";
-		fullSprite.mirrored = true;
+		spriteSide = left;
+		body->mirrored = true;
 	}
-	if (direction == Direction::RIGHT || direction == Direction::UPRIGHT || direction == Direction::DOWNRIGHT)
+	if (lastDirection == Direction::RIGHT || lastDirection == Direction::UPRIGHT || lastDirection == Direction::DOWNRIGHT)
 	{
-		directionStr = "left";
-		fullSprite.mirrored = true;
+		spriteDirection = DirectionsSystem::cutRights(spriteDirection);
+		body->mirrored = true;
 	}
+
+	body->direction = DirectionsSystem::sideToDirection(spriteSide);
 
 	switch (currentAction)
 	{
 	case commonHit:
 	{
 		animationLength = 12;
-		animationSpeed = 12;
-		fullSprite.path = "Game/worldSprites/nightmare2/hit/" + sideStr + '/';
-		fullSprite.path += std::to_string(currentSprite[0]) + ".png";
+		body->packTag = PackTag::nightmare2Hit;
 		break;
 	}
 	case combatState:
 	{
 		animationLength = 9;
-		fullSprite.path = "Game/worldSprites/nightmare2/stand/" + sideStr + '/';
-		fullSprite.path += std::to_string(currentSprite[0]) + ".png";
+		body->packTag = PackTag::nightmare2Stand;
 		break;
 	}
 	case relax:
 	{
 		animationLength = 9;
-		fullSprite.path = "Game/worldSprites/nightmare2/stand/" + sideStr + '/';
-		fullSprite.path += std::to_string(currentSprite[0]) + ".png";
+		body->packTag = PackTag::nightmare2Stand;
 		break;
 	}
 	case dead:
 	{
 		animationLength = 1;
-		fullSprite.path = "Game/worldSprites/nightmare2/stand/down/1.png";
+		body->packTag = PackTag::nightmare2Stand;
 		currentSprite[0] = 1;
 		deletePromiseOn();
 		break;
@@ -100,20 +95,17 @@ std::vector<SpriteChainElement*> Nightmare2::prepareSprites(long long elapsedTim
 	case move:
 	{
 		animationLength = 8;
-		fullSprite.path = "Game/worldSprites/nightmare2/move/" + sideStr + '/';
-		fullSprite.path += std::to_string(currentSprite[0]) + ".png";
-		if (currentSprite[0] == 2 || currentSprite[0] == 6)
-			doShake = true;
+		body->packTag = PackTag::nightmare2Move;
 		break;
 	}
 	default:;
 	}
 
-	additionalSprites.push_back(fullSprite);
+	body->number = currentSprite[0];
 
 	timeForNewSprite += elapsedTime;
 
-	if (timeForNewSprite >= 1000000 / animationSpeed)
+	if (timeForNewSprite >= 1e6 / animationSpeed)
 	{
 		timeForNewSprite = 0;
 
@@ -122,6 +114,8 @@ std::vector<SpriteChainElement*> Nightmare2::prepareSprites(long long elapsedTim
 			lastAction = currentAction;
 			currentSprite[0] = 1;
 		}
-	}*/
+	}
+
+	return { body };
 }
 

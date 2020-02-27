@@ -64,6 +64,8 @@ void Hare::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 
 void Hare::behavior(long long elapsedTime)
 {	
+	if (isSelected)
+		auto test = 123;
 	endingPreviousAction();
 	fightInteract(elapsedTime);
 	if (healthPoint <= 0)
@@ -73,7 +75,7 @@ void Hare::behavior(long long elapsedTime)
 		return;
 	}
 
-	direction = calculateDirection();
+	calculateDirection();
 	if (direction != Direction::STAND)
 		lastDirection = direction;
 
@@ -193,56 +195,56 @@ void Hare::jerk(float power, float deceleration, Vector2f destinationPoint)
 
 std::vector<SpriteChainElement*> Hare::prepareSprites(long long elapsedTime)
 {
-    return {};
-	/*spriteChainElement fullSprite;
-
-	fullSprite.offset = Vector2f(this->textureBoxOffset);
-	fullSprite.size = Vector2f(this->conditionalSizeUnits);
-	additionalSprites.clear();
+	auto body = new SpriteChainElement(PackTag::hare, PackPart::full, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	animationSpeed = 10;
-	std::string sideStr = DynamicObject::sideToString(side), directionStr = DynamicObject::directionToString(lastDirection);
+
+	Side spriteSide = side;
+	Direction spriteDirection = lastDirection;
+
 	if (side == right)
 	{
-		sideStr = "left";
-		fullSprite.mirrored = true;
+		spriteSide = left;
+		body->mirrored = true;
 	}
 	if (lastDirection == Direction::RIGHT || lastDirection == Direction::UPRIGHT || lastDirection == Direction::DOWNRIGHT)
 	{
-		directionStr = "left";
-		fullSprite.mirrored = true;
+		spriteDirection = DirectionsSystem::cutRights(spriteDirection);
+		body->mirrored = true;
 	}
+
+	body->direction = DirectionsSystem::sideToDirection(spriteSide);
 
 	switch (currentAction)
 	{
 		case relax:
 		{
 			animationLength = 1;
-			fullSprite.path = "Game/worldSprites/hare/stand/" + directionStr + "/1.png";
+			body->packPart = PackPart::stand;
 			break;
 		}
 		case absorbs:
 		{
 			animationLength = 10;
-			fullSprite.path = "Game/worldSprites/hare/trap/" + std::to_string(currentSprite[0]) + ".png";
+			body->packPart = PackPart::trap;
 			break;
 		}
 		case dead:
 		{
 			animationLength = 1;
-			fullSprite.path = "Game/worldSprites/hare/stand/down/1.png";
+			body->packPart = PackPart::stand;
 			currentSprite[0] = 1;
 			break;
 		}
 		case move:
 		{
-			animationLength = 5;			
-			fullSprite.path = "Game/worldSprites/hare/move/" + sideStr + '/' + std::to_string(currentSprite[0]) + ".png";
+			animationLength = 5;
+			body->packPart = PackPart::move;						
 			break;
 		}
 	default:;
 	}
 
-	additionalSprites.push_back(fullSprite);
+	body->number = currentSprite[0];
 
 	timeForNewSprite += elapsedTime;
 
@@ -255,5 +257,7 @@ std::vector<SpriteChainElement*> Hare::prepareSprites(long long elapsedTime)
 			lastAction = currentAction;
 			currentSprite[0] = 1;
 		}
-	}*/
+	}
+
+	return { body };
 }

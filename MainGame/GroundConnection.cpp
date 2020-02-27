@@ -56,13 +56,13 @@ void GroundConnection::setType(int typeOfObject)
 Vector2f GroundConnection::calculateTextureOffset()
 {
 	if (typeOfObject % 4 == 1)
-		return { 0, textureBox.height };
+		return { 0, textureBox.height - 5 };
 	if (typeOfObject % 4 == 2)
-		return { 0, 0 };
+		return { 0, 5 };
 	if (typeOfObject % 4 == 3)
-		return { textureBox.width, 0 };
+		return { textureBox.width - 5, 0 };
 	if (typeOfObject % 4 == 0)
-		return { 0, 0 };
+		return { 5, 0 };
 	return { 0, 0 };
 }
 

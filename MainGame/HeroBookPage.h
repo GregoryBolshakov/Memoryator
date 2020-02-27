@@ -45,20 +45,19 @@ class HeroBookPage
 public:
 	HeroBookPage();
 	~HeroBookPage();
-	/*void initAuxiliarySpriteMap();
+	void initAuxiliarySpriteMap();
 	void buttonListBounding(std::unordered_map<ButtonTag, Button>* buttonList);
 	void setPage(int page) { this->currentPage = page; }
-	void onMouseDown();
 
 	// object information (creatures, craft, plants, wreaths, nightmare)
 	void initObjectInfo();
-	Tag pageToObjectId(int page);
+	static Tag pageToObjectId(int page);
 	int buttonToPage(ButtonTag button);
 	void setButtonLock(ButtonTag button, ButtonTag changedButton);
-	void drawIconFrame(ButtonTag button, RenderWindow* window, int type = 1);
-	void drawAllIcons(pageContent content, RenderWindow* window);
-	void drawLines(RenderWindow* window);
-	void drawHeadingText(RenderWindow* window);
+	SpriteChainElement* prepareIconFrame(ButtonTag button, int type = 1);
+	std::vector<SpriteChainElement*> prepareAllIcons(pageContent content);
+	std::vector<SpriteChainElement*> prepareLines();
+	std::vector<TextChainElement*> prepareHeadingText();
 	void unlockObject(Tag object);
 	static int getHeadingPage(Tag object);
 	std::unordered_map<Tag, BookObjectInfo>* getObjectInfo() { return &objectInfo; }
@@ -74,7 +73,7 @@ public:
 	static bool checkWreathCellFit(int i, int j, std::vector<int> rings = std::vector<int>());
 	void setPlantsOnMatrix(std::vector<std::pair<Tag, std::pair<int, int>>> plants);
 	bool isCenterSurrounded();
-	void drawConnectableFlowers(Tag currentFlower, RenderWindow* window);
+	std::vector<DrawableChainElement*> prepareConnectableFlowers(Tag currentFlower);
 
 	std::vector<std::vector<Vector2f>> wreathMatrixPositions;
 	std::vector<std::vector<Tag>> wreathMatrix;
@@ -92,10 +91,10 @@ public:
 private:
 	static int div_up(int n, int d) { return n / d + (((n < 0) ^ (d > 0)) && (n % d)); }
 	std::unordered_map<ButtonTag, Button>* buttonList;
-	void setBookmarkPosition();
+	void setBookmarkPosition() const;
 	void preparePageBase();
 	void putHeadingsToPositions(std::vector<ButtonTag> buttons);
-	void setArrowsPosition();
+	void setArrowsPosition() const;
 	
 	int currentPage = 0;
 	FloatRect pageGlobalBounds;
@@ -121,6 +120,6 @@ private:
 
 	std::unordered_map<Tag, DraftInfo> originalSetups;
 	std::vector<std::vector<int>> coloredMatrix;	
-	//--------*/
+	//--------
 };
 

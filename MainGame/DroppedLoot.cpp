@@ -6,8 +6,8 @@ DroppedLoot::DroppedLoot(std::string objectName, Vector2f centerPosition, int ty
 	varietyOfTypes = 5;
 	this->typeOfObject = typeOfObject;
 	toSaveName = "drop";
-	setType(typeOfObject);
-	radius = Helper::GetScreenSize().y / 36;
+	DroppedLoot::setType(typeOfObject);
+	radius = SpritePack::iconSize.x / 2;
 	tag = Tag::droppedLoot;
 	this->count = count;
 }
@@ -19,14 +19,14 @@ void DroppedLoot::setType(int typeOfObject)
 
 	this->typeOfObject = typeOfObject;
 	id = Tag(typeOfObject);
-	conditionalSizeUnits = { radius * 3, radius * 3 };
+	conditionalSizeUnits = SpritePack::iconSize;
 }
 
 Vector2f DroppedLoot::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
-	return { textureBox.width / 2.0f, textureBox.height / 1.2f };
+	return { textureBox.width / 2.0f, textureBox.height / 2.0f };
 }
 
 void DroppedLoot::initPedestal()
@@ -48,43 +48,36 @@ int DroppedLoot::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement*> DroppedLoot::prepareSprites(long long elapsedTime)
 {
-    return {};
-	/*additionalSprites.clear();
-	spriteChainElement sprite;
+	SpriteChainElement* body = new SpriteChainElement(PackTag::empty, PackPart::full, Direction::DOWN, this->isSelected, position, conditionalSizeUnits, textureBoxOffset);	
+
 	switch (typeOfObject)
 	{
-		case 401:
-			sprite.path = "Game/inventorySprites/chamomile";
-			break;
-		case 402:
-			sprite.path = "Game/inventorySprites/yarrow";
-			break;
-		case 201:
-			sprite.path = "Game/inventorySprites/bag1Icon";
-			break;
-		case 202:
-			sprite.path = "Game/inventorySprites/noose";
-			break;
-		case 219:
-			sprite.path = "Game/inventorySprites/inkyBlackPen";
-			break;
-		case 102:
-			sprite.path = "Game/inventorySprites/hare";
-			break;
-		default:
-			sprite.path = "Game/inventorySprites/bagCell";
-			break;
+	case 401:
+		body->setDrawInfo(PackTag::icons, PackPart::flowers, Direction::DOWN, body->number + 1);	
+		break;
+	case 402:
+		body->setDrawInfo(PackTag::icons, PackPart::flowers, Direction::DOWN, body->number + 9);
+		break;
+	case 201:
+		body->setDrawInfo(PackTag::inventory, PackPart::bag1, Direction::DOWN, body->number + 1);
+		break;
+	case 202:
+		body->setDrawInfo(PackTag::icons, PackPart::craftObjects, Direction::DOWN, body->number + 5);
+		break;
+	case 219:
+		body->setDrawInfo(PackTag::icons, PackPart::notCraftObjects, Direction::DOWN, 1);
+		break;
+	case 102:
+		body->setDrawInfo(PackTag::icons, PackPart::mobs, Direction::DOWN, 3);
+		break;
+	default:
+		body->setDrawInfo(PackTag::inventory, PackPart::areas, Direction::DOWN, 1);
+		break;
 	}
-	if (this->isSelected)
-	{
-		if (typeOfObject == 201)
-			sprite.path = "Game/inventorySprites/bag1IconHover";
-		else
-			if (typeOfObject >= 401 && typeOfObject <= 499)
-				sprite.path += "L";
-	}
-	sprite.path += ".png";
-	sprite.size = Vector2f(conditionalSizeUnits);
-	sprite.offset = Vector2f(textureBoxOffset);
-	additionalSprites.push_back(sprite);*/
+
+	return { body };
+
+
+	
+
 }

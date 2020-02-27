@@ -18,6 +18,7 @@ public:
 	static void drawNumberOfItems(Vector2f pos, int itemsCount, RenderTarget& target);
 	static void initFonts();
 	static void initTextBoxes();
+	static Vector2f getTextBoxSize(const std::string& string, int characterSize, FontName font);
 
 	static std::unordered_map<FontName, Font> fonts;
 	static std::unordered_map<FontName, Text> textBoxes;

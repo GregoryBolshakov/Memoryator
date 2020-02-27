@@ -36,6 +36,8 @@ void HeroBag::initialize(Vector2f position, bool isSelectable, std::vector<std::
 	bagSpriteChain.OpenedBag->offset = textureOpenOffset; bagSpriteChain.OpenedBagSelected->offset = textureOpenOffset;
 	bagSpriteChain.ClosedBag->position = position; bagSpriteChain.ClosedBagSelected->position = position; bagSpriteChain.ClosedBagBig->position = position;
 	bagSpriteChain.OpenedBag->position = position; bagSpriteChain.OpenedBagSelected->position = position;
+	bagSpriteChain.ClosedBag->initialize(); bagSpriteChain.ClosedBagSelected->initialize(); bagSpriteChain.ClosedBagBig->initialize();
+	bagSpriteChain.OpenedBag->initialize(); bagSpriteChain.OpenedBagSelected->initialize();
 
 	this->minDistToBorder = std::max(sizeClosed.y - textureClosedOffset.y, textureClosedOffset.y);
 	closedRadius = (sizeClosed.x + sizeClosed.y) / 4;
@@ -107,7 +109,7 @@ void HeroBag::drawCircuit(RenderWindow* window)
 				RectangleShape rec;
 				rec.setPosition(i, j);
 				rec.setSize(Vector2f(5, 5));
-				rec.setFillColor(Color::Red);
+				rec.setFillColor(sf::Color::Red);
 				window->draw(rec);
 			}
 		}
@@ -389,4 +391,5 @@ SpriteChainElement* HeroBag::prepareSprite(long long elapsedTime, std::map<PackT
 		}
 		return  bagSpriteChain.ClosedBag;
 	}
+	return new SpriteChainElement();
 }

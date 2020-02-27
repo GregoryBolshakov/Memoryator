@@ -2,7 +2,7 @@
 
 {
 	"filename": "brazier/1.png",
-	"frame": {"x":0,"y":0,"w":829,"h":781},
+	"frame": {"x":1,"y":1,"w":829,"h":781},
 	"rotated": true,
 	"trimmed": true,
 	"spriteSourceSize": {"x":1,"y":0,"w":829,"h":781},
@@ -10,7 +10,7 @@
 },
 {
 	"filename": "brazier/2.png",
-	"frame": {"x":0,"y":829,"w":520,"h":576},
+	"frame": {"x":1,"y":832,"w":520,"h":576},
 	"rotated": true,
 	"trimmed": true,
 	"spriteSourceSize": {"x":182,"y":201,"w":520,"h":576},
@@ -18,7 +18,7 @@
 },
 {
 	"filename": "wreathTable/1.png",
-	"frame": {"x":0,"y":1349,"w":563,"h":496},
+	"frame": {"x":1,"y":1354,"w":563,"h":496},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":13,"y":16,"w":563,"h":496},
@@ -29,8 +29,8 @@
 	"version": "1.0",
 	"image": "locations.png",
 	"format": "RGBA8888",
-	"size": {"w":781,"h":1845},
+	"size": {"w":783,"h":1851},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:4da2df44965b798ff60395f7c61a0e9e:b0be6f7a0ba5665ee705a11f64edaa65:0de8d34558dfea4434e39ae8d6ec41ab$"
+	"smartupdate": "$TexturePacker:SmartUpdate:9551bd270bf482e8d729d32897e80ffa:b0be6f7a0ba5665ee705a11f64edaa65:0de8d34558dfea4434e39ae8d6ec41ab$"
 }
 }

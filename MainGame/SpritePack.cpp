@@ -1,6 +1,7 @@
 #include "SpritePack.h"
 #include <fstream>
 #include "Helper.h"
+#include "Button.h"
 
 const Vector2f SpritePack::iconSize = { Helper::GetScreenSize().y / 13.8f, Helper::GetScreenSize().y / 13.8f };
 Vector2f SpritePack::iconWithoutSpaceSize = { 0, 0 };
@@ -22,7 +23,13 @@ std::map<std::string, PackTag> SpritePack::mappedPackTag = {
     {"swampyTrees", PackTag::swampyTrees},
 	{"craftObjects", PackTag::craftObjects},
 	{"inventory", PackTag::inventory},
-	{"icons", PackTag::icons}
+	{"icons", PackTag::icons},
+	{"book", PackTag::book},
+	{"hare", PackTag::hare},
+	{"nightmare1", PackTag::nightmare1},
+	{"nightmare2Stand", PackTag::nightmare2Stand},
+	{"nightmare2Move", PackTag::nightmare2Move}, 
+	{"nightmare2Hit", PackTag::nightmare2Hit}
 };
 
 std::map<std::string, PackPart> SpritePack::mappedPackPart = {
@@ -30,6 +37,10 @@ std::map<std::string, PackPart> SpritePack::mappedPackPart = {
     {"body", PackPart::body},
     {"legs", PackPart::legs},
     {"lines", PackPart::lines}, // creature's parts
+	{"stand", PackPart::stand},
+	{"move", PackPart::move}, 
+	{"trap", PackPart::trap}, 
+	{"hit", PackPart::hit}, // action's parts
     {"ground", PackPart::ground},
     {"tree", PackPart::tree},
     {"bush", PackPart::bush},
@@ -60,21 +71,28 @@ std::map<std::string, PackPart> SpritePack::mappedPackPart = {
 	{"craftObjects", PackPart::craftObjects},
 	{"flowers", PackPart::flowers}, 
 	{"mobs", PackPart::mobs},
-	{"notCraftObjects", PackPart::notCraftObjects} // icon's parts
+	{"notCraftObjects", PackPart::notCraftObjects}, // icon's parts
+	{"arrowBig", PackPart::arrowBig},
+	{"arrowSmall", PackPart::arrowSmall},
+	{"bookmarks", PackPart::bookmarks},
+	{"cover", PackPart::cover}, 
+	{"frame1", PackPart::frame1},
+	{"frame2", PackPart::frame2}, 
+	{"pages", PackPart::pages},
+	{"plus", PackPart::plus}, 
+	{"cell", PackPart::cell} // book's parts
 };
 
 std::map<std::string, Direction> SpritePack::mappedDirection = { {"up", Direction::UP}, {"up-right", Direction::UPRIGHT}, {"right", Direction::RIGHT}, {"down-right", Direction::DOWNRIGHT},
 {"down", Direction::DOWN}, {"down-left", Direction::DOWNLEFT}, {"left", Direction::LEFT}, {"up-left", Direction::UPLEFT} };
 
 SpritePack::SpritePack()
-{
-}
+= default;
 
 SpritePack::~SpritePack()
-{
-}
+= default;
 
-void SpritePack::init(std::string path, std::string jsonPath, PackTag tag)
+void SpritePack::init(const std::string path, const std::string& jsonPath, PackTag tag)
 {
     this->tag = tag;
     this->texture.loadFromFile(path);

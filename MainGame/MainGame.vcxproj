@@ -140,6 +140,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="DirectionsSystem.cpp" />
     <ClCompile Include="DrawableChainElement.cpp" />
     <ClCompile Include="DrawSystem.cpp" />
     <ClCompile Include="InputBox.cpp" />
@@ -212,6 +213,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console.h" />
+    <ClInclude Include="DirectionsSystem.h" />
     <ClInclude Include="DrawableChainElement.h" />
     <ClInclude Include="DrawSystem.h" />
     <ClInclude Include="InputBox.h" />

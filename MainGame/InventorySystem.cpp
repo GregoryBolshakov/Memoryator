@@ -70,8 +70,8 @@ void InventorySystem::interact(long long elapsedTime)
 	{
 		cnt++;
 
-		if (cursorText == "  throw away" && Helper::getDist(bag.getPosition(), Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2)) <= dropZoneRadius ||
-			cursorText == "")
+		if (cursorText == "throw away" && Helper::getDist(bag.getPosition(), Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2)) <= dropZoneRadius ||
+			cursorText.empty())
 			if (cnt == currentMovingBag || currentMovingBag == -1)
 				bag.mouseMove();
 
@@ -303,7 +303,7 @@ std::vector<DrawableChainElement*> InventorySystem::prepareSprites(long long ela
 			{
 				effectsSystem.addEffect(Effects::transparencyRemoval, &dropZone, "dropZone", 3 * 10e4);
 			}
-			cursorText = "  throw away";
+			cursorText = "throw away";
 			cursorTextPos = bag.getPosition();
 			bag.readyToEject = true;
 			bagPosDot.setPosition(bag.getPosition());
@@ -367,10 +367,10 @@ std::vector<DrawableChainElement*> InventorySystem::prepareSprites(long long ela
 		cursorText = "";
 		effectsSystem.resetEffects({ "dropZone" });
 	}
-	if (cursorText == "  throw away")
+	if (cursorText == "throw away")
 	{
 		result.push_back((new TextChainElement(cursorTextPos,
-			{ 0, 0 }, 
+			{ TextSystem::getTextBoxSize(cursorText, TextChainElement::defaultCharacterSize * 1.5, FontName::NormalFont).x / 2.0f, 0 },
 			sf::Color(0, 0, 0, 180),
 			cursorText, 
 			TextChainElement::defaultCharacterSize * 1.5)));

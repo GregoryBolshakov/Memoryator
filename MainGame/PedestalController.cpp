@@ -24,7 +24,7 @@ void PedestalController::start(TerrainObject* object)
 	readyToStart = false;
 	boundObject = object;
 	focuses.clear();
-	if (boundObject->isMultiellipse)	
+	if (boundObject->isMultiEllipse)	
 		for (auto& internalEllipse : boundObject->internalEllipses)
 		{
 			focuses.push_back(internalEllipse.first);
@@ -81,7 +81,7 @@ void PedestalController::handleEvents(Event& event)
 	{
 		if (doubleClickTimer <= 2e5)
 		{
-			if (boundObject->isMultiellipse)
+			if (boundObject->isMultiEllipse)
 				centerPosition = boundObject->getPosition();
 			else
 				centerPosition = { (focuses[0].x + focuses[1].x) / 2, (focuses[0].y + focuses[1].y) / 2 };

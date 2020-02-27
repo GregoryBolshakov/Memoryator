@@ -48,7 +48,7 @@ void Log::initPedestal()
 	switch (typeOfObject)
 	{
 	case 1:
-		this->isMultiellipse = true;
+		this->isMultiEllipse = true;
 		focus1 = Vector2f(position.x, position.y);
 		focus2 = Vector2f(position.x, position.y);
 

@@ -16,7 +16,7 @@ void TerrainObject::initMicroBlocks()
 	if (mirrored)
 		textureBoxOffset.x = conditionalSizeUnits.x - textureBoxOffset.x;
 	
-	if (isMultiellipse)
+	if (isMultiEllipse)
 	{
 		for (int i = 0; i < internalEllipses.size(); i++)
 		{
@@ -53,7 +53,7 @@ void TerrainObject::initMicroBlocks()
 
 float TerrainObject::getEllipseSize(int i)
 {
-	if (isMultiellipse)
+	if (isMultiEllipse)
 		return Helper::getDist(internalEllipses[i].first, internalEllipses[i].second) * ellipseSizeMultipliers[i];
 
 	return Helper::getDist(focus1, focus2) * ellipseSizeMultipliers[0];
@@ -61,7 +61,7 @@ float TerrainObject::getEllipseSize(int i)
 
 void TerrainObject::setFocuses(std::vector<Vector2f> focuses)
 {
-	if (isMultiellipse)
+	if (isMultiEllipse)
 	{
 		for (int i = 0; i < focuses.size() / 2; i++)
 		{
@@ -78,7 +78,7 @@ void TerrainObject::setFocuses(std::vector<Vector2f> focuses)
 
 bool TerrainObject::isIntersected(Vector2f curPosition, Vector2f newPosition) //const
 {
-	if (this->isMultiellipse)
+	if (this->isMultiEllipse)
 		return false;
 
 	if (this->isDotsAdjusted)

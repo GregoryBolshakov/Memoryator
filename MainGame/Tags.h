@@ -14,19 +14,23 @@ enum class Tag {
 enum class PackTag
 {
     empty = 0, heroAbsorb = 1, heroHit = 2, heroMove = 3, heroPick = 4, heroRoll = 5, heroStand = 6, heroThrow = 7,
-    interfaceElements = 8, locations = 9, darkWoods = 10, birchGrove = 11, swampyTrees = 12, craftObjects = 13, inventory = 14, icons = 15
+    interfaceElements = 8, locations = 9, darkWoods = 10, birchGrove = 11, swampyTrees = 12, craftObjects = 13,
+	inventory = 14, icons = 15, book = 16, hare = 17, nightmare1 = 18, nightmare2Stand = 20,
+	nightmare2Move = 21, nightmare2Hit = 22
 };
 
 enum class PackPart
 {
-    full = 101, body = 102, legs = 103, lines = 104, // creature's parts
-    ground = 201, tree = 202, bush = 203, log = 204, mushroom = 205, path = 206, plant = 207, rock = 208, stump = 209,
-    decor = 210, roof = 211, lake = 212, root = 213, flower = 213,// biome's parts
-    bookLittle = 301, crossButton = 302, menu = 303, // interface's parts
-    brazier = 401, wreathTable = 402, // location's parts
+	full = 101, body = 102, legs = 103, lines = 104, // creature's parts
+	stand = 1, move = 2, trap = 3, hit = 4, // action's parts
+	ground = 201, tree = 202, bush = 203, log = 204, mushroom = 205, path = 206, plant = 207, rock = 208, stump = 209,
+	decor = 210, roof = 211, lake = 212, root = 213, flower = 213,// biome's parts
+	bookLittle = 301, crossButton = 302, menu = 303, // interface's parts
+	brazier = 401, wreathTable = 402, // location's parts
 	cageBear = 501, cageOwl = 502, fence = 503, hareTrap = 504, noose = 505, totem = 506, // craftObject's parts
 	areas = 601, bag1 = 602, // inventory's parts
-	craftObjects = 701, flowers = 702, mobs = 703, notCraftObjects = 704 // icon's parts
+	craftObjects = 701, flowers = 702, mobs = 703, notCraftObjects = 704, // icon's parts
+	arrowBig = 801, arrowSmall = 802, bookmarks = 803, cover = 804, frame1 = 805, frame2 = 806, pages = 807, plus = 808, cell = 809 // book's parts
 };
 
 enum class Direction { RIGHT = 0, UPRIGHT = 45, UP = 90, UPLEFT = 135, LEFT = 180, DOWNLEFT = 225, DOWN = 270, DOWNRIGHT = 315, STAND = 360 };

@@ -4,6 +4,7 @@
 
 #include "WorldObject.h"
 #include "TerrainObject.h"
+#include "DirectionsSystem.h"
 
 const float pi = 3.14159265358979323846f;
 
@@ -23,8 +24,8 @@ protected:
 	float strength = 0;
 	float defaultSpeed, speed;
 	float timeAfterHitself = 0;
-	Side calculateSide(Vector2f otherObjectPosition, long long elapsedTime);
-	Direction calculateDirection() const;
+	Side calculateSide(Vector2f otherObjectPosition, long long elapsedTime) const;
+	void calculateDirection();
 	static Side invertSide(Side side);	
 	Side side = down;	
 	Actions currentAction, lastAction = relax;
@@ -42,8 +43,8 @@ protected:
 	float bumpDistance = 0;
 	float pushDamage = 0, pushDistance = 0;
 	Vector2f pushDirection = { 0, 0 }, pushVector = {0, 0};
-	float pushDuration = 0, pushRestDuration = 0;
-	const float DEFAULT_PUSH_DURATION = 2e5, DEFAULT_PUSH_SPEED = 0.0004f;
+	float pushDuration = 0, pushRestDuration = 0, redDuration = 0, redRestDuration = 0;
+	const float DEFAULT_PUSH_DURATION = 2e5, DEFAULT_PUSH_SPEED = 0.00025f;
 	//-----------
 
 	//jerk logic
@@ -69,12 +70,6 @@ public:
 	Direction getLastDirection() { return lastDirection; }
 	Side getSide() { return side; }
 	WorldObject *getBoundTarget() { return boundTarget; }
-	static std::string sideToString(Side side);
-	static std::string directionToString(Direction direction);
-    static Direction cutRights(Direction direction);
-    static Side cutRights(Side side);
-	Direction DynamicObject::sideToDirection(Side side);
-	Direction invertDirection(Direction dir);
 
 	void setCurrentAction(Actions action) { this->currentAction = action; }	
 	void changeMovePositionToRoute(Vector2f newPosition) { movePosition = newPosition; }

@@ -1,0 +1,42 @@
+0 book cover 1 70 22 55 0 0 18
+0 book cover 2 70 22 55 0 0 20
+0 book pages 1 70 22 44.275 0 0 21
+0 book pages 2 70 22 44.275 0 0 22
+0 book pages 3 70 22 44.275 0 0 46
+1 book arrowBig 1 2 3 0 0 4.83 0 0 16
+1 book arrowBig 1 2 3 0 0 4.83 0 0 17
+
+1 book bookmarks 1 2 3 0 0 5 0 0 31
+1 book bookmarks 7 8 9 0 0 5 0 0 32
+1 book bookmarks 10 11 12 0 0 5 0 0 33
+1 book bookmarks 10 11 12 0 0 5 0 0 34
+1 book bookmarks 13 14 15 0 0 5 0 0 35
+1 book bookmarks 4 5 6 0 0 5 0 0 36
+
+0 interfaceElements bookLittle 6 10 10 12 0 0 40
+0 interfaceElements bookLittle 4 10 10 12 0 0 41
+0 interfaceElements bookLittle 5 10 10 12 0 0 42
+0 interfaceElements bookLittle 3 10 10 12 0 0 43
+0 interfaceElements bookLittle 2 10 10 3.5 0 0 44
+0 interfaceElements bookLittle 1 10 10 3.5 0 0 45
+0 book cell 1 0 0 3.5 0 0 47
+0 book cell 2 0 0 3.5 0 0 48
+1 book frame1 1 2 3 0 0 5.189 -0.06 -0.06 49 
+1 book frame2 1 2 3 0 0 5.876 0 0 50
+1 book plus 1 2 3 0 0 5.876 0 0 51
+0 icons notCraftObjects 1 0 0 5.876 0 0 52
+
+0 icons mobs 3 0 0 5.876 0 0 102
+0 icons mobs 6 0 0 5.876 0 0 103
+0 icons mobs 2 0 0 5.876 0 0 104
+0 icons mobs 2 0 0 5.876 0 0 105
+0 icons mobs 1 0 0 5.876 0 0 106
+0 icons mobs 7 0 0 5.876 0 0 107
+
+0 inventory bag1 1 0 0 5.876 0 0 201
+
+1 icons flowers 1 2 2 0 0 5.876 0 0 401
+1 icons flowers 9 10 10 0 0 5.876 0 0 402
+1 icons flowers 3 4 4 0 0 5.876 0 0 403
+1 icons flowers 5 6 6 0 0 5.876 0 0 404
+1 icons flowers 7 8 8 0 0 5.876 0 0 405

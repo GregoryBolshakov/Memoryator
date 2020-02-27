@@ -95,3 +95,15 @@ void TextSystem::drawNumberOfItems(Vector2f pos, int itemsCount, RenderTarget& t
 	numberOfItems.setPosition(pos.x + SpritePack::iconSize.x, pos.y + SpritePack::iconSize.x);
 	target.draw(numberOfItems);
 }
+
+sf::Vector2f TextSystem::getTextBoxSize(const std::string& string, int characterSize, FontName font)
+{
+	if (fonts.count(font) <= 0 || textBoxes.count(font) <= 0)
+		return { 0, 0 };
+
+	textBoxes.at(font).setFont(fonts.at(font));
+	textBoxes.at(font).setString(string);
+	textBoxes.at(font).setCharacterSize(characterSize);
+
+	return { textBoxes.at(font).getGlobalBounds().width, textBoxes.at(font).getGlobalBounds().height };
+}
