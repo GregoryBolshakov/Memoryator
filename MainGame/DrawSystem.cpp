@@ -97,7 +97,7 @@ void DrawSystem::initPacksMap()
 		packsMap.at(PackTag::inventory).getOriginalInfo(PackPart::areas, Direction::DOWN, 1).frame.h);
 }
 
-void DrawSystem::advancedScale(SpriteChainElement& item, Sprite& sprite, sprite_pack::sprite originalInfo, float scale) const
+void DrawSystem::advancedScale(SpriteChainElement& item, Sprite& sprite, const sprite_pack::sprite& originalInfo, float scale) const
 {
 	if (!originalInfo.rotated)
 		sprite.setScale(scale * item.size.x / originalInfo.source_size.w,
@@ -121,7 +121,7 @@ void DrawSystem::advancedScale(SpriteChainElement& item, Sprite& sprite, sprite_
 	}
 }
 
-std::vector<DrawableChainElement*> DrawSystem::UpcastChain(std::vector<SpriteChainElement*> chain)
+std::vector<DrawableChainElement*> DrawSystem::UpcastChain(const std::vector<SpriteChainElement*>& chain)
 {
 	std::vector<DrawableChainElement*> result = {};
 	for (auto spriteChainItem : chain)
@@ -132,12 +132,12 @@ std::vector<DrawableChainElement*> DrawSystem::UpcastChain(std::vector<SpriteCha
 	return result;
 }
 
-std::vector<SpriteChainElement*> DrawSystem::DowncastToSpriteChain(std::vector<DrawableChainElement*> chain)
+std::vector<SpriteChainElement*> DrawSystem::DowncastToSpriteChain(const std::vector<DrawableChainElement*>& chain)
 {
 	std::vector<SpriteChainElement*> result = {};
 	for (auto item : chain)
 	{
-		auto spriteChainItem = static_cast<SpriteChainElement*>(item);
+		auto spriteChainItem = dynamic_cast<SpriteChainElement*>(item);
 		result.push_back(spriteChainItem);
 	}
 	return result;
@@ -179,7 +179,7 @@ void DrawSystem::drawTextChainElement(RenderTarget& target, TextChainElement* te
 		textChainItem->color);
 }
 
-void DrawSystem::draw(RenderTarget& target, std::vector<DrawableChainElement*> drawableItems, float scale, Vector2f cameraPosition)
+void DrawSystem::draw(RenderTarget& target, const std::vector<DrawableChainElement*>& drawableItems, float scale, Vector2f cameraPosition)
 {
     if (drawableItems.empty())
         return;

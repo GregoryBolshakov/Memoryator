@@ -12,7 +12,7 @@ using namespace std;
 int main() {	
 	srand(time(0));
 	const auto screenSize = Helper::GetScreenSize();
-	RenderWindow mainWindow(VideoMode(static_cast<unsigned int>(screenSize.x), static_cast<unsigned int>(screenSize.y), 32), "game", Style::Fullscreen);
+	RenderWindow mainWindow(VideoMode(static_cast<unsigned int>(screenSize.x), static_cast<unsigned int>(screenSize.y), 32), "game");//, Style::Fullscreen);
 
     DrawSystem drawSystem;
 	MenuSystem menuSystem;
