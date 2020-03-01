@@ -1,6 +1,4 @@
 #pragma once
-#ifndef WORLDHANDLER_H
-#define WORLDHANDLER_H
 
 #include <unordered_map>
 #include <windows.h>
@@ -15,6 +13,7 @@
 #include "InventorySystem.h"
 #include "TimeSystem.h"
 #include "LightSystem.h"
+#include "CameraSystem.h"
 
 using namespace sf;
 
@@ -30,7 +29,7 @@ public:
 	// Getters
 	GridList& getStaticGrid() { return staticGrid; }
 	GridList& getDynamicGrid() { return dynamicGrid; }
-	Vector2f getCameraPosition() const { return cameraPosition; }
+	Vector2f getCameraPosition() const	{ return cameraSystem.position; }
 	InventorySystem& getInventorySystem() { return inventorySystem; }
 	BuildSystem& getBuildSystem() { return buildSystem; }
 	TimeSystem& getTimeSystem() { return timeSystem; }
@@ -86,15 +85,9 @@ private:
 	int height;
 	Vector2f blockSize = { 1000, 1000 };
 	Vector2f microBlockSize = { 20, 20 };
-	Vector2f cameraPosition;
-	const Vector2f maxCameraDistance = Vector2f(250, 250), camOffset = { 0, -0.04f };
 	std::string spriteNameFileDirectory = "Game/objects.txt";
 	bool fixedClimbingBeyond(Vector2f &pos) const;
-	void makeCameraShake();
-	void cameraShakeInteract(long long elapsedTime);
-	Vector2f cameraShakeVector = { 0, 0 };
-	long long cameraShakeDuration = 0;
-	float cameraShakePower = 0.0002f;
+	
 	WorldGenerator worldGenerator;
 
 	// Time logic
@@ -117,6 +110,7 @@ private:
 	EffectsSystem effectSystem;
 
 	// Systems
+	CameraSystem cameraSystem;
 	InventorySystem inventorySystem;
 	BuildSystem buildSystem;
 	TimeSystem timeSystem;
@@ -131,5 +125,3 @@ private:
 	// Test
 	std::vector<std::pair<Tag, int>>* testInv = new std::vector<std::pair<Tag, int>>({ {Tag::chamomile, 2}, {Tag::chamomile, 2}, {Tag::chamomile, 2} });
 };
-
-#endif

@@ -36,11 +36,9 @@ public:
 	[[nodiscard]] int getType() const	{ return typeOfObject; }
 	[[nodiscard]] int getVarietyOfTypes() const	{ return varietyOfTypes; }
 	[[nodiscard]] float getHealthPoint() const	{ return healthPoint; }
-	float getMaxHealthPointValue();
+	[[nodiscard]] float getMaxHealthPointValue() const;
 	[[nodiscard]] bool getDeletePromise() const { return deletePromise; }
 	[[nodiscard]] bool getMirroredState() const { return mirrored; }
-	void manuallyDisableMirroring() { mirrored = false; }
-	void cancelMirroring();
 	[[nodiscard]] float getRadius() const { return radius; }
 	[[nodiscard]] float getPermissibleDistance() const { return permissibleDistance; }
 	[[nodiscard]] std::string getToSaveName() const { return toSaveName; }
@@ -52,7 +50,7 @@ public:
 	Vector2f *getPtrPosition() { return &position; }
 	[[nodiscard]] Vector2f getTextureSize() const { return { textureBox.width, textureBox.height }; }
 	[[nodiscard]] Vector2f getTextureOffset() const { return { textureBoxOffset.x, textureBoxOffset.y }; }
-	Vector2f getScaleRatio();
+	[[nodiscard]] Vector2f getScaleRatio() const;
 	[[nodiscard]] Vector2f getConditionalSizeUnits() const { return conditionalSizeUnits; }
 	[[nodiscard]] Vector2f getMicroBlockCheckAreaBounds() const { return microBlockCheckAreaBounds; }
 	[[nodiscard]] std::vector<Vector2i> getLockedMicroBlocks() const { return lockedMicroBlocks; }
@@ -62,6 +60,8 @@ public:
 	[[nodiscard]] State getState() const { return state; }	
 	std::pair<std::stack<birthStaticInfo>, std::stack<birthDynamicInfo>> getBirthObjects() { return std::make_pair(birthStatics, birthDynamics); }	
 
+	void manuallyDisableMirroring() { mirrored = false; }
+	void cancelMirroring();
 	void clearBirthStack() { birthStatics = std::stack<birthStaticInfo>(); birthDynamics = std::stack<birthDynamicInfo>(); }
 	void setPosition(Vector2f newPosition);
 	void setHealthPoint(float healthPoint) { this->healthPoint = healthPoint; }
@@ -72,7 +72,7 @@ public:
 	void setState(State state) { this->state = state; }
 	virtual void takeDamage(float damage, Vector2f attackerPos = { -1, -1 });
 	virtual void initMicroBlocks();
-	virtual bool isLockedPlace(std::map<std::pair<int, int>, bool> checkBlocks);
+	virtual bool isLockedPlace(const std::map<std::pair<int, int>, bool>& checkBlocks);
 
 	bool isTransparent = false, isSelected = false, isVisibleInventory = false;
 	bool isProcessed = false;
@@ -101,7 +101,7 @@ protected:
 	Vector2f conditionalSizeUnits;	
 	Vector2f microBlockCheckAreaBounds = { 0, 0 };
 	Vector2f position = { 0, 0 };
-	float radius, permissibleDistance = 0;
+	float radius = 0, permissibleDistance = 0;
 	State state = common;
 	std::stack<birthStaticInfo> birthStatics;
 	std::stack<birthDynamicInfo> birthDynamics;

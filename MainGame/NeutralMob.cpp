@@ -13,14 +13,17 @@ NeutralMob::~NeutralMob()
 
 void NeutralMob::setTarget(DynamicObject& object)
 {
-	if (object.tag == Tag::noose)
+	/*if (object.tag == Tag::noose)
 		return;
 	if (Helper::getDist(position, object.getPosition()) < distanceToNearest)
 	{
 		boundTarget = &object;
 		distanceToNearest = Helper::getDist(position, object.getPosition());
+	}*/
+
+	if (object.tag == Tag::hero)
+		boundTarget = &object;
 	}
-}
 
 void NeutralMob::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
 {
@@ -37,12 +40,12 @@ void NeutralMob::behavior(long long elapsedTime)
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);
-		direction = Direction::STAND;
+		directionSystem.direction = Direction::STAND;
 		return;
 	}
 	fightInteract(elapsedTime);
 
-	side = calculateSide(movePosition);
+	directionSystem.side = DirectionSystem::calculateSide(position, movePosition, elapsedTime);
 	//return;
 	if (boundTarget == nullptr)
 		return;
@@ -60,7 +63,7 @@ void NeutralMob::behavior(long long elapsedTime)
 			if (distanceToTarget >= sightRange * 1.5)
 			{
 				changeAction(relax, true, true);
-				direction = Direction::STAND;
+				directionSystem.direction = Direction::STAND;
 				movePosition = { -1, -1 };
 			}
 			else
@@ -74,5 +77,5 @@ void NeutralMob::behavior(long long elapsedTime)
 
 void NeutralMob::fightInteract(long long elapsedTime, DynamicObject* target)
 {
-	pushAway(elapsedTime);
+	moveSystem.pushAway(elapsedTime);
 }

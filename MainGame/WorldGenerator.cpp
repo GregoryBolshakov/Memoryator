@@ -173,6 +173,7 @@ void WorldGenerator::inBlockGenerate(const int blockIndex)
 		int(staticGrid->getPointByIndex(blockIndex).y),
 		int(Vector2f(blockSize).x),
 		int(Vector2f(blockSize).y));
+	
 	generateGround(blockIndex);
 
 	//block filling
@@ -290,7 +291,7 @@ void WorldGenerator::perimeterGeneration()
 		ceil(characterPosition.x + (screenSize.x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)),
 		ceil(characterPosition.y + (screenSize.y / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)));
 
-	if (focusedObject->getDirection() != Direction::STAND)
+	if (focusedObject->getDirectionSystem().direction != Direction::STAND)
 	{
 		for (auto& block : staticGrid->getBlocksAround(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y))
 		{

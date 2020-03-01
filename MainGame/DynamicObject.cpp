@@ -3,8 +3,8 @@
 
 DynamicObject::DynamicObject(std::string objectName, const Vector2f centerPosition) : WorldObject(std::move(objectName), centerPosition), currentAction()
 {
-	speed = 0;
-	direction = Direction::STAND;
+	moveSystem.init(&radius, &position, &color);
+	directionSystem.init(&position, &movePosition);
 }
 
 DynamicObject::~DynamicObject()
@@ -19,111 +19,7 @@ void DynamicObject::initMicroBlocks()
 	lockedMicroBlocks = { Vector2i(int(ceil(position.x / microBlockSize.x)), int(ceil(position.y / microBlockSize.y))) };
 }
 
-Side DynamicObject::calculateSide(const Vector2f otherObjectPosition) const
-{
-	auto answer = down;
-
-	const auto alpha = atan((float(otherObjectPosition.y) - this->position.y) / (float(otherObjectPosition.x) - this->position.x)) * 180 / pi;
-	if (this->position.y >= otherObjectPosition.y && abs(alpha) >= 45 && abs(alpha) <= 90)
-		answer = up;
-	else
-		if (this->position.x <= otherObjectPosition.x && abs(alpha) >= 0 && abs(alpha) <= 45)
-			answer = right;
-		else
-			if (this->position.y <= otherObjectPosition.y && abs(alpha) >= 45 && abs(alpha) <= 90)
-				answer = down;
-			else
-				if (this->position.x >= otherObjectPosition.x && abs(alpha) >= 0 && abs(alpha) <= 45)
-					answer = left;
-	return answer;
-}
-
-void DynamicObject::calculateDirection()
-{
-	const Vector2f curPos = this->getPosition();
-	const Vector2f tarPos = movePosition;
-
-	if (tarPos == Vector2f(-1, -1))
-		direction = Direction::STAND;
-
-	const float directionCorridor = 50;
-
-	if (abs(curPos.x - tarPos.x) <= directionCorridor && abs(curPos.y - tarPos.y) <= directionCorridor)
-	{
-		if (abs(curPos.x - tarPos.x) > abs(curPos.y - tarPos.y))
-		{
-			if (curPos.x >= tarPos.x)
-				direction = Direction::LEFT;
-			else
-				direction = Direction::RIGHT;
-		}
-		else
-		{
-			if (curPos.y >= tarPos.y)
-				direction = Direction::UP;
-			else
-				direction = Direction::DOWN;
-		}
-		lastDirection = direction;
-		return;
-	}
-
-	if (abs(curPos.x - tarPos.x) <= directionCorridor)
-	{
-		if (curPos.y < tarPos.y)
-			direction = Direction::DOWN;
-		else
-			direction = Direction::UP;
-	}
-	else
-		if (abs(curPos.y - tarPos.y) <= directionCorridor)
-		{
-			if (curPos.x < tarPos.x)
-				direction = Direction::RIGHT;
-			else
-				direction = Direction::LEFT;
-		}
-		else
-			if (curPos.x < tarPos.x)
-			{
-				if (curPos.y < tarPos.y)
-					direction = Direction::DOWNRIGHT;
-				else
-					if (curPos.y > tarPos.y)
-						direction = Direction::UPRIGHT;
-			}
-			else
-				if (curPos.x > tarPos.x)
-				{
-					if (curPos.y < tarPos.y)
-						direction = Direction::DOWNLEFT;
-					else
-						if (curPos.y > tarPos.y)
-							direction = Direction::UPLEFT;
-				}
-
-	if (direction != Direction::STAND)
-		lastDirection = direction;
-}
-
-Side DynamicObject::invertSide(const Side side)
-{
-	switch (side)
-	{
-	case up:
-		return down;
-	case down:
-		return up;
-	case left:
-		return right;
-	case right:
-		return left;
-	default:
-		return down;
-	}
-}
-
-bool DynamicObject::isIntersectDynamic(const Vector2f newPosition, DynamicObject & otherDynamic) const
+bool DynamicObject::isIntersectDynamic(Vector2f newPosition, DynamicObject& otherDynamic) const
 {
 	//Vector2f position1 = dynamic1.getPosition();
 	const auto position1 = newPosition;
@@ -132,15 +28,7 @@ bool DynamicObject::isIntersectDynamic(const Vector2f newPosition, DynamicObject
 	return sqrt(pow(position1.x - position2.x, 2) + pow(position1.y - position2.y, 2)) <= /*this->radius + */otherDynamic.radius;
 }
 
-Vector2f DynamicObject::EllipseSlip(
-	DynamicObject * dynamic,
-	const Vector2f newPos,
-	const Vector2f destination,
-	const Vector2f f1,
-	const Vector2f f2,
-	const float ellipseSize,
-	const float height,
-	const long long elapsedTime) const
+Vector2f DynamicObject::ellipseSlip(DynamicObject *dynamic, Vector2f newPos, Vector2f destination, Vector2f f1, Vector2f f2, float ellipseSize, float height, long long elapsedTime) const
 {
 	const auto dynamicPos = Vector2f(dynamic->getPosition().x, height - dynamic->getPosition().y);
 	const auto focus1 = Vector2f(f1.x, height - f1.y);
@@ -211,12 +99,12 @@ Vector2f DynamicObject::EllipseSlip(
 
 	if (dist1 <= dist2 && d >= 0 && sqrt(pow(x1 - dynamic->getPosition().x, 2) + pow(height - yl - dynamic->getPosition().y, 2)) != 0)
 	{
-		const auto k = dynamic->getSpeed() * time / sqrt(pow(x1 - dynamic->getPosition().x, 2) + pow(height - yl - dynamic->getPosition().y, 2));
+		const auto k = ((dynamic->getMoveSystem().speed * time) / sqrt(pow(x1 - dynamic->getPosition().x, 2) + pow(height - yl - dynamic->getPosition().y, 2)));
 		return { (x1 - dynamic->getPosition().x) * k, (height - yl - dynamic->getPosition().y) * k };
 	}
 	if (dist2 <= dist1 && d >= 0 && sqrt(pow(x2 - dynamic->getPosition().x, 2) + pow(height - y2 - dynamic->getPosition().y, 2)) != 0)
 	{
-		const auto k = dynamic->getSpeed() * time / sqrt(pow(x2 - dynamic->getPosition().x, 2) + pow(height - y2 - dynamic->getPosition().y, 2));
+		const auto k = ((dynamic->getMoveSystem().speed * time) / sqrt(pow(x2 - dynamic->getPosition().x, 2) + pow(height - y2 - dynamic->getPosition().y, 2)));
 		return { (x2 - dynamic->getPosition().x) * k, (height - y2 - dynamic->getPosition().y) * k };
 	}
 
@@ -265,64 +153,69 @@ Vector2f DynamicObject::EllipseSlip(
 
 void DynamicObject::setMoveOffset(long long elapsedTime)
 {
-	if (!(currentAction == move || currentAction == moveHit || currentAction == moveEnd || currentAction == jerking || currentAction == throwNoose))
+	if (!(currentAction == move ||
+		currentAction == moveHit ||
+		currentAction == moveEnd ||
+		currentAction == jerking ||
+		currentAction == throwNoose || 
+		currentAction == moveSlowly))
 	{
-		moveOffset = { -1, -1 };
+		moveSystem.moveOffset = { -1, -1 };
 		return;
 	}
 
 	if (movePosition == Vector2f(-1, -1))
 	{
-		if (direction != Direction::STAND)
+		if (directionSystem.direction != Direction::STAND)
 		{
-			auto angle = int(this->getDirection()) * pi / 180;
-			const float k = speed * elapsedTime / sqrt(pow(cos(angle), 2) + pow(sin(angle), 2));
-			moveOffset.x = float(k * cos(angle));
-			moveOffset.y = float(k * -sin(angle));
+			const auto angle = float(directionSystem.direction) * pi / 180;
+			const float k = moveSystem.speed * float(elapsedTime) / sqrt(pow(cos(angle), 2) + pow(sin(angle), 2));
+			moveSystem.moveOffset.x = float(k * cos(angle));
+			moveSystem.moveOffset.y = float(k * -sin(angle));
 			return;
 		}
-		moveOffset = Vector2f(-1, -1);
+		moveSystem.moveOffset = Vector2f(-1, -1);
 		return;
 	}
 
-	const float distanceToTarget = float(sqrt(pow(movePosition.x - position.x, 2) + pow(movePosition.y - position.y, 2)));
+	const auto distanceToTarget = float(sqrt(pow(movePosition.x - position.x, 2) + pow(movePosition.y - position.y, 2)));
 	if (distanceToTarget == 0)
 	{
-		moveOffset = Vector2f(-1, -1);
+		moveSystem.moveOffset = Vector2f(-1, -1);
 		return;
 	}
 
-	const float k = speed * elapsedTime / sqrt(pow(movePosition.x - position.x, 2) + pow(movePosition.y - position.y, 2));
+	const auto k = moveSystem.speed * float(elapsedTime) / sqrt(pow(movePosition.x - position.x, 2) + pow(movePosition.y - position.y, 2));
 	/*if (distanceToTarget <= k)
 	{
 		moveOffset = Vector2f(-1, -1);
 		return;
 	}*/
-	moveOffset = { (movePosition.x - position.x) * k, (movePosition.y - position.y) * k };
+	moveSystem.moveOffset = { (movePosition.x - position.x) * k, (movePosition.y - position.y) * k };
 }
 
 Vector2f DynamicObject::doMove(long long elapsedTime)
 {
 	setMoveOffset(elapsedTime);
 	auto position = this->position;
-	position.x += pushVector.x; position.y += pushVector.y;
+	position.x += moveSystem.pushVector.x; position.y += moveSystem.pushVector.y;
 
 	//if (this->direction == Direction::STAND)
 		//return position;
 
-	if (moveOffset != Vector2f(-1, -1))
+	if (moveSystem.moveOffset != Vector2f(-1, -1))
 	{
-		position.x += moveOffset.x;
-		position.y += moveOffset.y;
+		position.x += moveSystem.moveOffset.x;
+		position.y += moveSystem.moveOffset.y;
 	}
 
-	return Vector2f(position);
+	return position;
 }
 
 Vector2f DynamicObject::doSlip(Vector2f newPosition, const std::vector<StaticObject*> & localStaticItems, const float height, const long long elapsedTime)
 {
 	bool crashed = false;
-	if (!canCrashIntoStatic)
+	if (!moveSystem.canCrashIntoStatic)
 		return newPosition;
 
 	for (auto& staticItem : localStaticItems)
@@ -346,7 +239,7 @@ Vector2f DynamicObject::doSlip(Vector2f newPosition, const std::vector<StaticObj
 						return Vector2f(-1, -1);
 
 					crashed = true;
-					motionAfterSlipping = this->EllipseSlip(this, newPosition, this->movePosition, terrain->internalEllipses[curEllipse].first, terrain->internalEllipses[curEllipse].second, terrain->getEllipseSize(curEllipse), height, elapsedTime);
+					motionAfterSlipping = this->ellipseSlip(this, newPosition, this->movePosition, terrain->internalEllipses[curEllipse].first, terrain->internalEllipses[curEllipse].second, terrain->getEllipseSize(curEllipse), height, elapsedTime);
 
 					if (motionAfterSlipping != Vector2f(-1, -1))
 					{
@@ -367,9 +260,9 @@ Vector2f DynamicObject::doSlip(Vector2f newPosition, const std::vector<StaticObj
 				Vector2f motionAfterSlipping;
 
 				if (staticItem->isDotsAdjusted)
-					motionAfterSlipping = terrain->newSlippingPositionForDotsAdjusted(moveOffset, this->getSpeed(), elapsedTime);
+					motionAfterSlipping = terrain->newSlippingPositionForDotsAdjusted(this->getPosition(), moveSystem.speed, elapsedTime);
 				else
-					motionAfterSlipping = this->EllipseSlip(this, newPosition, this->movePosition, terrain->getFocus1(), terrain->getFocus2(), terrain->getEllipseSize(), height, elapsedTime);
+					motionAfterSlipping = this->ellipseSlip(this, newPosition, this->movePosition, terrain->getFocus1(), terrain->getFocus2(), terrain->getEllipseSize(), height, elapsedTime);
 
 				if (motionAfterSlipping != Vector2f(-1, -1))
 				{
@@ -386,7 +279,7 @@ Vector2f DynamicObject::doSlip(Vector2f newPosition, const std::vector<StaticObj
 
 Vector2f DynamicObject::doSlipOffDynamic(Vector2f newPosition, const std::vector<DynamicObject*> & localDynamicItems, const float height, const long long elapsedTime)
 {
-	if (!canCrashIntoDynamic)
+	if (!moveSystem.canCrashIntoDynamic)
 		return newPosition;
 
 	lastIntersected = "";
@@ -399,7 +292,7 @@ Vector2f DynamicObject::doSlipOffDynamic(Vector2f newPosition, const std::vector
 		if (this->isIntersectDynamic(newPosition, *otherDynamicItem) && otherDynamicItem->lastIntersected != name)
 		{
 			this->lastIntersected = otherDynamicItem->getName();
-			auto motionAfterSlipping = EllipseSlip(this, newPosition, movePosition, otherDynamicItem->getPosition(), otherDynamicItem->getPosition(), otherDynamicItem->getRadius() * 2, height, elapsedTime);
+			auto motionAfterSlipping = ellipseSlip(this, newPosition, movePosition, otherDynamicItem->getPosition(), otherDynamicItem->getPosition(), otherDynamicItem->getRadius() * 2, height, elapsedTime);
 
 			if (motionAfterSlipping != Vector2f(-1, -1))
 			{
@@ -426,100 +319,21 @@ void DynamicObject::changeAction(const Actions newAction, const bool resetSprite
 			number = 1;
 }
 
-void DynamicObject::pushByBumping(DynamicObject* object)
-{
-	if (!this->canCrashIntoDynamic || !object->canCrashIntoDynamic || pushDamage != 0)
-		return;
-	bumpedPositions.emplace_back(object->getPosition(), false);
-	bumpDistance += object->getRadius();
-}
-
-void DynamicObject::endPush()
-{
-	pushDirection = { 0, 0 };
-	pushDuration = 0;
-	pushVector = { 0, 0 };
-	pushDamage = 0;
-	bumpedPositions.clear();
-	bumpDistance = 0;
-}
-
-void DynamicObject::pushAway(const long long elapsedTime, float pushSpeed)
-{
-	if (pushSpeed == 0)
-		pushSpeed = DEFAULT_PUSH_SPEED;
-	
-	timeAfterHitSelf += elapsedTime;
-	const sf::Color pushColor = sf::Color(255, 100, 100, 255);
-
-	if (!bumpedPositions.empty() && this->canCrashIntoDynamic && pushDamage == 0)
-	{
-		Vector2f bumpCenter = { 0, 0 };
-		auto bumpCount = 0;
-		
-		for (const auto bump : bumpedPositions)
-		{
-			bumpCount++;
-			bumpCenter.x += bump.position.x;
-			bumpCenter.y += bump.position.y;
-		}
-		if (bumpCount == 0 || pushSpeed == 0)
-			return;
-		
-		bumpCenter.x /= bumpCount;
-		bumpCenter.y /= bumpCount;
-		pushDistance = this->radius + bumpDistance - Helper::getDist(this->getPosition(), bumpCenter);
-		pushDirection = Vector2f(this->position.x - bumpCenter.x, this->position.y - bumpCenter.y);
-		pushDuration = long(pushDistance / pushSpeed);
-		pushRestDuration = pushDuration;
-		bumpDistance = 0;
-		bumpedPositions.clear();
-		color = pushColor;
-	}
-
-	if (redRestDuration > 0)
-		color = sf::Color(
-			255,
-			pushColor.g + (255 - pushColor.g) * (1 - Uint8(redRestDuration / redDuration)),
-			pushColor.b + (255 - pushColor.b) * (1 - Uint8(redRestDuration / redDuration)),
-			255);
-	else
-	{
-		color = sf::Color::White;
-		redRestDuration = 0;
-	}
-
-	redRestDuration -= elapsedTime;
-
-	if (pushRestDuration <= 0 || currentAction == dead)
-	{
-		endPush();
-		return;
-	}
-
-	pushRestDuration -= elapsedTime;
-
-	const float elongationCoefficient = pushSpeed * float(elapsedTime) / sqrt(pow(pushDirection.x, 2) + pow(pushDirection.y, 2));
-	if (pushDirection != Vector2f(0, 0))
-		pushVector = { elongationCoefficient * pushDirection.x, elongationCoefficient * pushDirection.y };
-	else
-		pushVector = { 0, 0 };
-}
-
 void DynamicObject::takeDamage(const float damage, const Vector2f attackerPos)
 {
 	if (timeAfterHitSelf < timeForNewHitSelf)
 		return;
+	
 	this->timeAfterHitSelf = 0;
 	this->healthPoint -= damage / this->armor;
 
-	pushDamage = damage;
-	pushDuration = DEFAULT_PUSH_DURATION;
-	pushRestDuration = pushDuration;
-	redDuration = 2 * pushDuration;
-	redRestDuration = redDuration;
+	moveSystem.pushDamage = damage;
+	moveSystem.pushDuration = moveSystem.DEFAULT_PUSH_DURATION;
+	moveSystem.pushRestDuration = moveSystem.pushDuration;
+	moveSystem.redDuration = 2 * moveSystem.pushDuration;
+	moveSystem.redRestDuration = moveSystem.redDuration;
 
-	pushDistance = Helper::getDist(this->getPosition(), attackerPos);
+	moveSystem.pushDistance = Helper::getDist(this->getPosition(), attackerPos);
 	if (attackerPos != Vector2f(-1, -1))
-		pushDirection = Vector2f(this->position.x - attackerPos.x, this->position.y - attackerPos.y);
+		moveSystem.pushDirection = Vector2f(this->position.x - attackerPos.x, this->position.y - attackerPos.y);
 }

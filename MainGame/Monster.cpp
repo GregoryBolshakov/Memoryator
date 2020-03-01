@@ -7,7 +7,7 @@ Monster::Monster(std::string objectName, const Vector2f centerPosition) : Dynami
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
 	currentAction = relax;
-	side = down;
+	directionSystem.side = down;
 	sightRange = 950.0f;
 	strikingSprite = 6;
 	timeForNewHit = long(1e5);
@@ -39,12 +39,12 @@ void Monster::behaviorWithDynamic(DynamicObject* target, const long long elapsed
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);
-		direction = Direction::STAND;
+		directionSystem.direction = Direction::STAND;
 		return;
 	}
 
 	if (Helper::getDist(position, target->getPosition()) <= radius + target->getRadius())
-		pushByBumping(target);
+		moveSystem.pushByBumping(target->getPosition(), target->getRadius(), target->getMoveSystem().canCrashIntoDynamic);
 
 	if (target->tag != Tag::hero)
 		return;
@@ -57,12 +57,12 @@ void Monster::behaviorWithDynamic(DynamicObject* target, const long long elapsed
 	}
 
 	boundTarget = target;
-	side = calculateSide(boundTarget->getPosition());	
+	directionSystem.side = DirectionSystem::calculateSide(position, boundTarget->getPosition(), elapsedTime);
 
 	if (Helper::getDist(position, boundTarget->getPosition()) <= sightRange && timeAfterHit >= timeForNewHit)
-		speed = std::max((1 - Helper::getDist(position, boundTarget->getPosition()) / sightRange) * defaultSpeed / 2 + defaultSpeed, defaultSpeed);
+		moveSystem.speed = std::max((1 - Helper::getDist(position, boundTarget->getPosition()) / sightRange) * moveSystem.defaultSpeed / 2 + moveSystem.defaultSpeed, moveSystem.defaultSpeed);
 	else
-		speed = defaultSpeed;
+		moveSystem.speed = moveSystem.defaultSpeed;
 	if (isAttack.count(currentAction) == 0)
 		timeAfterHit += elapsedTime;
 
@@ -110,8 +110,8 @@ void Monster::stopping(const bool doStand, const bool forgetBoundTarget)
 	if (doStand)
 	{
 		this->laxMovePosition = { -1, -1 };
-		moveOffset = { 0, 0 };
-		this->direction = Direction::STAND;
+		moveSystem.moveOffset = { 0, 0 };
+		directionSystem.direction = Direction::STAND;
 	}
 
 	if (forgetBoundTarget && boundTarget != nullptr)
@@ -137,5 +137,5 @@ void Monster::jerk(float power, float deceleration, Vector2f destinationPoint)
 
 void Monster::fightInteract(const long long elapsedTime, DynamicObject* target)
 {
-	pushAway(elapsedTime);
+	moveSystem.pushAway(elapsedTime);
 }

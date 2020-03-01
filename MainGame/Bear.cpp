@@ -7,8 +7,8 @@ Bear::Bear(const std::string& objectName, Vector2f centerPosition) : NeutralMob(
 	conditionalSizeUnits = { 432, 384 };
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
-	defaultSpeed = 0.0003f;
-	speed = 0.0003f;
+	moveSystem.defaultSpeed = 0.0003f;
+	moveSystem.speed = 0.0003f;
 	animationSpeed = float(5e-4);
 	animationLength = 8;
 	radius = 70;
@@ -47,19 +47,19 @@ void Bear::behavior(long long elapsedTime)
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);
-		direction = Direction::STAND;
+		directionSystem.direction = Direction::STAND;
 		return;
 	}
 
 	if (this->owner != nullptr)
 	{
-		speed = defaultSpeed;
+		moveSystem.speed = moveSystem.defaultSpeed;
 		if (currentAction == commonHit)
 		{
 			movePosition = position;
 			return;
 		}
-		side = calculateSide(owner->getPosition());
+		directionSystem.side = DirectionSystem::calculateSide(position, owner->getPosition(), elapsedTime);
 		if (Helper::getDist(position, owner->getPosition()) > sightRange / 2)
 		{
 			changeAction(grab, false, false);
@@ -74,12 +74,12 @@ void Bear::behavior(long long elapsedTime)
 		return;
 	}
 
-	side = calculateSide(movePosition);
+	directionSystem.side = DirectionSystem::calculateSide(position, movePosition, elapsedTime);
 
 	if (boundTarget == nullptr)
 		return;
 	const float distanceToTarget = Helper::getDist(this->position, boundTarget->getPosition());
-	speed = std::max(defaultSpeed, (defaultSpeed * 10) * (1 - (distanceToTarget) / sightRange * 1.5f));
+	moveSystem.speed = std::max(moveSystem.defaultSpeed, (moveSystem.defaultSpeed * 10) * (1 - (distanceToTarget) / sightRange * 1.5f));
 	//animationSpeed = std::max(0.0003f, 0.0003f * speed / defaultSpeed);
 
 	if (distanceToTarget <= sightRange)
@@ -94,7 +94,7 @@ void Bear::behavior(long long elapsedTime)
 			if (distanceToTarget >= sightRange * 1.5)
 			{
 				changeAction(relax, true, true);
-				direction = Direction::STAND;
+				directionSystem.direction = Direction::STAND;
 				movePosition = { -1, -1 };
 			}
 			else

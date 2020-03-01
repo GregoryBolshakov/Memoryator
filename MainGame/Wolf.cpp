@@ -7,7 +7,7 @@ Wolf::Wolf(std::string objectName, Vector2f centerPosition) : NeutralMob(std::mo
 	conditionalSizeUnits = { 250, 200 };
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
-	speed = 0.0005f;
+	moveSystem.speed = 0.0005f;
 	animationSpeed = 0.0006f;
 	animationLength = 8;
 	radius = 70;

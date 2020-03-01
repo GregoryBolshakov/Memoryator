@@ -145,8 +145,9 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="Console.cpp" />
-    <ClCompile Include="DirectionsSystem.cpp" />
+    <ClCompile Include="DirectionSystem.cpp" />
     <ClCompile Include="DrawableChainElement.cpp" />
     <ClCompile Include="DrawSystem.cpp" />
     <ClCompile Include="InputBox.cpp" />
@@ -198,6 +199,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="Roof.cpp" />
     <ClCompile Include="Root.cpp" />
     <ClCompile Include="Spawn.cpp" />
+    <ClCompile Include="MoveSystem.cpp" />
     <ClCompile Include="SpriteChainElement.cpp" />
     <ClCompile Include="SpritePack.cpp" />
     <ClCompile Include="StaticObject.cpp" />
@@ -219,8 +221,9 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="Yarrow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="Console.h" />
-    <ClInclude Include="DirectionsSystem.h" />
+    <ClInclude Include="DirectionSystem.h" />
     <ClInclude Include="DrawableChainElement.h" />
     <ClInclude Include="DrawSystem.h" />
     <ClInclude Include="InputBox.h" />
@@ -240,6 +243,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="PedestalController.h" />
     <ClInclude Include="Roof.h" />
     <ClInclude Include="Root.h" />
+    <ClInclude Include="MoveSystem.h" />
     <ClInclude Include="SpriteChainElement.h" />
     <ClInclude Include="SpritePack.h" />
     <ClInclude Include="SpriteStructures.h" />

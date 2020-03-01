@@ -76,7 +76,7 @@ int Mushroom::getBuildType(Vector2f ounPos, Vector2f otherPos)
 std::vector<SpriteChainElement*> Mushroom::prepareSprites(long long elapsedTime)
 {
 	SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::mushroom, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
-	body->isBackground = true;
+	body->unscaled = true;
 
 	if (typeOfObject >= 1 && typeOfObject <= 3)
 		body->packTag = PackTag::birchGrove;
