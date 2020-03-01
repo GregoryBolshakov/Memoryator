@@ -3,8 +3,8 @@
 Nightmare2::Nightmare2(std::string objectName, Vector2f centerPosition) : Monster(objectName, centerPosition)
 {
 	conditionalSizeUnits = { 600, 600 };
-	defaultSpeed = 0.0005f;
-	speed = 0.0005f;
+	moveSystem.defaultSpeed = 0.0005f;
+	moveSystem.speed = 0.0005f;
 	radius = 120;
 	hitDistance = 120;
 	strength = 17;
@@ -46,23 +46,24 @@ void Nightmare2::doAttack(WorldObject* target)
 std::vector<SpriteChainElement*> Nightmare2::prepareSprites(long long elapsedTime)
 {
 	auto body = new SpriteChainElement(PackTag::nightmare2Stand, PackPart::full, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
+	shakeSpeed = -1;
 	animationSpeed = 10;
 
-	Side spriteSide = side;
-	Direction spriteDirection = lastDirection;
+	Side spriteSide = directionSystem.side;
+	Direction spriteDirection = directionSystem.lastDirection;
 
-	if (side == right)
+	if (directionSystem.side == right)
 	{
 		spriteSide = left;
 		body->mirrored = true;
 	}
-	if (lastDirection == Direction::RIGHT || lastDirection == Direction::UPRIGHT || lastDirection == Direction::DOWNRIGHT)
+	if (directionSystem.lastDirection == Direction::RIGHT || directionSystem.lastDirection == Direction::UPRIGHT || directionSystem.lastDirection == Direction::DOWNRIGHT)
 	{
-		spriteDirection = DirectionsSystem::cutRights(spriteDirection);
+		spriteDirection = DirectionSystem::cutRights(spriteDirection);
 		body->mirrored = true;
 	}
 
-	body->direction = DirectionsSystem::sideToDirection(spriteSide);
+	body->direction = DirectionSystem::sideToDirection(spriteSide);
 
 	switch (currentAction)
 	{
@@ -96,6 +97,8 @@ std::vector<SpriteChainElement*> Nightmare2::prepareSprites(long long elapsedTim
 	{
 		animationLength = 8;
 		body->packTag = PackTag::nightmare2Move;
+		if (currentSprite[0] == 2 || currentSprite[0] == 6)
+			shakeSpeed = 0;
 		break;
 	}
 	default:;

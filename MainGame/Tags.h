@@ -16,13 +16,13 @@ enum class PackTag
     empty = 0, heroAbsorb = 1, heroHit = 2, heroMove = 3, heroPick = 4, heroRoll = 5, heroStand = 6, heroThrow = 7,
     interfaceElements = 8, locations = 9, darkWoods = 10, birchGrove = 11, swampyTrees = 12, craftObjects = 13,
 	inventory = 14, icons = 15, book = 16, hare = 17, nightmare1 = 18, nightmare2Stand = 20,
-	nightmare2Move = 21, nightmare2Hit = 22
+	nightmare2Move = 21, nightmare2Hit = 22, deer = 23
 };
 
 enum class PackPart
 {
 	full = 101, body = 102, legs = 103, lines = 104, // creature's parts
-	stand = 1, move = 2, trap = 3, hit = 4, // action's parts
+	stand = 1, move = 2, trap = 3, hit = 4, hunt = 5, // action's parts
 	ground = 201, tree = 202, bush = 203, log = 204, mushroom = 205, path = 206, plant = 207, rock = 208, stump = 209,
 	decor = 210, roof = 211, lake = 212, root = 213, flower = 213,// biome's parts
 	bookLittle = 301, crossButton = 302, menu = 303, // interface's parts
@@ -44,7 +44,7 @@ enum class ButtonTag { playTag = 0, continueTag = 1, newRunTag = 2, settingsTag 
 	heroBag = 201
 };
 
-enum Actions { directHit = 2, relax = 3, combatState = 4, move = 5, dead = 6, commonHit = 9, moveHit = 10, dropping = 11, transitionToEnotherWorld = 12,
+enum Actions { directHit = 2, relax = 3, combatState = 4, move = 5, dead = 6, moveSlowly = 7, commonHit = 9, moveHit = 10, dropping = 11, transitionToEnotherWorld = 12,
 	open = 13, absorbs = 14, grab = 15, builds = 16, jerking = 17, moveEnd = 18, upFlap = 30, leftFlap = 31, rightFlap = 32, startFlap = 33, stopFlap = 34, throwNoose = 35 };
 
 enum Side { up = 1, right = 2, down = 3, left = 4 };

@@ -3,8 +3,8 @@
 Nightmare3::Nightmare3(std::string objectName, Vector2f centerPosition) : Monster(objectName, centerPosition)
 {
 	conditionalSizeUnits = { 600, 600 };
-	defaultSpeed = 0.0003f;
-	speed = 0.0005f;
+	moveSystem.defaultSpeed = 0.0003f;
+	moveSystem.speed = 0.0005f;
 	radius = 120;
 	hitDistance = 120;
 	strength = 25;

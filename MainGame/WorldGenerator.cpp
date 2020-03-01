@@ -139,8 +139,8 @@ void WorldGenerator::inBlockGenerate(int blockIndex)
 			}
 
 	std::sort(roomedBlocksContent.begin(), roomedBlocksContent.end(), cmpByChance);
-	
-	IntRect blockTransform = IntRect(staticGrid->getPointByIndex(blockIndex).x, staticGrid->getPointByIndex(blockIndex).y, Vector2f(blockSize).x, Vector2f(blockSize).y);
+
+	const IntRect blockTransform = IntRect(staticGrid->getPointByIndex(blockIndex).x, staticGrid->getPointByIndex(blockIndex).y, Vector2f(blockSize).x, Vector2f(blockSize).y);
 	generateGround(blockIndex);
 
 	//block filling
@@ -252,7 +252,7 @@ void WorldGenerator::perimeterGeneration(int offset)
 	const Vector2f worldUpperLeft(int(characterPosition.x - (screenSize.x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)), int(characterPosition.y - (screenSize.y / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)));
 	const Vector2f worldBottomRight(int(characterPosition.x + (screenSize.x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)), int(characterPosition.y + (screenSize.y / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)));
 
-	if (focusedObject->getDirection() != Direction::STAND)
+	if (focusedObject->getDirectionSystem().direction != Direction::STAND)
 	{
 		for (auto& block : staticGrid->getBlocksAround(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y, offset))
 		{

@@ -102,7 +102,7 @@ std::vector<SpriteChainElement*> Grass::prepareSprites(long long elapsedTime)
 {
 	std::vector<SpriteChainElement*> result = {};
 	SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::plant, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
-	body->isBackground = true;
+	body->unscaled = true;
 
 	if (typeOfObject >= 1 && typeOfObject <= 8)
 		body->packTag = PackTag::birchGrove;

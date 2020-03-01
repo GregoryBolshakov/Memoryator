@@ -3,8 +3,8 @@
 Nightmare1::Nightmare1(std::string objectName, Vector2f centerPosition) : Monster(objectName, centerPosition)
 {
 	conditionalSizeUnits = { 375, 375 };
-	defaultSpeed = 0.0005f;
-	speed = 0.0005f;
+	moveSystem.defaultSpeed = 0.0005f;
+	moveSystem.speed = 0.0005f;
 	radius = 90;
 	hitDistance = 70;
 	strength = 10;
@@ -49,21 +49,21 @@ std::vector<SpriteChainElement*> Nightmare1::prepareSprites(long long elapsedTim
 	auto body = new SpriteChainElement(PackTag::nightmare1, PackPart::stand, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	animationSpeed = 10;
 
-	Side spriteSide = side;
-	Direction spriteDirection = lastDirection;
+	Side spriteSide = directionSystem.side;
+	Direction spriteDirection = directionSystem.lastDirection;
 
-	if (side == right)
+	if (directionSystem.side == right)
 	{
 		spriteSide = left;
 		body->mirrored = true;
 	}
-	if (lastDirection == Direction::RIGHT || lastDirection == Direction::UPRIGHT || lastDirection == Direction::DOWNRIGHT)
+	if (directionSystem.lastDirection == Direction::RIGHT || directionSystem.lastDirection == Direction::UPRIGHT || directionSystem.lastDirection == Direction::DOWNRIGHT)
 	{
-		spriteDirection = DirectionsSystem::cutRights(spriteDirection);
+		spriteDirection = DirectionSystem::cutRights(spriteDirection);
 		body->mirrored = true;
 	}
 
-	body->direction = DirectionsSystem::sideToDirection(spriteSide);
+	body->direction = DirectionSystem::sideToDirection(spriteSide);
 
 	switch (currentAction)
 	{

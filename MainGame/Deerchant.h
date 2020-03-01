@@ -31,6 +31,7 @@ public:
 	void stopping(bool doStand = false, bool forgetBoundTarget = false, bool offUnsealInventory = false);
 	void calculateSpeedLineDirection(Direction lastDirection = Direction::STAND, Direction direction = Direction::STAND);
 	void changeAction(Actions newAction, bool resetSpriteNumber, bool rememberLastAction) override;
+	void changeMovePositionToRoute(Vector2f newPosition) override { if (currentAction != jerking) movePosition = newPosition; };
 	Vector2f getBeltPosition() const;
 
 	void jerk(float power, float deceleration, Vector2f destinationPoint = Vector2f(-1, -1)) override;

@@ -12,6 +12,9 @@ WorldObject::WorldObject(std::string objectName, Vector2f centerPosition)
 	currentSprite[0] = 1;
 }
 
+WorldObject::~WorldObject()
+= default;
+
 void WorldObject::setTextureSize(Vector2f textureSize)
 {
 	textureBox.width = textureSize.x;
@@ -25,9 +28,9 @@ void WorldObject::setTextureSize(Vector2f textureSize)
 	initPedestal();
 }
 
-Vector2f WorldObject::getScaleRatio()
+Vector2f WorldObject::getScaleRatio() const
 {
-	return Vector2f (float(conditionalSizeUnits.x) / originalTextureBox.width, float(conditionalSizeUnits.y) / originalTextureBox.height);
+	return { float(conditionalSizeUnits.x) / originalTextureBox.width, float(conditionalSizeUnits.y) / originalTextureBox.height };
 }
 
 void WorldObject::cancelMirroring()
@@ -75,13 +78,4 @@ void WorldObject::onSpriteChange()
 	return;
 }
 
-WorldObject::~WorldObject()
-{
-
-}
-
-float WorldObject::getMaxHealthPointValue()
-{
-	return maxHealthPointValue;
-}
 

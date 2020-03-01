@@ -49,7 +49,7 @@ void WorldHandler::runWorldGenerator()
 	brazier = dynamic_cast<Brazier*>(staticGrid.getItemByName("brazier"));
 	//brazier->linkWithBuildSystem(&buildSystem);
 	worldGenerator.rememberedBlocks = { { staticGrid.getIndexByPoint(brazier->getPosition().x, brazier->getPosition().y), true } };
-	cameraPosition = Vector2f(focusedObject->getPosition().x + Helper::GetScreenSize().x * camOffset.x, focusedObject->getPosition().y + Helper::GetScreenSize().y * camOffset.y);
+	cameraSystem.position = Vector2f(focusedObject->getPosition().x + Helper::GetScreenSize().x * CameraSystem::camOffset.x, focusedObject->getPosition().y + Helper::GetScreenSize().y * CameraSystem::camOffset.y);
 
 	const auto hero = dynamic_cast<Deerchant*>(focusedObject);
 	inventorySystem.inventoryBounding(&hero->bags);
@@ -231,8 +231,8 @@ void WorldHandler::clearWorld()
 void WorldHandler::setTransparent(std::vector<WorldObject*>& visibleItems, long long elapsedTime)
 {
 	mouseDisplayName = "";
-	Vector2f mousePos = Vector2f((Mouse::getPosition().x - Helper::GetScreenSize().x / 2 + cameraPosition.x*worldGenerator.scaleFactor) / worldGenerator.scaleFactor,
-		(Mouse::getPosition().y - Helper::GetScreenSize().y / 2 + cameraPosition.y*worldGenerator.scaleFactor) / worldGenerator.scaleFactor);
+	Vector2f mousePos = Vector2f((Mouse::getPosition().x - Helper::GetScreenSize().x / 2 + cameraSystem.position.x*worldGenerator.scaleFactor) / worldGenerator.scaleFactor,
+		(Mouse::getPosition().y - Helper::GetScreenSize().y / 2 + cameraSystem.position.y*worldGenerator.scaleFactor) / worldGenerator.scaleFactor);
 
 	float minCapacity = 1e6f, minDistance = 1e6f;
 
@@ -401,26 +401,6 @@ void WorldHandler::setItemFromBuildSystem()
 	}
 }
 
-void WorldHandler::makeCameraShake(float power)
-{
-	cameraShakeVector = Vector2f(int(rand() % 60 - 30), int(rand() % 60 - 30));
-	if (cameraShakeVector == Vector2f(0, 0))
-		cameraShakeVector = { 1, 1 };
-	cameraShakeDuration = 2e5;
-}
-
-void WorldHandler::cameraShakeInteract(long long elapsedTime)
-{
-	if (cameraShakeDuration > 0)
-	{
-		const float k = cameraShakePower * elapsedTime / sqrt(pow(cameraShakeVector.x, 2) + pow(cameraShakeVector.y, 2));
-		cameraPosition.x += cameraShakeVector.x * k; cameraPosition.y += cameraShakeVector.y * k;
-		cameraShakeDuration -= elapsedTime;
-	}
-	else
-		cameraShakeDuration = 0;
-}
-
 void WorldHandler::onMouseUp(int currentMouseButton)
 {	
 	if (mouseDisplayName == "Set pedestal")
@@ -431,8 +411,8 @@ void WorldHandler::onMouseUp(int currentMouseButton)
 	if (pedestalController.isRunning())
 		return;
 	const Vector2i mousePos = Mouse::getPosition();
-	Vector2f mouseWorldPos = Vector2f((mousePos.x - Helper::GetScreenSize().x / 2 + cameraPosition.x*worldGenerator.scaleFactor) / worldGenerator.scaleFactor,
-		(mousePos.y - Helper::GetScreenSize().y / 2 + cameraPosition.y*worldGenerator.scaleFactor) / worldGenerator.scaleFactor);
+	Vector2f mouseWorldPos = Vector2f((mousePos.x - Helper::GetScreenSize().x / 2 + cameraSystem.position.x*worldGenerator.scaleFactor) / worldGenerator.scaleFactor,
+		(mousePos.y - Helper::GetScreenSize().y / 2 + cameraSystem.position.y*worldGenerator.scaleFactor) / worldGenerator.scaleFactor);
 	
 	inventorySystem.onMouseUp();
 
@@ -529,7 +509,8 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event e
 					break;
 
 				dynamicItem->route.erase(dynamicItem->route.begin());
-				routeMicroBlock = dynamicItem->route[0];
+				if (!dynamicItem->route.empty())
+					routeMicroBlock = dynamicItem->route[0];
 			}
 			dynamicItem->changeMovePositionToRoute(Vector2f(routeMicroBlock.first * microblockSize.x, routeMicroBlock.second * microblockSize.y));
 		}
@@ -553,13 +534,10 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event e
 		}
 		for (auto& otherStaticItem : localStaticItems)
 			dynamicItem->behaviorWithStatic(otherStaticItem, elapsedTime);
-		//--------						
+		//--------
 
-		if (dynamicItem->doShake)
-		{
-			makeCameraShake();
-			dynamicItem->doShake = false;
-		}
+		if (dynamicItem->shakeSpeed != -1)
+			cameraSystem.makeShake(4, dynamicItem->shakeSpeed);
 
 		auto newPosition = dynamicItem->doMove(elapsedTime);
 
@@ -569,16 +547,16 @@ void WorldHandler::interact(RenderWindow& window, long long elapsedTime, Event e
 		//newPosition = dynamicItem->doSlipOffDynamic(newPosition, localDynamicItems, height, elapsedTime);
 
 		if (!fixedClimbingBeyond(newPosition))
-			newPosition = dynamicItem->getPosition();				
+			newPosition = dynamicItem->getPosition();
 		dynamicItem->setPosition(newPosition);
-		dynamicGrid.updateItemPosition(dynamicItem->getName(), newPosition.x, newPosition.y);		
+		dynamicGrid.updateItemPosition(dynamicItem->getName(), newPosition.x, newPosition.y);
 	}
 
 	//if (focusedObject->getCurrentAction() == builds)
 		setItemFromBuildSystem();
 
 	//buildSystem.setHeldItem(inventorySystem.getHeldItem()->lootInfo);
-	buildSystem.interact(cameraPosition, worldGenerator.scaleFactor);
+	buildSystem.interact(cameraSystem.position, worldGenerator.scaleFactor);
 	inventorySystem.interact(elapsedTime);
 	pedestalController.interact(elapsedTime, event);
 	//-------------------
@@ -630,11 +608,13 @@ std::vector<SpriteChainElement*> WorldHandler::prepareSprites(long long elapsedT
 
 	const auto screenSize = Helper::GetScreenSize();
 	const auto screenCenter = Vector2f(screenSize.x / 2, screenSize.y / 2);
-	cameraPosition.x += (focusedObject->getPosition().x + Helper::GetScreenSize().x * camOffset.x - cameraPosition.x) * (focusedObject->getSpeed() * elapsedTime) / maxCameraDistance.x;
-	cameraPosition.y += (focusedObject->getPosition().y + Helper::GetScreenSize().y * camOffset.y - cameraPosition.y) * (focusedObject->getSpeed() * elapsedTime) / maxCameraDistance.y;
-	cameraShakeInteract(elapsedTime);
-    worldUpperLeft = Vector2f(int(cameraPosition.x - (screenCenter.x + extra.x) / worldGenerator.scaleFactor), int(cameraPosition.y - (screenCenter.y + extra.y) / worldGenerator.scaleFactor));
-	worldBottomRight = Vector2f(int(cameraPosition.x + (screenCenter.x + extra.x) / worldGenerator.scaleFactor), int(cameraPosition.y + (screenCenter.y + extra.y) / worldGenerator.scaleFactor));
+
+	cameraSystem.position.x += (focusedObject->getPosition().x + Helper::GetScreenSize().x * CameraSystem::camOffset.x - cameraSystem.position.x) * (focusedObject->getMoveSystem().speed * elapsedTime) / CameraSystem::maxCameraDistance.x;
+	cameraSystem.position.y += (focusedObject->getPosition().y + Helper::GetScreenSize().y * CameraSystem::camOffset.y - cameraSystem.position.y) * (focusedObject->getMoveSystem().speed * elapsedTime) / CameraSystem::maxCameraDistance.y;
+	cameraSystem.shakeInteract(elapsedTime);
+
+    worldUpperLeft = Vector2f(int(cameraSystem.position.x - (screenCenter.x + extra.x) / worldGenerator.scaleFactor), int(cameraSystem.position.y - (screenCenter.y + extra.y) / worldGenerator.scaleFactor));
+	worldBottomRight = Vector2f(int(cameraSystem.position.x + (screenCenter.x + extra.x) / worldGenerator.scaleFactor), int(cameraSystem.position.y + (screenCenter.y + extra.y) / worldGenerator.scaleFactor));
     if (worldUpperLeft.x < 0)
 		worldUpperLeft.x = 0;
 	if (worldUpperLeft.y < 0)
@@ -643,6 +623,7 @@ std::vector<SpriteChainElement*> WorldHandler::prepareSprites(long long elapsedT
 		worldBottomRight.x = width;
 	if (worldBottomRight.y > height)
 		worldBottomRight.y = height;
+
     auto localStaticItems = staticGrid.getItems(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y);
 	auto localDynamicItems = dynamicGrid.getItems(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y);
 

@@ -9,8 +9,8 @@ Owl::Owl(const std::string objectName, Vector2f centerPosition) : NeutralMob(obj
 	conditionalSizeUnits = { 280, 200 };
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
-	defaultSpeed = 0.0006f;
-	speed = 0.0006f;
+	moveSystem.defaultSpeed = 0.0006f;
+	moveSystem.speed = 0.0006f;
 	animationSpeed = 0.0008f;
 	animationLength = 8;
 	radius = 70;
@@ -23,7 +23,7 @@ Owl::Owl(const std::string objectName, Vector2f centerPosition) : NeutralMob(obj
 	timeForNewHit = 1000000;
 	toSaveName = "owl";
 	tag = Tag::owl;
-	canCrashIntoStatic = false;
+	moveSystem.canCrashIntoStatic = false;
 	zCoord = 10;
 }
 
@@ -86,7 +86,7 @@ void Owl::behavior(long long elapsedTime)
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);
-		direction = Direction::STAND;
+		directionSystem.direction = Direction::STAND;
 		return;
 	}
 
@@ -110,12 +110,12 @@ void Owl::behavior(long long elapsedTime)
 			{				
 				changeAction(move, false, true);
 				movePosition = nearestTreeCasted->getOwlBase();
-				side = calculateSide(movePosition, elapsedTime);
+				directionSystem.side = DirectionSystem::calculateSide(position, movePosition, elapsedTime);
 				return;
 			}
 
 		changeAction(relax, true, true);
-		direction = Direction::STAND;
+		directionSystem.direction = Direction::STAND;
 		movePosition = position;
 		return;
 	}
@@ -123,11 +123,11 @@ void Owl::behavior(long long elapsedTime)
 	// bouncing to a trap
 	if (boundTarget && boundTarget->tag == Tag::fern)
 	{
-		side = calculateSide(boundTarget->getPosition(), elapsedTime);
+		directionSystem.side = DirectionSystem::calculateSide(position, boundTarget->getPosition(), elapsedTime);
 		if (Helper::getDist(position, boundTarget->getPosition()) <= radius)
 		{
 			const auto trap = dynamic_cast<Fern*>(boundTarget);
-			if (side == right)
+			if (directionSystem.side == right)
 				mirrored = true;
 			else
 				mirrored = false;
@@ -146,10 +146,10 @@ void Owl::behavior(long long elapsedTime)
 	// runaway from enemy
 	if (boundTarget && boundTarget->tag == Tag::hero)
 	{
-		float distanceToTarget = Helper::getDist(this->position, boundTarget->getPosition());
-		side = calculateSide(movePosition, elapsedTime);
-		speed = std::max(defaultSpeed, (defaultSpeed * 10) * (1 - (Helper::getDist(position, boundTarget->getPosition()) / sightRange * 1.5f)));
-		animationSpeed = std::max(0.0008f, 0.0008f * speed / defaultSpeed);
+		const float distanceToTarget = Helper::getDist(this->position, boundTarget->getPosition());
+		directionSystem.side = DirectionSystem::calculateSide(position, movePosition, elapsedTime);
+		moveSystem.speed = std::max(moveSystem.defaultSpeed, (moveSystem.defaultSpeed * 10) * (1 - (Helper::getDist(position, boundTarget->getPosition()) / sightRange * 1.5f)));
+		animationSpeed = std::max(0.0008f, 0.0008f * moveSystem.speed / moveSystem.defaultSpeed);
 		if (distanceToTarget <= sightRange)
 		{
 			changeAction(move, false, true);

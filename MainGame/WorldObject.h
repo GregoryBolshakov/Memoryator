@@ -33,16 +33,14 @@ class WorldObject
 public:
 	WorldObject(std::string objectName, Vector2f centerPosition);
 	virtual ~WorldObject();
-	int getZCoords() { return zCoord; }
-	int getType() { return typeOfObject; }
-	int getVarietyOfTypes() { return varietyOfTypes; }
-	float getHealthPoint() { return healthPoint; }
-	float getMaxHealthPointValue();
+	int getZCoords() const { return zCoord; }
+	int getType() const { return typeOfObject; }
+	int getVarietyOfTypes() const { return varietyOfTypes; }
+	float getHealthPoint() const { return healthPoint; }
+	float getMaxHealthPointValue() const { return maxHealthPointValue; };
 	bool getDeletePromise() const { return deletePromise; }
 	bool getMirroredState() const { return mirrored; }
-	void manuallyDisableMirroring() { mirrored = false; }
-	void cancelMirroring();
-	float getRadius() const { return radius; }
+	float getRadius() const { return radius; }	
 	int getPermissibleDistance() const { return permissibleDistance; }
 	std::string getToSaveName() const { return toSaveName; }
 	std::string getName() const { return name; }
@@ -53,7 +51,7 @@ public:
 	Vector2f *getPtrPosition() { return &position; }
 	Vector2f getTextureSize() const { return { textureBox.width, textureBox.height }; }
 	Vector2f getTextureOffset() const { return { textureBoxOffset.x, textureBoxOffset.y }; }
-	Vector2f getScaleRatio();
+	Vector2f getScaleRatio() const;
 	Vector2f getConditionalSizeUnits() const { return conditionalSizeUnits; }
 	Vector2f getMicroBlockCheckAreaBounds() const { return microBlockCheckAreaBounds; }
 	std::vector<Vector2i> getLockedMicroBlocks() const { return lockedMicroBlocks; }
@@ -63,7 +61,8 @@ public:
 	State getState() const { return state; }	
 	std::pair<std::stack<birthStaticInfo>, std::stack<birthDynamicInfo>> getBirthObjects() { return std::make_pair(birthStatics, birthDynamics); }
 	
-
+	void manuallyDisableMirroring() { mirrored = false; }
+	void cancelMirroring();
 	void clearBirthStack() { birthStatics = std::stack<birthStaticInfo>(); birthDynamics = std::stack<birthDynamicInfo>(); }
 	void setPosition(Vector2f newPosition);
 	void setHealthPoint(float healthPoint) { this->healthPoint = healthPoint; }
@@ -102,7 +101,7 @@ protected:
 	Vector2f conditionalSizeUnits;	
 	Vector2f microBlockCheckAreaBounds = { 0, 0 };
 	Vector2f position = { 0, 0 };
-	float radius, permissibleDistance = 0;
+	float radius = 0, permissibleDistance = 0;
 	State state = common;
 	std::stack<birthStaticInfo> birthStatics;
 	std::stack<birthDynamicInfo> birthDynamics;

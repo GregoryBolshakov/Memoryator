@@ -22,7 +22,7 @@ private:
 	Vector2f ownerPos = { 0, 0 };
 	Vector2f ownerGlobalBounds = { 0, 0 };
 public:
-	Noose(std::string objectName, Vector2f centerPosition, WorldObject* owner);
+	Noose(const std::string& objectName, Vector2f centerPosition, WorldObject* owner);
 	~Noose();
 	Vector2f calculateTextureOffset() override;
 	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;

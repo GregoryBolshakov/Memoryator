@@ -201,7 +201,13 @@
     <ClCompile Include="TextChainElement.cpp">
       <Filter>Systems\DrawSystem</Filter>
     </ClCompile>
-    <ClCompile Include="DirectionsSystem.cpp">
+    <ClCompile Include="CameraSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>
@@ -410,7 +416,13 @@
     <ClInclude Include="TextChainElement.h">
       <Filter>Systems\DrawSystem</Filter>
     </ClInclude>
-    <ClInclude Include="DirectionsSystem.h">
+    <ClInclude Include="CameraSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
   </ItemGroup>
