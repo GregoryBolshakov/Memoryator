@@ -39,8 +39,8 @@ int main() {
 		err() << "Error creating renderer texture." << std::endl;
 		return EXIT_FAILURE;
 	}
-	auto texture = surface.getTexture();
-	auto sprite = Sprite(texture);
+	auto visual_effect_texture = surface.getTexture();
+	auto visual_effect_sprite = Sprite(visual_effect_texture);
 
 	AmbientLight ambient_light(screenSize);
 	ambient_light.load();
@@ -125,29 +125,13 @@ int main() {
 			mainBook.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().getHeldItem(), hero->nearTheTable);
 			mainBook.interact();
 
-			//surface.clear();
 			mainWindow.clear(sf::Color::White);
 			
             drawSystem.draw(mainWindow, DrawSystem::UpcastChain(world.prepareSprites(time_micro_sec, true)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
             drawSystem.draw(mainWindow, DrawSystem::UpcastChain(world.prepareSprites(time_micro_sec, false)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
             
-            //drawSystem.draw(surface, DrawSystem::UpcastChain(world.prepareSprites(time, true)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
-            //drawSystem.draw(surface, DrawSystem::UpcastChain(world.prepareSprites(time, false)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
-
-			//surface.display();
-			//texture = surface.getTexture();
-			//
-			
-			//surface.draw(sprite, ambient_light.shader);
-
-			//surface.display();
-			//texture = surface.getTexture();
-
-			//mainWindow.clear(sf::Color::White);
-			//mainWindow.draw(sprite);
-
-			texture.update(mainWindow);
-			mainWindow.draw(sprite, ambient_light.shader);
+			//visual_effect_texture.update(mainWindow);
+			//mainWindow.draw(visual_effect_sprite, ambient_light.shader);
 
 			drawSystem.draw(mainWindow, DrawSystem::UpcastChain(world.getBuildSystem().prepareSprites(world.getStaticGrid(), world.getLocalTerrain(), &drawSystem.packsMap)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
 			TextSystem::drawString(world.getMouseDisplayName(), FontName::NormalFont, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), mainWindow, sf::Color(255, 255, 255, 180));
