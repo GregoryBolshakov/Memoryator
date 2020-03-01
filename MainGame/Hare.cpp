@@ -8,8 +8,8 @@ Hare::Hare(const std::string objectName, Vector2f centerPosition) : NeutralMob(o
 	conditionalSizeUnits = { 180, 150 };
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
-	defaultSpeed = 0.0003f;
-	speed = 0.0003f;	
+	moveSystem.defaultSpeed = 0.0003f;
+	moveSystem.speed = 0.0003f;
 	radius = 70;
 	strength = 10;
 	sightRange = 720;
@@ -71,13 +71,13 @@ void Hare::behavior(long long elapsedTime)
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);
-		direction = Direction::STAND;
+		directionSystem.direction = Direction::STAND;
 		return;
 	}
 
-	calculateDirection();
-	if (direction != Direction::STAND)
-		lastDirection = direction;
+	directionSystem.calculateDirection();
+	if (directionSystem.direction != Direction::STAND)
+		directionSystem.lastDirection = directionSystem.direction;
 
 	// first-priority actions
 	if (boundTarget)
@@ -110,7 +110,7 @@ void Hare::behavior(long long elapsedTime)
 	// bouncing to a trap
 	if (boundTarget->tag == Tag::hareTrap)
 	{
-		side = calculateSide(boundTarget->getPosition(), elapsedTime);
+		directionSystem.side = DirectionSystem::calculateSide(position, boundTarget->getPosition(), elapsedTime);
 		if (Helper::getDist(position, boundTarget->getPosition()) <= radius)
 		{
 			const auto trap = dynamic_cast<HareTrap*>(boundTarget);
@@ -129,9 +129,9 @@ void Hare::behavior(long long elapsedTime)
 	// runaway from enemy
 	if (boundTarget->tag == Tag::hero)
 	{
-		side = calculateSide(laxMovePosition, elapsedTime);
-		speed = std::max(defaultSpeed, (defaultSpeed * 10) * (1 - (Helper::getDist(position, boundTarget->getPosition()) / sightRange * 1.5f)));
-		animationSpeed = std::max(0.0004f, 0.0003f * speed / defaultSpeed);
+		directionSystem.side = DirectionSystem::calculateSide(position, laxMovePosition, elapsedTime);
+		moveSystem.speed = std::max(moveSystem.defaultSpeed, (moveSystem.defaultSpeed * 10) * (1 - (Helper::getDist(position, boundTarget->getPosition()) / sightRange * 1.5f)));
+		animationSpeed = std::max(0.0004f, 0.0003f * moveSystem.speed / moveSystem.defaultSpeed);
 		if (distanceToTarget <= sightRange)
 		{
 			changeAction(move, false, true);
@@ -145,7 +145,7 @@ void Hare::behavior(long long elapsedTime)
 				if (distanceToTarget >= sightRange * 1.5f)
 				{
 					changeAction(relax, true, true);
-					direction = Direction::STAND;
+					directionSystem.direction = Direction::STAND;
 					laxMovePosition = { -1, -1 };
 				}
 				else
@@ -198,21 +198,21 @@ std::vector<SpriteChainElement*> Hare::prepareSprites(long long elapsedTime)
 	auto body = new SpriteChainElement(PackTag::hare, PackPart::full, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	animationSpeed = 10;
 
-	Side spriteSide = side;
-	Direction spriteDirection = lastDirection;
+	Side spriteSide = directionSystem.side;
+	Direction spriteDirection = directionSystem.lastDirection;
 
-	if (side == right)
+	if (directionSystem.side == right)
 	{
 		spriteSide = left;
 		body->mirrored = true;
 	}
-	if (lastDirection == Direction::RIGHT || lastDirection == Direction::UPRIGHT || lastDirection == Direction::DOWNRIGHT)
+	if (directionSystem.lastDirection == Direction::RIGHT || directionSystem.lastDirection == Direction::UPRIGHT || directionSystem.lastDirection == Direction::DOWNRIGHT)
 	{
-		spriteDirection = DirectionsSystem::cutRights(spriteDirection);
+		spriteDirection = DirectionSystem::cutRights(spriteDirection);
 		body->mirrored = true;
 	}
 
-	body->direction = DirectionsSystem::sideToDirection(spriteSide);
+	body->direction = DirectionSystem::sideToDirection(spriteSide);
 
 	switch (currentAction)
 	{

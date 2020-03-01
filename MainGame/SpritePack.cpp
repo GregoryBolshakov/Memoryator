@@ -29,7 +29,8 @@ std::map<std::string, PackTag> SpritePack::mappedPackTag = {
 	{"nightmare1", PackTag::nightmare1},
 	{"nightmare2Stand", PackTag::nightmare2Stand},
 	{"nightmare2Move", PackTag::nightmare2Move}, 
-	{"nightmare2Hit", PackTag::nightmare2Hit}
+	{"nightmare2Hit", PackTag::nightmare2Hit},
+	{"deer", PackTag::deer}
 };
 
 std::map<std::string, PackPart> SpritePack::mappedPackPart = {
@@ -40,7 +41,8 @@ std::map<std::string, PackPart> SpritePack::mappedPackPart = {
 	{"stand", PackPart::stand},
 	{"move", PackPart::move}, 
 	{"trap", PackPart::trap}, 
-	{"hit", PackPart::hit}, // action's parts
+	{"hit", PackPart::hit}, 
+	{"hunt", PackPart::hunt}, // action's parts
     {"ground", PackPart::ground},
     {"tree", PackPart::tree},
     {"bush", PackPart::bush},

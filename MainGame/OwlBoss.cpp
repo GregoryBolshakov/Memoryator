@@ -7,7 +7,7 @@ OwlBoss::OwlBoss(std::string objectName, Vector2f centerPosition) : DynamicObjec
 	conditionalSizeUnits = { 600, 600 };
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
-	defaultSpeed = 0.0005f;
+	moveSystem.defaultSpeed = 0.0005f;
 	animationSpeed = 0.0005f;
 	animationLength = 1;
 	currentSprite[0] = 1;
@@ -19,7 +19,7 @@ OwlBoss::OwlBoss(std::string objectName, Vector2f centerPosition) : DynamicObjec
 	timeForNewHitself = 6e5;
 	timeForNewHit = 2000000;
 	routeGenerationAbility = false;
-	canCrashIntoDynamic = false;
+	moveSystem.canCrashIntoDynamic = false;
 
 	toSaveName = "monster";
 }
@@ -43,14 +43,14 @@ void OwlBoss::behavior(long long elapsedTime)
 		if (jerkTime > 0)
 		{
 			jerkTime -= elapsedTime;
-			speed = (jerkDistance / jerkDuration) * pow(jerkTime / jerkDuration, jerkDeceleration);
-			speed = std::max(defaultSpeed / jerkDeceleration, speed);
+			moveSystem.speed = (jerkDistance / jerkDuration) * pow(jerkTime / jerkDuration, jerkDeceleration);
+			moveSystem.speed = std::max(moveSystem.defaultSpeed / jerkDeceleration, moveSystem.speed);
 			//speed = defaultSpeed;
 		}
 		else
 		{
 			isJerking = false;
-			speed = defaultSpeed;
+			moveSystem.speed = moveSystem.defaultSpeed;
 		}
 	}
 	//----------------
@@ -97,14 +97,14 @@ void OwlBoss::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true, false);
-		direction = Direction::STAND;
+		directionSystem.direction = Direction::STAND;
 		return;
 	}
 
 	if (target->tag != Tag::hero)
 		return;
 
-	side = calculateSide(movePosition, elapsedTime);
+	directionSystem.side = DirectionSystem::calculateSide(position, movePosition, elapsedTime);
 
 	timeAfterHit += elapsedTime;
 
@@ -112,11 +112,11 @@ void OwlBoss::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
 	{
 		float dragCoefficient = 1.2f; // 1..2
 		float startPower = 1.1f; //1..2
-		this->speed = pow(this->defaultSpeed, dragCoefficient / (startPower + (timeAfterHit / timeForNewHit)));
+		moveSystem.speed = pow(moveSystem.defaultSpeed, dragCoefficient / (startPower + (timeAfterHit / timeForNewHit)));
 		if (Helper::getDist(this->position, target->getPosition()) / jerkDistance <= 0.2f)
-			this->speed *= Helper::getDist(this->position, target->getPosition()) / jerkDistance;
+			moveSystem.speed *= Helper::getDist(this->position, target->getPosition()) / jerkDistance;
 	}
-	this->speed = std::max(defaultSpeed / 10, speed);
+	moveSystem.speed = std::max(moveSystem.defaultSpeed / 10, moveSystem.speed);
 
 	if (flapsBeforeJerkCount > 1)
 	{
@@ -128,16 +128,16 @@ void OwlBoss::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
 	if (flapsBeforeJerkCount == 0)
 	{
 		changeAction(move, false, true);
-		this->speed = defaultSpeed;
+		moveSystem.speed = moveSystem.defaultSpeed;
 		jerkDistance = Helper::getDist(this->position, target->getPosition());
 	}
 
-	if (speed <= defaultSpeed * 3) //with greater acceleration the owl loses the ability to coordinate the route
+	if (moveSystem.speed <= moveSystem.defaultSpeed * 3) //with greater acceleration the owl loses the ability to coordinate the route
 	{
 		movePosition = Vector2f(target->getPosition().x + (target->getPosition().x - this->position.x) / 1.0f, target->getPosition().y + (target->getPosition().y - this->position.y) / 1.0f);
 	}
 
-	if (Helper::getDist(this->position, movePosition) / speed <= (40 / animationSpeed) * 3 && currentAction == move)
+	if (Helper::getDist(this->position, movePosition) / moveSystem.speed <= (40 / animationSpeed) * 3 && currentAction == move)
 	{
 		changeAction(stopFlap, true, false);
 	}
@@ -149,7 +149,7 @@ void OwlBoss::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
 		timeAfterHit = 0;
 		flapsBeforeJerkCount = rand() % 3 + 3;
 		changeAction(upFlap, true, true);
-		this->speed = defaultSpeed;
+		moveSystem.speed = moveSystem.defaultSpeed;
 	}
 	//-----------------
 }
@@ -178,7 +178,7 @@ void OwlBoss::jerk(float power, float deceleration, Vector2f destinationPoint)
 
 void OwlBoss::fightInteract(long long elapsedTime, DynamicObject* target)
 {
-	pushAway(elapsedTime);
+	moveSystem.pushAway(elapsedTime);
 }
 
 std::vector<SpriteChainElement*> OwlBoss::prepareSprites(long long elapsedTime)

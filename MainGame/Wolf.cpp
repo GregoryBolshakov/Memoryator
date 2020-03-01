@@ -7,7 +7,7 @@ Wolf::Wolf(std::string objectName, Vector2f centerPosition) : NeutralMob(objectN
 	conditionalSizeUnits = { 250, 200 };
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
-	speed = 0.0005f;
+	moveSystem.speed = 0.0005f;
 	animationSpeed = 0.0006f;
 	animationLength = 8;
 	radius = 70;
@@ -25,8 +25,7 @@ Wolf::Wolf(std::string objectName, Vector2f centerPosition) : NeutralMob(objectN
 }
 
 Wolf::~Wolf()
-{
-}
+= default;
 
 void Wolf::setTarget(DynamicObject& object)
 {

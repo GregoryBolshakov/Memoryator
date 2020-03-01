@@ -192,16 +192,16 @@ void DrawSystem::draw(RenderTarget& target, std::vector<DrawableChainElement*> d
 
 	for (auto drawableChainItem : drawableItems)
 	{
-		if (!drawableChainItem->initialized)
-			continue;
+		if (!drawableChainItem->initialized)		
+			continue;		
 
 		const auto spriteChainItem = dynamic_cast<SpriteChainElement*>(drawableChainItem);
 		if (spriteChainItem)
 			drawSpriteChainElement(target, spriteChainItem, cameraPosition, screenCenter, scale);
 
 		const auto textChainItem = dynamic_cast<TextChainElement*>(drawableChainItem);
-		if (textChainItem)
-			drawTextChainElement(target, textChainItem);
+		if (textChainItem)		
+			drawTextChainElement(target, textChainItem);	
 	}
 }
 

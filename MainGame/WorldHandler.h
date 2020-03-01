@@ -16,6 +16,7 @@
 #include "InventorySystem.h"
 #include "TimeSystem.h"
 #include "LightSystem.h"
+#include "CameraSystem.h"
 
 using namespace sf;
 
@@ -32,7 +33,7 @@ public:
 	Vector2f getWorldSize() { return Vector2f (width, height); }
 	GridList& getStaticGrid() { return staticGrid; }
 	GridList& getDynamicGrid() { return dynamicGrid; }
-	Vector2f getCameraPosition() { return cameraPosition; }
+	Vector2f getCameraPosition() { return cameraSystem.position; }
 	InventorySystem& getInventorySystem() { return inventorySystem; }
 	BuildSystem& getBuildSystem() { return buildSystem; }
 	TimeSystem& getTimeSystem() { return timeSystem; }
@@ -86,16 +87,11 @@ private:
 
 	// World base
 	float width, height;
-	Vector2f blockSize = { 1000, 1000 }, microblockSize = { 20, 20 };
-	Vector2f cameraPosition;
-	const Vector2f maxCameraDistance = Vector2f(250, 250), camOffset = { 0, -0.04f };
+	Vector2f blockSize = { 1000, 1000 }, microblockSize = { 20, 20 };	
 	std::string spriteNameFileDirectory = "Game/objects.txt";
 	const float heroToScreenRatio = 0.25f;
 	bool fixedClimbingBeyond(Vector2f &pos);
-	void makeCameraShake(float power = 0.0002f);
-	void cameraShakeInteract(long long elapsedTime);
-	Vector2f cameraShakeVector = { 0, 0 };
-	float cameraShakeDuration = 0, cameraShakePower = 0.0002f;
+	
 	WorldGenerator worldGenerator;
 
 	// Time logic
@@ -117,6 +113,7 @@ private:
 	EffectsSystem effectSystem;
 
 	// Systems
+	CameraSystem cameraSystem;
 	InventorySystem inventorySystem;
 	BuildSystem buildSystem;
 	TimeSystem timeSystem;
