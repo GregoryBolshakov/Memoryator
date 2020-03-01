@@ -3,7 +3,6 @@
 #define WORLDHANDLER_H
 
 #include <unordered_map>
-#include <ltbl/lighting/LightSystem.h>
 #include <windows.h>
 
 #include "Helper.h"
@@ -29,10 +28,9 @@ public:
 	void birthObjects();
 
 	// Getters
-	Vector2f getWorldSize() { return Vector2f (width, height); }
 	GridList& getStaticGrid() { return staticGrid; }
 	GridList& getDynamicGrid() { return dynamicGrid; }
-	Vector2f getCameraPosition() { return cameraPosition; }
+	Vector2f getCameraPosition() const { return cameraPosition; }
 	InventorySystem& getInventorySystem() { return inventorySystem; }
 	BuildSystem& getBuildSystem() { return buildSystem; }
 	TimeSystem& getTimeSystem() { return timeSystem; }
@@ -40,7 +38,7 @@ public:
 	LightSystem& getLightSystem() { return lightSystem; }
 	std::string getMouseDisplayName() const { return mouseDisplayName; }
 	WorldObject* getSelectedObject() const { return selectedObject; }
-	std::vector<WorldObject*> getLocalTerrain() { return localTerrain; }
+	std::vector<WorldObject*> getLocalTerrain() const { return localTerrain; }
 
 	// Save-load logic
 	void clearWorld();
@@ -49,7 +47,7 @@ public:
 	
 	// Base (draw, interact)
 	std::map<PackTag, SpritePack>* packsMap;
-	void interact(RenderWindow& window, long long elapsedTime, Event event);
+	void interact(Vector2f render_target_size, long long elapsedTime, Event event);
 	void handleEvents(Event& event);
     std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime, bool onlyBackground = false);
 	//void draw(RenderWindow& window, long long elapsedTime);
@@ -64,12 +62,12 @@ public:
 	// Zoom	
 	void setScaleFactor(int delta);
 	void scaleSmoothing();
-	float scaleDecrease, timeForScaleDecrease = 0;
+	float scaleDecrease{}, timeForScaleDecrease = 0;
 	Clock scaleDecreaseClock;
 
 	// Hero
 	DynamicObject* focusedObject = nullptr;
-	Brazier* brazier;
+	Brazier* brazier{};
 
 	// Events
 	void onMouseUp(int currentMouseButton);
@@ -84,35 +82,37 @@ private:
 	const std::string heroTextureName = "Game/worldSprites/hero/move/body/down/1.png";
 	bool isHeroBookVisible = false;
 
-	// World base
-	float width, height;
-	Vector2f blockSize = { 1000, 1000 }, microblockSize = { 20, 20 };
+	int width;
+	int height;
+	Vector2f blockSize = { 1000, 1000 };
+	Vector2f microBlockSize = { 20, 20 };
 	Vector2f cameraPosition;
 	const Vector2f maxCameraDistance = Vector2f(250, 250), camOffset = { 0, -0.04f };
 	std::string spriteNameFileDirectory = "Game/objects.txt";
-	const float heroToScreenRatio = 0.25f;
-	bool fixedClimbingBeyond(Vector2f &pos);
-	void makeCameraShake(float power = 0.0002f);
+	bool fixedClimbingBeyond(Vector2f &pos) const;
+	void makeCameraShake();
 	void cameraShakeInteract(long long elapsedTime);
 	Vector2f cameraShakeVector = { 0, 0 };
-	float cameraShakeDuration = 0, cameraShakePower = 0.0002f;
+	long long cameraShakeDuration = 0;
+	float cameraShakePower = 0.0002f;
 	WorldGenerator worldGenerator;
 
 	// Time logic
 	Clock timer;
-	int newNameId = 10;	
-	float timeForNewSave = 0, timeAfterSave = 6e7;
-	float timeForNewRoute = 3e5, timeAfterNewRoute = 3e5;
+	long long timeForNewSave = 0;
+	long long timeAfterSave = long(6e7);
+	long long timeForNewRoute = long(3e5);
+	long long timeAfterNewRoute = long(3e5);
 
 	// Selection logic
-	void setTransparent(std::vector<WorldObject*>& visibleItems, long long elapsedTime);
+	void setTransparent(std::vector<WorldObject*>& visibleItems);
 	std::string mouseDisplayName;
-	WorldObject *selectedObject = focusedObject;
+	WorldObject* selectedObject = focusedObject;
 
 	// Shaders
-	sf::Shader spiritWorldShader;
-	sf::Texture distortionMap;
-	void initShaders();
+	/*Shader spiritWorldShader;
+	Texture distortionMap;
+	void initShaders();*/
 
 	EffectsSystem effectSystem;
 

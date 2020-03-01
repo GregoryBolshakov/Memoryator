@@ -47,4 +47,4 @@ enum class ButtonTag { playTag = 0, continueTag = 1, newRunTag = 2, settingsTag 
 enum Actions { directHit = 2, relax = 3, combatState = 4, move = 5, dead = 6, commonHit = 9, moveHit = 10, dropping = 11, transitionToEnotherWorld = 12,
 	open = 13, absorbs = 14, grab = 15, builds = 16, jerking = 17, moveEnd = 18, upFlap = 30, leftFlap = 31, rightFlap = 32, startFlap = 33, stopFlap = 34, throwNoose = 35 };
 
-enum Side { up = 1, right = 2, down = 3, left = 4 };
+enum Side { undefined = 0, up = 1, right = 2, down = 3, left = 4 };

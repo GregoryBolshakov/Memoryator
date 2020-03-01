@@ -1,8 +1,7 @@
 #include "Button.h"
 
 Button::Button()
-{
-}
+= default;
 
 void Button::initialize(
     PackTag pack,

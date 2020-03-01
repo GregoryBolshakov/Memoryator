@@ -1,7 +1,7 @@
 #include "Roof.h"
 #include "Helper.h"
 
-Roof::Roof(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(objectName, centerPosition)
+Roof::Roof(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 4;
 	this->typeOfObject = typeOfObject;
@@ -9,11 +9,11 @@ Roof::Roof(std::string objectName, Vector2f centerPosition, int typeOfObject) : 
 	radius = 50;
 	animationSpeed = 10;
 	toSaveName = "roof";
-	setType(typeOfObject);
+	Roof::setType(typeOfObject);
 	tag = Tag::roof;
 }
 
-void Roof::setType(int typeOfObject)
+void Roof::setType(const int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
@@ -53,45 +53,45 @@ void Roof::initPedestal()
 	case 1:
 		focus1 = Vector2f(position.x - textureBox.width * 0.152f, position.y - textureBox.height * 0.021f);
 		focus2 = Vector2f(position.x + textureBox.width * 0.152f, position.y - textureBox.height * 0.021f);
-		ellipseSizeMultipliers[0] = { 1.5 };
+		ellipseSizeMultipliers[0] = { 1.5f };
 		break;
 	case 2:
 		focus1 = Vector2f(position.x - textureBox.width * 0.143f, position.y - textureBox.height * 0.021f);
 		focus2 = Vector2f(position.x + textureBox.width * 0.143f, position.y - textureBox.height * 0.021f);
-		ellipseSizeMultipliers[0] = { 1.55 };
+		ellipseSizeMultipliers[0] = { 1.55f };
 		break;
 	case 3:
 		focus1 = Vector2f(position.x - textureBox.width * 0.158f, position.y - textureBox.height * 0.037f);
 		focus2 = Vector2f(position.x + textureBox.width * 0.158f, position.y - textureBox.height * 0.037f);
-		ellipseSizeMultipliers[0] = { 1.62 };
+		ellipseSizeMultipliers[0] = { 1.62f };
 		break;
 	case 4:
 		focus1 = Vector2f(position.x - textureBox.width * 0.176f, position.y - textureBox.height * 0.032f);
 		focus2 = Vector2f(position.x + textureBox.width * 0.176f, position.y - textureBox.height * 0.032f);
-		ellipseSizeMultipliers[0] = { 1.55 };
+		ellipseSizeMultipliers[0] = { 1.55f };
 		break;
 	default:
 		focus1 = Vector2f(position.x - textureBox.width * 0.32f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.32f, position.y);
-		ellipseSizeMultipliers[0] = { 1.3 };
+		ellipseSizeMultipliers[0] = { 1.3f };
 		break;
 	}
 	initMicroBlocks();
 }
 
-Vector2f Roof::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f Roof::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Roof::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int Roof::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Roof::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Roof::prepareSprites(long long)
 {
-	SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::roof, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	const auto body = new SpriteChainElement(PackTag::darkWoods, PackPart::roof, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	return { body };
 }

@@ -1,13 +1,13 @@
 #include "HareTrap.h"
 #include "Helper.h"
 
-HareTrap::HareTrap(std::string objectName, Vector2f centerPosition, int typeOfObject) : PickedObject(objectName, centerPosition)
+HareTrap::HareTrap(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : PickedObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 1;
 	this->typeOfObject = typeOfObject;
 	radius = 100;
 	toSaveName = "hareTrap";
-	setType(typeOfObject);
+	HareTrap::setType(typeOfObject);
 	currentSprite[0] = 1;
 	id = Tag::hareTrap;
 	tag = Tag::hareTrap;
@@ -51,7 +51,7 @@ int HareTrap::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement*> HareTrap::prepareSprites(long long elapsedTime)
 {
-	SpriteChainElement* body = new SpriteChainElement(PackTag::craftObjects, PackPart::hareTrap, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	const auto body = new SpriteChainElement(PackTag::craftObjects, PackPart::hareTrap, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	body->isBackground = true;
 
 	return { body };

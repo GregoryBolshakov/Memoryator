@@ -1,7 +1,7 @@
 #include "Root.h"
 #include "Helper.h"
 
-Root::Root(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(objectName, centerPosition)
+Root::Root(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 5; // 1-5
 	this->typeOfObject = typeOfObject;
@@ -9,11 +9,11 @@ Root::Root(std::string objectName, Vector2f centerPosition, int typeOfObject) : 
 	radius = 50;
 	animationSpeed = 10;
 	toSaveName = "root";
-	setType(typeOfObject);
+	Root::setType(typeOfObject);
 	tag = Tag::root;
 }
 
-void Root::setType(int typeOfObject)
+void Root::setType(const int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
@@ -57,17 +57,17 @@ void Root::initPedestal()
 	case 1:
 		focus1 = Vector2f(position.x - textureBox.width * 0.229f, position.y - textureBox.height * 0.151f);
 		focus2 = Vector2f(position.x + textureBox.width * 0.229f, position.y - textureBox.height * 0.151f);
-		ellipseSizeMultipliers[0] = { 1.06 };
+		ellipseSizeMultipliers[0] = { 1.06f };
 		break;
 	case 2:
 		focus1 = Vector2f(position.x - textureBox.width * 0.288f, position.y - textureBox.height * 0.09f);
 		focus2 = Vector2f(position.x + textureBox.width * 0.288f, position.y - textureBox.height * 0.09f);
-		ellipseSizeMultipliers[0] = { 1.07 };
+		ellipseSizeMultipliers[0] = { 1.07f };
 		break;
 	case 3:
 		focus1 = Vector2f(position.x - textureBox.width * 0.367f, position.y - textureBox.height * 0.065f);
 		focus2 = Vector2f(position.x + textureBox.width * 0.367f, position.y - textureBox.height * 0.065f);
-		ellipseSizeMultipliers[0] = { 1.17 };
+		ellipseSizeMultipliers[0] = { 1.17f };
 		break;
 	case 4:
 		focus1 = Vector2f(position.x - textureBox.width * 0.311f, position.y);
@@ -88,19 +88,19 @@ void Root::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f Root::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f Root::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Root::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int Root::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Root::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Root::prepareSprites(long long)
 {
-	SpriteChainElement* body = new SpriteChainElement(PackTag::swampyTrees, PackPart::root, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	const auto body = new SpriteChainElement(PackTag::swampyTrees, PackPart::root, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	return { body };
 }

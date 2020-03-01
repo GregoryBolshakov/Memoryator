@@ -1,7 +1,7 @@
 #include "Lake.h"
 #include "Helper.h"
 
-Lake::Lake(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(objectName, centerPosition)
+Lake::Lake(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 4; // SwampyTrees: 1-4
 	this->typeOfObject = typeOfObject;
@@ -10,11 +10,11 @@ Lake::Lake(std::string objectName, Vector2f centerPosition, int typeOfObject) : 
 	animationSpeed = 10;
 	toSaveName = "lake";
 	isMultiEllipse = true;
-	setType(typeOfObject);
+	Lake::setType(typeOfObject);
 	tag = Tag::lake;
 }
 
-void Lake::setType(int typeOfObject)
+void Lake::setType(const int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
@@ -53,104 +53,104 @@ void Lake::initPedestal()
 		focus1 = Vector2f(position.x, position.y);
 		focus2 = Vector2f(position.x, position.y);
 
-		microEllipse.first = Vector2f(position.x - textureBox.width * 0.49, position.y + textureBox.height * 0.384);
-		microEllipse.second = Vector2f(position.x - textureBox.width * 0.0158, position.y + textureBox.height * 0.384);
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.49f, position.y + textureBox.height * 0.384f);
+		microEllipse.second = Vector2f(position.x - textureBox.width * 0.0158f, position.y + textureBox.height * 0.384f);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x - textureBox.width * 0.184, position.y + textureBox.height * 0.269);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.096, position.y + textureBox.height * 0.269);
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.184f, position.y + textureBox.height * 0.269f);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.096f, position.y + textureBox.height * 0.269f);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x - textureBox.width * 0.102, position.y + textureBox.height * 0.428);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.0549, position.y + textureBox.height * 0.428);
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.102f, position.y + textureBox.height * 0.428f);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.0549f, position.y + textureBox.height * 0.428f);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x + textureBox.width * 0.0222, position.y + textureBox.height * 0.159);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.352, position.y + textureBox.height * 0.159);
+		microEllipse.first = Vector2f(position.x + textureBox.width * 0.0222f, position.y + textureBox.height * 0.159f);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.352f, position.y + textureBox.height * 0.159f);
 		internalEllipses.push_back(microEllipse);
-		ellipseSizeMultipliers = { 1.06, 1.13, 1.26, 1.07, 1.16 };
+		ellipseSizeMultipliers = { 1.06f, 1.13f, 1.26f, 1.07f, 1.16f };
 		break;
 	case 2:
 		focus1 = Vector2f(position.x, position.y);
 		focus2 = Vector2f(position.x, position.y);
 
-		microEllipse.first = Vector2f(position.x - textureBox.width * 0.452, position.y - textureBox.height * 0.0536);
-		microEllipse.second = Vector2f(position.x - textureBox.width * 0.117, position.y - textureBox.height * 0.0536);
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.452f, position.y - textureBox.height * 0.0536f);
+		microEllipse.second = Vector2f(position.x - textureBox.width * 0.117f, position.y - textureBox.height * 0.0536f);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x - textureBox.width * 0.154, position.y + textureBox.height * 0.202);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.141, position.y + textureBox.height * 0.202);
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.154f, position.y + textureBox.height * 0.202f);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.141f, position.y + textureBox.height * 0.202f);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x + textureBox.width * 0.166, position.y + textureBox.height * 0.179);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.438, position.y + textureBox.height * 0.179);
+		microEllipse.first = Vector2f(position.x + textureBox.width * 0.166f, position.y + textureBox.height * 0.179f);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.438f, position.y + textureBox.height * 0.179f);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x - textureBox.width * 0.17, position.y - textureBox.height * 0.244);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.114, position.y - textureBox.height * 0.244);
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.17f, position.y - textureBox.height * 0.244f);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.114f, position.y - textureBox.height * 0.244f);
 		internalEllipses.push_back(microEllipse);
-		ellipseSizeMultipliers = { 1.45, 1.37, 1.38, 1.39 };
+		ellipseSizeMultipliers = { 1.45f, 1.37f, 1.38f, 1.39f };
 		break;
 	case 3:
 		focus1 = Vector2f(position.x, position.y);
 		focus2 = Vector2f(position.x, position.y);
 
-		microEllipse.first = Vector2f(position.x - textureBox.width * 0.463, position.y + textureBox.height * 0.601);
-		microEllipse.second = Vector2f(position.x - textureBox.width * 0.108, position.y + textureBox.height * 0.601);
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.463f, position.y + textureBox.height * 0.601f);
+		microEllipse.second = Vector2f(position.x - textureBox.width * 0.108f, position.y + textureBox.height * 0.601f);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x - textureBox.width * 0.145, position.y + textureBox.height * 0.759);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.15, position.y + textureBox.height * 0.759);
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.145f, position.y + textureBox.height * 0.759f);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.15f, position.y + textureBox.height * 0.759f);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x + textureBox.width * 0.175, position.y + textureBox.height * 0.242);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.392, position.y + textureBox.height * 0.242);
+		microEllipse.first = Vector2f(position.x + textureBox.width * 0.175f, position.y + textureBox.height * 0.242f);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.392f, position.y + textureBox.height * 0.242f);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x - textureBox.width * 0.16, position.y + textureBox.height * 0.426);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.155, position.y + textureBox.height * 0.426);
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.16f, position.y + textureBox.height * 0.426f);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.155f, position.y + textureBox.height * 0.426f);
 		internalEllipses.push_back(microEllipse);
-		ellipseSizeMultipliers = { 1.21, 1.11, 1.27, 1.3 };
+		ellipseSizeMultipliers = { 1.21f, 1.11f, 1.27f, 1.3f };
 		break;
 	case 4:
 		focus1 = Vector2f(position.x, position.y);
 		focus2 = Vector2f(position.x, position.y);
 
-		microEllipse.first = Vector2f(position.x - textureBox.width * 0.413, position.y + textureBox.height * 1.04);
-		microEllipse.second = Vector2f(position.x - textureBox.width * 0.066, position.y + textureBox.height * 1.04);
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.413f, position.y + textureBox.height * 1.04f);
+		microEllipse.second = Vector2f(position.x - textureBox.width * 0.066f, position.y + textureBox.height * 1.04f);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x - textureBox.width * 0.046, position.y + textureBox.height * 0.558);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.399, position.y + textureBox.height * 0.558);
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.046f, position.y + textureBox.height * 0.558f);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.399f, position.y + textureBox.height * 0.558f);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x + textureBox.width * 0.027, position.y + textureBox.height * 0.305);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.24, position.y + textureBox.height * 0.305);
+		microEllipse.first = Vector2f(position.x + textureBox.width * 0.027f, position.y + textureBox.height * 0.305f);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.24f, position.y + textureBox.height * 0.305f);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x + textureBox.width * 0.313, position.y + textureBox.height * 0.782);
-		microEllipse.second = Vector2f(position.x - textureBox.width * 0.428, position.y + textureBox.height * 0.782);
+		microEllipse.first = Vector2f(position.x + textureBox.width * 0.313f, position.y + textureBox.height * 0.782f);
+		microEllipse.second = Vector2f(position.x - textureBox.width * 0.428f, position.y + textureBox.height * 0.782f);
 		internalEllipses.push_back(microEllipse);
-		ellipseSizeMultipliers = { 1.19, 1.21, 1.53, 1.04 };
+		ellipseSizeMultipliers = { 1.19f, 1.21f, 1.53f, 1.04f };
 		break;
 	}
 	initMicroBlocks();
 }
 
-Vector2f Lake::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f Lake::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Lake::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int Lake::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Lake::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Lake::prepareSprites(long long)
 {
 	std::vector<SpriteChainElement*> result = {};
-	SpriteChainElement* body = new SpriteChainElement(PackTag::swampyTrees, PackPart::lake, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	const auto body = new SpriteChainElement(PackTag::swampyTrees, PackPart::lake, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 
 	result.push_back(body);
 

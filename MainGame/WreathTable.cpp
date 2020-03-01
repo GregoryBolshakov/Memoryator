@@ -1,16 +1,16 @@
-#include "WreathTable.h"
-#include "Helper.h"
 #include <fstream>
+
+#include "WreathTable.h"
 #include "ObjectInitializer.h"
 
-WreathTable::WreathTable(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(objectName, centerPosition)
+WreathTable::WreathTable(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 1;
 	this->typeOfObject = typeOfObject;
 	radius = 200;
 	plateRadius = 100;
 	toSaveName = "wreathTable";
-	setType(typeOfObject);
+	WreathTable::setType(typeOfObject);
 	mirrored = false;
 	initCraftRecipes();
 	tag = Tag::wreathTable;
@@ -33,7 +33,7 @@ void WreathTable::initPedestal()
 {
 	focus1 = Vector2f(position.x - textureBox.width / 4, position.y);
 	focus2 = Vector2f(position.x + textureBox.width / 4, position.y);
-	ellipseSizeMultipliers[0] = { 1.2 };
+	ellipseSizeMultipliers[0] = { 1.2f };
 	initMicroBlocks();
 }
 
@@ -58,7 +58,7 @@ void WreathTable::initCraftRecipes()
 	fin.close();
 }
 
-void WreathTable::resultAnalysis()
+void WreathTable::resultAnalysis() const
 {
 	if (craftResult == Tag::emptyCell)
 		return;
@@ -76,11 +76,11 @@ Tag WreathTable::checkCraftResult()
 		{
 			bool match = true;
 			for (auto ingredient : recipe)
-				if (currentCraft.count(ingredient.first) < ingredient.second)
+				if (currentCraft.count(ingredient.first) < unsigned(ingredient.second))
 				{
 					match = false;
-					continue;
 				}
+			
 			if (match)
 			{
 				//buildSystem->selectedObject = recipes.first;
@@ -113,7 +113,7 @@ int WreathTable::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement*> WreathTable::prepareSprites(long long elapsedTime)
 {
-	SpriteChainElement* body = new SpriteChainElement(PackTag::locations, PackPart::wreathTable, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	const auto body = new SpriteChainElement(PackTag::locations, PackPart::wreathTable, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	return { body };
 }

@@ -17,18 +17,18 @@ std::vector<std::pair<Tag, int>> HeroBag::testInventory =
 std::vector<std::pair<Tag, int>> HeroBag::emptyInventory =
 { {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0} };
 
-void HeroBag::initialize(Vector2f position, bool isSelectable, std::vector<std::pair<Tag, int>> inventory)
+void HeroBag::initialize(const Vector2f position, const bool isSelectable, std::vector<std::pair<Tag, int>> inventory)
 {
-	sizeClosed = Vector2f(Helper::GetScreenSize().x / 12, Helper::GetScreenSize().y / 6);
-	sizeOpen = Vector2f(Helper::GetScreenSize().x / 6, Helper::GetScreenSize().y / 3);
+	sizeClosed = Vector2f(Helper::GetScreenSize().x / 12.0f, Helper::GetScreenSize().y / 6.0f);
+	sizeOpen = Vector2f(Helper::GetScreenSize().x / 6.0f, Helper::GetScreenSize().y / 3.0f);
 
 	this->position = position;
 	lastMousePos = position;
 
-	this->isSelectable = isSelectable;	
+	this->isSelectable = isSelectable;
 
-	textureClosedOffset = Vector2f(sizeClosed.x / 2, sizeClosed.y / 1.7);
-	textureOpenOffset = Vector2f(sizeOpen.x / 2, sizeOpen.y / 1.7);
+	textureClosedOffset = Vector2f(sizeClosed.x / 2.0f, sizeClosed.y / 1.7f);
+	textureOpenOffset = Vector2f(sizeOpen.x / 2.0f, sizeOpen.y / 1.7f);
 
 	bagSpriteChain.ClosedBag->size = sizeClosed; bagSpriteChain.ClosedBagSelected->size = sizeClosed; bagSpriteChain.ClosedBagBig->size = sizeClosed;
 	bagSpriteChain.OpenedBag->size = sizeOpen; bagSpriteChain.OpenedBagSelected->size = sizeOpen;
@@ -47,12 +47,12 @@ void HeroBag::initialize(Vector2f position, bool isSelectable, std::vector<std::
 	this->selectionZoneOpenedOffset = Vector2f(0, -textureOpenOffset.y + sizeOpen.y * 0.15f);
 
 	if (inventory.empty())
-		inventory = emptyInventory;	
+		inventory = emptyInventory;
 
-	for (int i = 0; i < 7; i++)
+	for (auto i = 0; i < 7; i++)
 	{
 		cellsPos[i].x *= sizeOpen.x; cellsPos[i].y *= sizeOpen.y;
-		cells.push_back(createCell(Vector2f(position.x + cellsPos[i].x, position.y + cellsPos[i].y), inventory[i], SpritePack::iconSize.x / 2));
+		cells.push_back(createCell(Vector2f(position.x + cellsPos[i].x, position.y + cellsPos[i].y), inventory[i]));
 	}
 
 	// set sprites from pack
@@ -69,7 +69,7 @@ void HeroBag::initialize(Vector2f position, bool isSelectable, std::vector<std::
 	//----------------------
 }
 
-Cell HeroBag::createCell(Vector2f position, std::pair<Tag, int> content, float radius)
+Cell HeroBag::createCell(const Vector2f position, const std::pair<Tag, int> content)
 {
 	Cell cell;
 	cell.position = position;
@@ -77,9 +77,9 @@ Cell HeroBag::createCell(Vector2f position, std::pair<Tag, int> content, float r
 	return cell;
 }
 
-int HeroBag::getSelectedCell(Vector2f position)
+int HeroBag::getSelectedCell(const Vector2f position)
 {
-	for (int i = 0; i < cells.size(); i++)
+	for (auto i = 0u; i < cells.size(); i++)
 	{
 		if (Helper::getDist(position, cells[i].position) <= SpritePack::iconSize.x / 2)
 			return i;
@@ -87,22 +87,30 @@ int HeroBag::getSelectedCell(Vector2f position)
 	return -1;
 }
 
-float HeroBag::getRadius()
+float HeroBag::getRadius() const
 {
 	if (currentState == bagClosed)
 		return bagSpriteChain.ClosedBag->size.x / 2;
+
 	if (currentState == bagOpening)
 		return bagSpriteChain.ClosedBagSelected->size.x / 2;
+
 	if (currentState == bagOpen)
 		return bagSpriteChain.OpenedBag->size.x / 2;
+
 	return 0;
 }
 
 void HeroBag::drawCircuit(RenderWindow* window)
 {
-	for (int i = bagSpriteChain.OpenedBag->position.x; i <= bagSpriteChain.OpenedBag->position.x + bagSpriteChain.OpenedBag->size.x; i += 5)
+	const auto i_end = bagSpriteChain.OpenedBag->position.x + bagSpriteChain.OpenedBag->size.x;
+	const auto j_end = bagSpriteChain.OpenedBag->position.y + bagSpriteChain.OpenedBag->size.y;
+
+	auto i = bagSpriteChain.OpenedBag->position.x;
+	while (i <= i_end)
 	{
-		for (int j = bagSpriteChain.OpenedBag->position.y; j <= bagSpriteChain.OpenedBag->position.y + bagSpriteChain.OpenedBag->size.y; j += 5)
+		auto j = bagSpriteChain.OpenedBag->position.y;
+		while (j <= j_end)
 		{
 			if (getSelectedCell(Vector2f(i, j)) != -1)
 			{
@@ -112,13 +120,15 @@ void HeroBag::drawCircuit(RenderWindow* window)
 				rec.setFillColor(sf::Color::Red);
 				window->draw(rec);
 			}
+			j += 5.0f;
 		}
+		i += 5.0f;
 	}
 }
 
 void HeroBag::fixCells()
 {
-	for (int i = 0; i < cells.size(); i++)	
+	for (auto i = 0u; i < cells.size(); i++)
 		cells[i].position = Vector2f(position.x + cellsPos[i].x, position.y + cellsPos[i].y);
 }
 
@@ -143,30 +153,33 @@ void HeroBag::fixPos()
 		shiftVector.y = 0;
 }
 
-std::vector<std::pair<Tag, int>> HeroBag::cellsToInventory(std::vector<Cell> cells)
+std::vector<std::pair<Tag, int>> HeroBag::cellsToInventory(const std::vector<Cell>& cells)
 {
-	std::vector<std::pair<Tag, int>> ans;
-	for (auto&cell : cells)
-		ans.push_back({ cell.content.first, cell.content.second });
+	std::vector<std::pair<Tag, int>> ans(cells.size());
+	for (auto i = 0u; i < cells.size(); i++)
+	{
+		ans[i] = { cells[i].content.first, cells[i].content.second };
+	}
+
 	return ans;
 }
 
 bool HeroBag::canAfford(std::vector<std::pair<Tag, int>> recipe, std::vector<HeroBag>* bags, Cell* heldItem)
 {
-	for (auto&item : recipe)
+	for (auto& item : recipe)
 	{
 		if (heldItem != nullptr)
 		{
 			if (item.first == heldItem->content.first)
 				item.second -= heldItem->content.second;
 		}
-		for (auto&bag : *bags)
+		for (auto& bag : *bags)
 		{
 			if (item.second <= 0)
 				break;
-			for (int cnt = 0; cnt < bag.cells.size(); cnt++)
-				if (item.first == bag.cells[cnt].content.first)
-					item.second -= bag.cells[cnt].content.second;
+			for (auto& cell : bag.cells)
+				if (item.first == cell.content.first)
+					item.second -= cell.content.second;
 		}
 		if (item.second > 0)
 			return false;
@@ -176,7 +189,7 @@ bool HeroBag::canAfford(std::vector<std::pair<Tag, int>> recipe, std::vector<Her
 
 void HeroBag::takeItems(std::vector<std::pair<Tag, int>> recipe, std::vector<HeroBag>* bags, Cell* heldItem)
 {
-	for (auto&item : recipe)
+	for (auto& item : recipe)
 	{
 		if (heldItem != nullptr)
 		{
@@ -192,21 +205,21 @@ void HeroBag::takeItems(std::vector<std::pair<Tag, int>> recipe, std::vector<Her
 		}
 		for (auto& bag : *bags)
 		{
-			bool isBreak = true;
-			for (int cnt = 0; cnt < bag.cells.size(); cnt++)
-				if (item.first == bag.cells[cnt].content.first)
+			auto isBreak = true;
+			for (auto& cell : bag.cells)
+				if (item.first == cell.content.first)
 				{
-					if (item.second < bag.cells[cnt].content.second)
+					if (item.second < cell.content.second)
 					{
-						bag.cells[cnt].content.second -= item.second;
+						cell.content.second -= item.second;
 						item.second = 0;
 						isBreak = true;
 					}
 					else
 					{
-						item.second -= bag.cells[cnt].content.second;
-						bag.cells[cnt].content.second = 0;
-						bag.cells[cnt].content.first = Tag::emptyCell;
+						item.second -= cell.content.second;
+						cell.content.second = 0;
+						cell.content.first = Tag::emptyCell;
 					}
 				}
 			if (isBreak)
@@ -217,29 +230,26 @@ void HeroBag::takeItems(std::vector<std::pair<Tag, int>> recipe, std::vector<Her
 
 bool HeroBag::putItemsIn(std::vector<std::pair<Tag, int>>* loot, std::vector<HeroBag>* bags)
 {
-	bool result = true;
+	auto result = true;
 	for (auto& item : *loot)
 	{
 		for (auto& bag : *bags)
 		{
-			bool isBreak = false;
-			for (int cnt = 0; cnt < bag.cells.size(); cnt++)
-				if (item.first == bag.cells[cnt].content.first || bag.cells[cnt].content.first == Tag::emptyCell)
+			auto isBreak = false;
+			for (auto& cell : bag.cells)
+				if (item.first == cell.content.first || cell.content.first == Tag::emptyCell)
 				{
-					if (item.second <= (HeroBag::itemsMaxCount[item.first] - bag.cells[cnt].content.second))
+					if (item.second <= (itemsMaxCount[item.first] - cell.content.second))
 					{
-						bag.cells[cnt].content.second += item.second;
-						bag.cells[cnt].content.first = item.first;
+						cell.content.second += item.second;
+						cell.content.first = item.first;
 						item = std::make_pair(Tag::emptyCell, 0);
 						isBreak = true;
 						break;
 					}
-					else
-					{
-						item.second -= (HeroBag::itemsMaxCount[item.first] - bag.cells[cnt].content.second);
-						bag.cells[cnt].content.second = HeroBag::itemsMaxCount[item.first];
-						bag.cells[cnt].content.first = item.first;
-					}
+					item.second -= (itemsMaxCount[item.first] - cell.content.second);
+					cell.content.second = itemsMaxCount[item.first];
+					cell.content.first = item.first;
 				}
 			if (isBreak)
 				break;
@@ -252,29 +262,26 @@ bool HeroBag::putItemsIn(std::vector<std::pair<Tag, int>>* loot, std::vector<Her
 
 bool HeroBag::putItemIn(std::pair<Tag, int>* loot, std::vector<HeroBag>* bags)
 {
-	bool result = true;
+	auto result = true;
 
 	for (auto& bag : *bags)
 	{
-		bool isBreak = false;
-		for (int cnt = 0; cnt < bag.cells.size(); cnt++)
-			if (loot->first == bag.cells[cnt].content.first || bag.cells[cnt].content.first == Tag::emptyCell)
+		auto isBreak = false;
+		for (auto& cell : bag.cells)
+			if (loot->first == cell.content.first || cell.content.first == Tag::emptyCell)
 			{
-				if (loot->second <= (HeroBag::itemsMaxCount[loot->first] - bag.cells[cnt].content.second))
+				if (loot->second <= (itemsMaxCount[loot->first] - cell.content.second))
 				{
-					bag.cells[cnt].content.second += loot->second;
-					bag.cells[cnt].content.first = loot->first;
+					cell.content.second += loot->second;
+					cell.content.first = loot->first;
 					loot->first = Tag::emptyCell;
 					loot->second = 0;
 					isBreak = true;
 					break;
 				}
-				else
-				{
-					loot->second -= (HeroBag::itemsMaxCount[loot->first] - bag.cells[cnt].content.second);
-					bag.cells[cnt].content.second = HeroBag::itemsMaxCount[loot->first];
-					bag.cells[cnt].content.first = loot->first;
-				}
+				loot->second -= (itemsMaxCount[loot->first] - cell.content.second);
+				cell.content.second = itemsMaxCount[loot->first];
+				cell.content.first = loot->first;
 			}
 		if (isBreak)
 			break;
@@ -304,9 +311,9 @@ void HeroBag::mouseMove()
 	lastMousePos = Vector2f(Mouse::getPosition());
 }
 
-SpriteChainElement* HeroBag::prepareSprite(long long elapsedTime, std::map<PackTag, SpritePack>* packsMap)
+SpriteChainElement* HeroBag::prepareSprite(const long long elapsedTime, std::map<PackTag, SpritePack> * packsMap)
 {
-	const Vector2f screenCenter = Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2);
+	const auto screenCenter = Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2);
 	bagSpriteChain.ClosedBag->size = sizeClosed; bagSpriteChain.ClosedBagSelected->size = sizeClosed; bagSpriteChain.ClosedBagBig->size = sizeClosed;
 	bagSpriteChain.OpenedBag->size = sizeOpen; bagSpriteChain.OpenedBagSelected->size = sizeOpen;
 	bagSpriteChain.ClosedBag->offset = textureClosedOffset; bagSpriteChain.ClosedBagSelected->offset = textureClosedOffset; bagSpriteChain.ClosedBagBig->offset = textureClosedOffset;
@@ -318,19 +325,25 @@ SpriteChainElement* HeroBag::prepareSprite(long long elapsedTime, std::map<PackT
 	{
 		bagSpriteChain.OpenedBag->offset = textureOpenOffset;
 		bagSpriteChain.OpenedBagSelected->offset = textureOpenOffset;
-		if (readyToChangeState)			
-			return bagSpriteChain.OpenedBagSelected;		
-		return bagSpriteChain.OpenedBag;		
+		
+		if (readyToChangeState)
+			return bagSpriteChain.OpenedBagSelected;
+		
+		return bagSpriteChain.OpenedBag;
 	}
 
 	if (currentState == bagClosed)
 	{
 		bagSpriteChain.ClosedBag->offset = textureClosedOffset;
 		bagSpriteChain.ClosedBagSelected->offset = textureClosedOffset;
+		
 		if (readyToChangeState)
-			return bagSpriteChain.ClosedBagSelected;		
-		return bagSpriteChain.ClosedBag;		
+			return bagSpriteChain.ClosedBagSelected;
+		
+		return bagSpriteChain.ClosedBag;
 	}
+
+	const auto elapsed_to_change_time = float(elapsedTime) / float(stateChangeTime);
 
 	if (currentState == bagOpening)
 	{
@@ -342,18 +355,22 @@ SpriteChainElement* HeroBag::prepareSprite(long long elapsedTime, std::map<PackT
 		}
 		else
 		{
-			const Vector2f toCenterVector = Vector2f(screenCenter.x - position.x, screenCenter.y - position.y);
-			const float cutCoefficient = sqrt(pow((sizeOpen.x - sizeClosed.x) / 2 * elapsedTime / stateChangeTime, 2) + pow((sizeOpen.y - sizeClosed.y) / 2 * elapsedTime / stateChangeTime, 2)) /
+			const auto toCenterVector = Vector2f(screenCenter.x - position.x, screenCenter.y - position.y);
+			const auto cutCoefficient = sqrt(pow((sizeOpen.x - sizeClosed.x) / 2 * elapsed_to_change_time, 2) + pow((sizeOpen.y - sizeClosed.y) / 2 * elapsed_to_change_time, 2)) /
 				sqrt(pow(toCenterVector.x, 2) + pow(toCenterVector.y, 2));
 			shiftVector = Vector2f(toCenterVector.x * cutCoefficient, toCenterVector.y * cutCoefficient);
 			fixPos();
 			position.x += shiftVector.x; position.y += shiftVector.y;
 
 			const auto textureSize = packsMap->at(PackTag::inventory).getOriginalInfo(PackPart::bag1, Direction::DOWN, 4).source_size;
-			const Vector2f scaleValue = { (sizeClosed.x + ((sizeOpen.x - sizeClosed.x) * stateChangingTime / stateChangeTime)) / textureSize.w, (sizeClosed.y + ((sizeOpen.y - sizeClosed.y) * stateChangingTime / stateChangeTime)) / textureSize.h };
+			const auto changing_to_change_time = float(stateChangingTime)/float(stateChangeTime);
+			const Vector2f scaleValue = {
+				(sizeClosed.x + (sizeOpen.x - sizeClosed.x) * changing_to_change_time) / textureSize.w,
+				(sizeClosed.y + (sizeOpen.y - sizeClosed.y) * changing_to_change_time) / textureSize.h
+			};
 			bagSpriteChain.OpenedBag->size.x *= scaleValue.x; bagSpriteChain.OpenedBag->size.y *= scaleValue.y;
 
-			bagSpriteChain.OpenedBag->offset = Vector2f(bagSpriteChain.OpenedBag->size.x / 2, bagSpriteChain.OpenedBag->size.y / 1.7);
+			bagSpriteChain.OpenedBag->offset = Vector2f(bagSpriteChain.OpenedBag->size.x / 2.0f, bagSpriteChain.OpenedBag->size.y / 1.7f);
 			bagSpriteChain.OpenedBag->position = position;
 
 			fixCells();
@@ -371,20 +388,23 @@ SpriteChainElement* HeroBag::prepareSprite(long long elapsedTime, std::map<PackT
 		}
 		else
 		{
-			const Vector2f fromCenterVector = Vector2f(position.x - screenCenter.x, position.y - screenCenter.y);
-			const float cutCoefficient = sqrt(pow((sizeOpen.x - sizeClosed.x) / 2 * elapsedTime / stateChangeTime, 2) + pow((sizeOpen.y - sizeClosed.y) / 2 * elapsedTime / stateChangeTime, 2)) /
+			const auto fromCenterVector = Vector2f(position.x - screenCenter.x, position.y - screenCenter.y);
+			const auto cutCoefficient = 
+				sqrt(pow((sizeOpen.x - sizeClosed.x) / 2 * elapsed_to_change_time, 2) + pow((sizeOpen.y - sizeClosed.y) / 2 * elapsed_to_change_time, 2)) /
 				sqrt(pow(fromCenterVector.x, 2) + pow(fromCenterVector.y, 2));
 			shiftVector = Vector2f(fromCenterVector.x * cutCoefficient, fromCenterVector.y * cutCoefficient);
 			fixPos();
 			position.x += shiftVector.x; position.y += shiftVector.y;
 
-			const auto textureSize = packsMap->at(PackTag::inventory).getOriginalInfo(PackPart::bag1, Direction::DOWN, 1).source_size;
-			const Vector2f scaleValue = { (sizeClosed.x + (sizeOpen.x - sizeClosed.x) * (stateChangeTime - stateChangingTime) / stateChangeTime) / bagSpriteChain.ClosedBag->size.x,
-				(sizeClosed.y + (sizeOpen.y - sizeClosed.y) * (stateChangeTime - stateChangingTime) / stateChangeTime) / bagSpriteChain.ClosedBag->size.y };
+			const auto delta_time = float(stateChangeTime - stateChangingTime) / float(stateChangeTime);
+			const Vector2f scaleValue = {
+				(sizeClosed.x + (sizeOpen.x - sizeClosed.x) * delta_time) / bagSpriteChain.ClosedBag->size.x,
+				(sizeClosed.y + (sizeOpen.y - sizeClosed.y) * delta_time) / bagSpriteChain.ClosedBag->size.y
+			};
 			bagSpriteChain.ClosedBag->size = sizeClosed;
 			bagSpriteChain.ClosedBag->size.x *= scaleValue.x; bagSpriteChain.ClosedBag->size.y *= scaleValue.y;
 
-			bagSpriteChain.ClosedBag->offset = Vector2f(bagSpriteChain.ClosedBag->size.x / 2, bagSpriteChain.ClosedBag->size.y / 1.7);
+			bagSpriteChain.ClosedBag->offset = Vector2f(bagSpriteChain.ClosedBag->size.x / 2.0f, bagSpriteChain.ClosedBag->size.y / 1.7f);
 			bagSpriteChain.ClosedBag->position = position;
 
 			fixCells();

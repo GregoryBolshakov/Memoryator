@@ -1,16 +1,14 @@
 #include "EmptyObject.h"
 
 
-
-EmptyObject::EmptyObject(std::string objectName, Vector2f centerPosition) : WorldObject(objectName, centerPosition)
+EmptyObject::EmptyObject(std::string objectName, Vector2f centerPosition) : WorldObject(std::move(objectName), centerPosition)
 {
 	tag = Tag::emptyObject;
 }
 
 
 EmptyObject::~EmptyObject()
-{
-}
+= default;
 
 std::vector<SpriteChainElement*> EmptyObject::prepareSprites(long long elapsedTime)
 {

@@ -1,11 +1,10 @@
 #pragma once
-#ifndef SPRITEPACK_H
-#define SPRITEPACK_H
 
 #include <nlohmann/json.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-#include "SpriteChainElement.h"
+
 #include "Helper.h"
+#include "SpriteChainElement.h"
 
 using namespace sf;
 using json = nlohmann::json;
@@ -14,12 +13,12 @@ namespace sprite_pack
 {
     struct size
     {
-		size(int w = 0, int h = 0) { this->w = w; this->h = h; }
+	    explicit size(const int w = 0, const int h = 0) { this->w = w; this->h = h; }
         int w = 0;
         int h = 0;
     };
 
-	inline bool operator == (sprite_pack::size a, sprite_pack::size b)
+	inline bool operator == (const sprite_pack::size a, const sprite_pack::size b)
 	{
 		return (a.w == b.w && a.h == b.h);
 	}
@@ -35,10 +34,10 @@ namespace sprite_pack
     struct sprite
     {
         std::string frame_name;
-        rect frame;
-        bool rotated;
-        bool trimmed;
-        rect sprite_source_size;
+        rect frame{};
+        bool rotated{};
+        bool trimmed{};
+        rect sprite_source_size{};
         size source_size;
     };
 
@@ -80,9 +79,7 @@ namespace sprite_pack
 class SpritePack
 {
 public:
-    SpritePack();
-    ~SpritePack();
-    void init(std::string path, const std::string& jsonPath, PackTag tag);
+    void init(const std::string& path, const std::string& jsonPath, PackTag tag);
     Sprite getSprite(PackPart part, Direction direction, int number, bool mirrored = false);
 	sprite_pack::sprite getOriginalInfo(PackPart part, Direction direction, int number);
 	static SpriteChainElement* tagToIcon(Tag object, bool selected = false, int typeOfObject = 1);
@@ -97,6 +94,3 @@ private:
     Texture texture;
     std::map<PackPart, std::map<Direction, std::map<int, sprite_pack::sprite>>> pack;
 };
-
-#endif
-

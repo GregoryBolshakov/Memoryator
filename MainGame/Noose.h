@@ -1,6 +1,4 @@
 #pragma once
-#ifndef NOOSE_H
-#define NOOSE_H
 
 #include "DynamicObject.h"
 #include "Helper.h"
@@ -9,20 +7,8 @@ using namespace sf;
 
 class Noose : public DynamicObject
 {
-private:
-    void stopping(bool doStand = false, bool forgetBoundTarget = false);
-    void endingPreviousAction();
-	void rotateAndExtend(SpriteChainElement* rope, SpriteChainElement* loop) const;
-
-	float timeForNewSprite, timeAfterHit = 0, timeForNewHit = 100000;
-	float ropeElongation = 0, maximumLength = 1500;
-	int animationLength, strikingSprite = 4;
-	bool wasHit = false;
-	WorldObject* owner;
-	Vector2f ownerPos = { 0, 0 };
-	Vector2f ownerGlobalBounds = { 0, 0 };
 public:
-	Noose(std::string objectName, Vector2f centerPosition, WorldObject* owner);
+	Noose(const std::string& objectName, Vector2f centerPosition, WorldObject* owner);
 	~Noose();
 	Vector2f calculateTextureOffset() override;
 	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;
@@ -36,6 +22,17 @@ public:
 	void jerkInteract(long long elapsedTime);
 	void jerk(float power, float deceleration, Vector2f destinationPoint = Vector2f(-1, -1)) override;
 	void fightInteract(long long elapsedTime, DynamicObject* target = nullptr) override;
-};
 
-#endif
+private:
+	void stopping(bool doStand = false, bool forgetBoundTarget = false);
+    void endingPreviousAction();
+	void rotateAndExtend(SpriteChainElement* rope, SpriteChainElement* loop) const;
+
+    long long timeForNewSprite;
+    float ropeElongation = 0;
+    float maximumLength = 1500;
+	int animationLength;
+	WorldObject* owner;
+	Vector2f ownerPos = { 0, 0 };
+	Vector2f ownerGlobalBounds = { 0, 0 };
+};

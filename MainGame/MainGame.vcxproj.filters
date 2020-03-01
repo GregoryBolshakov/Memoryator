@@ -204,6 +204,9 @@
     <ClCompile Include="DirectionsSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="VisualEffects\AmbientLight.cpp">
+      <Filter>VisualEffects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EventHandler.h" />
@@ -413,6 +416,12 @@
     <ClInclude Include="DirectionsSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="VisualEffects\AmbientLight.hpp">
+      <Filter>VisualEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="VisualEffects\VisualEffect.hpp">
+      <Filter>VisualEffects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Terrain">
@@ -438,6 +447,9 @@
     </Filter>
     <Filter Include="Systems\DrawSystem">
       <UniqueIdentifier>{969d9f18-507a-4244-b5eb-e0aa540d6e67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VisualEffects">
+      <UniqueIdentifier>{3c325feb-d21d-4623-8836-f7951dc989ca}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -18,7 +18,7 @@ private:
 	int strikingSprite = 4;
 	WorldObject* owner = nullptr, *nearestTree = nullptr;
 public:
-	Owl(std::string objectName, Vector2f centerPosition);
+	Owl(const std::string& objectName, Vector2f centerPosition);
 	~Owl();
 	Vector2f calculateTextureOffset() override;
 	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;

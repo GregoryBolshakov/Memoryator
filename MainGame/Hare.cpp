@@ -3,7 +3,7 @@
 
 using namespace sf;
 
-Hare::Hare(const std::string objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
+Hare::Hare(const std::string& objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
 {
 	conditionalSizeUnits = { 180, 150 };
 	currentSprite[0] = 1;
@@ -15,16 +15,15 @@ Hare::Hare(const std::string objectName, Vector2f centerPosition) : NeutralMob(o
 	sightRange = 720;
 	healthPoint = 50;
 	currentAction = relax;
-	timeAfterHitself = 0;
-	timeForNewHitself = 6e5;
+	timeAfterHitSelf = 0;
+	timeForNewHitSelf = long(6e5);
 	timeForNewHit = 1000000;
 	toSaveName = "hare";
 	tag = Tag::hare;
 }
 
 Hare::~Hare()
-{
-}
+= default;
 
 Vector2f Hare::calculateTextureOffset()
 {
@@ -64,8 +63,6 @@ void Hare::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 
 void Hare::behavior(long long elapsedTime)
 {	
-	if (isSelected)
-		auto test = 123;
 	endingPreviousAction();
 	fightInteract(elapsedTime);
 	if (healthPoint <= 0)
@@ -110,7 +107,7 @@ void Hare::behavior(long long elapsedTime)
 	// bouncing to a trap
 	if (boundTarget->tag == Tag::hareTrap)
 	{
-		side = calculateSide(boundTarget->getPosition(), elapsedTime);
+		side = calculateSide(boundTarget->getPosition());
 		if (Helper::getDist(position, boundTarget->getPosition()) <= radius)
 		{
 			const auto trap = dynamic_cast<HareTrap*>(boundTarget);
@@ -129,7 +126,7 @@ void Hare::behavior(long long elapsedTime)
 	// runaway from enemy
 	if (boundTarget->tag == Tag::hero)
 	{
-		side = calculateSide(laxMovePosition, elapsedTime);
+		side = calculateSide(laxMovePosition);
 		speed = std::max(defaultSpeed, (defaultSpeed * 10) * (1 - (Helper::getDist(position, boundTarget->getPosition()) / sightRange * 1.5f)));
 		animationSpeed = std::max(0.0004f, 0.0003f * speed / defaultSpeed);
 		if (distanceToTarget <= sightRange)

@@ -1,12 +1,12 @@
 #include "Yarrow.h"
 #include "Helper.h"
 
-Yarrow::Yarrow(std::string objectName, Vector2f centerPosition, int typeOfObject) : PickedObject(objectName, centerPosition)
+Yarrow::Yarrow(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : PickedObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 5;
 	this->typeOfObject = typeOfObject;
 	toSaveName = "yarrow";
-	setType(typeOfObject);
+	Yarrow::setType(typeOfObject);
 	radius = 50;
 	tag = Tag::yarrow;
 

@@ -2,16 +2,14 @@
 
 using namespace sf;
 
-NeutralMob::NeutralMob(std::string objectName, Vector2f centerPosition) : DynamicObject(objectName, centerPosition)
+NeutralMob::NeutralMob(std::string objectName, Vector2f centerPosition) : DynamicObject(std::move(objectName), centerPosition)
 {
 	currentSprite[0] = 1;
 	currentAction = relax;
 }
 
 NeutralMob::~NeutralMob()
-{
-
-}
+= default;
 
 void NeutralMob::setTarget(DynamicObject& object)
 {
@@ -44,7 +42,7 @@ void NeutralMob::behavior(long long elapsedTime)
 	}
 	fightInteract(elapsedTime);
 
-	side = calculateSide(movePosition, elapsedTime);
+	side = calculateSide(movePosition);
 	//return;
 	if (boundTarget == nullptr)
 		return;

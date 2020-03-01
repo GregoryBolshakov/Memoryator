@@ -1,12 +1,12 @@
 #include "Chamomile.h"
 #include "Helper.h"
 
-Chamomile::Chamomile(std::string objectName, Vector2f centerPosition, int typeOfObject) : PickedObject(objectName, centerPosition)
+Chamomile::Chamomile(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : PickedObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 5;
 	this->typeOfObject = typeOfObject;
 	toSaveName = "chamomile";
-	setType(typeOfObject);
+	Chamomile::setType(typeOfObject);
 	tag = Tag::chamomile;
 
 	count = 1;

@@ -1,7 +1,7 @@
 #include "DroppedLoot.h"
 #include "Helper.h"
 
-DroppedLoot::DroppedLoot(std::string objectName, Vector2f centerPosition, int typeOfObject, int count) : PickedObject(objectName, centerPosition)
+DroppedLoot::DroppedLoot(std::string objectName, Vector2f centerPosition, int typeOfObject, int count) : PickedObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 5;
 	this->typeOfObject = typeOfObject;

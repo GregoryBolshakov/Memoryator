@@ -1,6 +1,4 @@
 #pragma once
-#ifndef SPRITECHAINELEMENT_H
-#define SPRITECHAINELEMENT_H
 
 #include <SFML/Graphics.hpp>
 #include "DrawableChainElement.h"
@@ -39,5 +37,3 @@ public:
 	int number = 1, animationLength = 1; int zCoord = 1, finishSprite = 0;
     bool isBackground = false, mirrored = false, antiTransparent = false, unscaled = false;	
 };
-
-#endif

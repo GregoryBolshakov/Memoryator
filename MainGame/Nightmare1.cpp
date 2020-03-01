@@ -1,6 +1,6 @@
 #include "Nightmare1.h"
 
-Nightmare1::Nightmare1(std::string objectName, Vector2f centerPosition) : Monster(objectName, centerPosition)
+Nightmare1::Nightmare1(std::string objectName, const Vector2f centerPosition) : Monster(std::move(objectName), centerPosition)
 {
 	conditionalSizeUnits = { 375, 375 };
 	defaultSpeed = 0.0005f;
@@ -10,9 +10,9 @@ Nightmare1::Nightmare1(std::string objectName, Vector2f centerPosition) : Monste
 	strength = 10;
 	healthPoint = 100;
 	currentAction = relax;	
-	timeForNewHitself = 2e5;
-	timeAfterHitself = timeForNewHitself;
-	timeForNewHit = 1e6;
+	timeForNewHitSelf = long(2e5);
+	timeAfterHitSelf = timeForNewHitSelf;
+	timeForNewHit = long(1e6);
 	timeAfterHit = timeForNewHit;
 	toSaveName = "nightmare1_";
 	tag = Tag::nightmare1;
@@ -20,8 +20,7 @@ Nightmare1::Nightmare1(std::string objectName, Vector2f centerPosition) : Monste
 
 
 Nightmare1::~Nightmare1()
-{
-}
+= default;
 
 
 Vector2f Nightmare1::calculateTextureOffset()
@@ -44,13 +43,12 @@ void Nightmare1::doAttack(WorldObject* target)
 	}
 }
 
-std::vector<SpriteChainElement*> Nightmare1::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Nightmare1::prepareSprites(const long long elapsedTime)
 {
 	auto body = new SpriteChainElement(PackTag::nightmare1, PackPart::stand, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	animationSpeed = 10;
 
-	Side spriteSide = side;
-	Direction spriteDirection = lastDirection;
+	auto spriteSide = side;
 
 	if (side == right)
 	{
@@ -59,7 +57,6 @@ std::vector<SpriteChainElement*> Nightmare1::prepareSprites(long long elapsedTim
 	}
 	if (lastDirection == Direction::RIGHT || lastDirection == Direction::UPRIGHT || lastDirection == Direction::DOWNRIGHT)
 	{
-		spriteDirection = DirectionsSystem::cutRights(spriteDirection);
 		body->mirrored = true;
 	}
 
@@ -75,12 +72,6 @@ std::vector<SpriteChainElement*> Nightmare1::prepareSprites(long long elapsedTim
 		break;
 	}
 	case combatState:
-	{
-		animationLength = 13;
-		body->packTag = PackTag::nightmare1;
-		body->packPart = PackPart::stand;		
-		break;
-	}
 	case relax:
 	{
 		animationLength = 13;
@@ -111,7 +102,7 @@ std::vector<SpriteChainElement*> Nightmare1::prepareSprites(long long elapsedTim
 
 	timeForNewSprite += elapsedTime;
 
-	if (timeForNewSprite >= 1e6 / animationSpeed)
+	if (timeForNewSprite >= long(1e6 / animationSpeed))
 	{
 		timeForNewSprite = 0;
 

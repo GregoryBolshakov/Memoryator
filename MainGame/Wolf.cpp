@@ -2,7 +2,7 @@
 
 using namespace sf;
 
-Wolf::Wolf(std::string objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
+Wolf::Wolf(std::string objectName, Vector2f centerPosition) : NeutralMob(std::move(objectName), centerPosition)
 {
 	conditionalSizeUnits = { 250, 200 };
 	currentSprite[0] = 1;
@@ -17,16 +17,15 @@ Wolf::Wolf(std::string objectName, Vector2f centerPosition) : NeutralMob(objectN
 	fear = 0;
 	healthPoint = 0;
 	currentAction = relax;
-	timeAfterHitself = 0;
-	timeForNewHitself = 6e5;
+	timeAfterHitSelf = 0;
+	timeForNewHitSelf = long(6e5);
 	timeForNewHit = 1000000;
 
 	toSaveName = "wolf";
 }
 
 Wolf::~Wolf()
-{
-}
+= default;
 
 void Wolf::setTarget(DynamicObject& object)
 {

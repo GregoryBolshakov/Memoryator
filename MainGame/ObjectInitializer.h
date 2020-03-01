@@ -56,20 +56,20 @@ public:
 		Tag itemClass,
 		Vector2f itemPosition,
 		int itemType,
-		std::string itemName, 
+		const std::string& itemName, 
 		int count,
 		Biomes biome,		
 		std::map<PackTag, SpritePack>* packsMap,
 		bool mirrored = true,
-		std::vector<std::pair<Tag, int>> inventory = {});
+		const std::vector<std::pair<Tag, int>>& inventory = {});
 	static int newNameId;
 	static int getRandomTypeByBiome(WorldObject* object, Biomes biome);
 	static DynamicObject* initializeDynamicItem(Tag itemClass,
 		Vector2f itemPosition,
-		std::string itemName,
+		const std::string& itemName,
 		std::map<PackTag, SpritePack>* packsMap,
 		WorldObject* owner = nullptr);
-	static std::vector<StaticObject*> vectorCastToStatic(std::vector<WorldObject*> items);
+	static std::vector<StaticObject*> vectorCastToStatic(const std::vector<WorldObject*>& items);
 	static std::vector<DynamicObject*> vectorCastToDynamic(std::vector<WorldObject*> items);
 
 	static std::map<Tag, std::string> mappedTags;

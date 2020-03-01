@@ -1,9 +1,9 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
 #include <windows.h>
 #include "SpritePack.h"
 #include "TextChainElement.h"
-#include "TextSystem.h"
 
 using namespace  sf;
 typedef void(*LPSEARCHFUNC)(LPCTSTR lpszFileName, std::map<PackTag, SpritePack> &packs_map);
@@ -26,4 +26,3 @@ private:
 	bool searchFiles(LPCTSTR lpszFileName, LPSEARCHFUNC lpSearchFunc, bool bInnerFolders = true);
 	void advancedScale(SpriteChainElement& item, Sprite& sprite, const sprite_pack::sprite& originalInfo, float scale = 1) const;
 };
-

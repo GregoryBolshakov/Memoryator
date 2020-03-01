@@ -1,5 +1,6 @@
 #include <windows.h>
 #include "Helper.h"
+
 Vector2f Helper::GetScreenSize()
 {
 	Vector2f screenSize;
@@ -24,39 +25,39 @@ int Helper::getFps()
 	return 0;
 }
 
-std::pair<float, float> Helper::solveSqr(float a, float b, float c)
+std::pair<float, float> Helper::solveSqr(const float a, const float b, const float c)
 {
-	float discr = b * b - 4 * a*c;
-	float firstRoot = (-b + sqrt(discr)) / (2 * a);
-	float secondRoot = (-b - sqrt(discr)) / (2 * a);
+	const auto discr = b * b - 4 * a * c;
+	auto firstRoot = (-b + sqrt(discr)) / (2 * a);
+	auto secondRoot = (-b - sqrt(discr)) / (2 * a);
 
 	if (discr < 0)
 		return std::make_pair(-0.1111122f, -0.1111122f);
 	return std::make_pair(firstRoot, secondRoot);
 }
 
-
-void Helper::drawText(std::string text, int size, int Posx, int Posy, RenderWindow *window)
-{
-	Font font;
-	font.loadFromFile("fonts/normal.ttf");
-	Text result(text, font, size);
-	result.setFillColor(Color::White);
-	Vector2f pos(static_cast<float>(Posx),static_cast<float>(Posy));
-	result.setPosition(Vector2f(pos));
-	window->draw(result);
-}
-
-void Helper::drawTextWithSettings(std::string text, int size, int Posx, int Posy, Color color, RenderWindow *window)
-{
-	Font font;
-	font.loadFromFile("fonts/normal.ttf");
-	Text result(text, font, size);
-	result.setFillColor(color);
-	Vector2f pos(static_cast<float>(Posx), static_cast<float>(Posy));
-	result.setPosition(Vector2f(pos));
-	window->draw(result);
-}
+//
+//void Helper::drawText(std::string text, int size, int Posx, int Posy, RenderWindow *window)
+//{
+//	Font font;
+//	font.loadFromFile("fonts/normal.ttf");
+//	Text result(text, font, size);
+//	result.setFillColor(Color::White);
+//	Vector2f pos(static_cast<float>(Posx),static_cast<float>(Posy));
+//	result.setPosition(Vector2f(pos));
+//	window->draw(result);
+//}
+//
+//void Helper::drawTextWithSettings(std::string text, int size, int Posx, int Posy, Color color, RenderWindow *window)
+//{
+//	Font font;
+//	font.loadFromFile("fonts/normal.ttf");
+//	Text result(text, font, size);
+//	result.setFillColor(color);
+//	Vector2f pos(static_cast<float>(Posx), static_cast<float>(Posy));
+//	result.setPosition(Vector2f(pos));
+//	window->draw(result);
+//}
 
 std::string Helper::withoutNums(std::string s)
 {
@@ -64,7 +65,7 @@ std::string Helper::withoutNums(std::string s)
 	while (true)
 	{
 		isFinish = true;
-		for (int i = 0; i < s.length(); i++)
+		for (auto i = 0; i < s.length(); i++)
 		{
 			if (s[i] >= '0' && s[i] <= '9')
 			{
@@ -78,53 +79,57 @@ std::string Helper::withoutNums(std::string s)
 	return s;
 }
 
-std::string Helper::getObjectName(std::string s)
+std::string Helper::getObjectName(const std::string& s)
 {
-	std::string answer = "";
-	for (int i = 0; i < s.length(); i++)
+	std::string answer;
+	
+	for (auto i : s)
 	{
-		if (s[i] != '.')
-			answer += s[i];
+		if (i != '.')
+			answer += i;
 		else
 			break;
 	}
+	
 	return answer;
 }
 
-std::string Helper::getSpriteName(std::string s)
-{
-	for (int i = s.length() - 1; i >= 0; i--)
-	{
-		if (s[i] >= '0' && s[i] <= '9')
-			s.erase(i, 1);
-		else
-			return s;
-	}
-}
+//std::string Helper::getSpriteName(std::string s)
+//{
+//	for (int i = s.length() - 1; i >= 0; i--)
+//	{
+//		if (s[i] >= '0' && s[i] <= '9')
+//			s.erase(i, 1);
+//		else
+//			return s;
+//	}
+//}
 
-bool Helper::isIntersects(Vector2f pos, IntRect shape)
+bool Helper::isIntersects(const Vector2f pos, const FloatRect shape)
 {
 	if (pos.x >= shape.left && pos.x <= shape.left + shape.width && pos.y >= shape.top && pos.y <= shape.top + shape.height)
 		return true;
 	return false;
 }
 
-bool Helper::isIntersects(Vector2f pos, Vector2f circlePos, float radius)
+bool Helper::isIntersects(const Vector2f pos, const Vector2f circlePos, const float radius)
 {
 	return getDist(pos, circlePos) <= radius;
 }
 
-bool Helper::isIntersectTerrain(Vector2f position, TerrainObject& terrain, float radius)
+bool Helper::isIntersectTerrain(const Vector2f position, TerrainObject& terrain, const float radius)
 {
-	auto f1 = terrain.getFocus1();
-	auto f2 = terrain.getFocus2();
-	return (sqrt((position.x - f1.x)*(position.x - f1.x) + (position.y - f1.y)*(position.y - f1.y)) + sqrt((position.x - f2.x)*(position.x - f2.x) + (position.y - f2.y)*(position.y - f2.y))/* - dynamic.radius*/) <= terrain.getEllipseSize() + radius;
+	const auto f1 = terrain.getFocus1();
+	const auto f2 = terrain.getFocus2();
+	return sqrt((position.x - f1.x) * (position.x - f1.x) + (position.y - f1.y) * (position.y - f1.y)) +
+		sqrt((position.x - f2.x) * (position.x - f2.x) + (position.y - f2.y) * (position.y - f2.y))/* - dynamic.radius*/ <= terrain.getEllipseSize() + radius;
 }
 
-Side Helper::getSide(Vector2f position, Vector2f anotherPosition)
+Side Helper::getSide(const Vector2f position, const Vector2f anotherPosition)
 {
-	Side answer;
-	float alpha = atan((float(anotherPosition.y) - position.y) / (float(anotherPosition.x) - position.x)) * 180 / pi;
+	auto answer = undefined;
+	const auto alpha = atan((float(anotherPosition.y) - position.y) / (float(anotherPosition.x) - position.x)) * 180 / pi;
+
 	if (position.y >= anotherPosition.y && abs(alpha) >= 45 && abs(alpha) <= 90)
 		answer = up;
 	else
@@ -139,7 +144,22 @@ Side Helper::getSide(Vector2f position, Vector2f anotherPosition)
 	return answer;
 }
 
-RectangleShape Helper::makeLine(Vector2f point1, Vector2f point2, Color color)
+float Helper::getDist(const Vector2f a, const Vector2f b)
+{
+	return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
+}
+
+float Helper::triangleArea(const float x1, const float y1, const float x2, const float y2, const float x3, const float y3)
+{
+	return (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1);
+}
+
+bool Helper::checkSigns(const float a, const float b)
+{
+	return a > 0 && b > 0 || a < 0 && b < 0;
+}
+
+RectangleShape Helper::makeLine(Vector2f point1, Vector2f point2, sf::Color color)
 {
 	if (point1.y >= point2.y)
 		std::swap(point1, point2);
@@ -160,8 +180,8 @@ RectangleShape Helper::makeLine(Vector2f point1, Vector2f point2, Color color)
 
 std::vector<std::string> Helper::split(std::string line, char delimiter)
 {
-    std::vector<std::string> commands;
-	std::string temp = line;
+	std::vector<std::string> commands;
+	auto temp = std::move(line);
 	if (temp[temp.size() - 1] != delimiter)
 		temp.push_back(delimiter);
 	while (!temp.empty())
@@ -170,5 +190,5 @@ std::vector<std::string> Helper::split(std::string line, char delimiter)
 		commands.push_back(token);
 		temp.erase(0, token.size() + 1);
 	}
-    return commands;
+	return commands;
 }

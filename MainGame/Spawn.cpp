@@ -1,16 +1,16 @@
 #include "Spawn.h"
 #include "Helper.h"
 
-Spawn::Spawn(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(objectName, centerPosition)
+Spawn::Spawn(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 1;
 	this->typeOfObject = typeOfObject;
 	radius = 200;
 	toSaveName = "spawn";
-	setType(typeOfObject);
+	Spawn::setType(typeOfObject);
 }
 
-void Spawn::setType(int typeOfObject)
+void Spawn::setType(const int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	this->conditionalSizeUnits = { 1000, 1000 };
@@ -27,33 +27,33 @@ void Spawn::initPedestal()
 {
 	if (typeOfObject == 1)
 	{
-		focus1 = Vector2f (textureBox.left + int(textureBox.width / 3.8), int(position.y));
-		focus2 = Vector2f (textureBox.left + textureBox.width - int(textureBox.width / 3.8), int(position.y));
+		focus1 = Vector2f (textureBox.left + floor(textureBox.width / 3.8f), position.y);
+		focus2 = Vector2f (textureBox.left + textureBox.width - floor(textureBox.width / 3.8f), position.y);
 	}
 	if (typeOfObject == 2)
 	{
-		focus1 = Vector2f (textureBox.left + int(textureBox.width / 2.3), int(position.y));
-		focus2 = Vector2f (textureBox.left + textureBox.width - int(textureBox.width / 3.3), int(position.y));	
+		focus1 = Vector2f (textureBox.left + floor(textureBox.width / 2.3f), position.y);
+		focus2 = Vector2f (textureBox.left + textureBox.width - floor(textureBox.width / 3.3f), position.y);	
 	}
 	if (typeOfObject == 3)
 	{
-		focus1 = Vector2f (textureBox.left + int(textureBox.width / 3.5), int(position.y + textureBox.height / 20));
-		focus2 = Vector2f (textureBox.left + textureBox.width - int(textureBox.width / 2), int(position.y + textureBox.height / 100));
+		focus1 = Vector2f (textureBox.left + floor(textureBox.width / 3.5f), position.y + textureBox.height / 20.0f);
+		focus2 = Vector2f (textureBox.left + textureBox.width - floor(textureBox.width / 2.0f), position.y + textureBox.height / 100.0f);
 	}
-	ellipseSizeMultipliers = { 1.08, 1.2, 1.3 };
+	ellipseSizeMultipliers = { 1.08f, 1.2f, 1.3f };
 }
 
-Vector2f Spawn::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f Spawn::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Spawn::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int Spawn::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Spawn::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Spawn::prepareSprites(long long)
 {
     return {};
 	/*additionalSprites.clear();

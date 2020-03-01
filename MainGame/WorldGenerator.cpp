@@ -1,11 +1,9 @@
 #include "WorldGenerator.h"
 #include "DynamicObject.h"
 #include "EmptyObject.h"
-#include "Brazier.h"
 
 WorldGenerator::WorldGenerator()
-{
-}
+= default;
 
 void WorldGenerator::initMainScale()
 {
@@ -15,7 +13,14 @@ void WorldGenerator::initMainScale()
 	mainScale = round(mainScale * 100) / 100;
 }
 
-void WorldGenerator::init(int width, int height, Vector2f blockSize, Vector2f microBlockSize, GridList* staticGrid, GridList* dynamicGrid, std::map<PackTag, SpritePack>* packsMap)
+void WorldGenerator::init(
+	const int width,
+	const int height,
+	const Vector2f blockSize,
+	const Vector2f microBlockSize,
+	GridList* staticGrid,
+	GridList* dynamicGrid,
+	std::map<PackTag, SpritePack>* packsMap)
 {
 	this->width = width;
 	this->height = height;
@@ -24,17 +29,23 @@ void WorldGenerator::init(int width, int height, Vector2f blockSize, Vector2f mi
 	this->staticGrid = staticGrid;
 	this->dynamicGrid = dynamicGrid;
 	this->packsMap = packsMap;
-	this->scaleFactor = scaleFactor;
 	stepSize = { blockSize.x / 10, blockSize.y / 10 };
 }
 
 WorldGenerator::~WorldGenerator()
-{
-}
+= default;
 
-void WorldGenerator::initializeStaticItem(Tag itemClass, Vector2f itemPosition, int itemType, std::string itemName, int count, Biomes biome, bool mirrored, std::vector<std::pair<Tag, int>> inventory)
+void WorldGenerator::initializeStaticItem(
+	Tag itemClass,
+	Vector2f itemPosition,
+	int itemType,
+	const std::string& itemName,
+	int count,
+	Biomes biome,
+	bool mirrored,
+	const std::vector<std::pair<Tag, int>>& inventory) const
 {
-	StaticObject* item = ObjectInitializer::initializeStaticItem(itemClass, itemPosition, itemType, itemName, count, biome, packsMap, mirrored, inventory);
+	auto item = ObjectInitializer::initializeStaticItem(itemClass, itemPosition, itemType, itemName, count, biome, packsMap, mirrored, inventory);
 	
 	if (item == nullptr)
 		return;
@@ -44,10 +55,25 @@ void WorldGenerator::initializeStaticItem(Tag itemClass, Vector2f itemPosition, 
 	if (terrain)
 	{
 		std::map<std::pair<int, int>, bool> checkBlocks = {};
-		for (int i = (item->getPosition().x - item->getMicroBlockCheckAreaBounds().x) / microBlockSize.x; i <= (item->getPosition().x + item->getMicroBlockCheckAreaBounds().x) / microBlockSize.x; i++)
-			for (int j = (item->getPosition().y - item->getMicroBlockCheckAreaBounds().y) / microBlockSize.y; j <= (item->getPosition().y + item->getMicroBlockCheckAreaBounds().y) / microBlockSize.y; j++)
-				if (!(i < 0 || i > width / microBlockSize.x || j < 0 || j > height / microBlockSize.y) && !staticGrid->microBlockMatrix[i][j])
+
+		const auto end_i = int((item->getPosition().x + item->getMicroBlockCheckAreaBounds().x) / microBlockSize.x);
+		const auto end_j = int((item->getPosition().y + item->getMicroBlockCheckAreaBounds().y) / microBlockSize.y);
+
+		const auto width_to_micro_x = width / int(microBlockSize.x);
+		const auto height_to_micro_y = height / int(microBlockSize.y);
+
+		auto i = int((item->getPosition().x - item->getMicroBlockCheckAreaBounds().x) / microBlockSize.x);
+		while (i <= end_i)
+		{
+			auto j = int((item->getPosition().y - item->getMicroBlockCheckAreaBounds().y) / microBlockSize.y);
+			while (j <= end_j)
+			{
+				if (!(i < 0 || i >width_to_micro_x || j < 0 || j >height_to_micro_y) && !staticGrid->microBlockMatrix[int(round(i))][int(round(j))])
 					checkBlocks[{i, j}] = true;
+				j++;
+			}
+			i++;
+		}
 
 		if (item->isLockedPlace(checkBlocks))
 		{
@@ -55,15 +81,13 @@ void WorldGenerator::initializeStaticItem(Tag itemClass, Vector2f itemPosition, 
 			return;
 		}
 	}
-	//-------------------
-	if (int(item->tag) == 0)
-		auto test = 123;
-	staticGrid->addItem(item, item->getName(), int(itemPosition.x), int(itemPosition.y));
+	
+	staticGrid->addItem(item, item->getName(), itemPosition.x, itemPosition.y);
 }
 
-void WorldGenerator::initializeDynamicItem(Tag itemClass, Vector2f itemPosition, std::string itemName, WorldObject* owner)
+void WorldGenerator::initializeDynamicItem(const Tag itemClass, const Vector2f itemPosition, const std::string& itemName, WorldObject* owner)
 {
-	DynamicObject* item = ObjectInitializer::initializeDynamicItem(itemClass, itemPosition, itemName, packsMap, owner);
+	const auto item = ObjectInitializer::initializeDynamicItem(itemClass, itemPosition, itemName, packsMap, owner);
 	
 	if (item == nullptr)
 		return;
@@ -71,13 +95,12 @@ void WorldGenerator::initializeDynamicItem(Tag itemClass, Vector2f itemPosition,
 	if (itemClass == Tag::hero)	
 		focusedObject = item;			
 
-	dynamicGrid->addItem(item, item->getName(), int(itemPosition.x), int(itemPosition.y));
+	dynamicGrid->addItem(item, item->getName(), itemPosition.x, itemPosition.y);
 }
 
 void WorldGenerator::generate()
 {	
 	staticGrid->boundDynamicMatrix(&dynamicGrid->microBlockMatrix);	
-	const int blocksCount = ceil(width / blockSize.x) * ceil(height / blockSize.y);
 
 	initializeDynamicItem(Tag::hero, Vector2f(15800, 15800), "hero");	
 	initializeStaticItem(Tag::brazier, Vector2f(16300, 16300), 1, "brazier");
@@ -85,79 +108,88 @@ void WorldGenerator::generate()
 
 	// world generation
 	initBiomesGenerationInfo();
-	const Vector2f upperLeft(int(focusedObject->getPosition().x - (Helper::GetScreenSize().x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)), int(focusedObject->getPosition().y - (Helper::GetScreenSize().y / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)));
-	const Vector2f bottomRight(int(focusedObject->getPosition().x + (Helper::GetScreenSize().x / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)), int(focusedObject->getPosition().y + (Helper::GetScreenSize().y / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)));
+	const Vector2f upperLeft(
+		floor(focusedObject->getPosition().x - (Helper::GetScreenSize().x / 2.0f + blockSize.x) / (FARTHEST_SCALE * mainScale)),
+		floor(focusedObject->getPosition().y - (Helper::GetScreenSize().y / 2.0f + blockSize.x) / (FARTHEST_SCALE * mainScale)));
+	const Vector2f bottomRight(
+		floor(focusedObject->getPosition().x + (Helper::GetScreenSize().x / 2.0f + blockSize.y) / (FARTHEST_SCALE * mainScale)),
+		floor(focusedObject->getPosition().y + (Helper::GetScreenSize().y / 2.0f + blockSize.y) / (FARTHEST_SCALE * mainScale)));
 
 	for (auto& block : staticGrid->getBlocksInSight(upperLeft.x, upperLeft.y, bottomRight.x, bottomRight.y))	
 		inBlockGenerate(block);	
-	//---------------
 }
 
-bool cmpByChance(std::pair<Tag, int> a, std::pair<Tag, int> b)
+bool cmpByChance(const std::pair<Tag, int> a, const std::pair<Tag, int> b)
 {
 	return a.second < b.second;
 }
 
-void WorldGenerator::inBlockGenerate(int blockIndex)
+void WorldGenerator::inBlockGenerate(const int blockIndex)
 {
-	const int blockTypeProbablilty = rand() % 100;
-	const int groundIndX = staticGrid->getPointByIndex(blockIndex).x / blockSize.x;
-	const int groundIndY = staticGrid->getPointByIndex(blockIndex).y / blockSize.y;
-	std::vector<std::pair<Tag, int>> roomedBlocksContent = {}, otherBlocksContent = {};
+	const auto blockTypeProbability = rand() % 100;
+	const auto groundIndX = int(ceil(staticGrid->getPointByIndex(blockIndex).x / blockSize.x));
+	const auto groundIndY = int(ceil(staticGrid->getPointByIndex(blockIndex).y / blockSize.y));
+
+	std::vector<std::pair<Tag, int>> roomedBlocksContent = {};
+	std::vector<std::pair<Tag, int>> otherBlocksContent = {};
 
 	if (biomeMatrix[groundIndX][groundIndY] == DarkWoods)
 	{
-		if (blockTypeProbablilty <= 10) // block with roofs		
+		if (blockTypeProbability <= 10) // block with roofs		
 			roomedBlocksContent = { {Tag::roof, 10}, {Tag::rock, 2}, {Tag::stump, 2}, {Tag::tree, 7} };
 		else
-			if (blockTypeProbablilty <= 30) // block with yarrow
+			if (blockTypeProbability <= 30) // block with yarrow
 				roomedBlocksContent = { {Tag::yarrow, 0}, {Tag::rock, 2}, {Tag::stump, 2}, {Tag::tree, 7} };
 			else
-				if (blockTypeProbablilty <= 99) // common block				
+				if (blockTypeProbability <= 99) // common block				
 					roomedBlocksContent = { {Tag::rock, 2}, {Tag::stump, 2}, {Tag::tree, 7} };
 		otherBlocksContent = { {Tag::grass, 6} , {Tag::mushroom, 4} };
 	}
 	else
 		if (biomeMatrix[groundIndX][groundIndY] == BirchGrove)
 		{
-			if (blockTypeProbablilty <= 30) // block with chamomile
+			if (blockTypeProbability <= 30) // block with chamomile
 				roomedBlocksContent = { {Tag::chamomile, 0}, {Tag::rock, 2}, {Tag::stump, 2}, {Tag::log, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
 			else
-				if (blockTypeProbablilty <= 99) // common block
+				if (blockTypeProbability <= 99) // common block
 					roomedBlocksContent = { {Tag::rock, 5}, {Tag::stump, 2}, {Tag::log, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
 			otherBlocksContent = { {Tag::grass, 6} , {Tag::mushroom, 3} };
 		}
 		else
 			if (biomeMatrix[groundIndX][groundIndY] == SwampyTrees)
 			{
-				if (blockTypeProbablilty <= 30) // block with chamomile
+				if (blockTypeProbability <= 30) // block with chamomile
 					roomedBlocksContent = { {Tag::rock, 2}, {Tag::lake, 2}, {Tag::stump, 2}, {Tag::root, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
 				else
-					if (blockTypeProbablilty <= 99) // common block
+					if (blockTypeProbability <= 99) // common block
 						roomedBlocksContent = { {Tag::rock, 2}, {Tag::lake, 2}, {Tag::stump, 2}, {Tag::root, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
 				otherBlocksContent = { {Tag::grass, 6} , {Tag::mushroom, 2} };
 			}
 
 	std::sort(roomedBlocksContent.begin(), roomedBlocksContent.end(), cmpByChance);
-	
-	IntRect blockTransform = IntRect(staticGrid->getPointByIndex(blockIndex).x, staticGrid->getPointByIndex(blockIndex).y, Vector2f(blockSize).x, Vector2f(blockSize).y);
+
+	const auto blockTransform = IntRect(
+		int(staticGrid->getPointByIndex(blockIndex).x),
+		int(staticGrid->getPointByIndex(blockIndex).y),
+		int(Vector2f(blockSize).x),
+		int(Vector2f(blockSize).y));
 	generateGround(blockIndex);
 
 	//block filling
 	//return;
 
-	for (int x = blockTransform.left; x < blockTransform.left + blockTransform.width; x += 100)
+	for (auto x = blockTransform.left; x < blockTransform.left + blockTransform.width; x += 100)
 	{
-		for (int y = blockTransform.top; y < blockTransform.top + blockTransform.height; y += 100)
+		for (auto y = blockTransform.top; y < blockTransform.top + blockTransform.height; y += 100)
 		{
 			if (isRoomyStepBlock(x, y))
 			{
 				for (auto& item : roomedBlocksContent)
 				{
-					const int placedObjectDeterminant = rand() % 100;
+					const auto placedObjectDeterminant = rand() % 100;
 					if (item.second > placedObjectDeterminant)
 					{
-						initializeStaticItem(item.first, Vector2f(x, y), -1, "", 1, biomeMatrix[groundIndX][groundIndY]);
+						initializeStaticItem(item.first, Vector2f(float(x), float(y)), -1, "", 1, biomeMatrix[groundIndX][groundIndY]);
 						break;
 					}
 				}
@@ -165,10 +197,10 @@ void WorldGenerator::inBlockGenerate(int blockIndex)
 			else
 				for (auto& item : otherBlocksContent)
 				{
-					const int placedObjectDeterminant = rand() % 100;
+					const auto placedObjectDeterminant = rand() % 100;
 					if (item.second > placedObjectDeterminant)
 					{
-						initializeStaticItem(item.first, Vector2f(x, y), -1, "", 1, biomeMatrix[groundIndX][groundIndY]);
+						initializeStaticItem(item.first, Vector2f(float(x), float(y)), -1, "", 1, biomeMatrix[groundIndX][groundIndY]);
 						break;
 					}
 				}
@@ -176,11 +208,11 @@ void WorldGenerator::inBlockGenerate(int blockIndex)
 	}	
 }
 
-void WorldGenerator::generateGround(int blockIndex)
+void WorldGenerator::generateGround(const int blockIndex)
 {
 	const auto position = staticGrid->getPointByIndex(blockIndex);
-	const int groundIndX = position.x / blockSize.x;
-	const int groundIndY = position.y / blockSize.y;
+	const auto groundIndX = int(ceil(position.x / blockSize.x));
+	const auto groundIndY = int(ceil(position.y / blockSize.y));
 	const auto biome = biomeMatrix[groundIndX][groundIndY];
 	
 	initializeStaticItem(Tag::ground, position, int(biome), "", 1, biome);
@@ -190,12 +222,12 @@ void WorldGenerator::generateGround(int blockIndex)
 	initializeStaticItem(Tag::groundConnection, Vector2f(position.x + blockSize.x - 1, position.y), (biome - 1) * 4 + 4, "", 1);
 }
 
-bool WorldGenerator::isRoomyStepBlock(int x, int y) const
+bool WorldGenerator::isRoomyStepBlock(const int x, const int y) const
 {
-	return (roomyStepBlocks.count(std::make_pair((x % int(blockSize.x) / stepSize.x), (y % int(blockSize.y) / stepSize.y))) > 0);
+	return roomyStepBlocks.count(std::make_pair(x % int(blockSize.x) / int(stepSize.x), y % int(blockSize.y) / int(stepSize.y))) > 0;
 }
 
-bool WorldGenerator::isTriggerBlock(int x, int y)
+bool WorldGenerator::isTriggerBlock(const int x, const int y) const
 {
 	return abs(x - biomesChangeCenter.x) >= 4 || abs(y - biomesChangeCenter.y) >= 4 || abs(x - biomesChangeCenter.x) + abs(y - biomesChangeCenter.y) >= 5;
 }
@@ -203,8 +235,8 @@ bool WorldGenerator::isTriggerBlock(int x, int y)
 void WorldGenerator::initBiomesGenerationInfo()
 {
 	biomesBlocksOffsets.resize(8);
-	for (int x = -5; x <= 5; x++)
-		for (int y = -5; y <= 5; y++)		
+	for (auto x = -5; x <= 5; x++)
+		for (auto y = -5; y <= 5; y++)		
 			if (abs(x) + abs(y) >= 6)
 			{
 				if (x < 0 && y < 0)
@@ -228,7 +260,9 @@ void WorldGenerator::initBiomesGenerationInfo()
 					if (x < 0 && abs(x) > abs(y))
 						biomesBlocksOffsets[7].emplace_back(x, y);
 				}
-	biomesChangeCenter = Vector2i(focusedObject->getPosition().x / blockSize.x, focusedObject->getPosition().y / blockSize.y);
+	biomesChangeCenter = Vector2i(
+		int(focusedObject->getPosition().x / blockSize.x),
+		int(focusedObject->getPosition().y / blockSize.y));
 	focusedObjectBlock = biomesChangeCenter;
 	biomesGenerate();
 }
@@ -239,22 +273,26 @@ void WorldGenerator::biomesGenerate()
 
 	for (auto& biome : biomesBlocksOffsets)
 	{
-		const int biomeId = rand() % 3 + 1;
-		for (auto offset : biome)
+		const auto biomeId = rand() % 3 + 1;
+		for (const auto offset : biome)
 			biomeMatrix[biomesChangeCenter.x + offset.x][biomesChangeCenter.y + offset.y] = Biomes(biomeId);
 	}
 }
 
-void WorldGenerator::perimeterGeneration(int offset)
+void WorldGenerator::perimeterGeneration()
 {
 	const auto screenSize = Helper::GetScreenSize();
 	const auto characterPosition = focusedObject->getPosition();
-	const Vector2f worldUpperLeft(int(characterPosition.x - (screenSize.x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)), int(characterPosition.y - (screenSize.y / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)));
-	const Vector2f worldBottomRight(int(characterPosition.x + (screenSize.x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)), int(characterPosition.y + (screenSize.y / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)));
+	const Vector2f worldUpperLeft(
+		ceil(characterPosition.x - (screenSize.x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)),
+		ceil(characterPosition.y - (screenSize.y / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)));
+	const Vector2f worldBottomRight(
+		ceil(characterPosition.x + (screenSize.x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)),
+		ceil(characterPosition.y + (screenSize.y / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)));
 
 	if (focusedObject->getDirection() != Direction::STAND)
 	{
-		for (auto& block : staticGrid->getBlocksAround(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y, offset))
+		for (auto& block : staticGrid->getBlocksAround(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y))
 		{
 			if (canBeRegenerated(block))
 			{
@@ -268,16 +306,20 @@ void WorldGenerator::perimeterGeneration(int offset)
 
 void WorldGenerator::beyondScreenGeneration()
 {
-	if (focusedObjectBlock != Vector2i(focusedObject->getPosition().x / blockSize.x, focusedObject->getPosition().y / blockSize.y))
+	const auto block = Vector2i(
+		int(focusedObject->getPosition().x / blockSize.x),
+		int(focusedObject->getPosition().y / blockSize.y));
+	
+	if (focusedObjectBlock != block)
 	{		
-		perimeterGeneration(0);
-		focusedObjectBlock = Vector2i(focusedObject->getPosition().x / blockSize.x, focusedObject->getPosition().y / blockSize.y);
+		perimeterGeneration();
+		focusedObjectBlock = block;
 	}
 	if (isTriggerBlock(focusedObjectBlock.x, focusedObjectBlock.y))
 		biomesGenerate();
 }
 
-bool WorldGenerator::canBeRegenerated(int blockIndex)
+bool WorldGenerator::canBeRegenerated(const int blockIndex) const
 {
 	if (rememberedBlocks.count(blockIndex) > 0)
 		return false;

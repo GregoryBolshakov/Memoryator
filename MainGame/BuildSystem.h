@@ -1,13 +1,11 @@
-#ifndef BUILDSYSTEM_H
-#define BUILDSYSTEM_H
+#pragma once
 
 #include <SFML/Graphics.hpp>
-#include "Helper.h"
-#include "WorldObject.h"
-#include "InventorySystem.h"
 #include "GridList.h"
-#include "SpriteStructures.h"
+#include "Helper.h"
+#include "InventorySystem.h"
 #include "SpritePack.h"
+#include "WorldObject.h"
 
 using namespace sf;
 
@@ -30,7 +28,7 @@ public:
 	void interact(Vector2f cameraPosition = {0, 0}, float scaleFactor = 1);
 	void clearHareBags(int block, GridList& staticGrid, std::vector<WorldObject*>* visibleItems);
 	void wasPlaced();
-	std::vector<SpriteChainElement*> prepareSprites(GridList& staticGrid, std::vector<WorldObject*> visibleItems, std::map<PackTag, SpritePack>* packsMap);
+	std::vector<SpriteChainElement*> prepareSprites(GridList& staticGrid, const std::vector<WorldObject*>& visibleItems, std::map<PackTag, SpritePack>* packsMap);
 
 	int getCurrentObject() const { return currentObject; }
 	bool getUsedMouse() const { return usedMouse; }
@@ -61,5 +59,3 @@ private:
 	std::string BuildSystemObjectsInfoFileDirectory = "Game/buildSystem/buildSystemObjectsInfo.txt";
 	Font font;
 };
-
-#endif

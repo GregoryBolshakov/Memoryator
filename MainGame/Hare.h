@@ -1,24 +1,14 @@
 #pragma once
-#ifndef HARE_H
-#define HARE_H
 
-#include "NeutralMob.h"
 #include "Helper.h"
+#include "NeutralMob.h"
 
 using namespace sf;
 
 class Hare : public NeutralMob
 {
-private:
-	float timeForNewSprite;
-
-	int animationLength;
-	bool wasHit = false;
-	float timeAfterFear = 0, fearTime = 2 * 10e5;
-	int strikingSprite = 4;
-	WorldObject* owner = nullptr;
 public:
-	Hare(std::string objectName, Vector2f centerPosition);
+	Hare(const std::string& objectName, Vector2f centerPosition);
 	~Hare();
 	Vector2f calculateTextureOffset() override;
 	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;
@@ -29,6 +19,10 @@ public:
 	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
 	void jerk(float power, float deceleration, Vector2f destinationPoint) override;
-};
 
-#endif
+private:
+	long long timeForNewSprite;
+	int animationLength{};
+	long long timeAfterFear = 0;
+	long long fearTime = long(2 * 10e5);
+};

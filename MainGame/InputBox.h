@@ -1,6 +1,5 @@
 #pragma once
-#ifndef  INPUTBOX_H
-#define INPUTBOX_H
+
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "TextSystem.h"
@@ -11,29 +10,32 @@ class InputBox
 {
 public:
 	InputBox();
-	InputBox(IntRect rect);
+	InputBox(FloatRect rect);
 	~InputBox();
-	void init(IntRect rect);
-	void draw(RenderWindow& window);
+	void init(FloatRect rect);
+	void draw(RenderWindow& window) const;
 	void onMouseRelease();
 	void handleEvents(Event event);
 	void interact(long long elapsedTime);
 	void resetCursor(bool toEnd = false);
 	std::string line;
+	
 private:
 	void setCursorToPos();
 	void animateCursor();
-	IntRect rect;
-	int cursorPos = 0;
-	Color outFill = Color(85, 47, 8, 220), inFill = Color(210, 163, 116, 60), inFillSelected = Color(235, 200, 166, 100), textColor = Color(235, 200, 166, 180);
+	FloatRect rect;
+	size_t cursorPos = 0;
+	sf::Color outFill = sf::Color(85, 47, 8, 220);
+	sf::Color inFill = sf::Color(210, 163, 116, 60);
+	sf::Color inFillSelected = sf::Color(235, 200, 166, 100);
+	sf::Color textColor = sf::Color(235, 200, 166, 180);
 	RectangleShape body, innerPart, cursor;
 	bool mousePressed = false;
 	std::pair<float, float> mouseSelectVector;
-	int characterSize = 30, microOffset = 6;
+	float characterSize = 30.0f;
+	float microOffset = 6.0f;
 	Text text;
 
-	float timeForCursorAnimation = 5e5, timeAfterCursorAnimation = 0;
+	long long timeForCursorAnimation = long(5e5);
+	long long timeAfterCursorAnimation = 0;
 };
-#endif
-
-

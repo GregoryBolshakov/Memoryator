@@ -1,6 +1,6 @@
 #include "Nightmare2.h"
 
-Nightmare2::Nightmare2(std::string objectName, Vector2f centerPosition) : Monster(objectName, centerPosition)
+Nightmare2::Nightmare2(std::string objectName, Vector2f centerPosition) : Monster(std::move(objectName), centerPosition)
 {
 	conditionalSizeUnits = { 600, 600 };
 	defaultSpeed = 0.0005f;
@@ -10,9 +10,9 @@ Nightmare2::Nightmare2(std::string objectName, Vector2f centerPosition) : Monste
 	strength = 17;
 	healthPoint = 180;
 	currentAction = relax;
-	timeForNewHitself = 2e5;
-	timeAfterHitself = timeForNewHitself;
-	timeForNewHit = 1e6;
+	timeForNewHitSelf = long(2e5);
+	timeAfterHitSelf = timeForNewHitSelf;
+	timeForNewHit = long(1e6);
 	timeAfterHit = timeForNewHit;
 	toSaveName = "nightmare2_";
 	tag = Tag::nightmare2;
@@ -20,8 +20,7 @@ Nightmare2::Nightmare2(std::string objectName, Vector2f centerPosition) : Monste
 
 
 Nightmare2::~Nightmare2()
-{
-}
+= default;
 
 
 Vector2f Nightmare2::calculateTextureOffset()

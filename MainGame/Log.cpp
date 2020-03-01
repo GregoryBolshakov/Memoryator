@@ -1,7 +1,7 @@
 #include "Log.h"
 #include "Helper.h"
 
-Log::Log(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(objectName, centerPosition)
+Log::Log(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 3;
 	this->typeOfObject = typeOfObject;
@@ -9,11 +9,11 @@ Log::Log(std::string objectName, Vector2f centerPosition, int typeOfObject) : Te
 	radius = 50;
 	animationSpeed = 10;
 	toSaveName = "log";
-	setType(typeOfObject);
+	Log::setType(typeOfObject);
 	tag = Tag::log;
 }
 
-void Log::setType(int typeOfObject)
+void Log::setType(const int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
@@ -52,51 +52,51 @@ void Log::initPedestal()
 		focus1 = Vector2f(position.x, position.y);
 		focus2 = Vector2f(position.x, position.y);
 
-		microEllipse.first = Vector2f(position.x - textureBox.width * 0.42, position.y + textureBox.height * 0.15);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.073, position.y - textureBox.height * 0.26);
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.42f, position.y + textureBox.height * 0.15f);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.073f, position.y - textureBox.height * 0.26f);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x - textureBox.width * 0.107, position.y - textureBox.height * 0.197);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.169, position.y - textureBox.height * 0.197);
+		microEllipse.first = Vector2f(position.x - textureBox.width * 0.107f, position.y - textureBox.height * 0.197f);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.169f, position.y - textureBox.height * 0.197f);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x + textureBox.width * 0.033, position.y - textureBox.height * 0.2);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.407, position.y + textureBox.height * 0.103);
+		microEllipse.first = Vector2f(position.x + textureBox.width * 0.033f, position.y - textureBox.height * 0.2f);
+		microEllipse.second = Vector2f(position.x + textureBox.width * 0.407f, position.y + textureBox.height * 0.103f);
 		internalEllipses.push_back(microEllipse);
-		ellipseSizeMultipliers = { 1.03, 1.11, 1.05 };
+		ellipseSizeMultipliers = { 1.03f, 1.11f, 1.05f };
 		break;
 	case 2:
 		focus1 = Vector2f(position.x - textureBox.width * 0.399f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.399f, position.y);
-		ellipseSizeMultipliers[0] = { 1.07 };
+		ellipseSizeMultipliers[0] = { 1.07f };
 		break;
 	case 3:
 		focus1 = Vector2f(position.x - textureBox.width * 0.396f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.396f, position.y);
-		ellipseSizeMultipliers[0] = { 1.12 };
+		ellipseSizeMultipliers[0] = { 1.12f };
 		break;
 	default:
 		focus1 = Vector2f(position.x - textureBox.width * 0.311f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.311f, position.y);
-		ellipseSizeMultipliers[0] = { 1.307 };
+		ellipseSizeMultipliers[0] = { 1.307f };
 		break;
 	}
 	initMicroBlocks();
 }
 
-Vector2f Log::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f Log::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Log::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int Log::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Log::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Log::prepareSprites(long long)
 {
-	SpriteChainElement* body = new SpriteChainElement(PackTag::birchGrove, PackPart::log, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);	
+	const auto body = new SpriteChainElement(PackTag::birchGrove, PackPart::log, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);	
 
 	return { body };
 }

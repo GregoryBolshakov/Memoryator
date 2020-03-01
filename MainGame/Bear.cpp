@@ -2,14 +2,14 @@
 
 using namespace sf;
 
-Bear::Bear(const std::string objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
+Bear::Bear(const std::string& objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
 {
 	conditionalSizeUnits = { 432, 384 };
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
 	defaultSpeed = 0.0003f;
 	speed = 0.0003f;
-	animationSpeed = 5e-4;
+	animationSpeed = float(5e-4);
 	animationLength = 8;
 	radius = 70;
 	strength = 10;
@@ -18,16 +18,15 @@ Bear::Bear(const std::string objectName, Vector2f centerPosition) : NeutralMob(o
 	fear = 0;
 	healthPoint = 50;
 	currentAction = relax;	
-	timeForNewHitself = 6e5;
-	timeAfterHitself = timeForNewHitself;
+	timeForNewHitSelf = long(6e5);
+	timeAfterHitSelf = timeForNewHitSelf;
 	timeForNewHit = 10e6;
 	toSaveName = "bear";
 	tag = Tag::bear;
 }
 
 Bear::~Bear()
-{
-}
+= default;
 
 Vector2f Bear::calculateTextureOffset()
 {
@@ -60,7 +59,7 @@ void Bear::behavior(long long elapsedTime)
 			movePosition = position;
 			return;
 		}
-		side = calculateSide(owner->getPosition(), elapsedTime);
+		side = calculateSide(owner->getPosition());
 		if (Helper::getDist(position, owner->getPosition()) > sightRange / 2)
 		{
 			changeAction(grab, false, false);
@@ -75,7 +74,7 @@ void Bear::behavior(long long elapsedTime)
 		return;
 	}
 
-	side = calculateSide(movePosition, elapsedTime);
+	side = calculateSide(movePosition);
 
 	if (boundTarget == nullptr)
 		return;

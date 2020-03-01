@@ -21,8 +21,8 @@ private:
 public:
 	WreathDraft();
 	~WreathDraft();
-	void init(DraftInfo originalSetup);
-	DraftInfo getOriginalSetup() const { return originalSetup; }
+	void init(const DraftInfo& originalSetup);
+	[[nodiscard]] DraftInfo getOriginalSetup() const { return originalSetup; }
 
 	DraftInfo currentSetup;
 };

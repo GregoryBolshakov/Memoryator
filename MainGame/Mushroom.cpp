@@ -1,13 +1,13 @@
 #include "Mushroom.h"
 #include "Helper.h"
 
-Mushroom::Mushroom(std::string objectName, Vector2f centerPosition, int typeOfObject) : StaticObject(objectName, centerPosition)
+Mushroom::Mushroom(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : StaticObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 16; // BirchGrove: 1-3; DarkWoods: 4-12; SwampyTrees: 13-16
 	this->typeOfObject = typeOfObject;
 	this->intangible = true;
 	toSaveName = "mushroom";
-	setType(typeOfObject);
+	Mushroom::setType(typeOfObject);
 	tag = Tag::mushroom;
 	mirrored = bool(rand() % 2);
 }

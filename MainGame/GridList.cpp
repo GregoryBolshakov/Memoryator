@@ -1,13 +1,10 @@
-#pragma once
-#ifndef GRIDLIST_CPP
-#define GRIDLIST_CPP
-
 #include <cmath>
 #include <queue>
+
 #include "GridList.h"
 #include "Helper.h"
 
-GridList::GridList() : width(0), height(0), size(0, 0)
+GridList::GridList() : width(0), height(0)
 {
 }
 
@@ -16,15 +13,21 @@ Vector2f GridList::getBlockSize() const
 	return size;
 }
 
-GridList::GridList(int width, int height, Vector2f size, Vector2f microSize)
+GridList::GridList(const int width, const int height, const Vector2f size, const Vector2f microSize)
 {
 	this->width = width;
 	this->height = height;
 	this->size = size;
 	this->microSize = microSize;
-	auto vectorSize = int(ceil(double(height) / size.y) * ceil(double(width) / size.x));
+
+	width_to_size_x_ = int(ceil(float(width) / size.x));
+	height_to_size_y_ = int(ceil(float(height) / size.y));
+	width_to_micro_x_ = int(ceil(float(width) / microSize.x));
+	height_to_micro_y_ = int(ceil(float(height) / microSize.y));
+	
+	const auto vectorSize = width_to_size_x_ * height_to_size_y_;
 	cells.resize(vectorSize);
-	for (auto&arr : cells)
+	for (auto& arr : cells)
 	{
 		arr.resize(0);
 	}
@@ -35,9 +38,9 @@ GridList::GridList(int width, int height, Vector2f size, Vector2f microSize)
 
 GridList::~GridList()
 {
-	for (std::vector<WorldObject*> cell : cells)
+	for (auto cell : cells)
 	{
-		for (WorldObject* ptr : cell)
+		for (auto ptr : cell)
 		{
 			delete ptr;
 		}
@@ -47,71 +50,87 @@ GridList::~GridList()
 	items.clear();
 }
 
-int GridList::getIndexByPoint(int x, int y) const
+int GridList::getIndexByPoint(const float x, const float y) const
 {
-	const int y1 = y / size.y;
-	const int x1 = ceil(double(width) / size.x);
-	const int result = x1 * y1 + x / size.x;
+	const auto x1 = width / int(size.x);
+	const auto y1 = int(y / size.y);
+	const auto result = x1 * y1 + int(x / size.x);
+	
 	return int(result);
 }
 
-Vector2f GridList::getPointByIndex(int index) const
+Vector2f GridList::getPointByIndex(const int index) const
 {
-	const int inLineNumber = ceil(double(width) / size.x);
-	const int inRawNumber = (index) / inLineNumber;
+	const auto inLineNumber = width / int(size.x);
+	const auto inRawNumber = index / inLineNumber;
 
-	Vector2f result;
-	result.x = (index % inLineNumber) * size.x;
-	result.y = (inRawNumber * size.y);
+	const auto result= Vector2f(
+		float(index % inLineNumber) * size.x,
+		float(inRawNumber) * size.y);
 
 	return result;
 }
 
-int GridList::getMicroBlockByPoint(int x, int y) const
+int GridList::getMicroBlockByPoint(const float x, const float y) const
 {
-	const int y1 = y / microSize.y;
-	const int x1 = ceil(double(width) / microSize.x);
-	const int result = x1 * y1 + x / microSize.x;
+	const auto x1 = width / int(microSize.x);
+	const auto y1 = int(y / microSize.y);
+	const auto result = x1 * y1 + int(x / microSize.x);
+	
 	return int(result);
 }
 
-Vector2f GridList::getPointByMicroBlock(int microBlockIndex) const
+Vector2f GridList::getPointByMicroBlock(const int microBlockIndex) const
 {
-	int inLineNumber = ceil(double(width) / microSize.x);
-	int inRawNumber = (microBlockIndex) / inLineNumber;
+	const auto inLineNumber = width / int(microSize.x);
+	const auto inRawNumber = microBlockIndex / inLineNumber;
 
-	Vector2f result = Vector2f((microBlockIndex % inLineNumber) * microSize.x, result.y = (inRawNumber * microSize.y));
+	const auto result = Vector2f(
+		float(microBlockIndex % inLineNumber) * microSize.x,
+		float(inRawNumber) * microSize.y);
 
 	return result;
 }
 
-void GridList::makeRoute(Vector2f startPos, Vector2f finishPos, int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY, int permissibleDistance)
+void GridList::makeRoute(
+	const Vector2f startPos,
+	const Vector2f finishPos,
+	const float upperLeftX,
+	const float upperLeftY,
+	const float bottomRightX,
+	const float bottomRightY,
+	const int permissibleDistance)
 {
 	route.clear();
 
 	if (abs(startPos.x - finishPos.x) / microSize.x + abs(startPos.y - finishPos.y) / microSize.y < 1)
 		return;
 
-	const int xMicroblocksCount = ceil((bottomRightX - upperLeftX) / microSize.x);
-	const int yMicroblocksCount = ceil((bottomRightY - upperLeftY) / microSize.y);
+	const auto xMicroBlocksCount = int(ceil((bottomRightX - upperLeftX) / microSize.x));
+	const auto yMicroBlocksCount = int(ceil((bottomRightY - upperLeftY) / microSize.y));
 
-	const int startXInd = upperLeftX / microSize.x;
-	const int startYInd = upperLeftY / microSize.y;
+	const auto startXInd = int(round(upperLeftX / microSize.x));
+	const auto startYInd = int(round(upperLeftY / microSize.y));
 
-	int curMicroblockX = startPos.x / microSize.x, curMicroblockY = startPos.y / microSize.y;
-	int lastMicroblockX = finishPos.x / microSize.x, lastMicroblockY = finishPos.y / microSize.y;
+	auto curMicroBlockX = int(round(startPos.x / microSize.x));
+	auto curMicroBlockY = int(round(startPos.y / microSize.y));
 
-	bool isBreak = false;
-	if (!microBlockMatrix[curMicroblockX][curMicroblockY]/* || !dynamicMicroBlockMatrix->at(curMicroblockX)[curMicroblockY]*/)
+	auto lastMicroBlockX = int(round(finishPos.x / microSize.x));
+	auto lastMicroBlockY = int(round(finishPos.y / microSize.y));
+
+	auto isBreak = false;
+	
+	if (!microBlockMatrix[curMicroBlockX][curMicroBlockY]/* || !dynamicMicroBlockMatrix->at(curMicroBlockX)[curMicroBlockY]*/)
 	{
-		for (int i = -1; i <= 1; i++)
+		for (auto i = -1; i <= 1; i++)
 		{
-			for (int j = -1; j <= 1; j++)
-				if (curMicroblockX + i > 0 && curMicroblockX + i < width / microSize.x &&
-					curMicroblockY + j > 0 && curMicroblockY + j < height / microSize.y && microBlockMatrix[curMicroblockX + i][curMicroblockY + j]/* && dynamicMicroBlockMatrix->at(curMicroblockX + i)[curMicroblockY + j]*/)
+			for (auto j = -1; j <= 1; j++)
+				if (curMicroBlockX + i > 0 && curMicroBlockX + i < width_to_micro_x_ &&
+					curMicroBlockY + j > 0 && curMicroBlockY + j < height_to_micro_y_ && 
+					microBlockMatrix[curMicroBlockX + i][curMicroBlockY + j]/* && dynamicMicroBlockMatrix->at(curMicroBlockX + i)[curMicroBlockY + j]*/)
 				{
-					curMicroblockX += i;
-					curMicroblockY += j;
+					curMicroBlockX += i;
+					curMicroBlockY += j;
 					isBreak = true;
 					break;
 				}
@@ -120,17 +139,18 @@ void GridList::makeRoute(Vector2f startPos, Vector2f finishPos, int upperLeftX, 
 		}
 	}
 
-	if (!microBlockMatrix[lastMicroblockX][lastMicroblockY]/* || !dynamicMicroBlockMatrix->at(lastMicroblockX)[lastMicroblockY]*/)
+	if (!microBlockMatrix[lastMicroBlockX][lastMicroBlockY]/* || !dynamicMicroBlockMatrix->at(lastMicroBlockX)[lastMicroBlockY]*/)
 	{
-		for (int i = -permissibleDistance; i <= permissibleDistance; i++)
+		for (auto i = -permissibleDistance; i <= permissibleDistance; i++)
 		{
 			isBreak = false;
-			for (int j = -permissibleDistance; j <= permissibleDistance; j++)
-				if (lastMicroblockX + i > 0 && lastMicroblockX + i < width / microSize.x &&
-					lastMicroblockY + j > 0 && lastMicroblockY + j < height / microSize.y && microBlockMatrix[lastMicroblockX + i][lastMicroblockY + j]/* && dynamicMicroBlockMatrix->at(lastMicroblockX + i)[lastMicroblockY + j]*/)
+			for (auto j = -permissibleDistance; j <= permissibleDistance; j++)
+				if (lastMicroBlockX + i > 0 && lastMicroBlockX + i < width_to_micro_x_ &&
+					lastMicroBlockY + j > 0 && lastMicroBlockY + j < height_to_micro_y_ && 
+					microBlockMatrix[lastMicroBlockX + i][lastMicroBlockY + j]/* && dynamicMicroBlockMatrix->at(lastMicroBlockX + i)[lastMicroBlockY + j]*/)
 				{
-					lastMicroblockX += i;
-					lastMicroblockY += j;
+					lastMicroBlockX += i;
+					lastMicroBlockY += j;
 					isBreak = true;
 					break;
 				}
@@ -139,35 +159,34 @@ void GridList::makeRoute(Vector2f startPos, Vector2f finishPos, int upperLeftX, 
 		}
 	}
 
-	if (!microBlockMatrix[lastMicroblockX][lastMicroblockY])
+	if (!microBlockMatrix[lastMicroBlockX][lastMicroBlockY])
 	{
 		route.clear();
 		return;
 	}
 
-	for (int i = startXInd; i < startXInd + xMicroblocksCount; i++)	
-		for (int j = startYInd; j < startYInd + yMicroblocksCount; j++)		
+	for (auto i = startXInd; i < startXInd + xMicroBlocksCount; i++)	
+		for (auto j = startYInd; j < startYInd + yMicroBlocksCount; j++)		
 			distances[i][j] = inf;
 
-	distances[curMicroblockX][curMicroblockY] = 0;
-	bfs(startXInd + xMicroblocksCount, startYInd + yMicroblocksCount, curMicroblockX, curMicroblockY, lastMicroblockX, lastMicroblockY, permissibleDistance);
+	distances[curMicroBlockX][curMicroBlockY] = 0;
+	bfs(startXInd + xMicroBlocksCount, startYInd + yMicroBlocksCount, curMicroBlockX, curMicroBlockY, lastMicroBlockX, lastMicroBlockY);
 }
 
-void GridList::bfs(int xBorder, int yBorder, int startX, int startY, int finishX, int finishY, int permissibleDistance)
+void GridList::bfs(const int xBorder, const int yBorder, int startX, int startY, const int finishX, const int finishY)
 {
 	std::queue<std::pair<int, int>> q;
 	q.push(std::make_pair(startX, startY));
 
-	int minDistToFinish = 1000;
-	float step = 1;
+	float step;
 	while (!q.empty()) 
 	{
-		std::pair<int, int> v = q.front();
+		const auto v = q.front();
 		q.pop();
-		bool isBreak = false;
+		auto isBreak = false;
 
-		for (int i = -1; i <= 1; i++)
-			for (int j = -1; j <= 1; j++)
+		for (auto i = -1; i <= 1; i++)
+			for (auto j = -1; j <= 1; j++)
 			{				
 				if (i == 0 && j == 0)
 					continue;
@@ -176,16 +195,16 @@ void GridList::bfs(int xBorder, int yBorder, int startX, int startY, int finishX
 				else
 					step = 1.0f;
 
-				std::pair<int, int> to = std::make_pair(v.first + i, v.second + j);
+				auto to = std::make_pair(v.first + i, v.second + j);
 				if (to.first < 0 || to.first > xBorder || to.second < 0 || to.second > yBorder)
 					continue;
 
 				if (abs(previous[v.first][v.second].first - v.first) + abs(previous[v.first][v.second].second - v.second) <= 2 &&
 					v.first - previous[v.first][v.second].first == to.first - v.first && v.second - previous[v.first][v.second].second == to.second - v.second)
-					step -= 0.0001;
+					step -= 0.0001f;
 
 
-				if (distances[to.first][to.second] > distances[v.first][v.second] + step && ((microBlockMatrix[to.first][to.second] != 0 && dynamicMicroBlockMatrix->at(to.first)[to.second] != 0) || (to.first == finishX && to.second == finishY)))
+				if (distances[to.first][to.second] > distances[v.first][v.second] + step && (microBlockMatrix[to.first][to.second] != 0 && dynamicMicroBlockMatrix->at(to.first)[to.second] != 0 || to.first == finishX && to.second == finishY))
 				{
 					distances[to.first][to.second] = distances[v.first][v.second] + step;
 					previous[to.first][to.second] = v;
@@ -201,9 +220,9 @@ void GridList::bfs(int xBorder, int yBorder, int startX, int startY, int finishX
 			break;
 	}
 
-	bool canCreateRoute = true;
+	auto canCreateRoute = true;
 
-	if ((finishX == -1) || distances[finishX][finishY] == inf)
+	if (finishX == -1 || distances[finishX][finishY] == inf)
 	{
 		canCreateRoute = false;
 		route.clear();		
@@ -213,7 +232,7 @@ void GridList::bfs(int xBorder, int yBorder, int startX, int startY, int finishX
 	{
 		std::vector<std::pair<int, int>> path;
 
-		std::pair<int, int> currentMatrixCeil = previous[finishX][finishY];
+		auto currentMatrixCeil = previous[finishX][finishY];
 		float iterations = 0;
 		while (true)
 		{
@@ -242,7 +261,7 @@ void GridList::bfs(int xBorder, int yBorder, int startX, int startY, int finishX
 			path.erase(path.begin() + 0);
 
 		// cut corners
-		int cnt = 0;
+		auto cnt = 0;
 		while (cnt < int(path.size() - 3))
 			if (path[cnt + 1].first - path[cnt].first == path[cnt + 2].first - path[cnt + 1].first && path[cnt + 1].second - path[cnt].second == path[cnt + 2].second - path[cnt + 1].second)
 				path.erase(path.begin() + cnt);
@@ -254,7 +273,7 @@ void GridList::bfs(int xBorder, int yBorder, int startX, int startY, int finishX
 	}
 }
 
-bool GridList::isIntersectWithOthers(WorldObject* object, std::vector<WorldObject*> visibleTerrain, bool isDotAdjustded) const
+bool GridList::isIntersectWithOthers(WorldObject* object, const std::vector<WorldObject*>& visibleTerrain, bool isDotAdjusted) const
 {
 	/*for (auto&anotherItem : visibleTerrain)
 	{
@@ -265,7 +284,7 @@ bool GridList::isIntersectWithOthers(WorldObject* object, std::vector<WorldObjec
 		if (anotherObject->isBackground || anotherObject->tag == Tag::hero || anotherObject->intangible)
 			continue;
 
-		if (anotherItem->isDotsAdjusted && isDotAdjustded)
+		if (anotherItem->isDotsAdjusted && isDotAdjusted)
 			continue;
 		
 		if (Helper::getDist(position, anotherObject->getPosition()) < radius + anotherObject->getRadius())
@@ -273,21 +292,28 @@ bool GridList::isIntersectWithOthers(WorldObject* object, std::vector<WorldObjec
 	}*/
 
 	std::map<std::pair<int, int>, bool> checkBlocks = {};
-	for (int i = (object->getPosition().x - object->getMicroBlockCheckAreaBounds().x) / microSize.x; i < (object->getPosition().x + object->getMicroBlockCheckAreaBounds().x) / microSize.x; i++)
-		for (int j = (object->getPosition().y - object->getMicroBlockCheckAreaBounds().y) / microSize.y; j < (object->getPosition().y + object->getMicroBlockCheckAreaBounds().y) / microSize.y; j++)
-			if (!(i < 0 || i > width / microSize.x || j < 0 || j > height / microSize.y) && !microBlockMatrix[i][j])
+
+	const auto i_start = int(round((object->getPosition().x - object->getMicroBlockCheckAreaBounds().x) / microSize.x));
+	const auto i_end = int(round((object->getPosition().x + object->getMicroBlockCheckAreaBounds().x) / microSize.x));
+
+	const auto j_start = int(round((object->getPosition().y - object->getMicroBlockCheckAreaBounds().y) / microSize.y));
+	const auto j_end = int(round((object->getPosition().y + object->getMicroBlockCheckAreaBounds().y) / microSize.y));
+
+	for (auto i = i_start; i < i_end; i++)
+		for (auto j = j_start; j < j_end; j++)
+			if (!(i < 0 || i > width_to_micro_x_ || j < 0 || j > height_to_micro_y_) && !microBlockMatrix[i][j])
 				checkBlocks[{i, j}] = true;
 
 	return object->isLockedPlace(checkBlocks);
 }
 
-void GridList::setLockedMicroBlocks(WorldObject* item, bool value, bool dynamicMatrix)
+void GridList::setLockedMicroBlocks(WorldObject* item, const bool value, const bool dynamicMatrix)
 {
 	const auto worldItem = dynamic_cast<WorldObject*>(item);
 	if (worldItem)
 		for (const auto block : worldItem->getLockedMicroBlocks())
 		{
-			if (!(block.x < 0 || block.x > width / microSize.x || block.y < 0 || block.y > height / microSize.y))
+			if (!(block.x < 0 || block.x > width_to_micro_x_ || block.y < 0 || block.y > height_to_micro_y_))
 			{
 				if (dynamicMatrix)
 					dynamicMicroBlockMatrix->at(block.x)[block.y] = value;
@@ -297,13 +323,9 @@ void GridList::setLockedMicroBlocks(WorldObject* item, bool value, bool dynamicM
 		}
 }
 
-void GridList::addItem(WorldObject* item, const std::string& name, int x, int y)
+void GridList::addItem(WorldObject* item, const std::string& name, const float x, const float y)
 {
-	if (item->tag == Tag::hero)
-		auto test = 123;
-
 	setLockedMicroBlocks(item);
-	int blocksCount = ceil(width / size.x) * ceil(height / size.y);
 
 	if (items.find(name) != items.end())
 		throw std::invalid_argument("The key " + name + " already exists in the Grid.");
@@ -317,7 +339,7 @@ void GridList::addItem(WorldObject* item, const std::string& name, int x, int y)
 	items.insert({ name, position });
 }
 
-void GridList::clearCell(int cellIndex)
+void GridList::clearCell(const int cellIndex)
 {
 	for (auto& item : cells[cellIndex])
 	{
@@ -327,66 +349,66 @@ void GridList::clearCell(int cellIndex)
 	cells[cellIndex].clear();
 }
 
-void GridList::deleteItem(std::string name)
-{		
-	auto position = items.at(name);
+void GridList::deleteItem(const std::string& name)
+{
+	const auto position = items.at(name);
 	setLockedMicroBlocks(cells[position.first][position.second], true);
-	for (int i = position.second; i < cells[position.first].size(); i++)
+	
+	for (unsigned int i = position.second; i < cells[position.first].size(); i++)
 	{
-		auto itemToUpdate = dynamic_cast<WorldObject*>(cells[position.first][i]);
+		const auto itemToUpdate = dynamic_cast<WorldObject*>(cells[position.first][i]);
 		auto itemName = itemToUpdate->getName();
 		items.at(itemName).second -= 1;
-	}	
+	}
+	
 	cells[position.first].erase(cells[position.first].begin() + position.second);
 	items.erase(items.find(name));
 }
 
 WorldObject* GridList::getItemByName(const std::string& name)
 {
-	auto position = items.at(name);
+	const auto position = items.at(name);
 	return cells[position.first][position.second];
 }
 
-std::vector<WorldObject*> GridList::getItems(int blockIndex)
+std::vector<WorldObject*> GridList::getItems(const int blockIndex)
 {
 	return cells[blockIndex];
 }
 
-std::vector<WorldObject*> GridList::getItems(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY)
+std::vector<WorldObject*> GridList::getItems(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY)
 {
 	std::vector<WorldObject*> result = {};
-	if (upperLeftX <= 0)
+	
+	if (upperLeftX < 0)
 	{
 		upperLeftX = 0;
 	}
-	if (bottomRightX >= width)
+	if (bottomRightX > float(width))
 	{
-		bottomRightX = width;
+		bottomRightX = float(width);
 	}
-	if (upperLeftY <= 0)
+	if (upperLeftY < 0)
 	{
 		upperLeftY = 0;
 	}
-	if (bottomRightY >= height)
+	if (bottomRightY > float(height))
 	{
-		bottomRightY = height;
+		bottomRightY = float(height);
 	}
 	const auto rowsCount = int(ceil(double(bottomRightY - upperLeftY) / int(size.y)));
 	auto firstColumn = int(getIndexByPoint(upperLeftX, upperLeftY));
 	auto lastColumn = int(getIndexByPoint(bottomRightX, upperLeftY));
-	const auto columnsPerRow = int(ceil(double(width) / int(size.x)));
+	const auto columnsPerRow = width_to_size_x_;
 	const auto maxColumn = int(cells.size()) - 1;
 
 	for (auto i = 0; i <= rowsCount; i++)
 	{
-		if (lastColumn >= maxColumn)
+		if (lastColumn > maxColumn)
 			lastColumn = maxColumn;
-
-
-		for (int j = firstColumn; j <= lastColumn; j++)
+		
+		for (auto j = firstColumn; j <= lastColumn; j++)
 		{
-			if (j == 647)
-				auto test = 123;
 			result.insert(result.end(), cells[j].begin(), cells[j].end());
 		}
 
@@ -397,24 +419,24 @@ std::vector<WorldObject*> GridList::getItems(int upperLeftX, int upperLeftY, int
 	return result;
 }
 
-std::vector<int> GridList::getBlocksAround(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY, int offset)
+std::vector<int> GridList::getBlocksAround(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY) const
 {
 	std::vector<int> result;
 
-	if (upperLeftX <= 0)
+	if (upperLeftX < 0)
 		upperLeftX = 0;
-	if (bottomRightX >= width)
-		bottomRightX = width;
-	if (upperLeftY <= 0)
+	if (bottomRightX > float(width))
+		bottomRightX = float(width);
+	if (upperLeftY < 0)
 		upperLeftY = 0;
-	if (bottomRightY >= height)
-		bottomRightY = height;
+	if (bottomRightY > float(height))
+		bottomRightY = float(height);
 
-	auto rowsCount = int(ceil(double(bottomRightY - upperLeftY) / size.y));
+	const auto rowsCount = int(ceil(double(bottomRightY - upperLeftY) / size.y));
 	auto firstColumn = getIndexByPoint(upperLeftX, upperLeftY);
 	auto lastColumn = getIndexByPoint(bottomRightX, upperLeftY);
-	auto columnsPerRow = int(ceil(double(width) / size.x));
-	auto maxColumn = int(cells.size()) - 1;
+	const auto columnsPerRow = width_to_size_x_;
+	const auto maxColumn = int(cells.size()) - 1;
 
 	for (auto i = 0; i <= rowsCount; i++)
 	{
@@ -422,7 +444,7 @@ std::vector<int> GridList::getBlocksAround(int upperLeftX, int upperLeftY, int b
 			lastColumn = maxColumn;
 
 		if (i == 0 || i == rowsCount)
-			for (int j = firstColumn; j <= lastColumn; j++)
+			for (auto j = firstColumn; j <= lastColumn; j++)
 				result.push_back(j);
 		else
 		{
@@ -437,31 +459,31 @@ std::vector<int> GridList::getBlocksAround(int upperLeftX, int upperLeftY, int b
 	return result;
 }
 
-std::vector<int> GridList::getBlocksInSight(int upperLeftX, int upperLeftY, int bottomRightX, int bottomRightY)
+std::vector<int> GridList::getBlocksInSight(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY) const
 {
 	std::vector<int> result;
 
-	if (upperLeftX <= 0)
+	if (upperLeftX < 0)
 		upperLeftX = 0;
-	if (bottomRightX >= width)
-		bottomRightX = width;
-	if (upperLeftY <= 0)
+	if (bottomRightX > float(width))
+		bottomRightX = float(width);
+	if (upperLeftY < 0)
 		upperLeftY = 0;
-	if (bottomRightY >= height)
-		bottomRightY = height;
+	if (bottomRightY > float(height))
+		bottomRightY = float(height);
 
-	auto rowsCount = int(ceil(double(bottomRightY - upperLeftY) / size.y));
+	const auto rowsCount = int(ceil(double(bottomRightY - upperLeftY) / size.y));
 	auto firstColumn = getIndexByPoint(upperLeftX, upperLeftY);
 	auto lastColumn = getIndexByPoint(bottomRightX, upperLeftY);
-	auto columnsPerRow = int(ceil(double(width) / size.x));
-	auto maxColumn = int(cells.size()) - 1;
+	const auto columnsPerRow = width_to_size_x_;
+	const auto maxColumn = int(cells.size()) - 1;
 
 	for (auto i = 0; i <= rowsCount; i++)
 	{
 		if (lastColumn >= maxColumn)
 			lastColumn = maxColumn;
 
-		for (int j = firstColumn; j <= lastColumn; j++)
+		for (auto j = firstColumn; j <= lastColumn; j++)
 			result.push_back(j);
 
 		firstColumn += columnsPerRow;
@@ -471,15 +493,15 @@ std::vector<int> GridList::getBlocksInSight(int upperLeftX, int upperLeftY, int 
 	return result;
 }
 
-void GridList::updateItemPosition(const std::string name, int x, int y)
+void GridList::updateItemPosition(const std::string& name, const float x, const float y)
 {
 	auto position = items.at(name);
 	const auto item = cells[position.first][position.second];
 	cells[position.first].erase(cells[position.first].begin() + position.second);
 
-	for (int i = position.second; i < cells[position.first].size(); i++)
+	for (unsigned int i = position.second; i < cells[position.first].size(); i++)
 	{
-		auto itemToUpdate = dynamic_cast<WorldObject*>(cells[position.first][i]);
+		const auto itemToUpdate = dynamic_cast<WorldObject*>(cells[position.first][i]);
 		auto itemName = itemToUpdate->getName();
 		items.at(itemName).second -= 1;
 	}
@@ -489,4 +511,3 @@ void GridList::updateItemPosition(const std::string name, int x, int y)
 	cells[index].push_back(item);
 }
 
-#endif

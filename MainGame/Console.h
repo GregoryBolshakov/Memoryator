@@ -1,30 +1,28 @@
 #pragma once
-#ifndef  CONSOLE_H
-#define CONSOLE_H
+
 #include "InputBox.h"
 #include "WorldHandler.h"
-#include "PedestalController.h"
 
 using namespace sf;
 
 class Console
 {
 public:	
-	Console(IntRect rect, WorldHandler* world = nullptr);
+	Console(FloatRect rect, WorldHandler* world = nullptr);
 	~Console();
-	InputBox getBody() { return body; }
+	InputBox getBody() const;
 	void draw(RenderWindow& window);
 	void interact(long long elapsedTime);
 	void handleEvents(Event event);
-	void resetCommandStackIterator() { commandStackIterator = commandStack.size(); };
-	bool getState() { return state; }
+	void resetCommandStackIterator();;
+	bool getState() const;
 private:
 	void doCommand();
 
 	InputBox body;
 	bool state = false;
 	std::vector<std::string> commandStack = { {""} };
-	int commandStackIterator = 0;
+	size_t commandStackIterator = 0;
 	WorldHandler* world = nullptr;
 };
-#endif
+

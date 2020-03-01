@@ -2,7 +2,7 @@
 
 using namespace sf;
 
-OwlBoss::OwlBoss(std::string objectName, Vector2f centerPosition) : DynamicObject(objectName, centerPosition)
+OwlBoss::OwlBoss(std::string objectName, Vector2f centerPosition) : DynamicObject(std::move(objectName), centerPosition)
 {
 	conditionalSizeUnits = { 600, 600 };
 	currentSprite[0] = 1;
@@ -15,8 +15,8 @@ OwlBoss::OwlBoss(std::string objectName, Vector2f centerPosition) : DynamicObjec
 	strength = 100;
 	healthPoint = 1000;
 	currentAction = rightFlap;
-	timeAfterHitself = 0;
-	timeForNewHitself = 6e5;
+	timeAfterHitSelf = 0;
+	timeForNewHitSelf = long(6e5);
 	timeForNewHit = 2000000;
 	routeGenerationAbility = false;
 	canCrashIntoDynamic = false;
@@ -25,9 +25,7 @@ OwlBoss::OwlBoss(std::string objectName, Vector2f centerPosition) : DynamicObjec
 }
 
 OwlBoss::~OwlBoss()
-{
-
-}
+= default;
 
 void OwlBoss::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
@@ -43,7 +41,7 @@ void OwlBoss::behavior(long long elapsedTime)
 		if (jerkTime > 0)
 		{
 			jerkTime -= elapsedTime;
-			speed = (jerkDistance / jerkDuration) * pow(jerkTime / jerkDuration, jerkDeceleration);
+			speed = float(jerkDistance / float(jerkDuration) * pow(jerkTime / jerkDuration, jerkDeceleration));
 			speed = std::max(defaultSpeed / jerkDeceleration, speed);
 			//speed = defaultSpeed;
 		}
@@ -59,10 +57,12 @@ void OwlBoss::behavior(long long elapsedTime)
 	if (lastAction == upFlap || lastAction == leftFlap || lastAction == rightFlap || lastAction == startFlap)
 	{
 		if (--flapsBeforeJerkCount > 0)
+		{
 			if (flapsBeforeJerkCount == 1)
 				changeAction(startFlap, true, false);
 			else
 				changeAction(Actions(30 + rand() % 3), true, false);
+		}
 		lastAction = relax;
 		//changeAction(rightFlap, false, true);
 		//lastAction = relax;
@@ -91,9 +91,9 @@ void OwlBoss::setTarget(DynamicObject& object)
 		return; //targetPosition = object.getPosition();
 }
 
-void OwlBoss::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
+void OwlBoss::behaviorWithDynamic(DynamicObject* target, const long long elapsedTime)
 {
-	debugInfo = Helper::getDist(this->position, movePosition) / jerkDistance * 1000;
+	debugInfo = std::to_string(Helper::getDist(this->position, movePosition) / jerkDistance * 1000.0f);
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true, false);
@@ -104,15 +104,15 @@ void OwlBoss::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
 	if (target->tag != Tag::hero)
 		return;
 
-	side = calculateSide(movePosition, elapsedTime);
+	side = calculateSide(movePosition);
 
 	timeAfterHit += elapsedTime;
 
 	if (jerkDistance != 0 && currentAction == move)
 	{
-		float dragCoefficient = 1.2f; // 1..2
-		float startPower = 1.1f; //1..2
-		this->speed = pow(this->defaultSpeed, dragCoefficient / (startPower + (timeAfterHit / timeForNewHit)));
+		const auto dragCoefficient = 1.2f; // 1..2
+		const auto startPower = 1.1f; //1..2
+		this->speed = pow(this->defaultSpeed, dragCoefficient / (startPower + float(timeAfterHit) / float(timeForNewHit)));
 		if (Helper::getDist(this->position, target->getPosition()) / jerkDistance <= 0.2f)
 			this->speed *= Helper::getDist(this->position, target->getPosition()) / jerkDistance;
 	}
@@ -151,24 +151,23 @@ void OwlBoss::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
 		changeAction(upFlap, true, true);
 		this->speed = defaultSpeed;
 	}
-	//-----------------
 }
 
-Vector2f OwlBoss::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f OwlBoss::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int OwlBoss::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int OwlBoss::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-void OwlBoss::jerk(float power, float deceleration, Vector2f destinationPoint)
+void OwlBoss::jerk(const float power, const float deceleration, const Vector2f destinationPoint)
 {
 	this->jerkPower = power;
 	this->jerkDeceleration = deceleration;
-	this->jerkDuration = 40 / animationSpeed * 10;
+	this->jerkDuration = long(40.0f / animationSpeed * 10.0f);
 	this->jerkTime = this->jerkDuration;
 	isJerking = true;
 	jerkDistance = 400;
@@ -176,7 +175,7 @@ void OwlBoss::jerk(float power, float deceleration, Vector2f destinationPoint)
 	movePosition = Vector2f(destinationPoint);
 }
 
-void OwlBoss::fightInteract(long long elapsedTime, DynamicObject* target)
+void OwlBoss::fightInteract(const long long elapsedTime, DynamicObject* target)
 {
 	pushAway(elapsedTime);
 }

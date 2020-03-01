@@ -1,6 +1,4 @@
 #pragma once
-#ifndef DRAWABLECHAINELEMENT_H
-#define DRAWABLECHAINELEMENT_H
 
 #include <SFML/Graphics.hpp>
 
@@ -25,6 +23,4 @@ public:
 	Color color = Color(255, 255, 255);
 	bool initialized = false;
 };
-
-#endif
 

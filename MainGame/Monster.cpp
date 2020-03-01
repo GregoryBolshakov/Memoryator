@@ -2,28 +2,26 @@
 
 using namespace sf;
 
-Monster::Monster(std::string objectName, Vector2f centerPosition) : DynamicObject(objectName, centerPosition)
+Monster::Monster(std::string objectName, const Vector2f centerPosition) : DynamicObject(std::move(objectName), centerPosition)
 {
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
 	currentAction = relax;
 	side = down;
-	sightRange = 950;
+	sightRange = 950.0f;
 	strikingSprite = 6;
-	timeForNewHit = 1e5;
+	timeForNewHit = long(1e5);
 }
 
 Monster::~Monster()
-{
-
-}
+= default;
 
 void Monster::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
 
 }
 
-void Monster::behavior(long long elapsedTime)
+void Monster::behavior(const long long elapsedTime)
 {
 	endingPreviousAction();
 	fightInteract(elapsedTime);
@@ -36,7 +34,7 @@ void Monster::setTarget(DynamicObject& object)
 		return; //targetPosition = object.getPosition();
 }
 
-void Monster::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
+void Monster::behaviorWithDynamic(DynamicObject* target, const long long elapsedTime)
 {
 	if (healthPoint <= 0)
 	{
@@ -59,7 +57,7 @@ void Monster::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
 	}
 
 	boundTarget = target;
-	side = calculateSide(boundTarget->getPosition(), elapsedTime);	
+	side = calculateSide(boundTarget->getPosition());	
 
 	if (Helper::getDist(position, boundTarget->getPosition()) <= sightRange && timeAfterHit >= timeForNewHit)
 		speed = std::max((1 - Helper::getDist(position, boundTarget->getPosition()) / sightRange) * defaultSpeed / 2 + defaultSpeed, defaultSpeed);
@@ -94,7 +92,6 @@ void Monster::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
 	}
 	else	
 		stopping(true, false);
-	//---------------
 }
 
 void Monster::endingPreviousAction()
@@ -108,7 +105,7 @@ void Monster::endingPreviousAction()
 	lastAction = relax;
 }
 
-void Monster::stopping(bool doStand, bool forgetBoundTarget)
+void Monster::stopping(const bool doStand, const bool forgetBoundTarget)
 {
 	if (doStand)
 	{
@@ -124,22 +121,21 @@ void Monster::stopping(bool doStand, bool forgetBoundTarget)
 	}
 }
 
-Vector2f Monster::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f Monster::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Monster::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int Monster::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
 void Monster::jerk(float power, float deceleration, Vector2f destinationPoint)
 {
-	return;
 }
 
-void Monster::fightInteract(long long elapsedTime, DynamicObject* target)
+void Monster::fightInteract(const long long elapsedTime, DynamicObject* target)
 {
 	pushAway(elapsedTime);
 }

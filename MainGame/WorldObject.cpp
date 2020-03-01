@@ -5,7 +5,7 @@ Vector2f WorldObject::microBlockSize = {20, 20};
 
 WorldObject::WorldObject(std::string objectName, Vector2f centerPosition)
 {
-	name = objectName;
+	name = std::move(objectName);
 	position = centerPosition;
 	WorldObject::initPedestal();
 	currentSprite.resize(1);
@@ -76,9 +76,7 @@ void WorldObject::onSpriteChange()
 }
 
 WorldObject::~WorldObject()
-{
-
-}
+= default;
 
 float WorldObject::getMaxHealthPointValue()
 {

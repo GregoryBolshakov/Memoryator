@@ -1,13 +1,13 @@
 #include "Deerchant.h"
-#include "Helper.h"
-#include "PickedObject.h"
-#include "Noose.h"
 #include "Brazier.h"
 #include "EmptyObject.h"
+#include "Helper.h"
+#include "Noose.h"
+#include "PickedObject.h"
 
 using namespace sf;
 
-Deerchant::Deerchant(std::string objectName, Vector2f centerPosition) : DynamicObject(objectName, centerPosition)
+Deerchant::Deerchant(std::string objectName, const Vector2f centerPosition) : DynamicObject(std::move(objectName), centerPosition)
 {
 	currentSprite.resize(3);
 	for (auto& number : currentSprite)
@@ -28,19 +28,18 @@ Deerchant::Deerchant(std::string objectName, Vector2f centerPosition) : DynamicO
 	tag = Tag::hero;
 	canCrashIntoStatic = true;
 
-	for (int i = 0; i < 3; i++)
-		bags.push_back((*new HeroBag));
-	const Vector2f openBagSize = Vector2f(Helper::GetScreenSize().x / 6, Helper::GetScreenSize().y / 3),
-		closedBagSize = Vector2f(Helper::GetScreenSize().x / 12, Helper::GetScreenSize().y / 6);
+	for (auto i = 0; i < 3; i++)
+		bags.emplace_back();
+	
+	const auto closedBagSize = Vector2f(Helper::GetScreenSize().x / 12, Helper::GetScreenSize().y / 6);
+	
 	bags[0].initialize(Vector2f(Helper::GetScreenSize().x - closedBagSize.x, closedBagSize.y), true);
-	bags[1].initialize(Vector2f(Helper::GetScreenSize().x - closedBagSize.x, 2 * closedBagSize.y), true);
-	bags[2].initialize(Vector2f(Helper::GetScreenSize().x - closedBagSize.x * 1.5f, 1.5 * closedBagSize.y), true);
+	bags[1].initialize(Vector2f(Helper::GetScreenSize().x - closedBagSize.x, 2.0f * closedBagSize.y), true);
+	bags[2].initialize(Vector2f(Helper::GetScreenSize().x - closedBagSize.x * 1.5f, 1.5f * closedBagSize.y), true);
 }
 
 Deerchant::~Deerchant()
-{
-
-}
+= default;
 
 Vector2f Deerchant::calculateTextureOffset()
 {
@@ -50,11 +49,11 @@ Vector2f Deerchant::calculateTextureOffset()
 	return { textureBox.width / 2, textureBox.height * 4 / 5 };
 }
 
-int Deerchant::calculateNextMoveEndSprite(int currentSprite) const
+int Deerchant::calculateNextMoveEndSprite(const int currentSprite) const
 {
-	const int endSprite1 = 1, endSprite2 = 6;
+	const auto endSprite1 = 1, endSprite2 = 6;
 
-	int increment = 1;
+	const auto increment = 1;
 
 	if (abs(currentSprite - endSprite1) <= abs(currentSprite - endSprite2))
 	{
@@ -71,12 +70,12 @@ int Deerchant::calculateNextMoveEndSprite(int currentSprite) const
 	return -1;
 }
 
-void Deerchant::moveEnd(bool animate, float distance, float speed, bool invertDirection)
+void Deerchant::moveEnd(const bool animate, const bool invertDirection)
 {
 	if (wasPushedAfterMovement)
 		return;
 
-	Vector2f pushPosition = position;
+	auto pushPosition = position;
 
 	if (direction != Direction::STAND)
 	{
@@ -104,7 +103,7 @@ void Deerchant::moveEnd(bool animate, float distance, float speed, bool invertDi
 	//bumpDistance += distance;
 }
 
-void Deerchant::handleInput(bool usedMouse)
+void Deerchant::handleInput(const bool usedMouse)
 {
 	//high-priority actions
 	if (currentAction == absorbs || currentAction == grab || currentAction == dropping || currentAction == builds || currentAction == jerking)
@@ -141,7 +140,7 @@ void Deerchant::handleInput(bool usedMouse)
 		direction = Direction::DOWNRIGHT;
 	if (direction != Direction::STAND && currentAction != Actions::moveEnd)
 	{
- 		for (int i = 0; i < bumpedPositions.size(); i++)
+ 		for (auto i = 0u; i < bumpedPositions.size(); i++)
 			if (bumpedPositions[i].cancelable)
 				bumpedPositions.erase(bumpedPositions.begin() + i);
 		pushAway(0);
@@ -158,13 +157,13 @@ void Deerchant::handleInput(bool usedMouse)
 	}
 	else
 		if (!boundTarget && currentAction == move || currentAction == moveHit)
-			moveEnd(true, moveEndDistance);		
+			moveEnd(true);		
 
 	if (currentAction != throwNoose) //second priority actions, interact while moving
 	{
 		if (!(Keyboard::isKeyPressed(Keyboard::A) || Keyboard::isKeyPressed(Keyboard::W) || Keyboard::isKeyPressed(Keyboard::D) || Keyboard::isKeyPressed(Keyboard::S)))
 		{
-			bool isIntersect = false;
+			auto isIntersect = false;
 			if (boundTarget)
 				isIntersect = (sqrt(pow(this->position.x - laxMovePosition.x, 2) + pow(this->position.y - laxMovePosition.y, 2)) <= (this->radius + boundTarget->getRadius()));
 			if (isIntersect || !boundTarget && currentAction != Actions::moveEnd)
@@ -386,9 +385,15 @@ void Deerchant::stopping(bool doStand, bool forgetBoundTarget, bool offUnsealInv
 
 void Deerchant::setHitDirection()
 {
-	auto screenSize = Helper::GetScreenSize();
-	float xPos = screenSize.x / 2, yPos = screenSize.y / 2, mouseX = Mouse::getPosition().x, mouseY = Mouse::getPosition().y;
-	float alpha = atan((yPos - mouseY) / (xPos - mouseX)) * 180 / pi;
+	const auto screenSize = Helper::GetScreenSize();
+
+	const auto xPos = screenSize.x / 2.0f, yPos = screenSize.y / 2.0f;
+	
+	const float mouseX = float(Mouse::getPosition().x);
+	const float mouseY = float(Mouse::getPosition().y);
+	
+	const auto alpha = atan((yPos - mouseY) / (xPos - mouseX)) * 180 / pi;
+	
 	if (mouseY <= yPos && abs(alpha) >= 45 && abs(alpha) <= 90)
 		side = up;
 	else
@@ -405,7 +410,6 @@ void Deerchant::setHitDirection()
 void Deerchant::setTarget(DynamicObject& object)
 {
 	nearTheTable = false;
-	return;
 }
 
 void Deerchant::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
@@ -413,9 +417,9 @@ void Deerchant::behaviorWithDynamic(DynamicObject* target, long long elapsedTime
 	if (Helper::getDist(position, target->getPosition()) <= radius + target->getRadius())
 		pushByBumping(target);
 
-	const bool isIntersect = Helper::getDist(position, target->getPosition()) <= this->radius + target->getRadius() + hitDistance;
+	const auto isIntersect = Helper::getDist(position, target->getPosition()) <= this->radius + target->getRadius() + hitDistance;
 
-	if (isIntersect && calculateSide(target->getPosition(), elapsedTime) != invertSide(side))
+	if (isIntersect && calculateSide(target->getPosition()) != invertSide(side))
 	{
 		if ((this->currentAction == commonHit || this->currentAction == moveHit) && (this->getSpriteNumber() == 4 || this->getSpriteNumber() == 5 || this->getSpriteNumber() == 8))	
 			target->takeDamage(this->getStrength(), position);		
@@ -431,7 +435,7 @@ void Deerchant::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 		nearTheTable = true;	
 }
 
-void Deerchant::behavior(long long elapsedTime)
+void Deerchant::behavior(const long long elapsedTime)
 {
 	jerkInteract(elapsedTime);
 	endingPreviousAction();
@@ -450,7 +454,7 @@ void Deerchant::behavior(long long elapsedTime)
 	if (currentAction != jerking && boundTarget->isProcessed)
 		laxMovePosition = boundTarget->getPosition();
 
-	const bool isIntersect = (Helper::getDist(position, laxMovePosition)) <= (this->radius + boundTarget->getRadius());
+	const auto isIntersect = (Helper::getDist(position, laxMovePosition)) <= (this->radius + boundTarget->getRadius());
 
 	//touch selected object 
 	if (isIntersect)
@@ -565,7 +569,7 @@ void Deerchant::onMouseUp(int currentMouseButton, WorldObject *mouseSelectedObje
 		return;
 	}
 
-	if (!mouseSelectedObject)
+	if (!mouseSelectedObject && heldItem != nullptr)
 	{
 		if (heldItem->content.first != Tag::emptyCell && currentMouseButton == 2)
 		{
@@ -648,10 +652,10 @@ void Deerchant::endingPreviousAction()
 		}
 		else
 		{
-			for (int cnt = 0; cnt != bags.size(); cnt++)			
+			for (auto cnt = 0; cnt != bags.size(); cnt++)			
 				if (bags[cnt].currentState == ejected)
 				{
-					bool isHareTrap = true;
+					auto isHareTrap = true;
 					for (auto& item : bags[cnt].cells)					
 						if (item.content.first != Tag::yarrow && item.content.first != Tag::emptyCell)
 						{
@@ -804,7 +808,7 @@ void Deerchant::animationSmoothInteract(long long elapsedTime)
 	}
 }
 
-void Deerchant::speedInteract(float elapsedTime)
+void Deerchant::speedInteract(const long long elapsedTime)
 {
 	if (!(currentAction == move || currentAction == moveHit || currentAction == Actions::moveEnd || currentAction == throwNoose))
 	{
@@ -814,21 +818,23 @@ void Deerchant::speedInteract(float elapsedTime)
 
 	moveTime += elapsedTime;
 
-	const float speedIncreaseTime = 5e5, partOfSpeed = 0.3f;
+	const long long speedIncreaseTime = long(5e5);
+	const float partOfSpeed = 0.3f;
+	
 	if (moveTime < speedIncreaseTime)
-		speed = (partOfSpeed + moveTime * (1 - partOfSpeed) / speedIncreaseTime) * defaultSpeed;
+		speed = (partOfSpeed + float(moveTime) * (1 - partOfSpeed) / speedIncreaseTime) * defaultSpeed;
 	else
 		speed = defaultSpeed;
 }
 
-void Deerchant::jerkInteract(long long elapsedTime)
+void Deerchant::jerkInteract(const long long elapsedTime)
 {
 	if (currentAction == jerking)
 	{
 		if (jerkTime > 0)
 		{
 			jerkTime -= elapsedTime;
-			speed = (jerkDistance / jerkDuration) * jerkPower * pow(jerkTime / jerkDuration, jerkDeceleration);
+			speed = float(jerkDistance / float(jerkDuration) * jerkPower * pow(jerkTime / jerkDuration, jerkDeceleration));
 			speed = std::max(defaultSpeed / jerkDeceleration, speed);
 		}
 		else
@@ -839,7 +845,7 @@ void Deerchant::jerkInteract(long long elapsedTime)
 	}
 }
 
-Vector2f Deerchant::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f Deerchant::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
@@ -853,12 +859,12 @@ Vector2f Deerchant::getBeltPosition() const
     return position;
 }
 
-int Deerchant::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int Deerchant::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-void Deerchant::jerk(float power, float deceleration, Vector2f destinationPoint)
+void Deerchant::jerk(const float power, const float deceleration, Vector2f)
 {
 	stopping(false, true);
 	this->jerkPower = power;
@@ -869,7 +875,7 @@ void Deerchant::jerk(float power, float deceleration, Vector2f destinationPoint)
 	jerkDistance = 500;
 	currentSprite[0] = 1;
 
-	laxMovePosition = Vector2f(position.x + cos(int(direction) * pi / 180) * jerkDistance, position.y - sin(int(direction) * pi / 180) * jerkDistance);
+	laxMovePosition = Vector2f(position.x + cos(float(direction) * pi / 180) * jerkDistance, position.y - sin(float(direction) * pi / 180) * jerkDistance);
 }
 
 void Deerchant::fightInteract(long long elapsedTime, DynamicObject* target)
@@ -879,7 +885,7 @@ void Deerchant::fightInteract(long long elapsedTime, DynamicObject* target)
 
 SpriteChainElement* Deerchant::prepareSpeedLine()
 {
-	SpriteChainElement* speedLine = new SpriteChainElement(PackTag::heroMove, PackPart::lines, Direction::STAND, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	auto speedLine = new SpriteChainElement(PackTag::heroMove, PackPart::lines, Direction::STAND, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	speedLine->animationLength = 3;
 	if (speedLineDirection == Direction::STAND || currentSprite[2] > speedLine->animationLength)
 		return speedLine;
@@ -902,9 +908,9 @@ std::vector<SpriteChainElement*> Deerchant::prepareSprites(long long elapsedTime
 	auto legsSprite = new SpriteChainElement(Vector2f(position.x, position.y - 1), conditionalSizeUnits, { textureBoxOffset.x, textureBoxOffset.y + 1 }, color);
 	auto* bodySprite = new SpriteChainElement(position, conditionalSizeUnits, textureBoxOffset, color);
 
-	SpriteChainElement* speedLine = prepareSpeedLine();
+	const auto speedLine = prepareSpeedLine();
 	std::vector<SpriteChainElement*> result = {};
-	bool legsInverse = false, bodyInverse = false;
+	auto legsInverse = false, bodyInverse = false;
 	legsSprite->animationLength = 8;
 
     auto spriteSide = side; auto spriteDirection = lastDirection;

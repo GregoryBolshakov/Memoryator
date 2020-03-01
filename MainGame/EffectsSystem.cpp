@@ -1,15 +1,13 @@
 #include "EffectsSystem.h"
 
-float EffectsSystem::defaultDuration = 10e5;
+long long EffectsSystem::defaultDuration = long(10e5);
 
 EffectsSystem::EffectsSystem()
-{
-}
+= default;
 
 
 EffectsSystem::~EffectsSystem()
-{
-}
+= default;
 
 void EffectsSystem::init()
 {
@@ -17,9 +15,9 @@ void EffectsSystem::init()
 		//item.second = false;	
 }
 
-void EffectsSystem::resetEffects(std::vector<std::string> removeList)
+void EffectsSystem::resetEffects(const std::vector<std::string>& removeList)
 {
-	int cnt = -1;
+	auto cnt = -1;
 	for (const auto& name : removeList)
 	{
 		if (names.count(name) == 0)
@@ -28,13 +26,13 @@ void EffectsSystem::resetEffects(std::vector<std::string> removeList)
 		auto sprite = dynamic_cast<Sprite*>(transparencyRemoval.at(name).body);
 		if (sprite)
 		{
-			const Color spriteColor = sprite->getColor();
+			const auto spriteColor = sprite->getColor();
 			sprite->setColor(Color(spriteColor.r, spriteColor.g, spriteColor.b, 255));
 		}
 		const auto text = dynamic_cast<Text*>(transparencyRemoval.at(name).body);
 		if (text)
 		{
-			const Color textColor = text->getFillColor();
+			const auto textColor = text->getFillColor();
 			text->setFillColor(Color(textColor.r, textColor.g, textColor.b, 255));
 		}
 		transparencyRemoval.erase(name);
@@ -43,7 +41,7 @@ void EffectsSystem::resetEffects(std::vector<std::string> removeList)
 }
 
 
-void EffectsSystem::addEffect(Effects effect, Drawable* elem, std::string name, float duration)
+void EffectsSystem::addEffect(Effects effect, Drawable* elem, const std::string& name, const long long duration)
 {
 	switch (effect)
 	{
@@ -64,9 +62,9 @@ void EffectsSystem::addEffect(Effects effect, Drawable* elem, std::string name, 
 }
 
 
-void EffectsSystem::interact(long long elapsedTime)
+void EffectsSystem::interact(const long long elapsedTime)
 {
-	int cnt = -1;
+	auto cnt = -1;
 	for (const auto& name : names)
 	{
 		cnt++;
@@ -79,15 +77,15 @@ void EffectsSystem::interact(long long elapsedTime)
 		auto sprite = dynamic_cast<Sprite*>(transparencyRemoval.at(name).body);
 		if (sprite)
 		{
-			const Color spriteColor = sprite->getColor();
-			sprite->setColor(Color(spriteColor.r, spriteColor.g, spriteColor.b, 255 * transparencyRemoval.at(name).timePassed / transparencyRemoval.at(name).duration));			
+			const auto spriteColor = sprite->getColor();
+			sprite->setColor(Color(spriteColor.r, spriteColor.g, spriteColor.b, Uint8(255 * transparencyRemoval.at(name).timePassed / transparencyRemoval.at(name).duration)));			
 			transparencyRemoval.at(name).timePassed += elapsedTime;
 		}
 		const auto text = dynamic_cast<Text*>(transparencyRemoval.at(name).body);
 		if (text)
 		{
-			const Color textColor = text->getFillColor();
-			text->setFillColor(Color(textColor.r, textColor.g, textColor.b, 255 * transparencyRemoval.at(name).timePassed / transparencyRemoval.at(name).duration));
+			const auto textColor = text->getFillColor();
+			text->setFillColor(Color(textColor.r, textColor.g, textColor.b, Uint8(255 * transparencyRemoval.at(name).timePassed / transparencyRemoval.at(name).duration)));
 			transparencyRemoval.at(name).timePassed += elapsedTime;
 		}
 	}

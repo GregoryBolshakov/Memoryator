@@ -20,12 +20,10 @@ std::map<std::string, Tag> ObjectInitializer::mappedStrings = { {"hero", Tag::he
 	{"emptyDraft", Tag::emptyDraft}, {"emptyPage", Tag::emptyPage}, {"emptyCell", Tag::emptyCell}, {"selectedCell", Tag::selectedCell}, {"clapWhirl", Tag::clapWhirl}, {"emptyObject", Tag::emptyObject} };
 
 ObjectInitializer::ObjectInitializer()
-{
-}
+= default;
 
 ObjectInitializer::~ObjectInitializer()
-{
-}
+= default;
 
 int ObjectInitializer::newNameId = 0;
 
@@ -33,12 +31,12 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 	Tag itemClass,
 	Vector2f itemPosition,
 	int itemType,
-	std::string itemName,
+	const std::string& itemName,
 	int count,
 	Biomes biome,	
 	std::map<PackTag, SpritePack>* packsMap,
 	bool mirrored,
-	std::vector<std::pair<Tag, int>> inventory)
+	const std::vector<std::pair<Tag, int>>& inventory)
 {
 	StaticObject* item = nullptr;
 
@@ -164,18 +162,18 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 			item = new Spawn("item", Vector2f(0, 0), -1);
 			break;
 		}
-	}	
+	}
 
-	int currentType = itemType == -1
-		? currentType = getRandomTypeByBiome(item, biome)
-		: currentType = itemType;
+	const auto currentType = itemType == -1
+		 ? getRandomTypeByBiome(item, biome)
+		 : itemType;
 
 	newNameId++;
 
 	item->setPosition(Vector2f(itemPosition));
 	item->setType(currentType);
 	auto sprites = item->prepareSprites(0);
-	FloatRect textureBounds = FloatRect(0, 0, 0, 0);
+	
 	if (packsMap->count(sprites[0]->packTag) <= 0 ||
 		packsMap->at(sprites[0]->packTag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack::size(0, 0))
 	{
@@ -183,11 +181,11 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 		return nullptr;
 	}
 	const auto info = packsMap->at(sprites[0]->packTag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number);
-	const Vector2f textureSize = Vector2f(info.source_size.w, info.source_size.h);
+	const auto textureSize = Vector2f(float(info.source_size.w), float(info.source_size.h));
 	item->setTextureSize(textureSize);
-	const std::string name = itemName.empty()
-		? std::to_string(newNameId)
-		: itemName;
+	const auto name = itemName.empty()
+		                  ? std::to_string(newNameId)
+		                  : itemName;
 	item->setName(name);
 	if (!inventory.empty())
 		item->inventory = inventory;
@@ -201,7 +199,7 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 DynamicObject* ObjectInitializer::initializeDynamicItem(
 	Tag itemClass,
 	Vector2f itemPosition,
-	std::string itemName,
+	const std::string& itemName,
 	std::map<PackTag, SpritePack>* packsMap,
 	WorldObject* owner)
 {
@@ -293,9 +291,9 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 	newNameId++;
 	nameOfImage += ".png";
 
-	const std::string name = itemName.empty()
-		? std::string(item->getToSaveName()) + "_" + std::to_string(newNameId)
-		: itemName;
+	const auto name = itemName.empty()
+		                  ? std::string(item->getToSaveName()) + "_" + std::to_string(newNameId)
+		                  : itemName;
 
 	item->setName(name);
 	item->setPosition(Vector2f(itemPosition));
@@ -307,7 +305,7 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 		return nullptr;
 	}
 	const auto info = packsMap->at(sprites[0]->packTag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number);
-	const Vector2f textureSize = Vector2f(info.source_size.w, info.source_size.h);
+	const auto textureSize = Vector2f(float(info.source_size.w), float(info.source_size.h));
 	item->setTextureSize(textureSize);
 	return item;
 }
@@ -379,7 +377,7 @@ int ObjectInitializer::getRandomTypeByBiome(WorldObject* object, const Biomes bi
 	return 0;
 }
 
-std::vector<StaticObject*> ObjectInitializer::vectorCastToStatic(std::vector<WorldObject*> items)
+std::vector<StaticObject*> ObjectInitializer::vectorCastToStatic(const std::vector<WorldObject*>& items)
 {
 	std::vector<StaticObject*> staticItems = {};
 	for (auto item : items)
@@ -389,7 +387,7 @@ std::vector<StaticObject*> ObjectInitializer::vectorCastToStatic(std::vector<Wor
 
 std::vector<DynamicObject*> ObjectInitializer::vectorCastToDynamic(std::vector<WorldObject*> items)
 {
-	std::vector<DynamicObject*> dynamicItems = *(new std::vector<DynamicObject*>());
+	auto dynamicItems = *(new std::vector<DynamicObject*>());
 	for (auto& item : items)
 		dynamicItems.push_back(dynamic_cast<DynamicObject*>(item));
 	return dynamicItems;

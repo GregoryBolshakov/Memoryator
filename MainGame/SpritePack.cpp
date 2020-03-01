@@ -1,7 +1,8 @@
-#include "SpritePack.h"
 #include <fstream>
-#include "Helper.h"
+
+#include "SpritePack.h"
 #include "Button.h"
+#include "Helper.h"
 
 const Vector2f SpritePack::iconSize = { Helper::GetScreenSize().y / 13.8f, Helper::GetScreenSize().y / 13.8f };
 Vector2f SpritePack::iconWithoutSpaceSize = { 0, 0 };
@@ -86,13 +87,7 @@ std::map<std::string, PackPart> SpritePack::mappedPackPart = {
 std::map<std::string, Direction> SpritePack::mappedDirection = { {"up", Direction::UP}, {"up-right", Direction::UPRIGHT}, {"right", Direction::RIGHT}, {"down-right", Direction::DOWNRIGHT},
 {"down", Direction::DOWN}, {"down-left", Direction::DOWNLEFT}, {"left", Direction::LEFT}, {"up-left", Direction::UPLEFT} };
 
-SpritePack::SpritePack()
-= default;
-
-SpritePack::~SpritePack()
-= default;
-
-void SpritePack::init(const std::string path, const std::string& jsonPath, PackTag tag)
+void SpritePack::init(const std::string& path, const std::string& jsonPath, const PackTag tag)
 {
     this->tag = tag;
     this->texture.loadFromFile(path);
@@ -104,11 +99,13 @@ void SpritePack::init(const std::string path, const std::string& jsonPath, PackT
 
     for (auto& frame : sp.frames)
     {
-        const int pngExtensionWithDotLength = 4;
+        const auto pngExtensionWithDotLength = 4;
         frame.frame_name.erase(frame.frame_name.size() - pngExtensionWithDotLength, pngExtensionWithDotLength);
         auto keyWords = Helper::split(frame.frame_name, '/');
 
-        PackPart part = PackPart::full; Direction direction = Direction::DOWN; int number = 1;
+        auto part = PackPart::full;
+        auto direction = Direction::DOWN;
+        auto number = 1;
         if (!keyWords.empty() && mappedPackPart.count(keyWords[0]) > 0)
         {
             part = mappedPackPart.at(keyWords[0]);
@@ -127,7 +124,7 @@ void SpritePack::init(const std::string path, const std::string& jsonPath, PackT
     }
 }
 
-sprite_pack::sprite SpritePack::getOriginalInfo(PackPart part, Direction direction, int number)
+sprite_pack::sprite SpritePack::getOriginalInfo(const PackPart part, const Direction direction, const int number)
 {
 	if (pack.count(part) <= 0 || pack.at(part).count(direction) <= 0 || pack.at(part).at(direction).count(number) <= 0)
 		return sprite_pack::sprite();
@@ -135,11 +132,11 @@ sprite_pack::sprite SpritePack::getOriginalInfo(PackPart part, Direction directi
 	return pack.at(part).at(direction).at(number);
 }
 
-SpriteChainElement* SpritePack::tagToIcon(Tag object, bool selected, int typeOfObject)
-{	
-	SpriteChainElement* result = new SpriteChainElement(PackTag::empty, PackPart::full, Direction::DOWN, 1, { 0, 0 }, iconSize, { iconSize.x / 2, iconSize.y / 2 });
+SpriteChainElement* SpritePack::tagToIcon(const Tag object, const bool selected, const int typeOfObject)
+{
+	auto result = new SpriteChainElement(PackTag::empty, PackPart::full, Direction::DOWN, 1, { 0, 0 }, iconSize, { iconSize.x / 2, iconSize.y / 2 });
 
-	int spriteNumber = int(selected);
+	auto spriteNumber = int(selected);
 
 	switch (object)
 	{
@@ -230,7 +227,7 @@ SpriteChainElement* SpritePack::tagToIcon(Tag object, bool selected, int typeOfO
 	return result;
 }
 
-Sprite SpritePack::getSprite(PackPart part, Direction direction, int number, bool mirrored)
+Sprite SpritePack::getSprite(const PackPart part, const Direction direction, const int number, const bool mirrored)
 {
     Sprite result;
     if (pack.count(part) <= 0 || pack.at(part).count(direction) <= 0 || pack.at(part).at(direction).count(number) <= 0)
@@ -239,8 +236,11 @@ Sprite SpritePack::getSprite(PackPart part, Direction direction, int number, boo
     result.setTexture(texture);
 
     const auto spriteInfo = pack.at(part).at(direction).at(number);
-    const Vector2f offset(spriteInfo.sprite_source_size.x, spriteInfo.sprite_source_size.y), 
-	invertedOffset(spriteInfo.source_size.w - spriteInfo.sprite_source_size.w - spriteInfo.sprite_source_size.x, 
+    const Vector2f offset(
+		float(spriteInfo.sprite_source_size.x),
+		float(spriteInfo.sprite_source_size.y));
+    const Vector2f invertedOffset(
+		float(spriteInfo.source_size.w - spriteInfo.sprite_source_size.w - spriteInfo.sprite_source_size.x),
 		offset.y);
 
     if (!spriteInfo.rotated && !mirrored)
@@ -257,13 +257,13 @@ Sprite SpritePack::getSprite(PackPart part, Direction direction, int number, boo
     {
         result.setTextureRect(IntRect(spriteInfo.frame.x, spriteInfo.frame.y, spriteInfo.frame.h, spriteInfo.frame.w));
         result.rotate(-90);
-        result.setOrigin(offset.y + spriteInfo.frame.h, -offset.x);
+        result.setOrigin(offset.y + float(spriteInfo.frame.h), -offset.x);
     }
     if (spriteInfo.rotated && mirrored)
     {
         result.setTextureRect(IntRect(spriteInfo.frame.x, spriteInfo.frame.y + spriteInfo.frame.w, spriteInfo.frame.h, -spriteInfo.frame.w));
         result.rotate(-90);
-        result.setOrigin(invertedOffset.y + spriteInfo.frame.h, -invertedOffset.x);
+        result.setOrigin(invertedOffset.y + float(spriteInfo.frame.h), -invertedOffset.x);
     }
     result.~Sprite();
 

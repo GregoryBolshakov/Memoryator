@@ -2,7 +2,7 @@
 
 using namespace sf;
 
-Deer::Deer(const std::string objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
+Deer::Deer(const std::string& objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
 {
 	conditionalSizeUnits = { 360, 300 };
 	currentSprite[0] = 1;
@@ -18,16 +18,15 @@ Deer::Deer(const std::string objectName, Vector2f centerPosition) : NeutralMob(o
 	fear = 0;
 	healthPoint = 50;
 	currentAction = relax;	
-	timeForNewHitself = 6e5;
-	timeAfterHitself = timeForNewHitself;
+	timeForNewHitSelf = long(6e5);
+	timeAfterHitSelf = timeForNewHitSelf;
 	timeForNewHit = 10e6;
 	toSaveName = "deer";
 	tag = Tag::deer;
 }
 
 Deer::~Deer()
-{
-}
+= default;
 
 Vector2f Deer::calculateTextureOffset()
 {
@@ -41,7 +40,7 @@ void Deer::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 
 }
 
-void Deer::behavior(long long elapsedTime)
+void Deer::behavior(const long long elapsedTime)
 {
 	endingPreviousAction();
 	fightInteract(elapsedTime);
@@ -60,7 +59,7 @@ void Deer::behavior(long long elapsedTime)
 			laxMovePosition = { -1, -1 };
 			return;			
 		}
-		side = calculateSide(owner->getPosition(), elapsedTime);
+		side = calculateSide(owner->getPosition());
 		if (Helper::getDist(position, owner->getPosition()) > sightRange / 2)
 		{
 			changeAction(grab, false, false);
@@ -75,12 +74,12 @@ void Deer::behavior(long long elapsedTime)
 		return;
 	}
 
-	side = calculateSide(laxMovePosition, elapsedTime);
+	side = calculateSide(laxMovePosition);
 
 	if (boundTarget == nullptr)
 		return;
 	const float distanceToTarget = Helper::getDist(this->position, boundTarget->getPosition());
-	speed = std::max(defaultSpeed, (defaultSpeed * 10) * (1 - (distanceToTarget) / sightRange * 1.5f));
+	speed = std::max(defaultSpeed, defaultSpeed * 10 * (1 - distanceToTarget / sightRange * 1.5f));
 	animationSpeed = std::max(0.0004f, 0.0003f * speed / defaultSpeed);
 
 	if (distanceToTarget <= sightRange)
@@ -106,12 +105,12 @@ void Deer::behavior(long long elapsedTime)
 	boundTarget = nullptr;
 }
 
-Vector2f Deer::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f Deer::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Deer::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int Deer::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
@@ -124,83 +123,83 @@ void Deer::endingPreviousAction()
 	lastAction = relax;
 }
 
-void Deer::jerk(float power, float deceleration, Vector2f destinationPoint)
+void Deer::jerk(float, float, Vector2f)
 {
-	return;
 }
 
 Vector2f Deer::getHeadPosition()
 {
-	Vector2f upperLeft = Vector2f(position.x - textureBoxOffset.x, position.y - textureBoxOffset.y);
+	const Vector2f upperLeft = Vector2f(position.x - textureBoxOffset.x, position.y - textureBoxOffset.y);
 
-	if ((side == up && laxMovePosition == position) || (laxMovePosition != position && direction == Direction::UP))
+	if (side == up && laxMovePosition == position || laxMovePosition != position && direction == Direction::UP)
 	{
 		if (currentSprite[0] == 1)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.569, upperLeft.y + conditionalSizeUnits.y * 0.111);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.569f, upperLeft.y + conditionalSizeUnits.y * 0.111f);
 		if (currentSprite[0] == 2)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.575, upperLeft.y + conditionalSizeUnits.y * 0.155);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.575f, upperLeft.y + conditionalSizeUnits.y * 0.155f);
 		if (currentSprite[0] == 3)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.577, upperLeft.y + conditionalSizeUnits.y * 0.202);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.577f, upperLeft.y + conditionalSizeUnits.y * 0.202f);
 		if (currentSprite[0] == 4)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.580, upperLeft.y + conditionalSizeUnits.y * 0.150);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.580f, upperLeft.y + conditionalSizeUnits.y * 0.150f);
 		if (currentSprite[0] == 5)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.570, upperLeft.y + conditionalSizeUnits.y * 0.106);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.570f, upperLeft.y + conditionalSizeUnits.y * 0.106f);
 		if (currentSprite[0] == 6)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.570, upperLeft.y + conditionalSizeUnits.y * 0.093);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.570f, upperLeft.y + conditionalSizeUnits.y * 0.093f);
 		if (currentSprite[0] == 7)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.575, upperLeft.y + conditionalSizeUnits.y * 0.075);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.575f, upperLeft.y + conditionalSizeUnits.y * 0.075f);
 	}
-	if ((side == down && laxMovePosition == position) || (laxMovePosition != position && direction == Direction::DOWN))
+	if (side == down && laxMovePosition == position || laxMovePosition != position && direction == Direction::DOWN)
 	{
 		if (currentSprite[0] == 1)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.446, upperLeft.y + conditionalSizeUnits.y * 0.222);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.446f, upperLeft.y + conditionalSizeUnits.y * 0.222f);
 		if (currentSprite[0] == 2)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.437, upperLeft.y + conditionalSizeUnits.y * 0.243);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.437f, upperLeft.y + conditionalSizeUnits.y * 0.243f);
 		if (currentSprite[0] == 3)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.437, upperLeft.y + conditionalSizeUnits.y * 0.258);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.437f, upperLeft.y + conditionalSizeUnits.y * 0.258f);
 		if (currentSprite[0] == 4)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.437, upperLeft.y + conditionalSizeUnits.y * 0.242);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.437f, upperLeft.y + conditionalSizeUnits.y * 0.242f);
 		if (currentSprite[0] == 5)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.440, upperLeft.y + conditionalSizeUnits.y * 0.168);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.440f, upperLeft.y + conditionalSizeUnits.y * 0.168f);
 		if (currentSprite[0] == 6)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.444, upperLeft.y + conditionalSizeUnits.y * 0.150);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.444f, upperLeft.y + conditionalSizeUnits.y * 0.150f);
 		if (currentSprite[0] == 7)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.445, upperLeft.y + conditionalSizeUnits.y * 0.182);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.445f, upperLeft.y + conditionalSizeUnits.y * 0.182f);
 	}
-	if ((side == left && laxMovePosition == position) || (laxMovePosition != position && direction == Direction::LEFT || direction == Direction::UPLEFT || direction == Direction::DOWNLEFT))
+	if (side == left && laxMovePosition == position || (laxMovePosition != position && direction == Direction::LEFT || direction == Direction::UPLEFT || direction == Direction::DOWNLEFT))
 	{
 		if (currentSprite[0] == 1)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.313, upperLeft.y + conditionalSizeUnits.y * 0.147);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.313f, upperLeft.y + conditionalSizeUnits.y * 0.147f);
 		if (currentSprite[0] == 2)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.325, upperLeft.y + conditionalSizeUnits.y * 0.159);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.325f, upperLeft.y + conditionalSizeUnits.y * 0.159f);
 		if (currentSprite[0] == 3)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.338, upperLeft.y + conditionalSizeUnits.y * 0.169);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.338f, upperLeft.y + conditionalSizeUnits.y * 0.169f);
 		if (currentSprite[0] == 4)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.319, upperLeft.y + conditionalSizeUnits.y * 0.138);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.319f, upperLeft.y + conditionalSizeUnits.y * 0.138f);
 		if (currentSprite[0] == 5)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.287, upperLeft.y + conditionalSizeUnits.y * 0.123);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.287f, upperLeft.y + conditionalSizeUnits.y * 0.123f);
 		if (currentSprite[0] == 6)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.282, upperLeft.y + conditionalSizeUnits.y * 0.130);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.282f, upperLeft.y + conditionalSizeUnits.y * 0.130f);
 		if (currentSprite[0] == 7)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.277, upperLeft.y + conditionalSizeUnits.y * 0.138);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.277f, upperLeft.y + conditionalSizeUnits.y * 0.138f);
 	}
-	if ((side == right && laxMovePosition == position) || (laxMovePosition != position && direction == Direction::RIGHT || direction == Direction::UPRIGHT || direction == Direction::DOWNRIGHT))
+	if (side == right && laxMovePosition == position || (laxMovePosition != position && direction == Direction::RIGHT || direction == Direction::UPRIGHT || direction == Direction::DOWNRIGHT))
 	{
 		if (currentSprite[0] == 1)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.6, upperLeft.y + conditionalSizeUnits.y * 0.17);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.6f, upperLeft.y + conditionalSizeUnits.y * 0.17f);
 		if (currentSprite[0] == 2)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.59, upperLeft.y + conditionalSizeUnits.y * 0.19);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.59f, upperLeft.y + conditionalSizeUnits.y * 0.19f);
 		if (currentSprite[0] == 3)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.56, upperLeft.y + conditionalSizeUnits.y * 0.2);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.56f, upperLeft.y + conditionalSizeUnits.y * 0.2f);
 		if (currentSprite[0] == 4)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.59, upperLeft.y + conditionalSizeUnits.y * 0.17);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.59f, upperLeft.y + conditionalSizeUnits.y * 0.17f);
 		if (currentSprite[0] == 5)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.62, upperLeft.y + conditionalSizeUnits.y * 0.16);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.62f, upperLeft.y + conditionalSizeUnits.y * 0.16f);
 		if (currentSprite[0] == 6)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.63, upperLeft.y + conditionalSizeUnits.y * 0.16);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.63f, upperLeft.y + conditionalSizeUnits.y * 0.16f);
 		if (currentSprite[0] == 7)
-			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.63, upperLeft.y + conditionalSizeUnits.y * 0.17);
+			return Vector2f(upperLeft.x + conditionalSizeUnits.x * 0.63f, upperLeft.y + conditionalSizeUnits.y * 0.17f);
 	}
+	throw std::logic_error("Unable to calculate the position of the head.");
 }
 
 std::vector<SpriteChainElement*> Deer::prepareSprites(long long elapsedTime)

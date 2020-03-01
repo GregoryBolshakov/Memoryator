@@ -1,8 +1,7 @@
 #include "PickedObject.h"
 
 
-
-PickedObject::PickedObject(std::string objectName, Vector2f centerPosition) : TerrainObject(objectName, centerPosition)
+PickedObject::PickedObject(std::string objectName, const Vector2f centerPosition) : TerrainObject(std::move(objectName), centerPosition), id(), count(0)
 {
 	radius = 0;
 }
@@ -52,5 +51,4 @@ bool PickedObject::pickUp(std::vector<HeroBag> *bags)
 }
 
 PickedObject::~PickedObject()
-{
-}
+= default;

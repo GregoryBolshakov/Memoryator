@@ -16,7 +16,7 @@ public:
 	int strength;
 	void setType(int typeOfObject) override;
 	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
-	Vector2f getEnterPosition() const;
+	[[nodiscard]] Vector2f getEnterPosition() const;
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
 };
 

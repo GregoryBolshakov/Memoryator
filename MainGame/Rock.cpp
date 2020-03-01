@@ -1,7 +1,7 @@
 #include "Rock.h"
 #include "Helper.h"
 
-Rock::Rock(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(objectName, centerPosition)
+Rock::Rock(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 18; // BirchGrove: 1-8; DarkWoods: 9-13; SwampyTrees: 14-18
 	this->typeOfObject = typeOfObject;
@@ -9,11 +9,11 @@ Rock::Rock(std::string objectName, Vector2f centerPosition, int typeOfObject) : 
 	radius = 50;
 	animationSpeed = 10;
 	toSaveName = "rock";
-	setType(typeOfObject);
+	Rock::setType(typeOfObject);
 	tag = Tag::rock;
 }
 
-void Rock::setType(int typeOfObject)
+void Rock::setType(const int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
@@ -111,12 +111,12 @@ void Rock::initPedestal()
 	case 1:
 		focus1 = Vector2f(position.x - textureBox.width * 0.293f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.293f, position.y);
-		ellipseSizeMultipliers[0] = { 1.21 };
+		ellipseSizeMultipliers[0] = { 1.21f };
 		break;
 	case 2:
 		focus1 = Vector2f(position.x - textureBox.width * 0.38f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.38f, position.y);
-		ellipseSizeMultipliers[0] = { 1.11 };
+		ellipseSizeMultipliers[0] = { 1.11f };
 		break;
 	case 3:
 		focus1 = Vector2f(position.x, position.y);
@@ -131,77 +131,77 @@ void Rock::initPedestal()
 	case 5:
 		focus1 = Vector2f(position.x - textureBox.width * 0.342f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.342f, position.y);
-		ellipseSizeMultipliers[0] = { 1.16 };
+		ellipseSizeMultipliers[0] = { 1.16f };
 		break;
 	case 6:
 		focus1 = Vector2f(position.x - textureBox.width * 0.311f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.311f, position.y);
-		ellipseSizeMultipliers[0] = { 1.15 };
+		ellipseSizeMultipliers[0] = { 1.15f };
 		break;
 	case 7:
 		focus1 = Vector2f(position.x - textureBox.width * 0.32f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.32f, position.y);
-		ellipseSizeMultipliers[0] = { 1.3};
+		ellipseSizeMultipliers[0] = { 1.3f };
 		break;
 	case 8:
 		focus1 = Vector2f(position.x - textureBox.width * 0.36f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.36f, position.y);
-		ellipseSizeMultipliers[0] = { 1.1 };
+		ellipseSizeMultipliers[0] = { 1.1f };
 		break;	
 	case 9:
 		focus1 = Vector2f(position.x - textureBox.width * 0.315f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.315f, position.y);
-		ellipseSizeMultipliers[0] = { 1.23 };
+		ellipseSizeMultipliers[0] = { 1.23f };
 		break;
 	case 10:
 		focus1 = Vector2f(position.x - textureBox.width * 0.302f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.302f, position.y);
-		ellipseSizeMultipliers[0] = { 1.26 };
+		ellipseSizeMultipliers[0] = { 1.26f };
 		break;
 	case 11:
 		focus1 = Vector2f(position.x - textureBox.width * 0.229f, position.y - textureBox.height * 0.092f);
 		focus2 = Vector2f(position.x + textureBox.width * 0.229f, position.y - textureBox.height * 0.092f);
-		ellipseSizeMultipliers[0] = { 1.64 };
+		ellipseSizeMultipliers[0] = { 1.64f };
 		break;
 	case 12:
 		focus1 = Vector2f(position.x - textureBox.width * 0.386f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.386f, position.y);
-		ellipseSizeMultipliers[0] = { 1.15 };
+		ellipseSizeMultipliers[0] = { 1.15f };
 		break;
 	case 13:
 		focus1 = Vector2f(position.x - textureBox.width * 0.273f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.273f, position.y);
-		ellipseSizeMultipliers[0] = { 1.64 };
+		ellipseSizeMultipliers[0] = { 1.64f };
 		break;
 	case 14:
 		focus1 = Vector2f(position.x - textureBox.width * 0.315f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.315f, position.y);
-		ellipseSizeMultipliers[0] = { 1.23 };
+		ellipseSizeMultipliers[0] = { 1.23f };
 		break;
 	case 15:
 		focus1 = Vector2f(position.x - textureBox.width * 0.354f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.354f, position.y);
-		ellipseSizeMultipliers[0] = { 1.14 };
+		ellipseSizeMultipliers[0] = { 1.14f };
 		break;
 	case 16:
 		focus1 = Vector2f(position.x - textureBox.width * 0.378f, position.y - textureBox.height * 0.101f);
 		focus2 = Vector2f(position.x + textureBox.width * 0.378f, position.y - textureBox.height * 0.101f);
-		ellipseSizeMultipliers[0] = { 1.3 };
+		ellipseSizeMultipliers[0] = { 1.3f };
 		break;
 	case 17:
 		focus1 = Vector2f(position.x - textureBox.width * 0.386f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.386f, position.y);
-		ellipseSizeMultipliers[0] = { 1.15 };
+		ellipseSizeMultipliers[0] = { 1.15f };
 		break;
 	case 18:
 		focus1 = Vector2f(position.x - textureBox.width * 0.38f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.38f, position.y);
-		ellipseSizeMultipliers[0] = { 1.08 };
+		ellipseSizeMultipliers[0] = { 1.08f };
 		break;
 	default:
 		focus1 = Vector2f(position.x - textureBox.width * 0.111f, position.y);
 		focus2 = Vector2f(position.x + textureBox.width * 0.111f, position.y);
-		ellipseSizeMultipliers[0] = { 1.78 };
+		ellipseSizeMultipliers[0] = { 1.78f };
 		break;
 	}
 	initMicroBlocks();
@@ -219,7 +219,7 @@ int Rock::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<SpriteChainElement*> Rock::prepareSprites(long long elapsedTime)
 {
-	SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::rock, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	auto body = new SpriteChainElement(PackTag::darkWoods, PackPart::rock, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	if (typeOfObject >= 1 && typeOfObject <= 8)
 		body->packTag = PackTag::birchGrove;

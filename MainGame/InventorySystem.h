@@ -52,9 +52,9 @@ private:
 	std::string cellsFileDirectory = "Game/inventorySprites/cellsPath.txt", 
 		bagsFileDirectory = "Game/inventorySprites/bagsPath.txt";
 	
-	void crashIntoOtherBags(int cnt);
-	void moveOtherBags(int cur, std::vector<int> ancestors = {});
-	void initMaxCounts(std::string filePath = "Game/maxCounts.txt");
+	void crashIntoOtherBags(int cnt) const;
+	void moveOtherBags(int cur) const;
+	static void initMaxCounts(const std::string& filePath = "Game/maxCounts.txt");
 	std::vector<bool> visitedInDisplacement;
 	bool usedMouse = false, cursorBlurUsing = false, successInit = false;
 	Vector2f cursorTextPos = {0, 0};

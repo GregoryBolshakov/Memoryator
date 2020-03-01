@@ -1,8 +1,7 @@
-#pragma once
 #include "TextSystem.h"
 #include "HeroBag.h"
 
-int TextSystem::characterSize = 30 * Helper::GetScreenSize().y / 1440;
+float TextSystem::characterSize = 30.0f * Helper::GetScreenSize().y / 1440.0f;
 std::unordered_map<FontName, Font> TextSystem::fonts = {};
 std::unordered_map<FontName, Text> TextSystem::textBoxes = {};
 Text TextSystem::numberOfItems;
@@ -41,21 +40,21 @@ void TextSystem::initTextBoxes()
 	textBoxes.insert({ FontName::ConsoleFont, currentText });
 }
 
-void TextSystem::drawString(const std::string& str, FontName font, int size, float posX, float posY, RenderTarget& target, sf::Color color)
+void TextSystem::drawString(const std::string& str, const FontName font, const float size, const float posX, const float posY, RenderTarget& target, const sf::Color color)
 {
 	textBoxes.at(font).setPosition(posX, posY);
-	textBoxes.at(font).setCharacterSize(size);
+	textBoxes.at(font).setCharacterSize(unsigned(ceil(size)));
 	textBoxes.at(font).setFillColor(color);
 	textBoxes.at(font).setString(str);
 	target.draw(textBoxes.at(font));
 }
 
-void TextSystem::drawTextBox(std::string str, FontName font, int size, float posX, float posY, float width, float height, RenderTarget& target, sf::Color color)
+void TextSystem::drawTextBox(std::string str, const FontName font, const float size, const float posX, const float posY, const float width, const float height, RenderTarget& target, const sf::Color color)
 {
 	auto curText = textBoxes.at(font);
 	curText.setString(str);
-	const int lineLength = str.size() * (width / curText.getGlobalBounds().width);
-	float curPosY = posY;
+	const unsigned long long lineLength = long(ceil(str.size() * (width / curText.getGlobalBounds().width)));
+	auto curPosY = posY;
 
 	if (curText.getGlobalBounds().width <= width)
 	{
@@ -67,8 +66,8 @@ void TextSystem::drawTextBox(std::string str, FontName font, int size, float pos
 	{
 		if (curPosY > posY + height - curText.getGlobalBounds().height / 2)
 			return;
-		
-		int spacePos = std::min(lineLength, int(str.size() - 1));
+
+		auto spacePos = std::min(lineLength, str.size() - 1);
 		if (str.length() > lineLength)
 		{
 			while (!(str[spacePos] == ' ' || str[spacePos] == '_') && spacePos > 0)
@@ -88,7 +87,7 @@ void TextSystem::drawTextBox(std::string str, FontName font, int size, float pos
 	}
 }
 
-void TextSystem::drawNumberOfItems(Vector2f pos, int itemsCount, RenderTarget& target)
+void TextSystem::drawNumberOfItems(const Vector2f pos, const int itemsCount, RenderTarget& target)
 {
 	numberOfItems.setString(std::to_string(itemsCount));
 	numberOfItems.setOrigin(numberOfItems.getGlobalBounds().width, numberOfItems.getGlobalBounds().height);
@@ -96,14 +95,14 @@ void TextSystem::drawNumberOfItems(Vector2f pos, int itemsCount, RenderTarget& t
 	target.draw(numberOfItems);
 }
 
-sf::Vector2f TextSystem::getTextBoxSize(const std::string& string, int characterSize, FontName font)
+sf::Vector2f TextSystem::getTextBoxSize(const std::string& string, const float characterSize, const FontName font)
 {
 	if (fonts.count(font) <= 0 || textBoxes.count(font) <= 0)
 		return { 0, 0 };
 
 	textBoxes.at(font).setFont(fonts.at(font));
 	textBoxes.at(font).setString(string);
-	textBoxes.at(font).setCharacterSize(characterSize);
+	textBoxes.at(font).setCharacterSize(unsigned(ceil(characterSize)));
 
 	return { textBoxes.at(font).getGlobalBounds().width, textBoxes.at(font).getGlobalBounds().height };
 }

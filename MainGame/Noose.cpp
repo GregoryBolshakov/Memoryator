@@ -4,7 +4,7 @@
 
 using namespace sf;
 
-Noose::Noose(const std::string objectName, Vector2f centerPosition, WorldObject* owner) : DynamicObject(objectName, centerPosition)
+Noose::Noose(const std::string& objectName, Vector2f centerPosition, WorldObject* owner) : DynamicObject(objectName, centerPosition)
 {
 	conditionalSizeUnits = { 360, 300 };
 	currentSprite[0] = 1;
@@ -12,20 +12,19 @@ Noose::Noose(const std::string objectName, Vector2f centerPosition, WorldObject*
 	this->owner = owner;
 	defaultSpeed = 0.0007f;
 	speed = defaultSpeed;
-	animationSpeed = 5e-4;
+	animationSpeed = float(5e-4);
 	animationLength = 8;
 	radius = 50;
 	currentAction = move;
 	routeGenerationAbility = false;
 	canCrashIntoDynamic = false;
-	jerk(2, 1);
+	Noose::jerk(2, 1);
 	toSaveName = "noose";
 	tag = Tag::noose;
 }
 
 Noose::~Noose()
-{
-}
+= default;
 
 Vector2f Noose::calculateTextureOffset()
 {
@@ -146,7 +145,7 @@ void Noose::jerkInteract(long long elapsedTime)
 		if (jerkTime > 0)
 		{
 			jerkTime -= elapsedTime;
-			speed = (jerkDistance / jerkDuration) * jerkPower * pow(jerkTime / jerkDuration, jerkDeceleration);
+			speed = float(jerkDistance / float(jerkDuration) * jerkPower * pow(jerkTime / jerkDuration, jerkDeceleration));
 			speed = std::max(defaultSpeed / jerkDeceleration, speed);
 		}
 		else
@@ -154,12 +153,12 @@ void Noose::jerkInteract(long long elapsedTime)
 	}
 }
 
-void Noose::jerk(float power, float deceleration, Vector2f destinationPoint)
+void Noose::jerk(float power, const float deceleration, Vector2f destinationPoint)
 {
 	stopping(false, false);
 	this->jerkPower = power;
 	this->jerkDeceleration = deceleration;
-	this->jerkDuration = 40 / animationSpeed * 13;
+	this->jerkDuration = long(40.0f / animationSpeed * 13.0f);
 	this->jerkTime = this->jerkDuration;
 	currentAction = jerking;
 	jerkDistance = 1400;
@@ -173,14 +172,13 @@ void Noose::jerk(float power, float deceleration, Vector2f destinationPoint)
 
 void Noose::fightInteract(long long elapsedTime, DynamicObject* target)
 {
-	return;
 }
 
 void Noose::rotateAndExtend(SpriteChainElement* rope, SpriteChainElement* loop) const
 {
 	if (ownerPos != Vector2f(0, 0))
 	{
-		const Vector2f beginPoint = Vector2f(ownerPos.x, ownerPos.y - ownerGlobalBounds.y / 13.0f);
+		const auto beginPoint = Vector2f(ownerPos.x, ownerPos.y - ownerGlobalBounds.y / 13.0f);
 		rope->size = Vector2f(Helper::getDist(beginPoint, position) + ropeElongation, rope->size.y); // a little bit longer rope for sprite joining		
 		if (position.y <= beginPoint.y)
 			rope->rotation = acos((beginPoint.x - position.x) / sqrt(pow(beginPoint.x - position.x, 2) + pow(beginPoint.y - position.y, 2))) / pi * 180;
@@ -201,7 +199,7 @@ void Noose::rotateAndExtend(SpriteChainElement* rope, SpriteChainElement* loop) 
 		rope->offset.y += (ownerPos.y - position.y) * ropeElongation / Helper::getDist(position, ownerPos);
 
 		// change position to hero belt
-		auto dynOwner = dynamic_cast<Deerchant*>(owner);
+		const auto dynOwner = dynamic_cast<Deerchant*>(owner);
 		if (dynOwner && currentAction != dead)
 		{
 			rope->position = dynOwner->getBeltPosition();
@@ -229,7 +227,7 @@ std::vector<SpriteChainElement*> Noose::prepareSprites(long long elapsedTime)
 					ropeSprite->size.y *= -1;
 			loopSprite->number = 1;
 			loopSprite->size = Vector2f(40, 30);
-			loopSprite->offset = Vector2f(float(loopSprite->size.x)*getScaleRatio().x / 1.8, float(loopSprite->size.y)*getScaleRatio().y / 1.8);
+			loopSprite->offset = Vector2f(float(loopSprite->size.x)*getScaleRatio().x / 1.8f, float(loopSprite->size.y)*getScaleRatio().y / 1.8f);
 			break;
 		}
 		case jerking:
@@ -276,7 +274,7 @@ std::vector<SpriteChainElement*> Noose::prepareSprites(long long elapsedTime)
 
 	timeForNewSprite += elapsedTime;
 
-	if (timeForNewSprite >= 40 / animationSpeed)
+	if (timeForNewSprite >= long(40.0f / animationSpeed))
 	{
 		timeForNewSprite = 0;
 

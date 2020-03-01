@@ -1,13 +1,13 @@
 #include "GroundConnection.h"
 #include "Helper.h"
 
-GroundConnection::GroundConnection(std::string objectName, Vector2f centerPosition, int typeOfObject) : StaticObject(objectName, centerPosition)
+GroundConnection::GroundConnection(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : StaticObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 12; // SwampyTrees: 1-4; DarkWoods: 5-8; BirchGrove: 9-12
 	this->typeOfObject = typeOfObject;
 	isBackground = true;
 	toSaveName = "groundConnection";
-	setType(typeOfObject);
+	GroundConnection::setType(typeOfObject);
 	tag = Tag::groundConnection;
 }
 
@@ -66,17 +66,17 @@ Vector2f GroundConnection::calculateTextureOffset()
 	return { 0, 0 };
 }
 
-Vector2f GroundConnection::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f GroundConnection::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int GroundConnection::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int GroundConnection::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<SpriteChainElement*> GroundConnection::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> GroundConnection::prepareSprites(long long)
 {	
 	if (typeOfObject >= 1 && typeOfObject <= 4)
 		return { new SpriteChainElement() };
@@ -85,7 +85,7 @@ std::vector<SpriteChainElement*> GroundConnection::prepareSprites(long long elap
 	if (spriteType == 1)
 		spriteType = 5;
 
-    SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::ground, Direction::DOWN, spriteType, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	auto body = new SpriteChainElement(PackTag::darkWoods, PackPart::ground, Direction::DOWN, spriteType, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	
 	body->zCoord = zCoord;
 

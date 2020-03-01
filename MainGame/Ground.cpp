@@ -1,13 +1,13 @@
 #include "Ground.h"
 #include "Helper.h"
 
-Ground::Ground(std::string objectName, Vector2f centerPosition, int typeOfObject) : StaticObject(objectName, centerPosition)
+Ground::Ground(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : StaticObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 3;
 	this->typeOfObject = typeOfObject;
 	isBackground = true;
 	toSaveName = "ground";
-	setType(typeOfObject);
+	Ground::setType(typeOfObject);
 	tag = Tag::ground;
 }
 
@@ -26,19 +26,19 @@ Vector2f Ground::calculateTextureOffset()
 	return {0, 0};
 }
 
-Vector2f Ground::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f Ground::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Ground::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int Ground::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Ground::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Ground::prepareSprites(long long)
 {
-    SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::ground, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	auto body = new SpriteChainElement(PackTag::darkWoods, PackPart::ground, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	
 	body->zCoord = zCoord;
 	body->isBackground = true;

@@ -18,7 +18,7 @@ protected:
 	int strikingSprite = 4;
 	WorldObject* owner = nullptr;
 public:
-	Bear(std::string objectName, Vector2f centerPosition);
+	Bear(const std::string& objectName, Vector2f centerPosition);
 	~Bear();
 	Vector2f calculateTextureOffset() override;
 	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;
@@ -27,7 +27,7 @@ public:
 	void endingPreviousAction();
 	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
-	WorldObject* getOwner() const { return owner; }
+	[[nodiscard]] WorldObject* getOwner() const { return owner; }
 	//void setTarget(DynamicObject& object) override;
 	void jerk(float power, float deceleration, Vector2f destinationPoint) override;
 	void setOwner(WorldObject* owner) { this->owner = owner; }

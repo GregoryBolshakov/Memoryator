@@ -1,7 +1,7 @@
 #include "Bush.h"
 #include "Helper.h"
 
-Bush::Bush(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(objectName, centerPosition)
+Bush::Bush(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 15; // BrichGrove: 1-8; SwampyTrees: 9-15
 	this->typeOfObject = typeOfObject;
@@ -9,7 +9,7 @@ Bush::Bush(std::string objectName, Vector2f centerPosition, int typeOfObject) : 
 	radius = 50;
 	animationSpeed = 10;
 	toSaveName = "bush";
-	setType(typeOfObject);
+	Bush::setType(typeOfObject);
 	tag = Tag::bush;
 }
 
@@ -92,10 +92,6 @@ void Bush::initPedestal()
 	switch (typeOfObject)
 	{
 		case 1:
-			focus1 = Vector2f(position.x, position.y);
-			focus2 = Vector2f(position.x, position.y);
-			ellipseSizeMultipliers[0] = { 0 };
-			break;
 		case 2:
 			focus1 = Vector2f(position.x, position.y);
 			focus2 = Vector2f(position.x, position.y);
@@ -104,28 +100,24 @@ void Bush::initPedestal()
 		case 3:
 			focus1 = Vector2f(position.x - textureBox.width * 0.224f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.224f, position.y);
-			ellipseSizeMultipliers[0] = { 1.29 };
+			ellipseSizeMultipliers[0] = { 1.29f };
 			break;
 		case 4:
 			focus1 = Vector2f(position.x - textureBox.width * 0.311f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.311f, position.y);
-			ellipseSizeMultipliers[0] = { 1.307 };
+			ellipseSizeMultipliers[0] = { 1.307f };
 			break;
 		case 5:
 			focus1 = Vector2f(position.x - textureBox.width * 0.32f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.32f, position.y);
-			ellipseSizeMultipliers[0] = { 1.3 };
+			ellipseSizeMultipliers[0] = { 1.3f };
 			break;
 		case 6:
 			focus1 = Vector2f(position.x - textureBox.width * 0.319f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.319f, position.y);
-			ellipseSizeMultipliers[0] = { 1.17 };
+			ellipseSizeMultipliers[0] = { 1.17f };
 			break;
 		case 7:
-			focus1 = Vector2f(position.x, position.y);
-			focus2 = Vector2f(position.x, position.y);
-			ellipseSizeMultipliers[0] = { 0 };
-			break;
 		case 8:
 			focus1 = Vector2f(position.x, position.y);
 			focus2 = Vector2f(position.x, position.y);
@@ -134,60 +126,60 @@ void Bush::initPedestal()
 		case 9:
 			focus1 = Vector2f(position.x - textureBox.width * 0.119f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.119f, position.y);
-			ellipseSizeMultipliers[0] = { 1.29 };
+			ellipseSizeMultipliers[0] = { 1.29f };
 			break;
 		case 10:
 			focus1 = Vector2f(position.x - textureBox.width * 0.196f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.196f, position.y);
-			ellipseSizeMultipliers[0] = { 1.31 };
+			ellipseSizeMultipliers[0] = { 1.31f };
 			break;
 		case 11:
 			focus1 = Vector2f(position.x - textureBox.width * 0.123f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.123f, position.y);
-			ellipseSizeMultipliers[0] = { 1.26 };
+			ellipseSizeMultipliers[0] = { 1.26f };
 			break;
 		case 12:
 			focus1 = Vector2f(position.x - textureBox.width * 0.174f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.174f, position.y);
-			ellipseSizeMultipliers[0] = { 1.18 };
+			ellipseSizeMultipliers[0] = { 1.18f };
 			break;
 		case 13:
 			focus1 = Vector2f(position.x - textureBox.width * 0.165f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.165f, position.y);
-			ellipseSizeMultipliers[0] = { 1.24 };
+			ellipseSizeMultipliers[0] = { 1.24f };
 			break;
 		case 14:
 			focus1 = Vector2f(position.x - textureBox.width * 0.238f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.238f, position.y);
-			ellipseSizeMultipliers[0] = { 1.09 };
+			ellipseSizeMultipliers[0] = { 1.09f };
 			break;
 		case 15:
 			focus1 = Vector2f(position.x - textureBox.width * 0.289f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.289f, position.y);
-			ellipseSizeMultipliers[0] = { 1.29 };
+			ellipseSizeMultipliers[0] = { 1.29f };
 			break;
 		default:
 			focus1 = Vector2f(position.x - textureBox.width * 0.341f, position.y);
 			focus2 = Vector2f(position.x + textureBox.width * 0.341f, position.y);
-			ellipseSizeMultipliers[0] = { 1.18 };
+			ellipseSizeMultipliers[0] = { 1.18f };
 			break;
 	}
 	initMicroBlocks();
 }
 
-Vector2f Bush::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f Bush::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Bush::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int Bush::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Bush::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> Bush::prepareSprites(long long)
 {
-	SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::bush, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	auto body = new SpriteChainElement(PackTag::darkWoods, PackPart::bush, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	if (typeOfObject >= 1 && typeOfObject <= 8)
 		body->packTag = PackTag::birchGrove;

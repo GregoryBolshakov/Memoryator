@@ -18,7 +18,7 @@ public:
 	~HeroBook();
 	void init(std::map<PackTag, SpritePack>* packsMap);
 	std::vector<DrawableChainElement*> prepareSprites(float hpRatio, long long elapsedTime);
-	void interact(long long elapsedTime);
+	void interact();
 	void onMouseUp();
 	void getAllOuterInfo(
 		std::vector<HeroBag>* bags,
@@ -29,7 +29,7 @@ public:
 	void WhileMouseDown();
 	void setPage(int page);
 	void changeVisibility() { this->visibility = !this->visibility; }
-	int getCurrentPage() const { return currentPage; }
+	[[nodiscard]] int getCurrentPage() const { return currentPage; }
 	
 	void boundHeldItem() { this->worldHeldItem = worldHeldItem; }
 	std::string debugInfo = "";
@@ -63,6 +63,6 @@ private:
 	std::string worldMouseName = "";
 	Vector2f blockDescriptionPoint = Vector2f(0.53f, 0.104f); // as a percentage of the size of the page markup
 	Vector2f pageDescriptionPoint = Vector2f(0.53f, 0.395f); // as a percentage of the size of the page markup
-	std::vector<HeroBag>* boundBags;
+	std::vector<HeroBag>* boundBags{};
 };
 

@@ -5,38 +5,38 @@ using namespace sf;
 
 InputBox::InputBox() = default;
 
-InputBox::InputBox(IntRect rect)
+InputBox::InputBox(const FloatRect rect)
 {
 	init(rect);
 }
 
 InputBox::~InputBox() = default;
 
-void InputBox::init(IntRect rect)
+void InputBox::init(const FloatRect rect)
 {
-	this->rect = rect;
+	this->rect = FloatRect(rect);
 	body.setSize(Vector2f(rect.width, rect.height));
 	body.setPosition(rect.left, rect.top);
 	body.setFillColor(outFill);
 	innerPart.setSize(Vector2f(rect.width - microOffset, rect.height - microOffset));
 	innerPart.setPosition(rect.left + microOffset / 2.0f, rect.top + microOffset / 2.0f);
 	innerPart.setFillColor(inFill);
-	cursor.setSize(Vector2f(microOffset / 1.5f, innerPart.getSize().y - 1.5 * microOffset));
+	cursor.setSize(Vector2f(microOffset / 1.5f, innerPart.getSize().y - 1.5f * microOffset));
 	cursor.setPosition(innerPart.getPosition().x + microOffset, innerPart.getPosition().y + microOffset * 3.0f / 4);
 	cursor.setFillColor(textColor);
 
 	text.setFont(TextSystem::fonts.at(FontName::ConsoleFont));
-	text.setCharacterSize(TextSystem::characterSize);
+	text.setCharacterSize(unsigned int(ceil(TextSystem::characterSize)));
 	text.setFillColor(textColor);
 	text.setPosition(innerPart.getPosition().x + microOffset * 2, innerPart.getPosition().y - microOffset / 2.0f);
 }
 
-void InputBox::resetCursor(bool toEnd)
+void InputBox::resetCursor(const bool toEnd)
 {
 	if (toEnd)
 	{
 		cursorPos = line.size();
-		setCursorToPos(); 
+		setCursorToPos();
 	}
 	else cursorPos = 0;
 }
@@ -47,11 +47,11 @@ void InputBox::setCursorToPos()
 	cursor.setPosition(text.getGlobalBounds().left + text.getGlobalBounds().width + microOffset / 2.0f, cursor.getPosition().y);
 }
 
-void InputBox::draw(sf::RenderWindow& window)
+void InputBox::draw(sf::RenderWindow & window) const
 {
 	window.draw(body);
 	window.draw(innerPart);
-	TextSystem::drawString(line, FontName::ConsoleFont, characterSize, innerPart.getPosition().x + microOffset * 2, innerPart.getPosition().y - microOffset / 2.0f, window, textColor);
+	TextSystem::drawString(line, FontName::ConsoleFont, characterSize, innerPart.getPosition().x + microOffset * 2.0f, innerPart.getPosition().y - microOffset / 2.0f, window, textColor);
 	window.draw(cursor);
 }
 
@@ -68,10 +68,10 @@ void InputBox::onMouseRelease()
 	mousePressed = false;
 	float minDist = Helper::GetScreenSize().x + Helper::GetScreenSize().y;
 	int newPos = 0;
-	for (int i = 0; i < line.size(); i++)
+	for (auto i = 0u; i < line.size(); i++)
 	{
 		text.setString(line.substr(0, i));
-		const float dist = abs(text.getGlobalBounds().left + text.getGlobalBounds().width- Mouse::getPosition().x);
+		const float dist = abs(text.getGlobalBounds().left + text.getGlobalBounds().width - Mouse::getPosition().x);
 		if (dist < minDist)
 		{
 			minDist = dist;
@@ -81,12 +81,10 @@ void InputBox::onMouseRelease()
 	cursorPos = newPos;
 }
 
-void InputBox::interact(long long elapsedTime)
+void InputBox::interact(const long long elapsedTime)
 {
-	if (cursorPos < 0)
-		cursorPos = 0;
 	setCursorToPos();
-	if (Helper::isIntersects(Vector2f(Mouse::getPosition()), IntRect(body.getPosition().x, body.getPosition().y, body.getSize().x, body.getSize().y)))
+	if (Helper::isIntersects(Vector2f(Mouse::getPosition()), FloatRect(body.getPosition().x, body.getPosition().y, body.getSize().x, body.getSize().y)))
 		innerPart.setFillColor(inFillSelected);
 	else
 		innerPart.setFillColor(inFill);
@@ -105,8 +103,8 @@ void InputBox::interact(long long elapsedTime)
 	}
 }
 
-void InputBox::handleEvents(Event event)
-{		
+void InputBox::handleEvents(const Event event)
+{
 	if (event.type == Event::MouseButtonReleased)
 		onMouseRelease();
 
@@ -121,15 +119,15 @@ void InputBox::handleEvents(Event event)
 			}
 		}
 		else
-		if (text.getGlobalBounds().left + text.getGlobalBounds().width <= innerPart.getGlobalBounds().left + innerPart.getGlobalBounds().width &&
-			!(Keyboard::isKeyPressed(Keyboard::Tilde) || Keyboard::isKeyPressed(Keyboard::Escape) || Keyboard::isKeyPressed(Keyboard::Enter)))
-		{
-			/*if (event.text.unicode >= 65 && event.text.unicode <= 90)
-				event.text.unicode += 32;*/
-			if (line.size() >= cursorPos)
-				line.insert(cursorPos, 1, char(event.text.unicode));
-			cursorPos++;
-		}
+			if (text.getGlobalBounds().left + text.getGlobalBounds().width <= innerPart.getGlobalBounds().left + innerPart.getGlobalBounds().width &&
+				!(Keyboard::isKeyPressed(Keyboard::Tilde) || Keyboard::isKeyPressed(Keyboard::Escape) || Keyboard::isKeyPressed(Keyboard::Enter)))
+			{
+				/*if (event.text.unicode >= 65 && event.text.unicode <= 90)
+					event.text.unicode += 32;*/
+				if (line.size() >= cursorPos)
+					line.insert(cursorPos, 1, char(event.text.unicode));
+				cursorPos++;
+			}
 	}
 
 	if (event.type == Event::KeyPressed)
@@ -141,9 +139,4 @@ void InputBox::handleEvents(Event event)
 		if (Keyboard::isKeyPressed(Keyboard::Right) && cursorPos < line.size())
 			cursorPos++;
 	}
-
-	if (cursorPos < 0)
-		cursorPos = 0;
 }
-
-

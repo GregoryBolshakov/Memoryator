@@ -3,14 +3,10 @@
 #include "DroppedLoot.h"
 
 BuildSystem::BuildSystem()
-{
-
-}
+= default;
 
 BuildSystem::~BuildSystem()
-{
-
-}
+= default;
 
 void BuildSystem::init()
 {
@@ -51,7 +47,7 @@ void BuildSystem::initializeObjectsInfo()
 	fin.close();
 }
 
-std::vector <SpriteChainElement*> BuildSystem::prepareSprites(GridList& staticGrid, std::vector<WorldObject*> visibleItems, std::map<PackTag, SpritePack>* packsMap)
+std::vector <SpriteChainElement*> BuildSystem::prepareSprites(GridList& staticGrid, const std::vector<WorldObject*>& visibleItems, std::map<PackTag, SpritePack>* packsMap)
 {
 	if (selectedObject == Tag::emptyCell)
 		return {};

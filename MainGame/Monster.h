@@ -18,7 +18,7 @@ public:
 	void stopping(bool doStand, bool forgetBoundTarget);
 	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
-	WorldObject* getVictim() const { return victim; }
+	[[nodiscard]] WorldObject* getVictim() const { return victim; }
 	void setTarget(DynamicObject& object) override;
 	void jerk(float power, float deceleration, Vector2f destinationPoint) override;
 	void fightInteract(long long elapsedTime, DynamicObject* target = nullptr) override;
@@ -27,7 +27,7 @@ protected:
 	WorldObject* victim = nullptr;
 	std::map<Actions, bool> isAttack = { {commonHit, true}, {directHit, true} };
 	float hitDistance = 30;
-	int animationLength;
+	int animationLength{};
 	bool wasHit = false;
 
 	int strikingSprite = 0;

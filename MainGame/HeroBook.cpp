@@ -18,12 +18,15 @@ void HeroBook::init(std::map<PackTag, SpritePack>* packsMap)
 
 void HeroBook::initButtons(std::map<PackTag, SpritePack>* packsMap)
 {
-	const Vector2f screenSize = Helper::GetScreenSize();
+	const auto screenSize = Helper::GetScreenSize();
 
-	//std::string buttonImagePathDefault, buttonImagePathPressed, buttonImagePathSelected;
-	std::string packTag = "empty", packPart = "full";
-	int number = 1, selectedNumber = 1, pressedNumber = 1;
-	Vector2f buttonPosition, buttonSize; // in percents
+	std::string packTag = "empty";
+	std::string packPart = "full";
+	int number = 1;
+	int selectedNumber = 1;
+	int pressedNumber = 1;
+	Vector2f buttonPosition;
+	Vector2f buttonSize;
 	Vector2f offset = {0, 0};
 	int tag;
 	bool isSelectable;
@@ -43,7 +46,7 @@ void HeroBook::initButtons(std::map<PackTag, SpritePack>* packsMap)
 		buttonPosition.y = buttonPosition.y * screenSize.y / 100;
 		const auto textureSize = packsMap->at(SpritePack::mappedPackTag.at(packTag)).getOriginalInfo(SpritePack::mappedPackPart.at(packPart), Direction::DOWN, number).source_size;
 		buttonSize.y = buttonSize.y * screenSize.y / 100;
-		buttonSize.x = textureSize.w * buttonSize.y / textureSize.h;
+		buttonSize.x = float(textureSize.w) * buttonSize.y / float(textureSize.h);
 
 		buttonList[ButtonTag(tag)].initialize(SpritePack::mappedPackTag.at(packTag), SpritePack::mappedPackPart.at(packPart), number, selectedNumber, pressedNumber, buttonPosition, buttonSize, isSelectable, ButtonTag(tag), offset);
 	}
@@ -71,7 +74,7 @@ void HeroBook::getAllOuterInfo(std::vector<HeroBag>* bags, std::string name, Wor
 {
 	boundBags = bags;
 	somePage.boundBags = bags;
-	this->worldMouseName = name;
+	this->worldMouseName = std::move(name);
 	this->worldSelectedObject = object;
 	somePage.nearTheTable = nearTheTable;
 }
@@ -102,16 +105,16 @@ std::vector<SpriteChainElement*> HeroBook::prepareWreathMatrix()
 
 	std::vector<SpriteChainElement*> result = {};
 
-	const Vector2f upperLeftCorner = Vector2f(
-		buttonList.at(ButtonTag::sketching).getGlobalBounds().left + buttonList.at(ButtonTag::sketching).getGlobalBounds().width / 1.875,
-		buttonList.at(ButtonTag::sketching).getGlobalBounds().top + buttonList.at(ButtonTag::sketching).getGlobalBounds().height / 8.2);
+	const auto upperLeftCorner = Vector2f(
+		buttonList.at(ButtonTag::sketching).getGlobalBounds().left + buttonList.at(ButtonTag::sketching).getGlobalBounds().width / 1.875f,
+		buttonList.at(ButtonTag::sketching).getGlobalBounds().top + buttonList.at(ButtonTag::sketching).getGlobalBounds().height / 8.2f);
 	Vector2f distance;
 	float offset;
 	ButtonTag currentType;
 
-	for (int raw = 0; raw < somePage.wreathMatrix.size(); raw++)
+	for (auto raw = 0u; raw < somePage.wreathMatrix.size(); raw++)
 	{
-		for (int column = 0; column < somePage.wreathMatrix[raw].size(); column++)
+		for (auto column = 0u; column < somePage.wreathMatrix[raw].size(); column++)
 		{
 			if (somePage.wreathMatrix[raw][column] == Tag::selectedCell)
 				currentType = ButtonTag::cellSelected;
@@ -132,7 +135,6 @@ std::vector<SpriteChainElement*> HeroBook::prepareWreathMatrix()
 				// draw cell
 				buttonList.at(currentType).setPosition(somePage.wreathMatrixPositions[raw][column]);
 				result.push_back(buttonList.at(currentType).prepareSprite());
-				//------------------
 			}
 		}
 	}
@@ -149,17 +151,17 @@ std::vector<SpriteChainElement*> HeroBook::prepareLineMatrix()
 	Vector2f distance = Vector2f(buttonList.at(ButtonTag::cell).getGlobalBounds().width * 6 / 4,
 		distance.y = buttonList.at(ButtonTag::cell).getGlobalBounds().height / 2);
 
-	for (int raw = 0; raw < somePage.wreathMatrix.size(); raw++)
+	for (auto raw = 0u; raw < somePage.wreathMatrix.size(); raw++)
 	{
-		for (int column = 0; column < somePage.wreathMatrix[raw].size(); column++)
+		for (auto column = 0u; column < somePage.wreathMatrix[raw].size(); column++)
 		{
 			if (somePage.wreathMatrix[raw][column] == Tag::emptyCell)
 				continue;
 
 			if (somePage.wreathMatrix[raw][column] != Tag::emptyCell)
 			{
-				const Vector2f contentOffset = Vector2f(buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).getGlobalBounds().width * 0.03,
-					buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).getGlobalBounds().height * 0.05);
+				const Vector2f contentOffset = Vector2f(buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).getGlobalBounds().width * 0.03f,
+					buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).getGlobalBounds().height * 0.05f);
 
 				for (const auto cell : somePage.getBorderCells(raw, column))
 					for (auto& connection : somePage.plantsConnections.at(somePage.wreathMatrix[raw][column]))
@@ -188,14 +190,14 @@ std::vector<SpriteChainElement*> HeroBook::preparePlantsMatrix()
 {
 	std::vector<SpriteChainElement*> result = {};
 
-	for (int raw = 0; raw < somePage.wreathMatrix.size(); raw++)
+	for (auto raw = 0u; raw < somePage.wreathMatrix.size(); raw++)
 	{
-		for (int column = 0; column < somePage.wreathMatrix[raw].size(); column++)
+		for (auto column = 0u; column < somePage.wreathMatrix[raw].size(); column++)
 		{
 			if (somePage.wreathMatrix[raw][column] != Tag::emptyCell && somePage.wreathMatrix[raw][column] != Tag::selectedCell)
 			{
-				const Vector2f contentOffset = Vector2f(buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).getGlobalBounds().width * 0.195,
-					buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).getGlobalBounds().height * 0.195);
+				const Vector2f contentOffset = Vector2f(buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).getGlobalBounds().width * 0.195f,
+					buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).getGlobalBounds().height * 0.195f);
 				buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).setPosition(Vector2f(somePage.wreathMatrixPositions[raw][column].x - contentOffset.x,
 					somePage.wreathMatrixPositions[raw][column].y - contentOffset.y));
 				buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).bekomeGray();
@@ -226,18 +228,18 @@ std::vector<SpriteChainElement*> HeroBook::preparePlantsList()
 
 	std::vector<SpriteChainElement*> result = {};
 
-	const Vector2f upperLeftCorner = Vector2f(
-		buttonList.at(ButtonTag::sketching).getGlobalBounds().left + buttonList.at(ButtonTag::sketching).getGlobalBounds().width * 0.066,
-		buttonList.at(ButtonTag::sketching).getGlobalBounds().top + buttonList.at(ButtonTag::sketching).getGlobalBounds().height * 0.55);
+	const auto upperLeftCorner = Vector2f(
+		buttonList.at(ButtonTag::sketching).getGlobalBounds().left + buttonList.at(ButtonTag::sketching).getGlobalBounds().width * 0.066f,
+		buttonList.at(ButtonTag::sketching).getGlobalBounds().top + buttonList.at(ButtonTag::sketching).getGlobalBounds().height * 0.55f);
 
-	for (int raw = 0; raw < somePage.plantsMatrix.size(); raw++)
+	for (auto raw = 0u; raw < somePage.plantsMatrix.size(); raw++)
 	{
-		for (int column = 0; column < somePage.plantsMatrix[raw].size(); column++)
+		for (auto column = 0u; column < somePage.plantsMatrix[raw].size(); column++)
 		{
 			if (somePage.plantsMatrix[raw][column].first == Tag::emptyCell)
 				continue;
 			auto curFlower = ButtonTag(somePage.plantsMatrix[raw][column].first);
-			const Vector2f size = Vector2f(buttonList.at(curFlower).getGlobalBounds().width, buttonList.at(curFlower).getGlobalBounds().height);			
+			const auto size = Vector2f(buttonList.at(curFlower).getGlobalBounds().width, buttonList.at(curFlower).getGlobalBounds().height);			
 
 			buttonList.at(curFlower).setPosition(Vector2f(upperLeftCorner.x + column * size.x, upperLeftCorner.y + raw * size.y));
 			if (buttonList.at(curFlower).isSelected(Vector2f(Mouse::getPosition())) && currentFlower == Tag::emptyCell)
@@ -301,13 +303,9 @@ std::vector<DrawableChainElement*> HeroBook::prepareSprites(float hpRatio, long 
 	if (!visibility)
 		return result;
 
-	FloatRect pageGlobalBounds;
-	
-
 	if (currentPage != 0)
 	{
 		result.push_back(buttonList.at(ButtonTag::pageBackground).prepareSprite());
-		pageGlobalBounds = buttonList.at(ButtonTag::pagePattern).getGlobalBounds();
 	}
 
 	const auto pageContent = somePage.getPreparedContent(currentPage, currentDraft);
@@ -379,10 +377,9 @@ std::vector<DrawableChainElement*> HeroBook::prepareSprites(float hpRatio, long 
 	//--------------
 
 	return result;
-	return {};
 }
 
-void HeroBook::interact(long long elapsedTime)
+void HeroBook::interact()
 {
 	if (Mouse::isButtonPressed(Mouse::Left))
 		WhileMouseDown();
@@ -396,7 +393,7 @@ void HeroBook::onMouseUp()
 		const auto selectedCell = somePage.getSelectedWreathCell();
 		if (selectedCell != std::make_pair(-1, -1) && currentDraft != Tag::emptyDraft)
 		{
-			bool canBePlaced = true;
+			auto canBePlaced = true;
 			auto plants = somePage.getOriginalSetups().at(currentDraft).plants;
 			for (auto& plant : plants)
 			{
@@ -494,6 +491,5 @@ void HeroBook::WhileMouseDown()
 				this->currentFlower = Tag(int(heldItem.first));
 		}
 	}
-	//--------------------------
 }
 

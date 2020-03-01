@@ -87,15 +87,20 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)Vendors\SFML\include;$(SolutionDir)Vendors\LTBL2\LTBL2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SFML_DYNAMIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ShowIncludes>false</ShowIncludes>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Vendors\SFML\lib;$(SolutionDir)Vendors\LTBL\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;LTBL2-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>
+xcopy /i /e /s /y /f "$(SolutionDir)Vendors\SFML\PDB" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -121,18 +126,19 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)Vendors\SFML\include;$(SolutionDir)Vendors\LTBL2\LTBL2\source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SFML_DYNAMIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ShowIncludes>false</ShowIncludes>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>sfml-graphics.lib;sfml-system.lib;sfml-window.lib;LTBL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Vendors\SFML\lib;$(SolutionDir)Vendors\LTBL2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /i /e /s /y /f "$(SolutionDir)Vendors\SFML\bin" "$(TargetDir)"
+      <Command>
 xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Data" "$(TargetDir)\Data"
 xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Fonts" "$(TargetDir)\Fonts"
 xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
@@ -203,6 +209,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="TimeSystem.cpp" />
     <ClCompile Include="Totem.cpp" />
     <ClCompile Include="EffectsSystem.cpp" />
+    <ClCompile Include="VisualEffects\AmbientLight.cpp" />
     <ClCompile Include="Wolf.cpp" />
     <ClCompile Include="WorldGenerator.cpp" />
     <ClCompile Include="WorldHandler.cpp" />
@@ -278,6 +285,8 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="TimeSystem.h" />
     <ClInclude Include="Totem.h" />
     <ClInclude Include="EffectsSystem.h" />
+    <ClInclude Include="VisualEffects\AmbientLight.hpp" />
+    <ClInclude Include="VisualEffects\VisualEffect.hpp" />
     <ClInclude Include="Wolf.h" />
     <ClInclude Include="WorldGenerator.h" />
     <ClInclude Include="WorldHandler.h" />
@@ -292,11 +301,23 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\nlohmann.json.3.7.3\build\native\nlohmann.json.targets" Condition="Exists('..\packages\nlohmann.json.3.7.3\build\native\nlohmann.json.targets')" />
+    <Import Project="..\packages\sfml_graphics.redist.2.5.1\build\native\sfml_graphics.redist.targets" Condition="Exists('..\packages\sfml_graphics.redist.2.5.1\build\native\sfml_graphics.redist.targets')" />
+    <Import Project="..\packages\sfml_system.redist.2.5.1\build\native\sfml_system.redist.targets" Condition="Exists('..\packages\sfml_system.redist.2.5.1\build\native\sfml_system.redist.targets')" />
+    <Import Project="..\packages\sfml_system.2.5.1\build\native\sfml_system.targets" Condition="Exists('..\packages\sfml_system.2.5.1\build\native\sfml_system.targets')" />
+    <Import Project="..\packages\sfml_window.redist.2.5.1\build\native\sfml_window.redist.targets" Condition="Exists('..\packages\sfml_window.redist.2.5.1\build\native\sfml_window.redist.targets')" />
+    <Import Project="..\packages\sfml_window.2.5.1\build\native\sfml_window.targets" Condition="Exists('..\packages\sfml_window.2.5.1\build\native\sfml_window.targets')" />
+    <Import Project="..\packages\sfml_graphics.2.5.1\build\native\sfml_graphics.targets" Condition="Exists('..\packages\sfml_graphics.2.5.1\build\native\sfml_graphics.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\nlohmann.json.3.7.3\build\native\nlohmann.json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nlohmann.json.3.7.3\build\native\nlohmann.json.targets'))" />
+    <Error Condition="!Exists('..\packages\sfml_graphics.redist.2.5.1\build\native\sfml_graphics.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\sfml_graphics.redist.2.5.1\build\native\sfml_graphics.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\sfml_system.redist.2.5.1\build\native\sfml_system.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\sfml_system.redist.2.5.1\build\native\sfml_system.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\sfml_system.2.5.1\build\native\sfml_system.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\sfml_system.2.5.1\build\native\sfml_system.targets'))" />
+    <Error Condition="!Exists('..\packages\sfml_window.redist.2.5.1\build\native\sfml_window.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\sfml_window.redist.2.5.1\build\native\sfml_window.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\sfml_window.2.5.1\build\native\sfml_window.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\sfml_window.2.5.1\build\native\sfml_window.targets'))" />
+    <Error Condition="!Exists('..\packages\sfml_graphics.2.5.1\build\native\sfml_graphics.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\sfml_graphics.2.5.1\build\native\sfml_graphics.targets'))" />
   </Target>
 </Project>

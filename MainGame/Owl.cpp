@@ -4,7 +4,7 @@
 
 using namespace sf;
 
-Owl::Owl(const std::string objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
+Owl::Owl(const std::string& objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
 {
 	conditionalSizeUnits = { 280, 200 };
 	currentSprite[0] = 1;
@@ -18,8 +18,8 @@ Owl::Owl(const std::string objectName, Vector2f centerPosition) : NeutralMob(obj
 	sightRange = Helper::GetScreenSize().y * 1 / 2;
 	healthPoint = 50;
 	currentAction = relax;
-	timeAfterHitself = 0;
-	timeForNewHitself = 6e5;
+	timeAfterHitSelf = 0;
+	timeForNewHitSelf = long(6e5);
 	timeForNewHit = 1000000;
 	toSaveName = "owl";
 	tag = Tag::owl;
@@ -28,8 +28,7 @@ Owl::Owl(const std::string objectName, Vector2f centerPosition) : NeutralMob(obj
 }
 
 Owl::~Owl()
-{
-}
+= default;
 
 Vector2f Owl::calculateTextureOffset()
 {
@@ -110,7 +109,7 @@ void Owl::behavior(long long elapsedTime)
 			{				
 				changeAction(move, false, true);
 				movePosition = nearestTreeCasted->getOwlBase();
-				side = calculateSide(movePosition, elapsedTime);
+				side = calculateSide(movePosition);
 				return;
 			}
 
@@ -123,7 +122,7 @@ void Owl::behavior(long long elapsedTime)
 	// bouncing to a trap
 	if (boundTarget && boundTarget->tag == Tag::fern)
 	{
-		side = calculateSide(boundTarget->getPosition(), elapsedTime);
+		side = calculateSide(boundTarget->getPosition());
 		if (Helper::getDist(position, boundTarget->getPosition()) <= radius)
 		{
 			const auto trap = dynamic_cast<Fern*>(boundTarget);
@@ -147,7 +146,7 @@ void Owl::behavior(long long elapsedTime)
 	if (boundTarget && boundTarget->tag == Tag::hero)
 	{
 		float distanceToTarget = Helper::getDist(this->position, boundTarget->getPosition());
-		side = calculateSide(movePosition, elapsedTime);
+		side = calculateSide(movePosition);
 		speed = std::max(defaultSpeed, (defaultSpeed * 10) * (1 - (Helper::getDist(position, boundTarget->getPosition()) / sightRange * 1.5f)));
 		animationSpeed = std::max(0.0008f, 0.0008f * speed / defaultSpeed);
 		if (distanceToTarget <= sightRange)

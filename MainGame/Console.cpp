@@ -1,16 +1,30 @@
 #include "Console.h"
 
-Console::Console(IntRect rect, WorldHandler* world)
+Console::Console(const FloatRect rect, WorldHandler* world)
 {
 	this->world = world;
 	body.init(rect);
 }
 
 Console::~Console()
+= default;
+
+InputBox Console::getBody() const
 {
+	return body;
 }
 
-void Console::draw(sf::RenderWindow& window)
+void Console::resetCommandStackIterator()
+{
+	commandStackIterator = commandStack.size();
+}
+
+bool Console::getState() const
+{
+	return state;
+}
+
+void Console::draw(RenderWindow& window)
 {
 	if (!state)
 		return;
@@ -26,7 +40,7 @@ void Console::interact(long long elapsedTime)
 	body.interact(elapsedTime);	
 }
 
-void Console::handleEvents(Event event)
+void Console::handleEvents(const Event event)
 {
 	if (event.type == Event::KeyPressed && Keyboard::isKeyPressed(Keyboard::Tilde))
 		state = !state;
@@ -51,12 +65,12 @@ void Console::handleEvents(Event event)
 }
 
 template<typename K, typename V>
-bool findByValue(std::vector<K> & vec, std::map<K, V> mapOfElemen, V value)
+bool findByValue(std::vector<K> & vec, std::map<K, V> mapOfElements, V value)
 {
-	bool bResult = false;
-	auto it = mapOfElemen.begin();
+	auto bResult = false;
+	auto it = mapOfElements.begin();
 	// Iterate through the map
-	while (it != mapOfElemen.end())
+	while (it != mapOfElements.end())
 	{
 		// Check if value of this entry matches with given value
 		if (it->second == value)
@@ -67,7 +81,7 @@ bool findByValue(std::vector<K> & vec, std::map<K, V> mapOfElemen, V value)
 			vec.push_back(it->first);
 		}
 		// Go to next entry in map
-		it++;
+		++it;
 	}
 	return bResult;
 }
@@ -81,7 +95,7 @@ void Console::doCommand()
 
 	std::vector<std::string> commands;
 	std::string temp = body.line;
-	std::string delimiter = " ";
+	const std::string delimiter = " ";
 	if (temp[temp.size() - 1] != ' ')
 		temp.push_back(' ');
 	while (!temp.empty())
@@ -93,14 +107,14 @@ void Console::doCommand()
 
 	body.resetCursor();
 	commandStack[commandStack.size() - 1] = body.line;
-	commandStack.push_back("");
+	commandStack.emplace_back("");
 	body.line.clear();
 
 	if (!world)
 		return;
 
 	for (auto& command : commands)
-		std::transform(command.begin(), command.end(), command.begin(), ::tolower);
+		std::transform(command.begin(), command.end(), command.begin(), tolower);
 	if (commands.size() >= 2)
 	{
 		if (commands[0] == "spawn" && ObjectInitializer::mappedStrings.count(commands[1]) > 0)
@@ -111,12 +125,12 @@ void Console::doCommand()
 		}
 		if (commands[0] == "build" && ObjectInitializer::mappedStrings.count(commands[1]) > 0)
 		{
-			int typeOfObject = 1;
+			auto typeOfObject = 1;
 			if (commands.size() >= 3 && std::stoi(commands[2]) >= 1 && std::stoi(commands[2]) <= 1000)
 				typeOfObject = std::stoi(commands[2]);
 			auto object = ObjectInitializer::mappedStrings.at(commands[1]);
 
-			if (int(object) >= 211 || int(object) >= 216 || int(object) >= 218 || (int(object) >= 301 && int(object) <= 405))
+			if (int(object) >= 211 || int(object) >= 301 && int(object) <= 405)
 				world->setObjectToBuild(object, typeOfObject, true);	
 		}
 		if (commands[0] == "set" && commands[1] == "pedestal")

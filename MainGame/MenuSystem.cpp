@@ -20,9 +20,7 @@ void MenuSystem::initButtons()
 }
 
 MenuSystem::~MenuSystem()
-{
-
-}
+= default;
 
 void MenuSystem::onKeyDown(Event event, WorldHandler &world)
 {

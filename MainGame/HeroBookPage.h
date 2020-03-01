@@ -2,7 +2,6 @@
 
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
-#include <fstream>
 
 #include "WreathDraft.h"
 #include "SpriteStructures.h"
@@ -17,7 +16,7 @@ struct Connection
 	{
 		this->id = id;
 		this->pedestal = pedestal;
-		this->description = description;
+		this->description = std::move(description);
 	}
 	int id;
 	int pedestal;
@@ -55,7 +54,7 @@ public:
 	int buttonToPage(ButtonTag button);
 	void setButtonLock(ButtonTag button, ButtonTag changedButton);
 	SpriteChainElement* prepareIconFrame(ButtonTag button, int type = 1);
-	std::vector<SpriteChainElement*> prepareAllIcons(pageContent content);
+	std::vector<SpriteChainElement*> prepareAllIcons(const pageContent& content);
 	std::vector<SpriteChainElement*> prepareLines();
 	std::vector<TextChainElement*> prepareHeadingText();
 	void unlockObject(Tag object);
@@ -70,8 +69,8 @@ public:
 	std::pair<int, int> getSelectedWreathCell();
 	std::pair<int, int> getSelectedPlantsCell();
 	std::vector<std::pair<int, int>> getBorderCells(int raw, int column);
-	static bool checkWreathCellFit(int i, int j, std::vector<int> rings = std::vector<int>());
-	void setPlantsOnMatrix(std::vector<std::pair<Tag, std::pair<int, int>>> plants);
+	static bool checkWreathCellFit(int i, int j, const std::vector<int>& rings = std::vector<int>());
+	void setPlantsOnMatrix(const std::vector<std::pair<Tag, std::pair<int, int>>>& plants);
 	bool isCenterSurrounded();
 	std::vector<DrawableChainElement*> prepareConnectableFlowers(Tag currentFlower);
 
@@ -87,10 +86,10 @@ public:
 
 	std::string debugInfo = "";
 	pageContent getPreparedContent(int pageNumber, Tag currentDraft = Tag::emptyDraft);
-	std::vector<HeroBag>* boundBags;
+	std::vector<HeroBag>* boundBags{};
 private:
 	static int div_up(int n, int d) { return n / d + (((n < 0) ^ (d > 0)) && (n % d)); }
-	std::unordered_map<ButtonTag, Button>* buttonList;
+	std::unordered_map<ButtonTag, Button>* buttonList{};
 	void setBookmarkPosition() const;
 	void preparePageBase();
 	void putHeadingsToPositions(std::vector<ButtonTag> buttons);
@@ -108,10 +107,10 @@ private:
 	Vector2f getConnectionPosition(int numberInOrder);	
 
 	std::unordered_map<Tag, BookObjectInfo> objectInfo;
-	std::vector<Vector2f> connectionPedestals = { {0.264, 0.278}, {0.113, 0.390}, {0.145, 0.606}, {0.126, 0.789}, {0.242, 0.479}, {0.269, 0.718}, {0.412, 0.789}, {0.363, 0.566} };
-	std::vector<Vector2f> headingPedestals = { {0.061, 0.315}, {0.061, 0.441}, {0.061, 0.568}, {0.061, 0.696}, {0.53, 0.097}, {0.53, 0.222}, {0.53, 0.348}, {0.53, 0.478}, {0.53, 0.614}, {0.53, 0.740} };
-	std::vector<Vector2f> headingTextPedestals = { {0.170, 0.315}, {0.170, 0.441}, {0.170, 0.568}, {0.170, 0.696}, {0.637, 0.097}, {0.637, 0.222}, {0.637, 0.348}, {0.637, 0.478}, {0.637, 0.614}, {0.637, 0.740} };
-	std::vector<Vector2f> flowerConnectionsPedestals = { {0.072, 0.342}, {0.160, 0.342}, {0.246, 0.342} };
+	std::vector<Vector2f> connectionPedestals = { {0.264f, 0.278f}, {0.113f, 0.390f}, {0.145f, 0.606f}, {0.126f, 0.789f}, {0.242f, 0.479f}, {0.269f, 0.718f}, {0.412f, 0.789f}, {0.363f, 0.566f} };
+	std::vector<Vector2f> headingPedestals = { {0.061f, 0.315f}, {0.061f, 0.441f}, {0.061f, 0.568f}, {0.061f, 0.696f}, {0.53f, 0.097f}, {0.53f, 0.222f}, {0.53f, 0.348f}, {0.53f, 0.478f}, {0.53f, 0.614f}, {0.53f, 0.740f} };
+	std::vector<Vector2f> headingTextPedestals = { {0.170f, 0.315f}, {0.170f, 0.441f}, {0.170f, 0.568f}, {0.170f, 0.696f}, {0.637f, 0.097f}, {0.637f, 0.222f}, {0.637f, 0.348f}, {0.637f, 0.478f}, {0.637f, 0.614f}, {0.637f, 0.740f} };
+	std::vector<Vector2f> flowerConnectionsPedestals = { {0.072f, 0.342f}, {0.160f, 0.342f}, {0.246f, 0.342f} };
 	//------------------------------------------------------------------
 
 	// wreaths

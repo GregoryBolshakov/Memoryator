@@ -1,13 +1,13 @@
 #include "Grass.h"
 #include "Helper.h"
 
-Grass::Grass(std::string objectName, Vector2f centerPosition, int typeOfObject) : StaticObject(objectName, centerPosition)
+Grass::Grass(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : StaticObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 30; // BirchGrove: 1-8; DarkWoods: 9-21; SwampyTrees: 22-30
 	this->typeOfObject = typeOfObject;
 	this->intangible = true;
 	toSaveName = "grass";
-	setType(typeOfObject);
+	Grass::setType(typeOfObject);
 	tag = Tag::grass;
 	mirrored = bool(rand() % 2);
 }

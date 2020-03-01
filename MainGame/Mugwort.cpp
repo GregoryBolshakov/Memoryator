@@ -1,12 +1,12 @@
 #include "Mugwort.h"
 #include "Helper.h"
 
-Mugwort::Mugwort(std::string objectName, Vector2f centerPosition, int typeOfObject) : PickedObject(objectName, centerPosition)
+Mugwort::Mugwort(std::string objectName, Vector2f centerPosition, int typeOfObject) : PickedObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 3;
 	this->typeOfObject = typeOfObject;
 	toSaveName = "mugwort";
-	setType(typeOfObject);
+	Mugwort::setType(typeOfObject);
 	radius = 50;
 	tag = Tag::mugwort;
 	count = 1;

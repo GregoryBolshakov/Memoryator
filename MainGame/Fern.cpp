@@ -1,12 +1,12 @@
 #include "Fern.h"
 #include "Helper.h"
 
-Fern::Fern(std::string objectName, Vector2f centerPosition, int typeOfObject) : PickedObject(objectName, centerPosition)
+Fern::Fern(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : PickedObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 1;
 	this->typeOfObject = typeOfObject;
 	toSaveName = "fern";
-	setType(typeOfObject);
+	Fern::setType(typeOfObject);
 	tag = Tag::fern;
 
 	count = 1;
