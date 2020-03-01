@@ -1,13 +1,9 @@
 #pragma once
-#ifndef INVENTORYSYSTEM_H
-#define INVENTORYSYSTEM_H
 
 #include <SFML/Graphics.hpp>
-#include <unordered_map>
-#include<fstream>
+
 #include "TextSystem.h"
 #include "EffectsSystem.h"
-#include "WorldObject.h"
 #include "HeroBag.h"
 #include "SpriteStructures.h"
 
@@ -61,5 +57,3 @@ private:
 	TextSystem textWriter;
 	EffectsSystem effectsSystem;
 };
-
-#endif

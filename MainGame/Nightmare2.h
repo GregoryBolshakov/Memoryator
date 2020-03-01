@@ -1,6 +1,4 @@
 #pragma once
-#ifndef NIGHTMARE2_H
-#define  NIGHTMARE2_H
 
 #include  "Monster.h"
 
@@ -14,6 +12,3 @@ public:
 private:
 	void doAttack(WorldObject* target) override;
 };
-
-#endif
-

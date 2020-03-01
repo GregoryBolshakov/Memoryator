@@ -1,6 +1,9 @@
 #define _USE_MATH_DEFINES
 
 #include "WorldHandler.h"
+
+#include <fstream>
+
 #include "ObjectInitializer.h"
 
 using namespace sf;

@@ -1,4 +1,5 @@
 #include "HareTrap.h"
+
 #include "Helper.h"
 
 HareTrap::HareTrap(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : PickedObject(std::move(objectName), centerPosition)

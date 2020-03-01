@@ -1,4 +1,5 @@
 #include "Deerchant.h"
+
 #include "Brazier.h"
 #include "EmptyObject.h"
 #include "Helper.h"

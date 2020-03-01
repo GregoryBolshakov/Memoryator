@@ -1,11 +1,10 @@
 #pragma once
-#ifndef MENUMAKER_H
-#define MENUMAKER_H
 
 #include <SFML/Graphics.hpp>
-#include "WorldHandler.h"
-#include "Helper.h"
+
 #include "Button.h"
+#include "Helper.h"
+#include "WorldHandler.h"
 
 using namespace sf;
 
@@ -13,8 +12,6 @@ enum MenuStates { mainMenu = 1, gameMenu = 2, closed = 3 };
 
 class MenuSystem
 {
-protected:
-
 public:
 	MenuSystem();
 	~MenuSystem();
@@ -32,4 +29,3 @@ private:
 	bool wasActive;
 	Vector2f screenSize;
 };
-#endif

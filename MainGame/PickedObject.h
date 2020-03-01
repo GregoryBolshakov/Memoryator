@@ -1,6 +1,4 @@
 #pragma once
-#ifndef PICKEDOBJECT_H
-#define PICKEDOBJECT_H
 
 #include "TerrainObject.h"
 #include "HeroBag.h"
@@ -19,5 +17,3 @@ public:
 
 	std::vector<Cell> ownInventory;
 };
-
-#endif

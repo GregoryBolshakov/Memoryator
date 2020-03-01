@@ -1,4 +1,5 @@
 #include "TextSystem.h"
+
 #include "HeroBag.h"
 
 float TextSystem::characterSize = 30.0f * Helper::GetScreenSize().y / 1440.0f;

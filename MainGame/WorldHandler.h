@@ -3,17 +3,17 @@
 #include <unordered_map>
 #include <windows.h>
 
-#include "Helper.h"
-#include "EffectsSystem.h"
-#include "WorldGenerator.h"
-#include "PedestalController.h"
-#include "DynamicObject.h"
-#include "EmptyObject.h"
 #include "Brazier.h"
-#include "InventorySystem.h"
-#include "TimeSystem.h"
-#include "LightSystem.h"
 #include "CameraSystem.h"
+#include "DynamicObject.h"
+#include "EffectsSystem.h"
+#include "EmptyObject.h"
+#include "Helper.h"
+#include "InventorySystem.h"
+#include "LightSystem.h"
+#include "PedestalController.h"
+#include "TimeSystem.h"
+#include "WorldGenerator.h"
 
 using namespace sf;
 

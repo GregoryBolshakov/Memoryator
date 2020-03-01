@@ -1,5 +1,4 @@
 #include "ObjectInitializer.h"
-#include "Helper.h"
 
 std::map<Tag, std::string> ObjectInitializer::mappedTags = { {Tag::hero, "hero"}, {Tag::hare, "hare"}, {Tag::owl, "owl"}, {Tag::deer, "deer"}, {Tag::fox, "fox"}, {Tag::bear, "beer"}, {Tag::wolf, "wolf"},
 {Tag::monster, "monster"}, {Tag::owlBoss, "owlBoss"}, {Tag::nightmare1, "nightmare1"}, {Tag::nightmare2, "nightmare2"}, {Tag::nightmare3, "nightmare3"},

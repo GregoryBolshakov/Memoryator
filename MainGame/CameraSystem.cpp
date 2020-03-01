@@ -1,4 +1,5 @@
 #include "CameraSystem.h"
+
 #include <cstdlib>
 
 const Vector2f CameraSystem::maxCameraDistance = Vector2f(250, 250), CameraSystem::camOffset = { 0, -0.04f };

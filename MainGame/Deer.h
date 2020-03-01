@@ -1,6 +1,4 @@
 #pragma once
-#ifndef DEER_H
-#define DEER_H
 
 #include "NeutralMob.h"
 #include "Helper.h"
@@ -33,5 +31,3 @@ public:
 	void jerk(float power, float deceleration, Vector2f destinationPoint) override;
 	void setOwner(WorldObject* owner) { this->owner = owner; }
 };
-
-#endif

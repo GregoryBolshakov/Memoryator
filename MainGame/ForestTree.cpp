@@ -1,4 +1,5 @@
 #include "ForestTree.h"
+
 #include "Helper.h"
 
 ForestTree::ForestTree(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)

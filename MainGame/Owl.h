@@ -1,6 +1,4 @@
 #pragma once
-#ifndef OWL_H
-#define OWL_H
 
 #include "NeutralMob.h"
 #include "Helper.h"
@@ -30,5 +28,3 @@ public:
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
 	void jerk(float power, float deceleration, Vector2f destinationPoint) override;
 };
-
-#endif

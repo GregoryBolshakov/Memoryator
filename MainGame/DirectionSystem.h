@@ -1,6 +1,4 @@
 #pragma once
-#ifndef DIRECTIONSYSTEM_H
-#define DIRECTIONSYSTEM_H
 
 #include <string>
 #include "Tags.h"
@@ -35,5 +33,3 @@ public:
 	Vector2f* movePosition = nullptr;
 	//-----------
 };
-
-#endif

@@ -1,4 +1,5 @@
 #include "Ground.h"
+
 #include "Helper.h"
 
 Ground::Ground(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : StaticObject(std::move(objectName), centerPosition)

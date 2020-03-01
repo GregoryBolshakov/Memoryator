@@ -1,4 +1,5 @@
 #include "Spawn.h"
+
 #include "Helper.h"
 
 Spawn::Spawn(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)

@@ -1,6 +1,7 @@
+#include "HeroBook.h"
+
 #include <fstream>
 
-#include "HeroBook.h"
 #include "Helper.h"
 
 HeroBook::HeroBook()

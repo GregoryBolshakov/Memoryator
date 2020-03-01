@@ -1,6 +1,5 @@
-/*#pragma once
-#ifndef CLAPWHILR_H
-#define CLAPWHILR_H
+#pragma once
+/*
 
 #include "DynamicObject.h"
 #include "Helper.h"
@@ -38,5 +37,4 @@ private:
 	Vector2f ownerPos = { 0, 0 }, startPos = { 0, 0 };
 	Vector2i ownerGlobalBounds = { 0, 0 };
 };
-
-#endif*/
+f*/

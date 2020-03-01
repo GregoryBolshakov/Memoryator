@@ -1,4 +1,5 @@
 #include "DroppedLoot.h"
+
 #include "Helper.h"
 
 DroppedLoot::DroppedLoot(std::string objectName, Vector2f centerPosition, int typeOfObject, int count) : PickedObject(std::move(objectName), centerPosition)

@@ -1,4 +1,5 @@
 #include "Lake.h"
+
 #include "Helper.h"
 
 Lake::Lake(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)

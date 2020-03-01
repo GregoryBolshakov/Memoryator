@@ -1,5 +1,4 @@
-#ifndef BUTTON_H
-#define BUTTON_H
+#pragma once
 
 #include <SFML/Graphics.hpp>
 #include "SpriteChainElement.h"
@@ -41,5 +40,3 @@ public:
 	[[nodiscard]] ButtonTag getTag() const { return tag; }
 	[[nodiscard]] bool getGrayState() const { return isGray; }
 };
-#endif
-

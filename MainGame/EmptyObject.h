@@ -1,7 +1,7 @@
-#ifndef EMPTYOBJECT_H
-#define EMPTYOBJECT_H
+#pragma once
 
 #include <SFML/Graphics.hpp>
+
 #include "WorldObject.h"
 
 class EmptyObject : public WorldObject
@@ -17,6 +17,4 @@ public:
 	Vector2f calculateTextureOffset() override;
 	void initPedestal() override;
 };
-
-#endif
 

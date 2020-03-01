@@ -1,6 +1,9 @@
 #include "BuildSystem.h"
-#include "ObjectInitializer.h"
+
+#include <fstream>
+
 #include "DroppedLoot.h"
+#include "ObjectInitializer.h"
 
 BuildSystem::BuildSystem()
 = default;

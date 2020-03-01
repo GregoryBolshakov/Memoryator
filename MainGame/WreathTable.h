@@ -1,6 +1,4 @@
 #pragma once
-#ifndef WREATHTABLE_H
-#define WREATHTABLE_H
 
 #include "TerrainObject.h"
 #include "BuildSystem.h"
@@ -27,7 +25,6 @@ public:
 	[[nodiscard]] int getPlateRadius() const { return plateRadius; }
 
 	//BuildSystem* buildSystem = nullptr;
-	//------
 private:
 	void resultAnalysis() const;
 
@@ -37,5 +34,3 @@ private:
 	Tag craftResult = Tag::emptyCell;
 	int plateRadius;
 };
-
-#endif

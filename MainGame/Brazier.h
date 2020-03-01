@@ -1,6 +1,4 @@
 #pragma once
-#ifndef BRAZIER_H
-#define BRAZIER_H
 
 #include "TerrainObject.h"
 #include "BuildSystem.h"
@@ -37,5 +35,3 @@ private:
 	Tag craftResult = Tag::emptyCell;
 	float plateRadius;
 };
-
-#endif

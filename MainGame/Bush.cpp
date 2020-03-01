@@ -1,4 +1,5 @@
 #include "Bush.h"
+
 #include "Helper.h"
 
 Bush::Bush(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)

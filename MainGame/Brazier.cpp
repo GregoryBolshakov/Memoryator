@@ -1,6 +1,7 @@
+#include "Brazier.h"
+
 #include <fstream>
 
-#include "Brazier.h"
 #include "Helper.h"
 
 Brazier::Brazier(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)

@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <windows.h>
+
 #include "SpritePack.h"
 #include "TextChainElement.h"
 

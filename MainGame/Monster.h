@@ -1,5 +1,4 @@
-#ifndef MONSTER_H
-#define MONSTER_H
+#pragma once
 
 #include "DynamicObject.h"
 #include "Helper.h"
@@ -32,4 +31,3 @@ protected:
 
 	int strikingSprite = 0;
 };
-#endif

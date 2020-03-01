@@ -1,4 +1,5 @@
 #include "Fern.h"
+
 #include "Helper.h"
 
 Fern::Fern(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : PickedObject(std::move(objectName), centerPosition)

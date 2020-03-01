@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+
 #include "GridList.h"
 #include "Helper.h"
 #include "InventorySystem.h"

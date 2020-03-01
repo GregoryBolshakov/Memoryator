@@ -1,4 +1,5 @@
 #include "Chamomile.h"
+
 #include "Helper.h"
 
 Chamomile::Chamomile(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : PickedObject(std::move(objectName), centerPosition)

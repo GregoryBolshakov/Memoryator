@@ -1,7 +1,9 @@
 #include "PedestalController.h"
-#include "Helper.h"
+
 #include <fstream>
 #include <iomanip>
+
+#include "Helper.h"
 #include "ObjectInitializer.h"
 
 PedestalController::PedestalController()

@@ -1,6 +1,7 @@
+#include "SpritePack.h"
+
 #include <fstream>
 
-#include "SpritePack.h"
 #include "Button.h"
 #include "Helper.h"
 

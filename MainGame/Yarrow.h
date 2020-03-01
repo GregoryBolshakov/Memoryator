@@ -1,6 +1,4 @@
 #pragma once
-#ifndef YARROW_H
-#define YARROW_H
 
 #include "PickedObject.h"
 
@@ -18,5 +16,3 @@ public:
 	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
 };
-
-#endif

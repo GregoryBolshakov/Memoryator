@@ -1,4 +1,5 @@
 #include "DynamicObject.h"
+
 #include "Helper.h"
 
 DynamicObject::DynamicObject(std::string objectName, const Vector2f centerPosition) : WorldObject(std::move(objectName), centerPosition), currentAction()

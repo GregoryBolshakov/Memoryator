@@ -1,6 +1,4 @@
 #pragma once
-#ifndef DEERCHANT_H
-#define DEERCHANT_H
 
 #include "DynamicObject.h"
 #include "HeroBag.h"
@@ -62,5 +60,3 @@ private:
 	bool wasPushedAfterMovement = false, mirroredSpeedLine = false, reverseSpeedLine = false;
 	std::vector<Direction> smoothDirections = {};
 };
-
-#endif

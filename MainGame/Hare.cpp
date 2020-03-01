@@ -1,4 +1,5 @@
 #include "Hare.h"
+
 #include "HareTrap.h"
 
 using namespace sf;

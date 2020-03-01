@@ -1,4 +1,5 @@
 #include "TerrainObject.h"
+
 #include "Helper.h"
 
 TerrainObject::TerrainObject(std::string objectName, Vector2f centerPosition) : StaticObject(std::move(objectName), centerPosition)

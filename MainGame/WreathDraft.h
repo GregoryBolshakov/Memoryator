@@ -1,8 +1,7 @@
-#ifndef WREATHDRAFT_H
-#define WREATHDRAFT_H
+#pragma once
 
 #include <SFML/Graphics.hpp>
-#include "Button.h"
+
 #include "WorldObject.h"
 
 using namespace sf;
@@ -16,7 +15,6 @@ struct DraftInfo
 
 class WreathDraft
 {
-private:
 	DraftInfo originalSetup;
 public:
 	WreathDraft();
@@ -26,5 +24,3 @@ public:
 
 	DraftInfo currentSetup;
 };
-
-#endif;

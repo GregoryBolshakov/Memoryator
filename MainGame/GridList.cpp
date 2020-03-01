@@ -1,7 +1,8 @@
+#include "GridList.h"
+
 #include <cmath>
 #include <queue>
 
-#include "GridList.h"
 #include "Helper.h"
 
 GridList::GridList() : width(0), height(0)

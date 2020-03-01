@@ -1,8 +1,8 @@
 #pragma once
 
-#include "WorldObject.h"
-#include "TerrainObject.h"
 #include "MoveSystem.h"
+#include "TerrainObject.h"
+#include "WorldObject.h"
 
 class DynamicObject : public WorldObject
 {

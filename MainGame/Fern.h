@@ -1,13 +1,9 @@
 #pragma once
-#ifndef FERN_H
-#define FERN_H
 
 #include "PickedObject.h"
 
 class Fern : public PickedObject
 {
-protected:
-
 public:
 	Fern(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;
@@ -19,5 +15,3 @@ public:
 	[[nodiscard]] Vector2f getEnterPosition() const;
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
 };
-
-#endif

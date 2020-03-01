@@ -1,6 +1,4 @@
 #pragma once
-#ifndef STRUCTS_H
-#define STRUCTS_H
 
 #include <string>
 
@@ -13,5 +11,3 @@ struct boardObject
 	int xSize;
 	int ySize;
 };
-
-#endif

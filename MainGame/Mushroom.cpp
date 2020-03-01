@@ -1,4 +1,5 @@
 #include "Mushroom.h"
+
 #include "Helper.h"
 
 Mushroom::Mushroom(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : StaticObject(std::move(objectName), centerPosition)

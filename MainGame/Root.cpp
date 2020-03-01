@@ -1,4 +1,5 @@
 #include "Root.h"
+
 #include "Helper.h"
 
 Root::Root(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)

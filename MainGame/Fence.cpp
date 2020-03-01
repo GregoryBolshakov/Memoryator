@@ -1,4 +1,5 @@
 #include "Fence.h"
+
 #include "Helper.h"
 
 Fence::Fence(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)

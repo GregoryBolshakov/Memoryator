@@ -1,5 +1,6 @@
-#include <windows.h>
 #include "Helper.h"
+
+#include <windows.h>
 
 Vector2f Helper::GetScreenSize()
 {

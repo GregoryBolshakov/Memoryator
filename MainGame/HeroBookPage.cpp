@@ -1,6 +1,7 @@
 #include <fstream>
 
 #include "HeroBookPage.h"
+
 #include "Helper.h"
 #include "GridList.h"
 

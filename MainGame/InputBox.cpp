@@ -1,4 +1,5 @@
 #include "InputBox.h"
+
 #include "Helper.h"
 
 using namespace sf;

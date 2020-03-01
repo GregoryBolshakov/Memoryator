@@ -30,6 +30,3 @@ private:
 	int selectedFocus = -1, selectedEllipse = -1;
 	bool selectedCenter = false;
 };
-
-
-

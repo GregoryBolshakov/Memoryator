@@ -1,10 +1,9 @@
 #pragma once
-#ifndef MOVESYSTEM_H
-#define MOVESYSTEM_H
+
+#include <SFML/Graphics/Color.hpp>
+#include <vector>
 
 #include "DirectionSystem.h"
-#include <vector>
-#include <SFML/Graphics/Color.hpp>
 
 struct BumpChainElement
 {
@@ -44,8 +43,4 @@ public:
 	float* radius = nullptr;
 	Vector2f* position = nullptr;
 	sf::Color* color = nullptr;
-	//-----------
 };
-
-#endif
-

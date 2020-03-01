@@ -1,5 +1,4 @@
-#ifndef OWLBOSS_H
-#define OWLBOSS_H
+#pragma once
 
 #include "DynamicObject.h"
 #include "Helper.h"
@@ -29,5 +28,3 @@ public:
 	void jerk(float power, float deceleration, Vector2f destinationPoint) override;
 	void fightInteract(long long elapsedTime, DynamicObject* target = nullptr) override;
 };
-
-#endif

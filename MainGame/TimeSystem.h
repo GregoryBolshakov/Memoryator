@@ -17,4 +17,3 @@ private:
 	long long minutesPerDay = 0, time = 0;
 	bool successInit = false;
 };
-

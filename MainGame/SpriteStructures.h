@@ -1,8 +1,7 @@
 #pragma once
-#ifndef SPRITETEXTURES_H
-#define SPRITETEXTURES_H
 
 #include <SFML/Graphics.hpp>
+
 #include "SpritePack.h"
 
 using namespace sf;
@@ -18,5 +17,3 @@ struct CellSprite {
 	Texture texture;
 	Vector2f offset;
 };
-
-#endif

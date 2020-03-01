@@ -1,7 +1,6 @@
 #include "LightSystem.h"
 
 
-
 LightSystem::LightSystem()
 = default;
 

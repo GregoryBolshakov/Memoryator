@@ -1,4 +1,5 @@
 #include "Yarrow.h"
+
 #include "Helper.h"
 
 Yarrow::Yarrow(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : PickedObject(std::move(objectName), centerPosition)

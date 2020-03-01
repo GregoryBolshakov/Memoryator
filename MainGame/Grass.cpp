@@ -1,4 +1,5 @@
 #include "Grass.h"
+
 #include "Helper.h"
 
 Grass::Grass(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : StaticObject(std::move(objectName), centerPosition)

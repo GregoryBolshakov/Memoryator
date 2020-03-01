@@ -1,6 +1,4 @@
 #pragma once
-#ifndef LIGHTSYSTEM_H
-#define LIGHTSYSTEM_H
 
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Vector2.hpp>
@@ -24,5 +22,3 @@ private:
 	Vector2f circleCenter = { 0, 0 }, calculationsCenter = { 0, 0 };
 	float calculationsRadius = 0;
 };
-
-#endif

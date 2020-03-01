@@ -1,12 +1,9 @@
 #pragma once
-#ifndef FORESTTREE_H
-#define FORESTTREE_H
 
 #include "TerrainObject.h"
 
 class ForestTree : public TerrainObject
 {
-protected:
 public:
 	ForestTree(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;	
@@ -19,5 +16,3 @@ public:
 
 	int strength;
 };
-
-#endif

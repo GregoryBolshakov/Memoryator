@@ -23,4 +23,3 @@ public:
 	Color color = Color(255, 255, 255);
 	bool initialized = false;
 };
-

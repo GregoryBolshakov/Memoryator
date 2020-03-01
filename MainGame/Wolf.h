@@ -1,6 +1,4 @@
 #pragma once
-#ifndef WOLF_H
-#define WOLF_H
 
 #include "NeutralMob.h"
 #include "Helper.h"
@@ -9,7 +7,6 @@ using namespace sf;
 
 class Wolf : public NeutralMob
 {
-private:
 	float timeForNewSprite;
 
 	int animationLength;
@@ -28,5 +25,3 @@ public:
 	void setTarget(DynamicObject& object) override;
 	void jerk(float power, float deceleration, Vector2f destinationPoint) override;
 };
-
-#endif

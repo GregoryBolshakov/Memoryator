@@ -1,6 +1,4 @@
 #pragma once
-#ifndef OBJECTINITIALIZER_H
-#define OBJECTINITIALIZER_H
 
 #include "StaticObject.h"
 #include "SpriteStructures.h"
@@ -75,6 +73,3 @@ public:
 	static std::map<Tag, std::string> mappedTags;
 	static std::map<std::string, Tag> mappedStrings;
 };
-
-#endif
-

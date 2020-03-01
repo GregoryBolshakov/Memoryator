@@ -1,10 +1,9 @@
-#ifndef HEROBAG_H
-#define HEROBAG_H
+#pragma once
 
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
+
 #include "SpriteStructures.h"
-#include "WorldObject.h"
 
 using namespace sf;
 
@@ -84,5 +83,3 @@ private:
 	bool isSelectable{};
 	std::vector<Vector2f> cellsPos = { {-0.1f, -0.15f}, {0.135f, -0.15f}, {-0.2f, 0.014f}, {0.018f, 0.0f}, {0.241f, 0.004f}, {-0.08f, 0.150f}, {0.131f, 0.150f} };
 };
-
-#endif

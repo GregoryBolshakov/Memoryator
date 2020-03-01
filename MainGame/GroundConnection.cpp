@@ -1,4 +1,5 @@
 #include "GroundConnection.h"
+
 #include "Helper.h"
 
 GroundConnection::GroundConnection(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : StaticObject(std::move(objectName), centerPosition)

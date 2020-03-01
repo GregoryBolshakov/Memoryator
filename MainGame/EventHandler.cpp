@@ -1,7 +1,6 @@
 #include "EventHandler.h"
 
 
-
 EventHandler::EventHandler()
 = default;
 
@@ -11,10 +10,8 @@ EventHandler::~EventHandler()
 
 void EventHandler::onMouseDownInteract()
 {
-
 }
 
 void EventHandler::onKeyDownInteract()
 {
-
 }

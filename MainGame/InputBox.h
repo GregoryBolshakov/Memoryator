@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
+
 #include "TextSystem.h"
 
 using namespace sf;

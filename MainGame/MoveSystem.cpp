@@ -1,5 +1,7 @@
 #include "MoveSystem.h"
+
 #include <SFML/Graphics/Color.hpp>
+
 #include "Helper.h"
 
 MoveSystem::MoveSystem()

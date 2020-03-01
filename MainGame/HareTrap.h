@@ -1,12 +1,9 @@
 #pragma once
-#ifndef HARETRAP_H
-#define HARETRAP_H
 
 #include "PickedObject.h"
 
 class HareTrap : public PickedObject
 {
-protected:
 public:
 	HareTrap(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;
@@ -17,5 +14,3 @@ public:
 	[[nodiscard]] Vector2f getEnterPosition() const;
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
 };
-
-#endif

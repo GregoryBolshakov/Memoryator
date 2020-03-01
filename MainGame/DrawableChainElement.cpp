@@ -1,10 +1,8 @@
 #include "DrawableChainElement.h"
 
 
-
 DrawableChainElement::DrawableChainElement()
 = default;
-
 
 DrawableChainElement::DrawableChainElement(
 	Vector2f position,

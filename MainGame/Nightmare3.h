@@ -1,6 +1,4 @@
 #pragma once
-#ifndef NIGHTMARE3_H
-#define  NIGHTMARE3_H
 
 #include  "Monster.h"
 
@@ -16,6 +14,3 @@ private:
 	void endingPreviousAction() override;
 	void onSpriteChange() override;
 };
-
-#endif
-
