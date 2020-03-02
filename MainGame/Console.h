@@ -5,11 +5,11 @@
 
 using namespace sf;
 
-class Console
+class console
 {
 public:	
-	Console(FloatRect rect, WorldHandler* world = nullptr);
-	~Console();
+	console(FloatRect rect, WorldHandler* world = nullptr);
+	~console();
 	InputBox getBody() const;
 	void draw(RenderWindow& window);
 	void interact(long long elapsedTime);

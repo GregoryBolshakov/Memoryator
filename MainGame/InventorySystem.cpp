@@ -274,7 +274,7 @@ void InventorySystem::onMouseUp()
 	currentMovingBag = -1;
 }
 
-std::vector<drawable_chain_element*> InventorySystem::prepareSprites(long long elapsedTime, std::map<PackTag, SpritePack>* packsMap)
+std::vector<drawable_chain_element*> InventorySystem::prepareSprites(long long elapsedTime, std::map<PackTag, sprite_pack>* packsMap)
 {
 	std::vector<drawable_chain_element*> result = {};
 	usedMouse = false;
@@ -322,7 +322,7 @@ std::vector<drawable_chain_element*> InventorySystem::prepareSprites(long long e
 			const auto item = cell;
 
 			//drawing cell background
-			auto iconBackground = SpritePack::tagToIcon(Tag::emptyObject, false);
+			auto iconBackground = sprite_pack::tagToIcon(Tag::emptyObject, false);
 			iconBackground->position = item.position;
 			result.push_back(iconBackground);
 			//-----------------------
@@ -330,17 +330,17 @@ std::vector<drawable_chain_element*> InventorySystem::prepareSprites(long long e
 			if (cell.content.first == Tag::emptyCell)
 				continue;
 
-			auto icon = SpritePack::tagToIcon(item.content.first, Helper::isIntersects(mousePos, cell.position, SpritePack::iconSize.x / 2), 1);			
+			auto icon = sprite_pack::tagToIcon(item.content.first, Helper::isIntersects(mousePos, cell.position, sprite_pack::iconSize.x / 2), 1);			
 			icon->position = item.position;
 			result.push_back(icon);
 
 			if (HeroBag::itemsMaxCount.at(item.content.first) != 1)
-				result.push_back(new TextChainElement(
+				result.push_back(new text_chain_element(
 					icon->position,
 					/*{ -SpritePack::iconWithoutSpaceSize.x / 2, -SpritePack::iconWithoutSpaceSize.y / 2 },*/ { 0, 0 },
 					sf::Color(255, 255, 255, 180),
 					std::to_string(item.content.second),
-					TextChainElement::defaultCharacterSize * 1.5f));
+					text_chain_element::defaultCharacterSize * 1.5f));
 		}
 		//--------------------
 	}
@@ -349,17 +349,17 @@ std::vector<drawable_chain_element*> InventorySystem::prepareSprites(long long e
 	//drawing held item
 	if (heldItem.content.first != Tag::emptyCell)
 	{
-		auto heldItemIcon = SpritePack::tagToIcon(heldItem.content.first, true, 1);
+		auto heldItemIcon = sprite_pack::tagToIcon(heldItem.content.first, true, 1);
 		heldItemIcon->position = heldItem.position;
 		result.push_back(heldItemIcon);
 		result.push_back(heldItemIcon);
 		if (HeroBag::itemsMaxCount.at(heldItem.content.first) != 1)
-			result.push_back(new TextChainElement(
+			result.push_back(new text_chain_element(
 				heldItemIcon->position,
 				/*{ -SpritePack::iconWithoutSpaceSize.x / 2, -SpritePack::iconWithoutSpaceSize.y / 2 },*/ { 0, 0 },
 				sf::Color(255, 255, 255, 180),
 				std::to_string(heldItem.content.second),
-				TextChainElement::defaultCharacterSize * 1.5f));
+				text_chain_element::defaultCharacterSize * 1.5f));
 ;	}
 	//-----------------
 
@@ -371,12 +371,12 @@ std::vector<drawable_chain_element*> InventorySystem::prepareSprites(long long e
 	}
 	if (cursorText == "throw away")
 	{
-		result.push_back(new TextChainElement(
+		result.push_back(new text_chain_element(
 			cursorTextPos,
-			{ TextSystem::getTextBoxSize(cursorText, TextChainElement::defaultCharacterSize * 1.5f, FontName::NormalFont).x / 2.0f, 0 },
+			{ TextSystem::getTextBoxSize(cursorText, text_chain_element::defaultCharacterSize * 1.5f, FontName::NormalFont).x / 2.0f, 0 },
 			sf::Color(0, 0, 0, 180),
 			cursorText, 
-			TextChainElement::defaultCharacterSize * 1.5f));
+			text_chain_element::defaultCharacterSize * 1.5f));
 		result.push_back(new sprite_chain_element(PackTag::inventory, PackPart::areas, Direction::DOWN, 2, { 0, 0 }, Helper::GetScreenSize()));
 	}
 	//if (bagPosDot.getPosition() != Vector2f(0, 0))

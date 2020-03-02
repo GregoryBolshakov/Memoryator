@@ -16,7 +16,7 @@ class hero_book
 public:
 	hero_book();
 	~hero_book();
-	void init(std::map<PackTag, SpritePack>* packsMap);
+	void init(std::map<PackTag, sprite_pack>* packsMap);
 	std::vector<drawable_chain_element*> prepareSprites(float hpRatio, long long elapsedTime);
 	void interact();
 	void onMouseUp();
@@ -43,7 +43,7 @@ private:
 	std::vector <sprite_chain_element*> prepareLineMatrix();
 	std::vector<sprite_chain_element*> preparePlantsList();
 	std::vector<drawable_chain_element*> prepareWreathCost(Vector2f pos);
-	void initButtons(std::map<PackTag, SpritePack>* packsMap);
+	void initButtons(std::map<PackTag, sprite_pack>* packsMap);
 	void initContent();
 
 	std::string buttonsInfoFileDirectory = "Game/bookButtons.txt";

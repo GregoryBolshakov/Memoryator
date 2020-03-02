@@ -57,7 +57,7 @@ public:
 	sprite_chain_element* prepareIconFrame(ButtonTag button, int type = 1);
 	std::vector<sprite_chain_element*> prepareAllIcons(const pageContent& content);
 	std::vector<sprite_chain_element*> prepareLines();
-	std::vector<TextChainElement*> prepareHeadingText();
+	std::vector<text_chain_element*> prepareHeadingText();
 	void unlockObject(Tag object);
 	static int getHeadingPage(Tag object);
 	std::unordered_map<Tag, BookObjectInfo>* getObjectInfo() { return &objectInfo; }

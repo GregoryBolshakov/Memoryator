@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "SpritePack.h"
+#include "sprite_pack.h"
 
 using namespace sf;
 

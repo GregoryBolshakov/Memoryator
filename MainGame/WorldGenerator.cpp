@@ -21,7 +21,7 @@ void WorldGenerator::init(
 	const Vector2f microBlockSize,
 	GridList* staticGrid,
 	GridList* dynamicGrid,
-	std::map<PackTag, SpritePack>* packsMap)
+	std::map<PackTag, sprite_pack>* packsMap)
 {
 	this->width = width;
 	this->height = height;

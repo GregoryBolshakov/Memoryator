@@ -1,30 +1,30 @@
-#include "Console.h"
+#include "console.h"
 
-Console::Console(const FloatRect rect, WorldHandler* world)
+console::console(const FloatRect rect, WorldHandler* world)
 {
 	this->world = world;
 	body.init(rect);
 }
 
-Console::~Console()
+console::~console()
 = default;
 
-InputBox Console::getBody() const
+InputBox console::getBody() const
 {
 	return body;
 }
 
-void Console::resetCommandStackIterator()
+void console::resetCommandStackIterator()
 {
 	commandStackIterator = commandStack.size();
 }
 
-bool Console::getState() const
+bool console::getState() const
 {
 	return state;
 }
 
-void Console::draw(RenderWindow& window)
+void console::draw(RenderWindow& window)
 {
 	if (!state)
 		return;
@@ -32,7 +32,7 @@ void Console::draw(RenderWindow& window)
 	body.draw(window);
 }
 
-void Console::interact(long long elapsedTime)
+void console::interact(long long elapsedTime)
 {
 	if (!state)
 		return;
@@ -40,7 +40,7 @@ void Console::interact(long long elapsedTime)
 	body.interact(elapsedTime);	
 }
 
-void Console::handleEvents(const Event event)
+void console::handleEvents(const Event event)
 {
 	if (event.type == Event::KeyPressed && Keyboard::isKeyPressed(Keyboard::Tilde))
 		state = !state;
@@ -86,7 +86,7 @@ bool findByValue(std::vector<K> & vec, std::map<K, V> mapOfElements, V value)
 	return bResult;
 }
 
-void Console::doCommand()
+void console::doCommand()
 {
 	resetCommandStackIterator();
 

@@ -10,7 +10,7 @@ public:
 	const float FARTHEST_SCALE = 0.998f;
 	
 	void generate();
-	void init(int width, int height, Vector2f blockSize, Vector2f microBlockSize, GridList* staticGrid, GridList* dynamicGrid, std::map<PackTag, SpritePack>* packsMap);
+	void init(int width, int height, Vector2f blockSize, Vector2f microBlockSize, GridList* staticGrid, GridList* dynamicGrid, std::map<PackTag, sprite_pack>* packsMap);
     void initMainScale();
 
 	void initializeStaticItem(
@@ -43,7 +43,7 @@ public:
 private:
 	GridList* staticGrid = nullptr;
 	GridList* dynamicGrid = nullptr;	
-	std::map<PackTag, SpritePack>* packsMap{};
+	std::map<PackTag, sprite_pack>* packsMap{};
 	int width = 0;
 	int height = 0;
 	Vector2f blockSize = { 0, 0 };

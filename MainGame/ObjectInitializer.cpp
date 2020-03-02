@@ -33,7 +33,7 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 	const std::string& itemName,
 	int count,
 	Biomes biome,	
-	std::map<PackTag, SpritePack>* packsMap,
+	std::map<PackTag, sprite_pack>* packsMap,
 	bool mirrored,
 	const std::vector<std::pair<Tag, int>>& inventory)
 {
@@ -174,7 +174,7 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 	auto sprites = item->prepareSprites(0);
 	
 	if (packsMap->count(sprites[0]->packTag) <= 0 ||
-		packsMap->at(sprites[0]->packTag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack::size(0, 0))
+		packsMap->at(sprites[0]->packTag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
 	{
 		delete item;
 		return nullptr;
@@ -199,7 +199,7 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 	Tag itemClass,
 	Vector2f itemPosition,
 	const std::string& itemName,
-	std::map<PackTag, SpritePack>* packsMap,
+	std::map<PackTag, sprite_pack>* packsMap,
 	WorldObject* owner)
 {
 	DynamicObject* item;
@@ -298,7 +298,7 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 	item->setPosition(Vector2f(itemPosition));
     auto sprites = item->prepareSprites(0);
 	if (packsMap->count(sprites[0]->packTag) <= 0 || 
-		packsMap->at(sprites[0]->packTag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack::size(0, 0))
+		packsMap->at(sprites[0]->packTag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
 	{
 		delete item;
 		return nullptr;

@@ -55,7 +55,7 @@ public:
 	std::vector<Cell> cells;
 
 	//animation
-	sprite_chain_element* prepareSprite(long long elapsedTime, std::map<PackTag, SpritePack>* packsMap);
+	sprite_chain_element* prepareSprite(long long elapsedTime, std::map<PackTag, sprite_pack>* packsMap);
 	void drawCircuit(RenderWindow* window);
 
 	long long stateChangeTime = 100000;

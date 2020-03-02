@@ -8,7 +8,7 @@
 
 using namespace sf;
 
-WorldHandler::WorldHandler(const int width, const int height, std::map<PackTag, SpritePack>* packsMap)
+WorldHandler::WorldHandler(const int width, const int height, std::map<PackTag, sprite_pack>* packsMap)
 {
     this->packsMap = packsMap;
 	WorldObject::microBlockSize = microBlockSize;
@@ -52,7 +52,7 @@ void WorldHandler::runWorldGenerator()
 	brazier = dynamic_cast<Brazier*>(staticGrid.getItemByName("brazier"));
 	//brazier->linkWithBuildSystem(&buildSystem);
 	worldGenerator.rememberedBlocks = { { staticGrid.getIndexByPoint(brazier->getPosition().x, brazier->getPosition().y), true } };
-	cameraSystem.position = Vector2f(focusedObject->getPosition().x + Helper::GetScreenSize().x * CameraSystem::camOffset.x, focusedObject->getPosition().y + Helper::GetScreenSize().y * CameraSystem::camOffset.y);
+	cameraSystem.position = Vector2f(focusedObject->getPosition().x + Helper::GetScreenSize().x * camera_system::camOffset.x, focusedObject->getPosition().y + Helper::GetScreenSize().y * camera_system::camOffset.y);
 
 	const auto hero = dynamic_cast<deerchant*>(focusedObject);
 	inventorySystem.inventoryBounding(&hero->bags);
@@ -613,11 +613,11 @@ std::vector<sprite_chain_element*> WorldHandler::prepareSprites(const long long 
 	const auto screenSize = Helper::GetScreenSize();
 	const auto screenCenter = Vector2f(screenSize.x / 2, screenSize.y / 2);
 
-	cameraSystem.position.x += (focusedObject->getPosition().x + Helper::GetScreenSize().x * CameraSystem::camOffset.x - cameraSystem.position.x) *
-		(focusedObject->getMoveSystem().speed * float(elapsedTime)) / CameraSystem::maxCameraDistance.x;
+	cameraSystem.position.x += (focusedObject->getPosition().x + Helper::GetScreenSize().x * camera_system::camOffset.x - cameraSystem.position.x) *
+		(focusedObject->getMoveSystem().speed * float(elapsedTime)) / camera_system::maxCameraDistance.x;
 	
-	cameraSystem.position.y += (focusedObject->getPosition().y + Helper::GetScreenSize().y * CameraSystem::camOffset.y - cameraSystem.position.y) *
-		(focusedObject->getMoveSystem().speed * float(elapsedTime)) / CameraSystem::maxCameraDistance.y;
+	cameraSystem.position.y += (focusedObject->getPosition().y + Helper::GetScreenSize().y * camera_system::camOffset.y - cameraSystem.position.y) *
+		(focusedObject->getMoveSystem().speed * float(elapsedTime)) / camera_system::maxCameraDistance.y;
 	
 	cameraSystem.shakeInteract(elapsedTime);
 

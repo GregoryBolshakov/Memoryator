@@ -10,14 +10,14 @@ hero_book::hero_book()
 hero_book::~hero_book()
 = default;
 
-void hero_book::init(std::map<PackTag, SpritePack>* packsMap)
+void hero_book::init(std::map<PackTag, sprite_pack>* packsMap)
 {
 	initButtons(packsMap);
 	//initContent();
 	//somePage.initAuxiliarySpriteMap();
 }
 
-void hero_book::initButtons(std::map<PackTag, SpritePack>* packsMap)
+void hero_book::initButtons(std::map<PackTag, sprite_pack>* packsMap)
 {
 	const auto screenSize = Helper::GetScreenSize();
 
@@ -45,11 +45,11 @@ void hero_book::initButtons(std::map<PackTag, SpritePack>* packsMap)
 
 		buttonPosition.x = buttonPosition.x * screenSize.x / 100;
 		buttonPosition.y = buttonPosition.y * screenSize.y / 100;
-		const auto textureSize = packsMap->at(SpritePack::mappedPackTag.at(packTag)).getOriginalInfo(SpritePack::mappedPackPart.at(packPart), Direction::DOWN, number).source_size;
+		const auto textureSize = packsMap->at(sprite_pack::mappedPackTag.at(packTag)).getOriginalInfo(sprite_pack::mappedPackPart.at(packPart), Direction::DOWN, number).source_size;
 		buttonSize.y = buttonSize.y * screenSize.y / 100;
 		buttonSize.x = float(textureSize.w) * buttonSize.y / float(textureSize.h);
 
-		buttonList[ButtonTag(tag)].initialize(SpritePack::mappedPackTag.at(packTag), SpritePack::mappedPackPart.at(packPart), number, selectedNumber, pressedNumber, buttonPosition, buttonSize, isSelectable, ButtonTag(tag), offset);
+		buttonList[ButtonTag(tag)].initialize(sprite_pack::mappedPackTag.at(packTag), sprite_pack::mappedPackPart.at(packPart), number, selectedNumber, pressedNumber, buttonPosition, buttonSize, isSelectable, ButtonTag(tag), offset);
 	}
 
 	fin.close();
@@ -272,7 +272,7 @@ std::vector<drawable_chain_element*> hero_book::prepareWreathCost(Vector2f pos)
 		{
 			buttonList.at(flowerButton).set_position(drawPos);
 			result.push_back(buttonList.at(flowerButton).prepare_sprite());
-			result.push_back(new TextChainElement(drawPos, { 0, 0 }, sf::Color::Black, std::to_string(item.second)));
+			result.push_back(new text_chain_element(drawPos, { 0, 0 }, sf::Color::Black, std::to_string(item.second)));
 			drawPos.x += buttonList.at(flowerButton).get_global_bounds().width;
 		}
 	}

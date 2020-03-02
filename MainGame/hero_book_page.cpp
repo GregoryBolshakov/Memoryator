@@ -216,9 +216,9 @@ int hero_book_page::buttonToPage(ButtonTag button)
 	return -1;
 }
 
-std::vector<TextChainElement*> hero_book_page::prepareHeadingText()
+std::vector<text_chain_element*> hero_book_page::prepareHeadingText()
 {
-	std::vector<TextChainElement*> result = {};
+	std::vector<text_chain_element*> result = {};
 	const auto upperLeftCorner = buttonList->at(ButtonTag::bookmarksList).get_position();
 	const auto x = buttonList->at(ButtonTag::bookmarksList).get_global_bounds().width;
 	const auto y = buttonList->at(ButtonTag::bookmarksList).get_global_bounds().height;
@@ -229,37 +229,37 @@ std::vector<TextChainElement*> hero_book_page::prepareHeadingText()
 	{
 	case 1:
 	{
-		result.push_back(new TextChainElement({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Creatures", TextChainElement::defaultCharacterSize * 1.2f));
-		result.push_back(new TextChainElement({ headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Hare"));
-		result.push_back(new TextChainElement({ headingTextPedestals[1].x * x + upperLeftCorner.x, headingTextPedestals[1].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Owl"));
-		result.push_back(new TextChainElement({ headingTextPedestals[2].x * x + upperLeftCorner.x, headingTextPedestals[2].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Deer"));
-		result.push_back(new TextChainElement({ headingTextPedestals[3].x * x + upperLeftCorner.x, headingTextPedestals[3].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Bear"));
+		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Creatures", text_chain_element::defaultCharacterSize * 1.2f));
+		result.push_back(new text_chain_element({ headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Hare"));
+		result.push_back(new text_chain_element({ headingTextPedestals[1].x * x + upperLeftCorner.x, headingTextPedestals[1].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Owl"));
+		result.push_back(new text_chain_element({ headingTextPedestals[2].x * x + upperLeftCorner.x, headingTextPedestals[2].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Deer"));
+		result.push_back(new text_chain_element({ headingTextPedestals[3].x * x + upperLeftCorner.x, headingTextPedestals[3].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Bear"));
 	}
 	break;
 	case 2:
 	{
-		result.push_back(new TextChainElement({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Items", TextChainElement::defaultCharacterSize * 1.2f));
-		result.push_back(new TextChainElement({ headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Bag"));
+		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Items", text_chain_element::defaultCharacterSize * 1.2f));
+		result.push_back(new text_chain_element({ headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Bag"));
 	}
 	break;
 	case 3:
 	{
-		result.push_back(new TextChainElement({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "World", TextChainElement::defaultCharacterSize * 1.2f));
+		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "World", text_chain_element::defaultCharacterSize * 1.2f));
 	}
 	break;
 	case 4:
 	{
-		result.push_back(new TextChainElement({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Flowers", TextChainElement::defaultCharacterSize * 1.2f));
-		result.push_back(new TextChainElement({ headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Chamomile"));
-		result.push_back(new TextChainElement({ headingTextPedestals[1].x * x + upperLeftCorner.x, headingTextPedestals[1].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Yarrow"));
-		result.push_back(new TextChainElement({ headingTextPedestals[2].x * x + upperLeftCorner.x, headingTextPedestals[2].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Fern"));
-		result.push_back(new TextChainElement({ headingTextPedestals[3].x * x + upperLeftCorner.x, headingTextPedestals[3].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Mugwort"));
-		result.push_back(new TextChainElement({ headingTextPedestals[4].x * x + upperLeftCorner.x, headingTextPedestals[4].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Poppy"));
+		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Flowers", text_chain_element::defaultCharacterSize * 1.2f));
+		result.push_back(new text_chain_element({ headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Chamomile"));
+		result.push_back(new text_chain_element({ headingTextPedestals[1].x * x + upperLeftCorner.x, headingTextPedestals[1].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Yarrow"));
+		result.push_back(new text_chain_element({ headingTextPedestals[2].x * x + upperLeftCorner.x, headingTextPedestals[2].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Fern"));
+		result.push_back(new text_chain_element({ headingTextPedestals[3].x * x + upperLeftCorner.x, headingTextPedestals[3].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Mugwort"));
+		result.push_back(new text_chain_element({ headingTextPedestals[4].x * x + upperLeftCorner.x, headingTextPedestals[4].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Poppy"));
 	}
 	break;
 	case 5:
 	{
-		result.push_back(new TextChainElement({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Sketching", TextChainElement::defaultCharacterSize * 1.2f));
+		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Sketching", text_chain_element::defaultCharacterSize * 1.2f));
 	}
 	break;
 	case 102:
@@ -272,7 +272,7 @@ std::vector<TextChainElement*> hero_book_page::prepareHeadingText()
 	case 404:
 	case 405:
 	{
-		result.push_back(new TextChainElement({ 0.2f * x + upperLeftCorner.x, 0.085f * y + upperLeftCorner.y }, { 0, 0 }, textColor, buttonToString(ButtonTag(currentPage)), TextChainElement::defaultCharacterSize * 1.2f));
+		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.085f * y + upperLeftCorner.y }, { 0, 0 }, textColor, buttonToString(ButtonTag(currentPage)), text_chain_element::defaultCharacterSize * 1.2f));
 	}
 	break;
 	default:
@@ -658,7 +658,7 @@ std::vector<drawable_chain_element*> hero_book_page::prepareConnectableFlowers(T
 	const auto pageSize = Vector2f(buttonList->at(ButtonTag::sketching).get_global_bounds().width, buttonList->at(ButtonTag::sketching).get_global_bounds().height);
 	const auto headingPos = Vector2f(upperLeftCorner.x + 0.072f * pageSize.x, upperLeftCorner.y + 0.28f * pageSize.y);
 
-	result.push_back(new TextChainElement({ headingPos.x, headingPos.y }, { 0, 0 }, sf::Color(100, 68, 34, 180), "Connected with:"));
+	result.push_back(new text_chain_element({ headingPos.x, headingPos.y }, { 0, 0 }, sf::Color(100, 68, 34, 180), "Connected with:"));
 
 	auto cnt = 0;
 	for (auto& connection : plantsConnections.at(Tag(int(currentFlower))))

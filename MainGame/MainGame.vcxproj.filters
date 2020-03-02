@@ -68,9 +68,6 @@
     <ClCompile Include="Roof.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="Console.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="InputBox.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -101,12 +98,6 @@
     <ClCompile Include="Lake.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="SpritePack.cpp">
-      <Filter>Systems\DrawSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="BuildSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="InventorySystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -121,12 +112,6 @@
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="EffectsSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="TextChainElement.cpp">
-      <Filter>Systems\DrawSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="MoveSystem.cpp">
@@ -213,6 +198,21 @@
     <ClCompile Include="sprite_chain_element.cpp">
       <Filter>Systems\DrawSystem</Filter>
     </ClCompile>
+    <ClCompile Include="sprite_pack.cpp">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="text_chain_element.cpp">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="build_system.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="camera_system.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="console.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EventHandler.h" />
@@ -283,9 +283,6 @@
     <ClInclude Include="Roof.h">
       <Filter>Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="Console.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="InputBox.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -319,12 +316,6 @@
     <ClInclude Include="Lake.h">
       <Filter>Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="SpritePack.h">
-      <Filter>Systems\DrawSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="BuildSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="InventorySystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -339,12 +330,6 @@
       <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="EffectsSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="TextChainElement.h">
-      <Filter>Systems\DrawSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="MoveSystem.h">
@@ -433,6 +418,21 @@
     </ClInclude>
     <ClInclude Include="sprite_chain_element.h">
       <Filter>Systems\DrawSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite_pack.h">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="text_chain_element.h">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="build_system.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="camera_system.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="console.h">
+      <Filter>Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

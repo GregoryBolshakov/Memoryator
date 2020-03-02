@@ -4,7 +4,7 @@
 #include <windows.h>
 
 #include "Brazier.h"
-#include "CameraSystem.h"
+#include "camera_system.h"
 #include "DynamicObject.h"
 #include "EffectsSystem.h"
 #include "EmptyObject.h"
@@ -20,7 +20,7 @@ using namespace sf;
 class WorldHandler
 {
 public:
-	WorldHandler(int width, int height, std::map<PackTag, SpritePack>* packsMap);
+	WorldHandler(int width, int height, std::map<PackTag, sprite_pack>* packsMap);
 	~WorldHandler();
 
 	//adding to the grid
@@ -31,7 +31,7 @@ public:
 	GridList& getDynamicGrid() { return dynamicGrid; }
 	Vector2f getCameraPosition() const	{ return cameraSystem.position; }
 	InventorySystem& getInventorySystem() { return inventorySystem; }
-	BuildSystem& getBuildSystem() { return buildSystem; }
+	build_system& getBuildSystem() { return buildSystem; }
 	TimeSystem& getTimeSystem() { return timeSystem; }
 	WorldGenerator& getWorldGenerator() { return worldGenerator; }
 	LightSystem& getLightSystem() { return lightSystem; }
@@ -45,7 +45,7 @@ public:
 	void Save();
 	
 	// Base (draw, interact)
-	std::map<PackTag, SpritePack>* packsMap;
+	std::map<PackTag, sprite_pack>* packsMap;
 	void interact(Vector2f render_target_size, long long elapsedTime, Event event);
 	void handleEvents(Event& event);
     std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime, bool onlyBackground = false);
@@ -110,9 +110,9 @@ private:
 	EffectsSystem effectSystem;
 
 	// Systems
-	CameraSystem cameraSystem;
+	camera_system cameraSystem;
 	InventorySystem inventorySystem;
-	BuildSystem buildSystem;
+	build_system buildSystem;
 	TimeSystem timeSystem;
 	LightSystem lightSystem;
 

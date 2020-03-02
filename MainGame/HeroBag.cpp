@@ -82,7 +82,7 @@ int HeroBag::getSelectedCell(const Vector2f position)
 {
 	for (auto i = 0u; i < cells.size(); i++)
 	{
-		if (Helper::getDist(position, cells[i].position) <= SpritePack::iconSize.x / 2)
+		if (Helper::getDist(position, cells[i].position) <= sprite_pack::iconSize.x / 2)
 			return i;
 	}
 	return -1;
@@ -312,7 +312,7 @@ void HeroBag::mouseMove()
 	lastMousePos = Vector2f(Mouse::getPosition());
 }
 
-sprite_chain_element* HeroBag::prepareSprite(const long long elapsedTime, std::map<PackTag, SpritePack> * packsMap)
+sprite_chain_element* HeroBag::prepareSprite(const long long elapsedTime, std::map<PackTag, sprite_pack> * packsMap)
 {
 	const auto screenCenter = Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2);
 	bagSpriteChain.ClosedBag->size = sizeClosed; bagSpriteChain.ClosedBagSelected->size = sizeClosed; bagSpriteChain.ClosedBagBig->size = sizeClosed;

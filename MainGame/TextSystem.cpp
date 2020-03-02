@@ -92,7 +92,7 @@ void TextSystem::drawNumberOfItems(const Vector2f pos, const int itemsCount, Ren
 {
 	numberOfItems.setString(std::to_string(itemsCount));
 	numberOfItems.setOrigin(numberOfItems.getGlobalBounds().width, numberOfItems.getGlobalBounds().height);
-	numberOfItems.setPosition(pos.x + SpritePack::iconSize.x, pos.y + SpritePack::iconSize.x);
+	numberOfItems.setPosition(pos.x + sprite_pack::iconSize.x, pos.y + sprite_pack::iconSize.x);
 	target.draw(numberOfItems);
 }
 

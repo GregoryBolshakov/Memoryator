@@ -1,6 +1,6 @@
 #include <thread>
 
-#include "Console.h"
+#include "console.h"
 #include "deerchant.h"
 #include "draw_system.h"
 #include "hero_book.h"
@@ -22,7 +22,7 @@ int main() {
 	MenuSystem menuSystem;
 	WorldHandler world(40000, 40000, &draw_system.packsMap);
 	bool windowFocus = true;
-	Console console(FloatRect(Helper::GetScreenSize().x * 0.2f, Helper::GetScreenSize().y * 0.8f, Helper::GetScreenSize().x * 0.6f, Helper::GetScreenSize().y * 0.03f), &world);
+	console console(FloatRect(Helper::GetScreenSize().x * 0.2f, Helper::GetScreenSize().y * 0.8f, Helper::GetScreenSize().x * 0.6f, Helper::GetScreenSize().y * 0.03f), &world);
 
 	Clock clock;
 	long long time_micro_sec = 0;

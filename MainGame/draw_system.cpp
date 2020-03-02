@@ -64,7 +64,7 @@ bool draw_system::searchFiles(const LPCTSTR lpszFileName, const LPSEARCHFUNC lpS
 	return TRUE;
 }
 
-void initSpritePack(const LPCTSTR lpszFileName, std::map<PackTag, SpritePack>& packs_map)
+void initSpritePack(const LPCTSTR lpszFileName, std::map<PackTag, sprite_pack>& packs_map)
 {
 	std::string packPath = lpszFileName;
 	packPath.erase(0, packPath.find("\\Game\\spritePacks") + 1);
@@ -84,21 +84,21 @@ void initSpritePack(const LPCTSTR lpszFileName, std::map<PackTag, SpritePack>& p
 	}
 	const int pngExtensionWithDotLength = 4;
 	packName.erase(packName.size() - pngExtensionWithDotLength, pngExtensionWithDotLength);
-	if (SpritePack::mappedPackTag.count(packName) == 0)
+	if (sprite_pack::mappedPackTag.count(packName) == 0)
 		return;
-	const auto tag = SpritePack::mappedPackTag.at(packName);
+	const auto tag = sprite_pack::mappedPackTag.at(packName);
 	packs_map[tag].init(packPath, jsonPath, tag);
 }
 
 void draw_system::initPacksMap()
 {
 	searchFiles("Game/spritePacks/*.png", initSpritePack, true);
-	SpritePack::iconWithoutSpaceSize = Vector2f(
+	sprite_pack::iconWithoutSpaceSize = Vector2f(
 		float(packsMap.at(PackTag::inventory).getOriginalInfo(PackPart::areas, Direction::DOWN, 1).frame.w),
 		float(packsMap.at(PackTag::inventory).getOriginalInfo(PackPart::areas, Direction::DOWN, 1).frame.h));
 }
 
-void draw_system::advancedScale(sprite_chain_element& item, Sprite& sprite, const sprite_pack::sprite& originalInfo, const float scale) const
+void draw_system::advancedScale(sprite_chain_element& item, Sprite& sprite, const sprite_pack_structure::sprite& originalInfo, const float scale) const
 {
 	const auto size_w = float(originalInfo.source_size.w);
 	const auto size_h = float(originalInfo.source_size.h);
@@ -173,7 +173,7 @@ void draw_system::drawSpriteChainElement(RenderTarget& target, sprite_chain_elem
 	target.draw(sprite);
 }
 
-void draw_system::drawTextChainElement(RenderTarget& target, TextChainElement* textChainItem)
+void draw_system::drawTextChainElement(RenderTarget& target, text_chain_element* textChainItem)
 {
 	TextSystem::drawString(
 		textChainItem->string,
@@ -203,7 +203,7 @@ void draw_system::draw(RenderTarget& target, const std::vector<drawable_chain_el
 		if (spriteChainItem)
 			drawSpriteChainElement(target, spriteChainItem, cameraPosition, screenCenter, scale);
 
-		const auto textChainItem = dynamic_cast<TextChainElement*>(drawableChainItem);
+		const auto textChainItem = dynamic_cast<text_chain_element*>(drawableChainItem);
 		if (textChainItem)		
 			drawTextChainElement(target, textChainItem);	
 	}

@@ -4,11 +4,11 @@
 
 using Vector2f = sf::Vector2f;
 
-class CameraSystem
+class camera_system
 {
 public:
-	CameraSystem();
-	~CameraSystem();
+	camera_system();
+	~camera_system();
 
 	void makeShake(int count = 0, float speed = 0);
 	void shakeInteract(long long elapsedTime);

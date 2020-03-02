@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
 
-#include "TextChainElement.h"
+#include "text_chain_element.h"
 
 using namespace sf;
 

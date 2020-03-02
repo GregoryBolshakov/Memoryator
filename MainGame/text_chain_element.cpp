@@ -1,12 +1,12 @@
-#include "TextChainElement.h"
+#include "text_chain_element.h"
 
-const float TextChainElement::defaultCharacterSize = Helper::GetScreenSize().y * 0.024f;
+const float text_chain_element::defaultCharacterSize = Helper::GetScreenSize().y * 0.024f;
 
-TextChainElement::TextChainElement() : drawable_chain_element()
+text_chain_element::text_chain_element() : drawable_chain_element()
 {
 }
 
-TextChainElement::TextChainElement(
+text_chain_element::text_chain_element(
 	Vector2f position, 	
 	Vector2f offset,
 	sf::Color color,
@@ -21,5 +21,5 @@ TextChainElement::TextChainElement(
 	this->rotation = rotation;
 }
 
-TextChainElement::~TextChainElement()
+text_chain_element::~text_chain_element()
 = default;

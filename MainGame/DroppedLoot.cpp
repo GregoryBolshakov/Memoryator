@@ -8,7 +8,7 @@ DroppedLoot::DroppedLoot(std::string objectName, Vector2f centerPosition, int ty
 	this->typeOfObject = typeOfObject;
 	toSaveName = "drop";
 	DroppedLoot::setType(typeOfObject);
-	radius = SpritePack::iconSize.x / 2;
+	radius = sprite_pack::iconSize.x / 2;
 	tag = Tag::droppedLoot;
 	this->count = count;
 }
@@ -20,7 +20,7 @@ void DroppedLoot::setType(int typeOfObject)
 
 	this->typeOfObject = typeOfObject;
 	id = Tag(typeOfObject);
-	conditionalSizeUnits = SpritePack::iconSize;
+	conditionalSizeUnits = sprite_pack::iconSize;
 }
 
 Vector2f DroppedLoot::calculateTextureOffset()

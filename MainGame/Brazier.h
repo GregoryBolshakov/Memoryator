@@ -1,7 +1,7 @@
 #pragma once
 
 #include "TerrainObject.h"
-#include "BuildSystem.h"
+#include "build_system.h"
 
 class Brazier : public TerrainObject
 {

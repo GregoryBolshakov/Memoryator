@@ -9,7 +9,7 @@
 using namespace sf;
 using json = nlohmann::json;
 
-namespace sprite_pack
+namespace sprite_pack_structure
 {
     struct size
     {
@@ -18,7 +18,7 @@ namespace sprite_pack
         int h = 0;
     };
 
-	inline bool operator == (const sprite_pack::size a, const sprite_pack::size b)
+	inline bool operator == (const size a, const size b)
 	{
 		return (a.w == b.w && a.h == b.h);
 	}
@@ -76,12 +76,12 @@ namespace sprite_pack
     }
 }
 
-class SpritePack
+class sprite_pack
 {
 public:
     void init(const std::string& path, const std::string& jsonPath, PackTag tag);
     Sprite getSprite(PackPart part, Direction direction, int number, bool mirrored = false);
-	sprite_pack::sprite getOriginalInfo(PackPart part, Direction direction, int number);
+	sprite_pack_structure::sprite getOriginalInfo(PackPart part, Direction direction, int number);
 	static sprite_chain_element* tagToIcon(Tag object, bool selected = false, int typeOfObject = 1);
 
     PackTag tag;
@@ -92,5 +92,5 @@ public:
 	static Vector2f iconWithoutSpaceSize;
 private:
     Texture texture;
-    std::map<PackPart, std::map<Direction, std::map<int, sprite_pack::sprite>>> pack;
+    std::map<PackPart, std::map<Direction, std::map<int, sprite_pack_structure::sprite>>> pack;
 };

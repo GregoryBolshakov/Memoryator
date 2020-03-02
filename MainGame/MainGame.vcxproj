@@ -145,8 +145,8 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CameraSystem.cpp" />
-    <ClCompile Include="Console.cpp" />
+    <ClCompile Include="camera_system.cpp" />
+    <ClCompile Include="console.cpp" />
     <ClCompile Include="DirectionSystem.cpp" />
     <ClCompile Include="drawable_chain_element.cpp" />
     <ClCompile Include="draw_system.cpp" />
@@ -156,7 +156,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="mushroom.cpp" />
     <ClCompile Include="bear.cpp" />
     <ClCompile Include="Brazier.cpp" />
-    <ClCompile Include="BuildSystem.cpp" />
+    <ClCompile Include="build_system.cpp" />
     <ClCompile Include="Bush.cpp" />
     <ClCompile Include="button.cpp" />
     <ClCompile Include="Chamomile.cpp" />
@@ -201,12 +201,12 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="Spawn.cpp" />
     <ClCompile Include="MoveSystem.cpp" />
     <ClCompile Include="sprite_chain_element.cpp" />
-    <ClCompile Include="SpritePack.cpp" />
+    <ClCompile Include="sprite_pack.cpp" />
     <ClCompile Include="StaticObject.cpp" />
     <ClCompile Include="Stump.cpp" />
     <ClCompile Include="TerrainObject.cpp" />
     <ClCompile Include="neutral_mob.cpp" />
-    <ClCompile Include="TextChainElement.cpp" />
+    <ClCompile Include="text_chain_element.cpp" />
     <ClCompile Include="TextSystem.cpp" />
     <ClCompile Include="TimeSystem.cpp" />
     <ClCompile Include="Totem.cpp" />
@@ -221,8 +221,8 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="Yarrow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CameraSystem.h" />
-    <ClInclude Include="Console.h" />
+    <ClInclude Include="camera_system.h" />
+    <ClInclude Include="console.h" />
     <ClInclude Include="DirectionSystem.h" />
     <ClInclude Include="drawable_chain_element.h" />
     <ClInclude Include="draw_system.h" />
@@ -245,10 +245,10 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="Root.h" />
     <ClInclude Include="MoveSystem.h" />
     <ClInclude Include="sprite_chain_element.h" />
-    <ClInclude Include="SpritePack.h" />
+    <ClInclude Include="sprite_pack.h" />
     <ClInclude Include="SpriteStructures.h" />
     <ClInclude Include="Brazier.h" />
-    <ClInclude Include="BuildSystem.h" />
+    <ClInclude Include="build_system.h" />
     <ClInclude Include="button.h" />
     <ClInclude Include="Chamomile.h" />
     <ClInclude Include="deer.h" />
@@ -284,7 +284,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="Tags.h" />
     <ClInclude Include="TerrainObject.h" />
     <ClInclude Include="neutral_mob.h" />
-    <ClInclude Include="TextChainElement.h" />
+    <ClInclude Include="text_chain_element.h" />
     <ClInclude Include="TextSystem.h" />
     <ClInclude Include="TimeSystem.h" />
     <ClInclude Include="Totem.h" />

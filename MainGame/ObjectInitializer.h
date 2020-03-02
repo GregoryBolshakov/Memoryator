@@ -2,7 +2,7 @@
 
 #include "StaticObject.h"
 #include "SpriteStructures.h"
-#include "SpritePack.h"
+#include "sprite_pack.h"
 #include "Rock.h"
 #include "ground.h"
 #include "ground_connection.h"
@@ -57,7 +57,7 @@ public:
 		const std::string& itemName, 
 		int count,
 		Biomes biome,		
-		std::map<PackTag, SpritePack>* packsMap,
+		std::map<PackTag, sprite_pack>* packsMap,
 		bool mirrored = true,
 		const std::vector<std::pair<Tag, int>>& inventory = {});
 	static int newNameId;
@@ -65,7 +65,7 @@ public:
 	static DynamicObject* initializeDynamicItem(Tag itemClass,
 		Vector2f itemPosition,
 		const std::string& itemName,
-		std::map<PackTag, SpritePack>* packsMap,
+		std::map<PackTag, sprite_pack>* packsMap,
 		WorldObject* owner = nullptr);
 	static std::vector<StaticObject*> vectorCastToStatic(const std::vector<WorldObject*>& items);
 	static std::vector<DynamicObject*> vectorCastToDynamic(std::vector<WorldObject*> items);

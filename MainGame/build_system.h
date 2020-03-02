@@ -5,7 +5,7 @@
 #include "GridList.h"
 #include "Helper.h"
 #include "InventorySystem.h"
-#include "SpritePack.h"
+#include "sprite_pack.h"
 #include "WorldObject.h"
 
 using namespace sf;
@@ -17,11 +17,11 @@ struct objectInfo {
 	std::vector<std::pair<Tag, int>> recipe;
 };
 
-class BuildSystem
+class build_system
 {
 public:	
-	BuildSystem();
-	~BuildSystem();
+	build_system();
+	~build_system();
 	void inventoryBounding(std::vector<HeroBag>* boundBags);
 	void init();	
 	void onMouseUp();
@@ -29,7 +29,7 @@ public:
 	void interact(Vector2f cameraPosition = {0, 0}, float scaleFactor = 1);
 	void clearHareBags(int block, GridList& staticGrid, std::vector<WorldObject*>* visibleItems);
 	void wasPlaced();
-	std::vector<sprite_chain_element*> prepareSprites(GridList& staticGrid, const std::vector<WorldObject*>& visibleItems, std::map<PackTag, SpritePack>* packsMap);
+	std::vector<sprite_chain_element*> prepareSprites(GridList& staticGrid, const std::vector<WorldObject*>& visibleItems, std::map<PackTag, sprite_pack>* packsMap);
 
 	int getCurrentObject() const { return currentObject; }
 	bool getUsedMouse() const { return usedMouse; }

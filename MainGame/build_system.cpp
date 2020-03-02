@@ -1,17 +1,17 @@
-#include "BuildSystem.h"
+#include "build_system.h"
 
 #include <fstream>
 
 #include "DroppedLoot.h"
 #include "ObjectInitializer.h"
 
-BuildSystem::BuildSystem()
+build_system::build_system()
 = default;
 
-BuildSystem::~BuildSystem()
+build_system::~build_system()
 = default;
 
-void BuildSystem::init()
+void build_system::init()
 {
 	initializeObjectsInfo();
 
@@ -19,12 +19,12 @@ void BuildSystem::init()
 	successInit = true;
 }
 
-void BuildSystem::inventoryBounding(std::vector<HeroBag>* boundBags)
+void build_system::inventoryBounding(std::vector<HeroBag>* boundBags)
 {
 	this->boundBags = boundBags;
 }
 
-void BuildSystem::initializeObjectsInfo()
+void build_system::initializeObjectsInfo()
 {
 	std::string objectIconPath, objectImageType;
 	std::ifstream fin(BuildSystemObjectsInfoFileDirectory);
@@ -50,7 +50,7 @@ void BuildSystem::initializeObjectsInfo()
 	fin.close();
 }
 
-std::vector <sprite_chain_element*> BuildSystem::prepareSprites(GridList& staticGrid, const std::vector<WorldObject*>& visibleItems, std::map<PackTag, SpritePack>* packsMap)
+std::vector <sprite_chain_element*> build_system::prepareSprites(GridList& staticGrid, const std::vector<WorldObject*>& visibleItems, std::map<PackTag, sprite_pack>* packsMap)
 {
 	if (selectedObject == Tag::emptyCell)
 		return {};
@@ -103,14 +103,14 @@ std::vector <sprite_chain_element*> BuildSystem::prepareSprites(GridList& static
 	return sprites;
 }
 
-void BuildSystem::interact(Vector2f cameraPosition, float scaleFactor)
+void build_system::interact(Vector2f cameraPosition, float scaleFactor)
 {
 	const Vector2f mousePos = Vector2f(Mouse::getPosition());
 	mouseWorldPos = Vector2f((mousePos.x - Helper::GetScreenSize().x / 2 + cameraPosition.x * scaleFactor) / scaleFactor,
 		(mousePos.y - Helper::GetScreenSize().y / 2 + cameraPosition.y * scaleFactor) / scaleFactor);
 }
 
-void BuildSystem::onMouseUp()
+void build_system::onMouseUp()
 {
 	usedMouse = false;
 
@@ -128,7 +128,7 @@ void BuildSystem::onMouseUp()
 		buildingPosition = Vector2f (-1, -1);
 }
 
-void BuildSystem::buildHeldItem(Vector2f focusedObjectPosition, float scaleFactor)
+void build_system::buildHeldItem(Vector2f focusedObjectPosition, float scaleFactor)
 {
 	if (heldItem->first == Tag::emptyCell)
 	{
@@ -143,7 +143,7 @@ void BuildSystem::buildHeldItem(Vector2f focusedObjectPosition, float scaleFacto
 	}
 }
 
-bool BuildSystem::canAfford()
+bool build_system::canAfford()
 {
 	if (currentObject != -1)
 	{
@@ -180,13 +180,13 @@ bool BuildSystem::canAfford()
 	return false;
 }
 
-void BuildSystem::wasPlaced()
+void build_system::wasPlaced()
 {
 	selectedObject = Tag::emptyCell;
 	buildingPosition = Vector2f (-1, -1);
 }
 
-void BuildSystem::clearHareBags(int block, GridList& staticGrid, std::vector<WorldObject*>* visibleItems)
+void build_system::clearHareBags(int block, GridList& staticGrid, std::vector<WorldObject*>* visibleItems)
 {
 	for (auto& item : *visibleItems)
 	{
@@ -211,7 +211,7 @@ void BuildSystem::clearHareBags(int block, GridList& staticGrid, std::vector<Wor
 	}
 }
 
-void BuildSystem::animator(long long elapsedTime)
+void build_system::animator(long long elapsedTime)
 {
 	if (builtObjects[0].iconSprite.getPosition().x < builtObjects[0].iconSprite.getTextureRect().width / 8 && animationSpeed > 0)
 		animationSpeed -= (float)elapsedTime / 400000000;

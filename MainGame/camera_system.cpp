@@ -1,18 +1,18 @@
-#include "CameraSystem.h"
+#include "camera_system.h"
 
 #include <cstdlib>
 
-const Vector2f CameraSystem::maxCameraDistance = Vector2f(250, 250), CameraSystem::camOffset = { 0, -0.04f };
-const float CameraSystem::shakeDefaultSpeed = 0.0005f;
-const long long CameraSystem::shakeDefaultDuration = long(3e4);
+const Vector2f camera_system::maxCameraDistance = Vector2f(250, 250), camera_system::camOffset = { 0, -0.04f };
+const float camera_system::shakeDefaultSpeed = 0.0005f;
+const long long camera_system::shakeDefaultDuration = long(3e4);
 
-CameraSystem::CameraSystem()
+camera_system::camera_system()
 = default;
 
-CameraSystem::~CameraSystem()
+camera_system::~camera_system()
 = default;
 
-void CameraSystem::makeShake(const int count, const float speed)
+void camera_system::makeShake(const int count, const float speed)
 {
 	if (count == 0)
 		return;
@@ -32,7 +32,7 @@ void CameraSystem::makeShake(const int count, const float speed)
 	shakeDuration = shakeDefaultDuration;
 }
 
-void CameraSystem::shakeInteract(long long elapsedTime)
+void camera_system::shakeInteract(long long elapsedTime)
 {
 	if (shakeDuration > 0)
 	{
