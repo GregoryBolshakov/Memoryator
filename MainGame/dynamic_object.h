@@ -33,7 +33,7 @@ protected:
 public:
 	dynamic_object(std::string objectName, Vector2f centerPosition);
 	virtual ~dynamic_object();
-	int getSpriteNumber() override { return currentSprite[0]; }
+	int get_sprite_number() override { return current_sprite_[0]; }
 	[[nodiscard]] int getEllipseSize() const { return ellipseSize; }
 	[[nodiscard]] move_system getMoveSystem() const { return moveSystem; }
 	[[nodiscard]] direction_system getDirectionSystem() const { return directionSystem; }
@@ -48,10 +48,10 @@ public:
 
 	void setCurrentAction(actions action) { this->currentAction = action; }	
 	virtual void changeMovePositionToRoute(Vector2f newPosition) { movePosition = newPosition; }
-	void takeDamage(float damage, Vector2f attackerPos = {-1, -1}) override;
+	void take_damage(float damage, Vector2f attackerPos = {-1, -1}) override;
 	void setMoveOffset(long long elapsedTime);
 	void setRoute(std::vector<std::pair<int, int>> route) { this->route = std::move(route); }
-	void initMicroBlocks() override;
+	void init_micro_blocks() override;
 	virtual void changeAction(actions newAction, bool resetSpriteNumber = false, bool rememberLastAction = false);
 	virtual void handleInput(bool usedMouse = false);
 	virtual void behaviorWithDynamic(dynamic_object* target, long long elapsedTime) = 0;

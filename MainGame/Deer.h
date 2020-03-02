@@ -11,14 +11,14 @@ class deer : public neutral_mob
 public:
 	deer(const std::string& objectName, Vector2f centerPosition);
 	~deer() override;
-	Vector2f calculateTextureOffset() override;
-	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;
+	Vector2f calculate_texture_offset() override;
+	std::vector<sprite_chain_element*> prepare_sprites(long long elapsedTime) override;
 	void behaviorWithStatic(world_object* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;
 	void endingPreviousAction();
-	Vector2f getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
+	Vector2f get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
 	Vector2f getHeadPosition();
-	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
+	int get_build_type(Vector2f ounPos, Vector2f otherPos) override;
 
 	[[nodiscard]] world_object* getOwner() const
 	{

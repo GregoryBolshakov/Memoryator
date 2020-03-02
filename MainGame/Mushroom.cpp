@@ -4,13 +4,13 @@
 
 mushroom::mushroom(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : static_object(std::move(objectName), centerPosition)
 {
-	varietyOfTypes = 16; // BirchGrove: 1-3; DarkWoods: 4-12; SwampyTrees: 13-16
-	this->typeOfObject = typeOfObject;
+	variety_of_types_ = 16; // BirchGrove: 1-3; DarkWoods: 4-12; SwampyTrees: 13-16
+	this->type_of_object_ = typeOfObject;
 	this->intangible = true;
-	toSaveName = "mushroom";
+	to_save_name_ = "mushroom";
 	mushroom::setType(typeOfObject);
 	tag = entity_tag::mushroom;
-	mirrored = bool(rand() % 2);
+	mirrored_ = bool(rand() % 2);
 }
 
 void mushroom::setType(int typeOfObject)
@@ -18,75 +18,75 @@ void mushroom::setType(int typeOfObject)
 	if (typeOfObject == -1)
 		return;
 
-	this->typeOfObject = typeOfObject;
+	this->type_of_object_ = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = { 72, 140 };
+		conditional_size_units_ = { 72, 140 };
 	if (typeOfObject == 2)
-		conditionalSizeUnits = { 67, 178 };
+		conditional_size_units_ = { 67, 178 };
 	if (typeOfObject == 3)
-		conditionalSizeUnits = { 82, 94 };
+		conditional_size_units_ = { 82, 94 };
 	if (typeOfObject == 4)
-		conditionalSizeUnits = { 143, 203 };
+		conditional_size_units_ = { 143, 203 };
 	if (typeOfObject == 5)
-		conditionalSizeUnits = { 120, 134 };
+		conditional_size_units_ = { 120, 134 };
 	if (typeOfObject == 6)
-		conditionalSizeUnits = { 173, 161 };
+		conditional_size_units_ = { 173, 161 };
 	if (typeOfObject == 7)
-		conditionalSizeUnits = { 70, 134 };
+		conditional_size_units_ = { 70, 134 };
 	if (typeOfObject == 8)
-		conditionalSizeUnits = { 91, 81 };
+		conditional_size_units_ = { 91, 81 };
 	if (typeOfObject == 9)
-		conditionalSizeUnits = { 94, 78 };
+		conditional_size_units_ = { 94, 78 };
 	if (typeOfObject == 10)
-		conditionalSizeUnits = { 103, 137 };
+		conditional_size_units_ = { 103, 137 };
 	if (typeOfObject == 11)
-		conditionalSizeUnits = { 89, 71 };
+		conditional_size_units_ = { 89, 71 };
 	if (typeOfObject == 12)
-		conditionalSizeUnits = { 144, 122 };
+		conditional_size_units_ = { 144, 122 };
 	if (typeOfObject == 13)
-		conditionalSizeUnits = { 54, 60 };
+		conditional_size_units_ = { 54, 60 };
 	if (typeOfObject == 14)
-		conditionalSizeUnits = { 80, 74 };
+		conditional_size_units_ = { 80, 74 };
 	if (typeOfObject == 15)
-		conditionalSizeUnits = { 80, 80 };
+		conditional_size_units_ = { 80, 80 };
 	if (typeOfObject == 16)
-		conditionalSizeUnits = { 77, 53 };
+		conditional_size_units_ = { 77, 53 };
 }
 
-Vector2f mushroom::calculateTextureOffset()
+Vector2f mushroom::calculate_texture_offset()
 {
-	textureBox.width = textureBox.width * getScaleRatio().x;
-	textureBox.height = textureBox.height * getScaleRatio().y;
+	texture_box_.width = texture_box_.width * get_scale_ratio().x;
+	texture_box_.height = texture_box_.height * get_scale_ratio().y;
 
-	if (typeOfObject == 0)
+	if (type_of_object_ == 0)
 		return { 0, 0 };
 
-	return { textureBox.width / 2.0f, textureBox.height / 2.0f };
+	return { texture_box_.width / 2.0f, texture_box_.height / 2.0f };
 }
 
-Vector2f mushroom::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f mushroom::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int mushroom::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int mushroom::get_build_type(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> mushroom::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> mushroom::prepare_sprites(long long elapsedTime)
 {
-	sprite_chain_element* body = new sprite_chain_element(pack_tag::darkWoods, pack_part::mushroom, direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	sprite_chain_element* body = new sprite_chain_element(pack_tag::darkWoods, pack_part::mushroom, direction::DOWN, type_of_object_, position_, conditional_size_units_, Vector2f(texture_box_offset_));
 	body->unscaled = true;
 
-	if (typeOfObject >= 1 && typeOfObject <= 3)
+	if (type_of_object_ >= 1 && type_of_object_ <= 3)
 		body->pack_tag = pack_tag::birchGrove;
-	if (typeOfObject >= 4 && typeOfObject <= 12)
+	if (type_of_object_ >= 4 && type_of_object_ <= 12)
 	{
 		body->pack_tag = pack_tag::darkWoods;
 		body->number -= 3;
 	}
-	if (typeOfObject >= 13 && typeOfObject <= 16)
+	if (type_of_object_ >= 13 && type_of_object_ <= 16)
 	{
 		body->pack_tag = pack_tag::swampyTrees;
 		body->number -= 12;

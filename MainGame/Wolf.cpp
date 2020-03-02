@@ -4,24 +4,24 @@ using namespace sf;
 
 wolf::wolf(std::string objectName, Vector2f centerPosition) : neutral_mob(std::move(objectName), centerPosition)
 {
-	conditionalSizeUnits = { 250, 200 };
-	currentSprite[0] = 1;
+	conditional_size_units_ = { 250, 200 };
+	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
 	moveSystem.speed = 0.0005f;
-	animationSpeed = 0.0006f;
+	animation_speed_ = 0.0006f;
 	animationLength = 8;
-	radius = 70;
+	radius_ = 70;
 	strength = 10;
 	sightRange = helper::GetScreenSize().y * 1 / 2; 
 	morality = 5; // from 1 to 10
 	fear = 0;
-	healthPoint = 0;
+	health_point_ = 0;
 	currentAction = relax;
 	timeAfterHitSelf = 0;
 	timeForNewHitSelf = long(6e5);
 	timeForNewHit = 1000000;
 
-	toSaveName = "wolf";
+	to_save_name_ = "wolf";
 }
 
 wolf::~wolf()
@@ -42,19 +42,19 @@ void wolf::behavior(long long elapsedTime)
 	fightInteract(elapsedTime);
 }
 
-Vector2f wolf::calculateTextureOffset()
+Vector2f wolf::calculate_texture_offset()
 {
-	textureBox.width = textureBox.width * getScaleRatio().x;
-	textureBox.height = textureBox.height * getScaleRatio().y;
-	return { textureBox.width / 2, textureBox.height * 7 / 8 };
+	texture_box_.width = texture_box_.width * get_scale_ratio().x;
+	texture_box_.height = texture_box_.height * get_scale_ratio().y;
+	return { texture_box_.width / 2, texture_box_.height * 7 / 8 };
 }
 
-Vector2f wolf::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f wolf::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int wolf::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int wolf::get_build_type(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
@@ -64,7 +64,7 @@ void wolf::jerk(float power, float deceleration, Vector2f destinationPoint)
 	return;
 }
 
-std::vector<sprite_chain_element*> wolf::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> wolf::prepare_sprites(long long elapsedTime)
 {
     return {};
 	/*std::string spriteName;

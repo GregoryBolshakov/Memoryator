@@ -4,11 +4,11 @@
 
 mugwort::mugwort(std::string objectName, Vector2f centerPosition, int typeOfObject) : picked_object(std::move(objectName), centerPosition)
 {
-	varietyOfTypes = 3;
-	this->typeOfObject = typeOfObject;
-	toSaveName = "mugwort";
+	variety_of_types_ = 3;
+	this->type_of_object_ = typeOfObject;
+	to_save_name_ = "mugwort";
 	mugwort::setType(typeOfObject);
-	radius = 50;
+	radius_ = 50;
 	tag = entity_tag::mugwort;
 	count = 1;
 	id = entity_tag::yarrow;
@@ -19,41 +19,41 @@ void mugwort::setType(int typeOfObject)
 	if (typeOfObject == -1)
 		return;
 
-	this->typeOfObject = typeOfObject;
+	this->type_of_object_ = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = { 308, 371 };
+		conditional_size_units_ = { 308, 371 };
 	if (typeOfObject == 2)
-		conditionalSizeUnits = { 303, 325 };
+		conditional_size_units_ = { 303, 325 };
 	if (typeOfObject == 3)
-		conditionalSizeUnits = { 250, 271 };
+		conditional_size_units_ = { 250, 271 };
 }
 
-Vector2f mugwort::calculateTextureOffset()
+Vector2f mugwort::calculate_texture_offset()
 {
-	textureBox.width = textureBox.width * getScaleRatio().x;
-	textureBox.height = textureBox.height * getScaleRatio().y;
-	return { textureBox.width / 2.0f, textureBox.height / 1.2f };
+	texture_box_.width = texture_box_.width * get_scale_ratio().x;
+	texture_box_.height = texture_box_.height * get_scale_ratio().y;
+	return { texture_box_.width / 2.0f, texture_box_.height / 1.2f };
 }
 
-void mugwort::initPedestal()
+void mugwort::init_pedestal()
 {
-	focus1 = position;
-	focus2 = position;
+	focus1 = position_;
+	focus2 = position_;
 	ellipseSizeMultipliers[0] = { 0 };
-	initMicroBlocks();
+	init_micro_blocks();
 }
 
-Vector2f mugwort::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f mugwort::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int mugwort::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int mugwort::get_build_type(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> mugwort::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> mugwort::prepare_sprites(long long elapsedTime)
 {
     return {};
 	/*additionalSprites.clear();

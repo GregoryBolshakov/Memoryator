@@ -3,7 +3,7 @@
 
 picked_object::picked_object(std::string objectName, const Vector2f centerPosition) : terrain_object(std::move(objectName), centerPosition), id(), count(0)
 {
-	radius = 0;
+	radius_ = 0;
 }
 
 bool picked_object::pickUp(std::vector<hero_bag> *bags)
@@ -41,7 +41,7 @@ bool picked_object::pickUp(std::vector<hero_bag> *bags)
 			{
 				count = 0;
 				id = entity_tag::emptyCell;
-				deletePromiseOn();
+				delete_promise_on();
 				return true;
 			}
 		}

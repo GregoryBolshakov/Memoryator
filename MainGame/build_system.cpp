@@ -64,11 +64,11 @@ std::vector <sprite_chain_element*> build_system::prepareSprites(grid_list& stat
 		{
 			for (auto item : visibleItems)
 			{
-				if (staticGrid.get_index_by_point(item->getPosition().x, item->getPosition().y) != staticGrid.get_index_by_point(mouseWorldPos.x, mouseWorldPos.y))
+				if (staticGrid.get_index_by_point(item->get_position().x, item->get_position().y) != staticGrid.get_index_by_point(mouseWorldPos.x, mouseWorldPos.y))
 					continue;
 				bool match = false;
 				auto droppedLoot = dynamic_cast<dropped_loot*>(item);
-				if (droppedLoot && droppedLoot->getType() == 201)
+				if (droppedLoot && droppedLoot->get_type() == 201)
 				{
 					for (auto& cell : droppedLoot->inventory)
 						if (cell.first == entity_tag::hare)
@@ -87,7 +87,7 @@ std::vector <sprite_chain_element*> build_system::prepareSprites(grid_list& stat
 		terrain = object_initializer::initializeStaticItem(selectedObject, mouseWorldPos, buildType, "", 1, DarkWoods, packsMap, false);
 	}
 
-	auto sprites = terrain->prepareSprites(0);
+	auto sprites = terrain->prepare_sprites(0);
 	canBePlaced = true;
 
 	if (staticGrid.is_intersect_with_others(terrain))
@@ -190,11 +190,11 @@ void build_system::clearHareBags(int block, grid_list& staticGrid, std::vector<w
 {
 	for (auto& item : *visibleItems)
 	{
-		if (staticGrid.get_index_by_point(item->getPosition().x, item->getPosition().y) != staticGrid.get_index_by_point(mouseWorldPos.x, mouseWorldPos.y))
+		if (staticGrid.get_index_by_point(item->get_position().x, item->get_position().y) != staticGrid.get_index_by_point(mouseWorldPos.x, mouseWorldPos.y))
 			continue;
 		bool match = false;
 		auto droppedLoot = dynamic_cast<dropped_loot*>(item);
-		if (droppedLoot && droppedLoot->getType() == 201)
+		if (droppedLoot && droppedLoot->get_type() == 201)
 		{
 			for (auto& cell : droppedLoot->inventory)
 				if (cell.first == entity_tag::hare)
@@ -205,7 +205,7 @@ void build_system::clearHareBags(int block, grid_list& staticGrid, std::vector<w
 		}
 		if (match)
 		{
-			item->deletePromiseOn();
+			item->delete_promise_on();
 			break;
 		}
 	}

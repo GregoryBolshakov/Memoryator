@@ -6,43 +6,43 @@ using namespace sf;
 
 hare::hare(const std::string& objectName, Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
 {
-	conditionalSizeUnits = { 180, 150 };
-	currentSprite[0] = 1;
+	conditional_size_units_ = { 180, 150 };
+	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
 	moveSystem.defaultSpeed = 0.0003f;
 	moveSystem.speed = 0.0003f;
-	radius = 70;
+	radius_ = 70;
 	strength = 10;
 	sightRange = 720;
-	healthPoint = 50;
+	health_point_ = 50;
 	currentAction = relax;
 	timeAfterHitSelf = 0;
 	timeForNewHitSelf = long(6e5);
 	timeForNewHit = 1000000;
-	toSaveName = "hare";
+	to_save_name_ = "hare";
 	tag = entity_tag::hare;
 }
 
 hare::~hare()
 = default;
 
-Vector2f hare::calculateTextureOffset()
+Vector2f hare::calculate_texture_offset()
 {
-	textureBox.width = float(textureBox.width)*getScaleRatio().x;
-	textureBox.height = float(textureBox.height)*getScaleRatio().y;
-	return { textureBox.width / 2, textureBox.height * 7 / 8 };
+	texture_box_.width = float(texture_box_.width)*get_scale_ratio().x;
+	texture_box_.height = float(texture_box_.height)*get_scale_ratio().y;
+	return { texture_box_.width / 2, texture_box_.height * 7 / 8 };
 }
 
 void hare::setTarget(dynamic_object& object)
 {
 	if (object.tag == entity_tag::noose || currentAction == absorbs)
 		return;
-	if (helper::getDist(position, object.getPosition()) <= sightRange)
+	if (helper::getDist(position_, object.get_position()) <= sightRange)
 	{
 		if (object.tag == entity_tag::hero)
 		{
 			boundTarget = &object;
-			distanceToNearest = helper::getDist(position, object.getPosition());
+			distanceToNearest = helper::getDist(position_, object.get_position());
 		}
 	}
 }
@@ -51,13 +51,13 @@ void hare::behaviorWithStatic(world_object* target, long long elapsedTime)
 {
 	if (currentAction == absorbs)
 		return;
-	if (helper::getDist(position, target->getPosition()) <= sightRange && timeAfterFear >= fearTime)		
+	if (helper::getDist(position_, target->get_position()) <= sightRange && timeAfterFear >= fearTime)		
 		if (target->tag == entity_tag::hareTrap)
 		{
 			if (boundTarget == nullptr)
 			{
 				boundTarget = target;
-				distanceToNearest = helper::getDist(position, target->getPosition());
+				distanceToNearest = helper::getDist(position_, target->get_position());
 			}
 		}
 }
@@ -66,7 +66,7 @@ void hare::behavior(long long elapsedTime)
 {	
 	endingPreviousAction();
 	fightInteract(elapsedTime);
-	if (healthPoint <= 0)
+	if (health_point_ <= 0)
 	{
 		changeAction(dead, true);
 		directionSystem.direction = direction::STAND;
@@ -95,7 +95,7 @@ void hare::behavior(long long elapsedTime)
 
 	if (boundTarget == nullptr)
 	{
-		if (helper::getDist(position, laxMovePosition) <= radius)
+		if (helper::getDist(position_, laxMovePosition) <= radius_)
 		{
 			changeAction(relax, true, true);
 			laxMovePosition = { -1, -1 };
@@ -103,23 +103,23 @@ void hare::behavior(long long elapsedTime)
 		return;
 	}
 	
-	const float distanceToTarget = helper::getDist(this->position, boundTarget->getPosition());
+	const float distanceToTarget = helper::getDist(this->position_, boundTarget->get_position());
 
 	// bouncing to a trap
 	if (boundTarget->tag == entity_tag::hareTrap)
 	{
-		directionSystem.side = direction_system::calculate_side(position, boundTarget->getPosition());
-		if (helper::getDist(position, boundTarget->getPosition()) <= radius)
+		directionSystem.side = direction_system::calculate_side(position_, boundTarget->get_position());
+		if (helper::getDist(position_, boundTarget->get_position()) <= radius_)
 		{
 			const auto trap = dynamic_cast<hare_trap*>(boundTarget);
-			position = trap->getEnterPosition();
+			position_ = trap->getEnterPosition();
 			changeAction(absorbs, true, false);
 			laxMovePosition = { -1, -1 };
 		}
 		else
 		{
 			changeAction(move, false, true);
-			laxMovePosition = boundTarget->getPosition();
+			laxMovePosition = boundTarget->get_position();
 		}
 	}
 	//-------------------
@@ -127,14 +127,14 @@ void hare::behavior(long long elapsedTime)
 	// runaway from enemy
 	if (boundTarget->tag == entity_tag::hero)
 	{
-		directionSystem.side = direction_system::calculate_side(position, laxMovePosition);
-		moveSystem.speed = std::max(moveSystem.defaultSpeed, (moveSystem.defaultSpeed * 10) * (1 - (helper::getDist(position, boundTarget->getPosition()) / sightRange * 1.5f)));
-		animationSpeed = std::max(0.0004f, 0.0003f * moveSystem.speed / moveSystem.defaultSpeed);
+		directionSystem.side = direction_system::calculate_side(position_, laxMovePosition);
+		moveSystem.speed = std::max(moveSystem.defaultSpeed, (moveSystem.defaultSpeed * 10) * (1 - (helper::getDist(position_, boundTarget->get_position()) / sightRange * 1.5f)));
+		animation_speed_ = std::max(0.0004f, 0.0003f * moveSystem.speed / moveSystem.defaultSpeed);
 		if (distanceToTarget <= sightRange)
 		{
 			changeAction(move, false, true);
-			float k = (sightRange/* * 1.5f - Helper::getDist(position, boundTarget->getPosition())*/) / helper::getDist(position, boundTarget->getPosition());
-			laxMovePosition = Vector2f(position.x - (boundTarget->getPosition().x - position.x) * k, position.y - (boundTarget->getPosition().y - position.y) * k);
+			float k = (sightRange/* * 1.5f - Helper::getDist(position, boundTarget->getPosition())*/) / helper::getDist(position_, boundTarget->get_position());
+			laxMovePosition = Vector2f(position_.x - (boundTarget->get_position().x - position_.x) * k, position_.y - (boundTarget->get_position().y - position_.y) * k);
 		}
 		else
 		{
@@ -148,8 +148,8 @@ void hare::behavior(long long elapsedTime)
 				}
 				else
 				{
-					float k = (sightRange/* * 1.5f - Helper::getDist(position, boundTarget->getPosition())*/) / helper::getDist(position, boundTarget->getPosition());
-					laxMovePosition = Vector2f(position.x - (boundTarget->getPosition().x - position.x) * k, position.y - (boundTarget->getPosition().y - position.y) * k);
+					float k = (sightRange/* * 1.5f - Helper::getDist(position, boundTarget->getPosition())*/) / helper::getDist(position_, boundTarget->get_position());
+					laxMovePosition = Vector2f(position_.x - (boundTarget->get_position().x - position_.x) * k, position_.y - (boundTarget->get_position().y - position_.y) * k);
 				}
 			}
 		}
@@ -163,12 +163,12 @@ void hare::behavior(long long elapsedTime)
 	}
 }
 
-Vector2f hare::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f hare::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int hare::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int hare::get_build_type(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
@@ -181,7 +181,7 @@ void hare::endingPreviousAction()
 	{
 		auto trap = dynamic_cast<hare_trap*>(boundTarget);
 		trap->inventory[0] = std::make_pair(entity_tag::hare, 1);
-		deletePromiseOn();
+		delete_promise_on();
 	}
 	lastAction = relax;
 }
@@ -191,10 +191,10 @@ void hare::jerk(float power, float deceleration, Vector2f destinationPoint)
 	return;
 }
 
-std::vector<sprite_chain_element*> hare::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> hare::prepare_sprites(long long elapsedTime)
 {
-	auto body = new sprite_chain_element(pack_tag::hare, pack_part::full, direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
-	animationSpeed = 10;
+	auto body = new sprite_chain_element(pack_tag::hare, pack_part::full, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
+	animation_speed_ = 10;
 
 	side spriteSide = directionSystem.side;
 
@@ -228,7 +228,7 @@ std::vector<sprite_chain_element*> hare::prepareSprites(long long elapsedTime)
 		{
 			animationLength = 1;
 			body->packPart = pack_part::stand;
-			currentSprite[0] = 1;
+			current_sprite_[0] = 1;
 			break;
 		}
 		case move:
@@ -240,18 +240,18 @@ std::vector<sprite_chain_element*> hare::prepareSprites(long long elapsedTime)
 	default:;
 	}
 
-	body->number = currentSprite[0];
+	body->number = current_sprite_[0];
 
 	timeForNewSprite += elapsedTime;
 
-	if (timeForNewSprite >= long(1e6 / animationSpeed))
+	if (timeForNewSprite >= long(1e6 / animation_speed_))
 	{
 		timeForNewSprite = 0;
 
-		if (++currentSprite[0] > animationLength)
+		if (++current_sprite_[0] > animationLength)
 		{
 			lastAction = currentAction;
-			currentSprite[0] = 1;
+			current_sprite_[0] = 1;
 		}
 	}
 

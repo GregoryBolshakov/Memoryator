@@ -169,9 +169,9 @@ static_object* object_initializer::initializeStaticItem(
 
 	newNameId++;
 
-	item->setPosition(Vector2f(itemPosition));
+	item->set_position(Vector2f(itemPosition));
 	item->setType(currentType);
-	auto sprites = item->prepareSprites(0);
+	auto sprites = item->prepare_sprites(0);
 	
 	if (packsMap->count(sprites[0]->pack_tag) <= 0 ||
 		packsMap->at(sprites[0]->pack_tag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
@@ -181,16 +181,16 @@ static_object* object_initializer::initializeStaticItem(
 	}
 	const auto info = packsMap->at(sprites[0]->pack_tag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number);
 	const auto textureSize = Vector2f(float(info.source_size.w), float(info.source_size.h));
-	item->setTextureSize(textureSize);
+	item->set_texture_size(textureSize);
 	const auto name = itemName.empty()
 		                  ? std::to_string(newNameId)
 		                  : itemName;
-	item->setName(name);
+	item->set_name(name);
 	if (!inventory.empty())
 		item->inventory = inventory;
 
-	if (!mirrored || item->isMultiEllipse)
-		item->cancelMirroring();
+	if (!mirrored || item->is_multi_ellipse)
+		item->cancel_mirroring();
 
 	return item;
 }
@@ -291,12 +291,12 @@ dynamic_object* object_initializer::initializeDynamicItem(
 	nameOfImage += ".png";
 
 	const auto name = itemName.empty()
-		                  ? std::string(item->getToSaveName()) + "_" + std::to_string(newNameId)
+		                  ? std::string(item->get_to_save_name()) + "_" + std::to_string(newNameId)
 		                  : itemName;
 
-	item->setName(name);
-	item->setPosition(Vector2f(itemPosition));
-    auto sprites = item->prepareSprites(0);
+	item->set_name(name);
+	item->set_position(Vector2f(itemPosition));
+    auto sprites = item->prepare_sprites(0);
 	if (packsMap->count(sprites[0]->pack_tag) <= 0 || 
 		packsMap->at(sprites[0]->pack_tag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
 	{
@@ -305,7 +305,7 @@ dynamic_object* object_initializer::initializeDynamicItem(
 	}
 	const auto info = packsMap->at(sprites[0]->pack_tag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number);
 	const auto textureSize = Vector2f(float(info.source_size.w), float(info.source_size.h));
-	item->setTextureSize(textureSize);
+	item->set_texture_size(textureSize);
 	return item;
 }
 
@@ -371,7 +371,7 @@ int object_initializer::getRandomTypeByBiome(world_object* object, const biomes 
 				return rand() % 4 + 13;
 			break;
 		}
-		default: return rand() % object->getVarietyOfTypes() + 1;
+		default: return rand() % object->get_variety_of_types() + 1;
 	}
 	return 0;
 }

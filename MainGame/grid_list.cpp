@@ -294,25 +294,25 @@ bool grid_list::is_intersect_with_others(world_object* object) const
 
 	std::map<std::pair<int, int>, bool> check_blocks = {};
 
-	const auto i_start = int(round((object->getPosition().x - object->getMicroBlockCheckAreaBounds().x) / micro_size_.x));
-	const auto i_end = int(round((object->getPosition().x + object->getMicroBlockCheckAreaBounds().x) / micro_size_.x));
+	const auto i_start = int(round((object->get_position().x - object->get_micro_block_check_area_bounds().x) / micro_size_.x));
+	const auto i_end = int(round((object->get_position().x + object->get_micro_block_check_area_bounds().x) / micro_size_.x));
 
-	const auto j_start = int(round((object->getPosition().y - object->getMicroBlockCheckAreaBounds().y) / micro_size_.y));
-	const auto j_end = int(round((object->getPosition().y + object->getMicroBlockCheckAreaBounds().y) / micro_size_.y));
+	const auto j_start = int(round((object->get_position().y - object->get_micro_block_check_area_bounds().y) / micro_size_.y));
+	const auto j_end = int(round((object->get_position().y + object->get_micro_block_check_area_bounds().y) / micro_size_.y));
 
 	for (auto i = i_start; i < i_end; i++)
 		for (auto j = j_start; j < j_end; j++)
 			if (!(i < 0 || i > width_to_micro_x_ || j < 0 || j > height_to_micro_y_) && !micro_block_matrix[i][j])
 				check_blocks[{i, j}] = true;
 
-	return object->isLockedPlace(check_blocks);
+	return object->is_locked_place(check_blocks);
 }
 
 void grid_list::set_locked_micro_blocks(world_object* item, const bool value, const bool dynamic_matrix)
 {
 	const auto world_item = dynamic_cast<world_object*>(item);
 	if (world_item)
-		for (const auto block : world_item->getLockedMicroBlocks())
+		for (const auto block : world_item->get_locked_micro_blocks())
 		{
 			if (!(block.x < 0 || block.x > width_to_micro_x_ || block.y < 0 || block.y > height_to_micro_y_))
 			{
@@ -345,7 +345,7 @@ void grid_list::clear_cell(const int cell_index)
 	for (auto& item : cells_[cell_index])
 	{
 		set_locked_micro_blocks(item, true);
-		items_.erase(items_.find(item->getName()));		
+		items_.erase(items_.find(item->get_name()));		
 	}
 	cells_[cell_index].clear();
 }
@@ -358,7 +358,7 @@ void grid_list::delete_item(const std::string& name)
 	for (unsigned int i = position.second; i < cells_[position.first].size(); i++)
 	{
 		const auto item_to_update = dynamic_cast<world_object*>(cells_[position.first][i]);
-		auto item_name = item_to_update->getName();
+		auto item_name = item_to_update->get_name();
 		items_.at(item_name).second -= 1;
 	}
 	
@@ -503,7 +503,7 @@ void grid_list::update_item_position(const std::string& name, const float x, con
 	for (unsigned int i = position.second; i < cells_[position.first].size(); i++)
 	{
 		const auto item_to_update = dynamic_cast<world_object*>(cells_[position.first][i]);
-		auto item_name = item_to_update->getName();
+		auto item_name = item_to_update->get_name();
 		items_.at(item_name).second -= 1;
 	}
 	auto index = get_index_by_point(x, y);

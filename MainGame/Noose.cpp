@@ -8,33 +8,33 @@ using namespace sf;
 
 noose::noose(const std::string& objectName, const Vector2f centerPosition, world_object* owner) : dynamic_object(objectName, centerPosition)
 {
-	conditionalSizeUnits = {360, 300};
-	currentSprite[0] = 1;
+	conditional_size_units_ = {360, 300};
+	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
 	this->owner = owner;
 	moveSystem.defaultSpeed = 0.0007F;
 	moveSystem.speed = moveSystem.defaultSpeed;
-	animationSpeed = float(5e-4);
+	animation_speed_ = float(5e-4);
 	animationLength = 8;
-	radius = 50;
+	radius_ = 50;
 	currentAction = move;
 	routeGenerationAbility = false;
 	moveSystem.canCrashIntoDynamic = false;
 	noose::jerk(2, 1);
-	toSaveName = "noose";
+	to_save_name_ = "noose";
 	tag = entity_tag::noose;
 }
 
 noose::~noose()
 = default;
 
-Vector2f noose::calculateTextureOffset()
+Vector2f noose::calculate_texture_offset()
 {
-	textureBox.width = textureBox.width * getScaleRatio().x;
-	textureBox.height = textureBox.height * getScaleRatio().y;
-	ropeElongation = textureBox.width / 20.0F;
+	texture_box_.width = texture_box_.width * get_scale_ratio().x;
+	texture_box_.height = texture_box_.height * get_scale_ratio().y;
+	ropeElongation = texture_box_.width / 20.0F;
 	//ropeElongation = 0;
-	return {0.0F, textureBox.height / 1.8F};
+	return {0.0F, texture_box_.height / 1.8F};
 }
 
 void noose::setTarget(dynamic_object& object)
@@ -52,7 +52,7 @@ void noose::behaviorWithDynamic(dynamic_object* target, long long /*elapsedTime*
 	{
 		auto deer = dynamic_cast<::deer*>(target);
 
-		if (helper::getDist(position, deer->getHeadPosition()) <= radius + target->getRadius())
+		if (helper::getDist(position_, deer->getHeadPosition()) <= radius_ + target->get_radius())
 		{
 			boundTarget = target;
 			if (deer->getOwner() == nullptr && deer->getCurrentAction() != commonHit)
@@ -79,23 +79,23 @@ void noose::behavior(long long elapsedTime)
 {
 	if (currentAction == dead)
 	{
-		zCoord = 0;
+		z_coordinate_ = 0;
 		return;
 	}
-	zCoord = 2;
+	z_coordinate_ = 2;
 
 	endingPreviousAction();
 	jerkInteract(elapsedTime);
 
 	if (owner != nullptr)
 	{
-		ownerPos = Vector2f(owner->getPosition().x + owner->getConditionalSizeUnits().x / 10.0F, owner->getPosition().y - owner->getConditionalSizeUnits().y / 13.0F);
-		ownerGlobalBounds = owner->getConditionalSizeUnits();
+		ownerPos = Vector2f(owner->get_position().x + owner->get_conditional_size_units().x / 10.0F, owner->get_position().y - owner->get_conditional_size_units().y / 13.0F);
+		ownerGlobalBounds = owner->get_conditional_size_units();
 	}
 
 	if (boundTarget != nullptr && owner != nullptr)
 	{
-		if (helper::getDist(position, owner->getPosition()) >= maximumLength)
+		if (helper::getDist(position_, owner->get_position()) >= maximumLength)
 		{
 			auto deer = dynamic_cast<::deer*>(boundTarget);
 			if (deer != nullptr)
@@ -111,18 +111,18 @@ void noose::behavior(long long elapsedTime)
 	if (boundTarget != nullptr)
 	{
 		auto deer = dynamic_cast<::deer*>(boundTarget);
-		position = deer->getHeadPosition();
+		position_ = deer->getHeadPosition();
 		moveSystem.speed = 0;
 		changeAction(relax, false, true);
 	}
 }
 
-Vector2f noose::getBuildPosition(std::vector<world_object*> /*visibleItems*/, float /*scaleFactor*/, Vector2f /*cameraPosition*/)
+Vector2f noose::get_build_position(std::vector<world_object*> visible_items, float scale_factor, Vector2f camera_position)
 {
 	return {-1, -1};
 }
 
-int noose::getBuildType(Vector2f /*ounPos*/, Vector2f /*otherPos*/)
+int noose::get_build_type(Vector2f oun_pos, Vector2f other_pos)
 {
 	return 1;
 }
@@ -137,7 +137,7 @@ void noose::stopping(bool doStand, bool forgetBoundTarget)
 
 	if (forgetBoundTarget && boundTarget != nullptr)
 	{
-		boundTarget->isProcessed = false;
+		boundTarget->is_processed = false;
 		boundTarget = nullptr;
 	}
 }
@@ -173,16 +173,16 @@ void noose::jerk(const float power, const float deceleration, Vector2f /*destina
 	stopping(false, false);
 	this->jerkPower = power;
 	this->jerkDeceleration = deceleration;
-	this->jerkDuration = long(40.0F / animationSpeed * 13.0F);
+	this->jerkDuration = long(40.0F / animation_speed_ * 13.0F);
 	this->jerkTime = this->jerkDuration;
 	currentAction = jerking;
 	jerkDistance = 1400;
-	currentSprite[0] = 1;
+	current_sprite_[0] = 1;
 
 	const auto mousePos = Vector2f(Mouse::getPosition());
 	const auto screenCenter = Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2);
 	const auto coeff = jerkDistance / helper::getDist(mousePos, screenCenter);
-	laxMovePosition = Vector2f(owner->getPosition().x + (mousePos.x - screenCenter.x) * coeff, owner->getPosition().y + (mousePos.y - screenCenter.y) * coeff);
+	laxMovePosition = Vector2f(owner->get_position().x + (mousePos.x - screenCenter.x) * coeff, owner->get_position().y + (mousePos.y - screenCenter.y) * coeff);
 }
 
 void noose::fightInteract(long long elapsedTime, dynamic_object* target)
@@ -200,59 +200,59 @@ void noose::rotateAndExtend(sprite_chain_element* rope, sprite_chain_element* lo
 	if (ownerPos != Vector2f(0, 0))
 	{
 		const auto beginPoint = Vector2f(ownerPos.x, ownerPos.y - ownerGlobalBounds.y / 13.0F);
-		rope->size = Vector2f(helper::getDist(beginPoint, position) + localElongation, rope->size.y); // a little bit longer rope for sprite joining		
-		if (position.y <= beginPoint.y)
+		rope->size = Vector2f(helper::getDist(beginPoint, position_) + localElongation, rope->size.y); // a little bit longer rope for sprite joining		
+		if (position_.y <= beginPoint.y)
 		{
-			rope->rotation = acos((beginPoint.x - position.x) / sqrt(pow(beginPoint.x - position.x, 2) + pow(beginPoint.y - position.y, 2))) / pi * 180;
+			rope->rotation = acos((beginPoint.x - position_.x) / sqrt(pow(beginPoint.x - position_.x, 2) + pow(beginPoint.y - position_.y, 2))) / pi * 180;
 		}
 		else
 		{
-			rope->rotation = -acos((beginPoint.x - position.x) / sqrt(pow(beginPoint.x - position.x, 2) + pow(beginPoint.y - position.y, 2))) / pi * 180;
+			rope->rotation = -acos((beginPoint.x - position_.x) / sqrt(pow(beginPoint.x - position_.x, 2) + pow(beginPoint.y - position_.y, 2))) / pi * 180;
 		}
 	}
 
 	if (currentAction != relax)
 	{
 		loop->rotation = rope->rotation + 180;
-		loop->offset.x -= sin(loop->rotation / 180 * pi) * textureBoxOffset.y; // rotational position correction
-		loop->offset.y -= (1 - cos(loop->rotation / 180 * pi)) * textureBoxOffset.y;
+		loop->offset.x -= sin(loop->rotation / 180 * pi) * texture_box_offset_.y; // rotational position correction
+		loop->offset.y -= (1 - cos(loop->rotation / 180 * pi)) * texture_box_offset_.y;
 	}
 
 	if (ownerPos != Vector2f(0, 0))
 	{
-		rope->offset.x += (ownerPos.x - position.x) * localElongation / helper::getDist(position, ownerPos); // offset of the extended rope
-		rope->offset.y += (ownerPos.y - position.y) * localElongation / helper::getDist(position, ownerPos);
+		rope->offset.x += (ownerPos.x - position_.x) * localElongation / helper::getDist(position_, ownerPos); // offset of the extended rope
+		rope->offset.y += (ownerPos.y - position_.y) * localElongation / helper::getDist(position_, ownerPos);
 
 		// change position to hero belt
 		const auto dynOwner = dynamic_cast<deerchant*>(owner);
 		if ((dynOwner != nullptr) && currentAction != dead)
 		{
 			rope->position = dynOwner->getBeltPosition();
-			rope->offset = Vector2f(rope->offset.x + rope->position.x - position.x, rope->offset.y + rope->position.y - position.y);
+			rope->offset = Vector2f(rope->offset.x + rope->position.x - position_.x, rope->offset.y + rope->position.y - position_.y);
 		}
 	}
 }
 
-std::vector<sprite_chain_element*> noose::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> noose::prepare_sprites(long long elapsedTime)
 {
 	std::vector<sprite_chain_element*> result = {};
-	auto ropeSprite = new sprite_chain_element(pack_tag::craftObjects, pack_part::noose, direction::DOWN, 3, position, {conditionalSizeUnits.x, 30}, {0, 0}, color);
-	auto loopSprite = new sprite_chain_element(pack_tag::craftObjects, pack_part::noose, direction::UP, 1, position, conditionalSizeUnits, textureBoxOffset, color);
+	auto ropeSprite = new sprite_chain_element(pack_tag::craftObjects, pack_part::noose, direction::DOWN, 3, position_, {conditional_size_units_.x, 30}, {0, 0}, color);
+	auto loopSprite = new sprite_chain_element(pack_tag::craftObjects, pack_part::noose, direction::UP, 1, position_, conditional_size_units_, texture_box_offset_, color);
 
-	loopSprite->number = currentSprite[0];
+	loopSprite->number = current_sprite_[0];
 
 	switch (currentAction)
 	{
 	case relax:
 		{
-			currentSprite[0] = 1;
+			current_sprite_[0] = 1;
 			animationLength = 1;
-			animationSpeed = 0.0005F;
+			animation_speed_ = 0.0005F;
 			ropeSprite->number = 1;
 			ropeSprite->size.y = 60;
 			if (owner != nullptr)
 			{
-				if (owner->getPosition().x < position.x)
+				if (owner->get_position().x < position_.x)
 				{
 					ropeSprite->size.y *= -1;
 				}
@@ -266,14 +266,14 @@ std::vector<sprite_chain_element*> noose::prepareSprites(long long elapsedTime)
 	case jerking:
 		{
 			animationLength = 13;
-			animationSpeed = 0.0005F;
+			animation_speed_ = 0.0005F;
 			ropeSprite->number = 3;
 			break;
 		}
 	case dead:
 		{
 			animationLength = 1;
-			animationSpeed = 0.0005F;
+			animation_speed_ = 0.0005F;
 
 			ropeSprite->number = 3;
 			loopSprite->number = 12;
@@ -282,7 +282,7 @@ std::vector<sprite_chain_element*> noose::prepareSprites(long long elapsedTime)
 
 			ropeSprite->is_background = true;
 			loopSprite->is_background = true;
-			isBackground = true;
+			is_background = true;
 
 			result.push_back(ropeSprite);
 			result.push_back(loopSprite);
@@ -294,7 +294,7 @@ std::vector<sprite_chain_element*> noose::prepareSprites(long long elapsedTime)
 	if (currentAction == move)
 	{
 		animationLength = 13;
-		animationSpeed = 0.0005F;
+		animation_speed_ = 0.0005F;
 		ropeSprite->number = 3;
 	}
 
@@ -305,17 +305,17 @@ std::vector<sprite_chain_element*> noose::prepareSprites(long long elapsedTime)
 
 	timeForNewSprite += elapsedTime;
 
-	if (timeForNewSprite >= long(40.0F / animationSpeed))
+	if (timeForNewSprite >= long(40.0F / animation_speed_))
 	{
 		timeForNewSprite = 0;
 
-		if (++currentSprite[0] > animationLength)
+		if (++current_sprite_[0] > animationLength)
 		{
 			lastAction = currentAction;
-			currentSprite[0] = 1;
+			current_sprite_[0] = 1;
 		}
 	}
 
-	setUnscaled(result);
+	set_unscaled(result);
 	return result;
 }

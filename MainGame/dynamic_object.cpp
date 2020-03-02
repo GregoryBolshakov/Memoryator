@@ -4,8 +4,8 @@
 
 dynamic_object::dynamic_object(std::string objectName, const Vector2f centerPosition) : world_object(std::move(objectName), centerPosition), currentAction()
 {
-	moveSystem.init(&radius, &position, &color);
-	directionSystem.init(&position, &movePosition);
+	moveSystem.init(&radius_, &position_, &color);
+	directionSystem.init(&position_, &movePosition);
 }
 
 dynamic_object::~dynamic_object()
@@ -15,23 +15,23 @@ void dynamic_object::handleInput(bool usedMouse)
 {
 }
 
-void dynamic_object::initMicroBlocks()
+void dynamic_object::init_micro_blocks()
 {
-	lockedMicroBlocks = { Vector2i(int(ceil(position.x / microBlockSize.x)), int(ceil(position.y / microBlockSize.y))) };
+	locked_micro_blocks_ = { Vector2i(int(ceil(position_.x / micro_block_size.x)), int(ceil(position_.y / micro_block_size.y))) };
 }
 
 bool dynamic_object::isIntersectDynamic(Vector2f newPosition, dynamic_object& otherDynamic) const
 {
 	//Vector2f position1 = dynamic1.getPosition();
 	const auto position1 = newPosition;
-	const auto position2 = otherDynamic.getPosition();
+	const auto position2 = otherDynamic.get_position();
 	//return (abs(position1.x - position2.x) <= (this->getRadius() + otherDynamic.getRadius()) && abs(position1.y - position2.y) <= (this->getRadius() + otherDynamic.getRadius()));
-	return sqrt(pow(position1.x - position2.x, 2) + pow(position1.y - position2.y, 2)) <= /*this->radius + */otherDynamic.radius;
+	return sqrt(pow(position1.x - position2.x, 2) + pow(position1.y - position2.y, 2)) <= /*this->radius + */otherDynamic.radius_;
 }
 
 Vector2f dynamic_object::ellipseSlip(dynamic_object *dynamic, Vector2f newPos, Vector2f destination, Vector2f f1, Vector2f f2, float ellipseSize, float height, long long elapsedTime) const
 {
-	const auto dynamicPos = Vector2f(dynamic->getPosition().x, height - dynamic->getPosition().y);
+	const auto dynamicPos = Vector2f(dynamic->get_position().x, height - dynamic->get_position().y);
 	const auto focus1 = Vector2f(f1.x, height - f1.y);
 	const auto focus2 = Vector2f(f2.x, height - f2.y);
 	const auto newPosition = Vector2f(newPos.x, height - newPos.y);
@@ -98,15 +98,15 @@ Vector2f dynamic_object::ellipseSlip(dynamic_object *dynamic, Vector2f newPos, V
 	else
 		dist1 = helper::getDist(destinationPos, Vector2f(x1, yl)), dist2 = helper::getDist(destinationPos, Vector2f(x2, y2));
 
-	if (dist1 <= dist2 && d >= 0 && sqrt(pow(x1 - dynamic->getPosition().x, 2) + pow(height - yl - dynamic->getPosition().y, 2)) != 0)
+	if (dist1 <= dist2 && d >= 0 && sqrt(pow(x1 - dynamic->get_position().x, 2) + pow(height - yl - dynamic->get_position().y, 2)) != 0)
 	{
-		const auto k = ((dynamic->getMoveSystem().speed * time) / sqrt(pow(x1 - dynamic->getPosition().x, 2) + pow(height - yl - dynamic->getPosition().y, 2)));
-		return { (x1 - dynamic->getPosition().x) * k, (height - yl - dynamic->getPosition().y) * k };
+		const auto k = ((dynamic->getMoveSystem().speed * time) / sqrt(pow(x1 - dynamic->get_position().x, 2) + pow(height - yl - dynamic->get_position().y, 2)));
+		return { (x1 - dynamic->get_position().x) * k, (height - yl - dynamic->get_position().y) * k };
 	}
-	if (dist2 <= dist1 && d >= 0 && sqrt(pow(x2 - dynamic->getPosition().x, 2) + pow(height - y2 - dynamic->getPosition().y, 2)) != 0)
+	if (dist2 <= dist1 && d >= 0 && sqrt(pow(x2 - dynamic->get_position().x, 2) + pow(height - y2 - dynamic->get_position().y, 2)) != 0)
 	{
-		const auto k = ((dynamic->getMoveSystem().speed * time) / sqrt(pow(x2 - dynamic->getPosition().x, 2) + pow(height - y2 - dynamic->getPosition().y, 2)));
-		return { (x2 - dynamic->getPosition().x) * k, (height - y2 - dynamic->getPosition().y) * k };
+		const auto k = ((dynamic->getMoveSystem().speed * time) / sqrt(pow(x2 - dynamic->get_position().x, 2) + pow(height - y2 - dynamic->get_position().y, 2)));
+		return { (x2 - dynamic->get_position().x) * k, (height - y2 - dynamic->get_position().y) * k };
 	}
 
 	return { -1, -1 };
@@ -179,26 +179,26 @@ void dynamic_object::setMoveOffset(long long elapsedTime)
 		return;
 	}
 
-	const auto distanceToTarget = float(sqrt(pow(movePosition.x - position.x, 2) + pow(movePosition.y - position.y, 2)));
+	const auto distanceToTarget = float(sqrt(pow(movePosition.x - position_.x, 2) + pow(movePosition.y - position_.y, 2)));
 	if (distanceToTarget == 0)
 	{
 		moveSystem.moveOffset = Vector2f(-1, -1);
 		return;
 	}
 
-	const auto k = moveSystem.speed * float(elapsedTime) / sqrt(pow(movePosition.x - position.x, 2) + pow(movePosition.y - position.y, 2));
+	const auto k = moveSystem.speed * float(elapsedTime) / sqrt(pow(movePosition.x - position_.x, 2) + pow(movePosition.y - position_.y, 2));
 	/*if (distanceToTarget <= k)
 	{
 		moveOffset = Vector2f(-1, -1);
 		return;
 	}*/
-	moveSystem.moveOffset = { (movePosition.x - position.x) * k, (movePosition.y - position.y) * k };
+	moveSystem.moveOffset = { (movePosition.x - position_.x) * k, (movePosition.y - position_.y) * k };
 }
 
 Vector2f dynamic_object::doMove(long long elapsedTime)
 {
 	setMoveOffset(elapsedTime);
-	auto position = this->position;
+	auto position = this->position_;
 	position.x += moveSystem.pushVector.x; position.y += moveSystem.pushVector.y;
 
 	//if (this->direction == Direction::STAND)
@@ -222,13 +222,13 @@ Vector2f dynamic_object::doSlip(Vector2f newPosition, const std::vector<static_o
 	for (auto& staticItem : localStaticItems)
 	{
 		auto terrain = dynamic_cast<terrain_object*>(staticItem);
-		if (!terrain || staticItem->isBackground || staticItem->getRadius() == 0)
+		if (!terrain || staticItem->is_background || staticItem->get_radius() == 0)
 			continue;
 
-		if (tag != entity_tag::hero && staticItem->isMultiEllipse)
+		if (tag != entity_tag::hero && staticItem->is_multi_ellipse)
 			continue;
 
-		if (terrain->isMultiEllipse)
+		if (terrain->is_multi_ellipse)
 		{
 			auto curEllipses = terrain->getMultiellipseIntersect(newPosition);
 			Vector2f motionAfterSlipping;
@@ -244,7 +244,7 @@ Vector2f dynamic_object::doSlip(Vector2f newPosition, const std::vector<static_o
 
 					if (motionAfterSlipping != Vector2f(-1, -1))
 					{
-						newPosition = Vector2f(this->getPosition().x + motionAfterSlipping.x, this->getPosition().y + motionAfterSlipping.y);
+						newPosition = Vector2f(this->get_position().x + motionAfterSlipping.x, this->get_position().y + motionAfterSlipping.y);
 						continue;
 					}
 
@@ -252,7 +252,7 @@ Vector2f dynamic_object::doSlip(Vector2f newPosition, const std::vector<static_o
 				}
 		}
 		else
-			if (terrain->isIntersected(this->getPosition(), newPosition))
+			if (terrain->isIntersected(this->get_position(), newPosition))
 			{
 				if (crashed)
 					return Vector2f(-1, -1);
@@ -260,14 +260,14 @@ Vector2f dynamic_object::doSlip(Vector2f newPosition, const std::vector<static_o
 				crashed = true;
 				Vector2f motionAfterSlipping;
 
-				if (staticItem->isDotsAdjusted)
-					motionAfterSlipping = terrain->newSlippingPositionForDotsAdjusted(this->getPosition(), moveSystem.speed, elapsedTime);
+				if (staticItem->is_dots_adjusted)
+					motionAfterSlipping = terrain->newSlippingPositionForDotsAdjusted(this->get_position(), moveSystem.speed, elapsedTime);
 				else
 					motionAfterSlipping = this->ellipseSlip(this, newPosition, this->movePosition, terrain->getFocus1(), terrain->getFocus2(), terrain->getEllipseSize(), height, elapsedTime);
 
 				if (motionAfterSlipping != Vector2f(-1, -1))
 				{
-					newPosition = Vector2f(this->getPosition().x + motionAfterSlipping.x, this->getPosition().y + motionAfterSlipping.y);
+					newPosition = Vector2f(this->get_position().x + motionAfterSlipping.x, this->get_position().y + motionAfterSlipping.y);
 					continue;
 				}
 
@@ -290,14 +290,14 @@ Vector2f dynamic_object::doSlipOffDynamic(Vector2f newPosition, const std::vecto
 		if (otherDynamicItem == this)
 			continue;
 
-		if (this->isIntersectDynamic(newPosition, *otherDynamicItem) && otherDynamicItem->lastIntersected != name)
+		if (this->isIntersectDynamic(newPosition, *otherDynamicItem) && otherDynamicItem->lastIntersected != name_)
 		{
-			this->lastIntersected = otherDynamicItem->getName();
-			auto motionAfterSlipping = ellipseSlip(this, newPosition, movePosition, otherDynamicItem->getPosition(), otherDynamicItem->getPosition(), otherDynamicItem->getRadius() * 2, height, elapsedTime);
+			this->lastIntersected = otherDynamicItem->get_name();
+			auto motionAfterSlipping = ellipseSlip(this, newPosition, movePosition, otherDynamicItem->get_position(), otherDynamicItem->get_position(), otherDynamicItem->get_radius() * 2, height, elapsedTime);
 
 			if (motionAfterSlipping != Vector2f(-1, -1))
 			{
-				newPosition = Vector2f(position.x + motionAfterSlipping.x, position.y + motionAfterSlipping.y);
+				newPosition = Vector2f(position_.x + motionAfterSlipping.x, position_.y + motionAfterSlipping.y);
 				continue;
 			}
 
@@ -316,17 +316,17 @@ void dynamic_object::changeAction(const actions newAction, const bool resetSprit
 	currentAction = newAction;
 
 	if (resetSpriteNumber)
-		for (auto& number : currentSprite)
+		for (auto& number : current_sprite_)
 			number = 1;
 }
 
-void dynamic_object::takeDamage(const float damage, const Vector2f attackerPos)
+void dynamic_object::take_damage(const float damage, const Vector2f attackerPos)
 {
 	if (timeAfterHitSelf < timeForNewHitSelf)
 		return;
 	
 	this->timeAfterHitSelf = 0;
-	this->healthPoint -= damage / this->armor;
+	this->health_point_ -= damage / this->armor_;
 
 	moveSystem.pushDamage = damage;
 	moveSystem.pushDuration = moveSystem.DEFAULT_PUSH_DURATION;
@@ -334,7 +334,7 @@ void dynamic_object::takeDamage(const float damage, const Vector2f attackerPos)
 	moveSystem.redDuration = 2 * moveSystem.pushDuration;
 	moveSystem.redRestDuration = moveSystem.redDuration;
 
-	moveSystem.pushDistance = helper::getDist(this->getPosition(), attackerPos);
+	moveSystem.pushDistance = helper::getDist(this->get_position(), attackerPos);
 	if (attackerPos != Vector2f(-1, -1))
-		moveSystem.pushDirection = Vector2f(this->position.x - attackerPos.x, this->position.y - attackerPos.y);
+		moveSystem.pushDirection = Vector2f(this->position_.x - attackerPos.x, this->position_.y - attackerPos.y);
 }

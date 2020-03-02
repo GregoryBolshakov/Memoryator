@@ -4,187 +4,187 @@
 
 bush::bush(std::string objectName, Vector2f centerPosition, int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {
-	varietyOfTypes = 15; // BrichGrove: 1-8; SwampyTrees: 9-15
-	this->typeOfObject = typeOfObject;
+	variety_of_types_ = 15; // BrichGrove: 1-8; SwampyTrees: 9-15
+	this->type_of_object_ = typeOfObject;
 	strength = 0;
-	radius = 50;
-	animationSpeed = 10;
-	toSaveName = "bush";
+	radius_ = 50;
+	animation_speed_ = 10;
+	to_save_name_ = "bush";
 	bush::setType(typeOfObject);
 	tag = entity_tag::bush;
 }
 
 void bush::setType(int typeOfObject)
 {
-	this->typeOfObject = typeOfObject;
+	this->type_of_object_ = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = { 173, 254 };
+		conditional_size_units_ = { 173, 254 };
 	if (typeOfObject == 2)
-		conditionalSizeUnits = { 152, 163 };
+		conditional_size_units_ = { 152, 163 };
 	if (typeOfObject == 3)
-		conditionalSizeUnits = { 272, 429 };
+		conditional_size_units_ = { 272, 429 };
 	if (typeOfObject == 4)
-		conditionalSizeUnits = { 283, 259 };
+		conditional_size_units_ = { 283, 259 };
 	if (typeOfObject == 5)
-		conditionalSizeUnits = { 349, 284 };
+		conditional_size_units_ = { 349, 284 };
 	if (typeOfObject == 6)
-		conditionalSizeUnits = { 363, 286 };
+		conditional_size_units_ = { 363, 286 };
 	if (typeOfObject == 7)
-		conditionalSizeUnits = { 231, 424 };
+		conditional_size_units_ = { 231, 424 };
 	if (typeOfObject == 8)
-		conditionalSizeUnits = { 405, 315 };
+		conditional_size_units_ = { 405, 315 };
 	if (typeOfObject == 9)
-		conditionalSizeUnits = { 642, 311 };
+		conditional_size_units_ = { 642, 311 };
 	if (typeOfObject == 10)
-		conditionalSizeUnits = { 289, 279 };
+		conditional_size_units_ = { 289, 279 };
 	if (typeOfObject == 11)
-		conditionalSizeUnits = { 396, 409 };
+		conditional_size_units_ = { 396, 409 };
 	if (typeOfObject == 12)
-		conditionalSizeUnits = { 385, 285 };
+		conditional_size_units_ = { 385, 285 };
 	if (typeOfObject == 13)
-		conditionalSizeUnits = { 450, 283 };
+		conditional_size_units_ = { 450, 283 };
 	if (typeOfObject == 14)
-		conditionalSizeUnits = { 462, 290 };
+		conditional_size_units_ = { 462, 290 };
 	if (typeOfObject == 15)
-		conditionalSizeUnits = { 189, 188 };
+		conditional_size_units_ = { 189, 188 };
 }
 
-Vector2f bush::calculateTextureOffset()
+Vector2f bush::calculate_texture_offset()
 {
-	switch (typeOfObject)
+	switch (type_of_object_)
 	{
 	case 1:
-		return { textureBox.width * 0.551f, textureBox.height * 0.01f };
+		return { texture_box_.width * 0.551f, texture_box_.height * 0.01f };
 	case 2:
-		return { textureBox.width * 0.59f, textureBox.height * 0.01f };
+		return { texture_box_.width * 0.59f, texture_box_.height * 0.01f };
 	case 3:
-		return { textureBox.width * 0.5f, textureBox.height * 0.929f };
+		return { texture_box_.width * 0.5f, texture_box_.height * 0.929f };
 	case 4:
-		return { textureBox.width * 0.49f, textureBox.height * 0.624f };
+		return { texture_box_.width * 0.49f, texture_box_.height * 0.624f };
 	case 5:
-		return { textureBox.width * 0.506f, textureBox.height * 0.632f };
+		return { texture_box_.width * 0.506f, texture_box_.height * 0.632f };
 	case 6:
-		return { textureBox.width * 0.495f, textureBox.height * 0.734f };
+		return { texture_box_.width * 0.495f, texture_box_.height * 0.734f };
 	case 7:
-		return { textureBox.width * 0.551f, textureBox.height * 0.01f };
+		return { texture_box_.width * 0.551f, texture_box_.height * 0.01f };
 	case 8:
-		return { textureBox.width * 0.59f, textureBox.height * 0.01f };
+		return { texture_box_.width * 0.59f, texture_box_.height * 0.01f };
 	case 9:
-		return { textureBox.width * 0.553f, textureBox.height * 0.908f };
+		return { texture_box_.width * 0.553f, texture_box_.height * 0.908f };
 	case 10:
-		return { textureBox.width * 0.525f, textureBox.height * 0.9f };
+		return { texture_box_.width * 0.525f, texture_box_.height * 0.9f };
 	case 11:
-		return { textureBox.width * 0.578f, textureBox.height * 0.931f };
+		return { texture_box_.width * 0.578f, texture_box_.height * 0.931f };
 	case 12:
-		return { textureBox.width * 0.506f, textureBox.height * 0.853f };
+		return { texture_box_.width * 0.506f, texture_box_.height * 0.853f };
 	case 13:
-		return { textureBox.width * 0.542f, textureBox.height * 0.83f };
+		return { texture_box_.width * 0.542f, texture_box_.height * 0.83f };
 	case 14:
-		return { textureBox.width * 0.519f, textureBox.height * 0.863f };
+		return { texture_box_.width * 0.519f, texture_box_.height * 0.863f };
 	case 15:
-		return { textureBox.width * 0.495f, textureBox.height * 0.734f };
+		return { texture_box_.width * 0.495f, texture_box_.height * 0.734f };
 	default:
-		return { textureBox.width * 0.409f, textureBox.height * 0.945f };
+		return { texture_box_.width * 0.409f, texture_box_.height * 0.945f };
 	}
 }
 
-void bush::initPedestal()
+void bush::init_pedestal()
 {
-	switch (typeOfObject)
+	switch (type_of_object_)
 	{
 		case 1:
 		case 2:
-			focus1 = Vector2f(position.x, position.y);
-			focus2 = Vector2f(position.x, position.y);
+			focus1 = Vector2f(position_.x, position_.y);
+			focus2 = Vector2f(position_.x, position_.y);
 			ellipseSizeMultipliers[0] = { 0 };
 			break;
 		case 3:
-			focus1 = Vector2f(position.x - textureBox.width * 0.224f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.224f, position.y);
+			focus1 = Vector2f(position_.x - texture_box_.width * 0.224f, position_.y);
+			focus2 = Vector2f(position_.x + texture_box_.width * 0.224f, position_.y);
 			ellipseSizeMultipliers[0] = { 1.29f };
 			break;
 		case 4:
-			focus1 = Vector2f(position.x - textureBox.width * 0.311f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.311f, position.y);
+			focus1 = Vector2f(position_.x - texture_box_.width * 0.311f, position_.y);
+			focus2 = Vector2f(position_.x + texture_box_.width * 0.311f, position_.y);
 			ellipseSizeMultipliers[0] = { 1.307f };
 			break;
 		case 5:
-			focus1 = Vector2f(position.x - textureBox.width * 0.32f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.32f, position.y);
+			focus1 = Vector2f(position_.x - texture_box_.width * 0.32f, position_.y);
+			focus2 = Vector2f(position_.x + texture_box_.width * 0.32f, position_.y);
 			ellipseSizeMultipliers[0] = { 1.3f };
 			break;
 		case 6:
-			focus1 = Vector2f(position.x - textureBox.width * 0.319f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.319f, position.y);
+			focus1 = Vector2f(position_.x - texture_box_.width * 0.319f, position_.y);
+			focus2 = Vector2f(position_.x + texture_box_.width * 0.319f, position_.y);
 			ellipseSizeMultipliers[0] = { 1.17f };
 			break;
 		case 7:
 		case 8:
-			focus1 = Vector2f(position.x, position.y);
-			focus2 = Vector2f(position.x, position.y);
+			focus1 = Vector2f(position_.x, position_.y);
+			focus2 = Vector2f(position_.x, position_.y);
 			ellipseSizeMultipliers[0] = { 0 };
 			break;
 		case 9:
-			focus1 = Vector2f(position.x - textureBox.width * 0.119f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.119f, position.y);
+			focus1 = Vector2f(position_.x - texture_box_.width * 0.119f, position_.y);
+			focus2 = Vector2f(position_.x + texture_box_.width * 0.119f, position_.y);
 			ellipseSizeMultipliers[0] = { 1.29f };
 			break;
 		case 10:
-			focus1 = Vector2f(position.x - textureBox.width * 0.196f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.196f, position.y);
+			focus1 = Vector2f(position_.x - texture_box_.width * 0.196f, position_.y);
+			focus2 = Vector2f(position_.x + texture_box_.width * 0.196f, position_.y);
 			ellipseSizeMultipliers[0] = { 1.31f };
 			break;
 		case 11:
-			focus1 = Vector2f(position.x - textureBox.width * 0.123f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.123f, position.y);
+			focus1 = Vector2f(position_.x - texture_box_.width * 0.123f, position_.y);
+			focus2 = Vector2f(position_.x + texture_box_.width * 0.123f, position_.y);
 			ellipseSizeMultipliers[0] = { 1.26f };
 			break;
 		case 12:
-			focus1 = Vector2f(position.x - textureBox.width * 0.174f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.174f, position.y);
+			focus1 = Vector2f(position_.x - texture_box_.width * 0.174f, position_.y);
+			focus2 = Vector2f(position_.x + texture_box_.width * 0.174f, position_.y);
 			ellipseSizeMultipliers[0] = { 1.18f };
 			break;
 		case 13:
-			focus1 = Vector2f(position.x - textureBox.width * 0.165f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.165f, position.y);
+			focus1 = Vector2f(position_.x - texture_box_.width * 0.165f, position_.y);
+			focus2 = Vector2f(position_.x + texture_box_.width * 0.165f, position_.y);
 			ellipseSizeMultipliers[0] = { 1.24f };
 			break;
 		case 14:
-			focus1 = Vector2f(position.x - textureBox.width * 0.238f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.238f, position.y);
+			focus1 = Vector2f(position_.x - texture_box_.width * 0.238f, position_.y);
+			focus2 = Vector2f(position_.x + texture_box_.width * 0.238f, position_.y);
 			ellipseSizeMultipliers[0] = { 1.09f };
 			break;
 		case 15:
-			focus1 = Vector2f(position.x - textureBox.width * 0.289f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.289f, position.y);
+			focus1 = Vector2f(position_.x - texture_box_.width * 0.289f, position_.y);
+			focus2 = Vector2f(position_.x + texture_box_.width * 0.289f, position_.y);
 			ellipseSizeMultipliers[0] = { 1.29f };
 			break;
 		default:
-			focus1 = Vector2f(position.x - textureBox.width * 0.341f, position.y);
-			focus2 = Vector2f(position.x + textureBox.width * 0.341f, position.y);
+			focus1 = Vector2f(position_.x - texture_box_.width * 0.341f, position_.y);
+			focus2 = Vector2f(position_.x + texture_box_.width * 0.341f, position_.y);
 			ellipseSizeMultipliers[0] = { 1.18f };
 			break;
 	}
-	initMicroBlocks();
+	init_micro_blocks();
 }
 
-Vector2f bush::getBuildPosition(std::vector<world_object*>, float, Vector2f)
+Vector2f bush::get_build_position(std::vector<world_object*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int bush::getBuildType(Vector2f, Vector2f)
+int bush::get_build_type(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> bush::prepareSprites(long long)
+std::vector<sprite_chain_element*> bush::prepare_sprites(long long)
 {
-	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::bush, direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::bush, direction::DOWN, type_of_object_, position_, conditional_size_units_, Vector2f(texture_box_offset_), color, mirrored_);
 
-	if (typeOfObject >= 1 && typeOfObject <= 8)
+	if (type_of_object_ >= 1 && type_of_object_ <= 8)
 		body->pack_tag = pack_tag::birchGrove;
-	if (typeOfObject >= 9 && typeOfObject <= 15)
+	if (type_of_object_ >= 9 && type_of_object_ <= 15)
 	{
 		body->pack_tag = pack_tag::swampyTrees;
 		body->number -= 8;

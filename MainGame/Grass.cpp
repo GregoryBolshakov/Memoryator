@@ -4,13 +4,13 @@
 
 grass::grass(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : static_object(std::move(objectName), centerPosition)
 {
-	varietyOfTypes = 30; // BirchGrove: 1-8; DarkWoods: 9-21; SwampyTrees: 22-30
-	this->typeOfObject = typeOfObject;
+	variety_of_types_ = 30; // BirchGrove: 1-8; DarkWoods: 9-21; SwampyTrees: 22-30
+	this->type_of_object_ = typeOfObject;
 	this->intangible = true;
-	toSaveName = "grass";
+	to_save_name_ = "grass";
 	grass::setType(typeOfObject);
 	tag = entity_tag::grass;
-	mirrored = bool(rand() % 2);
+	mirrored_ = bool(rand() % 2);
 }
 
 void grass::setType(int typeOfObject)
@@ -18,108 +18,108 @@ void grass::setType(int typeOfObject)
 	if (typeOfObject == -1)
 		return;
 
-	this->typeOfObject = typeOfObject;
+	this->type_of_object_ = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = { 86, 71 };
+		conditional_size_units_ = { 86, 71 };
 	if (typeOfObject == 2)
-		conditionalSizeUnits = { 146, 182 };
+		conditional_size_units_ = { 146, 182 };
 	if (typeOfObject == 3)
-		conditionalSizeUnits = { 205, 214 };
+		conditional_size_units_ = { 205, 214 };
 	if (typeOfObject == 4)
-		conditionalSizeUnits = { 205, 137 };
+		conditional_size_units_ = { 205, 137 };
 	if (typeOfObject == 5)
-		conditionalSizeUnits = { 108, 189 };
+		conditional_size_units_ = { 108, 189 };
 	if (typeOfObject == 6)
-		conditionalSizeUnits = { 116, 211 };
+		conditional_size_units_ = { 116, 211 };
 	if (typeOfObject == 7)
-		conditionalSizeUnits = { 141, 240 };
+		conditional_size_units_ = { 141, 240 };
 	if (typeOfObject == 8)
-		conditionalSizeUnits = { 220, 264 };
+		conditional_size_units_ = { 220, 264 };
 	if (typeOfObject == 9)
-		conditionalSizeUnits = { 251, 120 };
+		conditional_size_units_ = { 251, 120 };
 	if (typeOfObject == 10)
-		conditionalSizeUnits = { 222, 343 };
+		conditional_size_units_ = { 222, 343 };
 	if (typeOfObject == 11)
-		conditionalSizeUnits = { 357, 330 };
+		conditional_size_units_ = { 357, 330 };
 	if (typeOfObject == 12)
-		conditionalSizeUnits = { 386, 428 };
+		conditional_size_units_ = { 386, 428 };
 	if (typeOfObject == 13)
-		conditionalSizeUnits = { 425, 291 };
+		conditional_size_units_ = { 425, 291 };
 	if (typeOfObject == 14)
-		conditionalSizeUnits = { 87, 183 };
+		conditional_size_units_ = { 87, 183 };
 	if (typeOfObject == 15)
-		conditionalSizeUnits = { 113, 202 };
+		conditional_size_units_ = { 113, 202 };
 	if (typeOfObject == 16)
-		conditionalSizeUnits = { 67, 158 };
+		conditional_size_units_ = { 67, 158 };
 	if (typeOfObject == 17)
-		conditionalSizeUnits = { 119, 171 };
+		conditional_size_units_ = { 119, 171 };
 	if (typeOfObject == 18)
-		conditionalSizeUnits = { 178, 170 };
+		conditional_size_units_ = { 178, 170 };
 	if (typeOfObject == 19)
-		conditionalSizeUnits = { 188, 129 };
+		conditional_size_units_ = { 188, 129 };
 	if (typeOfObject == 20)
-		conditionalSizeUnits = { 136, 171 };
+		conditional_size_units_ = { 136, 171 };
 	if (typeOfObject == 21)
-		conditionalSizeUnits = { 171, 288 };
+		conditional_size_units_ = { 171, 288 };
 	if (typeOfObject == 22)
-		conditionalSizeUnits = { 491, 209 };
+		conditional_size_units_ = { 491, 209 };
 	if (typeOfObject == 23)
-		conditionalSizeUnits = { 166, 124 };
+		conditional_size_units_ = { 166, 124 };
 	if (typeOfObject == 24)
-		conditionalSizeUnits = { 78, 255 };
+		conditional_size_units_ = { 78, 255 };
 	if (typeOfObject == 25)
-		conditionalSizeUnits = { 171, 173 };
+		conditional_size_units_ = { 171, 173 };
 	if (typeOfObject == 26)
-		conditionalSizeUnits = { 123, 137 };
+		conditional_size_units_ = { 123, 137 };
 	if (typeOfObject == 27)
-		conditionalSizeUnits = { 133, 136 };
+		conditional_size_units_ = { 133, 136 };
 	if (typeOfObject == 28)
-		conditionalSizeUnits = { 91, 112 };
+		conditional_size_units_ = { 91, 112 };
 	if (typeOfObject == 29)
-		conditionalSizeUnits = { 119, 125 };
+		conditional_size_units_ = { 119, 125 };
 	if (typeOfObject == 30)
-		conditionalSizeUnits = { 134, 84 };
+		conditional_size_units_ = { 134, 84 };
 }
 
-Vector2f grass::calculateTextureOffset()
+Vector2f grass::calculate_texture_offset()
 {	
-	textureBox.width = textureBox.width * getScaleRatio().x;
-	textureBox.height = textureBox.height * getScaleRatio().y;
+	texture_box_.width = texture_box_.width * get_scale_ratio().x;
+	texture_box_.height = texture_box_.height * get_scale_ratio().y;
 	
-	return { textureBox.width / 2.0f, textureBox.height / 1.2f };
+	return { texture_box_.width / 2.0f, texture_box_.height / 1.2f };
 }
 
-Vector2f grass::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f grass::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int grass::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int grass::get_build_type(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> grass::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> grass::prepare_sprites(long long elapsedTime)
 {
 	std::vector<sprite_chain_element*> result = {};
-	sprite_chain_element* body = new sprite_chain_element(pack_tag::darkWoods, pack_part::plant, direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	sprite_chain_element* body = new sprite_chain_element(pack_tag::darkWoods, pack_part::plant, direction::DOWN, type_of_object_, position_, conditional_size_units_, Vector2f(texture_box_offset_));
 	body->unscaled = true;
 
-	if (typeOfObject >= 1 && typeOfObject <= 8)
+	if (type_of_object_ >= 1 && type_of_object_ <= 8)
 		body->pack_tag = pack_tag::birchGrove;
-	if (typeOfObject >= 9 && typeOfObject <= 21)
+	if (type_of_object_ >= 9 && type_of_object_ <= 21)
 	{
 		body->pack_tag = pack_tag::darkWoods;
 		body->number -= 8;
 	}
-	if (typeOfObject >= 22 && typeOfObject <= 30)
+	if (type_of_object_ >= 22 && type_of_object_ <= 30)
 	{
 		body->pack_tag = pack_tag::swampyTrees;
 		body->number -= 21;
 	}
 	result.push_back(body);
 
-	setUnscaled(result);
+	set_unscaled(result);
 
 	return result;
 }

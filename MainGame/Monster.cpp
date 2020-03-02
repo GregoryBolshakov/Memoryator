@@ -4,8 +4,8 @@ using namespace sf;
 
 monster::monster(std::string objectName, const Vector2f centerPosition) : dynamic_object(std::move(objectName), centerPosition)
 {
-	currentSprite[0] = 1;
-	timeForNewSprite = 0;
+	current_sprite_[0] = 1;
+	time_for_new_sprite_ = 0;
 	currentAction = relax;
 	directionSystem.side = down;
 	sightRange = 950.0f;
@@ -36,20 +36,20 @@ void monster::setTarget(dynamic_object& object)
 
 void monster::behaviorWithDynamic(dynamic_object* target, const long long elapsedTime)
 {
-	if (healthPoint <= 0)
+	if (health_point_ <= 0)
 	{
 		changeAction(dead, true);
 		directionSystem.direction = direction::STAND;
 		return;
 	}
 
-	if (helper::getDist(position, target->getPosition()) <= radius + target->getRadius())
-		moveSystem.pushByBumping(target->getPosition(), target->getRadius(), target->getMoveSystem().canCrashIntoDynamic);
+	if (helper::getDist(position_, target->get_position()) <= radius_ + target->get_radius())
+		moveSystem.pushByBumping(target->get_position(), target->get_radius(), target->getMoveSystem().canCrashIntoDynamic);
 
 	if (target->tag != entity_tag::hero)
 		return;
 
-	if (helper::getDist(target->getPosition(), position) > sightRange)
+	if (helper::getDist(target->get_position(), position_) > sightRange)
 	{		
 		laxMovePosition = { -1, -1 };
 		changeAction(relax, currentAction != relax);
@@ -57,10 +57,10 @@ void monster::behaviorWithDynamic(dynamic_object* target, const long long elapse
 	}
 
 	boundTarget = target;
-	directionSystem.side = direction_system::calculate_side(position, boundTarget->getPosition());
+	directionSystem.side = direction_system::calculate_side(position_, boundTarget->get_position());
 
-	if (helper::getDist(position, boundTarget->getPosition()) <= sightRange && timeAfterHit >= timeForNewHit)
-		moveSystem.speed = std::max((1 - helper::getDist(position, boundTarget->getPosition()) / sightRange) * moveSystem.defaultSpeed / 2 + moveSystem.defaultSpeed, moveSystem.defaultSpeed);
+	if (helper::getDist(position_, boundTarget->get_position()) <= sightRange && timeAfterHit >= timeForNewHit)
+		moveSystem.speed = std::max((1 - helper::getDist(position_, boundTarget->get_position()) / sightRange) * moveSystem.defaultSpeed / 2 + moveSystem.defaultSpeed, moveSystem.defaultSpeed);
 	else
 		moveSystem.speed = moveSystem.defaultSpeed;
 	if (isAttack.count(currentAction) == 0)
@@ -68,13 +68,13 @@ void monster::behaviorWithDynamic(dynamic_object* target, const long long elapse
 
 	// fight with player	
 	doAttack(boundTarget);
-	if (helper::getDist(position, boundTarget->getPosition()) <= (this->radius + boundTarget->getRadius() + hitDistance) &&
-		isAttack.count(currentAction) > 0 && currentSprite[0] == strikingSprite)
+	if (helper::getDist(position_, boundTarget->get_position()) <= (this->radius_ + boundTarget->get_radius() + hitDistance) &&
+		isAttack.count(currentAction) > 0 && current_sprite_[0] == strikingSprite)
 	{
-		boundTarget->takeDamage(this->strength, position);
+		boundTarget->take_damage(this->strength, position_);
 	}
 
-	if (isAttack.count(currentAction) == 0 && helper::getDist(position, boundTarget->getPosition()) <= (this->radius + boundTarget->getRadius() + hitDistance / 5))
+	if (isAttack.count(currentAction) == 0 && helper::getDist(position_, boundTarget->get_position()) <= (this->radius_ + boundTarget->get_radius() + hitDistance / 5))
 	{
 		stopping(true, false);
 		changeAction(combatState, false, false);								
@@ -82,12 +82,12 @@ void monster::behaviorWithDynamic(dynamic_object* target, const long long elapse
 	//---------------------
 	
 	// move to player
-	if (helper::getDist(position, boundTarget->getPosition()) > (this->radius + boundTarget->getRadius() + hitDistance / 5))
+	if (helper::getDist(position_, boundTarget->get_position()) > (this->radius_ + boundTarget->get_radius() + hitDistance / 5))
 	{
 		if (isAttack.count(currentAction) == 0 && currentAction != combatState)
 		{
 			changeAction(move, false);
-			laxMovePosition = boundTarget->getPosition();
+			laxMovePosition = boundTarget->get_position();
 		}
 	}
 	else	
@@ -116,17 +116,17 @@ void monster::stopping(const bool doStand, const bool forgetBoundTarget)
 
 	if (forgetBoundTarget && boundTarget != nullptr)
 	{
-		boundTarget->isProcessed = false;
+		boundTarget->is_processed = false;
 		boundTarget = nullptr;
 	}
 }
 
-Vector2f monster::getBuildPosition(std::vector<world_object*>, float, Vector2f)
+Vector2f monster::get_build_position(std::vector<world_object*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int monster::getBuildType(Vector2f, Vector2f)
+int monster::get_build_type(Vector2f, Vector2f)
 {
 	return 1;
 }

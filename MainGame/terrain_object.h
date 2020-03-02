@@ -10,7 +10,7 @@ protected:
 public:
 	terrain_object(std::string objectName, Vector2f centerPosition);
 	virtual ~terrain_object();
-	void initMicroBlocks() override;
+	void init_micro_blocks() override;
 	[[nodiscard]] Vector2f getFocus1() const { return focus1; }
 	[[nodiscard]] Vector2f getFocus2() const { return focus2; }
 	void setFocuses(std::vector<Vector2f> focuses);

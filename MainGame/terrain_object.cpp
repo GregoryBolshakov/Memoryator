@@ -4,43 +4,43 @@
 
 terrain_object::terrain_object(std::string objectName, Vector2f centerPosition) : static_object(std::move(objectName), centerPosition)
 {
-	isTerrain = true;
-	mirrored = bool(rand() % 2);
+	is_terrain = true;
+	mirrored_ = bool(rand() % 2);
 }
 
 terrain_object::~terrain_object()
 = default;
 
-void terrain_object::initMicroBlocks()
+void terrain_object::init_micro_blocks()
 {	
-	const auto currentMicroBlock = Vector2i(int(round(position.x / microBlockSize.x)), int(round(position.y / microBlockSize.y)));
-	if (mirrored)
-		textureBoxOffset.x = conditionalSizeUnits.x - textureBoxOffset.x;
+	const auto currentMicroBlock = Vector2i(int(round(position_.x / micro_block_size.x)), int(round(position_.y / micro_block_size.y)));
+	if (mirrored_)
+		texture_box_offset_.x = conditional_size_units_.x - texture_box_offset_.x;
 	
-	if (isMultiEllipse)
+	if (is_multi_ellipse)
 	{
 		for (auto i = 0u; i < internalEllipses.size(); i++)
 		{
-			microBlockCheckAreaBounds.x += getEllipseSize(i) / 2;
-			microBlockCheckAreaBounds.y += getEllipseSize(i) / 2;
+			micro_block_check_area_bounds_.x += getEllipseSize(i) / 2;
+			micro_block_check_area_bounds_.y += getEllipseSize(i) / 2;
 		}
 		
-		const auto i_end = int(microBlockCheckAreaBounds.x / microBlockSize.x);
-		const auto j_end = int(microBlockCheckAreaBounds.y / microBlockSize.y);
+		const auto i_end = int(micro_block_check_area_bounds_.x / micro_block_size.x);
+		const auto j_end = int(micro_block_check_area_bounds_.y / micro_block_size.y);
 		
 		for (auto cnt = 0u; cnt < internalEllipses.size(); cnt++)
 		{
-			auto i = int(-microBlockCheckAreaBounds.x / microBlockSize.x);
+			auto i = int(-micro_block_check_area_bounds_.x / micro_block_size.x);
 			while (i < i_end)
 			{
-				auto j = int(-microBlockCheckAreaBounds.y / microBlockSize.y);
+				auto j = int(-micro_block_check_area_bounds_.y / micro_block_size.y);
 				while (j <= j_end)
 				{
-					const auto pos = Vector2f(position.x + i * microBlockSize.x, position.y + j * microBlockSize.y);
+					const auto pos = Vector2f(position_.x + i * micro_block_size.x, position_.y + j * micro_block_size.y);
 					auto const f1 = internalEllipses[cnt].first;
 					auto const f2 = internalEllipses[cnt].second;
-					if (helper::getDist(pos, f1) + helper::getDist(pos, f2) < getEllipseSize(cnt) - sqrt(2.0f * microBlockSize.x) * 1.2f)
-						lockedMicroBlocks.emplace_back(currentMicroBlock.x + i, currentMicroBlock.y + j);
+					if (helper::getDist(pos, f1) + helper::getDist(pos, f2) < getEllipseSize(cnt) - sqrt(2.0f * micro_block_size.x) * 1.2f)
+						locked_micro_blocks_.emplace_back(currentMicroBlock.x + i, currentMicroBlock.y + j);
 					j++;
 				}
 				i++;
@@ -49,22 +49,22 @@ void terrain_object::initMicroBlocks()
 	}
 	else
 	{
-		microBlockCheckAreaBounds = { getEllipseSize() / 2.0f, getEllipseSize() / 2.0f };
+		micro_block_check_area_bounds_ = { getEllipseSize() / 2.0f, getEllipseSize() / 2.0f };
 
-		const auto i_end = microBlockCheckAreaBounds.x / microBlockSize.x;
-		const auto j_end = microBlockCheckAreaBounds.y / microBlockSize.y;
+		const auto i_end = micro_block_check_area_bounds_.x / micro_block_size.x;
+		const auto j_end = micro_block_check_area_bounds_.y / micro_block_size.y;
 
-		auto i = int(-microBlockCheckAreaBounds.x / microBlockSize.x);
+		auto i = int(-micro_block_check_area_bounds_.x / micro_block_size.x);
 		while (i <= i_end)
 		{
-			auto j = int(-microBlockCheckAreaBounds.y / microBlockSize.y);
+			auto j = int(-micro_block_check_area_bounds_.y / micro_block_size.y);
 			while (j <= j_end)
 			{
-				const auto pos = Vector2f(position.x + i * microBlockSize.x, position.y + j * microBlockSize.y);
+				const auto pos = Vector2f(position_.x + i * micro_block_size.x, position_.y + j * micro_block_size.y);
 				auto const f1 = this->getFocus1();
 				auto const f2 = this->getFocus2();
-				if (helper::getDist(pos, f1) + helper::getDist(pos, f2) < this->getEllipseSize() - sqrt(2.0f * microBlockSize.x) * 1.2f)
-					lockedMicroBlocks.emplace_back(currentMicroBlock.x + i, currentMicroBlock.y + j);
+				if (helper::getDist(pos, f1) + helper::getDist(pos, f2) < this->getEllipseSize() - sqrt(2.0f * micro_block_size.x) * 1.2f)
+					locked_micro_blocks_.emplace_back(currentMicroBlock.x + i, currentMicroBlock.y + j);
 				j++;
 			}
 			i++;
@@ -74,7 +74,7 @@ void terrain_object::initMicroBlocks()
 
 float terrain_object::getEllipseSize(int i)
 {
-	if (isMultiEllipse)
+	if (is_multi_ellipse)
 		return helper::getDist(internalEllipses[i].first, internalEllipses[i].second) * ellipseSizeMultipliers[i];
 
 	return helper::getDist(focus1, focus2) * ellipseSizeMultipliers[0];
@@ -82,7 +82,7 @@ float terrain_object::getEllipseSize(int i)
 
 void terrain_object::setFocuses(std::vector<Vector2f> focuses)
 {
-	if (isMultiEllipse)
+	if (is_multi_ellipse)
 	{
 		for (auto i = 0u; i < focuses.size() / 2; i++)
 		{
@@ -99,10 +99,10 @@ void terrain_object::setFocuses(std::vector<Vector2f> focuses)
 
 bool terrain_object::isIntersected(Vector2f curPosition, Vector2f newPosition) //const
 {
-	if (this->isMultiEllipse)
+	if (this->is_multi_ellipse)
 		return false;
 
-	if (this->isDotsAdjusted)
+	if (this->is_dots_adjusted)
 	{
 		const auto d1 = this->getDot1();
 		const auto d2 = this->getDot2();

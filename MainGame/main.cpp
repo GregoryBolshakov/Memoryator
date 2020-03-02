@@ -134,7 +134,7 @@ int main() {
 			draw_system.draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepareSprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packs_map)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
 			text_system::drawString(world.getMouseDisplayName(), font_name::NormalFont, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));
 			world.pedestalController.draw(&main_window, world.getCameraPosition(), world.getWorldGenerator().scaleFactor);
-			draw_system.draw(main_window, main_book.prepareSprites(world.focusedObject->getHealthPoint() / world.focusedObject->getMaxHealthPointValue(), time_micro_sec));
+			draw_system.draw(main_window, main_book.prepareSprites(world.focusedObject->get_health_point() / world.focusedObject->get_max_health_point_value(), time_micro_sec));
 			draw_system.draw(main_window, world.getInventorySystem().prepareSprites(time_micro_sec, world.packsMap));			
 			//world.runInventorySystemDrawing(mainWindow, time);
 		}

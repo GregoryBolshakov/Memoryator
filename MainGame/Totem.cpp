@@ -5,79 +5,79 @@
 
 totem::totem(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {
-	varietyOfTypes = 1;
-	this->typeOfObject = typeOfObject;
+	variety_of_types_ = 1;
+	this->type_of_object_ = typeOfObject;
 	strength = 0;
-	radius = 20;
-	toSaveName = "totem";
+	radius_ = 20;
+	to_save_name_ = "totem";
 	totem::setType(typeOfObject);
 	tag = entity_tag::totem;
 }
 
 void totem::setType(const int typeOfObject)
 {
-	this->typeOfObject = typeOfObject;
+	this->type_of_object_ = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = { 154, 544 };
+		conditional_size_units_ = { 154, 544 };
 	if (typeOfObject == 2)
-		conditionalSizeUnits = { 154, 544 };
+		conditional_size_units_ = { 154, 544 };
 	if (typeOfObject == 3)
-		conditionalSizeUnits = { 568, 292 };
+		conditional_size_units_ = { 568, 292 };
 	if (typeOfObject == 4)
-		conditionalSizeUnits = { 336, 240 };
+		conditional_size_units_ = { 336, 240 };
 	if (typeOfObject == 5)
-		conditionalSizeUnits = { 280, 212 };
+		conditional_size_units_ = { 280, 212 };
 	if (typeOfObject == 6)
-		conditionalSizeUnits = { 272, 196 };
+		conditional_size_units_ = { 272, 196 };
 
-	radius = std::max(conditionalSizeUnits.x, conditionalSizeUnits.y) / 2;
+	radius_ = std::max(conditional_size_units_.x, conditional_size_units_.y) / 2;
 }
 
-Vector2f totem::calculateTextureOffset()
+Vector2f totem::calculate_texture_offset()
 {
-	textureBox.width = textureBox.width * getScaleRatio().x;
-	textureBox.height = textureBox.height * getScaleRatio().y;
+	texture_box_.width = texture_box_.width * get_scale_ratio().x;
+	texture_box_.height = texture_box_.height * get_scale_ratio().y;
 
-	if (typeOfObject == 1)
-		return { textureBox.width / 2.0f, textureBox.height / 1.15f };
-	if (typeOfObject == 2)
-		return { textureBox.width / 2.0f, textureBox.height / 1.15f };
-	if (typeOfObject == 3)
-		return { textureBox.width / 2.0f, textureBox.height / 1.5f };
-	if (typeOfObject == 4)
-		return { textureBox.width / 2.0f, textureBox.height / 1.5f };
-	if (typeOfObject == 5)
-		return { textureBox.width / 2.0f, textureBox.height / 1.5f };
-	if (typeOfObject == 6)
-		return { textureBox.width / 2.0f, textureBox.height / 1.25f };
+	if (type_of_object_ == 1)
+		return { texture_box_.width / 2.0f, texture_box_.height / 1.15f };
+	if (type_of_object_ == 2)
+		return { texture_box_.width / 2.0f, texture_box_.height / 1.15f };
+	if (type_of_object_ == 3)
+		return { texture_box_.width / 2.0f, texture_box_.height / 1.5f };
+	if (type_of_object_ == 4)
+		return { texture_box_.width / 2.0f, texture_box_.height / 1.5f };
+	if (type_of_object_ == 5)
+		return { texture_box_.width / 2.0f, texture_box_.height / 1.5f };
+	if (type_of_object_ == 6)
+		return { texture_box_.width / 2.0f, texture_box_.height / 1.25f };
 
 	throw std::logic_error("Invalid type of object.");
 }
 
-void totem::initPedestal()
+void totem::init_pedestal()
 {
 	//if (typeOfObject == 1)
 	{
-		focus1 = Vector2f(position.x - textureBox.width / 4, position.y);
-		focus2 = Vector2f(position.x + textureBox.width / 4, position.y);
+		focus1 = Vector2f(position_.x - texture_box_.width / 4, position_.y);
+		focus2 = Vector2f(position_.x + texture_box_.width / 4, position_.y);
 		ellipseSizeMultipliers[0] = { 1.8f };
 	}	
-	initMicroBlocks();
+	init_micro_blocks();
 }
 
-Vector2f totem::getBuildPosition(std::vector<world_object*>, float, Vector2f)
+Vector2f totem::get_build_position(std::vector<world_object*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int totem::getBuildType(Vector2f, Vector2f)
+int totem::get_build_type(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> totem::prepareSprites(long long)
+std::vector<sprite_chain_element*> totem::prepare_sprites(long long)
 {
-	const auto body = new sprite_chain_element(pack_tag::craftObjects, pack_part::totem, direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	const auto body = new sprite_chain_element(pack_tag::craftObjects, pack_part::totem, direction::DOWN, type_of_object_, position_, conditional_size_units_, Vector2f(texture_box_offset_), color, mirrored_);
 
 	return { body };
 }

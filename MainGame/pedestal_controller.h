@@ -18,7 +18,7 @@ public:
 private:
 	bool running = false;
 	terrain_object* boundObject = nullptr;
-	Vector2f size = Vector2f(world_object::microBlockSize.x / 2, world_object::microBlockSize.y / 2);
+	Vector2f size = Vector2f(world_object::micro_block_size.x / 2, world_object::micro_block_size.y / 2);
 	RectangleShape filedFigure;
 	CircleShape focusFigure, centerFigure;
 	std::vector<Vector2f> focuses;

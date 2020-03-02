@@ -2,19 +2,19 @@
 
 nightmare_third::nightmare_third(std::string objectName, Vector2f centerPosition) : monster(std::move(objectName), centerPosition)
 {
-	conditionalSizeUnits = { 600, 600 };
+	conditional_size_units_ = { 600, 600 };
 	moveSystem.defaultSpeed = 0.0003f;
 	moveSystem.speed = 0.0005f;
-	radius = 120;
+	radius_ = 120;
 	hitDistance = 120;
 	strength = 25;
-	healthPoint = 300;
+	health_point_ = 300;
 	currentAction = relax;
 	timeForNewHitSelf = long(6e5);
 	timeAfterHitSelf = timeForNewHitSelf;
 	timeForNewHit = long(1e6);
 	timeAfterHit = timeForNewHit;
-	toSaveName = "nightmare3_";
+	to_save_name_ = "nightmare3_";
 	tag = entity_tag::nightmare3;
 }
 
@@ -23,24 +23,24 @@ nightmare_third::~nightmare_third()
 = default;
 
 
-Vector2f nightmare_third::calculateTextureOffset()
+Vector2f nightmare_third::calculate_texture_offset()
 {
-	textureBox.width = textureBox.width * getScaleRatio().x;
-	textureBox.height = textureBox.height * getScaleRatio().y;
-	return { textureBox.width / 2, textureBox.height * 6 / 8 };
+	texture_box_.width = texture_box_.width * get_scale_ratio().x;
+	texture_box_.height = texture_box_.height * get_scale_ratio().y;
+	return { texture_box_.width / 2, texture_box_.height * 6 / 8 };
 }
 
 void nightmare_third::doAttack(world_object* target)
 {
 	if (timeAfterHit >= timeForNewHit)
 	{
-		if (helper::getDist(position, boundTarget->getPosition()) <= (this->radius + boundTarget->getRadius() + hitDistance / 3))
+		if (helper::getDist(position_, boundTarget->get_position()) <= (this->radius_ + boundTarget->get_radius() + hitDistance / 3))
 		{
 			changeAction(commonHit, true, false);
 			timeAfterHit = 0;
 		}
 		else
-			if (helper::getDist(position, boundTarget->getPosition()) > this->radius + boundTarget->getRadius() + hitDistance * 2)
+			if (helper::getDist(position_, boundTarget->get_position()) > this->radius_ + boundTarget->get_radius() + hitDistance * 2)
 			{
 				changeAction(directHit, true, false);
 				timeAfterHit = 0;
@@ -60,19 +60,19 @@ void nightmare_third::endingPreviousAction()
 	lastAction = relax;
 }
 
-void nightmare_third::onSpriteChange()
+void nightmare_third::on_sprite_change()
 {
-	if (currentAction == directHit && currentSprite[0] == 5)
+	if (currentAction == directHit && current_sprite_[0] == 5)
 	{
 		birth_dynamic_info whirl;
-		whirl.position = position;
+		whirl.position = position_;
 		whirl.tag = entity_tag::clapWhirl;
 		whirl.owner = this;
-		birthDynamics.push(whirl);
+		birth_dynamics_.push(whirl);
 	}
 }
 
-std::vector<sprite_chain_element*> nightmare_third::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> nightmare_third::prepare_sprites(long long elapsedTime)
 {
     return {};
 	/*spriteChainElement fullSprite;

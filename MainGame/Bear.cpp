@@ -4,35 +4,35 @@ using namespace sf;
 
 bear::bear(const std::string& objectName, Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
 {
-	conditionalSizeUnits = { 432, 384 };
-	currentSprite[0] = 1;
+	conditional_size_units_ = { 432, 384 };
+	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
 	moveSystem.defaultSpeed = 0.0003f;
 	moveSystem.speed = 0.0003f;
-	animationSpeed = float(5e-4);
+	animation_speed_ = float(5e-4);
 	animationLength = 8;
-	radius = 70;
+	radius_ = 70;
 	strength = 10;
-	sightRange = conditionalSizeUnits.x * 3;
+	sightRange = conditional_size_units_.x * 3;
 	morality = 5; // from 1 to 10
 	fear = 0;
-	healthPoint = 50;
+	health_point_ = 50;
 	currentAction = relax;	
 	timeForNewHitSelf = long(6e5);
 	timeAfterHitSelf = timeForNewHitSelf;
 	timeForNewHit = 10e6;
-	toSaveName = "bear";
+	to_save_name_ = "bear";
 	tag = entity_tag::bear;
 }
 
 bear::~bear()
 = default;
 
-Vector2f bear::calculateTextureOffset()
+Vector2f bear::calculate_texture_offset()
 {
-	textureBox.width = textureBox.width * getScaleRatio().x;
-	textureBox.height = textureBox.height * getScaleRatio().y;
-	return { textureBox.width / 2, textureBox.height * 7 / 8 };
+	texture_box_.width = texture_box_.width * get_scale_ratio().x;
+	texture_box_.height = texture_box_.height * get_scale_ratio().y;
+	return { texture_box_.width / 2, texture_box_.height * 7 / 8 };
 }
 
 void bear::behaviorWithStatic(world_object* target, long long elapsedTime)
@@ -44,7 +44,7 @@ void bear::behavior(long long elapsedTime)
 {
 	endingPreviousAction();
 	fightInteract(elapsedTime);
-	if (healthPoint <= 0)
+	if (health_point_ <= 0)
 	{
 		changeAction(dead, true);
 		directionSystem.direction = direction::STAND;
@@ -56,36 +56,36 @@ void bear::behavior(long long elapsedTime)
 		moveSystem.speed = moveSystem.defaultSpeed;
 		if (currentAction == commonHit)
 		{
-			movePosition = position;
+			movePosition = position_;
 			return;
 		}
-		directionSystem.side = direction_system::calculate_side(position, owner->getPosition());
-		if (helper::getDist(position, owner->getPosition()) > sightRange / 2)
+		directionSystem.side = direction_system::calculate_side(position_, owner->get_position());
+		if (helper::getDist(position_, owner->get_position()) > sightRange / 2)
 		{
 			changeAction(grab, false, false);
-			movePosition = owner->getPosition();
+			movePosition = owner->get_position();
 		}
 		else
-			if (helper::getDist(position, owner->getPosition()) <= sightRange / 2.5 && currentAction != relax)
+			if (helper::getDist(position_, owner->get_position()) <= sightRange / 2.5 && currentAction != relax)
 			{
 				changeAction(relax, true, false);
-				movePosition = position;
+				movePosition = position_;
 			}
 		return;
 	}
 
-	directionSystem.side = direction_system::calculate_side(position, movePosition);
+	directionSystem.side = direction_system::calculate_side(position_, movePosition);
 
 	if (boundTarget == nullptr)
 		return;
-	const float distanceToTarget = helper::getDist(this->position, boundTarget->getPosition());
+	const float distanceToTarget = helper::getDist(this->position_, boundTarget->get_position());
 	moveSystem.speed = std::max(moveSystem.defaultSpeed, (moveSystem.defaultSpeed * 10) * (1 - (distanceToTarget) / sightRange * 1.5f));
 	//animationSpeed = std::max(0.0003f, 0.0003f * speed / defaultSpeed);
 
 	if (distanceToTarget <= sightRange)
 	{
 		changeAction(move, false, true);
-		movePosition = Vector2f(position.x - (boundTarget->getPosition().x - position.x), position.y - (boundTarget->getPosition().y - position.y));
+		movePosition = Vector2f(position_.x - (boundTarget->get_position().x - position_.x), position_.y - (boundTarget->get_position().y - position_.y));
 	}
 	else
 	{
@@ -98,19 +98,19 @@ void bear::behavior(long long elapsedTime)
 				movePosition = { -1, -1 };
 			}
 			else
-				movePosition = Vector2f(position.x - (boundTarget->getPosition().x - position.x), position.y - (boundTarget->getPosition().y - position.y));
+				movePosition = Vector2f(position_.x - (boundTarget->get_position().x - position_.x), position_.y - (boundTarget->get_position().y - position_.y));
 		}
 	}
 	distanceToNearest = 10e6;
 	boundTarget = nullptr;
 }
 
-Vector2f bear::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f bear::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int bear::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int bear::get_build_type(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
@@ -128,7 +128,7 @@ void bear::jerk(float power, float deceleration, Vector2f destinationPoint)
 	return;
 }
 
-std::vector<sprite_chain_element*> bear::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> bear::prepare_sprites(long long elapsedTime)
 {
     return {};
 	/*spriteChainElement fullSprite;

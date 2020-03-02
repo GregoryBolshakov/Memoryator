@@ -25,7 +25,7 @@ void pedestal_controller::start(terrain_object * object)
 	readyToStart = false;
 	boundObject = object;
 	focuses.clear();
-	if (boundObject->isMultiEllipse)
+	if (boundObject->is_multi_ellipse)
 		for (auto& internalEllipse : boundObject->internalEllipses)
 		{
 			focuses.push_back(internalEllipse.first);
@@ -36,7 +36,7 @@ void pedestal_controller::start(terrain_object * object)
 		focuses.push_back(boundObject->getFocus1());
 		focuses.push_back(boundObject->getFocus2());
 	}
-	centerPosition = boundObject->getPosition();
+	centerPosition = boundObject->get_position();
 	running = true;
 }
 
@@ -53,25 +53,25 @@ void pedestal_controller::writeToFile()
 	if (!boundObject)
 		return;
 
-	const Vector2f offset = { (boundObject->getTextureOffset().x + centerPosition.x - boundObject->getPosition().x) / boundObject->getTextureSize().x,
-		(boundObject->getTextureOffset().y + centerPosition.y - boundObject->getPosition().y) / boundObject->getTextureSize().y };
+	const Vector2f offset = { (boundObject->get_texture_offset().x + centerPosition.x - boundObject->get_position().x) / boundObject->get_texture_size().x,
+		(boundObject->get_texture_offset().y + centerPosition.y - boundObject->get_position().y) / boundObject->get_texture_size().y };
 
 	std::ofstream stream_out("Game/pedestalsInfo.txt");
 
 	stream_out.clear();
 	stream_out << std::setprecision(3) << "Tag: " << object_initializer::mappedTags.at(boundObject->tag) + " " << '\n';
-	stream_out << std::setprecision(3) << "Type: " << boundObject->getType() << '\n';
-	stream_out << std::setprecision(3) << "Mirrored: " << boundObject->getMirroredState() << '\n';
+	stream_out << std::setprecision(3) << "Type: " << boundObject->get_type() << '\n';
+	stream_out << std::setprecision(3) << "Mirrored: " << boundObject->get_mirrored_state() << '\n';
 
-	if (boundObject->getMirroredState())
+	if (boundObject->get_mirrored_state())
 		stream_out << std::setprecision(3) << "OffsetX: " << 1 - offset.x << " " << "OffsetY: " << offset.y << '\n' << '\n';
 	else
 		stream_out << std::setprecision(3) << "OffsetX: " << offset.x << " " << "OffsetY: " << offset.y << '\n' << '\n';
 
 	for (auto i = 0u; i < focuses.size() / 2; i++)
 	{
-		stream_out << std::setprecision(3) << "Focus" << i * 2 << " X: " << (focuses[i * 2].x - centerPosition.x) / boundObject->getTextureSize().x << " " << "Focus" << i * 2 << " Y: " << (focuses[i * 2].y - centerPosition.y) / boundObject->getTextureSize().y << '\n';
-		stream_out << std::setprecision(3) << "Focus" << i * 2 + 1 << " X: " << (focuses[i * 2 + 1].x - centerPosition.x) / boundObject->getTextureSize().x << " " << "Focus" << i * 2 + 1 << " Y: " << (focuses[i * 2 + 1].y - centerPosition.y) / boundObject->getTextureSize().y << '\n';
+		stream_out << std::setprecision(3) << "Focus" << i * 2 << " X: " << (focuses[i * 2].x - centerPosition.x) / boundObject->get_texture_size().x << " " << "Focus" << i * 2 << " Y: " << (focuses[i * 2].y - centerPosition.y) / boundObject->get_texture_size().y << '\n';
+		stream_out << std::setprecision(3) << "Focus" << i * 2 + 1 << " X: " << (focuses[i * 2 + 1].x - centerPosition.x) / boundObject->get_texture_size().x << " " << "Focus" << i * 2 + 1 << " Y: " << (focuses[i * 2 + 1].y - centerPosition.y) / boundObject->get_texture_size().y << '\n';
 		stream_out << std::setprecision(3) << "Ellipse size: " << boundObject->ellipseSizeMultipliers[i] << '\n' << '\n';
 	}
 	stream_out.close();
@@ -86,8 +86,8 @@ void pedestal_controller::handleEvents(Event & event)
 	{
 		if (doubleClickTimer <= long(2e5))
 		{
-			if (boundObject->isMultiEllipse)
-				centerPosition = boundObject->getPosition();
+			if (boundObject->is_multi_ellipse)
+				centerPosition = boundObject->get_position();
 			else
 				centerPosition = { (focuses[0].x + focuses[1].x) / 2, (focuses[0].y + focuses[1].y) / 2 };
 		}

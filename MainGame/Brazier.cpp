@@ -6,68 +6,68 @@
 
 brazier::brazier(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {
-	varietyOfTypes = 1;
-	this->typeOfObject = typeOfObject;
-	radius = 450.0f;
+	variety_of_types_ = 1;
+	this->type_of_object_ = typeOfObject;
+	radius_ = 450.0f;
 	plateRadius = 100.0f;
-	toSaveName = "brazier";
+	to_save_name_ = "brazier";
 	brazier::setType(typeOfObject);
-	isMultiEllipse = true;
-	mirrored = false;
+	is_multi_ellipse = true;
+	mirrored_ = false;
 	initCraftRecipes();
 	tag = entity_tag::brazier;
 }
 
 void brazier::setType(int typeOfObject)
 {
-	this->typeOfObject = typeOfObject;
-	this->conditionalSizeUnits = {900, 900};
+	this->type_of_object_ = typeOfObject;
+	this->conditional_size_units_ = {900, 900};
 }
 
-Vector2f brazier::calculateTextureOffset()
+Vector2f brazier::calculate_texture_offset()
 {
-	textureBox.width = textureBox.width * getScaleRatio().x;
-	textureBox.height = textureBox.height * getScaleRatio().y;
-	return { textureBox.width * 0.5f, textureBox.height * 0.762f };
+	texture_box_.width = texture_box_.width * get_scale_ratio().x;
+	texture_box_.height = texture_box_.height * get_scale_ratio().y;
+	return { texture_box_.width * 0.5f, texture_box_.height * 0.762f };
 }
 
-void brazier::initPedestal()
+void brazier::init_pedestal()
 {
-	if (typeOfObject == 1)
+	if (type_of_object_ == 1)
 	{
 		/*focus1 = Vector2f (position.x - textureBox.width / 4, position.y);
 		focus2 = Vector2f (position.x + textureBox.width / 4, position.y);
 		ellipseSize = float((focus2.x - focus1.x) * 1.17);*/
-		focus1 = Vector2f(position.x, position.y);
-		focus2 = Vector2f(position.x, position.y);
+		focus1 = Vector2f(position_.x, position_.y);
+		focus2 = Vector2f(position_.x, position_.y);
 
 		std::pair<Vector2f, Vector2f> microEllipse;
-		microEllipse.first = Vector2f(position.x - textureBox.width * 0.333f, position.y + textureBox.height * 0.04f);
-		microEllipse.second = Vector2f(position.x - textureBox.width * 0.124f, position.y + textureBox.height * 0.04f);
+		microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.333f, position_.y + texture_box_.height * 0.04f);
+		microEllipse.second = Vector2f(position_.x - texture_box_.width * 0.124f, position_.y + texture_box_.height * 0.04f);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x - textureBox.width * 0.25f, position.y - textureBox.height * 0.04f);
-		microEllipse.second = Vector2f(position.x, position.y - textureBox.height * 0.04f);
+		microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.25f, position_.y - texture_box_.height * 0.04f);
+		microEllipse.second = Vector2f(position_.x, position_.y - texture_box_.height * 0.04f);
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x, position.y - textureBox.height * 0.02f);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.25f, position.y - textureBox.height * 0.02f);		
+		microEllipse.first = Vector2f(position_.x, position_.y - texture_box_.height * 0.02f);
+		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.25f, position_.y - texture_box_.height * 0.02f);		
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x + textureBox.width * 0.191f, position.y + textureBox.height * 0.0211f);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.335f, position.y + textureBox.height * 0.0211f);		
+		microEllipse.first = Vector2f(position_.x + texture_box_.width * 0.191f, position_.y + texture_box_.height * 0.0211f);
+		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.335f, position_.y + texture_box_.height * 0.0211f);		
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x - textureBox.width * 0.045f, position.y + textureBox.height * 0.19f);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.0698f, position.y + textureBox.height * 0.19f);		
+		microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.045f, position_.y + texture_box_.height * 0.19f);
+		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.0698f, position_.y + texture_box_.height * 0.19f);		
 		internalEllipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position.x + textureBox.width * 0.155f, position.y + textureBox.height * 0.126f);
-		microEllipse.second = Vector2f(position.x + textureBox.width * 0.327f, position.y + textureBox.height * 0.126f);		
+		microEllipse.first = Vector2f(position_.x + texture_box_.width * 0.155f, position_.y + texture_box_.height * 0.126f);
+		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.327f, position_.y + texture_box_.height * 0.126f);		
 		internalEllipses.push_back(microEllipse);
 	}
 	ellipseSizeMultipliers = { 1.2f, 1.25f, 1.17f, 1.58f, 1.25f, 1.43f };
-	initMicroBlocks();
+	init_micro_blocks();
 }
 
 void brazier::initCraftRecipes()
@@ -135,23 +135,23 @@ void brazier::putItemToCraft(const entity_tag id)
 	craftResult = checkCraftResult();
 }
 
-Vector2f brazier::getBuildPosition(std::vector<world_object*>, float, Vector2f)
+Vector2f brazier::get_build_position(std::vector<world_object*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int brazier::getBuildType(Vector2f, Vector2f)
+int brazier::get_build_type(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> brazier::prepareSprites(long long)
+std::vector<sprite_chain_element*> brazier::prepare_sprites(long long)
 {
-    const Vector2f frontOffset(textureBox.width * 0.506f, textureBox.height * 0.949f);
-	const Vector2f frontPosition(position.x - textureBoxOffset.x + frontOffset.x, position.y - textureBoxOffset.y + frontOffset.y);
+    const Vector2f frontOffset(texture_box_.width * 0.506f, texture_box_.height * 0.949f);
+	const Vector2f frontPosition(position_.x - texture_box_offset_.x + frontOffset.x, position_.y - texture_box_offset_.y + frontOffset.y);
 	
-    const auto back = new sprite_chain_element(pack_tag::locations, pack_part::brazier, direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
-    const auto front = new sprite_chain_element(pack_tag::locations, pack_part::brazier, direction::DOWN, 2, frontPosition, conditionalSizeUnits, frontOffset);
+    const auto back = new sprite_chain_element(pack_tag::locations, pack_part::brazier, direction::DOWN, 1, position_, conditional_size_units_, Vector2f(texture_box_offset_));
+    const auto front = new sprite_chain_element(pack_tag::locations, pack_part::brazier, direction::DOWN, 2, frontPosition, conditional_size_units_, frontOffset);
 	
     return {back, front};
 	

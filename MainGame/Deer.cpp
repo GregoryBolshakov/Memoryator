@@ -4,36 +4,36 @@ using namespace sf;
 
 deer::deer(const std::string& objectName, const Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
 {
-	conditionalSizeUnits = {360, 300};
-	currentSprite[0] = 1;
+	conditional_size_units_ = {360, 300};
+	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
 	moveSystem.defaultSpeed = 0.00085F;
 	//defaultSpeed = 0.0002f;
 	moveSystem.speed = moveSystem.defaultSpeed;
-	animationSpeed = 10;
+	animation_speed_ = 10;
 	animationLength = 8;
-	radius = 70;
+	radius_ = 70;
 	strength = 10;
-	sightRange = conditionalSizeUnits.x * 3;
+	sightRange = conditional_size_units_.x * 3;
 	morality = 5; // from 1 to 10
 	fear = 0;
-	healthPoint = 50;
+	health_point_ = 50;
 	currentAction = relax;
 	timeForNewHitSelf = long(6e5);
 	timeAfterHitSelf = timeForNewHitSelf;
 	timeForNewHit = 10e6;
-	toSaveName = "deer";
+	to_save_name_ = "deer";
 	tag = entity_tag::deer;
 }
 
 deer::~deer()
 = default;
 
-Vector2f deer::calculateTextureOffset()
+Vector2f deer::calculate_texture_offset()
 {
-	textureBox.width = textureBox.width * getScaleRatio().x;
-	textureBox.height = textureBox.height * getScaleRatio().y;
-	return {textureBox.width / 2, textureBox.height * 7 / 8};
+	texture_box_.width = texture_box_.width * get_scale_ratio().x;
+	texture_box_.height = texture_box_.height * get_scale_ratio().y;
+	return {texture_box_.width / 2, texture_box_.height * 7 / 8};
 }
 
 void deer::behaviorWithStatic(world_object* target, long long elapsedTime)
@@ -46,7 +46,7 @@ void deer::behavior(const long long elapsedTime)
 	directionSystem.calculate_direction();
 	fightInteract(elapsedTime);
 
-	if (healthPoint <= 0)
+	if (health_point_ <= 0)
 	{
 		changeAction(dead, true);
 		directionSystem.direction = direction::STAND;
@@ -61,13 +61,13 @@ void deer::behavior(const long long elapsedTime)
 			laxMovePosition = {-1, -1};
 			return;
 		}
-		directionSystem.side = direction_system::calculate_side(position, owner->getPosition());
-		if (helper::getDist(position, owner->getPosition()) > sightRange / 2)
+		directionSystem.side = direction_system::calculate_side(position_, owner->get_position());
+		if (helper::getDist(position_, owner->get_position()) > sightRange / 2)
 		{
 			changeAction(moveSlowly, false, false);
-			laxMovePosition = owner->getPosition();
+			laxMovePosition = owner->get_position();
 		}
-		else if (helper::getDist(position, owner->getPosition()) <= sightRange / 2.5 && currentAction != relax)
+		else if (helper::getDist(position_, owner->get_position()) <= sightRange / 2.5 && currentAction != relax)
 		{
 			changeAction(relax, true, false);
 			laxMovePosition = {-1, -1};
@@ -75,21 +75,21 @@ void deer::behavior(const long long elapsedTime)
 		return;
 	}
 
-	directionSystem.side = direction_system::calculate_side(position, laxMovePosition);
+	directionSystem.side = direction_system::calculate_side(position_, laxMovePosition);
 
 	if (boundTarget == nullptr)
 	{
 		return;
 	}
 
-	const auto distanceToTarget = helper::getDist(this->position, boundTarget->getPosition());
+	const auto distanceToTarget = helper::getDist(this->position_, boundTarget->get_position());
 	//speed = std::max(defaultSpeed, (defaultSpeed * 10) * (1 - (distanceToTarget) / sightRange * 1.5f));
-	animationSpeed = std::max(0.0004F, 0.0003F * moveSystem.speed / moveSystem.defaultSpeed);
+	animation_speed_ = std::max(0.0004F, 0.0003F * moveSystem.speed / moveSystem.defaultSpeed);
 
 	if (distanceToTarget <= sightRange)
 	{
 		changeAction(move, false, true);
-		laxMovePosition = Vector2f(position.x - (boundTarget->getPosition().x - position.x), position.y - (boundTarget->getPosition().y - position.y));
+		laxMovePosition = Vector2f(position_.x - (boundTarget->get_position().x - position_.x), position_.y - (boundTarget->get_position().y - position_.y));
 	}
 	else
 	{
@@ -103,7 +103,7 @@ void deer::behavior(const long long elapsedTime)
 			}
 			else
 			{
-				laxMovePosition = Vector2f(position.x - (boundTarget->getPosition().x - position.x), position.y - (boundTarget->getPosition().y - position.y));
+				laxMovePosition = Vector2f(position_.x - (boundTarget->get_position().x - position_.x), position_.y - (boundTarget->get_position().y - position_.y));
 			}
 		}
 	}
@@ -111,12 +111,12 @@ void deer::behavior(const long long elapsedTime)
 	boundTarget = nullptr;
 }
 
-Vector2f deer::getBuildPosition(std::vector<world_object*> /*visibleItems*/, float /*scaleFactor*/, Vector2f /*cameraPosition*/)
+Vector2f deer::get_build_position(std::vector<world_object*> /*visibleItems*/, float /*scaleFactor*/, Vector2f /*cameraPosition*/)
 {
 	return {-1, -1};
 }
 
-int deer::getBuildType(Vector2f /*ounPos*/, Vector2f /*otherPos*/)
+int deer::get_build_type(Vector2f /*ounPos*/, Vector2f /*otherPos*/)
 {
 	return 1;
 }
@@ -137,139 +137,139 @@ void deer::jerk(float /*power*/, float /*deceleration*/, Vector2f /*destinationP
 
 Vector2f deer::getHeadPosition()
 {
-	const auto upperLeft = Vector2f(position.x - textureBoxOffset.x, position.y - textureBoxOffset.y);
+	const auto upperLeft = Vector2f(position_.x - texture_box_offset_.x, position_.y - texture_box_offset_.y);
 
 	if (directionSystem.lastDirection == direction::UP)
 	{
-		if (currentSprite[0] == 1)
+		if (current_sprite_[0] == 1)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.569F, upperLeft.y + conditionalSizeUnits.y * 0.111F};
+			return {upperLeft.x + conditional_size_units_.x * 0.569F, upperLeft.y + conditional_size_units_.y * 0.111F};
 		}
-		if (currentSprite[0] == 2)
+		if (current_sprite_[0] == 2)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.575F, upperLeft.y + conditionalSizeUnits.y * 0.155F};
+			return {upperLeft.x + conditional_size_units_.x * 0.575F, upperLeft.y + conditional_size_units_.y * 0.155F};
 		}
-		if (currentSprite[0] == 3)
+		if (current_sprite_[0] == 3)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.577F, upperLeft.y + conditionalSizeUnits.y * 0.202F};
+			return {upperLeft.x + conditional_size_units_.x * 0.577F, upperLeft.y + conditional_size_units_.y * 0.202F};
 		}
-		if (currentSprite[0] == 4)
+		if (current_sprite_[0] == 4)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.580F, upperLeft.y + conditionalSizeUnits.y * 0.150F};
+			return {upperLeft.x + conditional_size_units_.x * 0.580F, upperLeft.y + conditional_size_units_.y * 0.150F};
 		}
-		if (currentSprite[0] == 5)
+		if (current_sprite_[0] == 5)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.570F, upperLeft.y + conditionalSizeUnits.y * 0.106F};
+			return {upperLeft.x + conditional_size_units_.x * 0.570F, upperLeft.y + conditional_size_units_.y * 0.106F};
 		}
-		if (currentSprite[0] == 6)
+		if (current_sprite_[0] == 6)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.570F, upperLeft.y + conditionalSizeUnits.y * 0.093F};
+			return {upperLeft.x + conditional_size_units_.x * 0.570F, upperLeft.y + conditional_size_units_.y * 0.093F};
 		}
-		if (currentSprite[0] == 7)
+		if (current_sprite_[0] == 7)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.575F, upperLeft.y + conditionalSizeUnits.y * 0.075F};
+			return {upperLeft.x + conditional_size_units_.x * 0.575F, upperLeft.y + conditional_size_units_.y * 0.075F};
 		}
 	}
 	if (directionSystem.lastDirection == direction::DOWN)
 	{
-		if (currentSprite[0] == 1)
+		if (current_sprite_[0] == 1)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.446F, upperLeft.y + conditionalSizeUnits.y * 0.222F};
+			return {upperLeft.x + conditional_size_units_.x * 0.446F, upperLeft.y + conditional_size_units_.y * 0.222F};
 		}
-		if (currentSprite[0] == 2)
+		if (current_sprite_[0] == 2)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.437F, upperLeft.y + conditionalSizeUnits.y * 0.243F};
+			return {upperLeft.x + conditional_size_units_.x * 0.437F, upperLeft.y + conditional_size_units_.y * 0.243F};
 		}
-		if (currentSprite[0] == 3)
+		if (current_sprite_[0] == 3)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.437F, upperLeft.y + conditionalSizeUnits.y * 0.258F};
+			return {upperLeft.x + conditional_size_units_.x * 0.437F, upperLeft.y + conditional_size_units_.y * 0.258F};
 		}
-		if (currentSprite[0] == 4)
+		if (current_sprite_[0] == 4)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.437F, upperLeft.y + conditionalSizeUnits.y * 0.242F};
+			return {upperLeft.x + conditional_size_units_.x * 0.437F, upperLeft.y + conditional_size_units_.y * 0.242F};
 		}
-		if (currentSprite[0] == 5)
+		if (current_sprite_[0] == 5)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.440F, upperLeft.y + conditionalSizeUnits.y * 0.168F};
+			return {upperLeft.x + conditional_size_units_.x * 0.440F, upperLeft.y + conditional_size_units_.y * 0.168F};
 		}
-		if (currentSprite[0] == 6)
+		if (current_sprite_[0] == 6)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.444F, upperLeft.y + conditionalSizeUnits.y * 0.150F};
+			return {upperLeft.x + conditional_size_units_.x * 0.444F, upperLeft.y + conditional_size_units_.y * 0.150F};
 		}
-		if (currentSprite[0] == 7)
+		if (current_sprite_[0] == 7)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.445F, upperLeft.y + conditionalSizeUnits.y * 0.182F};
+			return {upperLeft.x + conditional_size_units_.x * 0.445F, upperLeft.y + conditional_size_units_.y * 0.182F};
 		}
 	}
 	if (direction_system::cut_diagonals(directionSystem.lastDirection) == direction::LEFT)
 	{
-		if (currentSprite[0] == 1)
+		if (current_sprite_[0] == 1)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.313F, upperLeft.y + conditionalSizeUnits.y * 0.147F};
+			return {upperLeft.x + conditional_size_units_.x * 0.313F, upperLeft.y + conditional_size_units_.y * 0.147F};
 		}
-		if (currentSprite[0] == 2)
+		if (current_sprite_[0] == 2)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.325F, upperLeft.y + conditionalSizeUnits.y * 0.159F};
+			return {upperLeft.x + conditional_size_units_.x * 0.325F, upperLeft.y + conditional_size_units_.y * 0.159F};
 		}
-		if (currentSprite[0] == 3)
+		if (current_sprite_[0] == 3)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.338F, upperLeft.y + conditionalSizeUnits.y * 0.169F};
+			return {upperLeft.x + conditional_size_units_.x * 0.338F, upperLeft.y + conditional_size_units_.y * 0.169F};
 		}
-		if (currentSprite[0] == 4)
+		if (current_sprite_[0] == 4)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.319F, upperLeft.y + conditionalSizeUnits.y * 0.138F};
+			return {upperLeft.x + conditional_size_units_.x * 0.319F, upperLeft.y + conditional_size_units_.y * 0.138F};
 		}
-		if (currentSprite[0] == 5)
+		if (current_sprite_[0] == 5)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.287F, upperLeft.y + conditionalSizeUnits.y * 0.123F};
+			return {upperLeft.x + conditional_size_units_.x * 0.287F, upperLeft.y + conditional_size_units_.y * 0.123F};
 		}
-		if (currentSprite[0] == 6)
+		if (current_sprite_[0] == 6)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.282F, upperLeft.y + conditionalSizeUnits.y * 0.130F};
+			return {upperLeft.x + conditional_size_units_.x * 0.282F, upperLeft.y + conditional_size_units_.y * 0.130F};
 		}
-		if (currentSprite[0] == 7)
+		if (current_sprite_[0] == 7)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.277F, upperLeft.y + conditionalSizeUnits.y * 0.138F};
+			return {upperLeft.x + conditional_size_units_.x * 0.277F, upperLeft.y + conditional_size_units_.y * 0.138F};
 		}
 	}
 	if (direction_system::cut_diagonals(directionSystem.lastDirection) == direction::RIGHT)
 	{
-		if (currentSprite[0] == 1)
+		if (current_sprite_[0] == 1)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.6F, upperLeft.y + conditionalSizeUnits.y * 0.17F};
+			return {upperLeft.x + conditional_size_units_.x * 0.6F, upperLeft.y + conditional_size_units_.y * 0.17F};
 		}
-		if (currentSprite[0] == 2)
+		if (current_sprite_[0] == 2)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.59F, upperLeft.y + conditionalSizeUnits.y * 0.19F};
+			return {upperLeft.x + conditional_size_units_.x * 0.59F, upperLeft.y + conditional_size_units_.y * 0.19F};
 		}
-		if (currentSprite[0] == 3)
+		if (current_sprite_[0] == 3)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.56F, upperLeft.y + conditionalSizeUnits.y * 0.2F};
+			return {upperLeft.x + conditional_size_units_.x * 0.56F, upperLeft.y + conditional_size_units_.y * 0.2F};
 		}
-		if (currentSprite[0] == 4)
+		if (current_sprite_[0] == 4)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.59F, upperLeft.y + conditionalSizeUnits.y * 0.17F};
+			return {upperLeft.x + conditional_size_units_.x * 0.59F, upperLeft.y + conditional_size_units_.y * 0.17F};
 		}
-		if (currentSprite[0] == 5)
+		if (current_sprite_[0] == 5)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.62F, upperLeft.y + conditionalSizeUnits.y * 0.16F};
+			return {upperLeft.x + conditional_size_units_.x * 0.62F, upperLeft.y + conditional_size_units_.y * 0.16F};
 		}
-		if (currentSprite[0] == 6)
+		if (current_sprite_[0] == 6)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.63F, upperLeft.y + conditionalSizeUnits.y * 0.16F};
+			return {upperLeft.x + conditional_size_units_.x * 0.63F, upperLeft.y + conditional_size_units_.y * 0.16F};
 		}
-		if (currentSprite[0] == 7)
+		if (current_sprite_[0] == 7)
 		{
-			return {upperLeft.x + conditionalSizeUnits.x * 0.63F, upperLeft.y + conditionalSizeUnits.y * 0.17F};
+			return {upperLeft.x + conditional_size_units_.x * 0.63F, upperLeft.y + conditional_size_units_.y * 0.17F};
 		}
 	}
-	return position;
+	return position_;
 }
 
-std::vector<sprite_chain_element*> deer::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> deer::prepare_sprites(long long elapsedTime)
 {
-	auto body = new sprite_chain_element(pack_tag::deer, pack_part::stand, direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
-	animationSpeed = 10;
+	auto body = new sprite_chain_element(pack_tag::deer, pack_part::stand, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
+	animation_speed_ = 10;
 
 	auto spriteDirection = direction_system::cut_diagonals(directionSystem.lastDirection);
 
@@ -302,7 +302,7 @@ std::vector<sprite_chain_element*> deer::prepareSprites(long long elapsedTime)
 		{
 			animationLength = 1;
 			body->direction = direction::DOWN;
-			currentSprite[0] = 1;
+			current_sprite_[0] = 1;
 			break;
 		}
 	case move:
@@ -315,18 +315,18 @@ std::vector<sprite_chain_element*> deer::prepareSprites(long long elapsedTime)
 	default: ;
 	}
 
-	body->number = currentSprite[0];
+	body->number = current_sprite_[0];
 
 	timeForNewSprite += elapsedTime;
 
-	if (timeForNewSprite >= long(1e6 / animationSpeed))
+	if (timeForNewSprite >= long(1e6 / animation_speed_))
 	{
 		timeForNewSprite = 0;
 
-		if (++currentSprite[0] > animationLength)
+		if (++current_sprite_[0] > animationLength)
 		{
 			lastAction = currentAction;
-			currentSprite[0] = 1;
+			current_sprite_[0] = 1;
 		}
 	}
 

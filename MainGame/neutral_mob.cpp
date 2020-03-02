@@ -4,7 +4,7 @@ using namespace sf;
 
 neutral_mob::neutral_mob(std::string objectName, Vector2f centerPosition) : dynamic_object(std::move(objectName), centerPosition)
 {
-	currentSprite[0] = 1;
+	current_sprite_[0] = 1;
 	currentAction = relax;
 }
 
@@ -37,7 +37,7 @@ void neutral_mob::behaviorWithStatic(world_object* target, long long elapsedTime
 
 void neutral_mob::behavior(long long elapsedTime)
 {
-	if (healthPoint <= 0)
+	if (health_point_ <= 0)
 	{
 		changeAction(dead, true);
 		directionSystem.direction = direction::STAND;
@@ -45,16 +45,16 @@ void neutral_mob::behavior(long long elapsedTime)
 	}
 	fightInteract(elapsedTime);
 
-	directionSystem.side = direction_system::calculate_side(position, movePosition);
+	directionSystem.side = direction_system::calculate_side(position_, movePosition);
 	//return;
 	if (boundTarget == nullptr)
 		return;
-	const float distanceToTarget = helper::getDist(this->position, boundTarget->getPosition());
+	const float distanceToTarget = helper::getDist(this->position_, boundTarget->get_position());
 
 	if (distanceToTarget <= sightRange)
 	{
 		changeAction(move, false, true);
-		movePosition = Vector2f(position.x - (boundTarget->getPosition().x - position.x), position.y - (boundTarget->getPosition().y - position.y));
+		movePosition = Vector2f(position_.x - (boundTarget->get_position().x - position_.x), position_.y - (boundTarget->get_position().y - position_.y));
 	}
 	else
 	{
@@ -67,7 +67,7 @@ void neutral_mob::behavior(long long elapsedTime)
 				movePosition = { -1, -1 };
 			}
 			else
-				movePosition = Vector2f(position.x - (boundTarget->getPosition().x - position.x), position.y - (boundTarget->getPosition().y - position.y));
+				movePosition = Vector2f(position_.x - (boundTarget->get_position().x - position_.x), position_.y - (boundTarget->get_position().y - position_.y));
 		}
 	}
 

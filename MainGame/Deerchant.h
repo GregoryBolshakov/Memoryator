@@ -14,8 +14,8 @@ public:
 	bool isBuildSystem = false;
 	//draw
 	std::string nameOfFile;
-	Vector2f calculateTextureOffset() override;
-	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;
+	Vector2f calculate_texture_offset() override;
+	std::vector<sprite_chain_element*> prepare_sprites(long long elapsedTime) override;
 	//control
 	void handleInput(bool usedMouse = false) override;
 	void moveEnd(bool animate = false, bool invertDirection = false);
@@ -40,8 +40,8 @@ public:
 	void animationSmooth();
 
 	cell* heldItem = nullptr;
-	Vector2f getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
-	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
+	Vector2f get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
+	int get_build_type(Vector2f ounPos, Vector2f otherPos) override;
 	std::vector<hero_bag> bags;
 	bool nearTheTable = false;
 private:

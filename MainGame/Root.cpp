@@ -4,104 +4,104 @@
 
 root::root(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {
-	varietyOfTypes = 5; // 1-5
-	this->typeOfObject = typeOfObject;
+	variety_of_types_ = 5; // 1-5
+	this->type_of_object_ = typeOfObject;
 	strength = 0;
-	radius = 50;
-	animationSpeed = 10;
-	toSaveName = "root";
+	radius_ = 50;
+	animation_speed_ = 10;
+	to_save_name_ = "root";
 	root::setType(typeOfObject);
 	tag = entity_tag::root;
 }
 
 void root::setType(const int typeOfObject)
 {
-	this->typeOfObject = typeOfObject;
+	this->type_of_object_ = typeOfObject;
 	if (typeOfObject == 1)
-		conditionalSizeUnits = { 544, 138 };
+		conditional_size_units_ = { 544, 138 };
 	if (typeOfObject == 2)
-		conditionalSizeUnits = { 468, 208 };
+		conditional_size_units_ = { 468, 208 };
 	if (typeOfObject == 3)
-		conditionalSizeUnits = { 333, 228 };
+		conditional_size_units_ = { 333, 228 };
 	if (typeOfObject == 4)
-		conditionalSizeUnits = { 406, 137 };
+		conditional_size_units_ = { 406, 137 };
 	if (typeOfObject == 5)
-		conditionalSizeUnits = { 339, 132 };
+		conditional_size_units_ = { 339, 132 };
 }
 
-Vector2f root::calculateTextureOffset()
+Vector2f root::calculate_texture_offset()
 {
-	textureBox.width = textureBox.width * getScaleRatio().x;
-	textureBox.height = textureBox.height * getScaleRatio().y;
+	texture_box_.width = texture_box_.width * get_scale_ratio().x;
+	texture_box_.height = texture_box_.height * get_scale_ratio().y;
 
-	switch (typeOfObject)
+	switch (type_of_object_)
 	{	
 	case 1:
-		return { textureBox.width * 0.698f, textureBox.height * 0.47f };
+		return { texture_box_.width * 0.698f, texture_box_.height * 0.47f };
 	case 2:
-		return { textureBox.width * 0.313f, textureBox.height * 0.671f };
+		return { texture_box_.width * 0.313f, texture_box_.height * 0.671f };
 	case 3:
-		return { textureBox.width * 0.429f, textureBox.height * 0.508f };
+		return { texture_box_.width * 0.429f, texture_box_.height * 0.508f };
 	case 4:
-		return { textureBox.width * 0.485f, textureBox.height * 0.01f };
+		return { texture_box_.width * 0.485f, texture_box_.height * 0.01f };
 	case 5:
-		return { textureBox.width * 0.551f, textureBox.height * 0.01f };
+		return { texture_box_.width * 0.551f, texture_box_.height * 0.01f };
 	default:
-		return { textureBox.width * 0.409f, textureBox.height * 0.01f };
+		return { texture_box_.width * 0.409f, texture_box_.height * 0.01f };
 	}
 }
 
-void root::initPedestal()
+void root::init_pedestal()
 {
-	switch (typeOfObject)
+	switch (type_of_object_)
 	{
 	case 1:
-		focus1 = Vector2f(position.x - textureBox.width * 0.229f, position.y - textureBox.height * 0.151f);
-		focus2 = Vector2f(position.x + textureBox.width * 0.229f, position.y - textureBox.height * 0.151f);
+		focus1 = Vector2f(position_.x - texture_box_.width * 0.229f, position_.y - texture_box_.height * 0.151f);
+		focus2 = Vector2f(position_.x + texture_box_.width * 0.229f, position_.y - texture_box_.height * 0.151f);
 		ellipseSizeMultipliers[0] = { 1.06f };
 		break;
 	case 2:
-		focus1 = Vector2f(position.x - textureBox.width * 0.288f, position.y - textureBox.height * 0.09f);
-		focus2 = Vector2f(position.x + textureBox.width * 0.288f, position.y - textureBox.height * 0.09f);
+		focus1 = Vector2f(position_.x - texture_box_.width * 0.288f, position_.y - texture_box_.height * 0.09f);
+		focus2 = Vector2f(position_.x + texture_box_.width * 0.288f, position_.y - texture_box_.height * 0.09f);
 		ellipseSizeMultipliers[0] = { 1.07f };
 		break;
 	case 3:
-		focus1 = Vector2f(position.x - textureBox.width * 0.367f, position.y - textureBox.height * 0.065f);
-		focus2 = Vector2f(position.x + textureBox.width * 0.367f, position.y - textureBox.height * 0.065f);
+		focus1 = Vector2f(position_.x - texture_box_.width * 0.367f, position_.y - texture_box_.height * 0.065f);
+		focus2 = Vector2f(position_.x + texture_box_.width * 0.367f, position_.y - texture_box_.height * 0.065f);
 		ellipseSizeMultipliers[0] = { 1.17f };
 		break;
 	case 4:
-		focus1 = Vector2f(position.x - textureBox.width * 0.311f, position.y);
-		focus2 = Vector2f(position.x + textureBox.width * 0.311f, position.y);
+		focus1 = Vector2f(position_.x - texture_box_.width * 0.311f, position_.y);
+		focus2 = Vector2f(position_.x + texture_box_.width * 0.311f, position_.y);
 		ellipseSizeMultipliers[0] = { 0 };
 		break;
 	case 5:
-		focus1 = Vector2f(position.x - textureBox.width * 0.167f, position.y - textureBox.height * 0.091f);
-		focus2 = Vector2f(position.x + textureBox.width * 0.167f, position.y - textureBox.height * 0.091f);
+		focus1 = Vector2f(position_.x - texture_box_.width * 0.167f, position_.y - texture_box_.height * 0.091f);
+		focus2 = Vector2f(position_.x + texture_box_.width * 0.167f, position_.y - texture_box_.height * 0.091f);
 		ellipseSizeMultipliers[0] = { 0 };
 		break;
 	default:
-		focus1 = Vector2f(position.x - textureBox.width * 0.111f, position.y);
-		focus2 = Vector2f(position.x + textureBox.width * 0.111f, position.y);
+		focus1 = Vector2f(position_.x - texture_box_.width * 0.111f, position_.y);
+		focus2 = Vector2f(position_.x + texture_box_.width * 0.111f, position_.y);
 		ellipseSizeMultipliers[0] = { 0 };
 		break;
 	}
-	initMicroBlocks();
+	init_micro_blocks();
 }
 
-Vector2f root::getBuildPosition(std::vector<world_object*>, float, Vector2f)
+Vector2f root::get_build_position(std::vector<world_object*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int root::getBuildType(Vector2f, Vector2f)
+int root::get_build_type(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> root::prepareSprites(long long)
+std::vector<sprite_chain_element*> root::prepare_sprites(long long)
 {
-	const auto body = new sprite_chain_element(pack_tag::swampyTrees, pack_part::root, direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	const auto body = new sprite_chain_element(pack_tag::swampyTrees, pack_part::root, direction::DOWN, type_of_object_, position_, conditional_size_units_, Vector2f(texture_box_offset_), color, mirrored_);
 
 	return { body };
 }

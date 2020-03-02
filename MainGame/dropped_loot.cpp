@@ -4,11 +4,11 @@
 
 dropped_loot::dropped_loot(std::string objectName, Vector2f centerPosition, int typeOfObject, int count) : picked_object(std::move(objectName), centerPosition)
 {
-	varietyOfTypes = 5;
-	this->typeOfObject = typeOfObject;
-	toSaveName = "drop";
+	variety_of_types_ = 5;
+	this->type_of_object_ = typeOfObject;
+	to_save_name_ = "drop";
 	dropped_loot::setType(typeOfObject);
-	radius = sprite_pack::iconSize.x / 2;
+	radius_ = sprite_pack::iconSize.x / 2;
 	tag = entity_tag::droppedLoot;
 	this->count = count;
 }
@@ -18,40 +18,40 @@ void dropped_loot::setType(int typeOfObject)
 	if (typeOfObject == -1)
 		return;
 
-	this->typeOfObject = typeOfObject;
+	this->type_of_object_ = typeOfObject;
 	id = entity_tag(typeOfObject);
-	conditionalSizeUnits = sprite_pack::iconSize;
+	conditional_size_units_ = sprite_pack::iconSize;
 }
 
-Vector2f dropped_loot::calculateTextureOffset()
+Vector2f dropped_loot::calculate_texture_offset()
 {
-	textureBox.width = textureBox.width * getScaleRatio().x;
-	textureBox.height = textureBox.height * getScaleRatio().y;
-	return { textureBox.width / 2.0f, textureBox.height / 2.0f };
+	texture_box_.width = texture_box_.width * get_scale_ratio().x;
+	texture_box_.height = texture_box_.height * get_scale_ratio().y;
+	return { texture_box_.width / 2.0f, texture_box_.height / 2.0f };
 }
 
-void dropped_loot::initPedestal()
+void dropped_loot::init_pedestal()
 {
-	focus1 = position;
-	focus2 = position;
+	focus1 = position_;
+	focus2 = position_;
 	ellipseSizeMultipliers[0] = { 0 };
 }
 
-Vector2f dropped_loot::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f dropped_loot::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int dropped_loot::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int dropped_loot::get_build_type(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> dropped_loot::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> dropped_loot::prepare_sprites(long long elapsedTime)
 {
-	sprite_chain_element* body = new sprite_chain_element(pack_tag::empty, pack_part::full, direction::DOWN, this->isSelected, position, conditionalSizeUnits, textureBoxOffset);	
+	sprite_chain_element* body = new sprite_chain_element(pack_tag::empty, pack_part::full, direction::DOWN, this->is_selected, position_, conditional_size_units_, texture_box_offset_);	
 
-	switch (typeOfObject)
+	switch (type_of_object_)
 	{
 	case 401:
 		body->set_draw_info(pack_tag::icons, pack_part::flowers, direction::DOWN, body->number + 1);	

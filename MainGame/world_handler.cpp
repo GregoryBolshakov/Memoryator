@@ -11,7 +11,7 @@ using namespace sf;
 world_handler::world_handler(const int width, const int height, std::map<pack_tag, sprite_pack>* packsMap)
 {
     this->packsMap = packsMap;
-	world_object::microBlockSize = microBlockSize;
+	world_object::micro_block_size = microBlockSize;
     worldGenerator.initMainScale();
 	worldGenerator.scaleFactor = worldGenerator.mainScale;
 	this->width = width;
@@ -51,8 +51,8 @@ void world_handler::runWorldGenerator()
 	this->focusedObject = worldGenerator.focusedObject;
 	brazier = dynamic_cast<::brazier*>(staticGrid.get_item_by_name("brazier"));
 	//brazier->linkWithBuildSystem(&buildSystem);
-	worldGenerator.rememberedBlocks = { { staticGrid.get_index_by_point(brazier->getPosition().x, brazier->getPosition().y), true } };
-	cameraSystem.position = Vector2f(focusedObject->getPosition().x + helper::GetScreenSize().x * camera_system::camOffset.x, focusedObject->getPosition().y + helper::GetScreenSize().y * camera_system::camOffset.y);
+	worldGenerator.rememberedBlocks = { { staticGrid.get_index_by_point(brazier->get_position().x, brazier->get_position().y), true } };
+	cameraSystem.position = Vector2f(focusedObject->get_position().x + helper::GetScreenSize().x * camera_system::camOffset.x, focusedObject->get_position().y + helper::GetScreenSize().y * camera_system::camOffset.y);
 
 	const auto hero = dynamic_cast<deerchant*>(focusedObject);
 	inventorySystem.inventoryBounding(&hero->bags);
@@ -128,13 +128,13 @@ void world_handler::birthObjects()
 {
 	for (auto& object : localTerrain)
 	{
-		auto birthStaticStack = object->getBirthObjects().first;
-		auto birthDynamicStack = object->getBirthObjects().second;
+		auto birthStaticStack = object->get_birth_objects().first;
+		auto birthDynamicStack = object->get_birth_objects().second;
 
 		while (!birthStaticStack.empty())
 		{
 			const auto biome = worldGenerator.biomeMatrix[int(birthStaticStack.top().position.x / blockSize.x)][int(birthStaticStack.top().position.y / blockSize.y)];
-			worldGenerator.initializeStaticItem(birthStaticStack.top().tag, birthStaticStack.top().position, birthStaticStack.top().typeOfObject, "", birthStaticStack.top().count, biome, true, birthStaticStack.top().inventory);
+			worldGenerator.initializeStaticItem(birthStaticStack.top().tag, birthStaticStack.top().position, birthStaticStack.top().type_of_object, "", birthStaticStack.top().count, biome, true, birthStaticStack.top().inventory);
 			birthStaticStack.pop();
 		}
 		while (!birthDynamicStack.empty())
@@ -142,7 +142,7 @@ void world_handler::birthObjects()
 			worldGenerator.initializeDynamicItem(birthDynamicStack.top().tag, birthDynamicStack.top().position, "", birthDynamicStack.top().owner);
 			birthDynamicStack.pop();
 		}
-		object->clearBirthStack();
+		object->clear_birth_stack();
 	}
 }
 
@@ -161,13 +161,13 @@ void world_handler::Load()
 	{
 		fin >> saveName >> posX >> posY;
 
-		if (saveName == nightmare_first("loadInit", Vector2f(0, 0)).getToSaveName())
+		if (saveName == nightmare_first("loadInit", Vector2f(0, 0)).get_to_save_name())
 			worldGenerator.initializeDynamicItem(entity_tag::monster, Vector2f(posX, posY), "");
 		else
-			if (saveName == deerchant("loadInit", Vector2f(0, 0)).getToSaveName())
+			if (saveName == deerchant("loadInit", Vector2f(0, 0)).get_to_save_name())
 				worldGenerator.initializeDynamicItem(entity_tag::hero, Vector2f(posX, posY), "");
 			else
-				if (saveName == wolf("loadInit", Vector2f(0, 0)).getToSaveName())
+				if (saveName == wolf("loadInit", Vector2f(0, 0)).get_to_save_name())
 					worldGenerator.initializeDynamicItem(entity_tag::wolf, Vector2f(posX, posY), "");
 	}
 
@@ -176,23 +176,23 @@ void world_handler::Load()
 	{
 		fin >> saveName >> typeOfObject >> posX >> posY;
 
-		if (saveName == ground_connection("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
+		if (saveName == ground_connection("loadInit", Vector2f(0, 0), typeOfObject).get_to_save_name())
 			worldGenerator.initializeStaticItem(entity_tag::groundConnection, Vector2f(posX, posY), typeOfObject, "", 1);
 		else
-			if (saveName == ground("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
+			if (saveName == ground("loadInit", Vector2f(0, 0), typeOfObject).get_to_save_name())
 				worldGenerator.initializeStaticItem(entity_tag::ground, Vector2f(posX, posY), typeOfObject, "", 1);
 			else
-				if (saveName == forest_tree("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
+				if (saveName == forest_tree("loadInit", Vector2f(0, 0), typeOfObject).get_to_save_name())
 					worldGenerator.initializeStaticItem(entity_tag::tree, Vector2f(posX, posY), typeOfObject, "", 1);
 				else
-					if (saveName == grass("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
+					if (saveName == grass("loadInit", Vector2f(0, 0), typeOfObject).get_to_save_name())
 						worldGenerator.initializeStaticItem(entity_tag::grass, Vector2f(posX, posY), typeOfObject, "", 1);																
 	}
 
 	fin.close();
 
 	//preparations for the inventory system 
-	auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->getName()));
+	auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->get_name()));
 
 	inventorySystem.inventoryBounding(&hero->bags);
 	//------------------------------------
@@ -216,12 +216,12 @@ void world_handler::Save()
 	fout << dynamicItems.size() << std::endl;
 	for (auto& dynamicItem : dynamicItems)
 	{
-		fout << dynamicItem->getToSaveName() << " " << dynamicItem->getPosition().x << " " << dynamicItem->getPosition().y << std::endl;
+		fout << dynamicItem->get_to_save_name() << " " << dynamicItem->get_position().x << " " << dynamicItem->get_position().y << std::endl;
 	}
 	fout << staticItems.size() << std::endl;
 	for (auto& staticItem : staticItems)
 	{
-		fout << staticItem->getToSaveName() << " " << staticItem->getType() << " " << staticItem->getPosition().x << " " << staticItem->getPosition().y << std::endl;
+		fout << staticItem->get_to_save_name() << " " << staticItem->get_type() << " " << staticItem->get_position().x << " " << staticItem->get_position().y << std::endl;
 	}
 	fout.close();
 }
@@ -242,32 +242,32 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 
 	for (auto& visibleItem : visibleItems)
 	{
-		if (!visibleItem || visibleItem->getName() == focusedObject->getName() || visibleItem->intangible)
+		if (!visibleItem || visibleItem->get_name() == focusedObject->get_name() || visibleItem->intangible)
 			continue;
 
-		visibleItem->isTransparent = false;
-		const auto itemPos = Vector2f(visibleItem->getPosition().x - visibleItem->getTextureOffset().x, visibleItem->getPosition().y - visibleItem->getTextureOffset().y);
+		visibleItem->is_transparent = false;
+		const auto itemPos = Vector2f(visibleItem->get_position().x - visibleItem->get_texture_offset().x, visibleItem->get_position().y - visibleItem->get_texture_offset().y);
 
-		if (mousePos.x >= itemPos.x && mousePos.x <= itemPos.x + visibleItem->getConditionalSizeUnits().x &&
-			mousePos.y >= itemPos.y && mousePos.y <= itemPos.y + visibleItem->getConditionalSizeUnits().y)
+		if (mousePos.x >= itemPos.x && mousePos.x <= itemPos.x + visibleItem->get_conditional_size_units().x &&
+			mousePos.y >= itemPos.y && mousePos.y <= itemPos.y + visibleItem->get_conditional_size_units().y)
 		{
-			visibleItem->isSelected = true;
+			visibleItem->is_selected = true;
 		}
 		else
-			visibleItem->isSelected = false;
+			visibleItem->is_selected = false;
 
-		if (!visibleItem->isBackground && helper::isIntersects(mousePos, FloatRect(itemPos.x, itemPos.y, visibleItem->getConditionalSizeUnits().x, visibleItem->getConditionalSizeUnits().y)) ||
-			helper::getDist(mousePos, visibleItem->getPosition()) <= visibleItem->getRadius())
+		if (!visibleItem->is_background && helper::isIntersects(mousePos, FloatRect(itemPos.x, itemPos.y, visibleItem->get_conditional_size_units().x, visibleItem->get_conditional_size_units().y)) ||
+			helper::getDist(mousePos, visibleItem->get_position()) <= visibleItem->get_radius())
 		{
-			auto itemCapacity = visibleItem->getConditionalSizeUnits().x + visibleItem->getConditionalSizeUnits().y;
+			auto itemCapacity = visibleItem->get_conditional_size_units().x + visibleItem->get_conditional_size_units().y;
 			if (visibleItem->tag == entity_tag::brazier)
 				itemCapacity /= 10;
 			float distanceToItemCenter;
-			if (!visibleItem->isBackground)
-				distanceToItemCenter = abs(mousePos.x - (itemPos.x + visibleItem->getConditionalSizeUnits().x / 2)) +
-				abs(mousePos.y - (itemPos.y + visibleItem->getConditionalSizeUnits().y / 2));
+			if (!visibleItem->is_background)
+				distanceToItemCenter = abs(mousePos.x - (itemPos.x + visibleItem->get_conditional_size_units().x / 2)) +
+				abs(mousePos.y - (itemPos.y + visibleItem->get_conditional_size_units().y / 2));
 			else
-				distanceToItemCenter = helper::getDist(mousePos, visibleItem->getPosition());
+				distanceToItemCenter = helper::getDist(mousePos, visibleItem->get_position());
 
 			if (itemCapacity < minCapacity || (itemCapacity == minCapacity && distanceToItemCenter <= minDistance))
 			{
@@ -290,7 +290,7 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 						if (inventorySystem.getHeldItem().content.first != entity_tag::emptyCell &&
 							helper::getDist(brazier->getPlatePosition(), mousePos) <= brazier->getPlateRadius())
 						{
-							if (helper::getDist(brazier->getPlatePosition(), focusedObject->getPosition()) <= brazier->getPlateRadius() + focusedObject->getRadius())
+							if (helper::getDist(brazier->getPlatePosition(), focusedObject->get_position()) <= brazier->getPlateRadius() + focusedObject->get_radius())
 								mouseDisplayName = "Toss";
 							else
 								mouseDisplayName = "Come to toss";
@@ -326,7 +326,7 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 						}
 						default:
 						{
-							mouseDisplayName = visibleItem->getToSaveName();
+							mouseDisplayName = visibleItem->get_to_save_name();
 							break;
 						}
 					}
@@ -335,9 +335,9 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 			}
 		}
 
-		if (focusedObject->getPosition().x >= itemPos.x && focusedObject->getPosition().x <= itemPos.x + visibleItem->getConditionalSizeUnits().x && focusedObject->getPosition().y >= itemPos.y && focusedObject->getPosition().y <= visibleItem->getPosition().y && !visibleItem->isBackground)
+		if (focusedObject->get_position().x >= itemPos.x && focusedObject->get_position().x <= itemPos.x + visibleItem->get_conditional_size_units().x && focusedObject->get_position().y >= itemPos.y && focusedObject->get_position().y <= visibleItem->get_position().y && !visibleItem->is_background)
 		{
-			visibleItem->isTransparent = true;
+			visibleItem->is_transparent = true;
 			if (visibleItem->color.a > 125)
 				visibleItem->color.a -= 1;
 		}
@@ -427,7 +427,7 @@ void world_handler::onMouseUp(const int currentMouseButton)
 	if (mouseDisplayName.empty())
 		selectedObject = nullptr;
 
-	auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->getName()));
+	auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->get_name()));
 	hero->onMouseUp(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.buildingPosition != Vector2f(-1, -1) && !buildSystem.instantBuild));
 }
 
@@ -446,7 +446,7 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 	scaleDecreaseClock.restart();
 
 	const auto extra = staticGrid.get_block_size();
-	const auto characterPosition = focusedObject->getPosition();
+	const auto characterPosition = focusedObject->get_position();
 
 	const Vector2f worldUpperLeft(characterPosition.x - render_target_size.x / 2, characterPosition.y - render_target_size.y / 2);
 	const Vector2f worldBottomRight(characterPosition.x + render_target_size.x / 2, characterPosition.y + render_target_size.y / 2);
@@ -459,14 +459,14 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 
 	localTerrain.clear();
 	for (auto& item : localStaticItems)
-		if (!item->isBackground)
+		if (!item->is_background)
 			localTerrain.push_back(item);
 	for (auto& item : localDynamicItems)
 		localTerrain.push_back(item);
 
 	setTransparent(localTerrain);
 
-	const auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->getName()));
+	const auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->get_name()));
 	hero->heldItem = &inventorySystem.getHeldItem();
 
 	//making route to the desire position
@@ -482,11 +482,11 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 			{
 				const auto permissibleDistance = 10;			
 				timeAfterNewRoute = 0;
-				staticGrid.make_route(dynamicItem->getPosition(), dynamicItem->laxMovePosition,
-				                     dynamicItem->getPosition().x - dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale),
-				                     dynamicItem->getPosition().y - dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale),
-				                     dynamicItem->getPosition().x + dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale),
-				                     dynamicItem->getPosition().y + dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale), permissibleDistance);
+				staticGrid.make_route(dynamicItem->get_position(), dynamicItem->laxMovePosition,
+				                     dynamicItem->get_position().x - dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale),
+				                     dynamicItem->get_position().y - dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale),
+				                     dynamicItem->get_position().x + dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale),
+				                     dynamicItem->get_position().y + dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale), permissibleDistance);
 				dynamicItem->setRoute(staticGrid.route);
 				staticGrid.set_locked_micro_blocks(dynamicItem, false, true);
 			}
@@ -510,7 +510,7 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 			{
 				routeMicroBlock = dynamicItem->route[0];
 				const auto routePos = Vector2f(routeMicroBlock.first * microBlockSize.x, routeMicroBlock.second * microBlockSize.y);
-				if (helper::getDist(dynamicItem->laxMovePosition, routePos) < helper::getDist(dynamicItem->laxMovePosition, dynamicItem->getPosition()) && dynamicItem->route.size() > 1)
+				if (helper::getDist(dynamicItem->laxMovePosition, routePos) < helper::getDist(dynamicItem->laxMovePosition, dynamicItem->get_position()) && dynamicItem->route.size() > 1)
 					break;
 
 				dynamicItem->route.erase(dynamicItem->route.begin());
@@ -551,9 +551,9 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 		//newPosition = dynamicItem->doSlipOffDynamic(newPosition, localDynamicItems, height, elapsedTime);
 
 		if (!fixedClimbingBeyond(newPosition))
-			newPosition = dynamicItem->getPosition();				
-		dynamicItem->setPosition(newPosition);
-		dynamicGrid.update_item_position(dynamicItem->getName(), newPosition.x, newPosition.y);		
+			newPosition = dynamicItem->get_position();				
+		dynamicItem->set_position(newPosition);
+		dynamicGrid.update_item_position(dynamicItem->get_name(), newPosition.x, newPosition.y);		
 	}
 
 	//if (focusedObject->getCurrentAction() == builds)
@@ -567,11 +567,11 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 
 	//deleting items
 	for (auto& item : localStaticItems)	
-		if (item->getDeletePromise())		
-			staticGrid.delete_item(item->getName());
+		if (item->get_delete_promise())		
+			staticGrid.delete_item(item->get_name());
 	for (auto& item : localDynamicItems)
-		if (item->getDeletePromise())
-			dynamicGrid.delete_item(item->getName());
+		if (item->get_delete_promise())
+			dynamicGrid.delete_item(item->get_name());
 	//--------------
 
 	//saving world
@@ -613,10 +613,10 @@ std::vector<sprite_chain_element*> world_handler::prepareSprites(const long long
 	const auto screenSize = helper::GetScreenSize();
 	const auto screenCenter = Vector2f(screenSize.x / 2, screenSize.y / 2);
 
-	cameraSystem.position.x += (focusedObject->getPosition().x + helper::GetScreenSize().x * camera_system::camOffset.x - cameraSystem.position.x) *
+	cameraSystem.position.x += (focusedObject->get_position().x + helper::GetScreenSize().x * camera_system::camOffset.x - cameraSystem.position.x) *
 		(focusedObject->getMoveSystem().speed * float(elapsedTime)) / camera_system::maxCameraDistance.x;
 	
-	cameraSystem.position.y += (focusedObject->getPosition().y + helper::GetScreenSize().y * camera_system::camOffset.y - cameraSystem.position.y) *
+	cameraSystem.position.y += (focusedObject->get_position().y + helper::GetScreenSize().y * camera_system::camOffset.y - cameraSystem.position.y) *
 		(focusedObject->getMoveSystem().speed * float(elapsedTime)) / camera_system::maxCameraDistance.y;
 	
 	cameraSystem.shakeInteract(elapsedTime);
@@ -642,9 +642,9 @@ std::vector<sprite_chain_element*> world_handler::prepareSprites(const long long
 
 	for (auto& item : localStaticItems)
 	{
-        if ((onlyBackground && item->isBackground) || (!onlyBackground && !item->isBackground))
+        if ((onlyBackground && item->is_background) || (!onlyBackground && !item->is_background))
         {
-            auto sprites = item->prepareSprites(elapsedTime);
+            auto sprites = item->prepare_sprites(elapsedTime);
             result.insert(result.end(), sprites.begin(), sprites.end());
         }
     }
@@ -652,7 +652,7 @@ std::vector<sprite_chain_element*> world_handler::prepareSprites(const long long
 	{
         if (!onlyBackground)
         {
-            auto sprites = item->prepareSprites(elapsedTime);
+            auto sprites = item->prepare_sprites(elapsedTime);
             result.insert(result.end(), sprites.begin(), sprites.end());
         }
     }
