@@ -1,6 +1,6 @@
 #pragma once
 
-#include "InputBox.h"
+#include "input_box.h"
 #include "WorldHandler.h"
 
 using namespace sf;
@@ -10,7 +10,7 @@ class console
 public:	
 	console(FloatRect rect, WorldHandler* world = nullptr);
 	~console();
-	InputBox getBody() const;
+	input_box getBody() const;
 	void draw(RenderWindow& window);
 	void interact(long long elapsedTime);
 	void handleEvents(Event event);
@@ -19,7 +19,7 @@ public:
 private:
 	void doCommand();
 
-	InputBox body;
+	input_box body;
 	bool state = false;
 	std::vector<std::string> commandStack = { {""} };
 	size_t commandStackIterator = 0;

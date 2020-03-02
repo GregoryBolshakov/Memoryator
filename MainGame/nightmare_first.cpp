@@ -58,11 +58,11 @@ std::vector<sprite_chain_element*> nightmare_first::prepareSprites(const long lo
 	}
 	if (directionSystem.lastDirection == Direction::RIGHT || directionSystem.lastDirection == Direction::UPRIGHT || directionSystem.lastDirection == Direction::DOWNRIGHT)
 	{
-		spriteDirection = DirectionSystem::cutRights(spriteDirection);
+		spriteDirection = direction_system::cutRights(spriteDirection);
 		body->mirrored = true;
 	}
 
-	body->direction = DirectionSystem::sideToDirection(spriteSide);
+	body->direction = direction_system::sideToDirection(spriteSide);
 
 	switch (currentAction)
 	{

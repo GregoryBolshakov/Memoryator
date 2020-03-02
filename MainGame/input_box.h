@@ -7,12 +7,12 @@
 
 using namespace sf;
 
-class InputBox
+class input_box
 {
 public:
-	InputBox();
-	InputBox(FloatRect rect);
-	~InputBox();
+	input_box();
+	input_box(FloatRect rect);
+	~input_box();
 	void init(FloatRect rect);
 	void draw(RenderWindow& window) const;
 	void onMouseRelease();

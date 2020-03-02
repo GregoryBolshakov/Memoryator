@@ -57,7 +57,7 @@ void monster::behaviorWithDynamic(DynamicObject* target, const long long elapsed
 	}
 
 	boundTarget = target;
-	directionSystem.side = DirectionSystem::calculateSide(position, boundTarget->getPosition(), elapsedTime);
+	directionSystem.side = direction_system::calculateSide(position, boundTarget->getPosition(), elapsedTime);
 
 	if (Helper::getDist(position, boundTarget->getPosition()) <= sightRange && timeAfterHit >= timeForNewHit)
 		moveSystem.speed = std::max((1 - Helper::getDist(position, boundTarget->getPosition()) / sightRange) * moveSystem.defaultSpeed / 2 + moveSystem.defaultSpeed, moveSystem.defaultSpeed);

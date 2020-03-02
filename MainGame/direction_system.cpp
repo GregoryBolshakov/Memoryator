@@ -1,13 +1,13 @@
-#include "DirectionSystem.h"
+#include "direction_system.h"
 
-DirectionSystem::DirectionSystem()
+direction_system::direction_system()
 = default;
 
 
-DirectionSystem::~DirectionSystem()
+direction_system::~direction_system()
 = default;
 
-void DirectionSystem::calculateDirection()
+void direction_system::calculateDirection()
 {
 	const Vector2f curPos = *position;
 	const Vector2f tarPos = *movePosition;
@@ -78,7 +78,7 @@ void DirectionSystem::calculateDirection()
 		lastDirection = direction;
 }
 
-Side DirectionSystem::calculateSide(Vector2f position, Vector2f otherObjectPosition, long long elapsedTime)
+Side direction_system::calculateSide(Vector2f position, Vector2f otherObjectPosition, long long elapsedTime)
 {
 	Side answer = down;
 
@@ -97,7 +97,7 @@ Side DirectionSystem::calculateSide(Vector2f position, Vector2f otherObjectPosit
 	return answer;
 }
 
-Side DirectionSystem::invertSide(Side side)
+Side direction_system::invertSide(Side side)
 {
 	switch (side)
 	{
@@ -113,7 +113,7 @@ Side DirectionSystem::invertSide(Side side)
 	return down;
 }
 
-std::string DirectionSystem::sideToString(Side side)
+std::string direction_system::sideToString(Side side)
 {
 	switch (side)
 	{
@@ -129,7 +129,7 @@ std::string DirectionSystem::sideToString(Side side)
 	return "";
 }
 
-std::string DirectionSystem::directionToString(Direction direction)
+std::string direction_system::directionToString(Direction direction)
 {
 	switch (direction)
 	{
@@ -154,7 +154,7 @@ std::string DirectionSystem::directionToString(Direction direction)
 	return "";
 }
 
-Direction DirectionSystem::sideToDirection(Side side)
+Direction direction_system::sideToDirection(Side side)
 {
 	switch (side)
 	{
@@ -170,7 +170,7 @@ Direction DirectionSystem::sideToDirection(Side side)
 	return Direction::DOWN;
 }
 
-Direction DirectionSystem::invertDirection(Direction dir)
+Direction direction_system::invertDirection(Direction dir)
 {
 	switch (dir)
 	{
@@ -195,7 +195,7 @@ Direction DirectionSystem::invertDirection(Direction dir)
 	return {};
 }
 
-Direction DirectionSystem::cutRights(Direction direction)
+Direction direction_system::cutRights(Direction direction)
 {
 	switch (direction)
 	{
@@ -209,14 +209,14 @@ Direction DirectionSystem::cutRights(Direction direction)
 	}
 }
 
-Side DirectionSystem::cutRights(Side side)
+Side direction_system::cutRights(Side side)
 {
 	if (side == right)
 		return left;
 	return side;
 }
 
-Direction DirectionSystem::cutDiagonals(Direction dir)
+Direction direction_system::cutDiagonals(Direction dir)
 {
 	if (dir == Direction::UPLEFT || dir == Direction::DOWNLEFT)
 		return Direction::LEFT;

@@ -59,7 +59,7 @@ void bear::behavior(long long elapsedTime)
 			movePosition = position;
 			return;
 		}
-		directionSystem.side = DirectionSystem::calculateSide(position, owner->getPosition(), elapsedTime);
+		directionSystem.side = direction_system::calculateSide(position, owner->getPosition(), elapsedTime);
 		if (Helper::getDist(position, owner->getPosition()) > sightRange / 2)
 		{
 			changeAction(grab, false, false);
@@ -74,7 +74,7 @@ void bear::behavior(long long elapsedTime)
 		return;
 	}
 
-	directionSystem.side = DirectionSystem::calculateSide(position, movePosition, elapsedTime);
+	directionSystem.side = direction_system::calculateSide(position, movePosition, elapsedTime);
 
 	if (boundTarget == nullptr)
 		return;

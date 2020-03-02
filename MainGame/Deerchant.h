@@ -1,7 +1,7 @@
 #pragma once
 
 #include "DynamicObject.h"
-#include "HeroBag.h"
+#include "hero_bag.h"
 
 using namespace sf;
 
@@ -39,10 +39,10 @@ public:
 	void animationSmoothInteract(long long elapsedTime);
 	void animationSmooth();
 
-	Cell* heldItem = nullptr;
+	cell* heldItem = nullptr;
 	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
-	std::vector<HeroBag> bags;
+	std::vector<hero_bag> bags;
 	bool nearTheTable = false;
 private:
 	void setHitDirection();

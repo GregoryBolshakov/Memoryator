@@ -1,30 +1,30 @@
-#include "InventorySystem.h"
+#include "inventory_system.h"
 
 #include<fstream>
 
 #include "Helper.h"
 
 
-InventorySystem::InventorySystem()
+inventory_system::inventory_system()
 {
 	heldItemSpeed = 0.00005f;
 }
 
-InventorySystem::~InventorySystem()
+inventory_system::~inventory_system()
 = default;
 
-void InventorySystem::initMaxCounts(const std::string& filePath)
+void inventory_system::initMaxCounts(const std::string& filePath)
 {
 	std::ifstream file(filePath);
 
 	auto tagNumber = 508, maxCount = 1;
 	while (file >> tagNumber >> maxCount)	
-		HeroBag::itemsMaxCount[Tag(tagNumber)] = maxCount;
+		hero_bag::itemsMaxCount[Tag(tagNumber)] = maxCount;
 
 	file.close();
 }
 
-void InventorySystem::init()
+void inventory_system::init()
 {
 	dropZoneRadius = Helper::GetScreenSize().y * 2 / 7;
 	heldItem.content = { Tag::emptyCell, 0 };
@@ -36,7 +36,7 @@ void InventorySystem::init()
 	successInit = true;
 }
 
-void InventorySystem::moveOtherBags(const int cur) const
+void inventory_system::moveOtherBags(const int cur) const
 {
 	const auto lapsCount = 20;
 	//if (boundBags->at(cur).currentState != bagClosed)
@@ -61,7 +61,7 @@ void InventorySystem::moveOtherBags(const int cur) const
 	//}
 }
 
-void InventorySystem::interact(const long long elapsedTime)
+void inventory_system::interact(const long long elapsedTime)
 {
 	const auto mousePos = Vector2f(Mouse::getPosition());
 
@@ -150,7 +150,7 @@ void InventorySystem::interact(const long long elapsedTime)
 	effectsSystem.interact(elapsedTime);
 }
 
-void InventorySystem::crashIntoOtherBags(const int cnt) const
+void inventory_system::crashIntoOtherBags(const int cnt) const
 {
 	auto lapsCount = 20.0f;
 	while (true)
@@ -183,13 +183,13 @@ void InventorySystem::crashIntoOtherBags(const int cnt) const
 	boundBags->at(cnt).shiftVector.x = 0; boundBags->at(cnt).shiftVector.y = 0;
 }
 
-void InventorySystem::onMouseUp()
+void inventory_system::onMouseUp()
 {
 	usedMouse = false;
 	const auto mousePos = Vector2f(Mouse::getPosition());
 
 	if (pickedCell != nullptr)	
-		HeroBag::putItemIn(pickedCell, boundBags);
+		hero_bag::putItemIn(pickedCell, boundBags);
 
 	auto cnt = -1;
 	for (auto& bag : *boundBags)
@@ -243,10 +243,10 @@ void InventorySystem::onMouseUp()
 			{
 				item.content.first = heldItem.content.first;
 				item.content.second += heldItem.content.second;
-				if (item.content.second > HeroBag::itemsMaxCount.at(Tag(item.content.first)))
+				if (item.content.second > hero_bag::itemsMaxCount.at(Tag(item.content.first)))
 				{
-					heldItem.content.second = item.content.second % HeroBag::itemsMaxCount.at(Tag(item.content.first));
-					item.content.second = HeroBag::itemsMaxCount.at(Tag(item.content.first));
+					heldItem.content.second = item.content.second % hero_bag::itemsMaxCount.at(Tag(item.content.first));
+					item.content.second = hero_bag::itemsMaxCount.at(Tag(item.content.first));
 				}
 				else
 					heldItem.content = { Tag::emptyCell, 0 };
@@ -274,7 +274,7 @@ void InventorySystem::onMouseUp()
 	currentMovingBag = -1;
 }
 
-std::vector<drawable_chain_element*> InventorySystem::prepareSprites(long long elapsedTime, std::map<PackTag, sprite_pack>* packsMap)
+std::vector<drawable_chain_element*> inventory_system::prepareSprites(long long elapsedTime, std::map<PackTag, sprite_pack>* packsMap)
 {
 	std::vector<drawable_chain_element*> result = {};
 	usedMouse = false;
@@ -334,7 +334,7 @@ std::vector<drawable_chain_element*> InventorySystem::prepareSprites(long long e
 			icon->position = item.position;
 			result.push_back(icon);
 
-			if (HeroBag::itemsMaxCount.at(item.content.first) != 1)
+			if (hero_bag::itemsMaxCount.at(item.content.first) != 1)
 				result.push_back(new text_chain_element(
 					icon->position,
 					/*{ -SpritePack::iconWithoutSpaceSize.x / 2, -SpritePack::iconWithoutSpaceSize.y / 2 },*/ { 0, 0 },
@@ -353,7 +353,7 @@ std::vector<drawable_chain_element*> InventorySystem::prepareSprites(long long e
 		heldItemIcon->position = heldItem.position;
 		result.push_back(heldItemIcon);
 		result.push_back(heldItemIcon);
-		if (HeroBag::itemsMaxCount.at(heldItem.content.first) != 1)
+		if (hero_bag::itemsMaxCount.at(heldItem.content.first) != 1)
 			result.push_back(new text_chain_element(
 				heldItemIcon->position,
 				/*{ -SpritePack::iconWithoutSpaceSize.x / 2, -SpritePack::iconWithoutSpaceSize.y / 2 },*/ { 0, 0 },
@@ -436,7 +436,7 @@ std::vector<drawable_chain_element*> InventorySystem::prepareSprites(long long e
 	}
 }*/
 
-void InventorySystem::resetAnimationValues()
+void inventory_system::resetAnimationValues()
 {
 	animationCounter = 0;
 }

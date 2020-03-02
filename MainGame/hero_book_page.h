@@ -7,7 +7,7 @@
 #include "wreath_draft.h"
 #include "SpriteStructures.h"
 #include "TextSystem.h"
-#include "HeroBag.h"
+#include "hero_bag.h"
 
 enum class AuxiliarySpriteTag { line1 = 1, line2 = 2, line3 = 3, line4 = 4, line5 = 5, line6 = 6, line7 = 7 };
 
@@ -87,7 +87,7 @@ public:
 
 	std::string debugInfo = "";
 	pageContent getPreparedContent(int pageNumber, Tag currentDraft = Tag::emptyDraft);
-	std::vector<HeroBag>* boundBags{};
+	std::vector<hero_bag>* boundBags{};
 private:
 	static int div_up(int n, int d) { return n / d + (((n < 0) ^ (d > 0)) && (n % d)); }
 	std::unordered_map<ButtonTag, button>* buttonList{};

@@ -18,11 +18,11 @@ struct Effect
 	//std::string name;
 };
 
-class EffectsSystem
+class effects_system
 {
 public:
-	EffectsSystem();
-	~EffectsSystem();
+	effects_system();
+	~effects_system();
 	static void init();
 	void resetEffects(const std::vector<std::string>& removeList);
 	void addEffect(Effects effect, Drawable* elem, const std::string& name, long long duration = defaultDuration);

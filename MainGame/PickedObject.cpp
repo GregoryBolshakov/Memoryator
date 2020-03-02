@@ -6,13 +6,13 @@ PickedObject::PickedObject(std::string objectName, const Vector2f centerPosition
 	radius = 0;
 }
 
-bool PickedObject::pickUp(std::vector<HeroBag> *bags)
+bool PickedObject::pickUp(std::vector<hero_bag> *bags)
 {
 	if (this->tag == Tag::emptyCell)
 		return true;
 	while (true)
 	{
-		Cell *maximumFilledCell = nullptr;
+		cell *maximumFilledCell = nullptr;
 
 		for (auto& bag : *bags)
 		{
@@ -20,11 +20,11 @@ bool PickedObject::pickUp(std::vector<HeroBag> *bags)
 			{
 				if (maximumFilledCell == nullptr)
 				{
-					if (cell.content.first == Tag::emptyCell || Tag(cell.content.first) == id && cell.content.second < HeroBag::itemsMaxCount.at(cell.content.first))
+					if (cell.content.first == Tag::emptyCell || Tag(cell.content.first) == id && cell.content.second < hero_bag::itemsMaxCount.at(cell.content.first))
 						maximumFilledCell = &cell;
 				}
 				else
-					if (Tag(cell.content.first) == id && cell.content.second > maximumFilledCell->content.second && cell.content.second < HeroBag::itemsMaxCount.at(cell.content.first))
+					if (Tag(cell.content.first) == id && cell.content.second > maximumFilledCell->content.second && cell.content.second < hero_bag::itemsMaxCount.at(cell.content.first))
 						maximumFilledCell = &cell;					
 			}
 		}
@@ -32,10 +32,10 @@ bool PickedObject::pickUp(std::vector<HeroBag> *bags)
 		{
 			maximumFilledCell->content.first = id;
 			maximumFilledCell->content.second += count;
-			if (maximumFilledCell->content.second > HeroBag::itemsMaxCount.at(Tag(id)))
+			if (maximumFilledCell->content.second > hero_bag::itemsMaxCount.at(Tag(id)))
 			{
-				count = maximumFilledCell->content.second % HeroBag::itemsMaxCount.at(Tag(id));
-				maximumFilledCell->content.second = HeroBag::itemsMaxCount.at(Tag(id));
+				count = maximumFilledCell->content.second % hero_bag::itemsMaxCount.at(Tag(id));
+				maximumFilledCell->content.second = hero_bag::itemsMaxCount.at(Tag(id));
 			}
 			else
 			{

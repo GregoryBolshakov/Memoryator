@@ -61,7 +61,7 @@ void deer::behavior(const long long elapsedTime)
 			laxMovePosition = {-1, -1};
 			return;
 		}
-		directionSystem.side = DirectionSystem::calculateSide(position, owner->getPosition(), elapsedTime);
+		directionSystem.side = direction_system::calculateSide(position, owner->getPosition(), elapsedTime);
 		if (Helper::getDist(position, owner->getPosition()) > sightRange / 2)
 		{
 			changeAction(moveSlowly, false, false);
@@ -75,7 +75,7 @@ void deer::behavior(const long long elapsedTime)
 		return;
 	}
 
-	directionSystem.side = DirectionSystem::calculateSide(position, laxMovePosition, elapsedTime);
+	directionSystem.side = direction_system::calculateSide(position, laxMovePosition, elapsedTime);
 
 	if (boundTarget == nullptr)
 	{
@@ -201,7 +201,7 @@ Vector2f deer::getHeadPosition()
 			return {upperLeft.x + conditionalSizeUnits.x * 0.445F, upperLeft.y + conditionalSizeUnits.y * 0.182F};
 		}
 	}
-	if (DirectionSystem::cutDiagonals(directionSystem.lastDirection) == Direction::LEFT)
+	if (direction_system::cutDiagonals(directionSystem.lastDirection) == Direction::LEFT)
 	{
 		if (currentSprite[0] == 1)
 		{
@@ -232,7 +232,7 @@ Vector2f deer::getHeadPosition()
 			return {upperLeft.x + conditionalSizeUnits.x * 0.277F, upperLeft.y + conditionalSizeUnits.y * 0.138F};
 		}
 	}
-	if (DirectionSystem::cutDiagonals(directionSystem.lastDirection) == Direction::RIGHT)
+	if (direction_system::cutDiagonals(directionSystem.lastDirection) == Direction::RIGHT)
 	{
 		if (currentSprite[0] == 1)
 		{
@@ -271,7 +271,7 @@ std::vector<sprite_chain_element*> deer::prepareSprites(long long elapsedTime)
 	auto body = new sprite_chain_element(PackTag::deer, PackPart::stand, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	animationSpeed = 10;
 
-	auto spriteDirection = DirectionSystem::cutDiagonals(directionSystem.lastDirection);
+	auto spriteDirection = direction_system::cutDiagonals(directionSystem.lastDirection);
 
 	if (directionSystem.side == right)
 	{
@@ -279,7 +279,7 @@ std::vector<sprite_chain_element*> deer::prepareSprites(long long elapsedTime)
 	}
 	if (directionSystem.lastDirection == Direction::RIGHT || directionSystem.lastDirection == Direction::UPRIGHT || directionSystem.lastDirection == Direction::DOWNRIGHT)
 	{
-		spriteDirection = DirectionSystem::cutRights(spriteDirection);
+		spriteDirection = direction_system::cutRights(spriteDirection);
 		body->mirrored = true;
 	}
 

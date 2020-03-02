@@ -6,10 +6,10 @@
 #include "Brazier.h"
 #include "camera_system.h"
 #include "DynamicObject.h"
-#include "EffectsSystem.h"
+#include "effects_system.h"
 #include "EmptyObject.h"
 #include "Helper.h"
-#include "InventorySystem.h"
+#include "inventory_system.h"
 #include "LightSystem.h"
 #include "PedestalController.h"
 #include "TimeSystem.h"
@@ -30,7 +30,7 @@ public:
 	GridList& getStaticGrid() { return staticGrid; }
 	GridList& getDynamicGrid() { return dynamicGrid; }
 	Vector2f getCameraPosition() const	{ return cameraSystem.position; }
-	InventorySystem& getInventorySystem() { return inventorySystem; }
+	inventory_system& getInventorySystem() { return inventorySystem; }
 	build_system& getBuildSystem() { return buildSystem; }
 	TimeSystem& getTimeSystem() { return timeSystem; }
 	WorldGenerator& getWorldGenerator() { return worldGenerator; }
@@ -107,11 +107,11 @@ private:
 	Texture distortionMap;
 	void initShaders();*/
 
-	EffectsSystem effectSystem;
+	effects_system effectSystem;
 
 	// Systems
 	camera_system cameraSystem;
-	InventorySystem inventorySystem;
+	inventory_system inventorySystem;
 	build_system buildSystem;
 	TimeSystem timeSystem;
 	LightSystem lightSystem;

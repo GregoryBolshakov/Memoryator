@@ -19,7 +19,7 @@ void build_system::init()
 	successInit = true;
 }
 
-void build_system::inventoryBounding(std::vector<HeroBag>* boundBags)
+void build_system::inventoryBounding(std::vector<hero_bag>* boundBags)
 {
 	this->boundBags = boundBags;
 }

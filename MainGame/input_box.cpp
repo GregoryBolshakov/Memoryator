@@ -1,19 +1,19 @@
-#include "InputBox.h"
+#include "input_box.h"
 
 #include "Helper.h"
 
 using namespace sf;
 
-InputBox::InputBox() = default;
+input_box::input_box() = default;
 
-InputBox::InputBox(const FloatRect rect)
+input_box::input_box(const FloatRect rect)
 {
 	init(rect);
 }
 
-InputBox::~InputBox() = default;
+input_box::~input_box() = default;
 
-void InputBox::init(const FloatRect rect)
+void input_box::init(const FloatRect rect)
 {
 	this->rect = FloatRect(rect);
 	body.setSize(Vector2f(rect.width, rect.height));
@@ -32,7 +32,7 @@ void InputBox::init(const FloatRect rect)
 	text.setPosition(innerPart.getPosition().x + microOffset * 2, innerPart.getPosition().y - microOffset / 2.0f);
 }
 
-void InputBox::resetCursor(const bool toEnd)
+void input_box::resetCursor(const bool toEnd)
 {
 	if (toEnd)
 	{
@@ -42,13 +42,13 @@ void InputBox::resetCursor(const bool toEnd)
 	else cursorPos = 0;
 }
 
-void InputBox::setCursorToPos()
+void input_box::setCursorToPos()
 {
 	text.setString(line.substr(0, cursorPos));
 	cursor.setPosition(text.getGlobalBounds().left + text.getGlobalBounds().width + microOffset / 2.0f, cursor.getPosition().y);
 }
 
-void InputBox::draw(sf::RenderWindow & window) const
+void input_box::draw(sf::RenderWindow & window) const
 {
 	window.draw(body);
 	window.draw(innerPart);
@@ -56,7 +56,7 @@ void InputBox::draw(sf::RenderWindow & window) const
 	window.draw(cursor);
 }
 
-void InputBox::animateCursor()
+void input_box::animateCursor()
 {
 	if (cursor.getFillColor() == textColor)
 		cursor.setFillColor(sf::Color(textColor.r, textColor.g, textColor.b, 10));
@@ -64,7 +64,7 @@ void InputBox::animateCursor()
 		cursor.setFillColor(textColor);
 }
 
-void InputBox::onMouseRelease()
+void input_box::onMouseRelease()
 {
 	mousePressed = false;
 	float minDist = Helper::GetScreenSize().x + Helper::GetScreenSize().y;
@@ -82,7 +82,7 @@ void InputBox::onMouseRelease()
 	cursorPos = newPos;
 }
 
-void InputBox::interact(const long long elapsedTime)
+void input_box::interact(const long long elapsedTime)
 {
 	setCursorToPos();
 	if (Helper::isIntersects(Vector2f(Mouse::getPosition()), FloatRect(body.getPosition().x, body.getPosition().y, body.getSize().x, body.getSize().y)))
@@ -104,7 +104,7 @@ void InputBox::interact(const long long elapsedTime)
 	}
 }
 
-void InputBox::handleEvents(const Event event)
+void input_box::handleEvents(const Event event)
 {
 	if (event.type == Event::MouseButtonReleased)
 		onMouseRelease();

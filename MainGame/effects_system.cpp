@@ -1,21 +1,21 @@
-#include "EffectsSystem.h"
+#include "effects_system.h"
 
-long long EffectsSystem::defaultDuration = long(10e5);
+long long effects_system::defaultDuration = long(10e5);
 
-EffectsSystem::EffectsSystem()
+effects_system::effects_system()
 = default;
 
 
-EffectsSystem::~EffectsSystem()
+effects_system::~effects_system()
 = default;
 
-void EffectsSystem::init()
+void effects_system::init()
 {
 	//for (auto& item : names)	
 		//item.second = false;	
 }
 
-void EffectsSystem::resetEffects(const std::vector<std::string>& removeList)
+void effects_system::resetEffects(const std::vector<std::string>& removeList)
 {
 	auto cnt = -1;
 	for (const auto& name : removeList)
@@ -41,7 +41,7 @@ void EffectsSystem::resetEffects(const std::vector<std::string>& removeList)
 }
 
 
-void EffectsSystem::addEffect(Effects effect, Drawable* elem, const std::string& name, const long long duration)
+void effects_system::addEffect(Effects effect, Drawable* elem, const std::string& name, const long long duration)
 {
 	switch (effect)
 	{
@@ -62,7 +62,7 @@ void EffectsSystem::addEffect(Effects effect, Drawable* elem, const std::string&
 }
 
 
-void EffectsSystem::interact(const long long elapsedTime)
+void effects_system::interact(const long long elapsedTime)
 {
 	auto cnt = -1;
 	for (const auto& name : names)

@@ -71,7 +71,7 @@ void hero_book::initContent()
 	somePage.initObjectInfo();
 }
 
-void hero_book::getAllOuterInfo(std::vector<HeroBag>* bags, std::string name, WorldObject* object, Cell* worldHeldItem, bool nearTheTable)
+void hero_book::getAllOuterInfo(std::vector<hero_bag>* bags, std::string name, WorldObject* object, cell* worldHeldItem, bool nearTheTable)
 {
 	boundBags = bags;
 	somePage.boundBags = bags;
@@ -431,7 +431,7 @@ void hero_book::onMouseUp()
 		if (buttonList.at(ButtonTag::makeWreath).is_selected(Vector2f(Mouse::getPosition())))		
 			if (boundBags)
 				if (hero_book_page::tagToWreath(Tag(currentPage)) != Tag::emptyCell)
-				HeroBag::putItemIn(new std::pair<Tag, int>(hero_book_page::tagToWreath(Tag(currentPage)), 1), boundBags);					
+				hero_bag::putItemIn(new std::pair<Tag, int>(hero_book_page::tagToWreath(Tag(currentPage)), 1), boundBags);					
 	//---------------
 
 	// clicking the plus in the draft center

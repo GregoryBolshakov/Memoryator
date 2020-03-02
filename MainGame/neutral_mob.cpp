@@ -45,7 +45,7 @@ void neutral_mob::behavior(long long elapsedTime)
 	}
 	fightInteract(elapsedTime);
 
-	directionSystem.side = DirectionSystem::calculateSide(position, movePosition, elapsedTime);
+	directionSystem.side = direction_system::calculateSide(position, movePosition, elapsedTime);
 	//return;
 	if (boundTarget == nullptr)
 		return;

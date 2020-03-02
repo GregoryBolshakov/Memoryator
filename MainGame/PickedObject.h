@@ -1,7 +1,7 @@
 #pragma once
 
 #include "TerrainObject.h"
-#include "HeroBag.h"
+#include "hero_bag.h"
 
 class PickedObject : public TerrainObject
 {
@@ -11,9 +11,9 @@ protected:
 public:
 	PickedObject::PickedObject(std::string objectName, Vector2f centerPosition);
 	virtual ~PickedObject();
-	bool pickUp(std::vector<HeroBag> *bags);
+	bool pickUp(std::vector<hero_bag> *bags);
 	Tag getId() { return id; }
 	int getCount() { return count; }
 
-	std::vector<Cell> ownInventory;
+	std::vector<cell> ownInventory;
 };

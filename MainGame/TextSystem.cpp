@@ -1,6 +1,6 @@
 #include "TextSystem.h"
 
-#include "HeroBag.h"
+#include "hero_bag.h"
 
 float TextSystem::characterSize = 30.0f * Helper::GetScreenSize().y / 1440.0f;
 std::unordered_map<FontName, Font> TextSystem::fonts = {};

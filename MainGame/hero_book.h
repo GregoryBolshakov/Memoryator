@@ -5,7 +5,7 @@
 
 #include "hero_book_page.h"
 #include "button.h"
-#include "HeroBag.h"
+#include "hero_bag.h"
 #include "TextSystem.h"
 #include "WorldObject.h"
 
@@ -21,10 +21,10 @@ public:
 	void interact();
 	void onMouseUp();
 	void getAllOuterInfo(
-		std::vector<HeroBag>* bags,
+		std::vector<hero_bag>* bags,
 		std::string name,
 		WorldObject* object,
-		Cell* worldHeldItem,
+		cell* worldHeldItem,
 		bool nearTheTable = false);
 	void WhileMouseDown();
 	void setPage(int page);
@@ -57,12 +57,12 @@ private:
 	/////////////////////////
 	bool visibility = false;
 	std::pair<Tag, int> heldItem = { Tag::emptyCell, 0 };
-	Cell* worldHeldItem = nullptr;
+	cell* worldHeldItem = nullptr;
 	WorldObject* worldSelectedObject = nullptr;
 	Tag currentDraft = Tag::emptyDraft, currentFlower = Tag::emptyCell;
 	std::string worldMouseName = "";
 	Vector2f blockDescriptionPoint = Vector2f(0.53f, 0.104f); // as a percentage of the size of the page markup
 	Vector2f pageDescriptionPoint = Vector2f(0.53f, 0.395f); // as a percentage of the size of the page markup
-	std::vector<HeroBag>* boundBags{};
+	std::vector<hero_bag>* boundBags{};
 };
 

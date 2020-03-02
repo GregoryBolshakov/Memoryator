@@ -108,7 +108,7 @@ void hare::behavior(long long elapsedTime)
 	// bouncing to a trap
 	if (boundTarget->tag == Tag::hareTrap)
 	{
-		directionSystem.side = DirectionSystem::calculateSide(position, boundTarget->getPosition(), elapsedTime);
+		directionSystem.side = direction_system::calculateSide(position, boundTarget->getPosition(), elapsedTime);
 		if (Helper::getDist(position, boundTarget->getPosition()) <= radius)
 		{
 			const auto trap = dynamic_cast<HareTrap*>(boundTarget);
@@ -127,7 +127,7 @@ void hare::behavior(long long elapsedTime)
 	// runaway from enemy
 	if (boundTarget->tag == Tag::hero)
 	{
-		directionSystem.side = DirectionSystem::calculateSide(position, laxMovePosition, elapsedTime);
+		directionSystem.side = direction_system::calculateSide(position, laxMovePosition, elapsedTime);
 		moveSystem.speed = std::max(moveSystem.defaultSpeed, (moveSystem.defaultSpeed * 10) * (1 - (Helper::getDist(position, boundTarget->getPosition()) / sightRange * 1.5f)));
 		animationSpeed = std::max(0.0004f, 0.0003f * moveSystem.speed / moveSystem.defaultSpeed);
 		if (distanceToTarget <= sightRange)
@@ -208,7 +208,7 @@ std::vector<sprite_chain_element*> hare::prepareSprites(long long elapsedTime)
 		body->mirrored = true;
 	}
 
-	body->direction = DirectionSystem::sideToDirection(spriteSide);
+	body->direction = direction_system::sideToDirection(spriteSide);
 
 	switch (currentAction)
 	{

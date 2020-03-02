@@ -1,18 +1,19 @@
 #pragma once
 
-#include <string>
-#include "Tags.h"
 #include <SFML/System/Vector2.hpp>
+#include <string>
+
+#include "Tags.h"
 
 const float pi = 3.14159265358979323846f;
 
 using Vector2f = sf::Vector2f;
 
-class DirectionSystem
+class direction_system
 {
 public:
-	DirectionSystem();
-	~DirectionSystem();
+	direction_system();
+	~direction_system();
 	void init(Vector2f* position, Vector2f* movePosition) { this->position = position; this->movePosition = movePosition; }
 	void calculateDirection();
 	static Side calculateSide(Vector2f position, sf::Vector2f otherObjectPosition, long long elapsedTime);

@@ -3,27 +3,27 @@
 #include <SFML/Graphics.hpp>
 
 #include "TextSystem.h"
-#include "EffectsSystem.h"
-#include "HeroBag.h"
+#include "effects_system.h"
+#include "hero_bag.h"
 #include "SpriteStructures.h"
 
 using namespace sf;
 
-class InventorySystem
+class inventory_system
 {
 public:
-	InventorySystem();
-	~InventorySystem();
+	inventory_system();
+	~inventory_system();
 	void init();
 	std::vector<drawable_chain_element*> prepareSprites(long long elapsedTime, std::map<PackTag, sprite_pack>* packsMap);
 	//void drawInventory(std::vector<std::pair<Tag, int>>* inventory, Vector2f position, RenderWindow& window);
 	void resetAnimationValues();
 	void onMouseUp();
-	void inventoryBounding(std::vector<HeroBag>* bags) { boundBags = bags; }
+	void inventoryBounding(std::vector<hero_bag>* bags) { boundBags = bags; }
 	void interact(long long elapsedTime);
 	void resetPickedCell() { pickedCell = nullptr; }
 	bool getUsedMouse() const { return usedMouse; }	
-	Cell &getHeldItem() { return heldItem; }
+	cell &getHeldItem() { return heldItem; }
 
 	bool wasDrawing = false;
 	std::string debugInfo = "", cursorText = "";
@@ -33,7 +33,7 @@ public:
 	Texture dropZoneTexture;
 private:
 	//hero bags
-	std::vector<HeroBag>* boundBags{};
+	std::vector<hero_bag>* boundBags{};
 	int currentMovingBag = -1;
 	float minDistToClosed = 10e4, minDistToOpen = 10e4;
 
@@ -41,7 +41,7 @@ private:
 	int animationCounter = 1;
 
 	//held item
-	Cell heldItem;
+	cell heldItem;
 	float heldItemSpeed = 0, dropZoneRadius{};
 	std::pair <Tag, int>* pickedCell = nullptr; 
 	//drawing
@@ -55,5 +55,5 @@ private:
 	bool usedMouse = false, cursorBlurUsing = false, successInit = false;
 	Vector2f cursorTextPos = {0, 0};
 	TextSystem textWriter;
-	EffectsSystem effectsSystem;
+	effects_system effectsSystem;
 };

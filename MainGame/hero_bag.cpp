@@ -1,24 +1,24 @@
-#include "HeroBag.h"
+#include "hero_bag.h"
 
 #include "GridList.h"
 #include "Helper.h"
 
-HeroBag::HeroBag()
+hero_bag::hero_bag()
 {
 	stateChangeTime = 100000;
 }
 
-HeroBag::~HeroBag()
+hero_bag::~hero_bag()
 = default;
 
-std::unordered_map<Tag, int> HeroBag::itemsMaxCount = std::unordered_map<Tag, int>();
+std::unordered_map<Tag, int> hero_bag::itemsMaxCount = std::unordered_map<Tag, int>();
 
-std::vector<std::pair<Tag, int>> HeroBag::testInventory =
+std::vector<std::pair<Tag, int>> hero_bag::testInventory =
 { {Tag::noose, 1}, {Tag::yarrow, 3}, {Tag::emptyCell, 0}, {Tag::inkyBlackPen, 1}, {Tag::hare, 1}, {Tag::chamomile, 2}, {Tag::emptyCell, 0} };
-std::vector<std::pair<Tag, int>> HeroBag::emptyInventory =
+std::vector<std::pair<Tag, int>> hero_bag::emptyInventory =
 { {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0} };
 
-void HeroBag::initialize(const Vector2f position, const bool isSelectable, std::vector<std::pair<Tag, int>> inventory)
+void hero_bag::initialize(const Vector2f position, const bool isSelectable, std::vector<std::pair<Tag, int>> inventory)
 {
 	sizeClosed = Vector2f(Helper::GetScreenSize().x / 12.0f, Helper::GetScreenSize().y / 6.0f);
 	sizeOpen = Vector2f(Helper::GetScreenSize().x / 6.0f, Helper::GetScreenSize().y / 3.0f);
@@ -70,15 +70,15 @@ void HeroBag::initialize(const Vector2f position, const bool isSelectable, std::
 	//----------------------
 }
 
-Cell HeroBag::createCell(const Vector2f position, const std::pair<Tag, int> content)
+cell hero_bag::createCell(const Vector2f position, const std::pair<Tag, int> content)
 {
-	Cell cell;
+	cell cell;
 	cell.position = position;
 	cell.content = content;
 	return cell;
 }
 
-int HeroBag::getSelectedCell(const Vector2f position)
+int hero_bag::getSelectedCell(const Vector2f position)
 {
 	for (auto i = 0u; i < cells.size(); i++)
 	{
@@ -88,7 +88,7 @@ int HeroBag::getSelectedCell(const Vector2f position)
 	return -1;
 }
 
-float HeroBag::getRadius() const
+float hero_bag::getRadius() const
 {
 	if (currentState == bagClosed)
 		return bagSpriteChain.ClosedBag->size.x / 2;
@@ -102,7 +102,7 @@ float HeroBag::getRadius() const
 	return 0;
 }
 
-void HeroBag::drawCircuit(RenderWindow* window)
+void hero_bag::drawCircuit(RenderWindow* window)
 {
 	const auto i_end = bagSpriteChain.OpenedBag->position.x + bagSpriteChain.OpenedBag->size.x;
 	const auto j_end = bagSpriteChain.OpenedBag->position.y + bagSpriteChain.OpenedBag->size.y;
@@ -127,13 +127,13 @@ void HeroBag::drawCircuit(RenderWindow* window)
 	}
 }
 
-void HeroBag::fixCells()
+void hero_bag::fixCells()
 {
 	for (auto i = 0u; i < cells.size(); i++)
 		cells[i].position = Vector2f(position.x + cellsPos[i].x, position.y + cellsPos[i].y);
 }
 
-void HeroBag::fixPos()
+void hero_bag::fixPos()
 {
 	if (movePosition == position)
 		movePosition = { -1, -1 };
@@ -154,7 +154,7 @@ void HeroBag::fixPos()
 		shiftVector.y = 0;
 }
 
-std::vector<std::pair<Tag, int>> HeroBag::cellsToInventory(const std::vector<Cell>& cells)
+std::vector<std::pair<Tag, int>> hero_bag::cellsToInventory(const std::vector<cell>& cells)
 {
 	std::vector<std::pair<Tag, int>> ans(cells.size());
 	for (auto i = 0u; i < cells.size(); i++)
@@ -165,7 +165,7 @@ std::vector<std::pair<Tag, int>> HeroBag::cellsToInventory(const std::vector<Cel
 	return ans;
 }
 
-bool HeroBag::canAfford(std::vector<std::pair<Tag, int>> recipe, std::vector<HeroBag>* bags, Cell* heldItem)
+bool hero_bag::canAfford(std::vector<std::pair<Tag, int>> recipe, std::vector<hero_bag>* bags, cell* heldItem)
 {
 	for (auto& item : recipe)
 	{
@@ -188,7 +188,7 @@ bool HeroBag::canAfford(std::vector<std::pair<Tag, int>> recipe, std::vector<Her
 	return true;
 }
 
-void HeroBag::takeItems(std::vector<std::pair<Tag, int>> recipe, std::vector<HeroBag>* bags, Cell* heldItem)
+void hero_bag::takeItems(std::vector<std::pair<Tag, int>> recipe, std::vector<hero_bag>* bags, cell* heldItem)
 {
 	for (auto& item : recipe)
 	{
@@ -229,7 +229,7 @@ void HeroBag::takeItems(std::vector<std::pair<Tag, int>> recipe, std::vector<Her
 	}
 }
 
-bool HeroBag::putItemsIn(std::vector<std::pair<Tag, int>>* loot, std::vector<HeroBag>* bags)
+bool hero_bag::putItemsIn(std::vector<std::pair<Tag, int>>* loot, std::vector<hero_bag>* bags)
 {
 	auto result = true;
 	for (auto& item : *loot)
@@ -261,7 +261,7 @@ bool HeroBag::putItemsIn(std::vector<std::pair<Tag, int>>* loot, std::vector<Her
 	return result;
 }
 
-bool HeroBag::putItemIn(std::pair<Tag, int>* loot, std::vector<HeroBag>* bags)
+bool hero_bag::putItemIn(std::pair<Tag, int>* loot, std::vector<hero_bag>* bags)
 {
 	auto result = true;
 
@@ -292,7 +292,7 @@ bool HeroBag::putItemIn(std::pair<Tag, int>* loot, std::vector<HeroBag>* bags)
 	return result;
 }
 
-void HeroBag::mouseMove()
+void hero_bag::mouseMove()
 {
 	if (currentState == bagClosed && (readyToChangeState || wasMoved))
 	{
@@ -312,7 +312,7 @@ void HeroBag::mouseMove()
 	lastMousePos = Vector2f(Mouse::getPosition());
 }
 
-sprite_chain_element* HeroBag::prepareSprite(const long long elapsedTime, std::map<PackTag, sprite_pack> * packsMap)
+sprite_chain_element* hero_bag::prepareSprite(const long long elapsedTime, std::map<PackTag, sprite_pack> * packsMap)
 {
 	const auto screenCenter = Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2);
 	bagSpriteChain.ClosedBag->size = sizeClosed; bagSpriteChain.ClosedBagSelected->size = sizeClosed; bagSpriteChain.ClosedBagBig->size = sizeClosed;

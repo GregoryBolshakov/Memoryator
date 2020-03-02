@@ -12,7 +12,7 @@ HareTrap::HareTrap(std::string objectName, const Vector2f centerPosition, const 
 	currentSprite[0] = 1;
 	id = Tag::hareTrap;
 	tag = Tag::hareTrap;
-	inventory = HeroBag::emptyInventory;
+	inventory = hero_bag::emptyInventory;
 }
 
 void HareTrap::setType(int typeOfObject)

@@ -104,7 +104,7 @@ void owl_boss::behaviorWithDynamic(DynamicObject* target, const long long elapse
 	if (target->tag != Tag::hero)
 		return;
 
-	directionSystem.side = DirectionSystem::calculateSide(position, movePosition, elapsedTime);
+	directionSystem.side = direction_system::calculateSide(position, movePosition, elapsedTime);
 
 	timeAfterHit += elapsedTime;
 

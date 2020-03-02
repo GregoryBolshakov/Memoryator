@@ -35,9 +35,6 @@
     <ClCompile Include="Mugwort.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="HeroBag.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="DroppedLoot.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
@@ -68,9 +65,6 @@
     <ClCompile Include="Roof.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="InputBox.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="PedestalController.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -98,9 +92,6 @@
     <ClCompile Include="Lake.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="InventorySystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="TimeSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -111,13 +102,7 @@
     <ClCompile Include="MenuSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="EffectsSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="MoveSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectionSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="VisualEffects\AmbientLight.cpp">
@@ -213,6 +198,21 @@
     <ClCompile Include="console.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="direction_system.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="effects_system.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="hero_bag.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="input_box.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="inventory_system.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EventHandler.h" />
@@ -249,9 +249,6 @@
     <ClInclude Include="Mugwort.h">
       <Filter>Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="HeroBag.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="DroppedLoot.h">
       <Filter>Terrain</Filter>
     </ClInclude>
@@ -283,9 +280,6 @@
     <ClInclude Include="Roof.h">
       <Filter>Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="InputBox.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="PedestalController.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -316,9 +310,6 @@
     <ClInclude Include="Lake.h">
       <Filter>Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="InventorySystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="TimeSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -329,13 +320,7 @@
     <ClInclude Include="MenuSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="EffectsSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="MoveSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectionSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="VisualEffects\AmbientLight.hpp">
@@ -432,6 +417,21 @@
       <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="console.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="direction_system.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="effects_system.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="hero_bag.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="input_box.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="inventory_system.h">
       <Filter>Systems</Filter>
     </ClInclude>
   </ItemGroup>

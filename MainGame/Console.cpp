@@ -9,7 +9,7 @@ console::console(const FloatRect rect, WorldHandler* world)
 console::~console()
 = default;
 
-InputBox console::getBody() const
+input_box console::getBody() const
 {
 	return body;
 }

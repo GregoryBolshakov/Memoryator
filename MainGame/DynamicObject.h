@@ -36,7 +36,7 @@ public:
 	int getSpriteNumber() override { return currentSprite[0]; }
 	[[nodiscard]] int getEllipseSize() const { return ellipseSize; }
 	[[nodiscard]] MoveSystem getMoveSystem() const { return moveSystem; }
-	[[nodiscard]] DirectionSystem getDirectionSystem() const { return directionSystem; }
+	[[nodiscard]] direction_system getDirectionSystem() const { return directionSystem; }
 	[[nodiscard]] float getStrength() const { return strength; }
 	[[nodiscard]] long long getTimeAfterHitSelf() const { return timeAfterHitSelf; }
 	[[nodiscard]] bool getRouteGenerationAbility() const { return routeGenerationAbility; }
@@ -61,7 +61,7 @@ public:
 	virtual void jerk(float power, float deceleration, Vector2f destinationPoint) = 0;
 
 	MoveSystem moveSystem;
-	DirectionSystem directionSystem;
+	direction_system directionSystem;
 	long long timeForNewHitSelf = long(6e5);
 	long long timeAfterHit = 0;
 	long long timeForNewHit = long(100000);

@@ -3,7 +3,7 @@
 #include <SFML/Graphics/Color.hpp>
 #include <vector>
 
-#include "DirectionSystem.h"
+#include "direction_system.h"
 
 struct BumpChainElement
 {

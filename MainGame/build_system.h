@@ -4,7 +4,7 @@
 
 #include "GridList.h"
 #include "Helper.h"
-#include "InventorySystem.h"
+#include "inventory_system.h"
 #include "sprite_pack.h"
 #include "WorldObject.h"
 
@@ -22,7 +22,7 @@ class build_system
 public:	
 	build_system();
 	~build_system();
-	void inventoryBounding(std::vector<HeroBag>* boundBags);
+	void inventoryBounding(std::vector<hero_bag>* boundBags);
 	void init();	
 	void onMouseUp();
 	void buildHeldItem(Vector2f focusedObjectPosition, float scaleFactor);
@@ -40,7 +40,7 @@ public:
 	
 	bool canAfford();
 
-	std::vector<HeroBag>* boundBags;
+	std::vector<hero_bag>* boundBags;
 	bool canBePlaced = false, instantBuild = false;
 	Tag selectedObject = Tag::emptyCell;
 	Vector2f buildingPosition = { -1, -1 };
