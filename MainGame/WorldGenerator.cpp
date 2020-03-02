@@ -46,7 +46,7 @@ void WorldGenerator::initializeStaticItem(
 	bool mirrored,
 	const std::vector<std::pair<Tag, int>>& inventory) const
 {
-	auto item = ObjectInitializer::initializeStaticItem(itemClass, itemPosition, itemType, itemName, count, biome, packsMap, mirrored, inventory);
+	auto item = object_initializer::initializeStaticItem(itemClass, itemPosition, itemType, itemName, count, biome, packsMap, mirrored, inventory);
 	
 	if (item == nullptr)
 		return;
@@ -88,7 +88,7 @@ void WorldGenerator::initializeStaticItem(
 
 void WorldGenerator::initializeDynamicItem(const Tag itemClass, const Vector2f itemPosition, const std::string& itemName, WorldObject* owner)
 {
-	const auto item = ObjectInitializer::initializeDynamicItem(itemClass, itemPosition, itemName, packsMap, owner);
+	const auto item = object_initializer::initializeDynamicItem(itemClass, itemPosition, itemName, packsMap, owner);
 	
 	if (item == nullptr)
 		return;

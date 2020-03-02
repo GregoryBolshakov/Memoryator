@@ -1,16 +1,16 @@
-#include "MoveSystem.h"
+#include "move_system.h"
 
 #include <SFML/Graphics/Color.hpp>
 
 #include "Helper.h"
 
-MoveSystem::MoveSystem()
+move_system::move_system()
 = default;
 
-MoveSystem::~MoveSystem()
+move_system::~move_system()
 = default;
 
-void MoveSystem::init(float* radius, Vector2f* position, sf::Color* color)
+void move_system::init(float* radius, Vector2f* position, sf::Color* color)
 {
 	this->radius = radius;
 	this->position = position;
@@ -18,7 +18,7 @@ void MoveSystem::init(float* radius, Vector2f* position, sf::Color* color)
 	turnedOn = true;
 }
 
-void MoveSystem::pushByBumping(Vector2f position, float radius, bool canCrash)
+void move_system::pushByBumping(Vector2f position, float radius, bool canCrash)
 {
 	if (canCrashIntoDynamic || canCrash || pushDamage != 0)
 		return;
@@ -26,7 +26,7 @@ void MoveSystem::pushByBumping(Vector2f position, float radius, bool canCrash)
 	bumpDistance += radius;
 }
 
-void MoveSystem::endPush(long long elapsedTime)
+void move_system::endPush(long long elapsedTime)
 {
 	pushDirection = { 0, 0 };
 	pushDuration = 0;
@@ -36,7 +36,7 @@ void MoveSystem::endPush(long long elapsedTime)
 	bumpDistance = 0;
 }
 
-void MoveSystem::pushAway(long long elapsedTime, float pushSpeed)
+void move_system::pushAway(long long elapsedTime, float pushSpeed)
 {
 	if (pushSpeed == 0)
 		pushSpeed = DEFAULT_PUSH_SPEED;

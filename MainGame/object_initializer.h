@@ -45,11 +45,11 @@
 
 enum Biomes { SwampyTrees = 1, DarkWoods = 2, BirchGrove = 3, FlowerValley = 4 };
 
-class ObjectInitializer
+class object_initializer
 {
 public:
-	ObjectInitializer();
-	~ObjectInitializer();
+	object_initializer();
+	~object_initializer();
 	static StaticObject* initializeStaticItem(
 		Tag itemClass,
 		Vector2f itemPosition,

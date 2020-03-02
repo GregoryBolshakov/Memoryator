@@ -11,8 +11,8 @@
 #include "Helper.h"
 #include "inventory_system.h"
 #include "LightSystem.h"
-#include "PedestalController.h"
-#include "TimeSystem.h"
+#include "pedestal_controller.h"
+#include "time_system.h"
 #include "WorldGenerator.h"
 
 using namespace sf;
@@ -32,7 +32,7 @@ public:
 	Vector2f getCameraPosition() const	{ return cameraSystem.position; }
 	inventory_system& getInventorySystem() { return inventorySystem; }
 	build_system& getBuildSystem() { return buildSystem; }
-	TimeSystem& getTimeSystem() { return timeSystem; }
+	time_system& getTimeSystem() { return timeSystem; }
 	WorldGenerator& getWorldGenerator() { return worldGenerator; }
 	LightSystem& getLightSystem() { return lightSystem; }
 	std::string getMouseDisplayName() const { return mouseDisplayName; }
@@ -56,7 +56,7 @@ public:
 	//void runBuildSystemDrawing(RenderWindow& window, long long elapsedTime);
 	//void runInventorySystemDrawing(RenderWindow& window, long long elapsedTime);
 	void runWorldGenerator();
-	PedestalController pedestalController;
+	pedestal_controller pedestalController;
 
 	// Zoom	
 	void setScaleFactor(int delta);
@@ -113,7 +113,7 @@ private:
 	camera_system cameraSystem;
 	inventory_system inventorySystem;
 	build_system buildSystem;
-	TimeSystem timeSystem;
+	time_system timeSystem;
 	LightSystem lightSystem;
 
 	// Grids

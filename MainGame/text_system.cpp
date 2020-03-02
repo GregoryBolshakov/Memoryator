@@ -1,13 +1,13 @@
-#include "TextSystem.h"
+#include "text_system.h"
 
 #include "hero_bag.h"
 
-float TextSystem::characterSize = 30.0f * Helper::GetScreenSize().y / 1440.0f;
-std::unordered_map<FontName, Font> TextSystem::fonts = {};
-std::unordered_map<FontName, Text> TextSystem::textBoxes = {};
-Text TextSystem::numberOfItems;
+float text_system::characterSize = 30.0f * Helper::GetScreenSize().y / 1440.0f;
+std::unordered_map<FontName, Font> text_system::fonts = {};
+std::unordered_map<FontName, Text> text_system::textBoxes = {};
+Text text_system::numberOfItems;
 
-TextSystem::TextSystem()
+text_system::text_system()
 {
 	initFonts();
 	initTextBoxes();
@@ -16,10 +16,10 @@ TextSystem::TextSystem()
 	numberOfItems.setFillColor(sf::Color::White);
 }
 
-TextSystem::~TextSystem()
+text_system::~text_system()
 = default;
 
-void TextSystem::initFonts()
+void text_system::initFonts()
 {
 	Font currentFont;
 	currentFont.loadFromFile("fonts/Bebas.ttf");
@@ -30,7 +30,7 @@ void TextSystem::initFonts()
 	fonts.insert({ FontName::ConsoleFont, currentFont });
 }
 
-void TextSystem::initTextBoxes()
+void text_system::initTextBoxes()
 {
 	Text currentText;
 	currentText.setFont(fonts[FontName::BebasFont]);
@@ -41,7 +41,7 @@ void TextSystem::initTextBoxes()
 	textBoxes.insert({ FontName::ConsoleFont, currentText });
 }
 
-void TextSystem::drawString(const std::string& str, const FontName font, const float size, const float posX, const float posY, RenderTarget& target, const sf::Color color)
+void text_system::drawString(const std::string& str, const FontName font, const float size, const float posX, const float posY, RenderTarget& target, const sf::Color color)
 {
 	textBoxes.at(font).setPosition(posX, posY);
 	textBoxes.at(font).setCharacterSize(unsigned(ceil(size)));
@@ -50,7 +50,7 @@ void TextSystem::drawString(const std::string& str, const FontName font, const f
 	target.draw(textBoxes.at(font));
 }
 
-void TextSystem::drawTextBox(std::string str, const FontName font, const float size, const float posX, const float posY, const float width, const float height, RenderTarget& target, const sf::Color color)
+void text_system::drawTextBox(std::string str, const FontName font, const float size, const float posX, const float posY, const float width, const float height, RenderTarget& target, const sf::Color color)
 {
 	auto curText = textBoxes.at(font);
 	curText.setString(str);
@@ -88,7 +88,7 @@ void TextSystem::drawTextBox(std::string str, const FontName font, const float s
 	}
 }
 
-void TextSystem::drawNumberOfItems(const Vector2f pos, const int itemsCount, RenderTarget& target)
+void text_system::drawNumberOfItems(const Vector2f pos, const int itemsCount, RenderTarget& target)
 {
 	numberOfItems.setString(std::to_string(itemsCount));
 	numberOfItems.setOrigin(numberOfItems.getGlobalBounds().width, numberOfItems.getGlobalBounds().height);
@@ -96,7 +96,7 @@ void TextSystem::drawNumberOfItems(const Vector2f pos, const int itemsCount, Ren
 	target.draw(numberOfItems);
 }
 
-sf::Vector2f TextSystem::getTextBoxSize(const std::string& string, const float characterSize, const FontName font)
+sf::Vector2f text_system::getTextBoxSize(const std::string& string, const float characterSize, const FontName font)
 {
 	if (fonts.count(font) <= 0 || textBoxes.count(font) <= 0)
 		return { 0, 0 };

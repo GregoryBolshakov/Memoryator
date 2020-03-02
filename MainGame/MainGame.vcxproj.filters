@@ -47,9 +47,6 @@
     <ClCompile Include="WreathTable.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="ObjectInitializer.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="WorldHandler.cpp">
       <Filter>World</Filter>
     </ClCompile>
@@ -64,9 +61,6 @@
     </ClCompile>
     <ClCompile Include="Roof.cpp">
       <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="PedestalController.cpp">
-      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="Root.cpp">
       <Filter>Terrain</Filter>
@@ -92,19 +86,7 @@
     <ClCompile Include="Lake.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="TimeSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="TextSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="LightSystem.cpp" />
-    <ClCompile Include="MenuSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="MoveSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="VisualEffects\AmbientLight.cpp">
       <Filter>VisualEffects</Filter>
     </ClCompile>
@@ -213,6 +195,24 @@
     <ClCompile Include="inventory_system.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="menu_system.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="move_system.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="object_initializer.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="pedestal_controller.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="text_system.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="time_system.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EventHandler.h" />
@@ -262,9 +262,6 @@
     <ClInclude Include="WreathTable.h">
       <Filter>Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectInitializer.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="WorldHandler.h">
       <Filter>World</Filter>
     </ClInclude>
@@ -279,9 +276,6 @@
     </ClInclude>
     <ClInclude Include="Roof.h">
       <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="PedestalController.h">
-      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="Root.h">
       <Filter>Terrain</Filter>
@@ -310,19 +304,7 @@
     <ClInclude Include="Lake.h">
       <Filter>Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="TimeSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="TextSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="LightSystem.h" />
-    <ClInclude Include="MenuSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="MoveSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="VisualEffects\AmbientLight.hpp">
       <Filter>VisualEffects</Filter>
     </ClInclude>
@@ -432,6 +414,24 @@
       <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="inventory_system.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="menu_system.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="move_system.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="object_initializer.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="pedestal_controller.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="text_system.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="time_system.h">
       <Filter>Systems</Filter>
     </ClInclude>
   </ItemGroup>

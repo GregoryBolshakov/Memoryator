@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
-#include "TextSystem.h"
+#include "text_system.h"
 
 using namespace sf;
 

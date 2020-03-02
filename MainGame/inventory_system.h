@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "TextSystem.h"
+#include "text_system.h"
 #include "effects_system.h"
 #include "hero_bag.h"
 #include "SpriteStructures.h"
@@ -54,6 +54,6 @@ private:
 	std::vector<bool> visitedInDisplacement;
 	bool usedMouse = false, cursorBlurUsing = false, successInit = false;
 	Vector2f cursorTextPos = {0, 0};
-	TextSystem textWriter;
+	text_system textWriter;
 	effects_system effectsSystem;
 };

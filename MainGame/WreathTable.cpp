@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-#include "ObjectInitializer.h"
+#include "object_initializer.h"
 
 WreathTable::WreathTable(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {

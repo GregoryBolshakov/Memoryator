@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MoveSystem.h"
+#include "move_system.h"
 #include "TerrainObject.h"
 #include "WorldObject.h"
 
@@ -35,7 +35,7 @@ public:
 	virtual ~DynamicObject();
 	int getSpriteNumber() override { return currentSprite[0]; }
 	[[nodiscard]] int getEllipseSize() const { return ellipseSize; }
-	[[nodiscard]] MoveSystem getMoveSystem() const { return moveSystem; }
+	[[nodiscard]] move_system getMoveSystem() const { return moveSystem; }
 	[[nodiscard]] direction_system getDirectionSystem() const { return directionSystem; }
 	[[nodiscard]] float getStrength() const { return strength; }
 	[[nodiscard]] long long getTimeAfterHitSelf() const { return timeAfterHitSelf; }
@@ -60,7 +60,7 @@ public:
 	virtual void setTarget(DynamicObject &object) = 0;
 	virtual void jerk(float power, float deceleration, Vector2f destinationPoint) = 0;
 
-	MoveSystem moveSystem;
+	move_system moveSystem;
 	direction_system directionSystem;
 	long long timeForNewHitSelf = long(6e5);
 	long long timeAfterHit = 0;

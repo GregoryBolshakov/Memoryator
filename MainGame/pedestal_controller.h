@@ -2,11 +2,11 @@
 
 #include "TerrainObject.h"
 
-class PedestalController
+class pedestal_controller
 {
 public:
-	PedestalController();
-	~PedestalController();
+	pedestal_controller();
+	~pedestal_controller();
 	void start(TerrainObject* object);
 	void stop();
 	void draw(RenderWindow* window, Vector2f cameraPosition, float scaleFactor);

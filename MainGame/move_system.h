@@ -5,18 +5,18 @@
 
 #include "direction_system.h"
 
-struct BumpChainElement
+struct bump_chain_element
 {
-	BumpChainElement(Vector2f position, bool cancelable) : position{ position }, cancelable{ cancelable } {};
+	bump_chain_element(Vector2f position, bool cancelable) : position{ position }, cancelable{ cancelable } {};
 	Vector2f position;
 	bool cancelable = true;
 };
 
-class MoveSystem
+class move_system
 {
 public:
-	MoveSystem();
-	virtual ~MoveSystem();
+	move_system();
+	virtual ~move_system();
 	void init(float* radius, Vector2f* position, sf::Color* color);
 	void turnOff() { turnedOn = false; }
 	void pushAway(long long elapsedTime, float pushSpeed = 0);
@@ -28,7 +28,7 @@ public:
 	Vector2f moveOffset = Vector2f(-1, -1);
 	float defaultSpeed = 0, speed = 0;
 
-	std::vector<BumpChainElement> bumpedPositions = {};
+	std::vector<bump_chain_element> bumpedPositions = {};
 	float bumpDistance = 0;
 	float pushDamage = 0, pushDistance = 0;
 	Vector2f pushDirection = { 0, 0 }, pushVector = { 0, 0 };

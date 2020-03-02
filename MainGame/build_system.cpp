@@ -3,7 +3,7 @@
 #include <fstream>
 
 #include "DroppedLoot.h"
-#include "ObjectInitializer.h"
+#include "object_initializer.h"
 
 build_system::build_system()
 = default;
@@ -57,7 +57,7 @@ std::vector <sprite_chain_element*> build_system::prepareSprites(GridList& stati
 
 	StaticObject* terrain = nullptr;
 	if (droppedLootIdList.count(selectedObject) > 0)
-		terrain = ObjectInitializer::initializeStaticItem(Tag::droppedLoot, mouseWorldPos, int(selectedObject), "", 1, DarkWoods, packsMap);
+		terrain = object_initializer::initializeStaticItem(Tag::droppedLoot, mouseWorldPos, int(selectedObject), "", 1, DarkWoods, packsMap);
 	else
 	{
 		if (selectedObject == Tag::totem)
@@ -84,7 +84,7 @@ std::vector <sprite_chain_element*> build_system::prepareSprites(GridList& stati
 				}
 			}
 		}
-		terrain = ObjectInitializer::initializeStaticItem(selectedObject, mouseWorldPos, buildType, "", 1, DarkWoods, packsMap, false);
+		terrain = object_initializer::initializeStaticItem(selectedObject, mouseWorldPos, buildType, "", 1, DarkWoods, packsMap, false);
 	}
 
 	auto sprites = terrain->prepareSprites(0);

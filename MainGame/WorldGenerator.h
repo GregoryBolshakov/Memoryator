@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ObjectInitializer.h"
+#include "object_initializer.h"
 #include "GridList.h"
 
 class WorldGenerator

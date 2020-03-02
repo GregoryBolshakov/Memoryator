@@ -1,6 +1,6 @@
-#include "ObjectInitializer.h"
+#include "object_initializer.h"
 
-std::map<Tag, std::string> ObjectInitializer::mappedTags = { {Tag::hero, "hero"}, {Tag::hare, "hare"}, {Tag::owl, "owl"}, {Tag::deer, "deer"}, {Tag::fox, "fox"}, {Tag::bear, "beer"}, {Tag::wolf, "wolf"},
+std::map<Tag, std::string> object_initializer::mappedTags = { {Tag::hero, "hero"}, {Tag::hare, "hare"}, {Tag::owl, "owl"}, {Tag::deer, "deer"}, {Tag::fox, "fox"}, {Tag::bear, "beer"}, {Tag::wolf, "wolf"},
 {Tag::monster, "monster"}, {Tag::owlBoss, "owlBoss"}, {Tag::nightmare1, "nightmare1"}, {Tag::nightmare2, "nightmare2"}, {Tag::nightmare3, "nightmare3"},
 {Tag::heroBag, "heroBag"}, {Tag::noose, "noose"}, {Tag::totem, "totem"}, {Tag::hareTrap, "hareTrap"}, {Tag::fence, "fence"}, {Tag::inkyBlackPen, "inkyBlackPen"},
 	{Tag::unknownWreath, "inknownWreath"}, {Tag::hareWreath, "hareWreath"}, {Tag::owlWreath, "owlWreath"}, {Tag::tree, "tree"}, {Tag::grass, "grass"}, {Tag::spawn, "spawn"},
@@ -9,7 +9,7 @@ std::map<Tag, std::string> ObjectInitializer::mappedTags = { {Tag::hero, "hero"}
 	{Tag::chamomile, "chamomile"}, {Tag::yarrow, "yarrow"}, {Tag::fern, "fern"}, {Tag::mugwort, "mugwort"}, {Tag::poppy, "poppy"}, {Tag::buildObject, "buildObject"}, {Tag::dropPoint, "dropPoint"},
 	{Tag::emptyDraft, "emptyDraft"}, {Tag::emptyPage, "emptyPage"}, {Tag::emptyCell, "emptyCell"}, {Tag::selectedCell, "selectedCell"}, {Tag::clapWhirl, "clapWhirl"}, {Tag::emptyObject, "emptyObject"} };
 
-std::map<std::string, Tag> ObjectInitializer::mappedStrings = { {"hero", Tag::hero}, {"hare", Tag::hare}, {"owl", Tag::owl}, {"deer", Tag::deer}, {"fox", Tag::fox}, {"bear", Tag::bear}, {"wolf", Tag::wolf},
+std::map<std::string, Tag> object_initializer::mappedStrings = { {"hero", Tag::hero}, {"hare", Tag::hare}, {"owl", Tag::owl}, {"deer", Tag::deer}, {"fox", Tag::fox}, {"bear", Tag::bear}, {"wolf", Tag::wolf},
 {"monster", Tag::monster}, {"owlBoss", Tag::owlBoss}, {"nightmare1", Tag::nightmare1}, {"nightmare2", Tag::nightmare2}, {"nightmare3", Tag::nightmare3},
 {"heroBag", Tag::heroBag}, {"noose", Tag::noose}, {"totem", Tag::totem}, {"hareTrap", Tag::hareTrap}, {"fence", Tag::fence}, {"inkyBlackPen", Tag::inkyBlackPen},
 	{"unknownWreath", Tag::unknownWreath}, {"hareWreath", Tag::hareWreath}, {"owlWreath", Tag::owlWreath}, {"tree", Tag::tree}, {"grass", Tag::grass}, {"spawn", Tag::spawn},
@@ -18,15 +18,15 @@ std::map<std::string, Tag> ObjectInitializer::mappedStrings = { {"hero", Tag::he
 	{"chamomile", Tag::chamomile}, {"yarrow", Tag::yarrow}, {"fern", Tag::fern}, {"mugwort", Tag::mugwort}, {"poppy", Tag::poppy}, {"buildObject", Tag::buildObject}, {"dropPoint", Tag::dropPoint},
 	{"emptyDraft", Tag::emptyDraft}, {"emptyPage", Tag::emptyPage}, {"emptyCell", Tag::emptyCell}, {"selectedCell", Tag::selectedCell}, {"clapWhirl", Tag::clapWhirl}, {"emptyObject", Tag::emptyObject} };
 
-ObjectInitializer::ObjectInitializer()
+object_initializer::object_initializer()
 = default;
 
-ObjectInitializer::~ObjectInitializer()
+object_initializer::~object_initializer()
 = default;
 
-int ObjectInitializer::newNameId = 0;
+int object_initializer::newNameId = 0;
 
-StaticObject* ObjectInitializer::initializeStaticItem(
+StaticObject* object_initializer::initializeStaticItem(
 	Tag itemClass,
 	Vector2f itemPosition,
 	int itemType,
@@ -195,7 +195,7 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 	return item;
 }
 
-DynamicObject* ObjectInitializer::initializeDynamicItem(
+DynamicObject* object_initializer::initializeDynamicItem(
 	Tag itemClass,
 	Vector2f itemPosition,
 	const std::string& itemName,
@@ -309,7 +309,7 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 	return item;
 }
 
-int ObjectInitializer::getRandomTypeByBiome(WorldObject* object, const Biomes biome)
+int object_initializer::getRandomTypeByBiome(WorldObject* object, const Biomes biome)
 {
 	switch (object->tag)
 	{
@@ -376,7 +376,7 @@ int ObjectInitializer::getRandomTypeByBiome(WorldObject* object, const Biomes bi
 	return 0;
 }
 
-std::vector<StaticObject*> ObjectInitializer::vectorCastToStatic(const std::vector<WorldObject*>& items)
+std::vector<StaticObject*> object_initializer::vectorCastToStatic(const std::vector<WorldObject*>& items)
 {
 	std::vector<StaticObject*> staticItems = {};
 	for (auto item : items)
@@ -384,7 +384,7 @@ std::vector<StaticObject*> ObjectInitializer::vectorCastToStatic(const std::vect
 	return staticItems;
 }
 
-std::vector<DynamicObject*> ObjectInitializer::vectorCastToDynamic(std::vector<WorldObject*> items)
+std::vector<DynamicObject*> object_initializer::vectorCastToDynamic(std::vector<WorldObject*> items)
 {
 	auto dynamicItems = *(new std::vector<DynamicObject*>());
 	for (auto& item : items)

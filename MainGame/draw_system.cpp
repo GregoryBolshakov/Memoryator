@@ -1,6 +1,6 @@
 #include "draw_system.h"
 
-#include "TextSystem.h"
+#include "text_system.h"
 
 draw_system::draw_system()
 {
@@ -175,7 +175,7 @@ void draw_system::drawSpriteChainElement(RenderTarget& target, sprite_chain_elem
 
 void draw_system::drawTextChainElement(RenderTarget& target, text_chain_element* textChainItem)
 {
-	TextSystem::drawString(
+	text_system::drawString(
 		textChainItem->string,
 		textChainItem->font,
 		textChainItem->characterSize,

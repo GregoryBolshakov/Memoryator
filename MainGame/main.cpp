@@ -4,7 +4,7 @@
 #include "deerchant.h"
 #include "draw_system.h"
 #include "hero_book.h"
-#include "MenuSystem.h"
+#include "menu_system.h"
 #include "VisualEffects/AmbientLight.hpp"
 
 
@@ -19,7 +19,7 @@ int main() {
 	RenderWindow mainWindow(VideoMode(static_cast<unsigned int>(screenSize.x), static_cast<unsigned int>(screenSize.y), 32), "game");//, Style::Fullscreen);
 
     draw_system draw_system;
-	MenuSystem menuSystem;
+	menu_system menuSystem;
 	WorldHandler world(40000, 40000, &draw_system.packsMap);
 	bool windowFocus = true;
 	console console(FloatRect(Helper::GetScreenSize().x * 0.2f, Helper::GetScreenSize().y * 0.8f, Helper::GetScreenSize().x * 0.6f, Helper::GetScreenSize().y * 0.03f), &world);
@@ -31,7 +31,7 @@ int main() {
 	hero_book mainBook;
 	mainBook.init(&draw_system.packsMap);
 
-	TextSystem textWriter;
+	text_system textWriter;
 	
 	RenderTexture surface;
 
@@ -134,7 +134,7 @@ int main() {
 			//mainWindow.draw(visual_effect_sprite, ambient_light.shader);
 
 			draw_system.draw(mainWindow, draw_system::UpcastChain(world.getBuildSystem().prepareSprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packsMap)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
-			TextSystem::drawString(world.getMouseDisplayName(), FontName::NormalFont, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), mainWindow, sf::Color(255, 255, 255, 180));
+			text_system::drawString(world.getMouseDisplayName(), FontName::NormalFont, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), mainWindow, sf::Color(255, 255, 255, 180));
 			world.pedestalController.draw(&mainWindow, world.getCameraPosition(), world.getWorldGenerator().scaleFactor);
 			draw_system.draw(mainWindow, mainBook.prepareSprites(world.focusedObject->getHealthPoint() / world.focusedObject->getMaxHealthPointValue(), time_micro_sec));
 			draw_system.draw(mainWindow, world.getInventorySystem().prepareSprites(time_micro_sec, world.packsMap));			

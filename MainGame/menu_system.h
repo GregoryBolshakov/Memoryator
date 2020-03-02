@@ -8,21 +8,21 @@
 
 using namespace sf;
 
-enum MenuStates { mainMenu = 1, gameMenu = 2, closed = 3 };
+enum menu_states { mainMenu = 1, gameMenu = 2, closed = 3 };
 
-class MenuSystem
+class menu_system
 {
 public:
-	MenuSystem();
-	~MenuSystem();
+	menu_system();
+	~menu_system();
 	void interact(WorldHandler &world, RenderWindow &window);
 	std::vector<sprite_chain_element*> prepareSprites();
-	MenuStates getState() { return menuState; }
-	void setState(MenuStates state) { menuState = state; }
+	menu_states getState() { return menuState; }
+	void setState(menu_states state) { menuState = state; }
 	void onKeyDown(Event event, WorldHandler &world);
 	bool getActivity() { return wasActive; }
 private:
-	MenuStates menuState = mainMenu;
+	menu_states menuState = mainMenu;
 	std::unordered_map<ButtonTag, button> buttonList;
 	std::string buttonsInfoFileDirectory = "Game/MenuSystem/buttonsInfo.txt";
 	void initButtons();

@@ -1,12 +1,12 @@
-#include "PedestalController.h"
+#include "pedestal_controller.h"
 
 #include <fstream>
 #include <iomanip>
 
 #include "Helper.h"
-#include "ObjectInitializer.h"
+#include "object_initializer.h"
 
-PedestalController::PedestalController()
+pedestal_controller::pedestal_controller()
 {
 	filedFigure.setSize(Vector2f(size));
 	filedFigure.setFillColor(sf::Color(255, 255, 255, 80));
@@ -17,10 +17,10 @@ PedestalController::PedestalController()
 	lastMousePos = Vector2f(Mouse::getPosition());
 }
 
-PedestalController::~PedestalController()
+pedestal_controller::~pedestal_controller()
 = default;
 
-void PedestalController::start(TerrainObject * object)
+void pedestal_controller::start(TerrainObject * object)
 {
 	readyToStart = false;
 	boundObject = object;
@@ -40,7 +40,7 @@ void PedestalController::start(TerrainObject * object)
 	running = true;
 }
 
-void PedestalController::stop()
+void pedestal_controller::stop()
 {
 	writeToFile();
 	readyToStart = false;
@@ -48,7 +48,7 @@ void PedestalController::stop()
 	running = false;
 }
 
-void PedestalController::writeToFile()
+void pedestal_controller::writeToFile()
 {
 	if (!boundObject)
 		return;
@@ -59,7 +59,7 @@ void PedestalController::writeToFile()
 	std::ofstream stream_out("Game/pedestalsInfo.txt");
 
 	stream_out.clear();
-	stream_out << std::setprecision(3) << "Tag: " << ObjectInitializer::mappedTags.at(boundObject->tag) + " " << '\n';
+	stream_out << std::setprecision(3) << "Tag: " << object_initializer::mappedTags.at(boundObject->tag) + " " << '\n';
 	stream_out << std::setprecision(3) << "Type: " << boundObject->getType() << '\n';
 	stream_out << std::setprecision(3) << "Mirrored: " << boundObject->getMirroredState() << '\n';
 
@@ -77,7 +77,7 @@ void PedestalController::writeToFile()
 	stream_out.close();
 }
 
-void PedestalController::handleEvents(Event & event)
+void pedestal_controller::handleEvents(Event & event)
 {
 	if (!boundObject)
 		return;
@@ -98,7 +98,7 @@ void PedestalController::handleEvents(Event & event)
 	//------------------------------
 }
 
-void PedestalController::interact(long long elapsedTime, Event event)
+void pedestal_controller::interact(long long elapsedTime, Event event)
 {
 	this->elapsedTime = elapsedTime;
 	if (!boundObject || !running)
@@ -205,7 +205,7 @@ void PedestalController::interact(long long elapsedTime, Event event)
 	boundObject->setFocuses(focuses);
 }
 
-void PedestalController::draw(RenderWindow * window, Vector2f cameraPosition, float scaleFactor)
+void pedestal_controller::draw(RenderWindow * window, Vector2f cameraPosition, float scaleFactor)
 {
 	this->cameraPosition = cameraPosition;
 	this->scaleFactor = scaleFactor;

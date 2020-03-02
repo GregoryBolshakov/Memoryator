@@ -1,10 +1,10 @@
 #pragma once
 
-class TimeSystem
+class time_system
 {
 public:
-	TimeSystem();
-	~TimeSystem();
+	time_system();
+	~time_system();
 	void init(long long minutesPerDay = 10, long long startTime = 0);
 	void interact(long long elapsedTime); // microseconds
 	void setTime(long long newTime);

@@ -4,7 +4,7 @@
 
 #include <fstream>
 
-#include "ObjectInitializer.h"
+#include "object_initializer.h"
 
 using namespace sf;
 
@@ -210,8 +210,8 @@ void WorldHandler::Save()
 	
 	std::ofstream fout("save.txt");
 	fout.clear();
-	auto staticItems = ObjectInitializer::vectorCastToStatic(staticGrid.getItems(0, 0, float(width), float(height)));
-	auto dynamicItems = ObjectInitializer::vectorCastToDynamic(dynamicGrid.getItems(0, 0, float(width), float(height)));
+	auto staticItems = object_initializer::vectorCastToStatic(staticGrid.getItems(0, 0, float(width), float(height)));
+	auto dynamicItems = object_initializer::vectorCastToDynamic(dynamicGrid.getItems(0, 0, float(width), float(height)));
 
 	fout << dynamicItems.size() << std::endl;
 	for (auto& dynamicItem : dynamicItems)
@@ -454,8 +454,8 @@ void WorldHandler::interact(Vector2f render_target_size, long long elapsedTime, 
 	worldGenerator.beyondScreenGeneration();
 
 	auto localItems = staticGrid.getItems(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y);
-	auto localStaticItems = ObjectInitializer::vectorCastToStatic(localItems);
-	auto localDynamicItems = ObjectInitializer::vectorCastToDynamic(dynamicGrid.getItems(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y));
+	auto localStaticItems = object_initializer::vectorCastToStatic(localItems);
+	auto localDynamicItems = object_initializer::vectorCastToDynamic(dynamicGrid.getItems(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y));
 
 	localTerrain.clear();
 	for (auto& item : localStaticItems)

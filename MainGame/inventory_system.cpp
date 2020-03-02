@@ -373,7 +373,7 @@ std::vector<drawable_chain_element*> inventory_system::prepareSprites(long long 
 	{
 		result.push_back(new text_chain_element(
 			cursorTextPos,
-			{ TextSystem::getTextBoxSize(cursorText, text_chain_element::defaultCharacterSize * 1.5f, FontName::NormalFont).x / 2.0f, 0 },
+			{ text_system::getTextBoxSize(cursorText, text_chain_element::defaultCharacterSize * 1.5f, FontName::NormalFont).x / 2.0f, 0 },
 			sf::Color(0, 0, 0, 180),
 			cursorText, 
 			text_chain_element::defaultCharacterSize * 1.5f));

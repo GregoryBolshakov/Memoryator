@@ -6,7 +6,7 @@
 #include "hero_book_page.h"
 #include "button.h"
 #include "hero_bag.h"
-#include "TextSystem.h"
+#include "text_system.h"
 #include "WorldObject.h"
 
 using namespace sf;
