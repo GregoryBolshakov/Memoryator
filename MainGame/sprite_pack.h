@@ -3,7 +3,7 @@
 #include <nlohmann/json.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-#include "Helper.h"
+#include "helper.h"
 #include "sprite_chain_element.h"
 
 using namespace sf;

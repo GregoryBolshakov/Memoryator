@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
 
-#include "SpriteStructures.h"
+#include "sprite_structures.h"
 
 using namespace sf;
 

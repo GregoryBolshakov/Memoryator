@@ -2,8 +2,8 @@
 
 #include "hero_book_page.h"
 
-#include "Helper.h"
-#include "GridList.h"
+#include "helper.h"
+#include "grid_list.h"
 
 hero_book_page::hero_book_page()
 {
@@ -116,7 +116,7 @@ void hero_book_page::putHeadingsToPositions(std::vector<ButtonTag> buttons)
 
 void hero_book_page::initAuxiliarySpriteMap()
 {
-	const auto screenSize = Helper::GetScreenSize();
+	const auto screenSize = helper::GetScreenSize();
 	std::string buttonImagePathDefault;
 	Vector2f buttonPosition, buttonSize; // in percents
 	Vector2f offset = { 0, 0 };
@@ -316,7 +316,7 @@ sprite_chain_element* hero_book_page::prepareIconFrame(const ButtonTag button, c
 	return buttonList->at(currentIcon).prepare_sprite();
 }
 
-std::vector<sprite_chain_element*> hero_book_page::prepareAllIcons(const pageContent& content)
+std::vector<sprite_chain_element*> hero_book_page::prepareAllIcons(const page_content& content)
 {
 	std::vector<sprite_chain_element*> result = {};
 
@@ -534,10 +534,10 @@ std::pair<int, int> hero_book_page::getSelectedWreathCell()
 				wreathMatrix[cnt1][cnt2] = Tag::emptyCell;
 			const auto curPos = Vector2f(wreathMatrixPositions[cnt1][cnt2].x + buttonList->at(ButtonTag::cell).get_global_bounds().width / 2.0f,
 			                             wreathMatrixPositions[cnt1][cnt2].y + buttonList->at(ButtonTag::cell).get_global_bounds().height / 2.0f);
-			if (Helper::getDist(Vector2f(mousePos), curPos) < minD &&
-				Helper::getDist(Vector2f(mousePos), curPos) <= buttonList->at(ButtonTag::cell).get_global_bounds().width / 2)
+			if (helper::getDist(Vector2f(mousePos), curPos) < minD &&
+				helper::getDist(Vector2f(mousePos), curPos) <= buttonList->at(ButtonTag::cell).get_global_bounds().width / 2)
 			{
-				minD = Helper::getDist(Vector2f(mousePos), curPos);
+				minD = helper::getDist(Vector2f(mousePos), curPos);
 				ans = std::make_pair(cnt1, cnt2);
 			}
 		}
@@ -676,9 +676,9 @@ std::vector<drawable_chain_element*> hero_book_page::prepareConnectableFlowers(T
 
 //--------
 
-pageContent hero_book_page::getPreparedContent(int pageNumber, Tag currentDraft)
+page_content hero_book_page::getPreparedContent(int pageNumber, Tag currentDraft)
 {
-	pageContent result;
+	page_content result;
 
 	preparePageBase();
 	setBookmarkPosition();

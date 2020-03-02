@@ -10,7 +10,7 @@ void world_generator::initMainScale()
 {
 	auto mainObject = deerchant("loadInit", Vector2f(0, 0));
 	mainObject.calculateTextureOffset();
-	mainScale = Helper::GetScreenSize().y / (5 * mainObject.getConditionalSizeUnits().y);
+	mainScale = helper::GetScreenSize().y / (5 * mainObject.getConditionalSizeUnits().y);
 	mainScale = round(mainScale * 100) / 100;
 }
 
@@ -19,8 +19,8 @@ void world_generator::init(
 	const int height,
 	const Vector2f blockSize,
 	const Vector2f microBlockSize,
-	GridList* staticGrid,
-	GridList* dynamicGrid,
+	grid_list* staticGrid,
+	grid_list* dynamicGrid,
 	std::map<PackTag, sprite_pack>* packsMap)
 {
 	this->width = width;
@@ -110,11 +110,11 @@ void world_generator::generate()
 	// world generation
 	initBiomesGenerationInfo();
 	const Vector2f upperLeft(
-		floor(focusedObject->getPosition().x - (Helper::GetScreenSize().x / 2.0f + blockSize.x) / (FARTHEST_SCALE * mainScale)),
-		floor(focusedObject->getPosition().y - (Helper::GetScreenSize().y / 2.0f + blockSize.x) / (FARTHEST_SCALE * mainScale)));
+		floor(focusedObject->getPosition().x - (helper::GetScreenSize().x / 2.0f + blockSize.x) / (FARTHEST_SCALE * mainScale)),
+		floor(focusedObject->getPosition().y - (helper::GetScreenSize().y / 2.0f + blockSize.x) / (FARTHEST_SCALE * mainScale)));
 	const Vector2f bottomRight(
-		floor(focusedObject->getPosition().x + (Helper::GetScreenSize().x / 2.0f + blockSize.y) / (FARTHEST_SCALE * mainScale)),
-		floor(focusedObject->getPosition().y + (Helper::GetScreenSize().y / 2.0f + blockSize.y) / (FARTHEST_SCALE * mainScale)));
+		floor(focusedObject->getPosition().x + (helper::GetScreenSize().x / 2.0f + blockSize.y) / (FARTHEST_SCALE * mainScale)),
+		floor(focusedObject->getPosition().y + (helper::GetScreenSize().y / 2.0f + blockSize.y) / (FARTHEST_SCALE * mainScale)));
 
 	for (auto& block : staticGrid->getBlocksInSight(upperLeft.x, upperLeft.y, bottomRight.x, bottomRight.y))	
 		inBlockGenerate(block);	
@@ -283,7 +283,7 @@ void world_generator::biomesGenerate()
 
 void world_generator::perimeterGeneration()
 {
-	const auto screenSize = Helper::GetScreenSize();
+	const auto screenSize = helper::GetScreenSize();
 	const auto characterPosition = focusedObject->getPosition();
 	const Vector2f worldUpperLeft(
 		ceil(characterPosition.x - (screenSize.x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)),

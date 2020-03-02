@@ -1,6 +1,6 @@
 #include "input_box.h"
 
-#include "Helper.h"
+#include "helper.h"
 
 using namespace sf;
 
@@ -67,7 +67,7 @@ void input_box::animateCursor()
 void input_box::onMouseRelease()
 {
 	mousePressed = false;
-	float minDist = Helper::GetScreenSize().x + Helper::GetScreenSize().y;
+	float minDist = helper::GetScreenSize().x + helper::GetScreenSize().y;
 	int newPos = 0;
 	for (auto i = 0u; i < line.size(); i++)
 	{
@@ -85,7 +85,7 @@ void input_box::onMouseRelease()
 void input_box::interact(const long long elapsedTime)
 {
 	setCursorToPos();
-	if (Helper::isIntersects(Vector2f(Mouse::getPosition()), FloatRect(body.getPosition().x, body.getPosition().y, body.getSize().x, body.getSize().y)))
+	if (helper::isIntersects(Vector2f(Mouse::getPosition()), FloatRect(body.getPosition().x, body.getPosition().y, body.getSize().x, body.getSize().y)))
 		innerPart.setFillColor(inFillSelected);
 	else
 		innerPart.setFillColor(inFill);

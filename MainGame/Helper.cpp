@@ -1,8 +1,8 @@
-#include "Helper.h"
+#include "helper.h"
 
 #include <windows.h>
 
-Vector2f Helper::GetScreenSize()
+Vector2f helper::GetScreenSize()
 {
 	Vector2f screenSize;
 	DEVMODEA lpDevMode;
@@ -15,7 +15,7 @@ Vector2f Helper::GetScreenSize()
 	return screenSize;
 }
 
-int Helper::getFps()
+int helper::getFps()
 {
 	DEVMODEA lpDevMode;
 
@@ -26,7 +26,7 @@ int Helper::getFps()
 	return 0;
 }
 
-std::pair<float, float> Helper::solveSqr(const float a, const float b, const float c)
+std::pair<float, float> helper::solveSqr(const float a, const float b, const float c)
 {
 	const auto discr = b * b - 4 * a * c;
 	auto firstRoot = (-b + sqrt(discr)) / (2 * a);
@@ -60,7 +60,7 @@ std::pair<float, float> Helper::solveSqr(const float a, const float b, const flo
 //	window->draw(result);
 //}
 
-std::string Helper::withoutNums(std::string s)
+std::string helper::withoutNums(std::string s)
 {
 	bool isFinish;
 	while (true)
@@ -80,7 +80,7 @@ std::string Helper::withoutNums(std::string s)
 	return s;
 }
 
-std::string Helper::getObjectName(const std::string& s)
+std::string helper::getObjectName(const std::string& s)
 {
 	std::string answer;
 	
@@ -106,19 +106,19 @@ std::string Helper::getObjectName(const std::string& s)
 //	}
 //}
 
-bool Helper::isIntersects(const Vector2f pos, const FloatRect shape)
+bool helper::isIntersects(const Vector2f pos, const FloatRect shape)
 {
 	if (pos.x >= shape.left && pos.x <= shape.left + shape.width && pos.y >= shape.top && pos.y <= shape.top + shape.height)
 		return true;
 	return false;
 }
 
-bool Helper::isIntersects(const Vector2f pos, const Vector2f circlePos, const float radius)
+bool helper::isIntersects(const Vector2f pos, const Vector2f circlePos, const float radius)
 {
 	return getDist(pos, circlePos) <= radius;
 }
 
-bool Helper::isIntersectTerrain(const Vector2f position, terrain_object& terrain, const float radius)
+bool helper::isIntersectTerrain(const Vector2f position, terrain_object& terrain, const float radius)
 {
 	const auto f1 = terrain.getFocus1();
 	const auto f2 = terrain.getFocus2();
@@ -126,7 +126,7 @@ bool Helper::isIntersectTerrain(const Vector2f position, terrain_object& terrain
 		sqrt((position.x - f2.x) * (position.x - f2.x) + (position.y - f2.y) * (position.y - f2.y))/* - dynamic.radius*/ <= terrain.getEllipseSize() + radius;
 }
 
-Side Helper::getSide(const Vector2f position, const Vector2f anotherPosition)
+Side helper::getSide(const Vector2f position, const Vector2f anotherPosition)
 {
 	auto answer = undefined;
 	const auto alpha = atan((float(anotherPosition.y) - position.y) / (float(anotherPosition.x) - position.x)) * 180 / pi;
@@ -145,22 +145,22 @@ Side Helper::getSide(const Vector2f position, const Vector2f anotherPosition)
 	return answer;
 }
 
-float Helper::getDist(const Vector2f a, const Vector2f b)
+float helper::getDist(const Vector2f a, const Vector2f b)
 {
 	return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
 }
 
-float Helper::triangleArea(const float x1, const float y1, const float x2, const float y2, const float x3, const float y3)
+float helper::triangleArea(const float x1, const float y1, const float x2, const float y2, const float x3, const float y3)
 {
 	return (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1);
 }
 
-bool Helper::checkSigns(const float a, const float b)
+bool helper::checkSigns(const float a, const float b)
 {
 	return a > 0 && b > 0 || a < 0 && b < 0;
 }
 
-RectangleShape Helper::makeLine(Vector2f point1, Vector2f point2, sf::Color color)
+RectangleShape helper::makeLine(Vector2f point1, Vector2f point2, sf::Color color)
 {
 	if (point1.y >= point2.y)
 		std::swap(point1, point2);
@@ -179,7 +179,7 @@ RectangleShape Helper::makeLine(Vector2f point1, Vector2f point2, sf::Color colo
 	return result;
 }
 
-std::vector<std::string> Helper::split(std::string line, char delimiter)
+std::vector<std::string> helper::split(std::string line, char delimiter)
 {
 	std::vector<std::string> commands;
 	auto temp = std::move(line);

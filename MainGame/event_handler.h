@@ -1,10 +1,10 @@
 #pragma once
 
-class EventHandler
+class event_handler
 {
 public:
-	EventHandler();
-	~EventHandler();
+	event_handler();
+	~event_handler();
 	void onMouseDownInteract();
 	void onKeyDownInteract();
 };

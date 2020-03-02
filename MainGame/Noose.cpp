@@ -52,7 +52,7 @@ void noose::behaviorWithDynamic(dynamic_object* target, long long /*elapsedTime*
 	{
 		auto deer = dynamic_cast<::deer*>(target);
 
-		if (Helper::getDist(position, deer->getHeadPosition()) <= radius + target->getRadius())
+		if (helper::getDist(position, deer->getHeadPosition()) <= radius + target->getRadius())
 		{
 			boundTarget = target;
 			if (deer->getOwner() == nullptr && deer->getCurrentAction() != commonHit)
@@ -95,7 +95,7 @@ void noose::behavior(long long elapsedTime)
 
 	if (boundTarget != nullptr && owner != nullptr)
 	{
-		if (Helper::getDist(position, owner->getPosition()) >= maximumLength)
+		if (helper::getDist(position, owner->getPosition()) >= maximumLength)
 		{
 			auto deer = dynamic_cast<::deer*>(boundTarget);
 			if (deer != nullptr)
@@ -180,8 +180,8 @@ void noose::jerk(const float power, const float deceleration, Vector2f /*destina
 	currentSprite[0] = 1;
 
 	const auto mousePos = Vector2f(Mouse::getPosition());
-	const auto screenCenter = Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2);
-	const auto coeff = jerkDistance / Helper::getDist(mousePos, screenCenter);
+	const auto screenCenter = Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2);
+	const auto coeff = jerkDistance / helper::getDist(mousePos, screenCenter);
 	laxMovePosition = Vector2f(owner->getPosition().x + (mousePos.x - screenCenter.x) * coeff, owner->getPosition().y + (mousePos.y - screenCenter.y) * coeff);
 }
 
@@ -200,7 +200,7 @@ void noose::rotateAndExtend(sprite_chain_element* rope, sprite_chain_element* lo
 	if (ownerPos != Vector2f(0, 0))
 	{
 		const auto beginPoint = Vector2f(ownerPos.x, ownerPos.y - ownerGlobalBounds.y / 13.0F);
-		rope->size = Vector2f(Helper::getDist(beginPoint, position) + localElongation, rope->size.y); // a little bit longer rope for sprite joining		
+		rope->size = Vector2f(helper::getDist(beginPoint, position) + localElongation, rope->size.y); // a little bit longer rope for sprite joining		
 		if (position.y <= beginPoint.y)
 		{
 			rope->rotation = acos((beginPoint.x - position.x) / sqrt(pow(beginPoint.x - position.x, 2) + pow(beginPoint.y - position.y, 2))) / pi * 180;
@@ -220,8 +220,8 @@ void noose::rotateAndExtend(sprite_chain_element* rope, sprite_chain_element* lo
 
 	if (ownerPos != Vector2f(0, 0))
 	{
-		rope->offset.x += (ownerPos.x - position.x) * localElongation / Helper::getDist(position, ownerPos); // offset of the extended rope
-		rope->offset.y += (ownerPos.y - position.y) * localElongation / Helper::getDist(position, ownerPos);
+		rope->offset.x += (ownerPos.x - position.x) * localElongation / helper::getDist(position, ownerPos); // offset of the extended rope
+		rope->offset.y += (ownerPos.y - position.y) * localElongation / helper::getDist(position, ownerPos);
 
 		// change position to hero belt
 		const auto dynOwner = dynamic_cast<deerchant*>(owner);

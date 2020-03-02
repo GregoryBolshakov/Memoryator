@@ -1,6 +1,6 @@
 #include "root.h"
 
-#include "Helper.h"
+#include "helper.h"
 
 root::root(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {

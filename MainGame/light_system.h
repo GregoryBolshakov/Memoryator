@@ -8,11 +8,11 @@ using Color = sf::Color;
 using Vector2f = sf::Vector2f;
 using FloatRect = sf::FloatRect;
 
-class LightSystem
+class light_system
 {
 public:
-	LightSystem();
-	~LightSystem();
+	light_system();
+	~light_system();
 	void init(FloatRect visibleArea);
 	Vector2f calculateSunPosition(float dayPart = 0); // from 0 to 1
 private:

@@ -1,6 +1,6 @@
 #include "ground.h"
 
-#include "Helper.h"
+#include "helper.h"
 
 ground::ground(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : static_object(std::move(objectName), centerPosition)
 {

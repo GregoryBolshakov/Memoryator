@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iomanip>
 
-#include "Helper.h"
+#include "helper.h"
 #include "object_initializer.h"
 
 pedestal_controller::pedestal_controller()
@@ -106,15 +106,15 @@ void pedestal_controller::interact(long long elapsedTime, Event event)
 
 	// moving focuses
 	const auto mousePos = Vector2f(Mouse::getPosition());
-	const auto mouseWorldPos = Vector2f((mousePos.x - Helper::GetScreenSize().x / 2 + cameraPosition.x * scaleFactor) / scaleFactor,
-		(mousePos.y - Helper::GetScreenSize().y / 2 + cameraPosition.y * scaleFactor) / scaleFactor);
+	const auto mouseWorldPos = Vector2f((mousePos.x - helper::GetScreenSize().x / 2 + cameraPosition.x * scaleFactor) / scaleFactor,
+		(mousePos.y - helper::GetScreenSize().y / 2 + cameraPosition.y * scaleFactor) / scaleFactor);
 
 	// selecting focus to move
 	if (!selectedCenter && selectedFocus == -1 && (Mouse::isButtonPressed(Mouse::Left) || Mouse::isButtonPressed(Mouse::Right)))
 	{
 		for (auto i = 0u; i < focuses.size(); i++)
 		{
-			if (Helper::getDist(mouseWorldPos, focuses[i]) * scaleFactor <= focusFigure.getRadius())
+			if (helper::getDist(mouseWorldPos, focuses[i]) * scaleFactor <= focusFigure.getRadius())
 			{
 				selectedFocus = i;
 				break;
@@ -155,7 +155,7 @@ void pedestal_controller::interact(long long elapsedTime, Event event)
 	// selecting center
 	if (selectedFocus == -1 && !selectedCenter && (Mouse::isButtonPressed(Mouse::Left) || Mouse::isButtonPressed(Mouse::Right)))
 	{
-		if (Helper::getDist(mouseWorldPos, centerPosition) <= focusFigure.getRadius())
+		if (helper::getDist(mouseWorldPos, centerPosition) <= focusFigure.getRadius())
 			selectedCenter = true;
 	}
 	else
@@ -187,16 +187,16 @@ void pedestal_controller::interact(long long elapsedTime, Event event)
 			float minDist = 1e5;
 			for (auto i = 0u; i < focuses.size() / 2; i++)
 			{
-				if (Helper::getDist(mouseWorldPos, focuses[i * 2]) + Helper::getDist(mouseWorldPos, focuses[i * 2 + 1]) <= minDist)
+				if (helper::getDist(mouseWorldPos, focuses[i * 2]) + helper::getDist(mouseWorldPos, focuses[i * 2 + 1]) <= minDist)
 				{
-					minDist = Helper::getDist(mouseWorldPos, focuses[i * 2]) + Helper::getDist(mouseWorldPos, focuses[i * 2 + 1]);
+					minDist = helper::getDist(mouseWorldPos, focuses[i * 2]) + helper::getDist(mouseWorldPos, focuses[i * 2 + 1]);
 					selectedEllipse = i;
 				}
 			}
 		}
 		const auto center = Vector2f((focuses[selectedEllipse * 2].x + focuses[selectedEllipse * 2 + 1].x) / 2,
 			(focuses[selectedEllipse * 2].y + focuses[selectedEllipse * 2 + 1].y) / 2);
-		boundObject->ellipseSizeMultipliers[selectedEllipse] += boundObject->ellipseSizeMultipliers[selectedEllipse] * (Helper::getDist(mousePos, center) - Helper::getDist(lastMousePos, center)) / 100;
+		boundObject->ellipseSizeMultipliers[selectedEllipse] += boundObject->ellipseSizeMultipliers[selectedEllipse] * (helper::getDist(mousePos, center) - helper::getDist(lastMousePos, center)) / 100;
 	}
 	lastMousePos = mousePos;
 	//---------------
@@ -215,8 +215,8 @@ void pedestal_controller::draw(RenderWindow * window, Vector2f cameraPosition, f
 	Vector2f areaBounds = { 0, 0 };
 	for (auto i = 0u; i < focuses.size() / 2; i++)
 	{
-		areaBounds.x += Helper::getDist(focuses[i * 2], focuses[i * 2 + 1]) * boundObject->ellipseSizeMultipliers[i] / 2;
-		areaBounds.y += Helper::getDist(focuses[i * 2], focuses[i * 2 + 1]) * boundObject->ellipseSizeMultipliers[i] / 2;
+		areaBounds.x += helper::getDist(focuses[i * 2], focuses[i * 2 + 1]) * boundObject->ellipseSizeMultipliers[i] / 2;
+		areaBounds.y += helper::getDist(focuses[i * 2], focuses[i * 2 + 1]) * boundObject->ellipseSizeMultipliers[i] / 2;
 	}
 	const auto upperLeft = Vector2f(std::min(focuses[0].x, focuses[1].x) - areaBounds.x, std::min(focuses[0].y, focuses[1].y) - areaBounds.y);
 	const auto bottomRight = Vector2f(std::max(focuses[0].x, focuses[1].x) + areaBounds.x, std::max(focuses[0].y, focuses[1].y) + areaBounds.y);
@@ -233,11 +233,11 @@ void pedestal_controller::draw(RenderWindow * window, Vector2f cameraPosition, f
 			for (auto i = 0u; i < focuses.size() / 2; i++)
 			{
 				if (sqrt(pow(x * size.x - focuses[i * 2].x, 2) + pow(y * size.x - focuses[i * 2].y, 2)) + 
-					sqrt(pow(x * size.x - focuses[i * 2 + 1].x, 2) + pow(y * size.x - focuses[i * 2 + 1].y, 2)) <= Helper::getDist(focuses[i * 2], focuses[i * 2 + 1]) * boundObject->ellipseSizeMultipliers[i])
+					sqrt(pow(x * size.x - focuses[i * 2 + 1].x, 2) + pow(y * size.x - focuses[i * 2 + 1].y, 2)) <= helper::getDist(focuses[i * 2], focuses[i * 2 + 1]) * boundObject->ellipseSizeMultipliers[i])
 				{
 					filedFigure.setPosition(
-						(x * size.x - cameraPosition.x - size.x / 2.0f) * scaleFactor + Helper::GetScreenSize().x / 2,
-						(y * size.y - cameraPosition.y - size.y / 2.0f) * scaleFactor + Helper::GetScreenSize().y / 2);
+						(x * size.x - cameraPosition.x - size.x / 2.0f) * scaleFactor + helper::GetScreenSize().x / 2,
+						(y * size.y - cameraPosition.y - size.y / 2.0f) * scaleFactor + helper::GetScreenSize().y / 2);
 					window->draw(filedFigure);
 				}
 			}
@@ -248,12 +248,12 @@ void pedestal_controller::draw(RenderWindow * window, Vector2f cameraPosition, f
 			
 	for (auto& focus : focuses)
 	{
-		focusFigure.setPosition((focus.x - cameraPosition.x - size.x) * scaleFactor + Helper::GetScreenSize().x / 2,
-			(focus.y - cameraPosition.y - size.y) * scaleFactor + Helper::GetScreenSize().y / 2);
+		focusFigure.setPosition((focus.x - cameraPosition.x - size.x) * scaleFactor + helper::GetScreenSize().x / 2,
+			(focus.y - cameraPosition.y - size.y) * scaleFactor + helper::GetScreenSize().y / 2);
 		window->draw(focusFigure);
 	}
-	centerFigure.setPosition((centerPosition.x - cameraPosition.x - size.x) * scaleFactor + Helper::GetScreenSize().x / 2,
-		(centerPosition.y - cameraPosition.y - size.y) * scaleFactor + Helper::GetScreenSize().y / 2);
+	centerFigure.setPosition((centerPosition.x - cameraPosition.x - size.x) * scaleFactor + helper::GetScreenSize().x / 2,
+		(centerPosition.y - cameraPosition.y - size.y) * scaleFactor + helper::GetScreenSize().y / 2);
 	window->draw(centerFigure);
 }
 

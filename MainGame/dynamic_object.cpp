@@ -1,6 +1,6 @@
 #include "dynamic_object.h"
 
-#include "Helper.h"
+#include "helper.h"
 
 dynamic_object::dynamic_object(std::string objectName, const Vector2f centerPosition) : world_object(std::move(objectName), centerPosition), currentAction()
 {
@@ -94,9 +94,9 @@ Vector2f dynamic_object::ellipseSlip(dynamic_object *dynamic, Vector2f newPos, V
 	const auto time = float(elapsedTime);
 
 	if (destination == Vector2f(-1, -1))
-		dist1 = Helper::getDist(newPosition, Vector2f(x1, yl)), dist2 = Helper::getDist(newPosition, Vector2f(x2, y2));
+		dist1 = helper::getDist(newPosition, Vector2f(x1, yl)), dist2 = helper::getDist(newPosition, Vector2f(x2, y2));
 	else
-		dist1 = Helper::getDist(destinationPos, Vector2f(x1, yl)), dist2 = Helper::getDist(destinationPos, Vector2f(x2, y2));
+		dist1 = helper::getDist(destinationPos, Vector2f(x1, yl)), dist2 = helper::getDist(destinationPos, Vector2f(x2, y2));
 
 	if (dist1 <= dist2 && d >= 0 && sqrt(pow(x1 - dynamic->getPosition().x, 2) + pow(height - yl - dynamic->getPosition().y, 2)) != 0)
 	{
@@ -334,7 +334,7 @@ void dynamic_object::takeDamage(const float damage, const Vector2f attackerPos)
 	moveSystem.redDuration = 2 * moveSystem.pushDuration;
 	moveSystem.redRestDuration = moveSystem.redDuration;
 
-	moveSystem.pushDistance = Helper::getDist(this->getPosition(), attackerPos);
+	moveSystem.pushDistance = helper::getDist(this->getPosition(), attackerPos);
 	if (attackerPos != Vector2f(-1, -1))
 		moveSystem.pushDirection = Vector2f(this->position.x - attackerPos.x, this->position.y - attackerPos.y);
 }

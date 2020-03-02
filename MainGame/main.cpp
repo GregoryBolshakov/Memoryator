@@ -15,14 +15,14 @@ using namespace std;
 int main() {	
 	srand(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
 	
-	const auto screenSize = Helper::GetScreenSize();
+	const auto screenSize = helper::GetScreenSize();
 	RenderWindow mainWindow(VideoMode(static_cast<unsigned int>(screenSize.x), static_cast<unsigned int>(screenSize.y), 32), "game");//, Style::Fullscreen);
 
     draw_system draw_system;
 	menu_system menuSystem;
 	world_handler world(40000, 40000, &draw_system.packsMap);
 	bool windowFocus = true;
-	console console(FloatRect(Helper::GetScreenSize().x * 0.2f, Helper::GetScreenSize().y * 0.8f, Helper::GetScreenSize().x * 0.6f, Helper::GetScreenSize().y * 0.03f), &world);
+	console console(FloatRect(helper::GetScreenSize().x * 0.2f, helper::GetScreenSize().y * 0.8f, helper::GetScreenSize().x * 0.6f, helper::GetScreenSize().y * 0.03f), &world);
 
 	Clock clock;
 	long long time_micro_sec = 0;

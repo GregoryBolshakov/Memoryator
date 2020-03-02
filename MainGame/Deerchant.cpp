@@ -2,7 +2,7 @@
 
 #include "brazier.h"
 #include "empty_object.h"
-#include "Helper.h"
+#include "helper.h"
 #include "noose.h"
 #include "picked_object.h"
 
@@ -32,11 +32,11 @@ deerchant::deerchant(std::string objectName, const Vector2f centerPosition) : dy
 	for (auto i = 0; i < 3; i++)
 		bags.emplace_back();
 	
-	const auto closedBagSize = Vector2f(Helper::GetScreenSize().x / 12, Helper::GetScreenSize().y / 6);
+	const auto closedBagSize = Vector2f(helper::GetScreenSize().x / 12, helper::GetScreenSize().y / 6);
 	
-	bags[0].initialize(Vector2f(Helper::GetScreenSize().x - closedBagSize.x, closedBagSize.y), true);
-	bags[1].initialize(Vector2f(Helper::GetScreenSize().x - closedBagSize.x, 2.0f * closedBagSize.y), true);
-	bags[2].initialize(Vector2f(Helper::GetScreenSize().x - closedBagSize.x * 1.5f, 1.5f * closedBagSize.y), true);
+	bags[0].initialize(Vector2f(helper::GetScreenSize().x - closedBagSize.x, closedBagSize.y), true);
+	bags[1].initialize(Vector2f(helper::GetScreenSize().x - closedBagSize.x, 2.0f * closedBagSize.y), true);
+	bags[2].initialize(Vector2f(helper::GetScreenSize().x - closedBagSize.x * 1.5f, 1.5f * closedBagSize.y), true);
 }
 
 deerchant::~deerchant()
@@ -386,7 +386,7 @@ void deerchant::stopping(const bool doStand, const bool forgetBoundTarget, const
 
 void deerchant::setHitDirection()
 {
-	const auto screenSize = Helper::GetScreenSize();
+	const auto screenSize = helper::GetScreenSize();
 
 	const auto xPos = screenSize.x / 2.0f, yPos = screenSize.y / 2.0f;
 	
@@ -415,10 +415,10 @@ void deerchant::setTarget(dynamic_object& object)
 
 void deerchant::behaviorWithDynamic(dynamic_object* target, long long elapsedTime)
 {
-	if (Helper::getDist(position, target->getPosition()) <= radius + target->getRadius())
+	if (helper::getDist(position, target->getPosition()) <= radius + target->getRadius())
 		moveSystem.pushByBumping(target->getPosition(), target->getRadius(), target->getMoveSystem().canCrashIntoDynamic);
 
-	const auto isIntersect = Helper::getDist(position, target->getPosition()) <= this->radius + target->getRadius() + hitDistance;
+	const auto isIntersect = helper::getDist(position, target->getPosition()) <= this->radius + target->getRadius() + hitDistance;
 
 	if (isIntersect && direction_system::calculateSide(position, target->getPosition(), elapsedTime) != direction_system::invertSide(directionSystem.side))
 	{
@@ -432,7 +432,7 @@ void deerchant::behaviorWithStatic(world_object* target, long long elapsedTime)
 	if (!target)
 		return;
 
-	if (target->tag == Tag::wreathTable && Helper::getDist(position, target->getPosition()) <= radius + target->getRadius())
+	if (target->tag == Tag::wreathTable && helper::getDist(position, target->getPosition()) <= radius + target->getRadius())
 		nearTheTable = true;	
 }
 
@@ -455,7 +455,7 @@ void deerchant::behavior(const long long elapsedTime)
 	if (currentAction != jerking && boundTarget->isProcessed)
 		laxMovePosition = boundTarget->getPosition();
 
-	const auto isIntersect = (Helper::getDist(position, laxMovePosition)) <= (this->radius + boundTarget->getRadius());
+	const auto isIntersect = (helper::getDist(position, laxMovePosition)) <= (this->radius + boundTarget->getRadius());
 
 	//touch selected object 
 	if (isIntersect)
@@ -559,7 +559,7 @@ void deerchant::onMouseUp(const int currentMouseButton, world_object *mouseSelec
 	{
 		auto brazier = dynamic_cast<::brazier*>(mouseSelectedObject);
 		if (heldItem->content.first != Tag::emptyCell &&
-			Helper::getDist(brazier->getPlatePosition(), position) <= brazier->getPlateRadius() + radius)
+			helper::getDist(brazier->getPlatePosition(), position) <= brazier->getPlateRadius() + radius)
 		{
 			brazier->putItemToCraft(heldItem->content.first);
 			heldItem->content = heldItem->content.second > 1
@@ -642,7 +642,7 @@ void deerchant::endingPreviousAction()
 		changeAction(relax, true, false);
 		if (heldItem->content.first != Tag::emptyCell)
 		{
-			birthStaticInfo dropObject;
+			birth_static_info dropObject;
 			dropObject.position = { boundTarget->getPosition().x, boundTarget->getPosition().y };
 			dropObject.tag = Tag::droppedLoot;
 			dropObject.typeOfObject = int(heldItem->content.first);
@@ -662,7 +662,7 @@ void deerchant::endingPreviousAction()
 							isHareTrap = false;
 							break;
 						}
-					birthStaticInfo dropObject;
+					birth_static_info dropObject;
 					if (isHareTrap)
 					{
 						dropObject.tag = Tag::hareTrap;											
@@ -685,7 +685,7 @@ void deerchant::endingPreviousAction()
 	if (currentAction == throwNoose && currentSprite[0] == 12 && heldItem->content == std::make_pair(Tag::noose, 1))
 	{
 		heldItem->content = { Tag::emptyCell, 0 };
-		birthDynamicInfo nooseObject;
+		birth_dynamic_info nooseObject;
 		nooseObject.position = position;
 		nooseObject.tag = Tag::noose;
 		nooseObject.owner = this;
@@ -715,7 +715,7 @@ void deerchant::endingPreviousAction()
 				{					
 					bags.resize(bags.size() + 1);
 					bags[bags.size() - 1] = *(new hero_bag());
-					bags[bags.size()-1].initialize(Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2), true, pickedItem->inventory);
+					bags[bags.size()-1].initialize(Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2), true, pickedItem->inventory);
 					pickedItem->deletePromiseOn();
 				}
 				else

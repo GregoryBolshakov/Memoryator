@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-#include "Helper.h"
+#include "helper.h"
 
 hero_book::hero_book()
 = default;
@@ -19,7 +19,7 @@ void hero_book::init(std::map<PackTag, sprite_pack>* packsMap)
 
 void hero_book::initButtons(std::map<PackTag, sprite_pack>* packsMap)
 {
-	const auto screenSize = Helper::GetScreenSize();
+	const auto screenSize = helper::GetScreenSize();
 
 	std::string packTag = "empty";
 	std::string packPart = "full";
@@ -59,10 +59,10 @@ void hero_book::initButtons(std::map<PackTag, sprite_pack>* packsMap)
 	//-----------------------------
 
 	// positioning interface elements
-	buttonList.at(ButtonTag::bookButtonTag).set_position(Vector2f(Helper::GetScreenSize().x * 2 / 5 - buttonList.at(ButtonTag::bookButtonTag).get_global_bounds().width, Helper::GetScreenSize().y * 14 / 15 - buttonList.at(ButtonTag::bookButtonTag).get_global_bounds().height));
-	buttonList.at(ButtonTag::bookStandTag).set_position(Vector2f(Helper::GetScreenSize().x * 2 / 5 - buttonList.at(ButtonTag::bookStandTag).get_global_bounds().width, Helper::GetScreenSize().y * 14 / 15 - buttonList.at(ButtonTag::bookButtonTag).get_global_bounds().height));
-	buttonList.at(ButtonTag::bookGlowTag).set_position(Vector2f(Helper::GetScreenSize().x * 2 / 5 - buttonList.at(ButtonTag::bookStandTag).get_global_bounds().width, Helper::GetScreenSize().y * 14 / 15 - buttonList.at(ButtonTag::bookButtonTag).get_global_bounds().height));
-	buttonList.at(ButtonTag::bookLightningTag).set_position(Vector2f(Helper::GetScreenSize().x * 2 / 5 - buttonList.at(ButtonTag::bookStandTag).get_global_bounds().width, Helper::GetScreenSize().y * 14 / 15 - buttonList.at(ButtonTag::bookButtonTag).get_global_bounds().height));
+	buttonList.at(ButtonTag::bookButtonTag).set_position(Vector2f(helper::GetScreenSize().x * 2 / 5 - buttonList.at(ButtonTag::bookButtonTag).get_global_bounds().width, helper::GetScreenSize().y * 14 / 15 - buttonList.at(ButtonTag::bookButtonTag).get_global_bounds().height));
+	buttonList.at(ButtonTag::bookStandTag).set_position(Vector2f(helper::GetScreenSize().x * 2 / 5 - buttonList.at(ButtonTag::bookStandTag).get_global_bounds().width, helper::GetScreenSize().y * 14 / 15 - buttonList.at(ButtonTag::bookButtonTag).get_global_bounds().height));
+	buttonList.at(ButtonTag::bookGlowTag).set_position(Vector2f(helper::GetScreenSize().x * 2 / 5 - buttonList.at(ButtonTag::bookStandTag).get_global_bounds().width, helper::GetScreenSize().y * 14 / 15 - buttonList.at(ButtonTag::bookButtonTag).get_global_bounds().height));
+	buttonList.at(ButtonTag::bookLightningTag).set_position(Vector2f(helper::GetScreenSize().x * 2 / 5 - buttonList.at(ButtonTag::bookStandTag).get_global_bounds().width, helper::GetScreenSize().y * 14 / 15 - buttonList.at(ButtonTag::bookButtonTag).get_global_bounds().height));
 	//-------------------------------
 }
 
@@ -173,7 +173,7 @@ std::vector<sprite_chain_element*> hero_book::prepareLineMatrix()
 							{
 								const Vector2f firstLnDot = Vector2f(somePage.wreathMatrixPositions[raw][column].x + distance.y + contentOffset.x, somePage.wreathMatrixPositions[raw][column].y + distance.y + contentOffset.y);
 								const Vector2f secondLnDot = Vector2f(somePage.wreathMatrixPositions[cell.first][cell.second].x + distance.y + contentOffset.x, somePage.wreathMatrixPositions[cell.first][cell.second].y + distance.y + contentOffset.y);
-								auto line = Helper::makeLine(firstLnDot, secondLnDot);
+								auto line = helper::makeLine(firstLnDot, secondLnDot);
 								//result.push_back(line);
 							}
 						}

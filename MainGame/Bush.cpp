@@ -1,6 +1,6 @@
 #include "bush.h"
 
-#include "Helper.h"
+#include "helper.h"
 
 bush::bush(std::string objectName, Vector2f centerPosition, int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {

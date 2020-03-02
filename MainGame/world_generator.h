@@ -1,7 +1,7 @@
 #pragma once
 
 #include "object_initializer.h"
-#include "GridList.h"
+#include "grid_list.h"
 
 class world_generator
 {
@@ -10,7 +10,7 @@ public:
 	const float FARTHEST_SCALE = 0.998f;
 	
 	void generate();
-	void init(int width, int height, Vector2f blockSize, Vector2f microBlockSize, GridList* staticGrid, GridList* dynamicGrid, std::map<PackTag, sprite_pack>* packsMap);
+	void init(int width, int height, Vector2f blockSize, Vector2f microBlockSize, grid_list* staticGrid, grid_list* dynamicGrid, std::map<PackTag, sprite_pack>* packsMap);
     void initMainScale();
 
 	void initializeStaticItem(
@@ -41,8 +41,8 @@ public:
 	float scaleFactor = 1;
 	float mainScale = 1;
 private:
-	GridList* staticGrid = nullptr;
-	GridList* dynamicGrid = nullptr;	
+	grid_list* staticGrid = nullptr;
+	grid_list* dynamicGrid = nullptr;	
 	std::map<PackTag, sprite_pack>* packsMap{};
 	int width = 0;
 	int height = 0;

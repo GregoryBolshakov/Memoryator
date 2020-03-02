@@ -1,7 +1,7 @@
 #include "hero_bag.h"
 
-#include "GridList.h"
-#include "Helper.h"
+#include "grid_list.h"
+#include "helper.h"
 
 hero_bag::hero_bag()
 {
@@ -20,8 +20,8 @@ std::vector<std::pair<Tag, int>> hero_bag::emptyInventory =
 
 void hero_bag::initialize(const Vector2f position, const bool isSelectable, std::vector<std::pair<Tag, int>> inventory)
 {
-	sizeClosed = Vector2f(Helper::GetScreenSize().x / 12.0f, Helper::GetScreenSize().y / 6.0f);
-	sizeOpen = Vector2f(Helper::GetScreenSize().x / 6.0f, Helper::GetScreenSize().y / 3.0f);
+	sizeClosed = Vector2f(helper::GetScreenSize().x / 12.0f, helper::GetScreenSize().y / 6.0f);
+	sizeOpen = Vector2f(helper::GetScreenSize().x / 6.0f, helper::GetScreenSize().y / 3.0f);
 
 	this->position = position;
 	lastMousePos = position;
@@ -82,7 +82,7 @@ int hero_bag::getSelectedCell(const Vector2f position)
 {
 	for (auto i = 0u; i < cells.size(); i++)
 	{
-		if (Helper::getDist(position, cells[i].position) <= sprite_pack::iconSize.x / 2)
+		if (helper::getDist(position, cells[i].position) <= sprite_pack::iconSize.x / 2)
 			return i;
 	}
 	return -1;
@@ -140,17 +140,17 @@ void hero_bag::fixPos()
 
 	if (movePosition.x < minDistToBorder)
 		movePosition.x = -1;
-	if (movePosition.x > Helper::GetScreenSize().x - minDistToBorder)
+	if (movePosition.x > helper::GetScreenSize().x - minDistToBorder)
 		movePosition.x = -1;
 
 	if (movePosition.y < minDistToBorder)
 		movePosition.y = -1;
-	if (movePosition.y > Helper::GetScreenSize().y - minDistToBorder)
+	if (movePosition.y > helper::GetScreenSize().y - minDistToBorder)
 		movePosition.y = -1;
 
-	if (position.x + shiftVector.x < minDistToBorder || position.x + shiftVector.x > Helper::GetScreenSize().x - minDistToBorder)
+	if (position.x + shiftVector.x < minDistToBorder || position.x + shiftVector.x > helper::GetScreenSize().x - minDistToBorder)
 		shiftVector.x = 0;
-	if (position.y + shiftVector.y < minDistToBorder || position.y + shiftVector.y > Helper::GetScreenSize().y - minDistToBorder)
+	if (position.y + shiftVector.y < minDistToBorder || position.y + shiftVector.y > helper::GetScreenSize().y - minDistToBorder)
 		shiftVector.y = 0;
 }
 
@@ -314,7 +314,7 @@ void hero_bag::mouseMove()
 
 sprite_chain_element* hero_bag::prepareSprite(const long long elapsedTime, std::map<PackTag, sprite_pack> * packsMap)
 {
-	const auto screenCenter = Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2);
+	const auto screenCenter = Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2);
 	bagSpriteChain.ClosedBag->size = sizeClosed; bagSpriteChain.ClosedBagSelected->size = sizeClosed; bagSpriteChain.ClosedBagBig->size = sizeClosed;
 	bagSpriteChain.OpenedBag->size = sizeOpen; bagSpriteChain.OpenedBagSelected->size = sizeOpen;
 	bagSpriteChain.ClosedBag->offset = textureClosedOffset; bagSpriteChain.ClosedBagSelected->offset = textureClosedOffset; bagSpriteChain.ClosedBagBig->offset = textureClosedOffset;

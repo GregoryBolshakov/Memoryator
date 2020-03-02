@@ -2,7 +2,7 @@
 
 #include <string>
 
-struct boardObject
+struct board_object
 {
 	std::string name;
 	std::string type;

@@ -1,6 +1,6 @@
 #include "rock.h"
 
-#include "Helper.h"
+#include "helper.h"
 
 rock::rock(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {

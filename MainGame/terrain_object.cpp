@@ -1,6 +1,6 @@
 #include "terrain_object.h"
 
-#include "Helper.h"
+#include "helper.h"
 
 terrain_object::terrain_object(std::string objectName, Vector2f centerPosition) : static_object(std::move(objectName), centerPosition)
 {
@@ -39,7 +39,7 @@ void terrain_object::initMicroBlocks()
 					const auto pos = Vector2f(position.x + i * microBlockSize.x, position.y + j * microBlockSize.y);
 					auto const f1 = internalEllipses[cnt].first;
 					auto const f2 = internalEllipses[cnt].second;
-					if (Helper::getDist(pos, f1) + Helper::getDist(pos, f2) < getEllipseSize(cnt) - sqrt(2.0f * microBlockSize.x) * 1.2f)
+					if (helper::getDist(pos, f1) + helper::getDist(pos, f2) < getEllipseSize(cnt) - sqrt(2.0f * microBlockSize.x) * 1.2f)
 						lockedMicroBlocks.emplace_back(currentMicroBlock.x + i, currentMicroBlock.y + j);
 					j++;
 				}
@@ -63,7 +63,7 @@ void terrain_object::initMicroBlocks()
 				const auto pos = Vector2f(position.x + i * microBlockSize.x, position.y + j * microBlockSize.y);
 				auto const f1 = this->getFocus1();
 				auto const f2 = this->getFocus2();
-				if (Helper::getDist(pos, f1) + Helper::getDist(pos, f2) < this->getEllipseSize() - sqrt(2.0f * microBlockSize.x) * 1.2f)
+				if (helper::getDist(pos, f1) + helper::getDist(pos, f2) < this->getEllipseSize() - sqrt(2.0f * microBlockSize.x) * 1.2f)
 					lockedMicroBlocks.emplace_back(currentMicroBlock.x + i, currentMicroBlock.y + j);
 				j++;
 			}
@@ -75,9 +75,9 @@ void terrain_object::initMicroBlocks()
 float terrain_object::getEllipseSize(int i)
 {
 	if (isMultiEllipse)
-		return Helper::getDist(internalEllipses[i].first, internalEllipses[i].second) * ellipseSizeMultipliers[i];
+		return helper::getDist(internalEllipses[i].first, internalEllipses[i].second) * ellipseSizeMultipliers[i];
 
-	return Helper::getDist(focus1, focus2) * ellipseSizeMultipliers[0];
+	return helper::getDist(focus1, focus2) * ellipseSizeMultipliers[0];
 }
 
 void terrain_object::setFocuses(std::vector<Vector2f> focuses)
@@ -107,10 +107,10 @@ bool terrain_object::isIntersected(Vector2f curPosition, Vector2f newPosition) /
 		const auto d1 = this->getDot1();
 		const auto d2 = this->getDot2();
 
-		auto const triangle1 = Helper::triangleArea(d1.x, d1.y, curPosition.x, curPosition.y, d2.x, d2.y);
-		auto const triangle2 = Helper::triangleArea(d1.x, d1.y, newPosition.x, newPosition.y, d2.x, d2.y);
+		auto const triangle1 = helper::triangleArea(d1.x, d1.y, curPosition.x, curPosition.y, d2.x, d2.y);
+		auto const triangle2 = helper::triangleArea(d1.x, d1.y, newPosition.x, newPosition.y, d2.x, d2.y);
 
-		return (!Helper::checkSigns(triangle1, triangle2)) &&
+		return (!helper::checkSigns(triangle1, triangle2)) &&
 			((newPosition.x >= std::min(d1.x, d2.x) - 5 && newPosition.x <= std::max(d1.x, d2.x) + 5)
 				&& (newPosition.y >= std::min(d1.y, d2.y) - 5 && newPosition.y <= std::max(d1.y, d2.y) + 5));
 	}
@@ -120,7 +120,7 @@ bool terrain_object::isIntersected(Vector2f curPosition, Vector2f newPosition) /
 
 	auto const position = newPosition;
 
-	return sqrt(pow(position.x - f1.x, 2) + pow(position.y - f1.y, 2)) + sqrt(pow(position.x - f2.x, 2) + pow(position.y - f2.y, 2)) <= Helper::getDist(f1, f2) * ellipseSizeMultipliers[0];
+	return sqrt(pow(position.x - f1.x, 2) + pow(position.y - f1.y, 2)) + sqrt(pow(position.x - f2.x, 2) + pow(position.y - f2.y, 2)) <= helper::getDist(f1, f2) * ellipseSizeMultipliers[0];
 }
 
 std::vector<int> terrain_object::getMultiellipseIntersect(Vector2f position) const
@@ -134,7 +134,7 @@ std::vector<int> terrain_object::getMultiellipseIntersect(Vector2f position) con
 		auto const f1 = this->internalEllipses[i].first;
 		auto const f2 = this->internalEllipses[i].second;
 
-		if (sqrt(pow(position.x - f1.x, 2) + pow(position.y - f1.y, 2)) + sqrt(pow(position.x - f2.x, 2) + pow(position.y - f2.y, 2)/* - dynamic.radius*/) <= Helper::getDist(f1, f2) * ellipseSizeMultipliers[i])
+		if (sqrt(pow(position.x - f1.x, 2) + pow(position.y - f1.y, 2)) + sqrt(pow(position.x - f2.x, 2) + pow(position.y - f2.y, 2)/* - dynamic.radius*/) <= helper::getDist(f1, f2) * ellipseSizeMultipliers[i])
 			ans.push_back(i);
 	}
 

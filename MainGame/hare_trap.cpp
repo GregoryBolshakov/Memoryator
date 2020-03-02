@@ -1,6 +1,6 @@
 #include "hare_trap.h"
 
-#include "Helper.h"
+#include "helper.h"
 
 hare_trap::hare_trap(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : picked_object(std::move(objectName), centerPosition)
 {

@@ -30,7 +30,7 @@ void build_system::initializeObjectsInfo()
 	std::ifstream fin(BuildSystemObjectsInfoFileDirectory);
 	while (fin >> objectIconPath >> objectImageType)
 	{
-		objectInfo infoItem;
+		object_info infoItem;
 
 		infoItem.icon = objectIconPath;
 		infoItem.type = objectImageType;
@@ -50,7 +50,7 @@ void build_system::initializeObjectsInfo()
 	fin.close();
 }
 
-std::vector <sprite_chain_element*> build_system::prepareSprites(GridList& staticGrid, const std::vector<world_object*>& visibleItems, std::map<PackTag, sprite_pack>* packsMap)
+std::vector <sprite_chain_element*> build_system::prepareSprites(grid_list& staticGrid, const std::vector<world_object*>& visibleItems, std::map<PackTag, sprite_pack>* packsMap)
 {
 	if (selectedObject == Tag::emptyCell)
 		return {};
@@ -106,8 +106,8 @@ std::vector <sprite_chain_element*> build_system::prepareSprites(GridList& stati
 void build_system::interact(Vector2f cameraPosition, float scaleFactor)
 {
 	const Vector2f mousePos = Vector2f(Mouse::getPosition());
-	mouseWorldPos = Vector2f((mousePos.x - Helper::GetScreenSize().x / 2 + cameraPosition.x * scaleFactor) / scaleFactor,
-		(mousePos.y - Helper::GetScreenSize().y / 2 + cameraPosition.y * scaleFactor) / scaleFactor);
+	mouseWorldPos = Vector2f((mousePos.x - helper::GetScreenSize().x / 2 + cameraPosition.x * scaleFactor) / scaleFactor,
+		(mousePos.y - helper::GetScreenSize().y / 2 + cameraPosition.y * scaleFactor) / scaleFactor);
 }
 
 void build_system::onMouseUp()
@@ -138,8 +138,8 @@ void build_system::buildHeldItem(Vector2f focusedObjectPosition, float scaleFact
 
 	if (canBePlaced)
 	{
-		buildingPosition = Vector2f ((Mouse::getPosition().x - Helper::GetScreenSize().x / 2 + focusedObjectPosition.x * scaleFactor) / scaleFactor,
-			(Mouse::getPosition().y - Helper::GetScreenSize().y / 2 + focusedObjectPosition.y*scaleFactor) / scaleFactor);
+		buildingPosition = Vector2f ((Mouse::getPosition().x - helper::GetScreenSize().x / 2 + focusedObjectPosition.x * scaleFactor) / scaleFactor,
+			(Mouse::getPosition().y - helper::GetScreenSize().y / 2 + focusedObjectPosition.y*scaleFactor) / scaleFactor);
 	}
 }
 
@@ -186,7 +186,7 @@ void build_system::wasPlaced()
 	buildingPosition = Vector2f (-1, -1);
 }
 
-void build_system::clearHareBags(int block, GridList& staticGrid, std::vector<world_object*>* visibleItems)
+void build_system::clearHareBags(int block, grid_list& staticGrid, std::vector<world_object*>* visibleItems)
 {
 	for (auto& item : *visibleItems)
 	{

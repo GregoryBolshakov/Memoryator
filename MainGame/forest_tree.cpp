@@ -1,6 +1,6 @@
 #include "forest_tree.h"
 
-#include "Helper.h"
+#include "helper.h"
 
 forest_tree::forest_tree(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {

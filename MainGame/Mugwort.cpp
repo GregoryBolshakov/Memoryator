@@ -1,6 +1,6 @@
 #include "mugwort.h"
 
-#include "Helper.h"
+#include "helper.h"
 
 mugwort::mugwort(std::string objectName, Vector2f centerPosition, int typeOfObject) : picked_object(std::move(objectName), centerPosition)
 {

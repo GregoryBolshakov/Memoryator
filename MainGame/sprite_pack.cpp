@@ -3,9 +3,9 @@
 #include <fstream>
 
 #include "button.h"
-#include "Helper.h"
+#include "helper.h"
 
-const Vector2f sprite_pack::iconSize = { Helper::GetScreenSize().y / 13.8f, Helper::GetScreenSize().y / 13.8f };
+const Vector2f sprite_pack::iconSize = { helper::GetScreenSize().y / 13.8f, helper::GetScreenSize().y / 13.8f };
 Vector2f sprite_pack::iconWithoutSpaceSize = { 0, 0 };
 
 
@@ -104,7 +104,7 @@ void sprite_pack::init(const std::string& path, const std::string& jsonPath, con
     {
         const auto pngExtensionWithDotLength = 4;
         frame.frame_name.erase(frame.frame_name.size() - pngExtensionWithDotLength, pngExtensionWithDotLength);
-        auto keyWords = Helper::split(frame.frame_name, '/');
+        auto keyWords = helper::split(frame.frame_name, '/');
 
         auto part = PackPart::full;
         auto direction = Direction::DOWN;

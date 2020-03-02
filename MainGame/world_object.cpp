@@ -1,6 +1,6 @@
 #include "world_object.h"
 
-#include "Helper.h"
+#include "helper.h"
 
 Vector2f world_object::microBlockSize = {20, 20};
 

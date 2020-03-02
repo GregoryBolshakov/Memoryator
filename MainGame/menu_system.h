@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "button.h"
-#include "Helper.h"
+#include "helper.h"
 #include "world_handler.h"
 
 using namespace sf;

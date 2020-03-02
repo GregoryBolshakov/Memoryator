@@ -60,13 +60,13 @@ void bear::behavior(long long elapsedTime)
 			return;
 		}
 		directionSystem.side = direction_system::calculateSide(position, owner->getPosition(), elapsedTime);
-		if (Helper::getDist(position, owner->getPosition()) > sightRange / 2)
+		if (helper::getDist(position, owner->getPosition()) > sightRange / 2)
 		{
 			changeAction(grab, false, false);
 			movePosition = owner->getPosition();
 		}
 		else
-			if (Helper::getDist(position, owner->getPosition()) <= sightRange / 2.5 && currentAction != relax)
+			if (helper::getDist(position, owner->getPosition()) <= sightRange / 2.5 && currentAction != relax)
 			{
 				changeAction(relax, true, false);
 				movePosition = position;
@@ -78,7 +78,7 @@ void bear::behavior(long long elapsedTime)
 
 	if (boundTarget == nullptr)
 		return;
-	const float distanceToTarget = Helper::getDist(this->position, boundTarget->getPosition());
+	const float distanceToTarget = helper::getDist(this->position, boundTarget->getPosition());
 	moveSystem.speed = std::max(moveSystem.defaultSpeed, (moveSystem.defaultSpeed * 10) * (1 - (distanceToTarget) / sightRange * 1.5f));
 	//animationSpeed = std::max(0.0003f, 0.0003f * speed / defaultSpeed);
 

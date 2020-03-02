@@ -8,9 +8,9 @@
 class world_object;
 using namespace sf;
 
-enum State { common = 1, absorbed = 2, constructed = 3 };
+enum state { common = 1, absorbed = 2, constructed = 3 };
 
-struct birthStaticInfo
+struct birth_static_info
 {
 	Tag tag;
 	Vector2f position = { 0,0 };
@@ -19,7 +19,7 @@ struct birthStaticInfo
 	std::vector<std::pair<Tag, int>> inventory;
 };
 
-struct  birthDynamicInfo
+struct  birth_dynamic_info
 {
 	Tag tag;
 	Vector2f position = { 0,0 };
@@ -57,19 +57,19 @@ public:
 	virtual Vector2f getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition) = 0;
 	virtual int getBuildType(Vector2f ounPos, Vector2f otherPos) = 0;
 	[[nodiscard]] FloatRect getOriginalTextureBox() const { return originalTextureBox; }
-	[[nodiscard]] State getState() const { return state; }	
-	std::pair<std::stack<birthStaticInfo>, std::stack<birthDynamicInfo>> getBirthObjects() { return std::make_pair(birthStatics, birthDynamics); }	
+	[[nodiscard]] state getState() const { return state; }	
+	std::pair<std::stack<birth_static_info>, std::stack<birth_dynamic_info>> getBirthObjects() { return std::make_pair(birthStatics, birthDynamics); }	
 
 	void manuallyDisableMirroring() { mirrored = false; }
 	void cancelMirroring();
-	void clearBirthStack() { birthStatics = std::stack<birthStaticInfo>(); birthDynamics = std::stack<birthDynamicInfo>(); }
+	void clearBirthStack() { birthStatics = std::stack<birth_static_info>(); birthDynamics = std::stack<birth_dynamic_info>(); }
 	void setPosition(Vector2f newPosition);
 	void setHealthPoint(float healthPoint) { this->healthPoint = healthPoint; }
 	void setName(std::string name) { this->name = std::move(name); }
 	void deletePromiseOn() { deletePromise = true; }
 	static void setUnscaled(const std::vector<sprite_chain_element*>& items) { for (auto& item : items) item->unscaled = true; }
 	virtual void setTextureSize(Vector2f textureSize);
-	void setState(State state) { this->state = state; }
+	void setState(state state) { this->state = state; }
 	virtual void takeDamage(float damage, Vector2f attackerPos = { -1, -1 });
 	virtual void initMicroBlocks();
 	virtual bool isLockedPlace(const std::map<std::pair<int, int>, bool>& checkBlocks);
@@ -102,8 +102,8 @@ protected:
 	Vector2f microBlockCheckAreaBounds = { 0, 0 };
 	Vector2f position = { 0, 0 };
 	float radius = 0, permissibleDistance = 0;
-	State state = common;
-	std::stack<birthStaticInfo> birthStatics;
-	std::stack<birthDynamicInfo> birthDynamics;
+	state state = common;
+	std::stack<birth_static_info> birthStatics;
+	std::stack<birth_dynamic_info> birthDynamics;
 	std::vector<Vector2i> lockedMicroBlocks = {};
 };

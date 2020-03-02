@@ -8,9 +8,9 @@
 #include "dynamic_object.h"
 #include "effects_system.h"
 #include "empty_object.h"
-#include "Helper.h"
+#include "helper.h"
 #include "inventory_system.h"
-#include "LightSystem.h"
+#include "light_system.h"
 #include "pedestal_controller.h"
 #include "time_system.h"
 #include "world_generator.h"
@@ -27,14 +27,14 @@ public:
 	void birthObjects();
 
 	// Getters
-	GridList& getStaticGrid() { return staticGrid; }
-	GridList& getDynamicGrid() { return dynamicGrid; }
+	grid_list& getStaticGrid() { return staticGrid; }
+	grid_list& getDynamicGrid() { return dynamicGrid; }
 	Vector2f getCameraPosition() const	{ return cameraSystem.position; }
 	inventory_system& getInventorySystem() { return inventorySystem; }
 	build_system& getBuildSystem() { return buildSystem; }
 	time_system& getTimeSystem() { return timeSystem; }
 	world_generator& getWorldGenerator() { return worldGenerator; }
-	LightSystem& getLightSystem() { return lightSystem; }
+	light_system& getLightSystem() { return lightSystem; }
 	std::string getMouseDisplayName() const { return mouseDisplayName; }
 	world_object* getSelectedObject() const { return selectedObject; }
 	std::vector<world_object*> getLocalTerrain() const { return localTerrain; }
@@ -114,11 +114,11 @@ private:
 	inventory_system inventorySystem;
 	build_system buildSystem;
 	time_system timeSystem;
-	LightSystem lightSystem;
+	light_system lightSystem;
 
 	// Grids
-	GridList staticGrid;
-	GridList dynamicGrid;
+	grid_list staticGrid;
+	grid_list dynamicGrid;
 	std::vector<sprite_chain_element*> visibleBackground, visibleTerrain;
 	std::vector<world_object*> localTerrain;
 

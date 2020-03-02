@@ -62,12 +62,12 @@ void deer::behavior(const long long elapsedTime)
 			return;
 		}
 		directionSystem.side = direction_system::calculateSide(position, owner->getPosition(), elapsedTime);
-		if (Helper::getDist(position, owner->getPosition()) > sightRange / 2)
+		if (helper::getDist(position, owner->getPosition()) > sightRange / 2)
 		{
 			changeAction(moveSlowly, false, false);
 			laxMovePosition = owner->getPosition();
 		}
-		else if (Helper::getDist(position, owner->getPosition()) <= sightRange / 2.5 && currentAction != relax)
+		else if (helper::getDist(position, owner->getPosition()) <= sightRange / 2.5 && currentAction != relax)
 		{
 			changeAction(relax, true, false);
 			laxMovePosition = {-1, -1};
@@ -82,7 +82,7 @@ void deer::behavior(const long long elapsedTime)
 		return;
 	}
 
-	const auto distanceToTarget = Helper::getDist(this->position, boundTarget->getPosition());
+	const auto distanceToTarget = helper::getDist(this->position, boundTarget->getPosition());
 	//speed = std::max(defaultSpeed, (defaultSpeed * 10) * (1 - (distanceToTarget) / sightRange * 1.5f));
 	animationSpeed = std::max(0.0004F, 0.0003F * moveSystem.speed / moveSystem.defaultSpeed);
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "static_object.h"
-#include "SpriteStructures.h"
+#include "sprite_structures.h"
 #include "sprite_pack.h"
 #include "rock.h"
 #include "ground.h"

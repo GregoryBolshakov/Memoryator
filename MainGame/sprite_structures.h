@@ -6,13 +6,13 @@
 
 using namespace sf;
 
-struct BoardSprite
+struct board_sprite
 {
 	Texture texture;
 	Sprite sprite;
 };
 
-struct CellSprite {
+struct cell_sprite {
 	Sprite sprite;
 	Texture texture;
 	Vector2f offset;

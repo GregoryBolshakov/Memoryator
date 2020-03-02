@@ -4,7 +4,7 @@
 #include <string>
 
 #include "drawable_chain_element.h"
-#include "Helper.h"
+#include "helper.h"
 
 enum class FontName { BebasFont = 1, NormalFont = 2, ConsoleFont = 3 };
 

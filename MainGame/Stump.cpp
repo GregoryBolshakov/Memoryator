@@ -1,6 +1,6 @@
 #include "stump.h"
 
-#include "Helper.h"
+#include "helper.h"
 
 stump::stump(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {

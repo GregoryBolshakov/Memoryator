@@ -1,6 +1,6 @@
 #include "fence.h"
 
-#include "Helper.h"
+#include "helper.h"
 
 fence::fence(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {
@@ -92,8 +92,8 @@ void fence::initPedestal()
 Vector2f fence::getBuildPosition(std::vector<world_object*> visibleItems, const float scaleFactor, const Vector2f cameraPosition)
 {
 	const auto mousePos = Vector2f (Mouse::getPosition());
-	const auto mouseWorldPos = Vector2f ((mousePos.x - Helper::GetScreenSize().x / 2 + cameraPosition.x * scaleFactor) / scaleFactor,
-	                                     (mousePos.y - Helper::GetScreenSize().y / 2 + cameraPosition.y * scaleFactor) / scaleFactor);
+	const auto mouseWorldPos = Vector2f ((mousePos.x - helper::GetScreenSize().x / 2 + cameraPosition.x * scaleFactor) / scaleFactor,
+	                                     (mousePos.y - helper::GetScreenSize().y / 2 + cameraPosition.y * scaleFactor) / scaleFactor);
 
 	const auto dot1 = Vector2f ((this->dot1.x - this->position.x) + mouseWorldPos.x, (this->dot1.y - this->position.y) + mouseWorldPos.y);
 	const auto dot2 = Vector2f ((this->dot2.x - this->position.x) + mouseWorldPos.x, (this->dot2.y - this->position.y) + mouseWorldPos.y);
@@ -147,7 +147,7 @@ int fence::getBuildType(const Vector2f ounPos, const Vector2f otherPos)
 {
 	if (otherPos != Vector2f (-1, -1))
 	{
-		const auto side = Helper::getSide(ounPos, otherPos);
+		const auto side = helper::getSide(ounPos, otherPos);
 		if (side == up)
 			return 3;
 		if (side == down)

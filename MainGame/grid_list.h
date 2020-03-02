@@ -10,13 +10,13 @@ using namespace sf;
 
 const float inf = 1e3;
 
-class GridList
+class grid_list
 {
 public:
 	[[nodiscard]] std::unordered_map<std::string, std::pair<int, int>> getItemsOfGreed() const { return items; }
-	GridList();
-	GridList(int width, int height, Vector2f size, Vector2f microSize);
-	~GridList();
+	grid_list();
+	grid_list(int width, int height, Vector2f size, Vector2f microSize);
+	~grid_list();
 	[[nodiscard]] Vector2f getBlockSize() const;
 	size_t getBlockItemsAmount(const int index) { return cells[index].size(); }
 	[[nodiscard]] int getIndexByPoint(float x, float y) const;

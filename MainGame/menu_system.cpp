@@ -1,9 +1,9 @@
 #include "menu_system.h"
 
-const Vector2f NEW_RUN_BUTTON_POSITION(Helper::GetScreenSize().x * 0.06f, Helper::GetScreenSize().y * 0.06f);
-const Vector2f CONTINUE_BUTTON_POSITION(Helper::GetScreenSize().x * 0.06f, Helper::GetScreenSize().y * 0.21f);
-const Vector2f EXIT_BUTTON_POSITION(Helper::GetScreenSize().x * 0.06f, Helper::GetScreenSize().y * 0.36f);
-const Vector2f BUTTON_SIZE(Helper::GetScreenSize().x * 0.2f, Helper::GetScreenSize().y * 0.14f);
+const Vector2f NEW_RUN_BUTTON_POSITION(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.06f);
+const Vector2f CONTINUE_BUTTON_POSITION(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.21f);
+const Vector2f EXIT_BUTTON_POSITION(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.36f);
+const Vector2f BUTTON_SIZE(helper::GetScreenSize().x * 0.2f, helper::GetScreenSize().y * 0.14f);
 
 menu_system::menu_system()
 {
@@ -12,7 +12,7 @@ menu_system::menu_system()
 
 void menu_system::initButtons()
 {
-	Vector2f screenSize = Helper::GetScreenSize();
+	Vector2f screenSize = helper::GetScreenSize();
 
     buttonList[ButtonTag::newRunTag].initialize(PackTag::interfaceElements, PackPart::menu, 1, 1, 1, NEW_RUN_BUTTON_POSITION, BUTTON_SIZE, true, ButtonTag::newRunTag);
     buttonList[ButtonTag::continueTag].initialize(PackTag::interfaceElements, PackPart::menu, 2, 2, 2, CONTINUE_BUTTON_POSITION, BUTTON_SIZE, true, ButtonTag::continueTag);

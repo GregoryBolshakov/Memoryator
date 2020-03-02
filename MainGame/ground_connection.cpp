@@ -1,6 +1,6 @@
 #include "ground_connection.h"
 
-#include "Helper.h"
+#include "helper.h"
 
 ground_connection::ground_connection(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : static_object(std::move(objectName), centerPosition)
 {

@@ -12,7 +12,7 @@ wolf::wolf(std::string objectName, Vector2f centerPosition) : neutral_mob(std::m
 	animationLength = 8;
 	radius = 70;
 	strength = 10;
-	sightRange = Helper::GetScreenSize().y * 1 / 2; 
+	sightRange = helper::GetScreenSize().y * 1 / 2; 
 	morality = 5; // from 1 to 10
 	fear = 0;
 	healthPoint = 0;

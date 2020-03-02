@@ -93,7 +93,7 @@ void owl_boss::setTarget(dynamic_object& object)
 
 void owl_boss::behaviorWithDynamic(dynamic_object* target, const long long elapsedTime)
 {
-	debugInfo = std::to_string(Helper::getDist(this->position, movePosition) / jerkDistance * 1000.0f);
+	debugInfo = std::to_string(helper::getDist(this->position, movePosition) / jerkDistance * 1000.0f);
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true, false);
@@ -113,8 +113,8 @@ void owl_boss::behaviorWithDynamic(dynamic_object* target, const long long elaps
 		const auto dragCoefficient = 1.2f; // 1..2
 		const auto startPower = 1.1f; //1..2
 		moveSystem.speed = pow(moveSystem.defaultSpeed, dragCoefficient / (startPower + float(timeAfterHit) / float(timeForNewHit)));
-		if (Helper::getDist(this->position, target->getPosition()) / jerkDistance <= 0.2f)
-			moveSystem.speed *= Helper::getDist(this->position, target->getPosition()) / jerkDistance;
+		if (helper::getDist(this->position, target->getPosition()) / jerkDistance <= 0.2f)
+			moveSystem.speed *= helper::getDist(this->position, target->getPosition()) / jerkDistance;
 	}
 	moveSystem.speed = std::max(moveSystem.defaultSpeed / 10, moveSystem.speed);
 
@@ -129,7 +129,7 @@ void owl_boss::behaviorWithDynamic(dynamic_object* target, const long long elaps
 	{
 		changeAction(move, false, true);
 		moveSystem.speed = moveSystem.defaultSpeed;
-		jerkDistance = Helper::getDist(this->position, target->getPosition());
+		jerkDistance = helper::getDist(this->position, target->getPosition());
 	}
 
 	if (moveSystem.speed <= moveSystem.defaultSpeed * 3) //with greater acceleration the owl loses the ability to coordinate the route
@@ -137,14 +137,14 @@ void owl_boss::behaviorWithDynamic(dynamic_object* target, const long long elaps
 		movePosition = Vector2f(target->getPosition().x + (target->getPosition().x - this->position.x) / 1.0f, target->getPosition().y + (target->getPosition().y - this->position.y) / 1.0f);
 	}
 
-	if (Helper::getDist(this->position, movePosition) / moveSystem.speed <= (40 / animationSpeed) * 3 && currentAction == move)
+	if (helper::getDist(this->position, movePosition) / moveSystem.speed <= (40 / animationSpeed) * 3 && currentAction == move)
 	{
 		changeAction(stopFlap, true, false);
 	}
 
-	if (Helper::getDist(this->position, movePosition) <= this->radius) //hit interaction
+	if (helper::getDist(this->position, movePosition) <= this->radius) //hit interaction
 	{
-		if (Helper::getDist(this->position, target->getPosition()) <= this->radius)
+		if (helper::getDist(this->position, target->getPosition()) <= this->radius)
 			target->takeDamage(this->strength, position);
 		timeAfterHit = 0;
 		flapsBeforeJerkCount = rand() % 3 + 3;

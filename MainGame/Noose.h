@@ -1,7 +1,7 @@
 #pragma once
 
 #include "dynamic_object.h"
-#include "Helper.h"
+#include "helper.h"
 
 using namespace sf;
 

@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics/Color.hpp>
 
-#include "Helper.h"
+#include "helper.h"
 
 move_system::move_system()
 = default;
@@ -57,7 +57,7 @@ void move_system::pushAway(long long elapsedTime, float pushSpeed)
 			return;
 		bumpCenter.x /= float(bumpCount);
 		bumpCenter.y /= float(bumpCount);
-		pushDistance = (*radius + bumpDistance) - Helper::getDist(*position, bumpCenter);
+		pushDistance = (*radius + bumpDistance) - helper::getDist(*position, bumpCenter);
 		pushDirection = Vector2f(position->x - bumpCenter.x, position->y - bumpCenter.y);
 		pushDuration = long(pushDistance / pushSpeed);
 		pushRestDuration = pushDuration;

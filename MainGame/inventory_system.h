@@ -5,7 +5,7 @@
 #include "text_system.h"
 #include "effects_system.h"
 #include "hero_bag.h"
-#include "SpriteStructures.h"
+#include "sprite_structures.h"
 
 using namespace sf;
 

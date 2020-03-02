@@ -1,6 +1,6 @@
 #include "text_chain_element.h"
 
-const float text_chain_element::defaultCharacterSize = Helper::GetScreenSize().y * 0.024f;
+const float text_chain_element::defaultCharacterSize = helper::GetScreenSize().y * 0.024f;
 
 text_chain_element::text_chain_element() : drawable_chain_element()
 {

@@ -2,15 +2,15 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "GridList.h"
-#include "Helper.h"
+#include "grid_list.h"
+#include "helper.h"
 #include "inventory_system.h"
 #include "sprite_pack.h"
 #include "world_object.h"
 
 using namespace sf;
 
-struct objectInfo {
+struct object_info {
 	std::string type, icon;
 	Sprite sprite, iconSprite;
 	Texture iconTexture;
@@ -27,9 +27,9 @@ public:
 	void onMouseUp();
 	void buildHeldItem(Vector2f focusedObjectPosition, float scaleFactor);
 	void interact(Vector2f cameraPosition = {0, 0}, float scaleFactor = 1);
-	void clearHareBags(int block, GridList& staticGrid, std::vector<world_object*>* visibleItems);
+	void clearHareBags(int block, grid_list& staticGrid, std::vector<world_object*>* visibleItems);
 	void wasPlaced();
-	std::vector<sprite_chain_element*> prepareSprites(GridList& staticGrid, const std::vector<world_object*>& visibleItems, std::map<PackTag, sprite_pack>* packsMap);
+	std::vector<sprite_chain_element*> prepareSprites(grid_list& staticGrid, const std::vector<world_object*>& visibleItems, std::map<PackTag, sprite_pack>* packsMap);
 
 	int getCurrentObject() const { return currentObject; }
 	bool getUsedMouse() const { return usedMouse; }
@@ -55,7 +55,7 @@ private:
 	void animator(long long elapsedTime);	
 	float originalAnimationSpeed = 0.001f, animationSpeed = 0.001f;
 	bool isPressed = false, usedMouse = false, successInit = false;
-	std::vector<objectInfo> builtObjects;
+	std::vector<object_info> builtObjects;
 	int currentObject = -1;
 	std::string BuildSystemObjectsInfoFileDirectory = "Game/buildSystem/buildSystemObjectsInfo.txt";
 	Font font;

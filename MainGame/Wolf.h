@@ -1,7 +1,7 @@
 #pragma once
 
 #include "neutral_mob.h"
-#include "Helper.h"
+#include "helper.h"
 
 using namespace sf;
 

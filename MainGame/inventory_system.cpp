@@ -2,7 +2,7 @@
 
 #include<fstream>
 
-#include "Helper.h"
+#include "helper.h"
 
 
 inventory_system::inventory_system()
@@ -26,11 +26,11 @@ void inventory_system::initMaxCounts(const std::string& filePath)
 
 void inventory_system::init()
 {
-	dropZoneRadius = Helper::GetScreenSize().y * 2 / 7;
+	dropZoneRadius = helper::GetScreenSize().y * 2 / 7;
 	heldItem.content = { Tag::emptyCell, 0 };
 	dropZoneTexture.loadFromFile("Game/inventorySprites/dropZone.png");
-	dropZone.setTexture(dropZoneTexture); dropZone.setScale(Helper::GetScreenSize().x / dropZoneTexture.getSize().x, Helper::GetScreenSize().y / dropZoneTexture.getSize().y);
-	bagPosDot.setRadius(Helper::GetScreenSize().y / 288);
+	dropZone.setTexture(dropZoneTexture); dropZone.setScale(helper::GetScreenSize().x / dropZoneTexture.getSize().x, helper::GetScreenSize().y / dropZoneTexture.getSize().y);
+	bagPosDot.setRadius(helper::GetScreenSize().y / 288);
 	bagPosDot.setFillColor(sf::Color(53, 53, 53, 200));
 	initMaxCounts();
 	successInit = true;
@@ -47,9 +47,9 @@ void inventory_system::moveOtherBags(const int cur) const
 				continue;
 			const auto newPos = Vector2f(boundBags->at(cur).getPosition().x + boundBags->at(cur).shiftVector.x, boundBags->at(cur).getPosition().y + boundBags->at(cur).shiftVector.y);
 
-			if (Helper::getDist(newPos, anotherBag.getPosition()) < boundBags->at(cur).getRadius() + anotherBag.getRadius())
+			if (helper::getDist(newPos, anotherBag.getPosition()) < boundBags->at(cur).getRadius() + anotherBag.getRadius())
 			{
-				const auto k = 0.05f * lapsCount * ((boundBags->at(cur).getRadius() + anotherBag.getRadius()) - Helper::getDist(newPos, anotherBag.getPosition())) / Helper::getDist(newPos, anotherBag.getPosition());
+				const auto k = 0.05f * lapsCount * ((boundBags->at(cur).getRadius() + anotherBag.getRadius()) - helper::getDist(newPos, anotherBag.getPosition())) / helper::getDist(newPos, anotherBag.getPosition());
 				anotherBag.shiftVector = Vector2f((anotherBag.getPosition().x - newPos.x) * k, (anotherBag.getPosition().y - newPos.y) * k);
 
 				const auto tempNewPos = Vector2f(anotherBag.getPosition().x + anotherBag.shiftVector.x, anotherBag.getPosition().y + (anotherBag.shiftVector.y));
@@ -71,7 +71,7 @@ void inventory_system::interact(const long long elapsedTime)
 	{
 		cnt++;
 
-		if (cursorText == "throw away" && Helper::getDist(bag.getPosition(), Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2)) <= dropZoneRadius ||
+		if (cursorText == "throw away" && helper::getDist(bag.getPosition(), Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2)) <= dropZoneRadius ||
 			cursorText.empty())
 			if (cnt == currentMovingBag || currentMovingBag == -1)
 				bag.mouseMove();
@@ -88,7 +88,7 @@ void inventory_system::interact(const long long elapsedTime)
 		
 		if (bag.movePosition.x != -1 && bag.movePosition.y != -1)
 		{
-			const auto k = bag.speed * time / Helper::getDist(bag.getPosition(), bag.movePosition);			
+			const auto k = bag.speed * time / helper::getDist(bag.getPosition(), bag.movePosition);			
 			newPos.x = bag.getPosition().x + shift.x * k;
 			newPos.y = bag.getPosition().y + shift.y * k;
 		}
@@ -105,7 +105,7 @@ void inventory_system::interact(const long long elapsedTime)
 				bag.movePosition.y = bag.getPosition().y;
 			}
 		}
-		if (Helper::getDist(bag.getPosition(), bag.movePosition) <= bag.speed * time)
+		if (helper::getDist(bag.getPosition(), bag.movePosition) <= bag.speed * time)
 			newPos = bag.movePosition;
 		bag.setPosition(newPos);
 		bag.fixCells();
@@ -115,12 +115,12 @@ void inventory_system::interact(const long long elapsedTime)
 		if (bag.currentState == bagClosed)
 		{
 			const auto selectionPos = Vector2f(bag.getPosition().x + bag.selectionZoneClosedOffset.x, bag.getPosition().y + bag.selectionZoneClosedOffset.y);
-			bag.readyToChangeState = (Helper::getDist(mousePos, selectionPos) <= bag.closedRadius);
+			bag.readyToChangeState = (helper::getDist(mousePos, selectionPos) <= bag.closedRadius);
 		} else
 		if (bag.currentState == bagOpen)
 		{
 			const auto selectionPos = Vector2f(bag.getPosition().x + bag.selectionZoneOpenedOffset.x, bag.getPosition().y + bag.selectionZoneOpenedOffset.y);
-			bag.readyToChangeState = (Helper::getDist(mousePos, selectionPos) <= bag.openedRadius);
+			bag.readyToChangeState = (helper::getDist(mousePos, selectionPos) <= bag.openedRadius);
 		}
 		//--------------
 	}
@@ -130,13 +130,13 @@ void inventory_system::interact(const long long elapsedTime)
 	{
 		for (auto& boundBag : *boundBags)
 		{
-			if (Helper::getDist(mousePos, boundBag.getPosition()) <= minDistToClosed && boundBag.currentState == bagClosed)
+			if (helper::getDist(mousePos, boundBag.getPosition()) <= minDistToClosed && boundBag.currentState == bagClosed)
 			{
-				minDistToClosed = Helper::getDist(mousePos, boundBag.getPosition());
+				minDistToClosed = helper::getDist(mousePos, boundBag.getPosition());
 			}
-			if (Helper::getDist(mousePos, boundBag.getPosition()) <= minDistToOpen && boundBag.currentState == bagOpen)
+			if (helper::getDist(mousePos, boundBag.getPosition()) <= minDistToOpen && boundBag.currentState == bagOpen)
 			{
-				minDistToOpen = Helper::getDist(mousePos, boundBag.getPosition());
+				minDistToOpen = helper::getDist(mousePos, boundBag.getPosition());
 			}
 		}		
 	}
@@ -162,11 +162,11 @@ void inventory_system::crashIntoOtherBags(const int cnt) const
 				continue;
 			const auto newPos = Vector2f(boundBags->at(cnt).getPosition().x + boundBags->at(cnt).shiftVector.x, boundBags->at(cnt).getPosition().y + boundBags->at(cnt).shiftVector.y);
 
-			if (Helper::getDist(newPos, anotherBag.getPosition()) < boundBags->at(cnt).getRadius() + anotherBag.getRadius())
+			if (helper::getDist(newPos, anotherBag.getPosition()) < boundBags->at(cnt).getRadius() + anotherBag.getRadius())
 			{
 				if (boundBags->at(cnt).currentState == bagClosed)
 				{
-					const auto k = 0.05f * lapsCount * ((boundBags->at(cnt).getRadius() + anotherBag.getRadius()) - Helper::getDist(newPos, anotherBag.getPosition())) / Helper::getDist(newPos, anotherBag.getPosition());
+					const auto k = 0.05f * lapsCount * ((boundBags->at(cnt).getRadius() + anotherBag.getRadius()) - helper::getDist(newPos, anotherBag.getPosition())) / helper::getDist(newPos, anotherBag.getPosition());
 					boundBags->at(cnt).shiftVector = Vector2f((newPos.x - anotherBag.getPosition().x) * k, (newPos.y - anotherBag.getPosition().y) * k);
 					isBreak = false;
 					break;
@@ -297,7 +297,7 @@ std::vector<drawable_chain_element*> inventory_system::prepareSprites(long long 
 			usedMouse = true;
 
 		// dropping bag
-		if (Helper::getDist(bag.getPosition(), Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2)) <= dropZoneRadius && bag.currentState == bagClosed)
+		if (helper::getDist(bag.getPosition(), Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2)) <= dropZoneRadius && bag.currentState == bagClosed)
 		{
 			cursorTurnedOn = true;
 			if (cursorText.empty())
@@ -330,7 +330,7 @@ std::vector<drawable_chain_element*> inventory_system::prepareSprites(long long 
 			if (cell.content.first == Tag::emptyCell)
 				continue;
 
-			auto icon = sprite_pack::tagToIcon(item.content.first, Helper::isIntersects(mousePos, cell.position, sprite_pack::iconSize.x / 2), 1);			
+			auto icon = sprite_pack::tagToIcon(item.content.first, helper::isIntersects(mousePos, cell.position, sprite_pack::iconSize.x / 2), 1);			
 			icon->position = item.position;
 			result.push_back(icon);
 
@@ -377,7 +377,7 @@ std::vector<drawable_chain_element*> inventory_system::prepareSprites(long long 
 			sf::Color(0, 0, 0, 180),
 			cursorText, 
 			text_chain_element::defaultCharacterSize * 1.5f));
-		result.push_back(new sprite_chain_element(PackTag::inventory, PackPart::areas, Direction::DOWN, 2, { 0, 0 }, Helper::GetScreenSize()));
+		result.push_back(new sprite_chain_element(PackTag::inventory, PackPart::areas, Direction::DOWN, 2, { 0, 0 }, helper::GetScreenSize()));
 	}
 	//if (bagPosDot.getPosition() != Vector2f(0, 0))
 		//window.draw(bagPosDot);

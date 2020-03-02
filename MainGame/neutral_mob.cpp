@@ -49,7 +49,7 @@ void neutral_mob::behavior(long long elapsedTime)
 	//return;
 	if (boundTarget == nullptr)
 		return;
-	const float distanceToTarget = Helper::getDist(this->position, boundTarget->getPosition());
+	const float distanceToTarget = helper::getDist(this->position, boundTarget->getPosition());
 
 	if (distanceToTarget <= sightRange)
 	{

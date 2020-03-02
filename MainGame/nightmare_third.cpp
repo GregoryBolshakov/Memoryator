@@ -34,13 +34,13 @@ void nightmare_third::doAttack(world_object* target)
 {
 	if (timeAfterHit >= timeForNewHit)
 	{
-		if (Helper::getDist(position, boundTarget->getPosition()) <= (this->radius + boundTarget->getRadius() + hitDistance / 3))
+		if (helper::getDist(position, boundTarget->getPosition()) <= (this->radius + boundTarget->getRadius() + hitDistance / 3))
 		{
 			changeAction(commonHit, true, false);
 			timeAfterHit = 0;
 		}
 		else
-			if (Helper::getDist(position, boundTarget->getPosition()) > this->radius + boundTarget->getRadius() + hitDistance * 2)
+			if (helper::getDist(position, boundTarget->getPosition()) > this->radius + boundTarget->getRadius() + hitDistance * 2)
 			{
 				changeAction(directHit, true, false);
 				timeAfterHit = 0;
@@ -64,7 +64,7 @@ void nightmare_third::onSpriteChange()
 {
 	if (currentAction == directHit && currentSprite[0] == 5)
 	{
-		birthDynamicInfo whirl;
+		birth_dynamic_info whirl;
 		whirl.position = position;
 		whirl.tag = Tag::clapWhirl;
 		whirl.owner = this;

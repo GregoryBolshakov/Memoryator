@@ -1,6 +1,6 @@
 #include "fern.h"
 
-#include "Helper.h"
+#include "helper.h"
 
 fern::fern(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : picked_object(std::move(objectName), centerPosition)
 {

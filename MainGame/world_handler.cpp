@@ -16,15 +16,15 @@ world_handler::world_handler(const int width, const int height, std::map<PackTag
 	worldGenerator.scaleFactor = worldGenerator.mainScale;
 	this->width = width;
 	this->height = height;
-	staticGrid = GridList(this->width, this->height, blockSize, microBlockSize);
-	dynamicGrid = GridList(this->width, this->height, blockSize, microBlockSize);
+	staticGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
+	dynamicGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
 
 	// initShaders();
 	worldGenerator.init(width, height, blockSize, microBlockSize, &staticGrid, &dynamicGrid, packsMap);
 	buildSystem.init();
 	inventorySystem.init();
 	timeSystem.init(1, 0);
-	lightSystem.init({0, 0, Helper::GetScreenSize().x, Helper::GetScreenSize().y});
+	lightSystem.init({0, 0, helper::GetScreenSize().x, helper::GetScreenSize().y});
 }
 
 world_handler::~world_handler()
@@ -42,8 +42,8 @@ world_handler::~world_handler()
 
 void world_handler::runWorldGenerator()
 {
-	staticGrid = GridList(this->width, this->height, blockSize, microBlockSize);
-	dynamicGrid = GridList(this->width, this->height, blockSize, microBlockSize);
+	staticGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
+	dynamicGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
 	for (auto& i : worldGenerator.biomeMatrix)
 		for (auto& j : i)
 			j = SwampyTrees;
@@ -52,7 +52,7 @@ void world_handler::runWorldGenerator()
 	brazier = dynamic_cast<::brazier*>(staticGrid.getItemByName("brazier"));
 	//brazier->linkWithBuildSystem(&buildSystem);
 	worldGenerator.rememberedBlocks = { { staticGrid.getIndexByPoint(brazier->getPosition().x, brazier->getPosition().y), true } };
-	cameraSystem.position = Vector2f(focusedObject->getPosition().x + Helper::GetScreenSize().x * camera_system::camOffset.x, focusedObject->getPosition().y + Helper::GetScreenSize().y * camera_system::camOffset.y);
+	cameraSystem.position = Vector2f(focusedObject->getPosition().x + helper::GetScreenSize().x * camera_system::camOffset.x, focusedObject->getPosition().y + helper::GetScreenSize().y * camera_system::camOffset.y);
 
 	const auto hero = dynamic_cast<deerchant*>(focusedObject);
 	inventorySystem.inventoryBounding(&hero->bags);
@@ -148,8 +148,8 @@ void world_handler::birthObjects()
 
 void world_handler::Load()
 {
-	staticGrid = GridList(this->width, this->height, blockSize, microBlockSize);
-	dynamicGrid = GridList(this->width, this->height, blockSize, microBlockSize);
+	staticGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
+	dynamicGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
 	staticGrid.boundDynamicMatrix(&dynamicGrid.microBlockMatrix);
 
 	std::ifstream fin("save.txt");
@@ -228,15 +228,15 @@ void world_handler::Save()
 
 void world_handler::clearWorld()
 {
-	staticGrid.~GridList();
-	dynamicGrid.~GridList();
+	staticGrid.~grid_list();
+	dynamicGrid.~grid_list();
 }
 
 void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 {
 	mouseDisplayName = "";
-	const auto mousePos = Vector2f((Mouse::getPosition().x - Helper::GetScreenSize().x / 2 + cameraSystem.position.x*worldGenerator.scaleFactor) / worldGenerator.scaleFactor,
-	                               (Mouse::getPosition().y - Helper::GetScreenSize().y / 2 + cameraSystem.position.y*worldGenerator.scaleFactor) / worldGenerator.scaleFactor);
+	const auto mousePos = Vector2f((Mouse::getPosition().x - helper::GetScreenSize().x / 2 + cameraSystem.position.x*worldGenerator.scaleFactor) / worldGenerator.scaleFactor,
+	                               (Mouse::getPosition().y - helper::GetScreenSize().y / 2 + cameraSystem.position.y*worldGenerator.scaleFactor) / worldGenerator.scaleFactor);
 
 	auto minCapacity = 1e6f, minDistance = 1e6f;
 
@@ -256,8 +256,8 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 		else
 			visibleItem->isSelected = false;
 
-		if (!visibleItem->isBackground && Helper::isIntersects(mousePos, FloatRect(itemPos.x, itemPos.y, visibleItem->getConditionalSizeUnits().x, visibleItem->getConditionalSizeUnits().y)) ||
-			Helper::getDist(mousePos, visibleItem->getPosition()) <= visibleItem->getRadius())
+		if (!visibleItem->isBackground && helper::isIntersects(mousePos, FloatRect(itemPos.x, itemPos.y, visibleItem->getConditionalSizeUnits().x, visibleItem->getConditionalSizeUnits().y)) ||
+			helper::getDist(mousePos, visibleItem->getPosition()) <= visibleItem->getRadius())
 		{
 			auto itemCapacity = visibleItem->getConditionalSizeUnits().x + visibleItem->getConditionalSizeUnits().y;
 			if (visibleItem->tag == Tag::brazier)
@@ -267,7 +267,7 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 				distanceToItemCenter = abs(mousePos.x - (itemPos.x + visibleItem->getConditionalSizeUnits().x / 2)) +
 				abs(mousePos.y - (itemPos.y + visibleItem->getConditionalSizeUnits().y / 2));
 			else
-				distanceToItemCenter = Helper::getDist(mousePos, visibleItem->getPosition());
+				distanceToItemCenter = helper::getDist(mousePos, visibleItem->getPosition());
 
 			if (itemCapacity < minCapacity || (itemCapacity == minCapacity && distanceToItemCenter <= minDistance))
 			{
@@ -288,9 +288,9 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 					case Tag::brazier:
 					{					
 						if (inventorySystem.getHeldItem().content.first != Tag::emptyCell &&
-							Helper::getDist(brazier->getPlatePosition(), mousePos) <= brazier->getPlateRadius())
+							helper::getDist(brazier->getPlatePosition(), mousePos) <= brazier->getPlateRadius())
 						{
-							if (Helper::getDist(brazier->getPlatePosition(), focusedObject->getPosition()) <= brazier->getPlateRadius() + focusedObject->getRadius())
+							if (helper::getDist(brazier->getPlatePosition(), focusedObject->getPosition()) <= brazier->getPlateRadius() + focusedObject->getRadius())
 								mouseDisplayName = "Toss";
 							else
 								mouseDisplayName = "Come to toss";
@@ -351,7 +351,7 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 
 bool world_handler::fixedClimbingBeyond(Vector2f &pos) const
 {
-	const auto screenSize = Helper::GetScreenSize();
+	const auto screenSize = helper::GetScreenSize();
 	const auto extra = staticGrid.getBlockSize();
 
 	const auto limit_x = (screenSize.x / 2.0f + extra.x) * 1.5f;
@@ -416,8 +416,8 @@ void world_handler::onMouseUp(const int currentMouseButton)
 	if (pedestalController.isRunning())
 		return;
 	const auto mousePos = Mouse::getPosition();
-	const auto mouseWorldPos = Vector2f((mousePos.x - Helper::GetScreenSize().x / 2 + cameraSystem.position.x*worldGenerator.scaleFactor) / worldGenerator.scaleFactor,
-	                                    (mousePos.y - Helper::GetScreenSize().y / 2 + cameraSystem.position.y*worldGenerator.scaleFactor) / worldGenerator.scaleFactor);
+	const auto mouseWorldPos = Vector2f((mousePos.x - helper::GetScreenSize().x / 2 + cameraSystem.position.x*worldGenerator.scaleFactor) / worldGenerator.scaleFactor,
+	                                    (mousePos.y - helper::GetScreenSize().y / 2 + cameraSystem.position.y*worldGenerator.scaleFactor) / worldGenerator.scaleFactor);
 	
 	inventorySystem.onMouseUp();
 
@@ -510,7 +510,7 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 			{
 				routeMicroBlock = dynamicItem->route[0];
 				const auto routePos = Vector2f(routeMicroBlock.first * microBlockSize.x, routeMicroBlock.second * microBlockSize.y);
-				if (Helper::getDist(dynamicItem->laxMovePosition, routePos) < Helper::getDist(dynamicItem->laxMovePosition, dynamicItem->getPosition()) && dynamicItem->route.size() > 1)
+				if (helper::getDist(dynamicItem->laxMovePosition, routePos) < helper::getDist(dynamicItem->laxMovePosition, dynamicItem->getPosition()) && dynamicItem->route.size() > 1)
 					break;
 
 				dynamicItem->route.erase(dynamicItem->route.begin());
@@ -610,13 +610,13 @@ std::vector<sprite_chain_element*> world_handler::prepareSprites(const long long
 
     const auto extra = staticGrid.getBlockSize();
 
-	const auto screenSize = Helper::GetScreenSize();
+	const auto screenSize = helper::GetScreenSize();
 	const auto screenCenter = Vector2f(screenSize.x / 2, screenSize.y / 2);
 
-	cameraSystem.position.x += (focusedObject->getPosition().x + Helper::GetScreenSize().x * camera_system::camOffset.x - cameraSystem.position.x) *
+	cameraSystem.position.x += (focusedObject->getPosition().x + helper::GetScreenSize().x * camera_system::camOffset.x - cameraSystem.position.x) *
 		(focusedObject->getMoveSystem().speed * float(elapsedTime)) / camera_system::maxCameraDistance.x;
 	
-	cameraSystem.position.y += (focusedObject->getPosition().y + Helper::GetScreenSize().y * camera_system::camOffset.y - cameraSystem.position.y) *
+	cameraSystem.position.y += (focusedObject->getPosition().y + helper::GetScreenSize().y * camera_system::camOffset.y - cameraSystem.position.y) *
 		(focusedObject->getMoveSystem().speed * float(elapsedTime)) / camera_system::maxCameraDistance.y;
 	
 	cameraSystem.shakeInteract(elapsedTime);

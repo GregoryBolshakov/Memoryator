@@ -9,7 +9,7 @@
 
 using namespace sf;
 
-class Helper
+class helper
 {
 public:
 	static Vector2f GetScreenSize();

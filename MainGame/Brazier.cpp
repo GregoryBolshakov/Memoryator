@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-#include "Helper.h"
+#include "helper.h"
 
 brazier::brazier(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {

@@ -1,6 +1,6 @@
 #include "totem.h"
 
-#include "Helper.h"
+#include "helper.h"
 
 
 totem::totem(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)

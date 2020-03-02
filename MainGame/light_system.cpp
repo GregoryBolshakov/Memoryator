@@ -1,14 +1,14 @@
-#include "LightSystem.h"
+#include "light_system.h"
 
 
-LightSystem::LightSystem()
+light_system::light_system()
 = default;
 
 
-LightSystem::~LightSystem()
+light_system::~light_system()
 = default;
 
-void LightSystem::init(FloatRect visibleArea)
+void light_system::init(FloatRect visibleArea)
 {
 	this->visibleArea = visibleArea;
 	circleCenter = { visibleArea.left + visibleArea.width / 2, visibleArea.top + visibleArea.height / 2 };
@@ -16,14 +16,14 @@ void LightSystem::init(FloatRect visibleArea)
 	calculationsCenter = circleCenter; calculationsCenter.y += calculationsRadius;
 }
 
-float LightSystem::calculateHorizontalOffset(float dayPart)
+float light_system::calculateHorizontalOffset(float dayPart)
 {
 	if (dayPart <= 0.5f) // high noon
 		return -calculationsRadius * (0.5f - dayPart) / 0.5f;
 	return calculationsRadius * (dayPart - 0.5f) / 0.5f;
 }
 
-Vector2f LightSystem::calculateSunPosition(float dayPart)
+Vector2f light_system::calculateSunPosition(float dayPart)
 {
 	Vector2f result = calculationsCenter;
 	const float horizontalOffset = calculateHorizontalOffset(dayPart);

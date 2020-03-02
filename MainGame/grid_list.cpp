@@ -1,20 +1,20 @@
-#include "GridList.h"
+#include "grid_list.h"
 
 #include <cmath>
 #include <queue>
 
-#include "Helper.h"
+#include "helper.h"
 
-GridList::GridList() : width(0), height(0)
+grid_list::grid_list() : width(0), height(0)
 {
 }
 
-Vector2f GridList::getBlockSize() const
+Vector2f grid_list::getBlockSize() const
 {
 	return size;
 }
 
-GridList::GridList(const int width, const int height, const Vector2f size, const Vector2f microSize)
+grid_list::grid_list(const int width, const int height, const Vector2f size, const Vector2f microSize)
 {
 	this->width = width;
 	this->height = height;
@@ -37,7 +37,7 @@ GridList::GridList(const int width, const int height, const Vector2f size, const
 	previous.resize(4000, std::vector<std::pair<int, int>>(4000, { -1, -1 }));
 }
 
-GridList::~GridList()
+grid_list::~grid_list()
 {
 	for (auto cell : cells)
 	{
@@ -51,7 +51,7 @@ GridList::~GridList()
 	items.clear();
 }
 
-int GridList::getIndexByPoint(const float x, const float y) const
+int grid_list::getIndexByPoint(const float x, const float y) const
 {
 	const auto x1 = width / int(size.x);
 	const auto y1 = int(y / size.y);
@@ -60,7 +60,7 @@ int GridList::getIndexByPoint(const float x, const float y) const
 	return int(result);
 }
 
-Vector2f GridList::getPointByIndex(const int index) const
+Vector2f grid_list::getPointByIndex(const int index) const
 {
 	const auto inLineNumber = width / int(size.x);
 	const auto inRawNumber = index / inLineNumber;
@@ -72,7 +72,7 @@ Vector2f GridList::getPointByIndex(const int index) const
 	return result;
 }
 
-int GridList::getMicroBlockByPoint(const float x, const float y) const
+int grid_list::getMicroBlockByPoint(const float x, const float y) const
 {
 	const auto x1 = width / int(microSize.x);
 	const auto y1 = int(y / microSize.y);
@@ -81,7 +81,7 @@ int GridList::getMicroBlockByPoint(const float x, const float y) const
 	return int(result);
 }
 
-Vector2f GridList::getPointByMicroBlock(const int microBlockIndex) const
+Vector2f grid_list::getPointByMicroBlock(const int microBlockIndex) const
 {
 	const auto inLineNumber = width / int(microSize.x);
 	const auto inRawNumber = microBlockIndex / inLineNumber;
@@ -93,7 +93,7 @@ Vector2f GridList::getPointByMicroBlock(const int microBlockIndex) const
 	return result;
 }
 
-void GridList::makeRoute(
+void grid_list::makeRoute(
 	const Vector2f startPos,
 	const Vector2f finishPos,
 	const float upperLeftX,
@@ -174,7 +174,7 @@ void GridList::makeRoute(
 	bfs(startXInd + xMicroBlocksCount, startYInd + yMicroBlocksCount, curMicroBlockX, curMicroBlockY, lastMicroBlockX, lastMicroBlockY);
 }
 
-void GridList::bfs(const int xBorder, const int yBorder, int startX, int startY, const int finishX, const int finishY)
+void grid_list::bfs(const int xBorder, const int yBorder, int startX, int startY, const int finishX, const int finishY)
 {
 	std::queue<std::pair<int, int>> q;
 	q.push(std::make_pair(startX, startY));
@@ -274,7 +274,7 @@ void GridList::bfs(const int xBorder, const int yBorder, int startX, int startY,
 	}
 }
 
-bool GridList::isIntersectWithOthers(world_object* object, const std::vector<world_object*>& visibleTerrain, bool isDotAdjusted) const
+bool grid_list::isIntersectWithOthers(world_object* object, const std::vector<world_object*>& visibleTerrain, bool isDotAdjusted) const
 {
 	/*for (auto&anotherItem : visibleTerrain)
 	{
@@ -308,7 +308,7 @@ bool GridList::isIntersectWithOthers(world_object* object, const std::vector<wor
 	return object->isLockedPlace(checkBlocks);
 }
 
-void GridList::setLockedMicroBlocks(world_object* item, const bool value, const bool dynamicMatrix)
+void grid_list::setLockedMicroBlocks(world_object* item, const bool value, const bool dynamicMatrix)
 {
 	const auto worldItem = dynamic_cast<world_object*>(item);
 	if (worldItem)
@@ -324,7 +324,7 @@ void GridList::setLockedMicroBlocks(world_object* item, const bool value, const 
 		}
 }
 
-void GridList::addItem(world_object* item, const std::string& name, const float x, const float y)
+void grid_list::addItem(world_object* item, const std::string& name, const float x, const float y)
 {
 	setLockedMicroBlocks(item);
 
@@ -340,7 +340,7 @@ void GridList::addItem(world_object* item, const std::string& name, const float 
 	items.insert({ name, position });
 }
 
-void GridList::clearCell(const int cellIndex)
+void grid_list::clearCell(const int cellIndex)
 {
 	for (auto& item : cells[cellIndex])
 	{
@@ -350,7 +350,7 @@ void GridList::clearCell(const int cellIndex)
 	cells[cellIndex].clear();
 }
 
-void GridList::deleteItem(const std::string& name)
+void grid_list::deleteItem(const std::string& name)
 {
 	const auto position = items.at(name);
 	setLockedMicroBlocks(cells[position.first][position.second], true);
@@ -366,18 +366,18 @@ void GridList::deleteItem(const std::string& name)
 	items.erase(items.find(name));
 }
 
-world_object* GridList::getItemByName(const std::string& name)
+world_object* grid_list::getItemByName(const std::string& name)
 {
 	const auto position = items.at(name);
 	return cells[position.first][position.second];
 }
 
-std::vector<world_object*> GridList::getItems(const int blockIndex)
+std::vector<world_object*> grid_list::getItems(const int blockIndex)
 {
 	return cells[blockIndex];
 }
 
-std::vector<world_object*> GridList::getItems(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY)
+std::vector<world_object*> grid_list::getItems(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY)
 {
 	std::vector<world_object*> result = {};
 	
@@ -420,7 +420,7 @@ std::vector<world_object*> GridList::getItems(float upperLeftX, float upperLeftY
 	return result;
 }
 
-std::vector<int> GridList::getBlocksAround(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY) const
+std::vector<int> grid_list::getBlocksAround(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY) const
 {
 	std::vector<int> result;
 
@@ -460,7 +460,7 @@ std::vector<int> GridList::getBlocksAround(float upperLeftX, float upperLeftY, f
 	return result;
 }
 
-std::vector<int> GridList::getBlocksInSight(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY) const
+std::vector<int> grid_list::getBlocksInSight(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY) const
 {
 	std::vector<int> result;
 
@@ -494,7 +494,7 @@ std::vector<int> GridList::getBlocksInSight(float upperLeftX, float upperLeftY, 
 	return result;
 }
 
-void GridList::updateItemPosition(const std::string& name, const float x, const float y)
+void grid_list::updateItemPosition(const std::string& name, const float x, const float y)
 {
 	auto position = items.at(name);
 	const auto item = cells[position.first][position.second];

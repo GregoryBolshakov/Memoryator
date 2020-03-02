@@ -2,7 +2,7 @@
 
 #include "hero_bag.h"
 
-float text_system::characterSize = 30.0f * Helper::GetScreenSize().y / 1440.0f;
+float text_system::characterSize = 30.0f * helper::GetScreenSize().y / 1440.0f;
 std::unordered_map<FontName, Font> text_system::fonts = {};
 std::unordered_map<FontName, Text> text_system::textBoxes = {};
 Text text_system::numberOfItems;
