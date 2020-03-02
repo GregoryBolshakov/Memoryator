@@ -58,13 +58,13 @@ int main() {
 
 			if (event.type == sf::Event::MouseWheelMoved)
 			{
-				if (menu_system.getState() == closed)
+				if (menu_system.get_state() == closed)
 					world.setScaleFactor(event.mouseWheel.delta);
 			}	
 
 			if (event.type == Event::MouseButtonReleased)
 			{			
-				if (menu_system.getState() == closed && world.getBuildSystem().get_success_init())
+				if (menu_system.get_state() == closed && world.getBuildSystem().get_success_init())
 				{
 					world.onMouseUp(current_mouse_button);					
 					main_book.onMouseUp();
@@ -76,7 +76,7 @@ int main() {
 
 			if (event.type == Event::KeyReleased)
 			{
-				menu_system.onKeyDown(event, world);
+				menu_system.on_key_down(event, world);
 				if (event.key.code == Keyboard::Escape)
 					world.pedestalController.stop();
 			}
@@ -97,17 +97,17 @@ int main() {
 			console.handle_events(event);
 		}
 
-		if (menu_system.getState() == mainMenu)
+		if (menu_system.get_state() == main_menu)
 		{		
 			main_window.clear(sf::Color::White);
-			draw_system.draw(main_window, draw_system::upcast_chain(menu_system.prepareSprites()));
+			draw_system.draw(main_window, draw_system::upcast_chain(menu_system.prepare_sprites()));
 			main_window.display();
 
 			clock.restart();
 			continue;
 		}
 
-		if (window_focus && menu_system.getState() != gameMenu)
+		if (window_focus && menu_system.get_state() != game_menu)
 		{
 			time_micro_sec = clock.getElapsedTime().asMicroseconds();
 			clock.restart();
@@ -115,12 +115,12 @@ int main() {
 			if (!console.get_state())
 			{				
 				world.interact(screen_size, time_micro_sec, event);
-				world.focusedObject->handleInput(world.getInventorySystem().getUsedMouse());
+				world.focusedObject->handleInput(world.getInventorySystem().get_used_mouse());
 				ambient_light.update(screen_size.x / 2, screen_size.y / 2);
 			}
 
 			auto hero = dynamic_cast<deerchant*>(world.focusedObject);
-			main_book.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().getHeldItem(), hero->nearTheTable);
+			main_book.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().get_held_item(), hero->nearTheTable);
 			main_book.interact();
 
 			main_window.clear(sf::Color::White);
@@ -135,13 +135,13 @@ int main() {
 			text_system::drawString(world.getMouseDisplayName(), font_name::normal_font, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));
 			world.pedestalController.draw(&main_window, world.getCameraPosition(), world.getWorldGenerator().scaleFactor);
 			draw_system.draw(main_window, main_book.prepareSprites(world.focusedObject->get_health_point() / world.focusedObject->get_max_health_point_value(), time_micro_sec));
-			draw_system.draw(main_window, world.getInventorySystem().prepareSprites(time_micro_sec, world.packsMap));			
+			draw_system.draw(main_window, world.getInventorySystem().prepare_sprites(time_micro_sec, world.packsMap));			
 			//world.runInventorySystemDrawing(mainWindow, time);
 		}
 		else
 			clock.restart();
 
-		draw_system.draw(main_window, draw_system::upcast_chain(menu_system.prepareSprites()));
+		draw_system.draw(main_window, draw_system::upcast_chain(menu_system.prepare_sprites()));
 
 		//textWriter.drawString(std::to_string(world.getWorldGenerator().scaleFactor), FontName::NormalFont, TextChainElement::defaultCharacterSize, 200, 200, mainWindow);
 

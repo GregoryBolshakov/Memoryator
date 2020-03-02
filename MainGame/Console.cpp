@@ -50,18 +50,18 @@ void console::handle_events(const Event event)
 	{
 		command_stack_iterator_--;
 		body.line = command_stack_[command_stack_iterator_];
-		body.resetCursor(true);
+		body.reset_cursor(true);
 	}
 	if (event.type == Event::KeyPressed && Keyboard::isKeyPressed(Keyboard::Down) && command_stack_iterator_ < command_stack_.size() - 1)
 	{
 		command_stack_iterator_++;
 		body.line = command_stack_[command_stack_iterator_];
-		body.resetCursor(true);
+		body.reset_cursor(true);
 	}
 
 	if (!state_)
 		return;
-	body.handleEvents(event);
+	body.handle_events(event);
 }
 
 template<typename K, typename V>
@@ -105,7 +105,7 @@ void console::do_command()
 		temp.erase(0, token.size() + 1);
 	}
 
-	body.resetCursor();
+	body.reset_cursor();
 	command_stack_[command_stack_.size() - 1] = body.line;
 	command_stack_.emplace_back("");
 	body.line.clear();

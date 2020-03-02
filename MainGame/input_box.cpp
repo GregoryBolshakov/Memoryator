@@ -15,129 +15,129 @@ input_box::~input_box() = default;
 
 void input_box::init(const FloatRect rect)
 {
-	this->rect = FloatRect(rect);
-	body.setSize(Vector2f(rect.width, rect.height));
-	body.setPosition(rect.left, rect.top);
-	body.setFillColor(outFill);
-	innerPart.setSize(Vector2f(rect.width - microOffset, rect.height - microOffset));
-	innerPart.setPosition(rect.left + microOffset / 2.0f, rect.top + microOffset / 2.0f);
-	innerPart.setFillColor(inFill);
-	cursor.setSize(Vector2f(microOffset / 1.5f, innerPart.getSize().y - 1.5f * microOffset));
-	cursor.setPosition(innerPart.getPosition().x + microOffset, innerPart.getPosition().y + microOffset * 3.0f / 4);
-	cursor.setFillColor(textColor);
+	this->rect_ = FloatRect(rect);
+	body_.setSize(Vector2f(rect.width, rect.height));
+	body_.setPosition(rect.left, rect.top);
+	body_.setFillColor(out_fill_);
+	inner_part_.setSize(Vector2f(rect.width - micro_offset_, rect.height - micro_offset_));
+	inner_part_.setPosition(rect.left + micro_offset_ / 2.0f, rect.top + micro_offset_ / 2.0f);
+	inner_part_.setFillColor(in_fill_);
+	cursor_.setSize(Vector2f(micro_offset_ / 1.5f, inner_part_.getSize().y - 1.5f * micro_offset_));
+	cursor_.setPosition(inner_part_.getPosition().x + micro_offset_, inner_part_.getPosition().y + micro_offset_ * 3.0f / 4);
+	cursor_.setFillColor(text_color_);
 
-	text.setFont(text_system::fonts.at(font_name::console_font));
-	text.setCharacterSize(unsigned int(ceil(text_system::characterSize)));
-	text.setFillColor(textColor);
-	text.setPosition(innerPart.getPosition().x + microOffset * 2, innerPart.getPosition().y - microOffset / 2.0f);
+	text_.setFont(text_system::fonts.at(font_name::console_font));
+	text_.setCharacterSize(unsigned int(ceil(text_system::characterSize)));
+	text_.setFillColor(text_color_);
+	text_.setPosition(inner_part_.getPosition().x + micro_offset_ * 2, inner_part_.getPosition().y - micro_offset_ / 2.0f);
 }
 
-void input_box::resetCursor(const bool toEnd)
+void input_box::reset_cursor(const bool to_end)
 {
-	if (toEnd)
+	if (to_end)
 	{
-		cursorPos = line.size();
-		setCursorToPos();
+		cursor_pos_ = line.size();
+		set_cursor_to_pos();
 	}
-	else cursorPos = 0;
+	else cursor_pos_ = 0;
 }
 
-void input_box::setCursorToPos()
+void input_box::set_cursor_to_pos()
 {
-	text.setString(line.substr(0, cursorPos));
-	cursor.setPosition(text.getGlobalBounds().left + text.getGlobalBounds().width + microOffset / 2.0f, cursor.getPosition().y);
+	text_.setString(line.substr(0, cursor_pos_));
+	cursor_.setPosition(text_.getGlobalBounds().left + text_.getGlobalBounds().width + micro_offset_ / 2.0f, cursor_.getPosition().y);
 }
 
 void input_box::draw(sf::RenderWindow & window) const
 {
-	window.draw(body);
-	window.draw(innerPart);
-	text_system::drawString(line, font_name::console_font, characterSize, innerPart.getPosition().x + microOffset * 2.0f, innerPart.getPosition().y - microOffset / 2.0f, window, textColor);
-	window.draw(cursor);
+	window.draw(body_);
+	window.draw(inner_part_);
+	text_system::drawString(line, font_name::console_font, character_size_, inner_part_.getPosition().x + micro_offset_ * 2.0f, inner_part_.getPosition().y - micro_offset_ / 2.0f, window, text_color_);
+	window.draw(cursor_);
 }
 
-void input_box::animateCursor()
+void input_box::animate_cursor()
 {
-	if (cursor.getFillColor() == textColor)
-		cursor.setFillColor(sf::Color(textColor.r, textColor.g, textColor.b, 10));
+	if (cursor_.getFillColor() == text_color_)
+		cursor_.setFillColor(sf::Color(text_color_.r, text_color_.g, text_color_.b, 10));
 	else
-		cursor.setFillColor(textColor);
+		cursor_.setFillColor(text_color_);
 }
 
-void input_box::onMouseRelease()
+void input_box::on_mouse_release()
 {
-	mousePressed = false;
+	mouse_pressed_ = false;
 	float minDist = helper::GetScreenSize().x + helper::GetScreenSize().y;
 	int newPos = 0;
 	for (auto i = 0u; i < line.size(); i++)
 	{
-		text.setString(line.substr(0, i));
-		const float dist = abs(text.getGlobalBounds().left + text.getGlobalBounds().width - Mouse::getPosition().x);
+		text_.setString(line.substr(0, i));
+		const float dist = abs(text_.getGlobalBounds().left + text_.getGlobalBounds().width - Mouse::getPosition().x);
 		if (dist < minDist)
 		{
 			minDist = dist;
 			newPos = i;
 		}
 	}
-	cursorPos = newPos;
+	cursor_pos_ = newPos;
 }
 
-void input_box::interact(const long long elapsedTime)
+void input_box::interact(const long long elapsed_time)
 {
-	setCursorToPos();
-	if (helper::isIntersects(Vector2f(Mouse::getPosition()), FloatRect(body.getPosition().x, body.getPosition().y, body.getSize().x, body.getSize().y)))
-		innerPart.setFillColor(inFillSelected);
+	set_cursor_to_pos();
+	if (helper::isIntersects(Vector2f(Mouse::getPosition()), FloatRect(body_.getPosition().x, body_.getPosition().y, body_.getSize().x, body_.getSize().y)))
+		inner_part_.setFillColor(in_fill_selected_);
 	else
-		innerPart.setFillColor(inFill);
+		inner_part_.setFillColor(in_fill_);
 
 	if (Mouse::isButtonPressed(Mouse::Left))
 	{
-		mousePressed = true;
-		mouseSelectVector.second = float(Mouse::getPosition().x);
+		mouse_pressed_ = true;
+		mouse_select_vector_.second = float(Mouse::getPosition().x);
 	}
 
-	timeAfterCursorAnimation += elapsedTime;
-	if (timeAfterCursorAnimation >= timeForCursorAnimation)
+	time_after_cursor_animation_ += elapsed_time;
+	if (time_after_cursor_animation_ >= time_for_cursor_animation_)
 	{
-		timeAfterCursorAnimation = 0;
-		animateCursor();
+		time_after_cursor_animation_ = 0;
+		animate_cursor();
 	}
 }
 
-void input_box::handleEvents(const Event event)
+void input_box::handle_events(const Event event)
 {
 	if (event.type == Event::MouseButtonReleased)
-		onMouseRelease();
+		on_mouse_release();
 
 	if (event.type == Event::TextEntered)
 	{
 		if (event.text.unicode == 8)
 		{
-			if (!line.empty() && cursorPos != 0)
+			if (!line.empty() && cursor_pos_ != 0)
 			{
-				line.erase(line.begin() + cursorPos - 1);
-				cursorPos--;
+				line.erase(line.begin() + cursor_pos_ - 1);
+				cursor_pos_--;
 			}
 		}
 		else
-			if (text.getGlobalBounds().left + text.getGlobalBounds().width <= innerPart.getGlobalBounds().left + innerPart.getGlobalBounds().width &&
+			if (text_.getGlobalBounds().left + text_.getGlobalBounds().width <= inner_part_.getGlobalBounds().left + inner_part_.getGlobalBounds().width &&
 				!(Keyboard::isKeyPressed(Keyboard::Tilde) || Keyboard::isKeyPressed(Keyboard::Escape) || Keyboard::isKeyPressed(Keyboard::Enter)))
 			{
 				/*if (event.text.unicode >= 65 && event.text.unicode <= 90)
 					event.text.unicode += 32;*/
-				if (line.size() >= cursorPos)
-					line.insert(cursorPos, 1, char(event.text.unicode));
-				cursorPos++;
+				if (line.size() >= cursor_pos_)
+					line.insert(cursor_pos_, 1, char(event.text.unicode));
+				cursor_pos_++;
 			}
 	}
 
 	if (event.type == Event::KeyPressed)
 	{
-		if (Keyboard::isKeyPressed(Keyboard::Delete) && cursorPos < line.size())
-			line.erase(line.begin() + cursorPos);
-		if (Keyboard::isKeyPressed(Keyboard::Left) && cursorPos > 0)
-			cursorPos--;
-		if (Keyboard::isKeyPressed(Keyboard::Right) && cursorPos < line.size())
-			cursorPos++;
+		if (Keyboard::isKeyPressed(Keyboard::Delete) && cursor_pos_ < line.size())
+			line.erase(line.begin() + cursor_pos_);
+		if (Keyboard::isKeyPressed(Keyboard::Left) && cursor_pos_ > 0)
+			cursor_pos_--;
+		if (Keyboard::isKeyPressed(Keyboard::Right) && cursor_pos_ < line.size())
+			cursor_pos_++;
 	}
 }

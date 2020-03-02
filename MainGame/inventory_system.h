@@ -2,10 +2,10 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "text_system.h"
 #include "effects_system.h"
 #include "hero_bag.h"
 #include "sprite_structures.h"
+#include "text_system.h"
 
 using namespace sf;
 
@@ -15,45 +15,49 @@ public:
 	inventory_system();
 	~inventory_system();
 	void init();
-	std::vector<drawable_chain_element*> prepareSprites(long long elapsedTime, std::map<pack_tag, sprite_pack>* packsMap);
+	std::vector<drawable_chain_element*> prepare_sprites(long long elapsed_time, std::map<pack_tag, sprite_pack>* packs_map);
 	//void drawInventory(std::vector<std::pair<Tag, int>>* inventory, Vector2f position, RenderWindow& window);
-	void resetAnimationValues();
-	void onMouseUp();
-	void inventoryBounding(std::vector<hero_bag>* bags) { boundBags = bags; }
-	void interact(long long elapsedTime);
-	void resetPickedCell() { pickedCell = nullptr; }
-	bool getUsedMouse() const { return usedMouse; }	
-	cell &getHeldItem() { return heldItem; }
+	void reset_animation_values();
+	void on_mouse_up();
+	void inventory_bounding(std::vector<hero_bag>* bags) { bound_bags_ = bags; }
+	void interact(long long elapsed_time);
+	void reset_picked_cell() { picked_cell_ = nullptr; }
+	bool get_used_mouse() const { return used_mouse_; }	
+	cell& get_held_item() { return held_item_; }
 
-	bool wasDrawing = false;
-	std::string debugInfo = "", cursorText = "";
+	bool was_drawing = false;
+	std::string debug_info = "", cursor_text = "";
 
-	Sprite *selectedCellBackground{}, dropZone;
-	CircleShape bagPosDot;
-	Texture dropZoneTexture;
+	Sprite * selected_cell_background{};
+	Sprite drop_zone;
+	CircleShape bag_pos_dot;
+	Texture drop_zone_texture;
 private:
 	//hero bags
-	std::vector<hero_bag>* boundBags{};
-	int currentMovingBag = -1;
-	float minDistToClosed = 10e4, minDistToOpen = 10e4;
+	std::vector<hero_bag>* bound_bags_{};
+	int current_moving_bag_ = -1;
+	float min_dist_to_closed_ = 10e4;
+	float min_dist_to_open_ = 10e4;
 
 	//another inventories 
-	int animationCounter = 1;
+	int animation_counter_ = 1;
 
 	//held item
-	cell heldItem;
-	float heldItemSpeed = 0, dropZoneRadius{};
-	std::pair <entity_tag, int>* pickedCell = nullptr; 
-	//drawing
-	std::string cellsFileDirectory = "Game/inventorySprites/cellsPath.txt", 
-		bagsFileDirectory = "Game/inventorySprites/bagsPath.txt";
-	
-	void crashIntoOtherBags(int cnt) const;
-	void moveOtherBags(int cur) const;
-	static void initMaxCounts(const std::string& filePath = "Game/maxCounts.txt");
-	std::vector<bool> visitedInDisplacement;
-	bool usedMouse = false, cursorBlurUsing = false, successInit = false;
-	Vector2f cursorTextPos = {0, 0};
-	text_system textWriter;
-	effects_system effectsSystem;
+	cell held_item_;
+	float held_item_speed_ = 0;
+	float drop_zone_radius_{};
+	std::pair <entity_tag, int>* picked_cell_ = nullptr;
+	std::string cells_file_directory_ = "Game/inventorySprites/cellsPath.txt";
+	std::string bags_file_directory_ = "Game/inventorySprites/bagsPath.txt";
+
+	void crash_into_other_bags(int cnt) const;
+	void move_other_bags(int cur) const;
+	static void init_max_counts(const std::string& file_path = "Game/maxCounts.txt");
+	std::vector<bool> visited_in_displacement_;
+	bool used_mouse_ = false;
+	bool cursor_blur_using_ = false;
+	bool success_init_ = false;
+	Vector2f cursor_text_pos_ = {0, 0};
+	text_system text_writer_;
+	effects_system effects_system_;
 };

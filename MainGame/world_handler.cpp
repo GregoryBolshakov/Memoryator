@@ -55,7 +55,7 @@ void world_handler::runWorldGenerator()
 	cameraSystem.position = Vector2f(focusedObject->get_position().x + helper::GetScreenSize().x * camera_system::cam_offset.x, focusedObject->get_position().y + helper::GetScreenSize().y * camera_system::cam_offset.y);
 
 	const auto hero = dynamic_cast<deerchant*>(focusedObject);
-	inventorySystem.inventoryBounding(&hero->bags);
+	inventorySystem.inventory_bounding(&hero->bags);
 }
 
 //void WorldHandler::initShaders()
@@ -194,7 +194,7 @@ void world_handler::Load()
 	//preparations for the inventory system 
 	auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->get_name()));
 
-	inventorySystem.inventoryBounding(&hero->bags);
+	inventorySystem.inventory_bounding(&hero->bags);
 	//------------------------------------
 	//buildSystem.inventoryBounding(&hero->bags);
 	//buildSystem.succesInit = true;
@@ -287,7 +287,7 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 						}
 					case entity_tag::brazier:
 					{					
-						if (inventorySystem.getHeldItem().content.first != entity_tag::emptyCell &&
+						if (inventorySystem.get_held_item().content.first != entity_tag::emptyCell &&
 							helper::getDist(brazier->getPlatePosition(), mousePos) <= brazier->getPlateRadius())
 						{
 							if (helper::getDist(brazier->getPlatePosition(), focusedObject->get_position()) <= brazier->getPlateRadius() + focusedObject->get_radius())
@@ -300,7 +300,7 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 					case entity_tag::hare:
 					case entity_tag::owl:
 						{
-							if (inventorySystem.getHeldItem().content.first == entity_tag::inkyBlackPen)
+							if (inventorySystem.get_held_item().content.first == entity_tag::inkyBlackPen)
 								mouseDisplayName = "Sketch";
 							else
 								mouseDisplayName = "Catch up";
@@ -419,7 +419,7 @@ void world_handler::onMouseUp(const int currentMouseButton)
 	const auto mouseWorldPos = Vector2f((mousePos.x - helper::GetScreenSize().x / 2 + cameraSystem.position.x*worldGenerator.scaleFactor) / worldGenerator.scaleFactor,
 	                                    (mousePos.y - helper::GetScreenSize().y / 2 + cameraSystem.position.y*worldGenerator.scaleFactor) / worldGenerator.scaleFactor);
 	
-	inventorySystem.onMouseUp();
+	inventorySystem.on_mouse_up();
 
 	if (buildSystem.get_success_init() /* && inventorySystem.getHeldItem()->first == -1*/)
 		buildSystem.on_mouse_up();
@@ -467,7 +467,7 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 	setTransparent(localTerrain);
 
 	const auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->get_name()));
-	hero->heldItem = &inventorySystem.getHeldItem();
+	hero->heldItem = &inventorySystem.get_held_item();
 
 	//making route to the desire position
 	timeAfterNewRoute += elapsedTime;

@@ -1,108 +1,106 @@
 #include "menu_system.h"
 
-const Vector2f NEW_RUN_BUTTON_POSITION(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.06f);
-const Vector2f CONTINUE_BUTTON_POSITION(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.21f);
-const Vector2f EXIT_BUTTON_POSITION(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.36f);
-const Vector2f BUTTON_SIZE(helper::GetScreenSize().x * 0.2f, helper::GetScreenSize().y * 0.14f);
+const Vector2f new_run_button_position(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.06f);
+const Vector2f continue_button_position(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.21f);
+const Vector2f exit_button_position(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.36f);
+const Vector2f button_size(helper::GetScreenSize().x * 0.2f, helper::GetScreenSize().y * 0.14f);
 
 menu_system::menu_system()
 {
-	initButtons();
+	init_buttons();
 }
 
-void menu_system::initButtons()
+void menu_system::init_buttons()
 {
-	Vector2f screenSize = helper::GetScreenSize();
-
-    buttonList[button_tag::newRunTag].initialize(pack_tag::interfaceElements, pack_part::menu, 1, 1, 1, NEW_RUN_BUTTON_POSITION, BUTTON_SIZE, true, button_tag::newRunTag);
-    buttonList[button_tag::continueTag].initialize(pack_tag::interfaceElements, pack_part::menu, 2, 2, 2, CONTINUE_BUTTON_POSITION, BUTTON_SIZE, true, button_tag::continueTag);
-    buttonList[button_tag::exitTag].initialize(pack_tag::interfaceElements, pack_part::menu, 4, 4, 4, EXIT_BUTTON_POSITION, BUTTON_SIZE, true, button_tag::exitTag);
+    button_list_[button_tag::newRunTag].initialize(pack_tag::interfaceElements, pack_part::menu, 1, 1, 1, new_run_button_position, button_size, true, button_tag::newRunTag);
+    button_list_[button_tag::continueTag].initialize(pack_tag::interfaceElements, pack_part::menu, 2, 2, 2, continue_button_position, button_size, true, button_tag::continueTag);
+    button_list_[button_tag::exitTag].initialize(pack_tag::interfaceElements, pack_part::menu, 4, 4, 4, exit_button_position, button_size, true, button_tag::exitTag);
 }
 
 menu_system::~menu_system()
 = default;
 
-void menu_system::onKeyDown(Event event, world_handler &world)
+void menu_system::on_key_down(const Event event, world_handler &world)
 {
 	if (event.key.code == Keyboard::Escape)
 	{
-		if (menuState == closed)
+		if (menu_state_ == closed)
 		{
-			menuState = gameMenu;
+			menu_state_ = game_menu;
 		}
 		else
-			if (menuState == gameMenu)
+			if (menu_state_ == game_menu)
 			{
-				menuState = closed;
+				menu_state_ = closed;
 			}
 	}
 }
 
 void menu_system::interact(world_handler &world, RenderWindow &window)
 {
-	wasActive = false;
+	was_active_ = false;
 
-	Vector2f mousePos = (Vector2f )Mouse::getPosition();
+	const Vector2f mouse_pos = Vector2f(Mouse::getPosition());
 
-	if (menuState == mainMenu)
+	if (menu_state_ == main_menu)
 	{
-		if (buttonList[button_tag::newRunTag].is_selected(mousePos))
+		if (button_list_[button_tag::newRunTag].is_selected(mouse_pos))
 		{
 			world.runWorldGenerator();
-			menuState = closed;
-			wasActive = true;
+			menu_state_ = closed;
+			was_active_ = true;
 			return;
 		}
 
-		if (buttonList[button_tag::continueTag].is_selected(mousePos))
+		if (button_list_[button_tag::continueTag].is_selected(mouse_pos))
 		{
 			//world.Load();
             world.runWorldGenerator();
-			menuState = closed;
-			wasActive = true;
+			menu_state_ = closed;
+			was_active_ = true;
 			return;
 		}
 
-		if (buttonList[button_tag::exitTag].is_selected(mousePos))
+		if (button_list_[button_tag::exitTag].is_selected(mouse_pos))
 		{
-			menuState = closed;
+			menu_state_ = closed;
 			window.close();
-			wasActive = true;
+			was_active_ = true;
 			return;
 		}
 
 		return;
 	}
 
-	if (menuState == gameMenu)
+	if (menu_state_ == game_menu)
 	{
-		if (buttonList[button_tag::newRunTag].is_selected(mousePos))
+		if (button_list_[button_tag::newRunTag].is_selected(mouse_pos))
 		{
 			world.runWorldGenerator();
-			menuState = closed;
-			wasActive = true;
+			menu_state_ = closed;
+			was_active_ = true;
 			return;
 		}
 
-		if (buttonList[button_tag::continueTag].is_selected(mousePos))
+		if (button_list_[button_tag::continueTag].is_selected(mouse_pos))
 		{
-			menuState = closed;
-			wasActive = true;
+			menu_state_ = closed;
+			was_active_ = true;
 			return;
 		}
 
-		if (buttonList[button_tag::exitTag].is_selected(mousePos))
+		if (button_list_[button_tag::exitTag].is_selected(mouse_pos))
 		{
 			world.Save();
-			menuState = mainMenu;
-			wasActive = true;
+			menu_state_ = main_menu;
+			was_active_ = true;
 			return;
 		}
 
 		return;
 	}
 
-	if (menuState == closed)
+	if (menu_state_ == closed)
 	{
 		/*if (buttonList.at(ButtonTag::openMenu).isSelected(mousePos))
 		{
@@ -113,24 +111,24 @@ void menu_system::interact(world_handler &world, RenderWindow &window)
 	}
 }
 
-std::vector<sprite_chain_element*> menu_system::prepareSprites()
+std::vector<sprite_chain_element*> menu_system::prepare_sprites()
 {
     std::vector<sprite_chain_element*> result = {};
-	if (menuState == mainMenu)
+	if (menu_state_ == main_menu)
 	{
-        result.push_back(buttonList.at(button_tag::newRunTag).prepare_sprite());
-		result.push_back(buttonList.at(button_tag::continueTag).prepare_sprite());
-		result.push_back(buttonList.at(button_tag::exitTag).prepare_sprite());		
+        result.push_back(button_list_.at(button_tag::newRunTag).prepare_sprite());
+		result.push_back(button_list_.at(button_tag::continueTag).prepare_sprite());
+		result.push_back(button_list_.at(button_tag::exitTag).prepare_sprite());		
 	}
 
-	if (menuState == gameMenu)
+	if (menu_state_ == game_menu)
 	{
-		result.push_back(buttonList.at(button_tag::newRunTag).prepare_sprite());
-		result.push_back(buttonList.at(button_tag::continueTag).prepare_sprite());
-		result.push_back(buttonList.at(button_tag::exitTag).prepare_sprite());
+		result.push_back(button_list_.at(button_tag::newRunTag).prepare_sprite());
+		result.push_back(button_list_.at(button_tag::continueTag).prepare_sprite());
+		result.push_back(button_list_.at(button_tag::exitTag).prepare_sprite());
 	}
 
-	if (menuState == closed)
+	if (menu_state_ == closed)
 	{
 		
 	}
