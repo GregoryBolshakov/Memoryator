@@ -33,7 +33,7 @@ public:
 	void set_draw_info(pack_tag tag, pack_part part, direction direction, int number = 1);
 	drawable_chain_element* up_cast() { drawable_chain_element* result = this; return result; }
 
-	pack_tag pack_tag = pack_tag::empty; pack_part packPart = pack_part::full; direction direction = direction::DOWN;
+	pack_tag pack_tag = pack_tag::empty; pack_part pack_part = pack_part::full; direction direction = direction::DOWN;
 
     int number = 1;
     int animation_length = 1;

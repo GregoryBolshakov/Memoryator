@@ -174,12 +174,12 @@ static_object* object_initializer::initializeStaticItem(
 	auto sprites = item->prepare_sprites(0);
 	
 	if (packsMap->count(sprites[0]->pack_tag) <= 0 ||
-		packsMap->at(sprites[0]->pack_tag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
+		packsMap->at(sprites[0]->pack_tag).getOriginalInfo(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
 	{
 		delete item;
 		return nullptr;
 	}
-	const auto info = packsMap->at(sprites[0]->pack_tag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number);
+	const auto info = packsMap->at(sprites[0]->pack_tag).getOriginalInfo(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number);
 	const auto textureSize = Vector2f(float(info.source_size.w), float(info.source_size.h));
 	item->set_texture_size(textureSize);
 	const auto name = itemName.empty()
@@ -298,12 +298,12 @@ dynamic_object* object_initializer::initializeDynamicItem(
 	item->set_position(Vector2f(itemPosition));
     auto sprites = item->prepare_sprites(0);
 	if (packsMap->count(sprites[0]->pack_tag) <= 0 || 
-		packsMap->at(sprites[0]->pack_tag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
+		packsMap->at(sprites[0]->pack_tag).getOriginalInfo(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
 	{
 		delete item;
 		return nullptr;
 	}
-	const auto info = packsMap->at(sprites[0]->pack_tag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number);
+	const auto info = packsMap->at(sprites[0]->pack_tag).getOriginalInfo(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number);
 	const auto textureSize = Vector2f(float(info.source_size.w), float(info.source_size.h));
 	item->set_texture_size(textureSize);
 	return item;

@@ -19,9 +19,9 @@ void button::initialize(
 	button_enabled_->pack_tag = pack;
 	this->button_selected_->pack_tag = pack;
 	this->button_pressed_->pack_tag = pack;
-	button_enabled_->packPart = pack_part;
-	this->button_selected_->packPart = pack_part;
-	this->button_pressed_->packPart = pack_part;
+	button_enabled_->pack_part = pack_part;
+	this->button_selected_->pack_part = pack_part;
+	this->button_pressed_->pack_part = pack_part;
 	button_enabled_->number = default_sprite_number;
 	this->button_selected_->number = selected_sprite_number;
 	this->button_pressed_->number = pressed_sprite_number;
@@ -91,7 +91,7 @@ sprite_chain_element* button::prepare_sprite()
 		{
 			result = new sprite_chain_element(
 				button_pressed_->pack_tag,
-				button_pressed_->packPart,
+				button_pressed_->pack_part,
 				button_pressed_->direction,
 				button_pressed_->number,
 				button_pressed_->position,
@@ -106,7 +106,7 @@ sprite_chain_element* button::prepare_sprite()
 		{
 			result = new sprite_chain_element(
 				button_selected_->pack_tag,
-				button_selected_->packPart,
+				button_selected_->pack_part,
 				button_selected_->direction,
 				button_selected_->number,
 				button_selected_->position,
@@ -122,7 +122,7 @@ sprite_chain_element* button::prepare_sprite()
 	{
 		result = new sprite_chain_element(
 			button_enabled_->pack_tag,
-			button_enabled_->packPart,
+			button_enabled_->pack_part,
 			button_enabled_->direction,
 			button_enabled_->number,
 			button_enabled_->position,

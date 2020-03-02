@@ -215,26 +215,26 @@ std::vector<sprite_chain_element*> hare::prepare_sprites(long long elapsedTime)
 		case relax:
 		{
 			animationLength = 1;
-			body->packPart = pack_part::stand;
+			body->pack_part = pack_part::stand;
 			break;
 		}
 		case absorbs:
 		{
 			animationLength = 10;
-			body->packPart = pack_part::trap;
+			body->pack_part = pack_part::trap;
 			break;
 		}
 		case dead:
 		{
 			animationLength = 1;
-			body->packPart = pack_part::stand;
+			body->pack_part = pack_part::stand;
 			current_sprite_[0] = 1;
 			break;
 		}
 		case move:
 		{
 			animationLength = 5;
-			body->packPart = pack_part::move;						
+			body->pack_part = pack_part::move;						
 			break;
 		}
 	default:;

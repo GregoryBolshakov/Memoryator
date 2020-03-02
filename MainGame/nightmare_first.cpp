@@ -70,7 +70,7 @@ std::vector<sprite_chain_element*> nightmare_first::prepare_sprites(const long l
 	{
 		animationLength = 9;
 		body->pack_tag = pack_tag::nightmare1;
-		body->packPart = pack_part::hit;		
+		body->pack_part = pack_part::hit;		
 		break;
 	}
 	case combatState:
@@ -78,14 +78,14 @@ std::vector<sprite_chain_element*> nightmare_first::prepare_sprites(const long l
 	{
 		animationLength = 13;
 		body->pack_tag = pack_tag::nightmare1;
-		body->packPart = pack_part::stand;
+		body->pack_part = pack_part::stand;
 		break;
 	}
 	case dead:
 	{
 		animationLength = 1;
 		body->pack_tag = pack_tag::nightmare1;
-		body->packPart = pack_part::stand;
+		body->pack_part = pack_part::stand;
 		current_sprite_[0] = 1;
 		delete_promise_on();
 		break;
@@ -94,7 +94,7 @@ std::vector<sprite_chain_element*> nightmare_first::prepare_sprites(const long l
 	{
 		animationLength = 8;
 		body->pack_tag = pack_tag::nightmare1;
-		body->packPart = pack_part::move;
+		body->pack_part = pack_part::move;
 		break;
 	}
 	default:;

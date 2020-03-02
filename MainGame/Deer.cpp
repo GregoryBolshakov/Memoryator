@@ -295,7 +295,7 @@ std::vector<sprite_chain_element*> deer::prepare_sprites(long long elapsedTime)
 	case commonHit:
 		{
 			animationLength = 6;
-			body->packPart = pack_part::hunt;
+			body->pack_part = pack_part::hunt;
 			break;
 		}
 	case dead:
@@ -309,7 +309,7 @@ std::vector<sprite_chain_element*> deer::prepare_sprites(long long elapsedTime)
 	case moveSlowly:
 		{
 			animationLength = 7;
-			body->packPart = pack_part::move;
+			body->pack_part = pack_part::move;
 			break;
 		}
 	default: ;

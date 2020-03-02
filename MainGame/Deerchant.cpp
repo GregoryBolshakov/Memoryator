@@ -976,32 +976,32 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 		bodySprite->animation_length = 8;
 		if (directionSystem.side == right)
 			legsSprite->mirrored = true;
-		bodySprite->pack_tag = pack_tag::heroHit; bodySprite->packPart = pack_part::body; bodySprite->direction = direction_system::side_to_direction(spriteSide);
-		legsSprite->pack_tag = pack_tag::heroHit; legsSprite->packPart = pack_part::legs; legsSprite->direction = direction_system::side_to_direction(spriteSide);
+		bodySprite->pack_tag = pack_tag::heroHit; bodySprite->pack_part = pack_part::body; bodySprite->direction = direction_system::side_to_direction(spriteSide);
+		legsSprite->pack_tag = pack_tag::heroHit; legsSprite->pack_part = pack_part::legs; legsSprite->direction = direction_system::side_to_direction(spriteSide);
 		break;
 	case absorbs:
 		bodySprite->animation_length = 10;
-		bodySprite->pack_tag = pack_tag::heroAbsorb; bodySprite->packPart = pack_part::full; bodySprite->direction = direction_system::cut_diagonals(spriteDirection);	
+		bodySprite->pack_tag = pack_tag::heroAbsorb; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_diagonals(spriteDirection);	
 		break;
 	case builds:
 		bodySprite->animation_length = 10;
-		bodySprite->pack_tag = pack_tag::heroAbsorb; bodySprite->packPart = pack_part::full; bodySprite->direction = direction_system::cut_diagonals(spriteDirection);
+		bodySprite->pack_tag = pack_tag::heroAbsorb; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_diagonals(spriteDirection);
 		break;
 	case grab:
 		bodySprite->animation_length = 11;
 		animation_speed_ = 15;
-		bodySprite->pack_tag = pack_tag::heroPick; bodySprite->packPart = pack_part::full; bodySprite->direction = direction_system::cut_diagonals(spriteDirection);
+		bodySprite->pack_tag = pack_tag::heroPick; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_diagonals(spriteDirection);
 		break;
 	case dropping:
 		bodyInverse = true;
 		bodySprite->animation_length = 5;
 		if (directionSystem.lastDirection == direction::RIGHT || directionSystem.lastDirection == direction::UPRIGHT || directionSystem.lastDirection == direction::DOWNRIGHT)
 			bodySprite->mirrored = true;
-		bodySprite->pack_tag = pack_tag::heroPick; bodySprite->packPart = pack_part::full; bodySprite->direction = direction_system::cut_diagonals(spriteDirection);
+		bodySprite->pack_tag = pack_tag::heroPick; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_diagonals(spriteDirection);
 		break;
 	case open:
 		bodySprite->animation_length = 12;
-		bodySprite->pack_tag = pack_tag::heroPick; bodySprite->packPart = pack_part::full; bodySprite->direction = direction_system::cut_diagonals(spriteDirection);
+		bodySprite->pack_tag = pack_tag::heroPick; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_diagonals(spriteDirection);
 		break;
 	case transitionToEnotherWorld:
 		bodySprite->animation_length = 18;
@@ -1014,7 +1014,7 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 			bodySprite->mirrored = true;
 		if (direction_system::cut_rights(directionSystem.lastDirection) == direction::UPLEFT || direction_system::cut_rights(directionSystem.lastDirection) == direction::DOWNLEFT)
 			spriteDirection = direction::LEFT;
-		bodySprite->pack_tag = pack_tag::heroRoll; bodySprite->packPart = pack_part::full; bodySprite->direction = direction_system::cut_rights(spriteDirection);
+		bodySprite->pack_tag = pack_tag::heroRoll; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_rights(spriteDirection);
 		break;
 	case relax:
 		bodySprite->mirrored = false;
@@ -1025,7 +1025,7 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 			bodySprite->mirrored = true;
 		if (direction_system::cut_rights(directionSystem.lastDirection) == direction::UPLEFT || direction_system::cut_rights(directionSystem.lastDirection) == direction::DOWNLEFT)
 			spriteDirection = direction::LEFT;
-		bodySprite->pack_tag = pack_tag::heroStand; bodySprite->packPart = pack_part::full; bodySprite->direction = direction_system::cut_rights(spriteDirection);
+		bodySprite->pack_tag = pack_tag::heroStand; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_rights(spriteDirection);
 		break;
 	case move:
 	{
@@ -1044,8 +1044,8 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 			legsSprite->mirrored = true;
 		}
 
-		bodySprite->pack_tag = pack_tag::heroMove; bodySprite->packPart = pack_part::body; bodySprite->direction = direction_system::cut_rights(finalDirection);
-		legsSprite->pack_tag = pack_tag::heroMove; legsSprite->packPart = pack_part::legs; legsSprite->direction = direction_system::cut_rights(finalDirection);
+		bodySprite->pack_tag = pack_tag::heroMove; bodySprite->pack_part = pack_part::body; bodySprite->direction = direction_system::cut_rights(finalDirection);
+		legsSprite->pack_tag = pack_tag::heroMove; legsSprite->pack_part = pack_part::legs; legsSprite->direction = direction_system::cut_rights(finalDirection);
 		break;
 	}
 	case actions::moveEnd:
@@ -1056,9 +1056,9 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 			bodySprite->mirrored = true;
 			legsSprite->mirrored = true;
 		}
-		bodySprite->pack_tag = pack_tag::heroMove; bodySprite->packPart = pack_part::body; bodySprite->direction = direction_system::cut_rights(directionSystem.lastDirection);
+		bodySprite->pack_tag = pack_tag::heroMove; bodySprite->pack_part = pack_part::body; bodySprite->direction = direction_system::cut_rights(directionSystem.lastDirection);
 		directionSystem.lastDirection = direction_system::cut_diagonals(directionSystem.lastDirection);
-		legsSprite->pack_tag = pack_tag::heroHit; legsSprite->packPart = pack_part::legs; legsSprite->direction = direction_system::cut_rights(directionSystem.lastDirection);
+		legsSprite->pack_tag = pack_tag::heroHit; legsSprite->pack_part = pack_part::legs; legsSprite->direction = direction_system::cut_rights(directionSystem.lastDirection);
 		
 		break;
 	}
@@ -1087,14 +1087,14 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 		if (directionSystem.direction == direction::UP && directionSystem.side == down || directionSystem.direction == direction::DOWN && directionSystem.side == up)
 			legsInverse = true;
 
-		legsSprite->pack_tag = pack_tag::heroMove; legsSprite->packPart = pack_part::legs; legsSprite->direction = direction_system::cut_rights(spriteDirection);
-		bodySprite->pack_tag = pack_tag::heroHit; bodySprite->packPart = pack_part::body; bodySprite->direction = direction_system::side_to_direction(spriteSide);
+		legsSprite->pack_tag = pack_tag::heroMove; legsSprite->pack_part = pack_part::legs; legsSprite->direction = direction_system::cut_rights(spriteDirection);
+		bodySprite->pack_tag = pack_tag::heroHit; bodySprite->pack_part = pack_part::body; bodySprite->direction = direction_system::side_to_direction(spriteSide);
 
 		if (directionSystem.direction == direction::STAND)
 		{
 			if (directionSystem.side == right)
 				legsSprite->mirrored = true;
-			legsSprite->pack_tag = pack_tag::heroMove; legsSprite->packPart = pack_part::legs; legsSprite->direction = direction_system::side_to_direction(spriteSide);
+			legsSprite->pack_tag = pack_tag::heroMove; legsSprite->pack_part = pack_part::legs; legsSprite->direction = direction_system::side_to_direction(spriteSide);
 			legsSprite->animation_length = 14;
 		}
 	}
@@ -1114,14 +1114,14 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 			legsSprite->mirrored = !legsSprite->mirrored;
 		}
 
-		legsSprite->pack_tag = pack_tag::heroMove; legsSprite->packPart = pack_part::legs, legsSprite->direction = spriteDirection;
-		bodySprite->pack_tag = pack_tag::heroThrow; bodySprite->packPart = pack_part::body; bodySprite->direction = direction_system::side_to_direction(spriteSide);
+		legsSprite->pack_tag = pack_tag::heroMove; legsSprite->pack_part = pack_part::legs, legsSprite->direction = spriteDirection;
+		bodySprite->pack_tag = pack_tag::heroThrow; bodySprite->pack_part = pack_part::body; bodySprite->direction = direction_system::side_to_direction(spriteSide);
 
 		if (directionSystem.direction == direction::STAND)
 		{
 			if (directionSystem.side == right)
 				legsSprite->mirrored = true;
-			legsSprite->pack_tag = pack_tag::heroThrow; legsSprite->packPart = pack_part::legs, legsSprite->direction = direction_system::side_to_direction(spriteSide);
+			legsSprite->pack_tag = pack_tag::heroThrow; legsSprite->pack_part = pack_part::legs, legsSprite->direction = direction_system::side_to_direction(spriteSide);
 			legsSprite->animation_length = 14;
 		}
 	}

@@ -182,13 +182,13 @@ void draw_system::draw_sprite_chain_element(RenderTarget& target, sprite_chain_e
 		return;
 	}
 
-	auto sprite = packs_map.at(sprite_chain_item->pack_tag).getSprite(sprite_chain_item->packPart, sprite_chain_item->direction, sprite_chain_item->number, sprite_chain_item->mirrored);
+	auto sprite = packs_map.at(sprite_chain_item->pack_tag).getSprite(sprite_chain_item->pack_part, sprite_chain_item->direction, sprite_chain_item->number, sprite_chain_item->mirrored);
 	if (sprite.getTextureRect() == IntRect())
 	{
 		return;
 	}
 
-	const auto original_info = packs_map.at(sprite_chain_item->pack_tag).getOriginalInfo(sprite_chain_item->packPart, sprite_chain_item->direction, sprite_chain_item->number);
+	const auto original_info = packs_map.at(sprite_chain_item->pack_tag).getOriginalInfo(sprite_chain_item->pack_part, sprite_chain_item->direction, sprite_chain_item->number);
 	const Vector2f sprite_pos = {
 		(sprite_chain_item->position.x - camera_position.x - sprite_chain_item->offset.x) * scale + screen_center.x,
 		(sprite_chain_item->position.y - camera_position.y - sprite_chain_item->offset.y) * scale + screen_center.y

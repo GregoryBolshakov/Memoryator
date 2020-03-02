@@ -6,7 +6,7 @@ sprite_chain_element::sprite_chain_element() : drawable_chain_element()
 
 sprite_chain_element::sprite_chain_element(
 	const ::pack_tag tag,
-	const pack_part part,
+	const ::pack_part part,
 	const ::direction direction,
 	const int number,
 	const Vector2f position,
@@ -18,7 +18,7 @@ sprite_chain_element::sprite_chain_element(
 	const float rotation) : drawable_chain_element(position, size, offset, color)
 {
     this->pack_tag = tag;
-    this->packPart = part;
+    this->pack_part = part;
     this->direction = direction;
     this->number = number;
 	this->mirrored = mirrored;
@@ -43,10 +43,10 @@ sprite_chain_element::sprite_chain_element(
 sprite_chain_element::~sprite_chain_element()
 = default;
 
-void sprite_chain_element::set_draw_info(const ::pack_tag tag, const pack_part part, const ::direction direction, const int number) 
+void sprite_chain_element::set_draw_info(const ::pack_tag tag, const ::pack_part part, const ::direction direction, const int number) 
 {
 	this->pack_tag = tag;
-	this->packPart = part;
+	this->pack_part = part;
 	this->direction = direction;
 	this->number = number;
 }
