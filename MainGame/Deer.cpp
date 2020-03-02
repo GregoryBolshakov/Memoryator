@@ -1,13 +1,13 @@
-#include "Deer.h"
+#include "deer.h"
 
 using namespace sf;
 
-Deer::Deer(const std::string& objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
+deer::deer(const std::string& objectName, const Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
 {
-	conditionalSizeUnits = { 360, 300 };
+	conditionalSizeUnits = {360, 300};
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
-	moveSystem.defaultSpeed = 0.00085f;
+	moveSystem.defaultSpeed = 0.00085F;
 	//defaultSpeed = 0.0002f;
 	moveSystem.speed = moveSystem.defaultSpeed;
 	animationSpeed = 10;
@@ -18,7 +18,7 @@ Deer::Deer(const std::string& objectName, Vector2f centerPosition) : NeutralMob(
 	morality = 5; // from 1 to 10
 	fear = 0;
 	healthPoint = 50;
-	currentAction = relax;	
+	currentAction = relax;
 	timeForNewHitSelf = long(6e5);
 	timeAfterHitSelf = timeForNewHitSelf;
 	timeForNewHit = 10e6;
@@ -26,22 +26,21 @@ Deer::Deer(const std::string& objectName, Vector2f centerPosition) : NeutralMob(
 	tag = Tag::deer;
 }
 
-Deer::~Deer()
+deer::~deer()
 = default;
 
-Vector2f Deer::calculateTextureOffset()
+Vector2f deer::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
-	return { textureBox.width / 2, textureBox.height * 7 / 8 };
+	return {textureBox.width / 2, textureBox.height * 7 / 8};
 }
 
-void Deer::behaviorWithStatic(WorldObject* target, long long elapsedTime)
+void deer::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
-
 }
 
-void Deer::behavior(const long long elapsedTime)
+void deer::behavior(const long long elapsedTime)
 {
 	endingPreviousAction();
 	directionSystem.calculateDirection();
@@ -53,14 +52,14 @@ void Deer::behavior(const long long elapsedTime)
 		directionSystem.direction = Direction::STAND;
 		return;
 	}
-	
+
 	if (this->owner != nullptr)
-	{		
+	{
 		moveSystem.speed = moveSystem.defaultSpeed;
 		if (currentAction == commonHit)
 		{
-			laxMovePosition = { -1, -1 };
-			return;			
+			laxMovePosition = {-1, -1};
+			return;
 		}
 		directionSystem.side = DirectionSystem::calculateSide(position, owner->getPosition(), elapsedTime);
 		if (Helper::getDist(position, owner->getPosition()) > sightRange / 2)
@@ -68,23 +67,24 @@ void Deer::behavior(const long long elapsedTime)
 			changeAction(moveSlowly, false, false);
 			laxMovePosition = owner->getPosition();
 		}
-		else
-			if (Helper::getDist(position, owner->getPosition()) <= sightRange / 2.5 && currentAction != relax)
-			{
-				changeAction(relax, true, false);
-				laxMovePosition = { -1, -1 };
-			}
+		else if (Helper::getDist(position, owner->getPosition()) <= sightRange / 2.5 && currentAction != relax)
+		{
+			changeAction(relax, true, false);
+			laxMovePosition = {-1, -1};
+		}
 		return;
 	}
 
 	directionSystem.side = DirectionSystem::calculateSide(position, laxMovePosition, elapsedTime);
 
 	if (boundTarget == nullptr)
+	{
 		return;
+	}
 
-	const float distanceToTarget = Helper::getDist(this->position, boundTarget->getPosition());
+	const auto distanceToTarget = Helper::getDist(this->position, boundTarget->getPosition());
 	//speed = std::max(defaultSpeed, (defaultSpeed * 10) * (1 - (distanceToTarget) / sightRange * 1.5f));
-	animationSpeed = std::max(0.0004f, 0.0003f * moveSystem.speed / moveSystem.defaultSpeed);
+	animationSpeed = std::max(0.0004F, 0.0003F * moveSystem.speed / moveSystem.defaultSpeed);
 
 	if (distanceToTarget <= sightRange)
 	{
@@ -99,124 +99,182 @@ void Deer::behavior(const long long elapsedTime)
 			{
 				changeAction(relax, true, true);
 				directionSystem.direction = Direction::STAND;
-				laxMovePosition = { -1, -1 };
+				laxMovePosition = {-1, -1};
 			}
 			else
+			{
 				laxMovePosition = Vector2f(position.x - (boundTarget->getPosition().x - position.x), position.y - (boundTarget->getPosition().y - position.y));
+			}
 		}
 	}
 	distanceToNearest = 10e6;
 	boundTarget = nullptr;
 }
 
-Vector2f Deer::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f deer::getBuildPosition(std::vector<WorldObject*> /*visibleItems*/, float /*scaleFactor*/, Vector2f /*cameraPosition*/)
 {
-	return { -1, -1 };
+	return {-1, -1};
 }
 
-int Deer::getBuildType(Vector2f, Vector2f)
+int deer::getBuildType(Vector2f /*ounPos*/, Vector2f /*otherPos*/)
 {
 	return 1;
 }
 
-void Deer::endingPreviousAction()
+void deer::endingPreviousAction()
 {
-	if (lastAction == commonHit)	
+	if (lastAction == commonHit)
+	{
 		currentAction = relax;
+	}
 
 	lastAction = relax;
 }
 
-void Deer::jerk(float, float, Vector2f)
+void deer::jerk(float /*power*/, float /*deceleration*/, Vector2f /*destinationPoint*/)
 {
 }
 
-Vector2f Deer::getHeadPosition()
+Vector2f deer::getHeadPosition()
 {
-	const Vector2f upperLeft = Vector2f(position.x - textureBoxOffset.x, position.y - textureBoxOffset.y);
+	const auto upperLeft = Vector2f(position.x - textureBoxOffset.x, position.y - textureBoxOffset.y);
 
 	if (directionSystem.lastDirection == Direction::UP)
 	{
 		if (currentSprite[0] == 1)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.569f, upperLeft.y + conditionalSizeUnits.y * 0.111f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.569F, upperLeft.y + conditionalSizeUnits.y * 0.111F};
+		}
 		if (currentSprite[0] == 2)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.575f, upperLeft.y + conditionalSizeUnits.y * 0.155f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.575F, upperLeft.y + conditionalSizeUnits.y * 0.155F};
+		}
 		if (currentSprite[0] == 3)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.577f, upperLeft.y + conditionalSizeUnits.y * 0.202f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.577F, upperLeft.y + conditionalSizeUnits.y * 0.202F};
+		}
 		if (currentSprite[0] == 4)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.580f, upperLeft.y + conditionalSizeUnits.y * 0.150f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.580F, upperLeft.y + conditionalSizeUnits.y * 0.150F};
+		}
 		if (currentSprite[0] == 5)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.570f, upperLeft.y + conditionalSizeUnits.y * 0.106f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.570F, upperLeft.y + conditionalSizeUnits.y * 0.106F};
+		}
 		if (currentSprite[0] == 6)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.570f, upperLeft.y + conditionalSizeUnits.y * 0.093f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.570F, upperLeft.y + conditionalSizeUnits.y * 0.093F};
+		}
 		if (currentSprite[0] == 7)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.575f, upperLeft.y + conditionalSizeUnits.y * 0.075f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.575F, upperLeft.y + conditionalSizeUnits.y * 0.075F};
+		}
 	}
 	if (directionSystem.lastDirection == Direction::DOWN)
 	{
 		if (currentSprite[0] == 1)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.446f, upperLeft.y + conditionalSizeUnits.y * 0.222f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.446F, upperLeft.y + conditionalSizeUnits.y * 0.222F};
+		}
 		if (currentSprite[0] == 2)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.437f, upperLeft.y + conditionalSizeUnits.y * 0.243f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.437F, upperLeft.y + conditionalSizeUnits.y * 0.243F};
+		}
 		if (currentSprite[0] == 3)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.437f, upperLeft.y + conditionalSizeUnits.y * 0.258f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.437F, upperLeft.y + conditionalSizeUnits.y * 0.258F};
+		}
 		if (currentSprite[0] == 4)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.437f, upperLeft.y + conditionalSizeUnits.y * 0.242f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.437F, upperLeft.y + conditionalSizeUnits.y * 0.242F};
+		}
 		if (currentSprite[0] == 5)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.440f, upperLeft.y + conditionalSizeUnits.y * 0.168f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.440F, upperLeft.y + conditionalSizeUnits.y * 0.168F};
+		}
 		if (currentSprite[0] == 6)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.444f, upperLeft.y + conditionalSizeUnits.y * 0.150f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.444F, upperLeft.y + conditionalSizeUnits.y * 0.150F};
+		}
 		if (currentSprite[0] == 7)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.445f, upperLeft.y + conditionalSizeUnits.y * 0.182f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.445F, upperLeft.y + conditionalSizeUnits.y * 0.182F};
+		}
 	}
 	if (DirectionSystem::cutDiagonals(directionSystem.lastDirection) == Direction::LEFT)
 	{
 		if (currentSprite[0] == 1)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.313f, upperLeft.y + conditionalSizeUnits.y * 0.147f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.313F, upperLeft.y + conditionalSizeUnits.y * 0.147F};
+		}
 		if (currentSprite[0] == 2)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.325f, upperLeft.y + conditionalSizeUnits.y * 0.159f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.325F, upperLeft.y + conditionalSizeUnits.y * 0.159F};
+		}
 		if (currentSprite[0] == 3)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.338f, upperLeft.y + conditionalSizeUnits.y * 0.169f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.338F, upperLeft.y + conditionalSizeUnits.y * 0.169F};
+		}
 		if (currentSprite[0] == 4)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.319f, upperLeft.y + conditionalSizeUnits.y * 0.138f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.319F, upperLeft.y + conditionalSizeUnits.y * 0.138F};
+		}
 		if (currentSprite[0] == 5)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.287f, upperLeft.y + conditionalSizeUnits.y * 0.123f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.287F, upperLeft.y + conditionalSizeUnits.y * 0.123F};
+		}
 		if (currentSprite[0] == 6)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.282f, upperLeft.y + conditionalSizeUnits.y * 0.130f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.282F, upperLeft.y + conditionalSizeUnits.y * 0.130F};
+		}
 		if (currentSprite[0] == 7)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.277f, upperLeft.y + conditionalSizeUnits.y * 0.138f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.277F, upperLeft.y + conditionalSizeUnits.y * 0.138F};
+		}
 	}
 	if (DirectionSystem::cutDiagonals(directionSystem.lastDirection) == Direction::RIGHT)
 	{
 		if (currentSprite[0] == 1)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.6f, upperLeft.y + conditionalSizeUnits.y * 0.17f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.6F, upperLeft.y + conditionalSizeUnits.y * 0.17F};
+		}
 		if (currentSprite[0] == 2)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.59f, upperLeft.y + conditionalSizeUnits.y * 0.19f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.59F, upperLeft.y + conditionalSizeUnits.y * 0.19F};
+		}
 		if (currentSprite[0] == 3)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.56f, upperLeft.y + conditionalSizeUnits.y * 0.2f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.56F, upperLeft.y + conditionalSizeUnits.y * 0.2F};
+		}
 		if (currentSprite[0] == 4)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.59f, upperLeft.y + conditionalSizeUnits.y * 0.17f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.59F, upperLeft.y + conditionalSizeUnits.y * 0.17F};
+		}
 		if (currentSprite[0] == 5)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.62f, upperLeft.y + conditionalSizeUnits.y * 0.16f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.62F, upperLeft.y + conditionalSizeUnits.y * 0.16F};
+		}
 		if (currentSprite[0] == 6)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.63f, upperLeft.y + conditionalSizeUnits.y * 0.16f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.63F, upperLeft.y + conditionalSizeUnits.y * 0.16F};
+		}
 		if (currentSprite[0] == 7)
-			return { upperLeft.x + conditionalSizeUnits.x * 0.63f, upperLeft.y + conditionalSizeUnits.y * 0.17f };
+		{
+			return {upperLeft.x + conditionalSizeUnits.x * 0.63F, upperLeft.y + conditionalSizeUnits.y * 0.17F};
+		}
 	}
 	return position;
 }
 
-std::vector<SpriteChainElement*> Deer::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> deer::prepareSprites(long long elapsedTime)
 {
 	auto body = new SpriteChainElement(PackTag::deer, PackPart::stand, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	animationSpeed = 10;
 
-	Side spriteSide = directionSystem.side;
-	Direction spriteDirection = DirectionSystem::cutDiagonals(directionSystem.lastDirection);
+	auto spriteDirection = DirectionSystem::cutDiagonals(directionSystem.lastDirection);
 
 	if (directionSystem.side == right)
 	{
-		spriteSide = left;
 		body->mirrored = true;
 	}
 	if (directionSystem.lastDirection == Direction::RIGHT || directionSystem.lastDirection == Direction::UPRIGHT || directionSystem.lastDirection == Direction::DOWNRIGHT)
@@ -229,39 +287,39 @@ std::vector<SpriteChainElement*> Deer::prepareSprites(long long elapsedTime)
 
 	switch (currentAction)
 	{
-		case relax:
+	case relax:
 		{
 			animationLength = 1;
 			break;
 		}
-		case commonHit:
+	case commonHit:
 		{
 			animationLength = 6;
-		body->packPart = PackPart::hunt;	
+			body->packPart = PackPart::hunt;
 			break;
 		}
-		case dead:
+	case dead:
 		{
 			animationLength = 1;
-		body->direction = Direction::DOWN;
+			body->direction = Direction::DOWN;
 			currentSprite[0] = 1;
-		break;
+			break;
 		}
 	case move:
 	case moveSlowly:
-	{
-		animationLength = 7;
-		body->packPart = PackPart::move;
-		break;
-	}
-	default:;
+		{
+			animationLength = 7;
+			body->packPart = PackPart::move;
+			break;
+		}
+	default: ;
 	}
 
 	body->number = currentSprite[0];
 
 	timeForNewSprite += elapsedTime;
 
-	if (timeForNewSprite >= 1e6 / animationSpeed)
+	if (timeForNewSprite >= long(1e6 / animationSpeed))
 	{
 		timeForNewSprite = 0;
 
@@ -272,5 +330,5 @@ std::vector<SpriteChainElement*> Deer::prepareSprites(long long elapsedTime)
 		}
 	}
 
-	return { body };
+	return {body};
 }

@@ -71,9 +71,6 @@
     <ClCompile Include="Noose.cpp">
       <Filter>DynamicObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Deer.cpp">
-      <Filter>Creatures</Filter>
-    </ClCompile>
     <ClCompile Include="HeroBag.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -97,9 +94,6 @@
     </ClCompile>
     <ClCompile Include="ObjectInitializer.cpp">
       <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Bear.cpp">
-      <Filter>Creatures</Filter>
     </ClCompile>
     <ClCompile Include="Nightmare1.cpp">
       <Filter>Creatures</Filter>
@@ -213,6 +207,12 @@
     <ClCompile Include="button.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="bear.cpp">
+      <Filter>Creatures</Filter>
+    </ClCompile>
+    <ClCompile Include="deer.cpp">
+      <Filter>Creatures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EventHandler.h" />
@@ -285,9 +285,6 @@
     <ClInclude Include="Noose.h">
       <Filter>DynamicObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Deer.h">
-      <Filter>Creatures</Filter>
-    </ClInclude>
     <ClInclude Include="HeroBag.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -312,9 +309,6 @@
     </ClInclude>
     <ClInclude Include="ObjectInitializer.h">
       <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Bear.h">
-      <Filter>Creatures</Filter>
     </ClInclude>
     <ClInclude Include="Nightmare1.h">
       <Filter>Creatures</Filter>
@@ -433,6 +427,12 @@
     </ClInclude>
     <ClInclude Include="button.h">
       <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="bear.h">
+      <Filter>Creatures</Filter>
+    </ClInclude>
+    <ClInclude Include="deer.h">
+      <Filter>Creatures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

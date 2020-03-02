@@ -154,14 +154,14 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="Lake.cpp" />
     <ClCompile Include="LightSystem.cpp" />
     <ClCompile Include="Mushroom.cpp" />
-    <ClCompile Include="Bear.cpp" />
+    <ClCompile Include="bear.cpp" />
     <ClCompile Include="Brazier.cpp" />
     <ClCompile Include="BuildSystem.cpp" />
     <ClCompile Include="Bush.cpp" />
     <ClCompile Include="button.cpp" />
     <ClCompile Include="Chamomile.cpp" />
     <ClCompile Include="ClapWhirl.cpp" />
-    <ClCompile Include="Deer.cpp" />
+    <ClCompile Include="deer.cpp" />
     <ClCompile Include="Deerchant.cpp" />
     <ClCompile Include="DroppedLoot.cpp" />
     <ClCompile Include="DynamicObject.cpp" />
@@ -230,7 +230,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="Lake.h" />
     <ClInclude Include="LightSystem.h" />
     <ClInclude Include="Mushroom.h" />
-    <ClInclude Include="Bear.h" />
+    <ClInclude Include="bear.h" />
     <ClInclude Include="Bush.h" />
     <ClInclude Include="ClapWhirl.h" />
     <ClInclude Include="Fern.h" />
@@ -251,7 +251,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="BuildSystem.h" />
     <ClInclude Include="button.h" />
     <ClInclude Include="Chamomile.h" />
-    <ClInclude Include="Deer.h" />
+    <ClInclude Include="deer.h" />
     <ClInclude Include="Deerchant.h" />
     <ClInclude Include="DroppedLoot.h" />
     <ClInclude Include="DynamicObject.h" />

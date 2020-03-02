@@ -227,13 +227,13 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 	}
 	case Tag::deer:
 	{
-		item = new Deer("item", Vector2f(0, 0));
+		item = new deer("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/deer/stand/down/1";
 		break;
 	}
 	case Tag::bear:
 	{
-		item = new Bear("item", Vector2f(0, 0));
+		item = new bear("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/deer/stand/down/1";
 		break;
 	}

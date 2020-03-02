@@ -1,8 +1,8 @@
-#include "Bear.h"
+#include "bear.h"
 
 using namespace sf;
 
-Bear::Bear(const std::string& objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
+bear::bear(const std::string& objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
 {
 	conditionalSizeUnits = { 432, 384 };
 	currentSprite[0] = 1;
@@ -25,22 +25,22 @@ Bear::Bear(const std::string& objectName, Vector2f centerPosition) : NeutralMob(
 	tag = Tag::bear;
 }
 
-Bear::~Bear()
+bear::~bear()
 = default;
 
-Vector2f Bear::calculateTextureOffset()
+Vector2f bear::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
 	return { textureBox.width / 2, textureBox.height * 7 / 8 };
 }
 
-void Bear::behaviorWithStatic(WorldObject* target, long long elapsedTime)
+void bear::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
 
 }
 
-void Bear::behavior(long long elapsedTime)
+void bear::behavior(long long elapsedTime)
 {
 	endingPreviousAction();
 	fightInteract(elapsedTime);
@@ -105,17 +105,17 @@ void Bear::behavior(long long elapsedTime)
 	boundTarget = nullptr;
 }
 
-Vector2f Bear::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f bear::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int Bear::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int bear::getBuildType(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
 
-void Bear::endingPreviousAction()
+void bear::endingPreviousAction()
 {
 	if (lastAction == commonHit)
 		currentAction = relax;
@@ -123,12 +123,12 @@ void Bear::endingPreviousAction()
 	lastAction = relax;
 }
 
-void Bear::jerk(float power, float deceleration, Vector2f destinationPoint)
+void bear::jerk(float power, float deceleration, Vector2f destinationPoint)
 {
 	return;
 }
 
-std::vector<SpriteChainElement*> Bear::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> bear::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*spriteChainElement fullSprite;
