@@ -26,15 +26,15 @@ public:
 private:
 	void stopping(bool doStand = false, bool forgetBoundTarget = false);
 	void endingPreviousAction();
-	void rotateAndExtend(spriteChainElement* whirl);
+	void rotateAndExtend(SpriteChainElement* whirl);
 
 	float timeForNewSprite, timeAfterHit = 0, timeForNewHit = 100000;
 	int animationLength, strikingSprite = 4;
 	std::map<Tag, bool> cantStopMe = { {Tag::chamomile, true},  {Tag::yarrow, true}, {Tag::mugwort, true}, {Tag::poppy, true}, {Tag::fern, true}, {Tag::stump, true}, {Tag::rock, true} };
 	bool wasHit = false;
-	spriteChainElement stillRope, stillLoop;
+	SpriteChainElement stillRope, stillLoop;
 	WorldObject* owner;
 	Vector2f ownerPos = { 0, 0 }, startPos = { 0, 0 };
 	Vector2i ownerGlobalBounds = { 0, 0 };
 };
-f*/
+*/

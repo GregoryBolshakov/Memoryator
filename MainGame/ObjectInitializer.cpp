@@ -215,7 +215,7 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 	}
 	case Tag::wolf:
 	{
-		item = new Wolf("item", Vector2f(0, 0));
+		item = new wolf("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/wolf/stand/down/1";
 		break;
 	}
@@ -239,13 +239,13 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 	}
 	case Tag::owl:
 	{
-		item = new Owl("item", Vector2f(0, 0));
+		item = new owl("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/deer/stand/down/1";
 		break;
 	}
 	case Tag::noose:
 	{
-		item = new Noose("item", Vector2f(0, 0), owner);
+		item = new noose("item", Vector2f(0, 0), owner);
 		nameOfImage = "Game/worldSprites/noose/nooseLoop/1";
 		break;
 	}
@@ -257,7 +257,7 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 	}*/
 	case Tag::owlBoss:
 	{
-		item = new OwlBoss("item", Vector2f(0, 0));
+		item = new owl_boss("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/owlBoss/stand/down/1";
 		break;
 	}

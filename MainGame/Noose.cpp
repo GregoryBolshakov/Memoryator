@@ -1,4 +1,4 @@
-#include "Noose.h"
+#include "noose.h"
 
 #include "deer.h"
 #include "deerchant.h"
@@ -6,7 +6,7 @@
 
 using namespace sf;
 
-Noose::Noose(const std::string& objectName, const Vector2f centerPosition, WorldObject* owner) : DynamicObject(objectName, centerPosition)
+noose::noose(const std::string& objectName, const Vector2f centerPosition, WorldObject* owner) : DynamicObject(objectName, centerPosition)
 {
 	conditionalSizeUnits = {360, 300};
 	currentSprite[0] = 1;
@@ -20,15 +20,15 @@ Noose::Noose(const std::string& objectName, const Vector2f centerPosition, World
 	currentAction = move;
 	routeGenerationAbility = false;
 	moveSystem.canCrashIntoDynamic = false;
-	Noose::jerk(2, 1);
+	noose::jerk(2, 1);
 	toSaveName = "noose";
 	tag = Tag::noose;
 }
 
-Noose::~Noose()
+noose::~noose()
 = default;
 
-Vector2f Noose::calculateTextureOffset()
+Vector2f noose::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
@@ -37,11 +37,11 @@ Vector2f Noose::calculateTextureOffset()
 	return {0.0F, textureBox.height / 1.8F};
 }
 
-void Noose::setTarget(DynamicObject& object)
+void noose::setTarget(DynamicObject& object)
 {
 }
 
-void Noose::behaviorWithDynamic(DynamicObject* target, long long /*elapsedTime*/)
+void noose::behaviorWithDynamic(DynamicObject* target, long long /*elapsedTime*/)
 {
 	if (currentAction == dead)
 	{
@@ -67,7 +67,7 @@ void Noose::behaviorWithDynamic(DynamicObject* target, long long /*elapsedTime*/
 	}
 }
 
-void Noose::behaviorWithStatic(WorldObject* /*target*/, long long /*elapsedTime*/)
+void noose::behaviorWithStatic(WorldObject* /*target*/, long long /*elapsedTime*/)
 {
 	if (currentAction == dead)
 	{
@@ -75,7 +75,7 @@ void Noose::behaviorWithStatic(WorldObject* /*target*/, long long /*elapsedTime*
 	}
 }
 
-void Noose::behavior(long long elapsedTime)
+void noose::behavior(long long elapsedTime)
 {
 	if (currentAction == dead)
 	{
@@ -117,17 +117,17 @@ void Noose::behavior(long long elapsedTime)
 	}
 }
 
-Vector2f Noose::getBuildPosition(std::vector<WorldObject*> /*visibleItems*/, float /*scaleFactor*/, Vector2f /*cameraPosition*/)
+Vector2f noose::getBuildPosition(std::vector<WorldObject*> /*visibleItems*/, float /*scaleFactor*/, Vector2f /*cameraPosition*/)
 {
 	return {-1, -1};
 }
 
-int Noose::getBuildType(Vector2f /*ounPos*/, Vector2f /*otherPos*/)
+int noose::getBuildType(Vector2f /*ounPos*/, Vector2f /*otherPos*/)
 {
 	return 1;
 }
 
-void Noose::stopping(bool doStand, bool forgetBoundTarget)
+void noose::stopping(bool doStand, bool forgetBoundTarget)
 {
 	if (doStand)
 	{
@@ -142,7 +142,7 @@ void Noose::stopping(bool doStand, bool forgetBoundTarget)
 	}
 }
 
-void Noose::endingPreviousAction()
+void noose::endingPreviousAction()
 {
 	if (lastAction == jerking)
 	{
@@ -151,7 +151,7 @@ void Noose::endingPreviousAction()
 	lastAction = relax;
 }
 
-void Noose::jerkInteract(const long long elapsedTime)
+void noose::jerkInteract(const long long elapsedTime)
 {
 	if (currentAction == jerking)
 	{
@@ -168,7 +168,7 @@ void Noose::jerkInteract(const long long elapsedTime)
 	}
 }
 
-void Noose::jerk(const float power, const float deceleration, Vector2f /*destinationPoint*/)
+void noose::jerk(const float power, const float deceleration, Vector2f /*destinationPoint*/)
 {
 	stopping(false, false);
 	this->jerkPower = power;
@@ -185,11 +185,11 @@ void Noose::jerk(const float power, const float deceleration, Vector2f /*destina
 	laxMovePosition = Vector2f(owner->getPosition().x + (mousePos.x - screenCenter.x) * coeff, owner->getPosition().y + (mousePos.y - screenCenter.y) * coeff);
 }
 
-void Noose::fightInteract(long long elapsedTime, DynamicObject* target)
+void noose::fightInteract(long long elapsedTime, DynamicObject* target)
 {
 }
 
-void Noose::rotateAndExtend(SpriteChainElement* rope, SpriteChainElement* loop) const
+void noose::rotateAndExtend(SpriteChainElement* rope, SpriteChainElement* loop) const
 {
 	auto localElongation = ropeElongation;
 	if (currentAction == relax)
@@ -233,7 +233,7 @@ void Noose::rotateAndExtend(SpriteChainElement* rope, SpriteChainElement* loop) 
 	}
 }
 
-std::vector<SpriteChainElement*> Noose::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> noose::prepareSprites(long long elapsedTime)
 {
 	std::vector<SpriteChainElement*> result = {};
 	auto ropeSprite = new SpriteChainElement(PackTag::craftObjects, PackPart::noose, Direction::DOWN, 3, position, {conditionalSizeUnits.x, 30}, {0, 0}, color);

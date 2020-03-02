@@ -167,7 +167,7 @@ void WorldHandler::Load()
 			if (saveName == deerchant("loadInit", Vector2f(0, 0)).getToSaveName())
 				worldGenerator.initializeDynamicItem(Tag::hero, Vector2f(posX, posY), "");
 			else
-				if (saveName == Wolf("loadInit", Vector2f(0, 0)).getToSaveName())
+				if (saveName == wolf("loadInit", Vector2f(0, 0)).getToSaveName())
 					worldGenerator.initializeDynamicItem(Tag::wolf, Vector2f(posX, posY), "");
 	}
 

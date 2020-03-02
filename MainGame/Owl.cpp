@@ -1,11 +1,11 @@
-#include "Owl.h"
+#include "owl.h"
 
 #include "Fern.h"
 #include "ForestTree.h"
 
 using namespace sf;
 
-Owl::Owl(const std::string& objectName, Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
+owl::owl(const std::string& objectName, Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
 {
 	conditionalSizeUnits = { 280, 200 };
 	currentSprite[0] = 1;
@@ -28,17 +28,17 @@ Owl::Owl(const std::string& objectName, Vector2f centerPosition) : neutral_mob(o
 	zCoord = 10;
 }
 
-Owl::~Owl()
+owl::~owl()
 = default;
 
-Vector2f Owl::calculateTextureOffset()
+Vector2f owl::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
 	return { textureBox.width / 2, textureBox.height * 7 / 8 };
 }
 
-void Owl::setTarget(DynamicObject& object)
+void owl::setTarget(DynamicObject& object)
 {	
 	if (object.tag == Tag::noose || currentAction == absorbs)
 		return;
@@ -52,7 +52,7 @@ void Owl::setTarget(DynamicObject& object)
 	}
 }
 
-void Owl::behaviorWithStatic(WorldObject* target, long long elapsedTime)
+void owl::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
 	if (currentAction == absorbs)
 		return;
@@ -79,7 +79,7 @@ void Owl::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 	}
 }
 
-void Owl::behavior(long long elapsedTime)
+void owl::behavior(long long elapsedTime)
 {
 	endingPreviousAction();
 	fightInteract(elapsedTime);
@@ -167,17 +167,17 @@ void Owl::behavior(long long elapsedTime)
 	}
 }
 
-Vector2f Owl::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f owl::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int Owl::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int owl::getBuildType(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
 
-void Owl::endingPreviousAction()
+void owl::endingPreviousAction()
 {
 	if (lastAction == commonHit)
 		currentAction = relax;
@@ -190,12 +190,12 @@ void Owl::endingPreviousAction()
 	lastAction = relax;
 }
 
-void Owl::jerk(float power, float deceleration, Vector2f destinationPoint)
+void owl::jerk(float power, float deceleration, Vector2f destinationPoint)
 {
 	return;
 }
 
-std::vector<SpriteChainElement*> Owl::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> owl::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*spriteChainElement fullSprite;

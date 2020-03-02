@@ -3,7 +3,7 @@
 #include "Brazier.h"
 #include "EmptyObject.h"
 #include "Helper.h"
-#include "Noose.h"
+#include "noose.h"
 #include "PickedObject.h"
 
 using namespace sf;
@@ -722,7 +722,7 @@ void deerchant::endingPreviousAction()
 					pickedItem->pickUp(&this->bags);
 			}
 			
-			auto nooseItem = dynamic_cast<Noose*>(boundTarget);
+			auto nooseItem = dynamic_cast<noose*>(boundTarget);
 			if (nooseItem)
 			{
 				const auto placedNoose = new std::vector<std::pair<Tag, int>>({ (std::make_pair(Tag::noose, 1)) });

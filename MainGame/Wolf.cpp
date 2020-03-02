@@ -1,8 +1,8 @@
-#include "Wolf.h"
+#include "wolf.h"
 
 using namespace sf;
 
-Wolf::Wolf(std::string objectName, Vector2f centerPosition) : neutral_mob(std::move(objectName), centerPosition)
+wolf::wolf(std::string objectName, Vector2f centerPosition) : neutral_mob(std::move(objectName), centerPosition)
 {
 	conditionalSizeUnits = { 250, 200 };
 	currentSprite[0] = 1;
@@ -24,47 +24,47 @@ Wolf::Wolf(std::string objectName, Vector2f centerPosition) : neutral_mob(std::m
 	toSaveName = "wolf";
 }
 
-Wolf::~Wolf()
+wolf::~wolf()
 = default;
 
-void Wolf::setTarget(DynamicObject& object)
+void wolf::setTarget(DynamicObject& object)
 {
 	return;
 }
 
-void Wolf::behaviorWithStatic(WorldObject* target, long long elapsedTime)
+void wolf::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
 
 }
 
-void Wolf::behavior(long long elapsedTime)
+void wolf::behavior(long long elapsedTime)
 {
 	fightInteract(elapsedTime);
 }
 
-Vector2f Wolf::calculateTextureOffset()
+Vector2f wolf::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
 	return { textureBox.width / 2, textureBox.height * 7 / 8 };
 }
 
-Vector2f Wolf::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f wolf::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int Wolf::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int wolf::getBuildType(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
 
-void Wolf::jerk(float power, float deceleration, Vector2f destinationPoint)
+void wolf::jerk(float power, float deceleration, Vector2f destinationPoint)
 {
 	return;
 }
 
-std::vector<SpriteChainElement*> Wolf::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> wolf::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*std::string spriteName;

@@ -5,11 +5,11 @@
 
 using namespace sf;
 
-class Noose : public DynamicObject
+class noose : public DynamicObject
 {
 public:
-	Noose(const std::string& objectName, Vector2f centerPosition, WorldObject* owner);
-	~Noose();
+	noose(const std::string& objectName, Vector2f centerPosition, WorldObject* owner);
+	~noose();
 	Vector2f calculateTextureOffset() override;
 	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;
     void behaviorWithDynamic(DynamicObject* target, long long elapsedTime) override;

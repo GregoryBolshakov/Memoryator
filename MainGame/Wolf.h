@@ -5,7 +5,7 @@
 
 using namespace sf;
 
-class Wolf : public neutral_mob
+class wolf : public neutral_mob
 {
 	float timeForNewSprite;
 
@@ -14,8 +14,8 @@ class Wolf : public neutral_mob
 	float timeAfterHit = 0, timeForNewHit = 100000;
 	int strikingSprite = 4;
 public:
-	Wolf(std::string objectName, Vector2f centerPosition);
-	~Wolf();
+	wolf(std::string objectName, Vector2f centerPosition);
+	~wolf();
 	Vector2f calculateTextureOffset() override;
 	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;
 	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;

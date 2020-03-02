@@ -30,17 +30,17 @@
 
 #include "monster.h"
 #include "deerchant.h"
-#include "Wolf.h"
+#include "wolf.h"
 #include "hare.h"
 #include "deer.h"
 #include "bear.h"
-#include "Owl.h"
-#include "OwlBoss.h"
+#include "owl.h"
+#include "owl_boss.h"
 #include "nightmare_first.h"
 #include "nightmare_second.h"
 #include "nightmare_third.h"
-#include "Noose.h"
-#include "ClapWhirl.h"
+#include "noose.h"
+//#include "clap_whirl.h"
 #include <unordered_map>
 
 enum Biomes { SwampyTrees = 1, DarkWoods = 2, BirchGrove = 3, FlowerValley = 4 };

@@ -13,9 +13,6 @@
     <ClCompile Include="Spawn.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="Wolf.cpp">
-      <Filter>Creatures</Filter>
-    </ClCompile>
     <ClCompile Include="Grass.cpp">
       <Filter>Ground</Filter>
     </ClCompile>
@@ -50,14 +47,8 @@
     <ClCompile Include="HeroBookPage.cpp">
       <Filter>HeroBook</Filter>
     </ClCompile>
-    <ClCompile Include="OwlBoss.cpp">
-      <Filter>Creatures</Filter>
-    </ClCompile>
     <ClCompile Include="Mugwort.cpp">
       <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Noose.cpp">
-      <Filter>DynamicObjects</Filter>
     </ClCompile>
     <ClCompile Include="HeroBag.cpp">
       <Filter>Systems</Filter>
@@ -71,9 +62,6 @@
     <ClCompile Include="Fern.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="Owl.cpp">
-      <Filter>Creatures</Filter>
-    </ClCompile>
     <ClCompile Include="Totem.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
@@ -82,9 +70,6 @@
     </ClCompile>
     <ClCompile Include="ObjectInitializer.cpp">
       <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="ClapWhirl.cpp">
-      <Filter>DynamicObjects</Filter>
     </ClCompile>
     <ClCompile Include="WorldHandler.cpp">
       <Filter>World</Filter>
@@ -213,6 +198,21 @@
     <ClCompile Include="nightmare_third.cpp">
       <Filter>Creatures</Filter>
     </ClCompile>
+    <ClCompile Include="owl.cpp">
+      <Filter>Creatures</Filter>
+    </ClCompile>
+    <ClCompile Include="owl_boss.cpp">
+      <Filter>Creatures</Filter>
+    </ClCompile>
+    <ClCompile Include="wolf.cpp">
+      <Filter>Creatures</Filter>
+    </ClCompile>
+    <ClCompile Include="clap_whirl.cpp">
+      <Filter>DynamicObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="noose.cpp">
+      <Filter>DynamicObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EventHandler.h" />
@@ -226,9 +226,6 @@
     </ClInclude>
     <ClInclude Include="Spawn.h">
       <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Wolf.h">
-      <Filter>Creatures</Filter>
     </ClInclude>
     <ClInclude Include="Grass.h">
       <Filter>Ground</Filter>
@@ -264,14 +261,8 @@
     <ClInclude Include="HeroBookPage.h">
       <Filter>HeroBook</Filter>
     </ClInclude>
-    <ClInclude Include="OwlBoss.h">
-      <Filter>Creatures</Filter>
-    </ClInclude>
     <ClInclude Include="Mugwort.h">
       <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Noose.h">
-      <Filter>DynamicObjects</Filter>
     </ClInclude>
     <ClInclude Include="HeroBag.h">
       <Filter>Systems</Filter>
@@ -286,9 +277,6 @@
     <ClInclude Include="Fern.h">
       <Filter>Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="Owl.h">
-      <Filter>Creatures</Filter>
-    </ClInclude>
     <ClInclude Include="Totem.h">
       <Filter>Terrain</Filter>
     </ClInclude>
@@ -297,9 +285,6 @@
     </ClInclude>
     <ClInclude Include="ObjectInitializer.h">
       <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="ClapWhirl.h">
-      <Filter>DynamicObjects</Filter>
     </ClInclude>
     <ClInclude Include="WorldHandler.h">
       <Filter>World</Filter>
@@ -433,6 +418,21 @@
     </ClInclude>
     <ClInclude Include="nightmare_third.h">
       <Filter>Creatures</Filter>
+    </ClInclude>
+    <ClInclude Include="owl.h">
+      <Filter>Creatures</Filter>
+    </ClInclude>
+    <ClInclude Include="owl_boss.h">
+      <Filter>Creatures</Filter>
+    </ClInclude>
+    <ClInclude Include="wolf.h">
+      <Filter>Creatures</Filter>
+    </ClInclude>
+    <ClInclude Include="clap_whirl.h">
+      <Filter>DynamicObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="noose.h">
+      <Filter>DynamicObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

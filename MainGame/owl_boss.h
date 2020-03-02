@@ -5,7 +5,7 @@
 
 using namespace sf;
 
-class OwlBoss : public DynamicObject
+class owl_boss : public DynamicObject
 {
 private:
 	float timeForNewSprite = 0;
@@ -15,8 +15,8 @@ private:
 	int flapsBeforeJerkCount = 4;
 	bool wasHit = false;
 public:
-	OwlBoss(std::string objectName, Vector2f centerPosition);
-	~OwlBoss();
+	owl_boss(std::string objectName, Vector2f centerPosition);
+	~owl_boss();
 	Vector2f calculateTextureOffset() override;
 	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;
 	void behaviorWithDynamic(DynamicObject* target, long long elapsedTime) override;

@@ -1,8 +1,8 @@
-#include "OwlBoss.h"
+#include "owl_boss.h"
 
 using namespace sf;
 
-OwlBoss::OwlBoss(std::string objectName, Vector2f centerPosition) : DynamicObject(std::move(objectName), centerPosition)
+owl_boss::owl_boss(std::string objectName, Vector2f centerPosition) : DynamicObject(std::move(objectName), centerPosition)
 {
 	conditionalSizeUnits = { 600, 600 };
 	currentSprite[0] = 1;
@@ -24,15 +24,15 @@ OwlBoss::OwlBoss(std::string objectName, Vector2f centerPosition) : DynamicObjec
 	toSaveName = "monster";
 }
 
-OwlBoss::~OwlBoss()
+owl_boss::~owl_boss()
 = default;
 
-void OwlBoss::behaviorWithStatic(WorldObject* target, long long elapsedTime)
+void owl_boss::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
 
 }
 
-void OwlBoss::behavior(long long elapsedTime)
+void owl_boss::behavior(long long elapsedTime)
 {
 	fightInteract(elapsedTime);
 	//jerk interaction
@@ -78,20 +78,20 @@ void OwlBoss::behavior(long long elapsedTime)
 	//--------------------------
 }
 
-Vector2f OwlBoss::calculateTextureOffset()
+Vector2f owl_boss::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
 	return { textureBox.width / 2, textureBox.height * 7 / 8 };
 }
 
-void OwlBoss::setTarget(DynamicObject& object)
+void owl_boss::setTarget(DynamicObject& object)
 {
 	if (object.tag == Tag::hero)
 		return; //targetPosition = object.getPosition();
 }
 
-void OwlBoss::behaviorWithDynamic(DynamicObject* target, const long long elapsedTime)
+void owl_boss::behaviorWithDynamic(DynamicObject* target, const long long elapsedTime)
 {
 	debugInfo = std::to_string(Helper::getDist(this->position, movePosition) / jerkDistance * 1000.0f);
 	if (healthPoint <= 0)
@@ -153,17 +153,17 @@ void OwlBoss::behaviorWithDynamic(DynamicObject* target, const long long elapsed
 	}
 }
 
-Vector2f OwlBoss::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f owl_boss::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int OwlBoss::getBuildType(Vector2f, Vector2f)
+int owl_boss::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-void OwlBoss::jerk(const float power, const float deceleration, const Vector2f destinationPoint)
+void owl_boss::jerk(const float power, const float deceleration, const Vector2f destinationPoint)
 {
 	this->jerkPower = power;
 	this->jerkDeceleration = deceleration;
@@ -175,12 +175,12 @@ void OwlBoss::jerk(const float power, const float deceleration, const Vector2f d
 	movePosition = Vector2f(destinationPoint);
 }
 
-void OwlBoss::fightInteract(const long long elapsedTime, DynamicObject* target)
+void owl_boss::fightInteract(const long long elapsedTime, DynamicObject* target)
 {
 	moveSystem.pushAway(elapsedTime);
 }
 
-std::vector<SpriteChainElement*> OwlBoss::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> owl_boss::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*spriteChainElement legsSprite, bodySprite, fullSprite;
