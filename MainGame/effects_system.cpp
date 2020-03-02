@@ -41,15 +41,15 @@ void effects_system::resetEffects(const std::vector<std::string>& removeList)
 }
 
 
-void effects_system::addEffect(Effects effect, Drawable* elem, const std::string& name, const long long duration)
+void effects_system::add_effect(const effects effect_kind, Drawable* elem, const std::string& name, const long long duration)
 {
-	switch (effect)
+	switch (effect_kind)
 	{
-		case Effects::transparencyRemoval:
+		case effects::transparencyRemoval:
 			if (names.count(name) == 0)
 			{
 				names.insert(name);
-				transparencyRemoval[name] = Effect(elem, duration);
+				transparencyRemoval[name] = effect(elem, duration);
 				auto sprite = dynamic_cast<Sprite*>(transparencyRemoval.at(name).body);
 				if (sprite)
 					sprite->setColor(Color(sprite->getColor().r, sprite->getColor().g, sprite->getColor().b, 0));

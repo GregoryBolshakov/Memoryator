@@ -23,7 +23,7 @@ deer::deer(const std::string& objectName, const Vector2f centerPosition) : neutr
 	timeAfterHitSelf = timeForNewHitSelf;
 	timeForNewHit = 10e6;
 	toSaveName = "deer";
-	tag = Tag::deer;
+	tag = entity_tag::deer;
 }
 
 deer::~deer()
@@ -268,7 +268,7 @@ Vector2f deer::getHeadPosition()
 
 std::vector<sprite_chain_element*> deer::prepareSprites(long long elapsedTime)
 {
-	auto body = new sprite_chain_element(PackTag::deer, PackPart::stand, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
+	auto body = new sprite_chain_element(pack_tag::deer, pack_part::stand, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	animationSpeed = 10;
 
 	auto spriteDirection = direction_system::cutDiagonals(directionSystem.lastDirection);
@@ -295,7 +295,7 @@ std::vector<sprite_chain_element*> deer::prepareSprites(long long elapsedTime)
 	case commonHit:
 		{
 			animationLength = 6;
-			body->packPart = PackPart::hunt;
+			body->packPart = pack_part::hunt;
 			break;
 		}
 	case dead:
@@ -309,7 +309,7 @@ std::vector<sprite_chain_element*> deer::prepareSprites(long long elapsedTime)
 	case moveSlowly:
 		{
 			animationLength = 7;
-			body->packPart = PackPart::move;
+			body->packPart = pack_part::move;
 			break;
 		}
 	default: ;

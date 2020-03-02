@@ -9,7 +9,7 @@ mushroom::mushroom(std::string objectName, const Vector2f centerPosition, const 
 	this->intangible = true;
 	toSaveName = "mushroom";
 	mushroom::setType(typeOfObject);
-	tag = Tag::mushroom;
+	tag = entity_tag::mushroom;
 	mirrored = bool(rand() % 2);
 }
 
@@ -76,19 +76,19 @@ int mushroom::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<sprite_chain_element*> mushroom::prepareSprites(long long elapsedTime)
 {
-	sprite_chain_element* body = new sprite_chain_element(PackTag::darkWoods, PackPart::mushroom, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	sprite_chain_element* body = new sprite_chain_element(pack_tag::darkWoods, pack_part::mushroom, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	body->unscaled = true;
 
 	if (typeOfObject >= 1 && typeOfObject <= 3)
-		body->packTag = PackTag::birchGrove;
+		body->packTag = pack_tag::birchGrove;
 	if (typeOfObject >= 4 && typeOfObject <= 12)
 	{
-		body->packTag = PackTag::darkWoods;
+		body->packTag = pack_tag::darkWoods;
 		body->number -= 3;
 	}
 	if (typeOfObject >= 13 && typeOfObject <= 16)
 	{
-		body->packTag = PackTag::swampyTrees;
+		body->packTag = pack_tag::swampyTrees;
 		body->number -= 12;
 	}
 

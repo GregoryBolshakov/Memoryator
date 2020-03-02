@@ -6,12 +6,12 @@
 
 using namespace  sf;
 
-enum class Effects { transparencyRemoval = 1 };
+enum class effects { transparencyRemoval = 1 };
 
-struct Effect
+struct effect
 {
-	Effect() : body(nullptr), duration(0) {}
-	Effect(Drawable* body, const long long duration) : body(body), duration(duration) {}
+	effect() : body(nullptr), duration(0) {}
+	effect(Drawable* body, const long long duration) : body(body), duration(duration) {}
 	Drawable* body;
 	long long duration;
 	long long timePassed = 0;
@@ -25,12 +25,12 @@ public:
 	~effects_system();
 	static void init();
 	void resetEffects(const std::vector<std::string>& removeList);
-	void addEffect(Effects effect, Drawable* elem, const std::string& name, long long duration = defaultDuration);
+	void add_effect(effects effect_kind, Drawable* elem, const std::string& name, long long duration = defaultDuration);
 	void interact(long long elapsedTime);
 
 	static long long defaultDuration;
 private:
-	std::unordered_map<std::string, Effect> transparencyRemoval;
+	std::unordered_map<std::string, effect> transparencyRemoval;
 	std::unordered_set<std::string> names;
 
 };

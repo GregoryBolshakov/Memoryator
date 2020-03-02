@@ -19,7 +19,7 @@ void inventory_system::initMaxCounts(const std::string& filePath)
 
 	auto tagNumber = 508, maxCount = 1;
 	while (file >> tagNumber >> maxCount)	
-		hero_bag::itemsMaxCount[Tag(tagNumber)] = maxCount;
+		hero_bag::itemsMaxCount[entity_tag(tagNumber)] = maxCount;
 
 	file.close();
 }
@@ -27,7 +27,7 @@ void inventory_system::initMaxCounts(const std::string& filePath)
 void inventory_system::init()
 {
 	dropZoneRadius = helper::GetScreenSize().y * 2 / 7;
-	heldItem.content = { Tag::emptyCell, 0 };
+	heldItem.content = { entity_tag::emptyCell, 0 };
 	dropZoneTexture.loadFromFile("Game/inventorySprites/dropZone.png");
 	dropZone.setTexture(dropZoneTexture); dropZone.setScale(helper::GetScreenSize().x / dropZoneTexture.getSize().x, helper::GetScreenSize().y / dropZoneTexture.getSize().y);
 	bagPosDot.setRadius(helper::GetScreenSize().y / 288);
@@ -141,7 +141,7 @@ void inventory_system::interact(const long long elapsedTime)
 		}		
 	}
 
-	if (heldItem.content.first != Tag::emptyCell)
+	if (heldItem.content.first != entity_tag::emptyCell)
 	{
 		const auto shiftVector = Vector2f(Mouse::getPosition().x - heldItem.position.x, Mouse::getPosition().y - heldItem.position.y);
 		heldItem.position.x += shiftVector.x; heldItem.position.y += shiftVector.y;
@@ -233,23 +233,23 @@ void inventory_system::onMouseUp()
 		//-------------------
 
 		// put cursor item to bag
-		if (heldItem.content.first != Tag::emptyCell)
+		if (heldItem.content.first != entity_tag::emptyCell)
 		{
 			const auto curIndex = bag.getSelectedCell(mousePos);
 			if (curIndex == -1)
 				continue;
 			auto& item = bag.cells[curIndex];
-			if (item.content.first == Tag::emptyCell || item.content.first == heldItem.content.first)
+			if (item.content.first == entity_tag::emptyCell || item.content.first == heldItem.content.first)
 			{
 				item.content.first = heldItem.content.first;
 				item.content.second += heldItem.content.second;
-				if (item.content.second > hero_bag::itemsMaxCount.at(Tag(item.content.first)))
+				if (item.content.second > hero_bag::itemsMaxCount.at(entity_tag(item.content.first)))
 				{
-					heldItem.content.second = item.content.second % hero_bag::itemsMaxCount.at(Tag(item.content.first));
-					item.content.second = hero_bag::itemsMaxCount.at(Tag(item.content.first));
+					heldItem.content.second = item.content.second % hero_bag::itemsMaxCount.at(entity_tag(item.content.first));
+					item.content.second = hero_bag::itemsMaxCount.at(entity_tag(item.content.first));
 				}
 				else
-					heldItem.content = { Tag::emptyCell, 0 };
+					heldItem.content = { entity_tag::emptyCell, 0 };
 				break;
 			}
 			else
@@ -266,7 +266,7 @@ void inventory_system::onMouseUp()
 			{
 				heldItem.content = bag.cells[curIndex].content;
 				heldItem.position = bag.cells[curIndex].position;
-				bag.cells[curIndex].content = { Tag::emptyCell, 0 };
+				bag.cells[curIndex].content = { entity_tag::emptyCell, 0 };
 			}
 		}
 		//-----------------------
@@ -274,7 +274,7 @@ void inventory_system::onMouseUp()
 	currentMovingBag = -1;
 }
 
-std::vector<drawable_chain_element*> inventory_system::prepareSprites(long long elapsedTime, std::map<PackTag, sprite_pack>* packsMap)
+std::vector<drawable_chain_element*> inventory_system::prepareSprites(long long elapsedTime, std::map<pack_tag, sprite_pack>* packsMap)
 {
 	std::vector<drawable_chain_element*> result = {};
 	usedMouse = false;
@@ -293,7 +293,7 @@ std::vector<drawable_chain_element*> inventory_system::prepareSprites(long long 
 			currentMovingBag = cnt;
 		const auto curIndex = bag.getSelectedCell(mousePos);
 
-		if (bag.readyToChangeState || heldItem.content.first != Tag::emptyCell || curIndex != -1)
+		if (bag.readyToChangeState || heldItem.content.first != entity_tag::emptyCell || curIndex != -1)
 			usedMouse = true;
 
 		// dropping bag
@@ -302,7 +302,7 @@ std::vector<drawable_chain_element*> inventory_system::prepareSprites(long long 
 			cursorTurnedOn = true;
 			if (cursorText.empty())
 			{
-				effectsSystem.addEffect(Effects::transparencyRemoval, &dropZone, "dropZone", long(3 * 10e4));
+				effectsSystem.add_effect(effects::transparencyRemoval, &dropZone, "dropZone", long(3 * 10e4));
 			}
 			cursorText = "throw away";
 			cursorTextPos = bag.getPosition();
@@ -322,12 +322,12 @@ std::vector<drawable_chain_element*> inventory_system::prepareSprites(long long 
 			const auto item = cell;
 
 			//drawing cell background
-			auto iconBackground = sprite_pack::tagToIcon(Tag::emptyObject, false);
+			auto iconBackground = sprite_pack::tagToIcon(entity_tag::emptyObject, false);
 			iconBackground->position = item.position;
 			result.push_back(iconBackground);
 			//-----------------------
 
-			if (cell.content.first == Tag::emptyCell)
+			if (cell.content.first == entity_tag::emptyCell)
 				continue;
 
 			auto icon = sprite_pack::tagToIcon(item.content.first, helper::isIntersects(mousePos, cell.position, sprite_pack::iconSize.x / 2), 1);			
@@ -347,7 +347,7 @@ std::vector<drawable_chain_element*> inventory_system::prepareSprites(long long 
 	//----------
 
 	//drawing held item
-	if (heldItem.content.first != Tag::emptyCell)
+	if (heldItem.content.first != entity_tag::emptyCell)
 	{
 		auto heldItemIcon = sprite_pack::tagToIcon(heldItem.content.first, true, 1);
 		heldItemIcon->position = heldItem.position;
@@ -377,7 +377,7 @@ std::vector<drawable_chain_element*> inventory_system::prepareSprites(long long 
 			sf::Color(0, 0, 0, 180),
 			cursorText, 
 			text_chain_element::defaultCharacterSize * 1.5f));
-		result.push_back(new sprite_chain_element(PackTag::inventory, PackPart::areas, Direction::DOWN, 2, { 0, 0 }, helper::GetScreenSize()));
+		result.push_back(new sprite_chain_element(pack_tag::inventory, pack_part::areas, Direction::DOWN, 2, { 0, 0 }, helper::GetScreenSize()));
 	}
 	//if (bagPosDot.getPosition() != Vector2f(0, 0))
 		//window.draw(bagPosDot);

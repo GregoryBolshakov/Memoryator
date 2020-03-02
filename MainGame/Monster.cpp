@@ -30,7 +30,7 @@ void monster::behavior(const long long elapsedTime)
 void monster::setTarget(dynamic_object& object)
 {
 	boundTarget = nullptr;
-	if (object.tag == Tag::hero)
+	if (object.tag == entity_tag::hero)
 		return; //targetPosition = object.getPosition();
 }
 
@@ -46,7 +46,7 @@ void monster::behaviorWithDynamic(dynamic_object* target, const long long elapse
 	if (helper::getDist(position, target->getPosition()) <= radius + target->getRadius())
 		moveSystem.pushByBumping(target->getPosition(), target->getRadius(), target->getMoveSystem().canCrashIntoDynamic);
 
-	if (target->tag != Tag::hero)
+	if (target->tag != entity_tag::hero)
 		return;
 
 	if (helper::getDist(target->getPosition(), position) > sightRange)

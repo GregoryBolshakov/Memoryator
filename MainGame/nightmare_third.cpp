@@ -15,7 +15,7 @@ nightmare_third::nightmare_third(std::string objectName, Vector2f centerPosition
 	timeForNewHit = long(1e6);
 	timeAfterHit = timeForNewHit;
 	toSaveName = "nightmare3_";
-	tag = Tag::nightmare3;
+	tag = entity_tag::nightmare3;
 }
 
 
@@ -66,7 +66,7 @@ void nightmare_third::onSpriteChange()
 	{
 		birth_dynamic_info whirl;
 		whirl.position = position;
-		whirl.tag = Tag::clapWhirl;
+		whirl.tag = entity_tag::clapWhirl;
 		whirl.owner = this;
 		birthDynamics.push(whirl);
 	}

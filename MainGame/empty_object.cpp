@@ -3,7 +3,7 @@
 
 empty_object::empty_object(std::string objectName, Vector2f centerPosition) : world_object(std::move(objectName), centerPosition)
 {
-	tag = Tag::emptyObject;
+	tag = entity_tag::emptyObject;
 }
 
 

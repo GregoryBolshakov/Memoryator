@@ -87,7 +87,7 @@ Vector2f owl_boss::calculateTextureOffset()
 
 void owl_boss::setTarget(dynamic_object& object)
 {
-	if (object.tag == Tag::hero)
+	if (object.tag == entity_tag::hero)
 		return; //targetPosition = object.getPosition();
 }
 
@@ -101,7 +101,7 @@ void owl_boss::behaviorWithDynamic(dynamic_object* target, const long long elaps
 		return;
 	}
 
-	if (target->tag != Tag::hero)
+	if (target->tag != entity_tag::hero)
 		return;
 
 	directionSystem.side = direction_system::calculateSide(position, movePosition, elapsedTime);

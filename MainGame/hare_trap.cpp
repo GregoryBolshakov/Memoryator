@@ -10,8 +10,8 @@ hare_trap::hare_trap(std::string objectName, const Vector2f centerPosition, cons
 	toSaveName = "hareTrap";
 	hare_trap::setType(typeOfObject);
 	currentSprite[0] = 1;
-	id = Tag::hareTrap;
-	tag = Tag::hareTrap;
+	id = entity_tag::hareTrap;
+	tag = entity_tag::hareTrap;
 	inventory = hero_bag::emptyInventory;
 }
 
@@ -52,7 +52,7 @@ int hare_trap::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<sprite_chain_element*> hare_trap::prepareSprites(long long elapsedTime)
 {
-	const auto body = new sprite_chain_element(PackTag::craftObjects, PackPart::hareTrap, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	const auto body = new sprite_chain_element(pack_tag::craftObjects, pack_part::hareTrap, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	body->isBackground = true;
 
 	return { body };

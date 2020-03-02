@@ -12,16 +12,16 @@ enum state { common = 1, absorbed = 2, constructed = 3 };
 
 struct birth_static_info
 {
-	Tag tag;
+	entity_tag tag;
 	Vector2f position = { 0,0 };
 	int typeOfObject = 1;
 	int count = 1;
-	std::vector<std::pair<Tag, int>> inventory;
+	std::vector<std::pair<entity_tag, int>> inventory;
 };
 
 struct  birth_dynamic_info
 {
-	Tag tag;
+	entity_tag tag;
 	Vector2f position = { 0,0 };
 	world_object* owner = nullptr;
 };
@@ -82,9 +82,9 @@ public:
 	virtual void initPedestal();
 
 	sf::Color color = sf::Color(255, 255, 255);
-	std::vector<std::pair<Tag, int>> inventory = {};
+	std::vector<std::pair<entity_tag, int>> inventory = {};
 	static Vector2f microBlockSize;
-	Tag tag = Tag::emptyObject;
+	entity_tag tag = entity_tag::emptyObject;
 protected:
 	int typeOfObject{};
 	int zCoord = 1;

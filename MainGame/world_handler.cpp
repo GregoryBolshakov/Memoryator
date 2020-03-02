@@ -8,7 +8,7 @@
 
 using namespace sf;
 
-world_handler::world_handler(const int width, const int height, std::map<PackTag, sprite_pack>* packsMap)
+world_handler::world_handler(const int width, const int height, std::map<pack_tag, sprite_pack>* packsMap)
 {
     this->packsMap = packsMap;
 	world_object::microBlockSize = microBlockSize;
@@ -162,13 +162,13 @@ void world_handler::Load()
 		fin >> saveName >> posX >> posY;
 
 		if (saveName == nightmare_first("loadInit", Vector2f(0, 0)).getToSaveName())
-			worldGenerator.initializeDynamicItem(Tag::monster, Vector2f(posX, posY), "");
+			worldGenerator.initializeDynamicItem(entity_tag::monster, Vector2f(posX, posY), "");
 		else
 			if (saveName == deerchant("loadInit", Vector2f(0, 0)).getToSaveName())
-				worldGenerator.initializeDynamicItem(Tag::hero, Vector2f(posX, posY), "");
+				worldGenerator.initializeDynamicItem(entity_tag::hero, Vector2f(posX, posY), "");
 			else
 				if (saveName == wolf("loadInit", Vector2f(0, 0)).getToSaveName())
-					worldGenerator.initializeDynamicItem(Tag::wolf, Vector2f(posX, posY), "");
+					worldGenerator.initializeDynamicItem(entity_tag::wolf, Vector2f(posX, posY), "");
 	}
 
 	fin >> num;
@@ -177,16 +177,16 @@ void world_handler::Load()
 		fin >> saveName >> typeOfObject >> posX >> posY;
 
 		if (saveName == ground_connection("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
-			worldGenerator.initializeStaticItem(Tag::groundConnection, Vector2f(posX, posY), typeOfObject, "", 1);
+			worldGenerator.initializeStaticItem(entity_tag::groundConnection, Vector2f(posX, posY), typeOfObject, "", 1);
 		else
 			if (saveName == ground("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
-				worldGenerator.initializeStaticItem(Tag::ground, Vector2f(posX, posY), typeOfObject, "", 1);
+				worldGenerator.initializeStaticItem(entity_tag::ground, Vector2f(posX, posY), typeOfObject, "", 1);
 			else
 				if (saveName == forest_tree("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
-					worldGenerator.initializeStaticItem(Tag::tree, Vector2f(posX, posY), typeOfObject, "", 1);
+					worldGenerator.initializeStaticItem(entity_tag::tree, Vector2f(posX, posY), typeOfObject, "", 1);
 				else
 					if (saveName == grass("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
-						worldGenerator.initializeStaticItem(Tag::grass, Vector2f(posX, posY), typeOfObject, "", 1);																
+						worldGenerator.initializeStaticItem(entity_tag::grass, Vector2f(posX, posY), typeOfObject, "", 1);																
 	}
 
 	fin.close();
@@ -260,7 +260,7 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 			helper::getDist(mousePos, visibleItem->getPosition()) <= visibleItem->getRadius())
 		{
 			auto itemCapacity = visibleItem->getConditionalSizeUnits().x + visibleItem->getConditionalSizeUnits().y;
-			if (visibleItem->tag == Tag::brazier)
+			if (visibleItem->tag == entity_tag::brazier)
 				itemCapacity /= 10;
 			float distanceToItemCenter;
 			if (!visibleItem->isBackground)
@@ -280,14 +280,14 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 				else
 					switch (visibleItem->tag)
 					{
-					case Tag::tree:
+					case entity_tag::tree:
 						{
 							mouseDisplayName = "Absorb";
 							break;
 						}
-					case Tag::brazier:
+					case entity_tag::brazier:
 					{					
-						if (inventorySystem.getHeldItem().content.first != Tag::emptyCell &&
+						if (inventorySystem.getHeldItem().content.first != entity_tag::emptyCell &&
 							helper::getDist(brazier->getPlatePosition(), mousePos) <= brazier->getPlateRadius())
 						{
 							if (helper::getDist(brazier->getPlatePosition(), focusedObject->getPosition()) <= brazier->getPlateRadius() + focusedObject->getRadius())
@@ -297,16 +297,16 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 						}
 						break;
 					}
-					case Tag::hare:
-					case Tag::owl:
+					case entity_tag::hare:
+					case entity_tag::owl:
 						{
-							if (inventorySystem.getHeldItem().content.first == Tag::inkyBlackPen)
+							if (inventorySystem.getHeldItem().content.first == entity_tag::inkyBlackPen)
 								mouseDisplayName = "Sketch";
 							else
 								mouseDisplayName = "Catch up";
 							break;
 						}
-					case Tag::fern:
+					case entity_tag::fern:
 						{
 							if (!visibleItem->inventory.empty())
 								mouseDisplayName = "Open";
@@ -314,12 +314,12 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 								mouseDisplayName = "Pick up";
 							break;
 						}
-					case Tag::yarrow:
-					case Tag::chamomile:				
-					case Tag::mugwort:
-					case Tag::noose:
-					case Tag::hareTrap:
-					case Tag::droppedLoot:
+					case entity_tag::yarrow:
+					case entity_tag::chamomile:				
+					case entity_tag::mugwort:
+					case entity_tag::noose:
+					case entity_tag::hareTrap:
+					case entity_tag::droppedLoot:
 						{
 							mouseDisplayName = "Pick up";
 							break;
@@ -385,14 +385,14 @@ void world_handler::setItemFromBuildSystem()
 	if (!(buildSystem.instantBuild || focusedObject->getCurrentAction() == builds))
 		return;
 
-	if (buildSystem.selectedObject != Tag::emptyCell && buildSystem.buildingPosition != Vector2f(-1, -1))
+	if (buildSystem.selectedObject != entity_tag::emptyCell && buildSystem.buildingPosition != Vector2f(-1, -1))
 	{
 		if (buildSystem.droppedLootIdList.count(buildSystem.selectedObject) > 0)
-			worldGenerator.initializeStaticItem(Tag::droppedLoot, buildSystem.buildingPosition, int(buildSystem.selectedObject), "", 1);
+			worldGenerator.initializeStaticItem(entity_tag::droppedLoot, buildSystem.buildingPosition, int(buildSystem.selectedObject), "", 1);
 		else
 			worldGenerator.initializeStaticItem(buildSystem.selectedObject, buildSystem.buildingPosition, buildSystem.buildType, "", 1);
 
-		if (buildSystem.selectedObject == Tag::totem)
+		if (buildSystem.selectedObject == entity_tag::totem)
 		{
 			if (buildSystem.buildType == 2)
 				buildSystem.clearHareBags(staticGrid.getIndexByPoint(buildSystem.buildingPosition.x, buildSystem.buildingPosition.y), staticGrid, &localTerrain);
@@ -478,7 +478,7 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 		{
 			//staticGrid.setLockedMicroBlocks(dynamicItem, true, true);
 			//dynamicItem->initMicroBlocks();
-			if (dynamicItem->getRouteGenerationAbility() && dynamicItem->laxMovePosition != Vector2f(-1, -1) && dynamicItem->getCurrentAction() != jerking && dynamicItem->tag != Tag::hero)
+			if (dynamicItem->getRouteGenerationAbility() && dynamicItem->laxMovePosition != Vector2f(-1, -1) && dynamicItem->getCurrentAction() != jerking && dynamicItem->tag != entity_tag::hero)
 			{
 				const auto permissibleDistance = 10;			
 				timeAfterNewRoute = 0;

@@ -21,7 +21,7 @@ void neutral_mob::setTarget(dynamic_object& object)
 		distanceToNearest = Helper::getDist(position, object.getPosition());
 	}*/
 
-	if (object.tag == Tag::hero)
+	if (object.tag == entity_tag::hero)
 		boundTarget = &object;
 	}
 

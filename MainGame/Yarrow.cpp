@@ -9,10 +9,10 @@ yarrow::yarrow(std::string objectName, const Vector2f centerPosition, const int 
 	toSaveName = "yarrow";
 	yarrow::setType(typeOfObject);
 	radius = 50;
-	tag = Tag::yarrow;
+	tag = entity_tag::yarrow;
 
 	count = 1;
-	id = Tag::yarrow;
+	id = entity_tag::yarrow;
 }
 
 void yarrow::setType(int typeOfObject)

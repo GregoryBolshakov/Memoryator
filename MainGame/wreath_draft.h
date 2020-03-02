@@ -6,21 +6,21 @@
 
 using namespace sf;
 
-struct DraftInfo
+struct draft_info
 {
-	std::vector<std::pair<Tag, std::pair<int, int>>> plants;
+	std::vector<std::pair<entity_tag, std::pair<int, int>>> plants;
 	std::vector<int> rings;
-	Tag id;
+	entity_tag id;
 };
 
 class wreath_draft
 {
-	DraftInfo originalSetup;
+	draft_info originalSetup;
 public:
 	wreath_draft();
 	~wreath_draft();
-	void init(const DraftInfo& originalSetup);
-	[[nodiscard]] DraftInfo getOriginalSetup() const { return originalSetup; }
+	void init(const draft_info& originalSetup);
+	[[nodiscard]] draft_info getOriginalSetup() const { return originalSetup; }
 
-	DraftInfo currentSetup;
+	draft_info currentSetup;
 };

@@ -11,7 +11,7 @@ rock::rock(std::string objectName, const Vector2f centerPosition, const int type
 	animationSpeed = 10;
 	toSaveName = "rock";
 	rock::setType(typeOfObject);
-	tag = Tag::rock;
+	tag = entity_tag::rock;
 }
 
 void rock::setType(const int typeOfObject)
@@ -220,18 +220,18 @@ int rock::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<sprite_chain_element*> rock::prepareSprites(long long elapsedTime)
 {
-	auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::rock, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::rock, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	if (typeOfObject >= 1 && typeOfObject <= 8)
-		body->packTag = PackTag::birchGrove;
+		body->packTag = pack_tag::birchGrove;
 	if (typeOfObject >= 9 && typeOfObject <= 13)
 	{
-		body->packTag = PackTag::darkWoods;
+		body->packTag = pack_tag::darkWoods;
 		body->number -= 8;
 	}
 	if (typeOfObject >= 14 && typeOfObject <= 18)
 	{
-		body->packTag = PackTag::swampyTrees;
+		body->packTag = pack_tag::swampyTrees;
 		body->number -= 13;
 	}
 

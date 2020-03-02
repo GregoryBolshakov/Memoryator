@@ -9,7 +9,7 @@ ground_connection::ground_connection(std::string objectName, const Vector2f cent
 	isBackground = true;
 	toSaveName = "groundConnection";
 	ground_connection::setType(typeOfObject);
-	tag = Tag::groundConnection;
+	tag = entity_tag::groundConnection;
 }
 
 void ground_connection::setType(int typeOfObject)
@@ -86,16 +86,16 @@ std::vector<sprite_chain_element*> ground_connection::prepareSprites(long long)
 	if (spriteType == 1)
 		spriteType = 5;
 
-	auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::ground, Direction::DOWN, spriteType, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::ground, Direction::DOWN, spriteType, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	
 	body->zCoord = zCoord;
 
 	//if (typeOfObject >= 1 && typeOfObject <= 4)
 		//body->packTag = PackTag::darkWoods;
 	if (typeOfObject >= 5 && typeOfObject <= 8)
-		body->packTag = PackTag::darkWoods;
+		body->packTag = pack_tag::darkWoods;
 	if (typeOfObject >= 9 && typeOfObject <= 12)
-		body->packTag = PackTag::birchGrove;
+		body->packTag = pack_tag::birchGrove;
 
 	body->isBackground = true;
     return { body };

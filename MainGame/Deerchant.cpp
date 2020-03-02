@@ -26,7 +26,7 @@ deerchant::deerchant(std::string objectName, const Vector2f centerPosition) : dy
 	healthPoint = maxHealthPointValue;
 	currentAction = relax;
 	toSaveName = "hero";
-	tag = Tag::hero;
+	tag = entity_tag::hero;
 	moveSystem.canCrashIntoStatic = true;
 
 	for (auto i = 0; i < 3; i++)
@@ -110,7 +110,7 @@ void deerchant::handleInput(const bool usedMouse)
 	if (currentAction == absorbs || currentAction == grab || currentAction == dropping || currentAction == builds || currentAction == jerking)
 		return;
 
-	if (currentAction == throwNoose && heldItem->content != std::make_pair(Tag::noose, 1))
+	if (currentAction == throwNoose && heldItem->content != std::make_pair(entity_tag::noose, 1))
 		changeAction(relax, true, false);
 
 	if (Keyboard::isKeyPressed(Keyboard::Space) && currentAction != jerking && directionSystem.direction != Direction::STAND)
@@ -191,7 +191,7 @@ void deerchant::handleInput(const bool usedMouse)
 		return;
 
 	//define actions
-	if (Mouse::isButtonPressed(Mouse::Left) && heldItem->content.first == Tag::noose)
+	if (Mouse::isButtonPressed(Mouse::Left) && heldItem->content.first == entity_tag::noose)
 	{
 		changeAction(throwNoose, true, false);
 		return;
@@ -432,7 +432,7 @@ void deerchant::behaviorWithStatic(world_object* target, long long elapsedTime)
 	if (!target)
 		return;
 
-	if (target->tag == Tag::wreathTable && helper::getDist(position, target->getPosition()) <= radius + target->getRadius())
+	if (target->tag == entity_tag::wreathTable && helper::getDist(position, target->getPosition()) <= radius + target->getRadius())
 		nearTheTable = true;	
 }
 
@@ -463,7 +463,7 @@ void deerchant::behavior(const long long elapsedTime)
 		boundTarget->isProcessed = true;
 		switch (boundTarget->tag)
 		{
-		case Tag::tree:
+		case entity_tag::tree:
 		{
 			if (boundTarget->getState() == absorbed)
 				break;
@@ -475,7 +475,7 @@ void deerchant::behavior(const long long elapsedTime)
 			stopping(true);
 			break;
 		}
-		case Tag::fern:
+		case entity_tag::fern:
 		{
 			if (!boundTarget->inventory.empty())
 			{
@@ -492,20 +492,20 @@ void deerchant::behavior(const long long elapsedTime)
 			
 			break;
 		}
-		case Tag::chamomile:
-		case Tag::yarrow:		
-		case Tag::mugwort:
-		case Tag::noose:
-		case Tag::droppedLoot:
-		case Tag::hareTrap:
-		case Tag::heroBag:
+		case entity_tag::chamomile:
+		case entity_tag::yarrow:		
+		case entity_tag::mugwort:
+		case entity_tag::noose:
+		case entity_tag::droppedLoot:
+		case entity_tag::hareTrap:
+		case entity_tag::heroBag:
 		{
 			changeAction(grab, true, false);
 			//side = calculateSide(boundTarget->getPosition(), elapsedTime);
 			stopping(true);
 			break;
 		}
-		case Tag::dropPoint:
+		case entity_tag::dropPoint:
 		{		
 			changeAction(dropping, true, false);
 			//side = calculateSide(boundTarget->getPosition(), elapsedTime);
@@ -513,7 +513,7 @@ void deerchant::behavior(const long long elapsedTime)
 			stopping(true);
 			break;
 		}
-		case Tag::buildObject:
+		case entity_tag::buildObject:
 		{
 			changeAction(builds, true, false);
 			//side = calculateSide(boundTarget->getPosition(), elapsedTime);
@@ -550,28 +550,28 @@ void deerchant::onMouseUp(const int currentMouseButton, world_object *mouseSelec
 			boundTarget = nullptr;			
 		}
 		boundTarget = new empty_object("buildItem", mouseWorldPos);
-		boundTarget->tag = Tag::buildObject;
+		boundTarget->tag = entity_tag::buildObject;
 		laxMovePosition = mouseWorldPos;
 		return;
 	}
 
-	if (mouseSelectedObject && mouseSelectedObject->tag == Tag::brazier)
+	if (mouseSelectedObject && mouseSelectedObject->tag == entity_tag::brazier)
 	{
 		auto brazier = dynamic_cast<::brazier*>(mouseSelectedObject);
-		if (heldItem->content.first != Tag::emptyCell &&
+		if (heldItem->content.first != entity_tag::emptyCell &&
 			helper::getDist(brazier->getPlatePosition(), position) <= brazier->getPlateRadius() + radius)
 		{
 			brazier->putItemToCraft(heldItem->content.first);
 			heldItem->content = heldItem->content.second > 1
 				? std::make_pair(heldItem->content.first, heldItem->content.second - 1)
-				: std::make_pair(Tag::emptyCell, 0);
+				: std::make_pair(entity_tag::emptyCell, 0);
 		}
 		return;
 	}
 
 	if (!mouseSelectedObject && heldItem != nullptr)
 	{
-		if (heldItem->content.first != Tag::emptyCell && currentMouseButton == 2)
+		if (heldItem->content.first != entity_tag::emptyCell && currentMouseButton == 2)
 		{
 			if (boundTarget != nullptr)
 			{
@@ -579,7 +579,7 @@ void deerchant::onMouseUp(const int currentMouseButton, world_object *mouseSelec
 				boundTarget = nullptr;				
 			}
 			boundTarget = new empty_object("droppedItem", mouseWorldPos);
-			boundTarget->tag = Tag::dropPoint;
+			boundTarget->tag = entity_tag::dropPoint;
 			laxMovePosition = mouseWorldPos;
 			return;
 		}
@@ -594,7 +594,7 @@ void deerchant::onMouseUp(const int currentMouseButton, world_object *mouseSelec
 					boundTarget = nullptr;
 				}
 				boundTarget = new empty_object("droppedBag", mouseWorldPos);
-				boundTarget->tag = Tag::dropPoint;
+				boundTarget->tag = entity_tag::dropPoint;
 				laxMovePosition = mouseWorldPos;
 			}
 		}
@@ -640,15 +640,15 @@ void deerchant::endingPreviousAction()
 	if (lastAction == dropping)
 	{
 		changeAction(relax, true, false);
-		if (heldItem->content.first != Tag::emptyCell)
+		if (heldItem->content.first != entity_tag::emptyCell)
 		{
 			birth_static_info dropObject;
 			dropObject.position = { boundTarget->getPosition().x, boundTarget->getPosition().y };
-			dropObject.tag = Tag::droppedLoot;
+			dropObject.tag = entity_tag::droppedLoot;
 			dropObject.typeOfObject = int(heldItem->content.first);
 			dropObject.count = heldItem->content.second;
 			birthStatics.push(dropObject);
-			heldItem->content = std::make_pair(Tag::emptyCell, 0);
+			heldItem->content = std::make_pair(entity_tag::emptyCell, 0);
 		}
 		else
 		{
@@ -657,7 +657,7 @@ void deerchant::endingPreviousAction()
 				{
 					auto isHareTrap = true;
 					for (auto& item : bags[cnt].cells)					
-						if (item.content.first != Tag::yarrow && item.content.first != Tag::emptyCell)
+						if (item.content.first != entity_tag::yarrow && item.content.first != entity_tag::emptyCell)
 						{
 							isHareTrap = false;
 							break;
@@ -665,12 +665,12 @@ void deerchant::endingPreviousAction()
 					birth_static_info dropObject;
 					if (isHareTrap)
 					{
-						dropObject.tag = Tag::hareTrap;											
+						dropObject.tag = entity_tag::hareTrap;											
 					}
 					else
 					{
-						dropObject.tag = Tag::droppedLoot;
-						dropObject.typeOfObject = int(Tag::heroBag);	
+						dropObject.tag = entity_tag::droppedLoot;
+						dropObject.typeOfObject = int(entity_tag::heroBag);	
 					}
 					dropObject.position = { position.x, position.y + radius };
 					dropObject.inventory = hero_bag::cellsToInventory(bags[cnt].cells);					
@@ -682,12 +682,12 @@ void deerchant::endingPreviousAction()
 		}
 		stopping(true, true);
 	}
-	if (currentAction == throwNoose && currentSprite[0] == 12 && heldItem->content == std::make_pair(Tag::noose, 1))
+	if (currentAction == throwNoose && currentSprite[0] == 12 && heldItem->content == std::make_pair(entity_tag::noose, 1))
 	{
-		heldItem->content = { Tag::emptyCell, 0 };
+		heldItem->content = { entity_tag::emptyCell, 0 };
 		birth_dynamic_info nooseObject;
 		nooseObject.position = position;
-		nooseObject.tag = Tag::noose;
+		nooseObject.tag = entity_tag::noose;
 		nooseObject.owner = this;
 		birthDynamics.push(nooseObject);
 	}
@@ -711,7 +711,7 @@ void deerchant::endingPreviousAction()
 			auto pickedItem = dynamic_cast<picked_object*>(boundTarget);
 			if (pickedItem)
 			{
-				if (pickedItem->getType() == int(Tag::heroBag) || pickedItem->getId() == Tag::hareTrap)
+				if (pickedItem->getType() == int(entity_tag::heroBag) || pickedItem->getId() == entity_tag::hareTrap)
 				{					
 					bags.resize(bags.size() + 1);
 					bags[bags.size() - 1] = *(new hero_bag());
@@ -725,7 +725,7 @@ void deerchant::endingPreviousAction()
 			auto nooseItem = dynamic_cast<noose*>(boundTarget);
 			if (nooseItem)
 			{
-				const auto placedNoose = new std::vector<std::pair<Tag, int>>({ (std::make_pair(Tag::noose, 1)) });
+				const auto placedNoose = new std::vector<std::pair<entity_tag, int>>({ (std::make_pair(entity_tag::noose, 1)) });
 				if (hero_bag::putItemsIn(placedNoose, &bags))
 					nooseItem->deletePromiseOn();
 				delete placedNoose;
@@ -926,7 +926,7 @@ void deerchant::fightInteract(long long elapsedTime, dynamic_object* target)
 
 sprite_chain_element* deerchant::prepareSpeedLine()
 {
-	auto speedLine = new sprite_chain_element(PackTag::heroMove, PackPart::lines, Direction::STAND, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	auto speedLine = new sprite_chain_element(pack_tag::heroMove, pack_part::lines, Direction::STAND, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	speedLine->animationLength = 3;
 	if (speedLineDirection == Direction::STAND || currentSprite[2] > speedLine->animationLength)
 		return speedLine;
@@ -976,32 +976,32 @@ std::vector<sprite_chain_element*> deerchant::prepareSprites(long long elapsedTi
 		bodySprite->animationLength = 8;
 		if (directionSystem.side == right)
 			legsSprite->mirrored = true;
-		bodySprite->packTag = PackTag::heroHit; bodySprite->packPart = PackPart::body; bodySprite->direction = direction_system::sideToDirection(spriteSide);
-		legsSprite->packTag = PackTag::heroHit; legsSprite->packPart = PackPart::legs; legsSprite->direction = direction_system::sideToDirection(spriteSide);
+		bodySprite->packTag = pack_tag::heroHit; bodySprite->packPart = pack_part::body; bodySprite->direction = direction_system::sideToDirection(spriteSide);
+		legsSprite->packTag = pack_tag::heroHit; legsSprite->packPart = pack_part::legs; legsSprite->direction = direction_system::sideToDirection(spriteSide);
 		break;
 	case absorbs:
 		bodySprite->animationLength = 10;
-		bodySprite->packTag = PackTag::heroAbsorb; bodySprite->packPart = PackPart::full; bodySprite->direction = direction_system::cutDiagonals(spriteDirection);	
+		bodySprite->packTag = pack_tag::heroAbsorb; bodySprite->packPart = pack_part::full; bodySprite->direction = direction_system::cutDiagonals(spriteDirection);	
 		break;
 	case builds:
 		bodySprite->animationLength = 10;
-		bodySprite->packTag = PackTag::heroAbsorb; bodySprite->packPart = PackPart::full; bodySprite->direction = direction_system::cutDiagonals(spriteDirection);
+		bodySprite->packTag = pack_tag::heroAbsorb; bodySprite->packPart = pack_part::full; bodySprite->direction = direction_system::cutDiagonals(spriteDirection);
 		break;
 	case grab:
 		bodySprite->animationLength = 11;
 		animationSpeed = 15;
-		bodySprite->packTag = PackTag::heroPick; bodySprite->packPart = PackPart::full; bodySprite->direction = direction_system::cutDiagonals(spriteDirection);
+		bodySprite->packTag = pack_tag::heroPick; bodySprite->packPart = pack_part::full; bodySprite->direction = direction_system::cutDiagonals(spriteDirection);
 		break;
 	case dropping:
 		bodyInverse = true;
 		bodySprite->animationLength = 5;
 		if (directionSystem.lastDirection == Direction::RIGHT || directionSystem.lastDirection == Direction::UPRIGHT || directionSystem.lastDirection == Direction::DOWNRIGHT)
 			bodySprite->mirrored = true;
-		bodySprite->packTag = PackTag::heroPick; bodySprite->packPart = PackPart::full; bodySprite->direction = direction_system::cutDiagonals(spriteDirection);
+		bodySprite->packTag = pack_tag::heroPick; bodySprite->packPart = pack_part::full; bodySprite->direction = direction_system::cutDiagonals(spriteDirection);
 		break;
 	case open:
 		bodySprite->animationLength = 12;
-		bodySprite->packTag = PackTag::heroPick; bodySprite->packPart = PackPart::full; bodySprite->direction = direction_system::cutDiagonals(spriteDirection);
+		bodySprite->packTag = pack_tag::heroPick; bodySprite->packPart = pack_part::full; bodySprite->direction = direction_system::cutDiagonals(spriteDirection);
 		break;
 	case transitionToEnotherWorld:
 		bodySprite->animationLength = 18;
@@ -1014,7 +1014,7 @@ std::vector<sprite_chain_element*> deerchant::prepareSprites(long long elapsedTi
 			bodySprite->mirrored = true;
 		if (direction_system::cutRights(directionSystem.lastDirection) == Direction::UPLEFT || direction_system::cutRights(directionSystem.lastDirection) == Direction::DOWNLEFT)
 			spriteDirection = Direction::LEFT;
-		bodySprite->packTag = PackTag::heroRoll; bodySprite->packPart = PackPart::full; bodySprite->direction = direction_system::cutRights(spriteDirection);
+		bodySprite->packTag = pack_tag::heroRoll; bodySprite->packPart = pack_part::full; bodySprite->direction = direction_system::cutRights(spriteDirection);
 		break;
 	case relax:
 		bodySprite->mirrored = false;
@@ -1025,7 +1025,7 @@ std::vector<sprite_chain_element*> deerchant::prepareSprites(long long elapsedTi
 			bodySprite->mirrored = true;
 		if (direction_system::cutRights(directionSystem.lastDirection) == Direction::UPLEFT || direction_system::cutRights(directionSystem.lastDirection) == Direction::DOWNLEFT)
 			spriteDirection = Direction::LEFT;
-		bodySprite->packTag = PackTag::heroStand; bodySprite->packPart = PackPart::full; bodySprite->direction = direction_system::cutRights(spriteDirection);
+		bodySprite->packTag = pack_tag::heroStand; bodySprite->packPart = pack_part::full; bodySprite->direction = direction_system::cutRights(spriteDirection);
 		break;
 	case move:
 	{
@@ -1044,8 +1044,8 @@ std::vector<sprite_chain_element*> deerchant::prepareSprites(long long elapsedTi
 			legsSprite->mirrored = true;
 		}
 
-		bodySprite->packTag = PackTag::heroMove; bodySprite->packPart = PackPart::body; bodySprite->direction = direction_system::cutRights(finalDirection);
-		legsSprite->packTag = PackTag::heroMove; legsSprite->packPart = PackPart::legs; legsSprite->direction = direction_system::cutRights(finalDirection);
+		bodySprite->packTag = pack_tag::heroMove; bodySprite->packPart = pack_part::body; bodySprite->direction = direction_system::cutRights(finalDirection);
+		legsSprite->packTag = pack_tag::heroMove; legsSprite->packPart = pack_part::legs; legsSprite->direction = direction_system::cutRights(finalDirection);
 		break;
 	}
 	case Actions::moveEnd:
@@ -1056,9 +1056,9 @@ std::vector<sprite_chain_element*> deerchant::prepareSprites(long long elapsedTi
 			bodySprite->mirrored = true;
 			legsSprite->mirrored = true;
 		}
-		bodySprite->packTag = PackTag::heroMove; bodySprite->packPart = PackPart::body; bodySprite->direction = direction_system::cutRights(directionSystem.lastDirection);
+		bodySprite->packTag = pack_tag::heroMove; bodySprite->packPart = pack_part::body; bodySprite->direction = direction_system::cutRights(directionSystem.lastDirection);
 		directionSystem.lastDirection = direction_system::cutDiagonals(directionSystem.lastDirection);
-		legsSprite->packTag = PackTag::heroHit; legsSprite->packPart = PackPart::legs; legsSprite->direction = direction_system::cutRights(directionSystem.lastDirection);
+		legsSprite->packTag = pack_tag::heroHit; legsSprite->packPart = pack_part::legs; legsSprite->direction = direction_system::cutRights(directionSystem.lastDirection);
 		
 		break;
 	}
@@ -1087,14 +1087,14 @@ std::vector<sprite_chain_element*> deerchant::prepareSprites(long long elapsedTi
 		if (directionSystem.direction == Direction::UP && directionSystem.side == down || directionSystem.direction == Direction::DOWN && directionSystem.side == up)
 			legsInverse = true;
 
-		legsSprite->packTag = PackTag::heroMove; legsSprite->packPart = PackPart::legs; legsSprite->direction = direction_system::cutRights(spriteDirection);
-		bodySprite->packTag = PackTag::heroHit; bodySprite->packPart = PackPart::body; bodySprite->direction = direction_system::sideToDirection(spriteSide);
+		legsSprite->packTag = pack_tag::heroMove; legsSprite->packPart = pack_part::legs; legsSprite->direction = direction_system::cutRights(spriteDirection);
+		bodySprite->packTag = pack_tag::heroHit; bodySprite->packPart = pack_part::body; bodySprite->direction = direction_system::sideToDirection(spriteSide);
 
 		if (directionSystem.direction == Direction::STAND)
 		{
 			if (directionSystem.side == right)
 				legsSprite->mirrored = true;
-			legsSprite->packTag = PackTag::heroMove; legsSprite->packPart = PackPart::legs; legsSprite->direction = direction_system::sideToDirection(spriteSide);
+			legsSprite->packTag = pack_tag::heroMove; legsSprite->packPart = pack_part::legs; legsSprite->direction = direction_system::sideToDirection(spriteSide);
 			legsSprite->animationLength = 14;
 		}
 	}
@@ -1114,14 +1114,14 @@ std::vector<sprite_chain_element*> deerchant::prepareSprites(long long elapsedTi
 			legsSprite->mirrored = !legsSprite->mirrored;
 		}
 
-		legsSprite->packTag = PackTag::heroMove; legsSprite->packPart = PackPart::legs, legsSprite->direction = spriteDirection;
-		bodySprite->packTag = PackTag::heroThrow; bodySprite->packPart = PackPart::body; bodySprite->direction = direction_system::sideToDirection(spriteSide);
+		legsSprite->packTag = pack_tag::heroMove; legsSprite->packPart = pack_part::legs, legsSprite->direction = spriteDirection;
+		bodySprite->packTag = pack_tag::heroThrow; bodySprite->packPart = pack_part::body; bodySprite->direction = direction_system::sideToDirection(spriteSide);
 
 		if (directionSystem.direction == Direction::STAND)
 		{
 			if (directionSystem.side == right)
 				legsSprite->mirrored = true;
-			legsSprite->packTag = PackTag::heroThrow; legsSprite->packPart = PackPart::legs, legsSprite->direction = direction_system::sideToDirection(spriteSide);
+			legsSprite->packTag = pack_tag::heroThrow; legsSprite->packPart = pack_part::legs, legsSprite->direction = direction_system::sideToDirection(spriteSide);
 			legsSprite->animationLength = 14;
 		}
 	}
@@ -1129,7 +1129,7 @@ std::vector<sprite_chain_element*> deerchant::prepareSprites(long long elapsedTi
 	//if (speedLineDirection != Direction::STAND)
 		//result.push_back(speedLine);
 
-	if (legsSprite->packTag != PackTag::empty)
+	if (legsSprite->packTag != pack_tag::empty)
 	{
 		if (legsInverse)
 			legsSprite->number = legsSprite->animationLength + 1 - currentSprite[1];
@@ -1138,7 +1138,7 @@ std::vector<sprite_chain_element*> deerchant::prepareSprites(long long elapsedTi
 		result.push_back(legsSprite);
 	}
 
-	if (bodySprite->packTag != PackTag::empty)
+	if (bodySprite->packTag != pack_tag::empty)
 	{
 		if (bodyInverse)
 			bodySprite->number = bodySprite->animationLength + 1 - currentSprite[0];

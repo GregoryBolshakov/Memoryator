@@ -7,7 +7,7 @@
 #include "text_chain_element.h"
 
 using namespace  sf;
-typedef void(*LPSEARCHFUNC)(LPCTSTR lpszFileName, std::map<PackTag, sprite_pack> &packs_map);
+typedef void(*LPSEARCHFUNC)(LPCTSTR lpszFileName, std::map<pack_tag, sprite_pack> &packs_map);
 typedef bool(*func)(Vector2f &pos);
 
 class draw_system
@@ -21,7 +21,7 @@ public:
 	static std::vector<drawable_chain_element*> UpcastChain(const std::vector<sprite_chain_element*>& chain);
 	static std::vector<sprite_chain_element*> DowncastToSpriteChain(const std::vector<drawable_chain_element*>& chain);
 
-    std::map<PackTag, sprite_pack> packsMap;
+    std::map<pack_tag, sprite_pack> packsMap;
 private:
     void initPacksMap();
 	bool searchFiles(LPCTSTR lpszFileName, LPSEARCHFUNC lpSearchFunc, bool bInnerFolders = true);

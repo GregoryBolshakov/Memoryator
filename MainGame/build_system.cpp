@@ -41,7 +41,7 @@ void build_system::initializeObjectsInfo()
 		for (int i = 0; i < recipeLength; i++)
 		{
 			fin >> recipeItemId >> recipeItemAmount;
-			infoItem.recipe.push_back(std::make_pair(Tag(recipeItemId), recipeItemAmount));
+			infoItem.recipe.push_back(std::make_pair(entity_tag(recipeItemId), recipeItemAmount));
 		}
 
 		builtObjects.push_back(infoItem);
@@ -50,17 +50,17 @@ void build_system::initializeObjectsInfo()
 	fin.close();
 }
 
-std::vector <sprite_chain_element*> build_system::prepareSprites(grid_list& staticGrid, const std::vector<world_object*>& visibleItems, std::map<PackTag, sprite_pack>* packsMap)
+std::vector <sprite_chain_element*> build_system::prepareSprites(grid_list& staticGrid, const std::vector<world_object*>& visibleItems, std::map<pack_tag, sprite_pack>* packsMap)
 {
-	if (selectedObject == Tag::emptyCell)
+	if (selectedObject == entity_tag::emptyCell)
 		return {};
 
 	static_object* terrain = nullptr;
 	if (droppedLootIdList.count(selectedObject) > 0)
-		terrain = object_initializer::initializeStaticItem(Tag::droppedLoot, mouseWorldPos, int(selectedObject), "", 1, DarkWoods, packsMap);
+		terrain = object_initializer::initializeStaticItem(entity_tag::droppedLoot, mouseWorldPos, int(selectedObject), "", 1, DarkWoods, packsMap);
 	else
 	{
-		if (selectedObject == Tag::totem)
+		if (selectedObject == entity_tag::totem)
 		{
 			for (auto item : visibleItems)
 			{
@@ -71,7 +71,7 @@ std::vector <sprite_chain_element*> build_system::prepareSprites(grid_list& stat
 				if (droppedLoot && droppedLoot->getType() == 201)
 				{
 					for (auto& cell : droppedLoot->inventory)
-						if (cell.first == Tag::hare)
+						if (cell.first == entity_tag::hare)
 						{
 							match = true;
 							break;
@@ -114,10 +114,10 @@ void build_system::onMouseUp()
 {
 	usedMouse = false;
 
-	if (selectedObject != Tag::emptyCell || currentObject != -1)
+	if (selectedObject != entity_tag::emptyCell || currentObject != -1)
 		usedMouse = true;
 
-	if (selectedObject != Tag::emptyCell && currentObject == -1 && canBePlaced)
+	if (selectedObject != entity_tag::emptyCell && currentObject == -1 && canBePlaced)
 	{
 		if (spriteBuildPos != Vector2f (-1, -1))
 			buildingPosition = spriteBuildPos;
@@ -130,7 +130,7 @@ void build_system::onMouseUp()
 
 void build_system::buildHeldItem(Vector2f focusedObjectPosition, float scaleFactor)
 {
-	if (heldItem->first == Tag::emptyCell)
+	if (heldItem->first == entity_tag::emptyCell)
 	{
 		buildingPosition = Vector2f (-1, -1);
 		return;
@@ -147,7 +147,7 @@ bool build_system::canAfford()
 {
 	if (currentObject != -1)
 	{
-		std::vector<std::pair <Tag, int>> temporaryInventory = builtObjects[currentObject].recipe;
+		std::vector<std::pair <entity_tag, int>> temporaryInventory = builtObjects[currentObject].recipe;
 
 		for (auto&curRecipeItem = temporaryInventory.begin(); curRecipeItem != temporaryInventory.end(); ++curRecipeItem)
 		{
@@ -182,7 +182,7 @@ bool build_system::canAfford()
 
 void build_system::wasPlaced()
 {
-	selectedObject = Tag::emptyCell;
+	selectedObject = entity_tag::emptyCell;
 	buildingPosition = Vector2f (-1, -1);
 }
 
@@ -197,7 +197,7 @@ void build_system::clearHareBags(int block, grid_list& staticGrid, std::vector<w
 		if (droppedLoot && droppedLoot->getType() == 201)
 		{
 			for (auto& cell : droppedLoot->inventory)
-				if (cell.first == Tag::hare)
+				if (cell.first == entity_tag::hare)
 				{
 					match = true;
 					break;

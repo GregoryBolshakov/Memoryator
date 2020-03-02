@@ -16,7 +16,7 @@ class hero_book
 public:
 	hero_book();
 	~hero_book();
-	void init(std::map<PackTag, sprite_pack>* packsMap);
+	void init(std::map<pack_tag, sprite_pack>* packsMap);
 	std::vector<drawable_chain_element*> prepareSprites(float hpRatio, long long elapsedTime);
 	void interact();
 	void onMouseUp();
@@ -43,7 +43,7 @@ private:
 	std::vector <sprite_chain_element*> prepareLineMatrix();
 	std::vector<sprite_chain_element*> preparePlantsList();
 	std::vector<drawable_chain_element*> prepareWreathCost(Vector2f pos);
-	void initButtons(std::map<PackTag, sprite_pack>* packsMap);
+	void initButtons(std::map<pack_tag, sprite_pack>* packsMap);
 	void initContent();
 
 	std::string buttonsInfoFileDirectory = "Game/bookButtons.txt";
@@ -56,10 +56,10 @@ private:
 	// wreath 401 - 499    //
 	/////////////////////////
 	bool visibility = false;
-	std::pair<Tag, int> heldItem = { Tag::emptyCell, 0 };
+	std::pair<entity_tag, int> heldItem = { entity_tag::emptyCell, 0 };
 	cell* worldHeldItem = nullptr;
 	world_object* worldSelectedObject = nullptr;
-	Tag currentDraft = Tag::emptyDraft, currentFlower = Tag::emptyCell;
+	entity_tag currentDraft = entity_tag::emptyDraft, currentFlower = entity_tag::emptyCell;
 	std::string worldMouseName = "";
 	Vector2f blockDescriptionPoint = Vector2f(0.53f, 0.104f); // as a percentage of the size of the page markup
 	Vector2f pageDescriptionPoint = Vector2f(0.53f, 0.395f); // as a percentage of the size of the page markup

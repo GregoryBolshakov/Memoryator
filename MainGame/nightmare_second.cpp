@@ -15,7 +15,7 @@ nightmare_second::nightmare_second(std::string objectName, Vector2f centerPositi
 	timeForNewHit = long(1e6);
 	timeAfterHit = timeForNewHit;
 	toSaveName = "nightmare2_";
-	tag = Tag::nightmare2;
+	tag = entity_tag::nightmare2;
 }
 
 
@@ -44,7 +44,7 @@ void nightmare_second::doAttack(world_object* target)
 
 std::vector<sprite_chain_element*> nightmare_second::prepareSprites(long long elapsedTime)
 {
-	auto body = new sprite_chain_element(PackTag::nightmare2Stand, PackPart::full, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
+	auto body = new sprite_chain_element(pack_tag::nightmare2Stand, pack_part::full, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	shakeSpeed = -1;
 	animationSpeed = 10;
 
@@ -69,25 +69,25 @@ std::vector<sprite_chain_element*> nightmare_second::prepareSprites(long long el
 	case commonHit:
 	{
 		animationLength = 12;
-		body->packTag = PackTag::nightmare2Hit;
+		body->packTag = pack_tag::nightmare2Hit;
 		break;
 	}
 	case combatState:
 	{
 		animationLength = 9;
-		body->packTag = PackTag::nightmare2Stand;
+		body->packTag = pack_tag::nightmare2Stand;
 		break;
 	}
 	case relax:
 	{
 		animationLength = 9;
-		body->packTag = PackTag::nightmare2Stand;
+		body->packTag = pack_tag::nightmare2Stand;
 		break;
 	}
 	case dead:
 	{
 		animationLength = 1;
-		body->packTag = PackTag::nightmare2Stand;
+		body->packTag = pack_tag::nightmare2Stand;
 		currentSprite[0] = 1;
 		deletePromiseOn();
 		break;
@@ -95,7 +95,7 @@ std::vector<sprite_chain_element*> nightmare_second::prepareSprites(long long el
 	case move:
 	{
 		animationLength = 8;
-		body->packTag = PackTag::nightmare2Move;
+		body->packTag = pack_tag::nightmare2Move;
 		if (currentSprite[0] == 2 || currentSprite[0] == 6)
 			shakeSpeed = 0;
 		break;

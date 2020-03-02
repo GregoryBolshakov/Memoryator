@@ -21,7 +21,7 @@ void world_generator::init(
 	const Vector2f microBlockSize,
 	grid_list* staticGrid,
 	grid_list* dynamicGrid,
-	std::map<PackTag, sprite_pack>* packsMap)
+	std::map<pack_tag, sprite_pack>* packsMap)
 {
 	this->width = width;
 	this->height = height;
@@ -37,14 +37,14 @@ world_generator::~world_generator()
 = default;
 
 void world_generator::initializeStaticItem(
-	Tag itemClass,
+	entity_tag itemClass,
 	Vector2f itemPosition,
 	int itemType,
 	const std::string& itemName,
 	int count,
-	Biomes biome,
+	biomes biome,
 	bool mirrored,
-	const std::vector<std::pair<Tag, int>>& inventory) const
+	const std::vector<std::pair<entity_tag, int>>& inventory) const
 {
 	auto item = object_initializer::initializeStaticItem(itemClass, itemPosition, itemType, itemName, count, biome, packsMap, mirrored, inventory);
 	
@@ -86,14 +86,14 @@ void world_generator::initializeStaticItem(
 	staticGrid->addItem(item, item->getName(), itemPosition.x, itemPosition.y);
 }
 
-void world_generator::initializeDynamicItem(const Tag itemClass, const Vector2f itemPosition, const std::string& itemName, world_object* owner)
+void world_generator::initializeDynamicItem(const entity_tag itemClass, const Vector2f itemPosition, const std::string& itemName, world_object* owner)
 {
 	const auto item = object_initializer::initializeDynamicItem(itemClass, itemPosition, itemName, packsMap, owner);
 	
 	if (item == nullptr)
 		return;
 
-	if (itemClass == Tag::hero)	
+	if (itemClass == entity_tag::hero)	
 		focusedObject = item;			
 
 	dynamicGrid->addItem(item, item->getName(), itemPosition.x, itemPosition.y);
@@ -103,8 +103,8 @@ void world_generator::generate()
 {	
 	staticGrid->boundDynamicMatrix(&dynamicGrid->microBlockMatrix);	
 
-	initializeDynamicItem(Tag::hero, Vector2f(15800, 15800), "hero");	
-	initializeStaticItem(Tag::brazier, Vector2f(16300, 16300), 1, "brazier");
+	initializeDynamicItem(entity_tag::hero, Vector2f(15800, 15800), "hero");	
+	initializeStaticItem(entity_tag::brazier, Vector2f(16300, 16300), 1, "brazier");
 	//initializeDynamicItem(Tag::nightmare1, Vector2f(15500, 15500), "enemy");
 
 	// world generation
@@ -120,7 +120,7 @@ void world_generator::generate()
 		inBlockGenerate(block);	
 }
 
-bool cmpByChance(const std::pair<Tag, int> a, const std::pair<Tag, int> b)
+bool cmpByChance(const std::pair<entity_tag, int> a, const std::pair<entity_tag, int> b)
 {
 	return a.second < b.second;
 }
@@ -131,40 +131,40 @@ void world_generator::inBlockGenerate(const int blockIndex)
 	const auto groundIndX = int(ceil(staticGrid->getPointByIndex(blockIndex).x / blockSize.x));
 	const auto groundIndY = int(ceil(staticGrid->getPointByIndex(blockIndex).y / blockSize.y));
 
-	std::vector<std::pair<Tag, int>> roomedBlocksContent = {};
-	std::vector<std::pair<Tag, int>> otherBlocksContent = {};
+	std::vector<std::pair<entity_tag, int>> roomedBlocksContent = {};
+	std::vector<std::pair<entity_tag, int>> otherBlocksContent = {};
 
 	if (biomeMatrix[groundIndX][groundIndY] == DarkWoods)
 	{
 		if (blockTypeProbability <= 10) // block with roofs		
-			roomedBlocksContent = { {Tag::roof, 10}, {Tag::rock, 2}, {Tag::stump, 2}, {Tag::tree, 7} };
+			roomedBlocksContent = { {entity_tag::roof, 10}, {entity_tag::rock, 2}, {entity_tag::stump, 2}, {entity_tag::tree, 7} };
 		else
 			if (blockTypeProbability <= 30) // block with yarrow
-				roomedBlocksContent = { {Tag::yarrow, 0}, {Tag::rock, 2}, {Tag::stump, 2}, {Tag::tree, 7} };
+				roomedBlocksContent = { {entity_tag::yarrow, 0}, {entity_tag::rock, 2}, {entity_tag::stump, 2}, {entity_tag::tree, 7} };
 			else
 				if (blockTypeProbability <= 99) // common block				
-					roomedBlocksContent = { {Tag::rock, 2}, {Tag::stump, 2}, {Tag::tree, 7} };
-		otherBlocksContent = { {Tag::grass, 6} , {Tag::mushroom, 4} };
+					roomedBlocksContent = { {entity_tag::rock, 2}, {entity_tag::stump, 2}, {entity_tag::tree, 7} };
+		otherBlocksContent = { {entity_tag::grass, 6} , {entity_tag::mushroom, 4} };
 	}
 	else
 		if (biomeMatrix[groundIndX][groundIndY] == BirchGrove)
 		{
 			if (blockTypeProbability <= 30) // block with chamomile
-				roomedBlocksContent = { {Tag::chamomile, 0}, {Tag::rock, 2}, {Tag::stump, 2}, {Tag::log, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
+				roomedBlocksContent = { {entity_tag::chamomile, 0}, {entity_tag::rock, 2}, {entity_tag::stump, 2}, {entity_tag::log, 2}, {entity_tag::bush, 5}, {entity_tag::tree, 7} };
 			else
 				if (blockTypeProbability <= 99) // common block
-					roomedBlocksContent = { {Tag::rock, 5}, {Tag::stump, 2}, {Tag::log, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
-			otherBlocksContent = { {Tag::grass, 6} , {Tag::mushroom, 3} };
+					roomedBlocksContent = { {entity_tag::rock, 5}, {entity_tag::stump, 2}, {entity_tag::log, 2}, {entity_tag::bush, 5}, {entity_tag::tree, 7} };
+			otherBlocksContent = { {entity_tag::grass, 6} , {entity_tag::mushroom, 3} };
 		}
 		else
 			if (biomeMatrix[groundIndX][groundIndY] == SwampyTrees)
 			{
 				if (blockTypeProbability <= 30) // block with chamomile
-					roomedBlocksContent = { {Tag::rock, 2}, {Tag::lake, 2}, {Tag::stump, 2}, {Tag::root, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
+					roomedBlocksContent = { {entity_tag::rock, 2}, {entity_tag::lake, 2}, {entity_tag::stump, 2}, {entity_tag::root, 2}, {entity_tag::bush, 5}, {entity_tag::tree, 7} };
 				else
 					if (blockTypeProbability <= 99) // common block
-						roomedBlocksContent = { {Tag::rock, 2}, {Tag::lake, 2}, {Tag::stump, 2}, {Tag::root, 2}, {Tag::bush, 5}, {Tag::tree, 7} };
-				otherBlocksContent = { {Tag::grass, 6} , {Tag::mushroom, 2} };
+						roomedBlocksContent = { {entity_tag::rock, 2}, {entity_tag::lake, 2}, {entity_tag::stump, 2}, {entity_tag::root, 2}, {entity_tag::bush, 5}, {entity_tag::tree, 7} };
+				otherBlocksContent = { {entity_tag::grass, 6} , {entity_tag::mushroom, 2} };
 			}
 
 	std::sort(roomedBlocksContent.begin(), roomedBlocksContent.end(), cmpByChance);
@@ -217,11 +217,11 @@ void world_generator::generateGround(const int blockIndex)
 	const auto groundIndY = int(ceil(position.y / blockSize.y));
 	const auto biome = biomeMatrix[groundIndX][groundIndY];
 	
-	initializeStaticItem(Tag::ground, position, int(biome), "", 1, biome);
-	initializeStaticItem(Tag::groundConnection, Vector2f(position), (biome - 1) * 4 + 1, "", 1);
-	initializeStaticItem(Tag::groundConnection, Vector2f(position.x, position.y + blockSize.y - 1), (biome - 1) * 4 + 2, "", 1);
-	initializeStaticItem(Tag::groundConnection, Vector2f(position), (biome - 1) * 4 + 3, "", 1);
-	initializeStaticItem(Tag::groundConnection, Vector2f(position.x + blockSize.x - 1, position.y), (biome - 1) * 4 + 4, "", 1);
+	initializeStaticItem(entity_tag::ground, position, int(biome), "", 1, biome);
+	initializeStaticItem(entity_tag::groundConnection, Vector2f(position), (biome - 1) * 4 + 1, "", 1);
+	initializeStaticItem(entity_tag::groundConnection, Vector2f(position.x, position.y + blockSize.y - 1), (biome - 1) * 4 + 2, "", 1);
+	initializeStaticItem(entity_tag::groundConnection, Vector2f(position), (biome - 1) * 4 + 3, "", 1);
+	initializeStaticItem(entity_tag::groundConnection, Vector2f(position.x + blockSize.x - 1, position.y), (biome - 1) * 4 + 4, "", 1);
 }
 
 bool world_generator::isRoomyStepBlock(const int x, const int y) const
@@ -277,7 +277,7 @@ void world_generator::biomesGenerate()
 	{
 		const auto biomeId = rand() % 3 + 1;
 		for (const auto offset : biome)
-			biomeMatrix[biomesChangeCenter.x + offset.x][biomesChangeCenter.y + offset.y] = Biomes(biomeId);
+			biomeMatrix[biomesChangeCenter.x + offset.x][biomesChangeCenter.y + offset.y] = biomes(biomeId);
 	}
 }
 

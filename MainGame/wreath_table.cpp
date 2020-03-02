@@ -14,7 +14,7 @@ wreath_table::wreath_table(std::string objectName, const Vector2f centerPosition
 	wreath_table::setType(typeOfObject);
 	mirrored = false;
 	initCraftRecipes();
-	tag = Tag::wreathTable;
+	tag = entity_tag::wreathTable;
 }
 
 void wreath_table::setType(int typeOfObject)
@@ -46,14 +46,14 @@ void wreath_table::initCraftRecipes()
 
 	while (fin >> craftedItemId >> recipeSize)
 	{
-		std::vector<std::pair<Tag, int>> recipe = {};
+		std::vector<std::pair<entity_tag, int>> recipe = {};
 		for (int i = 0; i < recipeSize; i++)
 		{
 			int ingredientId = 0, ingredientCount = 0;
 			fin >> ingredientId >> ingredientCount;
-			recipe.push_back(std::make_pair(Tag(ingredientId), ingredientCount));
+			recipe.push_back(std::make_pair(entity_tag(ingredientId), ingredientCount));
 		}
-		craftRecipes[Tag(craftedItemId)].push_back(recipe);
+		craftRecipes[entity_tag(craftedItemId)].push_back(recipe);
 	}
 
 	fin.close();
@@ -61,16 +61,16 @@ void wreath_table::initCraftRecipes()
 
 void wreath_table::resultAnalysis() const
 {
-	if (craftResult == Tag::emptyCell)
+	if (craftResult == entity_tag::emptyCell)
 		return;
 
-	if (craftResult == Tag::heroBag)
+	if (craftResult == entity_tag::heroBag)
 	{
 
 	}
 }
 
-Tag wreath_table::checkCraftResult()
+entity_tag wreath_table::checkCraftResult()
 {
 	for (auto& recipes : craftRecipes)
 		for (auto& recipe : recipes.second)
@@ -89,10 +89,10 @@ Tag wreath_table::checkCraftResult()
 			}
 		}
 
-	return Tag::emptyCell;
+	return entity_tag::emptyCell;
 }
 
-void wreath_table::putItemToCraft(Tag id)
+void wreath_table::putItemToCraft(entity_tag id)
 {
 	if (currentCraft.count(id) > 0)
 		currentCraft.at(id)++;
@@ -114,7 +114,7 @@ int wreath_table::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<sprite_chain_element*> wreath_table::prepareSprites(long long elapsedTime)
 {
-	const auto body = new sprite_chain_element(PackTag::locations, PackPart::wreathTable, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	const auto body = new sprite_chain_element(pack_tag::locations, pack_part::wreathTable, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	return { body };
 }

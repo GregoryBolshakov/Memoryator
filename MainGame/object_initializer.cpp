@@ -1,22 +1,22 @@
 #include "object_initializer.h"
 
-std::map<Tag, std::string> object_initializer::mappedTags = { {Tag::hero, "hero"}, {Tag::hare, "hare"}, {Tag::owl, "owl"}, {Tag::deer, "deer"}, {Tag::fox, "fox"}, {Tag::bear, "beer"}, {Tag::wolf, "wolf"},
-{Tag::monster, "monster"}, {Tag::owlBoss, "owlBoss"}, {Tag::nightmare1, "nightmare1"}, {Tag::nightmare2, "nightmare2"}, {Tag::nightmare3, "nightmare3"},
-{Tag::heroBag, "heroBag"}, {Tag::noose, "noose"}, {Tag::totem, "totem"}, {Tag::hareTrap, "hareTrap"}, {Tag::fence, "fence"}, {Tag::inkyBlackPen, "inkyBlackPen"},
-	{Tag::unknownWreath, "inknownWreath"}, {Tag::hareWreath, "hareWreath"}, {Tag::owlWreath, "owlWreath"}, {Tag::tree, "tree"}, {Tag::grass, "grass"}, {Tag::spawn, "spawn"},
-	{Tag::ground, "ground"}, {Tag::groundConnection, "groundConnection"}, {Tag::brazier, "brazier"}, {Tag::wreathTable, "wreathTable"}, {Tag::rock, "rock"},
-	{Tag::stump, "stump"}, {Tag::droppedLoot, "droppedLoot"}, {Tag::mushroom, "mushroom"}, {Tag::log, "log"}, {Tag::bush, "bush"}, {Tag::roof, "roof"}, {Tag::lake, "lake"}, {Tag::root, "root"},
-	{Tag::chamomile, "chamomile"}, {Tag::yarrow, "yarrow"}, {Tag::fern, "fern"}, {Tag::mugwort, "mugwort"}, {Tag::poppy, "poppy"}, {Tag::buildObject, "buildObject"}, {Tag::dropPoint, "dropPoint"},
-	{Tag::emptyDraft, "emptyDraft"}, {Tag::emptyPage, "emptyPage"}, {Tag::emptyCell, "emptyCell"}, {Tag::selectedCell, "selectedCell"}, {Tag::clapWhirl, "clapWhirl"}, {Tag::emptyObject, "emptyObject"} };
+std::map<entity_tag, std::string> object_initializer::mappedTags = { {entity_tag::hero, "hero"}, {entity_tag::hare, "hare"}, {entity_tag::owl, "owl"}, {entity_tag::deer, "deer"}, {entity_tag::fox, "fox"}, {entity_tag::bear, "beer"}, {entity_tag::wolf, "wolf"},
+{entity_tag::monster, "monster"}, {entity_tag::owlBoss, "owlBoss"}, {entity_tag::nightmare1, "nightmare1"}, {entity_tag::nightmare2, "nightmare2"}, {entity_tag::nightmare3, "nightmare3"},
+{entity_tag::heroBag, "heroBag"}, {entity_tag::noose, "noose"}, {entity_tag::totem, "totem"}, {entity_tag::hareTrap, "hareTrap"}, {entity_tag::fence, "fence"}, {entity_tag::inkyBlackPen, "inkyBlackPen"},
+	{entity_tag::unknownWreath, "inknownWreath"}, {entity_tag::hareWreath, "hareWreath"}, {entity_tag::owlWreath, "owlWreath"}, {entity_tag::tree, "tree"}, {entity_tag::grass, "grass"}, {entity_tag::spawn, "spawn"},
+	{entity_tag::ground, "ground"}, {entity_tag::groundConnection, "groundConnection"}, {entity_tag::brazier, "brazier"}, {entity_tag::wreathTable, "wreathTable"}, {entity_tag::rock, "rock"},
+	{entity_tag::stump, "stump"}, {entity_tag::droppedLoot, "droppedLoot"}, {entity_tag::mushroom, "mushroom"}, {entity_tag::log, "log"}, {entity_tag::bush, "bush"}, {entity_tag::roof, "roof"}, {entity_tag::lake, "lake"}, {entity_tag::root, "root"},
+	{entity_tag::chamomile, "chamomile"}, {entity_tag::yarrow, "yarrow"}, {entity_tag::fern, "fern"}, {entity_tag::mugwort, "mugwort"}, {entity_tag::poppy, "poppy"}, {entity_tag::buildObject, "buildObject"}, {entity_tag::dropPoint, "dropPoint"},
+	{entity_tag::emptyDraft, "emptyDraft"}, {entity_tag::emptyPage, "emptyPage"}, {entity_tag::emptyCell, "emptyCell"}, {entity_tag::selectedCell, "selectedCell"}, {entity_tag::clapWhirl, "clapWhirl"}, {entity_tag::emptyObject, "emptyObject"} };
 
-std::map<std::string, Tag> object_initializer::mappedStrings = { {"hero", Tag::hero}, {"hare", Tag::hare}, {"owl", Tag::owl}, {"deer", Tag::deer}, {"fox", Tag::fox}, {"bear", Tag::bear}, {"wolf", Tag::wolf},
-{"monster", Tag::monster}, {"owlBoss", Tag::owlBoss}, {"nightmare1", Tag::nightmare1}, {"nightmare2", Tag::nightmare2}, {"nightmare3", Tag::nightmare3},
-{"heroBag", Tag::heroBag}, {"noose", Tag::noose}, {"totem", Tag::totem}, {"hareTrap", Tag::hareTrap}, {"fence", Tag::fence}, {"inkyBlackPen", Tag::inkyBlackPen},
-	{"unknownWreath", Tag::unknownWreath}, {"hareWreath", Tag::hareWreath}, {"owlWreath", Tag::owlWreath}, {"tree", Tag::tree}, {"grass", Tag::grass}, {"spawn", Tag::spawn},
-	{"ground", Tag::ground}, {"groundConnection", Tag::groundConnection}, {"brazier", Tag::brazier}, {"wreathTable", Tag::wreathTable}, {"rock", Tag::rock},
-	{"stump", Tag::stump}, {"droppedLoot", Tag::droppedLoot}, {"mushroom", Tag::mushroom}, {"log", Tag::log}, {"bush", Tag::bush}, {"roof", Tag::roof}, {"lake", Tag::lake}, {"root", Tag::root},
-	{"chamomile", Tag::chamomile}, {"yarrow", Tag::yarrow}, {"fern", Tag::fern}, {"mugwort", Tag::mugwort}, {"poppy", Tag::poppy}, {"buildObject", Tag::buildObject}, {"dropPoint", Tag::dropPoint},
-	{"emptyDraft", Tag::emptyDraft}, {"emptyPage", Tag::emptyPage}, {"emptyCell", Tag::emptyCell}, {"selectedCell", Tag::selectedCell}, {"clapWhirl", Tag::clapWhirl}, {"emptyObject", Tag::emptyObject} };
+std::map<std::string, entity_tag> object_initializer::mappedStrings = { {"hero", entity_tag::hero}, {"hare", entity_tag::hare}, {"owl", entity_tag::owl}, {"deer", entity_tag::deer}, {"fox", entity_tag::fox}, {"bear", entity_tag::bear}, {"wolf", entity_tag::wolf},
+{"monster", entity_tag::monster}, {"owlBoss", entity_tag::owlBoss}, {"nightmare1", entity_tag::nightmare1}, {"nightmare2", entity_tag::nightmare2}, {"nightmare3", entity_tag::nightmare3},
+{"heroBag", entity_tag::heroBag}, {"noose", entity_tag::noose}, {"totem", entity_tag::totem}, {"hareTrap", entity_tag::hareTrap}, {"fence", entity_tag::fence}, {"inkyBlackPen", entity_tag::inkyBlackPen},
+	{"unknownWreath", entity_tag::unknownWreath}, {"hareWreath", entity_tag::hareWreath}, {"owlWreath", entity_tag::owlWreath}, {"tree", entity_tag::tree}, {"grass", entity_tag::grass}, {"spawn", entity_tag::spawn},
+	{"ground", entity_tag::ground}, {"groundConnection", entity_tag::groundConnection}, {"brazier", entity_tag::brazier}, {"wreathTable", entity_tag::wreathTable}, {"rock", entity_tag::rock},
+	{"stump", entity_tag::stump}, {"droppedLoot", entity_tag::droppedLoot}, {"mushroom", entity_tag::mushroom}, {"log", entity_tag::log}, {"bush", entity_tag::bush}, {"roof", entity_tag::roof}, {"lake", entity_tag::lake}, {"root", entity_tag::root},
+	{"chamomile", entity_tag::chamomile}, {"yarrow", entity_tag::yarrow}, {"fern", entity_tag::fern}, {"mugwort", entity_tag::mugwort}, {"poppy", entity_tag::poppy}, {"buildObject", entity_tag::buildObject}, {"dropPoint", entity_tag::dropPoint},
+	{"emptyDraft", entity_tag::emptyDraft}, {"emptyPage", entity_tag::emptyPage}, {"emptyCell", entity_tag::emptyCell}, {"selectedCell", entity_tag::selectedCell}, {"clapWhirl", entity_tag::clapWhirl}, {"emptyObject", entity_tag::emptyObject} };
 
 object_initializer::object_initializer()
 = default;
@@ -27,131 +27,131 @@ object_initializer::~object_initializer()
 int object_initializer::newNameId = 0;
 
 static_object* object_initializer::initializeStaticItem(
-	Tag itemClass,
+	entity_tag itemClass,
 	Vector2f itemPosition,
 	int itemType,
 	const std::string& itemName,
 	int count,
-	Biomes biome,	
-	std::map<PackTag, sprite_pack>* packsMap,
+	biomes biome,	
+	std::map<pack_tag, sprite_pack>* packsMap,
 	bool mirrored,
-	const std::vector<std::pair<Tag, int>>& inventory)
+	const std::vector<std::pair<entity_tag, int>>& inventory)
 {
 	static_object* item = nullptr;
 
 	switch (itemClass)
 	{
-		case Tag::tree:
+		case entity_tag::tree:
 		{
 			item = new forest_tree("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::grass:
+		case entity_tag::grass:
 		{
 			item = new grass("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::spawn:
+		case entity_tag::spawn:
 		{
 			item = new spawn("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::ground:
+		case entity_tag::ground:
 		{
 			item = new ground("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::groundConnection:
+		case entity_tag::groundConnection:
 		{
 			item = new ground_connection("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::chamomile:
+		case entity_tag::chamomile:
 		{
 			item = new chamomile("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::brazier:
+		case entity_tag::brazier:
 		{
 			item = new brazier("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::wreathTable:
+		case entity_tag::wreathTable:
 		{
 			item = new wreath_table("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::yarrow:
+		case entity_tag::yarrow:
 		{
 			item = new yarrow("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::fern:
+		case entity_tag::fern:
 		{
 			item = new fern("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::hareTrap:
+		case entity_tag::hareTrap:
 		{
 			item = new hare_trap("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::rock:
+		case entity_tag::rock:
 		{
 			item = new rock("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::fence:
+		case entity_tag::fence:
 		{
 			item = new fence("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::stump:
+		case entity_tag::stump:
 		{
 			item = new stump("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::droppedLoot:
+		case entity_tag::droppedLoot:
 		{
 			item = new dropped_loot("item", Vector2f(0, 0), -1, count);
 			break;
 		}
-		case Tag::mugwort:
+		case entity_tag::mugwort:
 		{
 			item = new mugwort("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::totem:
+		case entity_tag::totem:
 		{
 			item = new totem("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::mushroom:
+		case entity_tag::mushroom:
 		{
 			item = new mushroom("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::log:
+		case entity_tag::log:
 		{
 			item = new mr::log("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::bush:
+		case entity_tag::bush:
 		{
 			item = new bush("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::lake:
+		case entity_tag::lake:
 		{
 			item = new lake("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::root:
+		case entity_tag::root:
 		{
 			item = new root("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case Tag::roof:
+		case entity_tag::roof:
 		{
 			item = new roof("item", Vector2f(0, 0), -1);
 			break;
@@ -196,10 +196,10 @@ static_object* object_initializer::initializeStaticItem(
 }
 
 dynamic_object* object_initializer::initializeDynamicItem(
-	Tag itemClass,
+	entity_tag itemClass,
 	Vector2f itemPosition,
 	const std::string& itemName,
-	std::map<PackTag, sprite_pack>* packsMap,
+	std::map<pack_tag, sprite_pack>* packsMap,
 	world_object* owner)
 {
 	dynamic_object* item;
@@ -207,43 +207,43 @@ dynamic_object* object_initializer::initializeDynamicItem(
 
 	switch (itemClass)
 	{
-	case Tag::hero:
+	case entity_tag::hero:
 	{
 		item = new deerchant("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/hero/stand/down/1";		
 		break;
 	}
-	case Tag::wolf:
+	case entity_tag::wolf:
 	{
 		item = new wolf("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/wolf/stand/down/1";
 		break;
 	}
-	case Tag::hare:
+	case entity_tag::hare:
 	{
 		item = new hare("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/hare/stand/down/1";
 		break;
 	}
-	case Tag::deer:
+	case entity_tag::deer:
 	{
 		item = new deer("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/deer/stand/down/1";
 		break;
 	}
-	case Tag::bear:
+	case entity_tag::bear:
 	{
 		item = new bear("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/deer/stand/down/1";
 		break;
 	}
-	case Tag::owl:
+	case entity_tag::owl:
 	{
 		item = new owl("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/deer/stand/down/1";
 		break;
 	}
-	case Tag::noose:
+	case entity_tag::noose:
 	{
 		item = new noose("item", Vector2f(0, 0), owner);
 		nameOfImage = "Game/worldSprites/noose/nooseLoop/1";
@@ -255,25 +255,25 @@ dynamic_object* object_initializer::initializeDynamicItem(
 		nameOfImage = "Game/worldSprites/nightmare3/clap/whirl";
 		break;
 	}*/
-	case Tag::owlBoss:
+	case entity_tag::owlBoss:
 	{
 		item = new owl_boss("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/owlBoss/stand/down/1";
 		break;
 	}
-	case Tag::nightmare1:
+	case entity_tag::nightmare1:
 	{
 		item = new nightmare_first("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/nightmare1/stand/down/1";
 		break;
 	}
-	case Tag::nightmare2:
+	case entity_tag::nightmare2:
 	{
 		item = new nightmare_second("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/nightmare2/stand/down/1";
 		break;
 	}
-	case Tag::nightmare3:
+	case entity_tag::nightmare3:
 	{
 		item = new nightmare_third("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/nightmare2/stand/down/1";
@@ -309,11 +309,11 @@ dynamic_object* object_initializer::initializeDynamicItem(
 	return item;
 }
 
-int object_initializer::getRandomTypeByBiome(world_object* object, const Biomes biome)
+int object_initializer::getRandomTypeByBiome(world_object* object, const biomes biome)
 {
 	switch (object->tag)
 	{
-		case Tag::tree:
+		case entity_tag::tree:
 		{
 			if (biome == BirchGrove)
 				return rand() % 7 + 1;
@@ -323,7 +323,7 @@ int object_initializer::getRandomTypeByBiome(world_object* object, const Biomes 
 				return rand() % 5 + 14;
 			break;
 		}
-		case Tag::grass:
+		case entity_tag::grass:
 		{
 			if (biome == BirchGrove)
 				return rand() % 8 + 1;
@@ -333,7 +333,7 @@ int object_initializer::getRandomTypeByBiome(world_object* object, const Biomes 
 				return rand() % 9 + 22;
 			break;
 		}
-		case Tag::rock:
+		case entity_tag::rock:
 		{
 			if (biome == BirchGrove)
 				return rand() % 8 + 1;
@@ -343,7 +343,7 @@ int object_initializer::getRandomTypeByBiome(world_object* object, const Biomes 
 				return  rand() % 5 + 14;
 			break;
 		}
-		case Tag::stump:
+		case entity_tag::stump:
 		{
 			if (biome == BirchGrove)
 				return rand() % 4 + 1;
@@ -353,7 +353,7 @@ int object_initializer::getRandomTypeByBiome(world_object* object, const Biomes 
 				return rand() % 3 + 11;
 			break;
 		}
-		case Tag::bush:
+		case entity_tag::bush:
 		{
 			if (biome == BirchGrove)
 				return rand() % 8 + 1;
@@ -361,7 +361,7 @@ int object_initializer::getRandomTypeByBiome(world_object* object, const Biomes 
 				return rand() % 7 + 9;
 			break;
 		}
-		case Tag::mushroom:
+		case entity_tag::mushroom:
 		{
 			if (biome == BirchGrove)
 				return rand() % 3 + 1;

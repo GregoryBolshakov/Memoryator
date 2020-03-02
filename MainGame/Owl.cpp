@@ -23,7 +23,7 @@ owl::owl(const std::string& objectName, Vector2f centerPosition) : neutral_mob(o
 	timeForNewHitSelf = long(6e5);
 	timeForNewHit = 1000000;
 	toSaveName = "owl";
-	tag = Tag::owl;
+	tag = entity_tag::owl;
 	moveSystem.canCrashIntoStatic = false;
 	zCoord = 10;
 }
@@ -40,11 +40,11 @@ Vector2f owl::calculateTextureOffset()
 
 void owl::setTarget(dynamic_object& object)
 {	
-	if (object.tag == Tag::noose || currentAction == absorbs)
+	if (object.tag == entity_tag::noose || currentAction == absorbs)
 		return;
 	if (helper::getDist(position, object.getPosition()) <= sightRange)
 	{
-		if (object.tag == Tag::hero)
+		if (object.tag == entity_tag::hero)
 		{
 			boundTarget = &object;
 			distanceToNearest = helper::getDist(position, object.getPosition());
@@ -57,9 +57,9 @@ void owl::behaviorWithStatic(world_object* target, long long elapsedTime)
 	if (currentAction == absorbs)
 		return;
 
-	if (target->tag == Tag::fern && helper::getDist(position, target->getPosition()) <= sightRange * 2 && timeAfterFear >= fearTime)
+	if (target->tag == entity_tag::fern && helper::getDist(position, target->getPosition()) <= sightRange * 2 && timeAfterFear >= fearTime)
 	{
-		if (!(boundTarget && boundTarget->tag == Tag::hero && (helper::getDist(position, boundTarget->getPosition()) <= sightRange ||
+		if (!(boundTarget && boundTarget->tag == entity_tag::hero && (helper::getDist(position, boundTarget->getPosition()) <= sightRange ||
 			helper::getDist(target->getPosition(), boundTarget->getPosition()) <= sightRange)))
 		{
 			boundTarget = target;
@@ -67,11 +67,11 @@ void owl::behaviorWithStatic(world_object* target, long long elapsedTime)
 		}
 	}
 	else
-	if (target->tag == Tag::tree)
+	if (target->tag == entity_tag::tree)
 	{
 		auto nearestTreeCasted = dynamic_cast<forest_tree*>(target);
-		if (nearestTreeCasted && !(boundTarget && boundTarget->tag == Tag::fern))
-			if (boundTarget != nullptr && boundTarget->tag == Tag::hero && helper::getDist(nearestTreeCasted->getOwlBase(), position) < helper::getDist(nearestTreeCasted->getOwlBase(), boundTarget->getPosition()) &&
+		if (nearestTreeCasted && !(boundTarget && boundTarget->tag == entity_tag::fern))
+			if (boundTarget != nullptr && boundTarget->tag == entity_tag::hero && helper::getDist(nearestTreeCasted->getOwlBase(), position) < helper::getDist(nearestTreeCasted->getOwlBase(), boundTarget->getPosition()) &&
 				helper::getDist(nearestTreeCasted->getOwlBase(), boundTarget->getPosition()) > helper::getDist(position, boundTarget->getPosition()))
 				if ((nearestTree != nullptr && helper::getDist(nearestTreeCasted->getOwlBase(), position) < helper::getDist(nearestTree->getPosition(), position)) || nearestTree == nullptr)
 					if (helper::getDist(nearestTreeCasted->getOwlBase(), boundTarget->getPosition()) > sightRange * 1.2)
@@ -91,7 +91,7 @@ void owl::behavior(long long elapsedTime)
 	}
 
 	// first-priority actions
-	if (boundTarget && boundTarget->tag == Tag::hero && helper::getDist(position, boundTarget->getPosition()) <= sightRange)
+	if (boundTarget && boundTarget->tag == entity_tag::hero && helper::getDist(position, boundTarget->getPosition()) <= sightRange)
 			timeAfterFear = 0;	
 	else
 		timeAfterFear += elapsedTime;
@@ -103,7 +103,7 @@ void owl::behavior(long long elapsedTime)
 	}
 	//-----------------------	
 
-	if (boundTarget == nullptr || boundTarget && boundTarget->tag == Tag::hero && helper::getDist(position, boundTarget->getPosition()) > sightRange)
+	if (boundTarget == nullptr || boundTarget && boundTarget->tag == entity_tag::hero && helper::getDist(position, boundTarget->getPosition()) > sightRange)
 	{
 		auto nearestTreeCasted = dynamic_cast<forest_tree*>(nearestTree);
 		if (nearestTree && helper::getDist(position, nearestTreeCasted->getOwlBase()) > radius)
@@ -121,7 +121,7 @@ void owl::behavior(long long elapsedTime)
 	}
 
 	// bouncing to a trap
-	if (boundTarget && boundTarget->tag == Tag::fern)
+	if (boundTarget && boundTarget->tag == entity_tag::fern)
 	{
 		directionSystem.side = direction_system::calculateSide(position, boundTarget->getPosition(), elapsedTime);
 		if (helper::getDist(position, boundTarget->getPosition()) <= radius)
@@ -144,7 +144,7 @@ void owl::behavior(long long elapsedTime)
 	//-------------------
 
 	// runaway from enemy
-	if (boundTarget && boundTarget->tag == Tag::hero)
+	if (boundTarget && boundTarget->tag == entity_tag::hero)
 	{
 		const float distanceToTarget = helper::getDist(this->position, boundTarget->getPosition());
 		directionSystem.side = direction_system::calculateSide(position, movePosition, elapsedTime);
@@ -184,7 +184,7 @@ void owl::endingPreviousAction()
 	if (lastAction == absorbs)
 	{
 		auto trap = dynamic_cast<fern*>(boundTarget);
-		trap->inventory.emplace_back(Tag::owl, 1);
+		trap->inventory.emplace_back(entity_tag::owl, 1);
 		deletePromiseOn();
 	}
 	lastAction = relax;

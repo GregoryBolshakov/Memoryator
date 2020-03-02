@@ -12,7 +12,7 @@ lake::lake(std::string objectName, const Vector2f centerPosition, const int type
 	toSaveName = "lake";
 	isMultiEllipse = true;
 	lake::setType(typeOfObject);
-	tag = Tag::lake;
+	tag = entity_tag::lake;
 }
 
 void lake::setType(const int typeOfObject)
@@ -151,7 +151,7 @@ int lake::getBuildType(Vector2f, Vector2f)
 std::vector<sprite_chain_element*> lake::prepareSprites(long long)
 {
 	std::vector<sprite_chain_element*> result = {};
-	const auto body = new sprite_chain_element(PackTag::swampyTrees, PackPart::lake, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	const auto body = new sprite_chain_element(pack_tag::swampyTrees, pack_part::lake, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 
 	result.push_back(body);
 

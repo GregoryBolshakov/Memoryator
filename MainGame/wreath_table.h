@@ -17,10 +17,10 @@ public:
 
 	// craft
 	//void linkWithBuildSystem(BuildSystem* buildSystem) { this->buildSystem = buildSystem; }
-	void putItemToCraft(Tag id);
+	void putItemToCraft(entity_tag id);
 	void clearCurrentCraft() { currentCraft.clear(); }
 	[[nodiscard]] Vector2f getPlatePosition() const { return { position.x + conditionalSizeUnits.x * 0.06f, position.y - conditionalSizeUnits.x * 0.025f }; }
-	Tag checkCraftResult();
+	entity_tag checkCraftResult();
 
 	[[nodiscard]] int getPlateRadius() const { return plateRadius; }
 
@@ -29,8 +29,8 @@ private:
 	void resultAnalysis() const;
 
 	std::string craftRecipesPath = "Game/craftRecipes.txt";
-	std::map<Tag, std::vector<std::vector<std::pair<Tag, int>>>> craftRecipes;
-	std::map<Tag, int> currentCraft;
-	Tag craftResult = Tag::emptyCell;
+	std::map<entity_tag, std::vector<std::vector<std::pair<entity_tag, int>>>> craftRecipes;
+	std::map<entity_tag, int> currentCraft;
+	entity_tag craftResult = entity_tag::emptyCell;
 	int plateRadius;
 };

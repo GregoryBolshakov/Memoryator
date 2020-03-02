@@ -10,7 +10,7 @@ fence::fence(std::string objectName, const Vector2f centerPosition, const int ty
 	toSaveName = "fence";
 	fence::setType(typeOfObject);
 	isDotsAdjusted = true;
-	tag = Tag::fence;
+	tag = entity_tag::fence;
 }
 
 void fence::setType(const int typeOfObject)
@@ -100,7 +100,7 @@ Vector2f fence::getBuildPosition(std::vector<world_object*> visibleItems, const 
 
 	for (auto&item : visibleItems)
 	{
-		if (item->tag == Tag::fence)
+		if (item->tag == entity_tag::fence)
 		{
 			const auto object = dynamic_cast<fence*>(item);
 

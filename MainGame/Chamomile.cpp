@@ -8,10 +8,10 @@ chamomile::chamomile(std::string objectName, const Vector2f centerPosition, cons
 	this->typeOfObject = typeOfObject;
 	toSaveName = "chamomile";
 	chamomile::setType(typeOfObject);
-	tag = Tag::chamomile;
+	tag = entity_tag::chamomile;
 
 	count = 1;
-	id = Tag::chamomile;	
+	id = entity_tag::chamomile;	
 }
 
 void chamomile::setType(int typeOfObject)

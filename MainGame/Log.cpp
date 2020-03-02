@@ -13,7 +13,7 @@ namespace mr
 		animationSpeed = 10;
 		toSaveName = "log";
 		log::setType(typeOfObject);
-		tag = Tag::log;
+		tag = entity_tag::log;
 	}
 
 	void log::setType(const int typeOfObject)
@@ -99,7 +99,7 @@ namespace mr
 
 	std::vector<sprite_chain_element*> log::prepareSprites(long long)
 	{
-		const auto body = new sprite_chain_element(PackTag::birchGrove, PackPart::log, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+		const auto body = new sprite_chain_element(pack_tag::birchGrove, pack_part::log, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 		return { body };
 	}

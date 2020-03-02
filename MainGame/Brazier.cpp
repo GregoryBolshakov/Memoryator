@@ -15,7 +15,7 @@ brazier::brazier(std::string objectName, const Vector2f centerPosition, const in
 	isMultiEllipse = true;
 	mirrored = false;
 	initCraftRecipes();
-	tag = Tag::brazier;
+	tag = entity_tag::brazier;
 }
 
 void brazier::setType(int typeOfObject)
@@ -78,14 +78,14 @@ void brazier::initCraftRecipes()
 
 	while (fin >> craftedItemId >> recipeSize)
 	{
-		std::vector<std::pair<Tag, int>> recipe = {};
+		std::vector<std::pair<entity_tag, int>> recipe = {};
 		for (int i = 0; i < recipeSize; i++)
 		{
 			int ingredientId = 0, ingredientCount = 0;
 			fin >> ingredientId >> ingredientCount;
-			recipe.push_back(std::make_pair(Tag(ingredientId), ingredientCount));
+			recipe.push_back(std::make_pair(entity_tag(ingredientId), ingredientCount));
 		}
-		craftRecipes[Tag(craftedItemId)].push_back(recipe);
+		craftRecipes[entity_tag(craftedItemId)].push_back(recipe);
 	}
 
 	fin.close();
@@ -93,16 +93,16 @@ void brazier::initCraftRecipes()
 
 void brazier::resultAnalysis() const
 {
-	if (craftResult == Tag::emptyCell)
+	if (craftResult == entity_tag::emptyCell)
 		return;
 
-	if (craftResult == Tag::heroBag)
+	if (craftResult == entity_tag::heroBag)
 	{
 		
 	}
 }
 
-Tag brazier::checkCraftResult()
+entity_tag brazier::checkCraftResult()
 {
 	for (auto& recipes : craftRecipes)
 		for (auto& recipe : recipes.second)
@@ -122,10 +122,10 @@ Tag brazier::checkCraftResult()
 			}
 		}
 
-	return Tag::emptyCell;
+	return entity_tag::emptyCell;
 }
 
-void brazier::putItemToCraft(const Tag id)
+void brazier::putItemToCraft(const entity_tag id)
 {
 	if (currentCraft.count(id) > 0)
 		currentCraft.at(id)++;
@@ -150,8 +150,8 @@ std::vector<sprite_chain_element*> brazier::prepareSprites(long long)
     const Vector2f frontOffset(textureBox.width * 0.506f, textureBox.height * 0.949f);
 	const Vector2f frontPosition(position.x - textureBoxOffset.x + frontOffset.x, position.y - textureBoxOffset.y + frontOffset.y);
 	
-    const auto back = new sprite_chain_element(PackTag::locations, PackPart::brazier, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
-    const auto front = new sprite_chain_element(PackTag::locations, PackPart::brazier, Direction::DOWN, 2, frontPosition, conditionalSizeUnits, frontOffset);
+    const auto back = new sprite_chain_element(pack_tag::locations, pack_part::brazier, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+    const auto front = new sprite_chain_element(pack_tag::locations, pack_part::brazier, Direction::DOWN, 2, frontPosition, conditionalSizeUnits, frontOffset);
 	
     return {back, front};
 	

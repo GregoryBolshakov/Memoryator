@@ -11,7 +11,7 @@ forest_tree::forest_tree(std::string objectName, const Vector2f centerPosition, 
 	animationSpeed = 10;
 	toSaveName = "ForestTree";
 	forest_tree::setType(typeOfObject);
-	tag = Tag::tree;
+	tag = entity_tag::tree;
 }
 
 void forest_tree::setType(const int typeOfObject)
@@ -243,18 +243,18 @@ int forest_tree::getBuildType(Vector2f, Vector2f)
 
 std::vector<sprite_chain_element*> forest_tree::prepareSprites(const long long elapsedTime)
 {
-	auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::tree, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::tree, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	if (typeOfObject >= 1 && typeOfObject <= 7)
-		body->packTag = PackTag::birchGrove;
+		body->packTag = pack_tag::birchGrove;
 	if (typeOfObject >= 8 && typeOfObject <= 13)
 	{
-		body->packTag = PackTag::darkWoods;
+		body->packTag = pack_tag::darkWoods;
 		body->number -= 7;
 	}
 	if (typeOfObject >= 14 && typeOfObject <= 18)
 	{
-		body->packTag = PackTag::swampyTrees;
+		body->packTag = pack_tag::swampyTrees;
 		body->number -= 13;
 	}
 

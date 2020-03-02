@@ -15,7 +15,7 @@ public:
 	inventory_system();
 	~inventory_system();
 	void init();
-	std::vector<drawable_chain_element*> prepareSprites(long long elapsedTime, std::map<PackTag, sprite_pack>* packsMap);
+	std::vector<drawable_chain_element*> prepareSprites(long long elapsedTime, std::map<pack_tag, sprite_pack>* packsMap);
 	//void drawInventory(std::vector<std::pair<Tag, int>>* inventory, Vector2f position, RenderWindow& window);
 	void resetAnimationValues();
 	void onMouseUp();
@@ -43,7 +43,7 @@ private:
 	//held item
 	cell heldItem;
 	float heldItemSpeed = 0, dropZoneRadius{};
-	std::pair <Tag, int>* pickedCell = nullptr; 
+	std::pair <entity_tag, int>* pickedCell = nullptr; 
 	//drawing
 	std::string cellsFileDirectory = "Game/inventorySprites/cellsPath.txt", 
 		bagsFileDirectory = "Game/inventorySprites/bagsPath.txt";

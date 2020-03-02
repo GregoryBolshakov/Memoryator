@@ -1,7 +1,7 @@
 #pragma once
 
 // mobs 101 - 199; craft objects 201 - 299; world objects 301 - 399; flowers 401 - 499; auxiliary objects 501 - 599;
-enum class Tag {
+enum class entity_tag {
 	hero = 101, hare = 102, owl = 103, deer = 104, fox = 105, bear = 106, wolf = 107, monster = 108, owlBoss = 109, nightmare1 = 110, nightmare2 = 111, nightmare3 = 112,
 	heroBag = 201, noose = 202, totem = 211, hareTrap = 216, cageBear = 218, fence = 219, inkyBlackPen = 220, 
 	unknownWreath = 251, hareWreath = 252, owlWreath = 253, 
@@ -11,7 +11,7 @@ enum class Tag {
 	buildObject = 501, dropPoint = 502, emptyDraft = 503, emptyPage = 504, emptyCell = 505, selectedCell = 506, clapWhirl = 507, emptyObject = 508
 };
 
-enum class PackTag
+enum class pack_tag
 {
     empty = 0, heroAbsorb = 1, heroHit = 2, heroMove = 3, heroPick = 4, heroRoll = 5, heroStand = 6, heroThrow = 7,
     interfaceElements = 8, locations = 9, darkWoods = 10, birchGrove = 11, swampyTrees = 12, craftObjects = 13,
@@ -19,7 +19,7 @@ enum class PackTag
 	nightmare2Move = 21, nightmare2Hit = 22, deer = 23
 };
 
-enum class PackPart
+enum class pack_part
 {
 	full = 101, body = 102, legs = 103, lines = 104, // creature's parts
 	stand = 1, move = 2, trap = 3, hit = 4, hunt = 5, // action's parts

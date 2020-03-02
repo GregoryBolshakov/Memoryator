@@ -4,8 +4,8 @@ button::button()
 = default;
 
 void button::initialize(
-	const PackTag pack,
-	const PackPart pack_part,
+	const pack_tag pack,
+	const pack_part pack_part,
 	const int default_sprite_number,
 	const int selected_sprite_number,
 	const int pressed_sprite_number,

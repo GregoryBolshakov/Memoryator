@@ -21,7 +21,7 @@ struct bag_sprite_chain
 struct cell
 {
 	Vector2f position;
-	std::pair<Tag, int> content;
+	std::pair<entity_tag, int> content;
 };
 
 class hero_bag
@@ -29,33 +29,33 @@ class hero_bag
 public:
 	hero_bag();
 	~hero_bag();
-	void initialize(Vector2f position, bool isSelectable, std::vector<std::pair<Tag, int>> inventory = testInventory);
-	static cell createCell(Vector2f position, std::pair<Tag, int> content);
+	void initialize(Vector2f position, bool isSelectable, std::vector<std::pair<entity_tag, int>> inventory = testInventory);
+	static cell createCell(Vector2f position, std::pair<entity_tag, int> content);
 	[[nodiscard]] Vector2f getPosition() const { return position; }
 	[[nodiscard]] Vector2f getSizeClosed() const { return sizeClosed; }
 	[[nodiscard]] Vector2f getSizeOpen() const { return sizeOpen; }
 	[[nodiscard]] Vector2f getLastMousePos() const { return lastMousePos; }
 	[[nodiscard]] float getRadius() const;
 	int getSelectedCell(Vector2f position);
-	bool static canAfford(std::vector<std::pair<Tag, int>> recipe, std::vector<hero_bag>* bags, cell* heldItem = nullptr);
-	void static takeItems(std::vector<std::pair<Tag, int>> recipe, std::vector<hero_bag>* bags, cell* heldItem = nullptr);
-	bool static putItemsIn(std::vector<std::pair<Tag, int>>* loot, std::vector<hero_bag>* bags);
-	bool static putItemIn(std::pair<Tag, int>* loot, std::vector<hero_bag>* bags);
-	static std::vector<std::pair<Tag, int>> cellsToInventory(const std::vector<cell>& cells);
+	bool static canAfford(std::vector<std::pair<entity_tag, int>> recipe, std::vector<hero_bag>* bags, cell* heldItem = nullptr);
+	void static takeItems(std::vector<std::pair<entity_tag, int>> recipe, std::vector<hero_bag>* bags, cell* heldItem = nullptr);
+	bool static putItemsIn(std::vector<std::pair<entity_tag, int>>* loot, std::vector<hero_bag>* bags);
+	bool static putItemIn(std::pair<entity_tag, int>* loot, std::vector<hero_bag>* bags);
+	static std::vector<std::pair<entity_tag, int>> cellsToInventory(const std::vector<cell>& cells);
 	void mouseMove();
 	void setPosition(Vector2f position) { this->position = position; }
 	void fixCells();
 	void fixPos();
 
-	static std::unordered_map<Tag, int> itemsMaxCount;
-	static std::vector<std::pair<Tag, int>> testInventory;
-	static std::vector<std::pair<Tag, int>> emptyInventory;
+	static std::unordered_map<entity_tag, int> itemsMaxCount;
+	static std::vector<std::pair<entity_tag, int>> testInventory;
+	static std::vector<std::pair<entity_tag, int>> emptyInventory;
 
 	Vector2f textureOpenOffset, textureClosedOffset;
 	std::vector<cell> cells;
 
 	//animation
-	sprite_chain_element* prepareSprite(long long elapsedTime, std::map<PackTag, sprite_pack>* packsMap);
+	sprite_chain_element* prepareSprite(long long elapsedTime, std::map<pack_tag, sprite_pack>* packsMap);
 	void drawCircuit(RenderWindow* window);
 
 	long long stateChangeTime = 100000;

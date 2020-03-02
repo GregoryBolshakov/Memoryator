@@ -11,7 +11,7 @@ totem::totem(std::string objectName, const Vector2f centerPosition, const int ty
 	radius = 20;
 	toSaveName = "totem";
 	totem::setType(typeOfObject);
-	tag = Tag::totem;
+	tag = entity_tag::totem;
 }
 
 void totem::setType(const int typeOfObject)
@@ -77,7 +77,7 @@ int totem::getBuildType(Vector2f, Vector2f)
 
 std::vector<sprite_chain_element*> totem::prepareSprites(long long)
 {
-	const auto body = new sprite_chain_element(PackTag::craftObjects, PackPart::totem, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	const auto body = new sprite_chain_element(pack_tag::craftObjects, pack_part::totem, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	return { body };
 }

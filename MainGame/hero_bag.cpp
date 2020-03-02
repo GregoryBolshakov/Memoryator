@@ -11,14 +11,14 @@ hero_bag::hero_bag()
 hero_bag::~hero_bag()
 = default;
 
-std::unordered_map<Tag, int> hero_bag::itemsMaxCount = std::unordered_map<Tag, int>();
+std::unordered_map<entity_tag, int> hero_bag::itemsMaxCount = std::unordered_map<entity_tag, int>();
 
-std::vector<std::pair<Tag, int>> hero_bag::testInventory =
-{ {Tag::noose, 1}, {Tag::yarrow, 3}, {Tag::emptyCell, 0}, {Tag::inkyBlackPen, 1}, {Tag::hare, 1}, {Tag::chamomile, 2}, {Tag::emptyCell, 0} };
-std::vector<std::pair<Tag, int>> hero_bag::emptyInventory =
-{ {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0}, {Tag::emptyCell, 0} };
+std::vector<std::pair<entity_tag, int>> hero_bag::testInventory =
+{ {entity_tag::noose, 1}, {entity_tag::yarrow, 3}, {entity_tag::emptyCell, 0}, {entity_tag::inkyBlackPen, 1}, {entity_tag::hare, 1}, {entity_tag::chamomile, 2}, {entity_tag::emptyCell, 0} };
+std::vector<std::pair<entity_tag, int>> hero_bag::emptyInventory =
+{ {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0} };
 
-void hero_bag::initialize(const Vector2f position, const bool isSelectable, std::vector<std::pair<Tag, int>> inventory)
+void hero_bag::initialize(const Vector2f position, const bool isSelectable, std::vector<std::pair<entity_tag, int>> inventory)
 {
 	sizeClosed = Vector2f(helper::GetScreenSize().x / 12.0f, helper::GetScreenSize().y / 6.0f);
 	sizeOpen = Vector2f(helper::GetScreenSize().x / 6.0f, helper::GetScreenSize().y / 3.0f);
@@ -57,20 +57,20 @@ void hero_bag::initialize(const Vector2f position, const bool isSelectable, std:
 	}
 
 	// set sprites from pack
-	if (bagSpriteChain.ClosedBag->packTag == PackTag::empty)
-		bagSpriteChain.ClosedBag->setDrawInfo(PackTag::inventory, PackPart::bag1, Direction::DOWN, 1);
-	if (bagSpriteChain.ClosedBagSelected->packTag == PackTag::empty)
-		bagSpriteChain.ClosedBagSelected->setDrawInfo(PackTag::inventory, PackPart::bag1, Direction::DOWN, 2);
-	if (bagSpriteChain.ClosedBagBig->packTag == PackTag::empty)
-		bagSpriteChain.ClosedBagBig->setDrawInfo(PackTag::inventory, PackPart::bag1, Direction::DOWN, 3);
-	if (bagSpriteChain.OpenedBag->packTag == PackTag::empty)
-		bagSpriteChain.OpenedBag->setDrawInfo(PackTag::inventory, PackPart::bag1, Direction::DOWN, 4);
-	if (bagSpriteChain.OpenedBagSelected->packTag == PackTag::empty)
-		bagSpriteChain.OpenedBagSelected->setDrawInfo(PackTag::inventory, PackPart::bag1, Direction::DOWN, 5);
+	if (bagSpriteChain.ClosedBag->packTag == pack_tag::empty)
+		bagSpriteChain.ClosedBag->setDrawInfo(pack_tag::inventory, pack_part::bag1, Direction::DOWN, 1);
+	if (bagSpriteChain.ClosedBagSelected->packTag == pack_tag::empty)
+		bagSpriteChain.ClosedBagSelected->setDrawInfo(pack_tag::inventory, pack_part::bag1, Direction::DOWN, 2);
+	if (bagSpriteChain.ClosedBagBig->packTag == pack_tag::empty)
+		bagSpriteChain.ClosedBagBig->setDrawInfo(pack_tag::inventory, pack_part::bag1, Direction::DOWN, 3);
+	if (bagSpriteChain.OpenedBag->packTag == pack_tag::empty)
+		bagSpriteChain.OpenedBag->setDrawInfo(pack_tag::inventory, pack_part::bag1, Direction::DOWN, 4);
+	if (bagSpriteChain.OpenedBagSelected->packTag == pack_tag::empty)
+		bagSpriteChain.OpenedBagSelected->setDrawInfo(pack_tag::inventory, pack_part::bag1, Direction::DOWN, 5);
 	//----------------------
 }
 
-cell hero_bag::createCell(const Vector2f position, const std::pair<Tag, int> content)
+cell hero_bag::createCell(const Vector2f position, const std::pair<entity_tag, int> content)
 {
 	cell cell;
 	cell.position = position;
@@ -154,9 +154,9 @@ void hero_bag::fixPos()
 		shiftVector.y = 0;
 }
 
-std::vector<std::pair<Tag, int>> hero_bag::cellsToInventory(const std::vector<cell>& cells)
+std::vector<std::pair<entity_tag, int>> hero_bag::cellsToInventory(const std::vector<cell>& cells)
 {
-	std::vector<std::pair<Tag, int>> ans(cells.size());
+	std::vector<std::pair<entity_tag, int>> ans(cells.size());
 	for (auto i = 0u; i < cells.size(); i++)
 	{
 		ans[i] = { cells[i].content.first, cells[i].content.second };
@@ -165,7 +165,7 @@ std::vector<std::pair<Tag, int>> hero_bag::cellsToInventory(const std::vector<ce
 	return ans;
 }
 
-bool hero_bag::canAfford(std::vector<std::pair<Tag, int>> recipe, std::vector<hero_bag>* bags, cell* heldItem)
+bool hero_bag::canAfford(std::vector<std::pair<entity_tag, int>> recipe, std::vector<hero_bag>* bags, cell* heldItem)
 {
 	for (auto& item : recipe)
 	{
@@ -188,7 +188,7 @@ bool hero_bag::canAfford(std::vector<std::pair<Tag, int>> recipe, std::vector<he
 	return true;
 }
 
-void hero_bag::takeItems(std::vector<std::pair<Tag, int>> recipe, std::vector<hero_bag>* bags, cell* heldItem)
+void hero_bag::takeItems(std::vector<std::pair<entity_tag, int>> recipe, std::vector<hero_bag>* bags, cell* heldItem)
 {
 	for (auto& item : recipe)
 	{
@@ -202,7 +202,7 @@ void hero_bag::takeItems(std::vector<std::pair<Tag, int>> recipe, std::vector<he
 			}
 			item.second -= heldItem->content.second;
 			heldItem->content.second = 0;
-			heldItem->content.first = Tag::emptyCell;
+			heldItem->content.first = entity_tag::emptyCell;
 		}
 		for (auto& bag : *bags)
 		{
@@ -220,7 +220,7 @@ void hero_bag::takeItems(std::vector<std::pair<Tag, int>> recipe, std::vector<he
 					{
 						item.second -= cell.content.second;
 						cell.content.second = 0;
-						cell.content.first = Tag::emptyCell;
+						cell.content.first = entity_tag::emptyCell;
 					}
 				}
 			if (isBreak)
@@ -229,7 +229,7 @@ void hero_bag::takeItems(std::vector<std::pair<Tag, int>> recipe, std::vector<he
 	}
 }
 
-bool hero_bag::putItemsIn(std::vector<std::pair<Tag, int>>* loot, std::vector<hero_bag>* bags)
+bool hero_bag::putItemsIn(std::vector<std::pair<entity_tag, int>>* loot, std::vector<hero_bag>* bags)
 {
 	auto result = true;
 	for (auto& item : *loot)
@@ -238,13 +238,13 @@ bool hero_bag::putItemsIn(std::vector<std::pair<Tag, int>>* loot, std::vector<he
 		{
 			auto isBreak = false;
 			for (auto& cell : bag.cells)
-				if (item.first == cell.content.first || cell.content.first == Tag::emptyCell)
+				if (item.first == cell.content.first || cell.content.first == entity_tag::emptyCell)
 				{
 					if (item.second <= (itemsMaxCount[item.first] - cell.content.second))
 					{
 						cell.content.second += item.second;
 						cell.content.first = item.first;
-						item = std::make_pair(Tag::emptyCell, 0);
+						item = std::make_pair(entity_tag::emptyCell, 0);
 						isBreak = true;
 						break;
 					}
@@ -261,7 +261,7 @@ bool hero_bag::putItemsIn(std::vector<std::pair<Tag, int>>* loot, std::vector<he
 	return result;
 }
 
-bool hero_bag::putItemIn(std::pair<Tag, int>* loot, std::vector<hero_bag>* bags)
+bool hero_bag::putItemIn(std::pair<entity_tag, int>* loot, std::vector<hero_bag>* bags)
 {
 	auto result = true;
 
@@ -269,13 +269,13 @@ bool hero_bag::putItemIn(std::pair<Tag, int>* loot, std::vector<hero_bag>* bags)
 	{
 		auto isBreak = false;
 		for (auto& cell : bag.cells)
-			if (loot->first == cell.content.first || cell.content.first == Tag::emptyCell)
+			if (loot->first == cell.content.first || cell.content.first == entity_tag::emptyCell)
 			{
 				if (loot->second <= (itemsMaxCount[loot->first] - cell.content.second))
 				{
 					cell.content.second += loot->second;
 					cell.content.first = loot->first;
-					loot->first = Tag::emptyCell;
+					loot->first = entity_tag::emptyCell;
 					loot->second = 0;
 					isBreak = true;
 					break;
@@ -312,7 +312,7 @@ void hero_bag::mouseMove()
 	lastMousePos = Vector2f(Mouse::getPosition());
 }
 
-sprite_chain_element* hero_bag::prepareSprite(const long long elapsedTime, std::map<PackTag, sprite_pack> * packsMap)
+sprite_chain_element* hero_bag::prepareSprite(const long long elapsedTime, std::map<pack_tag, sprite_pack> * packsMap)
 {
 	const auto screenCenter = Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2);
 	bagSpriteChain.ClosedBag->size = sizeClosed; bagSpriteChain.ClosedBagSelected->size = sizeClosed; bagSpriteChain.ClosedBagBig->size = sizeClosed;
@@ -363,7 +363,7 @@ sprite_chain_element* hero_bag::prepareSprite(const long long elapsedTime, std::
 			fixPos();
 			position.x += shiftVector.x; position.y += shiftVector.y;
 
-			const auto textureSize = packsMap->at(PackTag::inventory).getOriginalInfo(PackPart::bag1, Direction::DOWN, 4).source_size;
+			const auto textureSize = packsMap->at(pack_tag::inventory).getOriginalInfo(pack_part::bag1, Direction::DOWN, 4).source_size;
 			const auto changing_to_change_time = float(stateChangingTime)/float(stateChangeTime);
 			const Vector2f scaleValue = {
 				(sizeClosed.x + (sizeOpen.x - sizeClosed.x) * changing_to_change_time) / textureSize.w,

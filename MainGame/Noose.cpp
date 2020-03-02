@@ -22,7 +22,7 @@ noose::noose(const std::string& objectName, const Vector2f centerPosition, world
 	moveSystem.canCrashIntoDynamic = false;
 	noose::jerk(2, 1);
 	toSaveName = "noose";
-	tag = Tag::noose;
+	tag = entity_tag::noose;
 }
 
 noose::~noose()
@@ -48,7 +48,7 @@ void noose::behaviorWithDynamic(dynamic_object* target, long long /*elapsedTime*
 		return;
 	}
 
-	if (target->tag == Tag::deer)
+	if (target->tag == entity_tag::deer)
 	{
 		auto deer = dynamic_cast<::deer*>(target);
 
@@ -236,8 +236,8 @@ void noose::rotateAndExtend(sprite_chain_element* rope, sprite_chain_element* lo
 std::vector<sprite_chain_element*> noose::prepareSprites(long long elapsedTime)
 {
 	std::vector<sprite_chain_element*> result = {};
-	auto ropeSprite = new sprite_chain_element(PackTag::craftObjects, PackPart::noose, Direction::DOWN, 3, position, {conditionalSizeUnits.x, 30}, {0, 0}, color);
-	auto loopSprite = new sprite_chain_element(PackTag::craftObjects, PackPart::noose, Direction::UP, 1, position, conditionalSizeUnits, textureBoxOffset, color);
+	auto ropeSprite = new sprite_chain_element(pack_tag::craftObjects, pack_part::noose, Direction::DOWN, 3, position, {conditionalSizeUnits.x, 30}, {0, 0}, color);
+	auto loopSprite = new sprite_chain_element(pack_tag::craftObjects, pack_part::noose, Direction::UP, 1, position, conditionalSizeUnits, textureBoxOffset, color);
 
 	loopSprite->number = currentSprite[0];
 

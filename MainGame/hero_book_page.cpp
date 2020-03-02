@@ -9,26 +9,26 @@ hero_book_page::hero_book_page()
 {
 	initDrafts();
 
-	wreathMatrix.resize(17, std::vector<Tag>(5));
+	wreathMatrix.resize(17, std::vector<entity_tag>(5));
 	wreathMatrixPositions.resize(17, std::vector<Vector2f>(5));
 	coloredMatrix.resize(17, std::vector<int>(5));
-	plantsMatrix.resize(2, std::vector<std::pair<Tag, int>>(3));
+	plantsMatrix.resize(2, std::vector<std::pair<entity_tag, int>>(3));
 	for (auto& raw : wreathMatrix)
 		for (auto& cell : raw)
-			cell = Tag::emptyCell;
+			cell = entity_tag::emptyCell;
 
-	plantsMatrix[0][0] = { Tag::chamomile, 1 };
-	plantsMatrix[0][1] = { Tag::yarrow, 1 };
-	plantsMatrix[0][2] = { Tag::fern, 1 };
-	plantsMatrix[1][0] = { Tag::mugwort, 1 };
-	plantsMatrix[1][1] = { Tag::poppy, 1 };
-	plantsMatrix[1][2] = { Tag::emptyCell, 0 };
+	plantsMatrix[0][0] = { entity_tag::chamomile, 1 };
+	plantsMatrix[0][1] = { entity_tag::yarrow, 1 };
+	plantsMatrix[0][2] = { entity_tag::fern, 1 };
+	plantsMatrix[1][0] = { entity_tag::mugwort, 1 };
+	plantsMatrix[1][1] = { entity_tag::poppy, 1 };
+	plantsMatrix[1][2] = { entity_tag::emptyCell, 0 };
 
-	plantsConnections[Tag::chamomile] = { Tag::poppy, Tag::yarrow };
-	plantsConnections[Tag::yarrow] = { Tag::chamomile, Tag::fern };
-	plantsConnections[Tag::fern] = { Tag::yarrow, Tag::mugwort };
-	plantsConnections[Tag::mugwort] = { Tag::fern, Tag::poppy };
-	plantsConnections[Tag::poppy] = { Tag::mugwort, Tag::chamomile };
+	plantsConnections[entity_tag::chamomile] = { entity_tag::poppy, entity_tag::yarrow };
+	plantsConnections[entity_tag::yarrow] = { entity_tag::chamomile, entity_tag::fern };
+	plantsConnections[entity_tag::fern] = { entity_tag::yarrow, entity_tag::mugwort };
+	plantsConnections[entity_tag::mugwort] = { entity_tag::fern, entity_tag::poppy };
+	plantsConnections[entity_tag::poppy] = { entity_tag::mugwort, entity_tag::chamomile };
 }
 
 hero_book_page::~hero_book_page()
@@ -136,11 +136,11 @@ void hero_book_page::initAuxiliarySpriteMap()
 		buttonSize.y = buttonSize.y * screenSize.y / 100;
 		buttonSize.x = buttonTextureDefault.getSize().x * buttonSize.y / buttonTextureDefault.getSize().y;		
 
-		auxiliarySpriteMap[AuxiliarySpriteTag(tag)].texture.loadFromFile(buttonImagePathDefault);
-		const auto textureSize = Vector2f(auxiliarySpriteMap[AuxiliarySpriteTag(tag)].texture.getSize());
+		auxiliarySpriteMap[auxiliary_sprite_tag(tag)].texture.loadFromFile(buttonImagePathDefault);
+		const auto textureSize = Vector2f(auxiliarySpriteMap[auxiliary_sprite_tag(tag)].texture.getSize());
 
-		auxiliarySpriteMap[AuxiliarySpriteTag(tag)].sprite.setTexture(auxiliarySpriteMap[AuxiliarySpriteTag(tag)].texture);
-		auxiliarySpriteMap[AuxiliarySpriteTag(tag)].sprite.setScale(buttonSize.x / textureSize.x, buttonSize.y / textureSize.y);		
+		auxiliarySpriteMap[auxiliary_sprite_tag(tag)].sprite.setTexture(auxiliarySpriteMap[auxiliary_sprite_tag(tag)].texture);
+		auxiliarySpriteMap[auxiliary_sprite_tag(tag)].sprite.setScale(buttonSize.x / textureSize.x, buttonSize.y / textureSize.y);		
 	}
 
 	fin.close();
@@ -183,19 +183,19 @@ Vector2f hero_book_page::getConnectionPosition(int numberInOrder)
 	return { upperLeft.x + connectionPedestals[numberInOrder].x * pageSize.x - frameOffset, upperLeft.y + connectionPedestals[numberInOrder].y * pageSize.y - frameOffset };
 }
 
-Tag hero_book_page::pageToObjectId(int page)
+entity_tag hero_book_page::pageToObjectId(int page)
 {
 	if (page < 101 || page > 499)
-		return Tag::emptyPage;
-	return Tag(page);
+		return entity_tag::emptyPage;
+	return entity_tag(page);
 }
 
 int hero_book_page::buttonToPage(ButtonTag button)
 {
 	if (int(button) >= 101 && int(button) <= 499)
 	{
-		if (objectInfo.find(Tag(int(button))) != objectInfo.end())		
-			if (objectInfo.at(Tag(int(button))).isUnlocked)
+		if (objectInfo.find(entity_tag(int(button))) != objectInfo.end())		
+			if (objectInfo.at(entity_tag(int(button))).isUnlocked)
 				return int(button);
 		return -1;
 	}
@@ -293,8 +293,8 @@ void hero_book_page::setButtonLock(ButtonTag button, const ButtonTag changedButt
 		return;
 	}
 
-	if (objectInfo.find(Tag(int(button))) != objectInfo.end())
-		if (objectInfo.at(Tag(int(button))).isUnlocked)
+	if (objectInfo.find(entity_tag(int(button))) != objectInfo.end())
+		if (objectInfo.at(entity_tag(int(button))).isUnlocked)
 		{
 			buttonList->at(changedButton).stop_being_gray();
 			return;
@@ -375,12 +375,12 @@ std::vector<sprite_chain_element*> hero_book_page::prepareLines()
 	return result;
 }
 
-void hero_book_page::unlockObject(Tag object)
+void hero_book_page::unlockObject(entity_tag object)
 {
 	objectInfo[object].isUnlocked = true;
 }
 
-int hero_book_page::getHeadingPage(Tag object)
+int hero_book_page::getHeadingPage(entity_tag object)
 {
 	if (!(int(object) >= 101 && int(object) <= 499))
 		return -1;
@@ -430,36 +430,36 @@ void hero_book_page::initDrafts()
 	
 	while (fin >> draftId >> ringsCount >> plantsCount)
 	{
-		originalSetups[Tag(draftId)].id = Tag(draftId);
+		originalSetups[entity_tag(draftId)].id = entity_tag(draftId);
 
 		for (auto i = 0; i < ringsCount; i++)
 		{
 			int ring;
 			fin >> ring;
-			originalSetups[Tag(draftId)].rings.push_back(ring);
+			originalSetups[entity_tag(draftId)].rings.push_back(ring);
 		}
 
 		for (auto i = 0; i < plantsCount; i++)
 		{
 			int raw, column, plant;
 			fin >> raw >> column >> plant;
-			originalSetups[Tag(draftId)].plants.emplace_back(Tag(plant), std::make_pair(raw, column));
+			originalSetups[entity_tag(draftId)].plants.emplace_back(entity_tag(plant), std::make_pair(raw, column));
 		}
 	}
 
 	fin.close();
 }
 
-Tag hero_book_page::tagToWreath(Tag item)
+entity_tag hero_book_page::tagToWreath(entity_tag item)
 {
 	switch (item)
 	{
-	case Tag::hare:
-		return Tag::hareWreath;
-	case Tag::owl:
-		return Tag::owlWreath;
+	case entity_tag::hare:
+		return entity_tag::hareWreath;
+	case entity_tag::owl:
+		return entity_tag::owlWreath;
 	default:
-		return Tag::emptyCell;
+		return entity_tag::emptyCell;
 	}	
 }
 
@@ -530,8 +530,8 @@ std::pair<int, int> hero_book_page::getSelectedWreathCell()
 	for (auto cnt1 = 0u; cnt1 < wreathMatrix.size(); cnt1++)
 		for (auto cnt2 = 0u; cnt2 < wreathMatrix[cnt1].size(); cnt2++)
 		{
-			if (wreathMatrix[cnt1][cnt2] == Tag::selectedCell)
-				wreathMatrix[cnt1][cnt2] = Tag::emptyCell;
+			if (wreathMatrix[cnt1][cnt2] == entity_tag::selectedCell)
+				wreathMatrix[cnt1][cnt2] = entity_tag::emptyCell;
 			const auto curPos = Vector2f(wreathMatrixPositions[cnt1][cnt2].x + buttonList->at(ButtonTag::cell).get_global_bounds().width / 2.0f,
 			                             wreathMatrixPositions[cnt1][cnt2].y + buttonList->at(ButtonTag::cell).get_global_bounds().height / 2.0f);
 			if (helper::getDist(Vector2f(mousePos), curPos) < minD &&
@@ -562,7 +562,7 @@ std::pair<int, int> hero_book_page::getSelectedPlantsCell()
 	std::pair<int, int> ans = std::make_pair(int((mousePos.y - upperLeftCorner.y) / size.y),
 	                                         int((mousePos.x - upperLeftCorner.x) / size.x));
 
-	if (plantsMatrix[ans.first][ans.second].first == Tag::emptyCell || plantsMatrix[ans.first][ans.second].second == 0)
+	if (plantsMatrix[ans.first][ans.second].first == entity_tag::emptyCell || plantsMatrix[ans.first][ans.second].second == 0)
 		return { -1, -1 };
 
 	return ans;
@@ -600,10 +600,10 @@ void hero_book_page::clearWreathMatrix()
 {
 	for (auto& raw : wreathMatrix)
 		for (auto column = 0u; column < wreathMatrix[0].size(); column++)
-			raw[column] = Tag::emptyCell;	
+			raw[column] = entity_tag::emptyCell;	
 }
 
-void hero_book_page::setPlantsOnMatrix(const std::vector<std::pair<Tag, std::pair<int, int>>>& plants)
+void hero_book_page::setPlantsOnMatrix(const std::vector<std::pair<entity_tag, std::pair<int, int>>>& plants)
 {
 	clearWreathMatrix();
 	for (auto& plant : plants)
@@ -619,12 +619,12 @@ void hero_book_page::coloredDfs(int raw, int column, int color, bool flowerPaten
 	{
 		if (!flowerPatency)
 		{
-			if (coloredMatrix[way.first][way.second] == 0 && (wreathMatrix[raw][column] == Tag::emptyCell || wreathMatrix[way.first][way.second] == Tag::selectedCell))
+			if (coloredMatrix[way.first][way.second] == 0 && (wreathMatrix[raw][column] == entity_tag::emptyCell || wreathMatrix[way.first][way.second] == entity_tag::selectedCell))
 				coloredDfs(way.first, way.second, color, flowerPatency);
 		}
 		else
 		{
-			if (coloredMatrix[way.first][way.second] == 1 && (wreathMatrix[raw][column] == Tag::emptyCell || wreathMatrix[way.first][way.second] == Tag::selectedCell) ||
+			if (coloredMatrix[way.first][way.second] == 1 && (wreathMatrix[raw][column] == entity_tag::emptyCell || wreathMatrix[way.first][way.second] == entity_tag::selectedCell) ||
 				coloredMatrix[way.first][way.second] == 0)
 				coloredDfs(way.first, way.second, color, flowerPatency);
 		}
@@ -647,9 +647,9 @@ bool hero_book_page::isCenterSurrounded()
 	return coloredMatrix[center.first][center.second] == 1;
 }
 
-std::vector<drawable_chain_element*> hero_book_page::prepareConnectableFlowers(Tag currentFlower)
+std::vector<drawable_chain_element*> hero_book_page::prepareConnectableFlowers(entity_tag currentFlower)
 {
-	if (plantsConnections.find(Tag(int(currentFlower))) == plantsConnections.end())
+	if (plantsConnections.find(entity_tag(int(currentFlower))) == plantsConnections.end())
 		return {};	
 
 	std::vector<drawable_chain_element*> result = {};
@@ -661,7 +661,7 @@ std::vector<drawable_chain_element*> hero_book_page::prepareConnectableFlowers(T
 	result.push_back(new text_chain_element({ headingPos.x, headingPos.y }, { 0, 0 }, sf::Color(100, 68, 34, 180), "Connected with:"));
 
 	auto cnt = 0;
-	for (auto& connection : plantsConnections.at(Tag(int(currentFlower))))
+	for (auto& connection : plantsConnections.at(entity_tag(int(currentFlower))))
 	{
 		if (buttonList->find(ButtonTag(int(connection))) == buttonList->end())
 			continue;
@@ -676,7 +676,7 @@ std::vector<drawable_chain_element*> hero_book_page::prepareConnectableFlowers(T
 
 //--------
 
-page_content hero_book_page::getPreparedContent(int pageNumber, Tag currentDraft)
+page_content hero_book_page::getPreparedContent(int pageNumber, entity_tag currentDraft)
 {
 	page_content result;
 

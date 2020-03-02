@@ -8,10 +8,10 @@ fern::fern(std::string objectName, const Vector2f centerPosition, const int type
 	this->typeOfObject = typeOfObject;
 	toSaveName = "fern";
 	fern::setType(typeOfObject);
-	tag = Tag::fern;
+	tag = entity_tag::fern;
 
 	count = 1;
-	id = Tag::fern;
+	id = entity_tag::fern;
 }
 
 void fern::setType(int typeOfObject)

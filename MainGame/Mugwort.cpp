@@ -9,9 +9,9 @@ mugwort::mugwort(std::string objectName, Vector2f centerPosition, int typeOfObje
 	toSaveName = "mugwort";
 	mugwort::setType(typeOfObject);
 	radius = 50;
-	tag = Tag::mugwort;
+	tag = entity_tag::mugwort;
 	count = 1;
-	id = Tag::yarrow;
+	id = entity_tag::yarrow;
 }
 
 void mugwort::setType(int typeOfObject)

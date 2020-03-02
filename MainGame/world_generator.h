@@ -10,20 +10,20 @@ public:
 	const float FARTHEST_SCALE = 0.998f;
 	
 	void generate();
-	void init(int width, int height, Vector2f blockSize, Vector2f microBlockSize, grid_list* staticGrid, grid_list* dynamicGrid, std::map<PackTag, sprite_pack>* packsMap);
+	void init(int width, int height, Vector2f blockSize, Vector2f microBlockSize, grid_list* staticGrid, grid_list* dynamicGrid, std::map<pack_tag, sprite_pack>* packsMap);
     void initMainScale();
 
 	void initializeStaticItem(
-		Tag itemClass,
+		entity_tag itemClass,
 		Vector2f itemPosition,
 		int itemType,
 		const std::string& itemName,
 		int count = 1,
-		Biomes biome = DarkWoods,
+		biomes biome = DarkWoods,
 		bool mirrored = true,
-		const std::vector<std::pair<Tag, int>>& inventory = {}) const;
+		const std::vector<std::pair<entity_tag, int>>& inventory = {}) const;
 	
-	void initializeDynamicItem(Tag itemClass, Vector2f itemPosition, const std::string& itemName, world_object* owner = nullptr);
+	void initializeDynamicItem(entity_tag itemClass, Vector2f itemPosition, const std::string& itemName, world_object* owner = nullptr);
 
 	//active generation
 	void inBlockGenerate(int blockIndex);
@@ -35,7 +35,7 @@ public:
 	world_generator();
 	~world_generator();
 
-	Biomes biomeMatrix[100][100]{};
+	biomes biomeMatrix[100][100]{};
 	std::map<int, bool> rememberedBlocks = { {0, true} };
 	dynamic_object* focusedObject = nullptr;
 	float scaleFactor = 1;
@@ -43,7 +43,7 @@ public:
 private:
 	grid_list* staticGrid = nullptr;
 	grid_list* dynamicGrid = nullptr;	
-	std::map<PackTag, sprite_pack>* packsMap{};
+	std::map<pack_tag, sprite_pack>* packsMap{};
 	int width = 0;
 	int height = 0;
 	Vector2f blockSize = { 0, 0 };

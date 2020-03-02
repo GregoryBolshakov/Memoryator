@@ -225,7 +225,7 @@ Vector2f dynamic_object::doSlip(Vector2f newPosition, const std::vector<static_o
 		if (!terrain || staticItem->isBackground || staticItem->getRadius() == 0)
 			continue;
 
-		if (tag != Tag::hero && staticItem->isMultiEllipse)
+		if (tag != entity_tag::hero && staticItem->isMultiEllipse)
 			continue;
 
 		if (terrain->isMultiEllipse)

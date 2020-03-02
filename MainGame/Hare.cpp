@@ -20,7 +20,7 @@ hare::hare(const std::string& objectName, Vector2f centerPosition) : neutral_mob
 	timeForNewHitSelf = long(6e5);
 	timeForNewHit = 1000000;
 	toSaveName = "hare";
-	tag = Tag::hare;
+	tag = entity_tag::hare;
 }
 
 hare::~hare()
@@ -35,11 +35,11 @@ Vector2f hare::calculateTextureOffset()
 
 void hare::setTarget(dynamic_object& object)
 {
-	if (object.tag == Tag::noose || currentAction == absorbs)
+	if (object.tag == entity_tag::noose || currentAction == absorbs)
 		return;
 	if (helper::getDist(position, object.getPosition()) <= sightRange)
 	{
-		if (object.tag == Tag::hero)
+		if (object.tag == entity_tag::hero)
 		{
 			boundTarget = &object;
 			distanceToNearest = helper::getDist(position, object.getPosition());
@@ -52,7 +52,7 @@ void hare::behaviorWithStatic(world_object* target, long long elapsedTime)
 	if (currentAction == absorbs)
 		return;
 	if (helper::getDist(position, target->getPosition()) <= sightRange && timeAfterFear >= fearTime)		
-		if (target->tag == Tag::hareTrap)
+		if (target->tag == entity_tag::hareTrap)
 		{
 			if (boundTarget == nullptr)
 			{
@@ -80,7 +80,7 @@ void hare::behavior(long long elapsedTime)
 	// first-priority actions
 	if (boundTarget)
 	{
-		if (boundTarget->tag == Tag::hero)
+		if (boundTarget->tag == entity_tag::hero)
 			timeAfterFear = 0;
 	}
 	else
@@ -106,7 +106,7 @@ void hare::behavior(long long elapsedTime)
 	const float distanceToTarget = helper::getDist(this->position, boundTarget->getPosition());
 
 	// bouncing to a trap
-	if (boundTarget->tag == Tag::hareTrap)
+	if (boundTarget->tag == entity_tag::hareTrap)
 	{
 		directionSystem.side = direction_system::calculateSide(position, boundTarget->getPosition(), elapsedTime);
 		if (helper::getDist(position, boundTarget->getPosition()) <= radius)
@@ -125,7 +125,7 @@ void hare::behavior(long long elapsedTime)
 	//-------------------
 
 	// runaway from enemy
-	if (boundTarget->tag == Tag::hero)
+	if (boundTarget->tag == entity_tag::hero)
 	{
 		directionSystem.side = direction_system::calculateSide(position, laxMovePosition, elapsedTime);
 		moveSystem.speed = std::max(moveSystem.defaultSpeed, (moveSystem.defaultSpeed * 10) * (1 - (helper::getDist(position, boundTarget->getPosition()) / sightRange * 1.5f)));
@@ -180,7 +180,7 @@ void hare::endingPreviousAction()
 	if (lastAction == absorbs)
 	{
 		auto trap = dynamic_cast<hare_trap*>(boundTarget);
-		trap->inventory[0] = std::make_pair(Tag::hare, 1);
+		trap->inventory[0] = std::make_pair(entity_tag::hare, 1);
 		deletePromiseOn();
 	}
 	lastAction = relax;
@@ -193,7 +193,7 @@ void hare::jerk(float power, float deceleration, Vector2f destinationPoint)
 
 std::vector<sprite_chain_element*> hare::prepareSprites(long long elapsedTime)
 {
-	auto body = new sprite_chain_element(PackTag::hare, PackPart::full, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
+	auto body = new sprite_chain_element(pack_tag::hare, pack_part::full, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	animationSpeed = 10;
 
 	Side spriteSide = directionSystem.side;
@@ -215,26 +215,26 @@ std::vector<sprite_chain_element*> hare::prepareSprites(long long elapsedTime)
 		case relax:
 		{
 			animationLength = 1;
-			body->packPart = PackPart::stand;
+			body->packPart = pack_part::stand;
 			break;
 		}
 		case absorbs:
 		{
 			animationLength = 10;
-			body->packPart = PackPart::trap;
+			body->packPart = pack_part::trap;
 			break;
 		}
 		case dead:
 		{
 			animationLength = 1;
-			body->packPart = PackPart::stand;
+			body->packPart = pack_part::stand;
 			currentSprite[0] = 1;
 			break;
 		}
 		case move:
 		{
 			animationLength = 5;
-			body->packPart = PackPart::move;						
+			body->packPart = pack_part::move;						
 			break;
 		}
 	default:;

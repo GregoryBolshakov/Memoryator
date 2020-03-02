@@ -10,8 +10,8 @@ class sprite_chain_element : public drawable_chain_element
 public:
     sprite_chain_element();
     sprite_chain_element(
-        PackTag tag,
-        PackPart part,
+        pack_tag tag,
+        pack_part part,
         Direction direction,
         int number = 1,
         Vector2f position = {0, 0},
@@ -30,10 +30,10 @@ public:
 		bool unscaled = false,
 		float rotation = 0);
     virtual ~sprite_chain_element();
-	void setDrawInfo(PackTag tag, PackPart part, Direction direction, int number = 1);
+	void setDrawInfo(pack_tag tag, pack_part part, Direction direction, int number = 1);
 	drawable_chain_element* upCast() { drawable_chain_element* result = this; return result; }
 
-	PackTag packTag = PackTag::empty; PackPart packPart = PackPart::full; Direction direction = Direction::DOWN;
+	pack_tag packTag = pack_tag::empty; pack_part packPart = pack_part::full; Direction direction = Direction::DOWN;
 	
 	int number = 1, animationLength = 1; int zCoord = 1, finishSprite = 0;
     bool isBackground = false, mirrored = false, antiTransparent = false, unscaled = false;	

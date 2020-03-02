@@ -12,8 +12,8 @@ public:
 	button();
 	
 	void initialize(
-		PackTag pack,
-		PackPart pack_part,
+		pack_tag pack,
+		pack_part pack_part,
 		int default_sprite_number,
 		int selected_sprite_number,
 		int pressed_sprite_number,

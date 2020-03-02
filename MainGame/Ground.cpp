@@ -9,7 +9,7 @@ ground::ground(std::string objectName, const Vector2f centerPosition, const int 
 	isBackground = true;
 	toSaveName = "ground";
 	ground::setType(typeOfObject);
-	tag = Tag::ground;
+	tag = entity_tag::ground;
 }
 
 void ground::setType(int typeOfObject)
@@ -39,17 +39,17 @@ int ground::getBuildType(Vector2f, Vector2f)
 
 std::vector<sprite_chain_element*> ground::prepareSprites(long long)
 {
-	auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::ground, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::ground, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	
 	body->zCoord = zCoord;
 	body->isBackground = true;
 
 	if (typeOfObject == 1)
-		body->packTag = PackTag::swampyTrees;
+		body->packTag = pack_tag::swampyTrees;
 	if (typeOfObject == 2)
-		body->packTag = PackTag::darkWoods;
+		body->packTag = pack_tag::darkWoods;
 	if (typeOfObject == 3)
-		body->packTag = PackTag::birchGrove;
+		body->packTag = pack_tag::birchGrove;
 
     return { body };
 }

@@ -11,7 +11,7 @@ stump::stump(std::string objectName, const Vector2f centerPosition, const int ty
 	animationSpeed = 10;
 	toSaveName = "stump";
 	stump::setType(typeOfObject);
-	tag = Tag::stump;
+	tag = entity_tag::stump;
 }
 
 void stump::setType(const int typeOfObject)
@@ -173,18 +173,18 @@ int stump::getBuildType(Vector2f, Vector2f)
 
 std::vector<sprite_chain_element*> stump::prepareSprites(long long)
 {
-	auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::stump, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::stump, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	if (typeOfObject >= 1 && typeOfObject <= 4)
-		body->packTag = PackTag::birchGrove;
+		body->packTag = pack_tag::birchGrove;
 	if (typeOfObject >= 5 && typeOfObject <= 10)
 	{
-		body->packTag = PackTag::darkWoods;
+		body->packTag = pack_tag::darkWoods;
 		body->number -= 4;
 	}
 	if (typeOfObject >= 11 && typeOfObject <= 13)
 	{
-		body->packTag = PackTag::swampyTrees;
+		body->packTag = pack_tag::swampyTrees;
 		body->number -= 10;
 	}
 

@@ -11,7 +11,7 @@ roof::roof(std::string objectName, const Vector2f centerPosition, const int type
 	animationSpeed = 10;
 	toSaveName = "roof";
 	roof::setType(typeOfObject);
-	tag = Tag::roof;
+	tag = entity_tag::roof;
 }
 
 void roof::setType(const int typeOfObject)
@@ -92,7 +92,7 @@ int roof::getBuildType(Vector2f, Vector2f)
 
 std::vector<sprite_chain_element*> roof::prepareSprites(long long)
 {
-	const auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::roof, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	const auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::roof, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	return { body };
 }

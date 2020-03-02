@@ -9,7 +9,7 @@ dropped_loot::dropped_loot(std::string objectName, Vector2f centerPosition, int 
 	toSaveName = "drop";
 	dropped_loot::setType(typeOfObject);
 	radius = sprite_pack::iconSize.x / 2;
-	tag = Tag::droppedLoot;
+	tag = entity_tag::droppedLoot;
 	this->count = count;
 }
 
@@ -19,7 +19,7 @@ void dropped_loot::setType(int typeOfObject)
 		return;
 
 	this->typeOfObject = typeOfObject;
-	id = Tag(typeOfObject);
+	id = entity_tag(typeOfObject);
 	conditionalSizeUnits = sprite_pack::iconSize;
 }
 
@@ -49,30 +49,30 @@ int dropped_loot::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<sprite_chain_element*> dropped_loot::prepareSprites(long long elapsedTime)
 {
-	sprite_chain_element* body = new sprite_chain_element(PackTag::empty, PackPart::full, Direction::DOWN, this->isSelected, position, conditionalSizeUnits, textureBoxOffset);	
+	sprite_chain_element* body = new sprite_chain_element(pack_tag::empty, pack_part::full, Direction::DOWN, this->isSelected, position, conditionalSizeUnits, textureBoxOffset);	
 
 	switch (typeOfObject)
 	{
 	case 401:
-		body->setDrawInfo(PackTag::icons, PackPart::flowers, Direction::DOWN, body->number + 1);	
+		body->setDrawInfo(pack_tag::icons, pack_part::flowers, Direction::DOWN, body->number + 1);	
 		break;
 	case 402:
-		body->setDrawInfo(PackTag::icons, PackPart::flowers, Direction::DOWN, body->number + 9);
+		body->setDrawInfo(pack_tag::icons, pack_part::flowers, Direction::DOWN, body->number + 9);
 		break;
 	case 201:
-		body->setDrawInfo(PackTag::inventory, PackPart::bag1, Direction::DOWN, body->number + 1);
+		body->setDrawInfo(pack_tag::inventory, pack_part::bag1, Direction::DOWN, body->number + 1);
 		break;
 	case 202:
-		body->setDrawInfo(PackTag::icons, PackPart::craftObjects, Direction::DOWN, body->number + 5);
+		body->setDrawInfo(pack_tag::icons, pack_part::craftObjects, Direction::DOWN, body->number + 5);
 		break;
 	case 219:
-		body->setDrawInfo(PackTag::icons, PackPart::notCraftObjects, Direction::DOWN, 1);
+		body->setDrawInfo(pack_tag::icons, pack_part::notCraftObjects, Direction::DOWN, 1);
 		break;
 	case 102:
-		body->setDrawInfo(PackTag::icons, PackPart::mobs, Direction::DOWN, 3);
+		body->setDrawInfo(pack_tag::icons, pack_part::mobs, Direction::DOWN, 3);
 		break;
 	default:
-		body->setDrawInfo(PackTag::inventory, PackPart::areas, Direction::DOWN, 1);
+		body->setDrawInfo(pack_tag::inventory, pack_part::areas, Direction::DOWN, 1);
 		break;
 	}
 

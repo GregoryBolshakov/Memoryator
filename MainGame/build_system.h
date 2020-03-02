@@ -14,7 +14,7 @@ struct object_info {
 	std::string type, icon;
 	Sprite sprite, iconSprite;
 	Texture iconTexture;
-	std::vector<std::pair<Tag, int>> recipe;
+	std::vector<std::pair<entity_tag, int>> recipe;
 };
 
 class build_system
@@ -29,26 +29,26 @@ public:
 	void interact(Vector2f cameraPosition = {0, 0}, float scaleFactor = 1);
 	void clearHareBags(int block, grid_list& staticGrid, std::vector<world_object*>* visibleItems);
 	void wasPlaced();
-	std::vector<sprite_chain_element*> prepareSprites(grid_list& staticGrid, const std::vector<world_object*>& visibleItems, std::map<PackTag, sprite_pack>* packsMap);
+	std::vector<sprite_chain_element*> prepareSprites(grid_list& staticGrid, const std::vector<world_object*>& visibleItems, std::map<pack_tag, sprite_pack>* packsMap);
 
 	int getCurrentObject() const { return currentObject; }
 	bool getUsedMouse() const { return usedMouse; }
 	bool getSuccessInit() const { return successInit; }
 
 	void setCurrentObject(int n) { currentObject = n; }
-	void setHeldItem(std::pair<Tag, int>& heldItem) { if (nullptr != &heldItem) this->heldItem = &heldItem; }
+	void setHeldItem(std::pair<entity_tag, int>& heldItem) { if (nullptr != &heldItem) this->heldItem = &heldItem; }
 	
 	bool canAfford();
 
 	std::vector<hero_bag>* boundBags;
 	bool canBePlaced = false, instantBuild = false;
-	Tag selectedObject = Tag::emptyCell;
+	entity_tag selectedObject = entity_tag::emptyCell;
 	Vector2f buildingPosition = { -1, -1 };
-	std::map<Tag, bool> droppedLootIdList = { {Tag::heroBag, 1} };
+	std::map<entity_tag, bool> droppedLootIdList = { {entity_tag::heroBag, 1} };
 	int buildType = 1;
 private:
 	//std::unordered_map<Tag, CellSprite> craftIngredientsSpriteList;
-	std::pair<Tag, int> *heldItem = nullptr;
+	std::pair<entity_tag, int> *heldItem = nullptr;
 	Vector2f mouseWorldPos = { 0, 0 };
 	Vector2f spriteBuildPos = Vector2f (-1, -1);
 	void initializeObjectsInfo();

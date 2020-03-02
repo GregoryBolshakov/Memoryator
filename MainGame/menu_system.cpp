@@ -14,9 +14,9 @@ void menu_system::initButtons()
 {
 	Vector2f screenSize = helper::GetScreenSize();
 
-    buttonList[ButtonTag::newRunTag].initialize(PackTag::interfaceElements, PackPart::menu, 1, 1, 1, NEW_RUN_BUTTON_POSITION, BUTTON_SIZE, true, ButtonTag::newRunTag);
-    buttonList[ButtonTag::continueTag].initialize(PackTag::interfaceElements, PackPart::menu, 2, 2, 2, CONTINUE_BUTTON_POSITION, BUTTON_SIZE, true, ButtonTag::continueTag);
-    buttonList[ButtonTag::exitTag].initialize(PackTag::interfaceElements, PackPart::menu, 4, 4, 4, EXIT_BUTTON_POSITION, BUTTON_SIZE, true, ButtonTag::exitTag);
+    buttonList[ButtonTag::newRunTag].initialize(pack_tag::interfaceElements, pack_part::menu, 1, 1, 1, NEW_RUN_BUTTON_POSITION, BUTTON_SIZE, true, ButtonTag::newRunTag);
+    buttonList[ButtonTag::continueTag].initialize(pack_tag::interfaceElements, pack_part::menu, 2, 2, 2, CONTINUE_BUTTON_POSITION, BUTTON_SIZE, true, ButtonTag::continueTag);
+    buttonList[ButtonTag::exitTag].initialize(pack_tag::interfaceElements, pack_part::menu, 4, 4, 4, EXIT_BUTTON_POSITION, BUTTON_SIZE, true, ButtonTag::exitTag);
 }
 
 menu_system::~menu_system()

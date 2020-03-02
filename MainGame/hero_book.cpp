@@ -10,14 +10,14 @@ hero_book::hero_book()
 hero_book::~hero_book()
 = default;
 
-void hero_book::init(std::map<PackTag, sprite_pack>* packsMap)
+void hero_book::init(std::map<pack_tag, sprite_pack>* packsMap)
 {
 	initButtons(packsMap);
 	//initContent();
 	//somePage.initAuxiliarySpriteMap();
 }
 
-void hero_book::initButtons(std::map<PackTag, sprite_pack>* packsMap)
+void hero_book::initButtons(std::map<pack_tag, sprite_pack>* packsMap)
 {
 	const auto screenSize = helper::GetScreenSize();
 
@@ -117,7 +117,7 @@ std::vector<sprite_chain_element*> hero_book::prepareWreathMatrix()
 	{
 		for (auto column = 0u; column < somePage.wreathMatrix[raw].size(); column++)
 		{
-			if (somePage.wreathMatrix[raw][column] == Tag::selectedCell)
+			if (somePage.wreathMatrix[raw][column] == entity_tag::selectedCell)
 				currentType = ButtonTag::cellSelected;
 			else
 				currentType = ButtonTag::cell;
@@ -156,10 +156,10 @@ std::vector<sprite_chain_element*> hero_book::prepareLineMatrix()
 	{
 		for (auto column = 0u; column < somePage.wreathMatrix[raw].size(); column++)
 		{
-			if (somePage.wreathMatrix[raw][column] == Tag::emptyCell)
+			if (somePage.wreathMatrix[raw][column] == entity_tag::emptyCell)
 				continue;
 
-			if (somePage.wreathMatrix[raw][column] != Tag::emptyCell)
+			if (somePage.wreathMatrix[raw][column] != entity_tag::emptyCell)
 			{
 				const Vector2f contentOffset = Vector2f(buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).get_global_bounds().width * 0.03f,
 					buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).get_global_bounds().height * 0.05f);
@@ -195,7 +195,7 @@ std::vector<sprite_chain_element*> hero_book::preparePlantsMatrix()
 	{
 		for (auto column = 0u; column < somePage.wreathMatrix[raw].size(); column++)
 		{
-			if (somePage.wreathMatrix[raw][column] != Tag::emptyCell && somePage.wreathMatrix[raw][column] != Tag::selectedCell)
+			if (somePage.wreathMatrix[raw][column] != entity_tag::emptyCell && somePage.wreathMatrix[raw][column] != entity_tag::selectedCell)
 			{
 				const Vector2f contentOffset = Vector2f(buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).get_global_bounds().width * 0.195f,
 					buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).get_global_bounds().height * 0.195f);
@@ -237,14 +237,14 @@ std::vector<sprite_chain_element*> hero_book::preparePlantsList()
 	{
 		for (auto column = 0u; column < somePage.plantsMatrix[raw].size(); column++)
 		{
-			if (somePage.plantsMatrix[raw][column].first == Tag::emptyCell)
+			if (somePage.plantsMatrix[raw][column].first == entity_tag::emptyCell)
 				continue;
 			auto curFlower = ButtonTag(somePage.plantsMatrix[raw][column].first);
 			const auto size = Vector2f(buttonList.at(curFlower).get_global_bounds().width, buttonList.at(curFlower).get_global_bounds().height);			
 
 			buttonList.at(curFlower).set_position(Vector2f(upperLeftCorner.x + column * size.x, upperLeftCorner.y + raw * size.y));
-			if (buttonList.at(curFlower).is_selected(Vector2f(Mouse::getPosition())) && currentFlower == Tag::emptyCell)
-				this->currentFlower = Tag(int(curFlower));
+			if (buttonList.at(curFlower).is_selected(Vector2f(Mouse::getPosition())) && currentFlower == entity_tag::emptyCell)
+				this->currentFlower = entity_tag(int(curFlower));
 
 			buttonList.at(curFlower).stop_being_gray();
 			result.push_back(somePage.prepareIconFrame(curFlower, 1));
@@ -257,7 +257,7 @@ std::vector<sprite_chain_element*> hero_book::preparePlantsList()
 
 std::vector<drawable_chain_element*> hero_book::prepareWreathCost(Vector2f pos)
 {
-	const Tag currentObject = hero_book_page::pageToObjectId(currentPage);
+	const entity_tag currentObject = hero_book_page::pageToObjectId(currentPage);
 	if (!somePage.nearTheTable || !somePage.getObjectInfo()->at(currentObject).isUnlocked || somePage.doneRecipes.count(currentObject) == 0)
 		return {};
 
@@ -297,8 +297,8 @@ std::vector<drawable_chain_element*> hero_book::prepareSprites(float hpRatio, lo
 	for (auto& button : buttonList)
 		if (button.first != ButtonTag::bookButtonTag)
 			button.second.is_active = false;
-	if (heldItem.first == Tag::emptyCell)
-		currentFlower = Tag::emptyCell;
+	if (heldItem.first == entity_tag::emptyCell)
+		currentFlower = entity_tag::emptyCell;
 	//-----------------------------
 
 	if (!visibility)
@@ -327,7 +327,7 @@ std::vector<drawable_chain_element*> hero_book::prepareSprites(float hpRatio, lo
 	auto plantsElements = preparePlantsList();
 	result.insert(result.end(), plantsElements.begin(), plantsElements.end());
 
-	if (currentFlower != Tag::emptyCell)
+	if (currentFlower != entity_tag::emptyCell)
 	{
 		auto connectableFlowers = somePage.prepareConnectableFlowers(currentFlower);
 		result.insert(result.end(), connectableFlowers.begin(), connectableFlowers.end());
@@ -369,7 +369,7 @@ std::vector<drawable_chain_element*> hero_book::prepareSprites(float hpRatio, lo
 	debugInfo = std::to_string((Mouse::getPosition().x - buttonList.at(ButtonTag::bookmarksList).get_global_bounds().left) / buttonList.at(ButtonTag::bookmarksList).get_global_bounds().width) + " " 
 	+ std::to_string((Mouse::getPosition().y - buttonList.at(ButtonTag::bookmarksList).get_global_bounds().top) / buttonList.at(ButtonTag::bookmarksList).get_global_bounds().height);
 
-	if (heldItem.first != Tag::emptyCell)
+	if (heldItem.first != entity_tag::emptyCell)
 	{
 		const float offset = buttonList.at(ButtonTag(heldItem.first)).get_global_bounds().width / 2;
 		buttonList.at(ButtonTag(heldItem.first)).set_position(Vector2f(Mouse::getPosition().x - offset, Mouse::getPosition().y - offset));
@@ -392,7 +392,7 @@ void hero_book::onMouseUp()
 	if (currentPage == 5)
 	{
 		const auto selectedCell = somePage.getSelectedWreathCell();
-		if (selectedCell != std::make_pair(-1, -1) && currentDraft != Tag::emptyDraft)
+		if (selectedCell != std::make_pair(-1, -1) && currentDraft != entity_tag::emptyDraft)
 		{
 			auto canBePlaced = true;
 			auto plants = somePage.getOriginalSetups().at(currentDraft).plants;
@@ -409,9 +409,9 @@ void hero_book::onMouseUp()
 				somePage.wreathMatrix[selectedCell.first][selectedCell.second] = heldItem.first;
 		}
 		somePage.readyToFinishDraft = somePage.isCenterSurrounded();
-		if (heldItem.first != Tag::emptyCell)
+		if (heldItem.first != entity_tag::emptyCell)
 		{
-			heldItem = { Tag::emptyCell, 0 };
+			heldItem = { entity_tag::emptyCell, 0 };
 			return;
 		}
 	}
@@ -430,8 +430,8 @@ void hero_book::onMouseUp()
 	if (buttonList.at(ButtonTag::makeWreath).is_active && somePage.nearTheTable)
 		if (buttonList.at(ButtonTag::makeWreath).is_selected(Vector2f(Mouse::getPosition())))		
 			if (boundBags)
-				if (hero_book_page::tagToWreath(Tag(currentPage)) != Tag::emptyCell)
-				hero_bag::putItemIn(new std::pair<Tag, int>(hero_book_page::tagToWreath(Tag(currentPage)), 1), boundBags);					
+				if (hero_book_page::tagToWreath(entity_tag(currentPage)) != entity_tag::emptyCell)
+				hero_bag::putItemIn(new std::pair<entity_tag, int>(hero_book_page::tagToWreath(entity_tag(currentPage)), 1), boundBags);					
 	//---------------
 
 	// clicking the plus in the draft center
@@ -441,13 +441,13 @@ void hero_book::onMouseUp()
 		{
 			for (auto& raw : somePage.wreathMatrix)
 				for (auto& column : raw)
-					if (column != Tag::emptyCell)
+					if (column != entity_tag::emptyCell)
 						somePage.doneRecipes[currentDraft][column] += 1;
 
 			somePage.unlockObject(currentDraft);
 			setPage(hero_book_page::getHeadingPage(currentDraft));
 			somePage.clearWreathMatrix();
-			currentDraft = Tag::emptyDraft;
+			currentDraft = entity_tag::emptyDraft;
 			somePage.readyToFinishDraft = false;
 		}
 	}
@@ -477,19 +477,19 @@ void hero_book::WhileMouseDown()
 	// flower to matrix transfer
 	if (currentPage == 5) 
 	{
-		if (heldItem.first == Tag::emptyCell)
+		if (heldItem.first == entity_tag::emptyCell)
 		{
 			const auto selectedCell = somePage.getSelectedPlantsCell();
 			if (selectedCell != std::make_pair(-1, -1))
 			{
-				heldItem.first = Tag(int(somePage.plantsMatrix[selectedCell.first][selectedCell.second].first));
+				heldItem.first = entity_tag(int(somePage.plantsMatrix[selectedCell.first][selectedCell.second].first));
 				heldItem.second = somePage.plantsMatrix[selectedCell.first][selectedCell.second].second;
 			}
 		}
 		else
 		{
 			if (int(heldItem.first) >= 401 && int(heldItem.first) <= 499)
-				this->currentFlower = Tag(int(heldItem.first));
+				this->currentFlower = entity_tag(int(heldItem.first));
 		}
 	}
 }

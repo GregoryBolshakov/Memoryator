@@ -9,7 +9,7 @@ grass::grass(std::string objectName, const Vector2f centerPosition, const int ty
 	this->intangible = true;
 	toSaveName = "grass";
 	grass::setType(typeOfObject);
-	tag = Tag::grass;
+	tag = entity_tag::grass;
 	mirrored = bool(rand() % 2);
 }
 
@@ -102,19 +102,19 @@ int grass::getBuildType(Vector2f ounPos, Vector2f otherPos)
 std::vector<sprite_chain_element*> grass::prepareSprites(long long elapsedTime)
 {
 	std::vector<sprite_chain_element*> result = {};
-	sprite_chain_element* body = new sprite_chain_element(PackTag::darkWoods, PackPart::plant, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	sprite_chain_element* body = new sprite_chain_element(pack_tag::darkWoods, pack_part::plant, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	body->unscaled = true;
 
 	if (typeOfObject >= 1 && typeOfObject <= 8)
-		body->packTag = PackTag::birchGrove;
+		body->packTag = pack_tag::birchGrove;
 	if (typeOfObject >= 9 && typeOfObject <= 21)
 	{
-		body->packTag = PackTag::darkWoods;
+		body->packTag = pack_tag::darkWoods;
 		body->number -= 8;
 	}
 	if (typeOfObject >= 22 && typeOfObject <= 30)
 	{
-		body->packTag = PackTag::swampyTrees;
+		body->packTag = pack_tag::swampyTrees;
 		body->number -= 21;
 	}
 	result.push_back(body);

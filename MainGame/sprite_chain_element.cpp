@@ -5,8 +5,8 @@ sprite_chain_element::sprite_chain_element() : drawable_chain_element()
 }
 
 sprite_chain_element::sprite_chain_element(
-    PackTag tag,
-    PackPart part,
+    pack_tag tag,
+    pack_part part,
     Direction direction,
     int number, 
     Vector2f position,
@@ -43,7 +43,7 @@ sprite_chain_element::sprite_chain_element(
 sprite_chain_element::~sprite_chain_element()
 = default;
 
-void sprite_chain_element::setDrawInfo(PackTag tag, PackPart part, Direction direction, int number) 
+void sprite_chain_element::setDrawInfo(pack_tag tag, pack_part part, Direction direction, int number) 
 {
 	this->packTag = tag;
 	this->packPart = part;

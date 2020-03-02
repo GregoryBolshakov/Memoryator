@@ -64,7 +64,7 @@ bool draw_system::searchFiles(const LPCTSTR lpszFileName, const LPSEARCHFUNC lpS
 	return TRUE;
 }
 
-void initSpritePack(const LPCTSTR lpszFileName, std::map<PackTag, sprite_pack>& packs_map)
+void initSpritePack(const LPCTSTR lpszFileName, std::map<pack_tag, sprite_pack>& packs_map)
 {
 	std::string packPath = lpszFileName;
 	packPath.erase(0, packPath.find("\\Game\\spritePacks") + 1);
@@ -94,8 +94,8 @@ void draw_system::initPacksMap()
 {
 	searchFiles("Game/spritePacks/*.png", initSpritePack, true);
 	sprite_pack::iconWithoutSpaceSize = Vector2f(
-		float(packsMap.at(PackTag::inventory).getOriginalInfo(PackPart::areas, Direction::DOWN, 1).frame.w),
-		float(packsMap.at(PackTag::inventory).getOriginalInfo(PackPart::areas, Direction::DOWN, 1).frame.h));
+		float(packsMap.at(pack_tag::inventory).getOriginalInfo(pack_part::areas, Direction::DOWN, 1).frame.w),
+		float(packsMap.at(pack_tag::inventory).getOriginalInfo(pack_part::areas, Direction::DOWN, 1).frame.h));
 }
 
 void draw_system::advancedScale(sprite_chain_element& item, Sprite& sprite, const sprite_pack_structure::sprite& originalInfo, const float scale) const
@@ -151,7 +151,7 @@ std::vector<sprite_chain_element*> draw_system::DowncastToSpriteChain(const std:
 
 void draw_system::drawSpriteChainElement(RenderTarget& target, sprite_chain_element* spriteChainItem, const Vector2f cameraPosition, const Vector2f screenCenter, const float scale)
 {
-	if (spriteChainItem->packTag == PackTag::empty)
+	if (spriteChainItem->packTag == pack_tag::empty)
 		return;
 
 	auto sprite = packsMap.at(spriteChainItem->packTag).getSprite(spriteChainItem->packPart, spriteChainItem->direction, spriteChainItem->number, spriteChainItem->mirrored);

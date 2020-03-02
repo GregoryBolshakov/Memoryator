@@ -22,7 +22,7 @@ bear::bear(const std::string& objectName, Vector2f centerPosition) : neutral_mob
 	timeAfterHitSelf = timeForNewHitSelf;
 	timeForNewHit = 10e6;
 	toSaveName = "bear";
-	tag = Tag::bear;
+	tag = entity_tag::bear;
 }
 
 bear::~bear()

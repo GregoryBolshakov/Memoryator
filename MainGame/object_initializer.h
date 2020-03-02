@@ -43,7 +43,7 @@
 //#include "clap_whirl.h"
 #include <unordered_map>
 
-enum Biomes { SwampyTrees = 1, DarkWoods = 2, BirchGrove = 3, FlowerValley = 4 };
+enum biomes { SwampyTrees = 1, DarkWoods = 2, BirchGrove = 3, FlowerValley = 4 };
 
 class object_initializer
 {
@@ -51,25 +51,25 @@ public:
 	object_initializer();
 	~object_initializer();
 	static static_object* initializeStaticItem(
-		Tag itemClass,
+		entity_tag itemClass,
 		Vector2f itemPosition,
 		int itemType,
 		const std::string& itemName, 
 		int count,
-		Biomes biome,		
-		std::map<PackTag, sprite_pack>* packsMap,
+		biomes biome,		
+		std::map<pack_tag, sprite_pack>* packsMap,
 		bool mirrored = true,
-		const std::vector<std::pair<Tag, int>>& inventory = {});
+		const std::vector<std::pair<entity_tag, int>>& inventory = {});
 	static int newNameId;
-	static int getRandomTypeByBiome(world_object* object, Biomes biome);
-	static dynamic_object* initializeDynamicItem(Tag itemClass,
+	static int getRandomTypeByBiome(world_object* object, biomes biome);
+	static dynamic_object* initializeDynamicItem(entity_tag itemClass,
 		Vector2f itemPosition,
 		const std::string& itemName,
-		std::map<PackTag, sprite_pack>* packsMap,
+		std::map<pack_tag, sprite_pack>* packsMap,
 		world_object* owner = nullptr);
 	static std::vector<static_object*> vectorCastToStatic(const std::vector<world_object*>& items);
 	static std::vector<dynamic_object*> vectorCastToDynamic(std::vector<world_object*> items);
 
-	static std::map<Tag, std::string> mappedTags;
-	static std::map<std::string, Tag> mappedStrings;
+	static std::map<entity_tag, std::string> mappedTags;
+	static std::map<std::string, entity_tag> mappedStrings;
 };
