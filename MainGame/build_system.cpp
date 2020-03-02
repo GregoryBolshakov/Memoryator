@@ -50,12 +50,12 @@ void build_system::initializeObjectsInfo()
 	fin.close();
 }
 
-std::vector <sprite_chain_element*> build_system::prepareSprites(GridList& staticGrid, const std::vector<WorldObject*>& visibleItems, std::map<PackTag, sprite_pack>* packsMap)
+std::vector <sprite_chain_element*> build_system::prepareSprites(GridList& staticGrid, const std::vector<world_object*>& visibleItems, std::map<PackTag, sprite_pack>* packsMap)
 {
 	if (selectedObject == Tag::emptyCell)
 		return {};
 
-	StaticObject* terrain = nullptr;
+	static_object* terrain = nullptr;
 	if (droppedLootIdList.count(selectedObject) > 0)
 		terrain = object_initializer::initializeStaticItem(Tag::droppedLoot, mouseWorldPos, int(selectedObject), "", 1, DarkWoods, packsMap);
 	else
@@ -186,7 +186,7 @@ void build_system::wasPlaced()
 	buildingPosition = Vector2f (-1, -1);
 }
 
-void build_system::clearHareBags(int block, GridList& staticGrid, std::vector<WorldObject*>* visibleItems)
+void build_system::clearHareBags(int block, GridList& staticGrid, std::vector<world_object*>* visibleItems)
 {
 	for (auto& item : *visibleItems)
 	{

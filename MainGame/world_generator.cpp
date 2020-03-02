@@ -1,12 +1,12 @@
-#include "WorldGenerator.h"
+#include "world_generator.h"
 
-#include "DynamicObject.h"
-#include "EmptyObject.h"
+#include "dynamic_object.h"
+#include "empty_object.h"
 
-WorldGenerator::WorldGenerator()
+world_generator::world_generator()
 = default;
 
-void WorldGenerator::initMainScale()
+void world_generator::initMainScale()
 {
 	auto mainObject = deerchant("loadInit", Vector2f(0, 0));
 	mainObject.calculateTextureOffset();
@@ -14,7 +14,7 @@ void WorldGenerator::initMainScale()
 	mainScale = round(mainScale * 100) / 100;
 }
 
-void WorldGenerator::init(
+void world_generator::init(
 	const int width,
 	const int height,
 	const Vector2f blockSize,
@@ -33,10 +33,10 @@ void WorldGenerator::init(
 	stepSize = { blockSize.x / 10, blockSize.y / 10 };
 }
 
-WorldGenerator::~WorldGenerator()
+world_generator::~world_generator()
 = default;
 
-void WorldGenerator::initializeStaticItem(
+void world_generator::initializeStaticItem(
 	Tag itemClass,
 	Vector2f itemPosition,
 	int itemType,
@@ -52,7 +52,7 @@ void WorldGenerator::initializeStaticItem(
 		return;
 
 	// locked place check
-	const auto terrain = dynamic_cast<TerrainObject*>(item);
+	const auto terrain = dynamic_cast<terrain_object*>(item);
 	if (terrain)
 	{
 		std::map<std::pair<int, int>, bool> checkBlocks = {};
@@ -86,7 +86,7 @@ void WorldGenerator::initializeStaticItem(
 	staticGrid->addItem(item, item->getName(), itemPosition.x, itemPosition.y);
 }
 
-void WorldGenerator::initializeDynamicItem(const Tag itemClass, const Vector2f itemPosition, const std::string& itemName, WorldObject* owner)
+void world_generator::initializeDynamicItem(const Tag itemClass, const Vector2f itemPosition, const std::string& itemName, world_object* owner)
 {
 	const auto item = object_initializer::initializeDynamicItem(itemClass, itemPosition, itemName, packsMap, owner);
 	
@@ -99,7 +99,7 @@ void WorldGenerator::initializeDynamicItem(const Tag itemClass, const Vector2f i
 	dynamicGrid->addItem(item, item->getName(), itemPosition.x, itemPosition.y);
 }
 
-void WorldGenerator::generate()
+void world_generator::generate()
 {	
 	staticGrid->boundDynamicMatrix(&dynamicGrid->microBlockMatrix);	
 
@@ -125,7 +125,7 @@ bool cmpByChance(const std::pair<Tag, int> a, const std::pair<Tag, int> b)
 	return a.second < b.second;
 }
 
-void WorldGenerator::inBlockGenerate(const int blockIndex)
+void world_generator::inBlockGenerate(const int blockIndex)
 {
 	const auto blockTypeProbability = rand() % 100;
 	const auto groundIndX = int(ceil(staticGrid->getPointByIndex(blockIndex).x / blockSize.x));
@@ -210,7 +210,7 @@ void WorldGenerator::inBlockGenerate(const int blockIndex)
 	}	
 }
 
-void WorldGenerator::generateGround(const int blockIndex)
+void world_generator::generateGround(const int blockIndex)
 {
 	const auto position = staticGrid->getPointByIndex(blockIndex);
 	const auto groundIndX = int(ceil(position.x / blockSize.x));
@@ -224,17 +224,17 @@ void WorldGenerator::generateGround(const int blockIndex)
 	initializeStaticItem(Tag::groundConnection, Vector2f(position.x + blockSize.x - 1, position.y), (biome - 1) * 4 + 4, "", 1);
 }
 
-bool WorldGenerator::isRoomyStepBlock(const int x, const int y) const
+bool world_generator::isRoomyStepBlock(const int x, const int y) const
 {
 	return roomyStepBlocks.count(std::make_pair(x % int(blockSize.x) / int(stepSize.x), y % int(blockSize.y) / int(stepSize.y))) > 0;
 }
 
-bool WorldGenerator::isTriggerBlock(const int x, const int y) const
+bool world_generator::isTriggerBlock(const int x, const int y) const
 {
 	return abs(x - biomesChangeCenter.x) >= 4 || abs(y - biomesChangeCenter.y) >= 4 || abs(x - biomesChangeCenter.x) + abs(y - biomesChangeCenter.y) >= 5;
 }
 
-void WorldGenerator::initBiomesGenerationInfo()
+void world_generator::initBiomesGenerationInfo()
 {
 	biomesBlocksOffsets.resize(8);
 	for (auto x = -5; x <= 5; x++)
@@ -269,7 +269,7 @@ void WorldGenerator::initBiomesGenerationInfo()
 	biomesGenerate();
 }
 
-void WorldGenerator::biomesGenerate()
+void world_generator::biomesGenerate()
 {
 	biomesChangeCenter = focusedObjectBlock;
 
@@ -281,7 +281,7 @@ void WorldGenerator::biomesGenerate()
 	}
 }
 
-void WorldGenerator::perimeterGeneration()
+void world_generator::perimeterGeneration()
 {
 	const auto screenSize = Helper::GetScreenSize();
 	const auto characterPosition = focusedObject->getPosition();
@@ -306,7 +306,7 @@ void WorldGenerator::perimeterGeneration()
 	}
 }
 
-void WorldGenerator::beyondScreenGeneration()
+void world_generator::beyondScreenGeneration()
 {
 	const auto block = Vector2i(
 		int(focusedObject->getPosition().x / blockSize.x),
@@ -321,14 +321,14 @@ void WorldGenerator::beyondScreenGeneration()
 		biomesGenerate();
 }
 
-bool WorldGenerator::canBeRegenerated(const int blockIndex) const
+bool world_generator::canBeRegenerated(const int blockIndex) const
 {
 	if (rememberedBlocks.count(blockIndex) > 0)
 		return false;
 
 	for (auto& item : dynamicGrid->getItems(blockIndex))
 	{
-		const auto dynamicItem = dynamic_cast<DynamicObject*>(item);
+		const auto dynamicItem = dynamic_cast<dynamic_object*>(item);
 		if (dynamicItem)
 			return false;
 	}

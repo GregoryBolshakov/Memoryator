@@ -5,23 +5,23 @@
 
 #include "brazier.h"
 #include "camera_system.h"
-#include "DynamicObject.h"
+#include "dynamic_object.h"
 #include "effects_system.h"
-#include "EmptyObject.h"
+#include "empty_object.h"
 #include "Helper.h"
 #include "inventory_system.h"
 #include "LightSystem.h"
 #include "pedestal_controller.h"
 #include "time_system.h"
-#include "WorldGenerator.h"
+#include "world_generator.h"
 
 using namespace sf;
 
-class WorldHandler
+class world_handler
 {
 public:
-	WorldHandler(int width, int height, std::map<PackTag, sprite_pack>* packsMap);
-	~WorldHandler();
+	world_handler(int width, int height, std::map<PackTag, sprite_pack>* packsMap);
+	~world_handler();
 
 	//adding to the grid
 	void birthObjects();
@@ -33,11 +33,11 @@ public:
 	inventory_system& getInventorySystem() { return inventorySystem; }
 	build_system& getBuildSystem() { return buildSystem; }
 	time_system& getTimeSystem() { return timeSystem; }
-	WorldGenerator& getWorldGenerator() { return worldGenerator; }
+	world_generator& getWorldGenerator() { return worldGenerator; }
 	LightSystem& getLightSystem() { return lightSystem; }
 	std::string getMouseDisplayName() const { return mouseDisplayName; }
-	WorldObject* getSelectedObject() const { return selectedObject; }
-	std::vector<WorldObject*> getLocalTerrain() const { return localTerrain; }
+	world_object* getSelectedObject() const { return selectedObject; }
+	std::vector<world_object*> getLocalTerrain() const { return localTerrain; }
 
 	// Save-load logic
 	void clearWorld();
@@ -65,7 +65,7 @@ public:
 	Clock scaleDecreaseClock;
 
 	// Hero
-	DynamicObject* focusedObject = nullptr;
+	dynamic_object* focusedObject = nullptr;
 	brazier* brazier{};
 
 	// Events
@@ -88,7 +88,7 @@ private:
 	std::string spriteNameFileDirectory = "Game/objects.txt";
 	bool fixedClimbingBeyond(Vector2f &pos) const;
 	
-	WorldGenerator worldGenerator;
+	world_generator worldGenerator;
 
 	// Time logic
 	Clock timer;
@@ -98,9 +98,9 @@ private:
 	long long timeAfterNewRoute = long(3e5);
 
 	// Selection logic
-	void setTransparent(std::vector<WorldObject*>& visibleItems);
+	void setTransparent(std::vector<world_object*>& visibleItems);
 	std::string mouseDisplayName;
-	WorldObject* selectedObject = focusedObject;
+	world_object* selectedObject = focusedObject;
 
 	// Shaders
 	/*Shader spiritWorldShader;
@@ -120,7 +120,7 @@ private:
 	GridList staticGrid;
 	GridList dynamicGrid;
 	std::vector<sprite_chain_element*> visibleBackground, visibleTerrain;
-	std::vector<WorldObject*> localTerrain;
+	std::vector<world_object*> localTerrain;
 
 	// Test
 	std::vector<std::pair<Tag, int>>* testInv = new std::vector<std::pair<Tag, int>>({ {Tag::chamomile, 2}, {Tag::chamomile, 2}, {Tag::chamomile, 2} });

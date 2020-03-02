@@ -4,8 +4,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "DynamicObject.h"
-#include "TerrainObject.h"
+#include "dynamic_object.h"
+#include "terrain_object.h"
 
 using namespace sf;
 
@@ -21,7 +21,7 @@ public:
 	// static std::string getSpriteName(std::string s);
 	static bool isIntersects(Vector2f pos, FloatRect shape);
 	static bool isIntersects(Vector2f pos, Vector2f circlePos, float radius);
-	static bool isIntersectTerrain(Vector2f position, TerrainObject& terrain, float radius);
+	static bool isIntersectTerrain(Vector2f position, terrain_object& terrain, float radius);
 	static Side getSide(Vector2f position, Vector2f anotherPosition);
 	static float getDist(Vector2f a, Vector2f b);
 	static float triangleArea(float x1, float y1, float x2, float y2, float x3, float y3);

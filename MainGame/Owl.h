@@ -13,11 +13,11 @@ public:
 	~owl() override;
 	Vector2f calculateTextureOffset() override;
 	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;
-	void setTarget(DynamicObject& object) override;
-	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
+	void setTarget(dynamic_object& object) override;
+	void behaviorWithStatic(world_object* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;
 	void endingPreviousAction();
-	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
+	Vector2f getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
 	void jerk(float power, float deceleration, Vector2f destinationPoint) override;
 private:
@@ -30,5 +30,5 @@ private:
 	float timeAfterFear = 0;
 	float fearTime = 2 * 10e5;
 	int strikingSprite = 4;
-	WorldObject *owner = nullptr, *nearestTree = nullptr;
+	world_object *owner = nullptr, *nearestTree = nullptr;
 };

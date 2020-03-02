@@ -1,12 +1,12 @@
-#include "PickedObject.h"
+#include "picked_object.h"
 
 
-PickedObject::PickedObject(std::string objectName, const Vector2f centerPosition) : TerrainObject(std::move(objectName), centerPosition), id(), count(0)
+picked_object::picked_object(std::string objectName, const Vector2f centerPosition) : terrain_object(std::move(objectName), centerPosition), id(), count(0)
 {
 	radius = 0;
 }
 
-bool PickedObject::pickUp(std::vector<hero_bag> *bags)
+bool picked_object::pickUp(std::vector<hero_bag> *bags)
 {
 	if (this->tag == Tag::emptyCell)
 		return true;
@@ -50,5 +50,5 @@ bool PickedObject::pickUp(std::vector<hero_bag> *bags)
 	}
 }
 
-PickedObject::~PickedObject()
+picked_object::~picked_object()
 = default;

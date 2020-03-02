@@ -71,7 +71,7 @@ void hero_book::initContent()
 	somePage.initObjectInfo();
 }
 
-void hero_book::getAllOuterInfo(std::vector<hero_bag>* bags, std::string name, WorldObject* object, cell* worldHeldItem, bool nearTheTable)
+void hero_book::getAllOuterInfo(std::vector<hero_bag>* bags, std::string name, world_object* object, cell* worldHeldItem, bool nearTheTable)
 {
 	boundBags = bags;
 	somePage.boundBags = bags;

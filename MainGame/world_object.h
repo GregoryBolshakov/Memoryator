@@ -5,7 +5,7 @@
 
 #include "sprite_chain_element.h"
 
-class WorldObject;
+class world_object;
 using namespace sf;
 
 enum State { common = 1, absorbed = 2, constructed = 3 };
@@ -23,14 +23,14 @@ struct  birthDynamicInfo
 {
 	Tag tag;
 	Vector2f position = { 0,0 };
-	WorldObject* owner = nullptr;
+	world_object* owner = nullptr;
 };
 
-class WorldObject
+class world_object
 {
 public:
-	WorldObject(std::string objectName, Vector2f centerPosition);
-	virtual ~WorldObject();
+	world_object(std::string objectName, Vector2f centerPosition);
+	virtual ~world_object();
 
 	[[nodiscard]] int getZCoords() const	{ return zCoord; }
 	[[nodiscard]] int getType() const	{ return typeOfObject; }
@@ -54,7 +54,7 @@ public:
 	[[nodiscard]] Vector2f getConditionalSizeUnits() const { return conditionalSizeUnits; }
 	[[nodiscard]] Vector2f getMicroBlockCheckAreaBounds() const { return microBlockCheckAreaBounds; }
 	[[nodiscard]] std::vector<Vector2i> getLockedMicroBlocks() const { return lockedMicroBlocks; }
-	virtual Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) = 0;
+	virtual Vector2f getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition) = 0;
 	virtual int getBuildType(Vector2f ounPos, Vector2f otherPos) = 0;
 	[[nodiscard]] FloatRect getOriginalTextureBox() const { return originalTextureBox; }
 	[[nodiscard]] State getState() const { return state; }	

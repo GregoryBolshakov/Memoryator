@@ -2,7 +2,7 @@
 
 #include "Helper.h"
 
-dropped_loot::dropped_loot(std::string objectName, Vector2f centerPosition, int typeOfObject, int count) : PickedObject(std::move(objectName), centerPosition)
+dropped_loot::dropped_loot(std::string objectName, Vector2f centerPosition, int typeOfObject, int count) : picked_object(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 5;
 	this->typeOfObject = typeOfObject;
@@ -37,7 +37,7 @@ void dropped_loot::initPedestal()
 	ellipseSizeMultipliers[0] = { 0 };
 }
 
-Vector2f dropped_loot::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f dropped_loot::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }

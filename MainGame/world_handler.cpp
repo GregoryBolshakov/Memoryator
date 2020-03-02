@@ -1,6 +1,6 @@
 #define _USE_MATH_DEFINES
 
-#include "WorldHandler.h"
+#include "world_handler.h"
 
 #include <fstream>
 
@@ -8,10 +8,10 @@
 
 using namespace sf;
 
-WorldHandler::WorldHandler(const int width, const int height, std::map<PackTag, sprite_pack>* packsMap)
+world_handler::world_handler(const int width, const int height, std::map<PackTag, sprite_pack>* packsMap)
 {
     this->packsMap = packsMap;
-	WorldObject::microBlockSize = microBlockSize;
+	world_object::microBlockSize = microBlockSize;
     worldGenerator.initMainScale();
 	worldGenerator.scaleFactor = worldGenerator.mainScale;
 	this->width = width;
@@ -27,7 +27,7 @@ WorldHandler::WorldHandler(const int width, const int height, std::map<PackTag, 
 	lightSystem.init({0, 0, Helper::GetScreenSize().x, Helper::GetScreenSize().y});
 }
 
-WorldHandler::~WorldHandler()
+world_handler::~world_handler()
 {
 	/*staticGrid.~GridList();
 	dynamicGrid.~GridList();
@@ -40,7 +40,7 @@ WorldHandler::~WorldHandler()
 		item->~WorldObject();*/
 }
 
-void WorldHandler::runWorldGenerator()
+void world_handler::runWorldGenerator()
 {
 	staticGrid = GridList(this->width, this->height, blockSize, microBlockSize);
 	dynamicGrid = GridList(this->width, this->height, blockSize, microBlockSize);
@@ -78,7 +78,7 @@ void WorldHandler::runWorldGenerator()
 //	float level = 0;
 //}
 
-void WorldHandler::setScaleFactor(const int delta)
+void world_handler::setScaleFactor(const int delta)
 {
 	if (delta == -1 && worldGenerator.scaleFactor > worldGenerator.FARTHEST_SCALE * worldGenerator.mainScale)
 	{
@@ -98,7 +98,7 @@ void WorldHandler::setScaleFactor(const int delta)
 		worldGenerator.scaleFactor = worldGenerator.CLOSEST_SCALE * worldGenerator.mainScale;
 }
 
-void WorldHandler::scaleSmoothing()
+void world_handler::scaleSmoothing()
 {
 	if (abs(scaleDecrease) >= 0.02 && timeForScaleDecrease >= 30000)
 	{
@@ -124,7 +124,7 @@ void WorldHandler::scaleSmoothing()
 	}
 }
 
-void WorldHandler::birthObjects()
+void world_handler::birthObjects()
 {
 	for (auto& object : localTerrain)
 	{
@@ -146,7 +146,7 @@ void WorldHandler::birthObjects()
 	}
 }
 
-void WorldHandler::Load()
+void world_handler::Load()
 {
 	staticGrid = GridList(this->width, this->height, blockSize, microBlockSize);
 	dynamicGrid = GridList(this->width, this->height, blockSize, microBlockSize);
@@ -203,7 +203,7 @@ void WorldHandler::Load()
 	Save();
 }
 
-void WorldHandler::Save()
+void world_handler::Save()
 {
 	if (staticGrid.getSize() == 0)
 		return;
@@ -226,13 +226,13 @@ void WorldHandler::Save()
 	fout.close();
 }
 
-void WorldHandler::clearWorld()
+void world_handler::clearWorld()
 {
 	staticGrid.~GridList();
 	dynamicGrid.~GridList();
 }
 
-void WorldHandler::setTransparent(std::vector<WorldObject*>& visibleItems)
+void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 {
 	mouseDisplayName = "";
 	const auto mousePos = Vector2f((Mouse::getPosition().x - Helper::GetScreenSize().x / 2 + cameraSystem.position.x*worldGenerator.scaleFactor) / worldGenerator.scaleFactor,
@@ -274,7 +274,7 @@ void WorldHandler::setTransparent(std::vector<WorldObject*>& visibleItems)
 				minCapacity = itemCapacity;
 				minDistance = distanceToItemCenter;
 
-				const auto terrain = dynamic_cast<TerrainObject*>(visibleItem);
+				const auto terrain = dynamic_cast<terrain_object*>(visibleItem);
 				if (terrain && pedestalController.readyToStart)				
 					mouseDisplayName = "Set pedestal";
 				else
@@ -349,7 +349,7 @@ void WorldHandler::setTransparent(std::vector<WorldObject*>& visibleItems)
 	}
 }
 
-bool WorldHandler::fixedClimbingBeyond(Vector2f &pos) const
+bool world_handler::fixedClimbingBeyond(Vector2f &pos) const
 {
 	const auto screenSize = Helper::GetScreenSize();
 	const auto extra = staticGrid.getBlockSize();
@@ -380,7 +380,7 @@ bool WorldHandler::fixedClimbingBeyond(Vector2f &pos) const
 	return true;
 }
 
-void WorldHandler::setItemFromBuildSystem()
+void world_handler::setItemFromBuildSystem()
 {
 	if (!(buildSystem.instantBuild || focusedObject->getCurrentAction() == builds))
 		return;
@@ -406,11 +406,11 @@ void WorldHandler::setItemFromBuildSystem()
 	}
 }
 
-void WorldHandler::onMouseUp(const int currentMouseButton)
+void world_handler::onMouseUp(const int currentMouseButton)
 {	
 	if (mouseDisplayName == "Set pedestal")
 	{
-		const auto terrain = dynamic_cast<TerrainObject*>(selectedObject);
+		const auto terrain = dynamic_cast<terrain_object*>(selectedObject);
 		pedestalController.start(terrain);
 	}
 	if (pedestalController.isRunning())
@@ -431,12 +431,12 @@ void WorldHandler::onMouseUp(const int currentMouseButton)
 	hero->onMouseUp(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.buildingPosition != Vector2f(-1, -1) && !buildSystem.instantBuild));
 }
 
-void WorldHandler::handleEvents(Event& event)
+void world_handler::handleEvents(Event& event)
 {
 	pedestalController.handleEvents(event);
 }
 
-void WorldHandler::interact(Vector2f render_target_size, long long elapsedTime, Event event)
+void world_handler::interact(Vector2f render_target_size, long long elapsedTime, Event event)
 {
 	scaleSmoothing();
 	birthObjects();
@@ -604,7 +604,7 @@ bool cmpImgDraw(sprite_chain_element* first, sprite_chain_element* second)
 	return first->zCoord < second->zCoord;
 }
 
-std::vector<sprite_chain_element*> WorldHandler::prepareSprites(const long long elapsedTime, const bool onlyBackground)
+std::vector<sprite_chain_element*> world_handler::prepareSprites(const long long elapsedTime, const bool onlyBackground)
 {
     std::vector<sprite_chain_element*> result = {};
 

@@ -4,7 +4,7 @@
 
 #include "button.h"
 #include "Helper.h"
-#include "WorldHandler.h"
+#include "world_handler.h"
 
 using namespace sf;
 
@@ -15,11 +15,11 @@ class menu_system
 public:
 	menu_system();
 	~menu_system();
-	void interact(WorldHandler &world, RenderWindow &window);
+	void interact(world_handler &world, RenderWindow &window);
 	std::vector<sprite_chain_element*> prepareSprites();
 	menu_states getState() { return menuState; }
 	void setState(menu_states state) { menuState = state; }
-	void onKeyDown(Event event, WorldHandler &world);
+	void onKeyDown(Event event, world_handler &world);
 	bool getActivity() { return wasActive; }
 private:
 	menu_states menuState = mainMenu;

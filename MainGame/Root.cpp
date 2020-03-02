@@ -2,7 +2,7 @@
 
 #include "Helper.h"
 
-root::root(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+root::root(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 5; // 1-5
 	this->typeOfObject = typeOfObject;
@@ -89,7 +89,7 @@ void root::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f root::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f root::getBuildPosition(std::vector<world_object*>, float, Vector2f)
 {
 	return { -1, -1 };
 }

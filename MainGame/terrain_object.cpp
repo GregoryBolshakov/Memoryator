@@ -1,17 +1,17 @@
-#include "TerrainObject.h"
+#include "terrain_object.h"
 
 #include "Helper.h"
 
-TerrainObject::TerrainObject(std::string objectName, Vector2f centerPosition) : StaticObject(std::move(objectName), centerPosition)
+terrain_object::terrain_object(std::string objectName, Vector2f centerPosition) : static_object(std::move(objectName), centerPosition)
 {
 	isTerrain = true;
 	mirrored = bool(rand() % 2);
 }
 
-TerrainObject::~TerrainObject()
+terrain_object::~terrain_object()
 = default;
 
-void TerrainObject::initMicroBlocks()
+void terrain_object::initMicroBlocks()
 {	
 	const auto currentMicroBlock = Vector2i(int(round(position.x / microBlockSize.x)), int(round(position.y / microBlockSize.y)));
 	if (mirrored)
@@ -72,7 +72,7 @@ void TerrainObject::initMicroBlocks()
 	}
 }
 
-float TerrainObject::getEllipseSize(int i)
+float terrain_object::getEllipseSize(int i)
 {
 	if (isMultiEllipse)
 		return Helper::getDist(internalEllipses[i].first, internalEllipses[i].second) * ellipseSizeMultipliers[i];
@@ -80,7 +80,7 @@ float TerrainObject::getEllipseSize(int i)
 	return Helper::getDist(focus1, focus2) * ellipseSizeMultipliers[0];
 }
 
-void TerrainObject::setFocuses(std::vector<Vector2f> focuses)
+void terrain_object::setFocuses(std::vector<Vector2f> focuses)
 {
 	if (isMultiEllipse)
 	{
@@ -97,7 +97,7 @@ void TerrainObject::setFocuses(std::vector<Vector2f> focuses)
 	}
 }
 
-bool TerrainObject::isIntersected(Vector2f curPosition, Vector2f newPosition) //const
+bool terrain_object::isIntersected(Vector2f curPosition, Vector2f newPosition) //const
 {
 	if (this->isMultiEllipse)
 		return false;
@@ -123,7 +123,7 @@ bool TerrainObject::isIntersected(Vector2f curPosition, Vector2f newPosition) //
 	return sqrt(pow(position.x - f1.x, 2) + pow(position.y - f1.y, 2)) + sqrt(pow(position.x - f2.x, 2) + pow(position.y - f2.y, 2)) <= Helper::getDist(f1, f2) * ellipseSizeMultipliers[0];
 }
 
-std::vector<int> TerrainObject::getMultiellipseIntersect(Vector2f position) const
+std::vector<int> terrain_object::getMultiellipseIntersect(Vector2f position) const
 {
 	std::vector<int> ans;
 	if (this->internalEllipses.empty())	
@@ -141,7 +141,7 @@ std::vector<int> TerrainObject::getMultiellipseIntersect(Vector2f position) cons
 	return ans;
 }
 
-Vector2f TerrainObject::newSlippingPositionForDotsAdjusted(const Vector2f motionVector, const float speed, const long long elapsedTime) const
+Vector2f terrain_object::newSlippingPositionForDotsAdjusted(const Vector2f motionVector, const float speed, const long long elapsedTime) const
 {
 	const auto dot1 = Vector2f(this->getDot1()), dot2 = Vector2f(this->getDot2());
 

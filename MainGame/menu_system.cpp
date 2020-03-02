@@ -22,7 +22,7 @@ void menu_system::initButtons()
 menu_system::~menu_system()
 = default;
 
-void menu_system::onKeyDown(Event event, WorldHandler &world)
+void menu_system::onKeyDown(Event event, world_handler &world)
 {
 	if (event.key.code == Keyboard::Escape)
 	{
@@ -38,7 +38,7 @@ void menu_system::onKeyDown(Event event, WorldHandler &world)
 	}
 }
 
-void menu_system::interact(WorldHandler &world, RenderWindow &window)
+void menu_system::interact(world_handler &world, RenderWindow &window)
 {
 	wasActive = false;
 

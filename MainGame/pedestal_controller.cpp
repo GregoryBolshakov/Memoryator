@@ -20,7 +20,7 @@ pedestal_controller::pedestal_controller()
 pedestal_controller::~pedestal_controller()
 = default;
 
-void pedestal_controller::start(TerrainObject * object)
+void pedestal_controller::start(terrain_object * object)
 {
 	readyToStart = false;
 	boundObject = object;

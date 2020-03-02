@@ -1,15 +1,15 @@
 #pragma once
 
-#include "StaticObject.h"
+#include "static_object.h"
 
-class TerrainObject : public StaticObject
+class terrain_object : public static_object
 {
 protected:
 	Vector2f focus1, focus2;
 	Vector2f dot1, dot2, currentDot = Vector2f (-1, -1);
 public:
-	TerrainObject(std::string objectName, Vector2f centerPosition);
-	virtual ~TerrainObject();
+	terrain_object(std::string objectName, Vector2f centerPosition);
+	virtual ~terrain_object();
 	void initMicroBlocks() override;
 	[[nodiscard]] Vector2f getFocus1() const { return focus1; }
 	[[nodiscard]] Vector2f getFocus2() const { return focus2; }

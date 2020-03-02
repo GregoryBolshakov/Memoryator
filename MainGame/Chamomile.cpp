@@ -2,7 +2,7 @@
 
 #include "Helper.h"
 
-chamomile::chamomile(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : PickedObject(std::move(objectName), centerPosition)
+chamomile::chamomile(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : picked_object(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 5;
 	this->typeOfObject = typeOfObject;
@@ -47,7 +47,7 @@ void chamomile::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f chamomile::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f chamomile::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }

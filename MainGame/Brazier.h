@@ -1,9 +1,9 @@
 #pragma once
 
-#include "TerrainObject.h"
+#include "terrain_object.h"
 #include "build_system.h"
 
-class brazier : public TerrainObject
+class brazier : public terrain_object
 {
 public:
 	brazier(std::string objectName, Vector2f centerPosition, int typeOfObject);
@@ -12,7 +12,7 @@ public:
 	void initCraftRecipes();
 	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;
 	void setType(int typeOfObject) override;
-	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
+	Vector2f getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
 
 	// craft

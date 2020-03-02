@@ -36,7 +36,7 @@ Vector2f deer::calculateTextureOffset()
 	return {textureBox.width / 2, textureBox.height * 7 / 8};
 }
 
-void deer::behaviorWithStatic(WorldObject* target, long long elapsedTime)
+void deer::behaviorWithStatic(world_object* target, long long elapsedTime)
 {
 }
 
@@ -111,7 +111,7 @@ void deer::behavior(const long long elapsedTime)
 	boundTarget = nullptr;
 }
 
-Vector2f deer::getBuildPosition(std::vector<WorldObject*> /*visibleItems*/, float /*scaleFactor*/, Vector2f /*cameraPosition*/)
+Vector2f deer::getBuildPosition(std::vector<world_object*> /*visibleItems*/, float /*scaleFactor*/, Vector2f /*cameraPosition*/)
 {
 	return {-1, -1};
 }

@@ -1,6 +1,6 @@
 #include "console.h"
 
-console::console(const FloatRect rect, WorldHandler* world)
+console::console(const FloatRect rect, world_handler* world)
 {
 	this->world = world;
 	body.init(rect);

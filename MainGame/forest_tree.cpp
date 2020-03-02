@@ -2,7 +2,7 @@
 
 #include "Helper.h"
 
-forest_tree::forest_tree(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+forest_tree::forest_tree(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 18; // BirchGrove: 1-7; DarkWoods: 8-13; SwampyTrees: 14-18
 	this->typeOfObject = typeOfObject;
@@ -226,7 +226,7 @@ void forest_tree::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f forest_tree::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f forest_tree::getBuildPosition(std::vector<world_object*>, float, Vector2f)
 {
 	return { -1, -1 };
 }

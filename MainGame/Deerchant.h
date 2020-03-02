@@ -1,11 +1,11 @@
 #pragma once
 
-#include "DynamicObject.h"
+#include "dynamic_object.h"
 #include "hero_bag.h"
 
 using namespace sf;
 
-class deerchant : public DynamicObject
+class deerchant : public dynamic_object
 {
 public:	
 	deerchant(std::string objectName, Vector2f centerPosition);
@@ -20,11 +20,11 @@ public:
 	void handleInput(bool usedMouse = false) override;
 	void moveEnd(bool animate = false, bool invertDirection = false);
 	[[nodiscard]] int calculateNextMoveEndSprite(int currentSprite = 1) const;
-	void behaviorWithDynamic(DynamicObject* target, long long elapsedTime) override;
-	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
+	void behaviorWithDynamic(dynamic_object* target, long long elapsedTime) override;
+	void behaviorWithStatic(world_object* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;
-	void onMouseUp(int currentMouseButton, WorldObject *mouseSelectedObject, Vector2f mouseWorldPos, bool isBuilding = false);
-	void setTarget(DynamicObject& object) override;
+	void onMouseUp(int currentMouseButton, world_object *mouseSelectedObject, Vector2f mouseWorldPos, bool isBuilding = false);
+	void setTarget(dynamic_object& object) override;
 	void endingPreviousAction();
 	void stopping(bool doStand = false, bool forgetBoundTarget = false, bool offUnsealInventory = false);
 	void calculateSpeedLineDirection(Direction lastDirection = Direction::STAND, Direction direction = Direction::STAND);
@@ -35,12 +35,12 @@ public:
 	void jerk(float power, float deceleration, Vector2f destinationPoint = Vector2f(-1, -1)) override;
 	void jerkInteract(long long elapsedTime);
 	void speedInteract(long long elapsedTime);
-	void fightInteract(long long elapsedTime, DynamicObject* target = nullptr) override;
+	void fightInteract(long long elapsedTime, dynamic_object* target = nullptr) override;
 	void animationSmoothInteract(long long elapsedTime);
 	void animationSmooth();
 
 	cell* heldItem = nullptr;
-	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
+	Vector2f getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
 	std::vector<hero_bag> bags;
 	bool nearTheTable = false;
@@ -53,7 +53,7 @@ private:
 	long long moveTime = 0;
 	long long smoothMoveTime = 0;
 	Direction smoothDirection = Direction::STAND;
-	WorldObject* owner = nullptr, *unsealInventoryOwner = nullptr;
+	world_object* owner = nullptr, *unsealInventoryOwner = nullptr;
 	int strikingSprite = 0;
 	Vector2f lastPosition = { 0, 0 };
 	Direction speedLineDirection = Direction::STAND;

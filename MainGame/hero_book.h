@@ -7,7 +7,7 @@
 #include "button.h"
 #include "hero_bag.h"
 #include "text_system.h"
-#include "WorldObject.h"
+#include "world_object.h"
 
 using namespace sf;
 
@@ -23,7 +23,7 @@ public:
 	void getAllOuterInfo(
 		std::vector<hero_bag>* bags,
 		std::string name,
-		WorldObject* object,
+		world_object* object,
 		cell* worldHeldItem,
 		bool nearTheTable = false);
 	void WhileMouseDown();
@@ -58,7 +58,7 @@ private:
 	bool visibility = false;
 	std::pair<Tag, int> heldItem = { Tag::emptyCell, 0 };
 	cell* worldHeldItem = nullptr;
-	WorldObject* worldSelectedObject = nullptr;
+	world_object* worldSelectedObject = nullptr;
 	Tag currentDraft = Tag::emptyDraft, currentFlower = Tag::emptyCell;
 	std::string worldMouseName = "";
 	Vector2f blockDescriptionPoint = Vector2f(0.53f, 0.104f); // as a percentage of the size of the page markup

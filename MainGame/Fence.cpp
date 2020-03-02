@@ -2,7 +2,7 @@
 
 #include "Helper.h"
 
-fence::fence(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+fence::fence(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 3;
 	this->typeOfObject = typeOfObject;
@@ -89,7 +89,7 @@ void fence::initPedestal()
 	//radius = sqrt(pow(dot1.x - dot2.x, 2) + pow(dot1.y + dot2.y, 2)) / 2 - 10;
 }
 
-Vector2f fence::getBuildPosition(std::vector<WorldObject*> visibleItems, const float scaleFactor, const Vector2f cameraPosition)
+Vector2f fence::getBuildPosition(std::vector<world_object*> visibleItems, const float scaleFactor, const Vector2f cameraPosition)
 {
 	const auto mousePos = Vector2f (Mouse::getPosition());
 	const auto mouseWorldPos = Vector2f ((mousePos.x - Helper::GetScreenSize().x / 2 + cameraPosition.x * scaleFactor) / scaleFactor,

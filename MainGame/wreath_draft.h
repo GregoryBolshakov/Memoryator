@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "WorldObject.h"
+#include "world_object.h"
 
 using namespace sf;
 

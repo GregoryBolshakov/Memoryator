@@ -2,16 +2,16 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "WorldObject.h"
+#include "world_object.h"
 
-class EmptyObject : public WorldObject
+class empty_object : public world_object
 {
 public:
-	EmptyObject(std::string objectName, Vector2f centerPosition);
-	~EmptyObject();
+	empty_object(std::string objectName, Vector2f centerPosition);
+	~empty_object();
 	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;
 	int getSpriteNumber() override;
-	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
+	Vector2f getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
 	void setTextureSize(Vector2f textureSize) override;
 	Vector2f calculateTextureOffset() override;

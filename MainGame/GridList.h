@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "WorldObject.h"
+#include "world_object.h"
 
 using namespace sf;
 
@@ -25,24 +25,24 @@ public:
 	[[nodiscard]] Vector2f getPointByMicroBlock(int microBlockIndex) const;
 	
 	void makeRoute(Vector2f startPos, Vector2f finishPos, float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY, int permissibleDistance = 1);
-	void addItem(WorldObject* item, const std::string& name, float x, float y);
-	WorldObject* getItemByName(const std::string& name);
-	std::vector<WorldObject*> getItems(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY);
-	std::vector<WorldObject*> getItems(int blockIndex);
+	void addItem(world_object* item, const std::string& name, float x, float y);
+	world_object* getItemByName(const std::string& name);
+	std::vector<world_object*> getItems(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY);
+	std::vector<world_object*> getItems(int blockIndex);
 	void updateItemPosition(const std::string& name, const float x, const float y);
 
-	[[nodiscard]] std::vector<std::vector<WorldObject*>> getCells() const { return cells; }
+	[[nodiscard]] std::vector<std::vector<world_object*>> getCells() const { return cells; }
 	
 	void clearCell(int cellIndex);
 	void deleteItem(const std::string& name);
-	void setLockedMicroBlocks(WorldObject* item, bool value = false, bool dynamicMatrix = false);
+	void setLockedMicroBlocks(world_object* item, bool value = false, bool dynamicMatrix = false);
 	void boundDynamicMatrix(std::vector<std::vector<bool>>* matrix) { this->dynamicMicroBlockMatrix = matrix; }
 	
 	[[nodiscard]] size_t getSize() const { return items.size(); }
 
 	[[nodiscard]] std::vector<int> getBlocksAround(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY) const;
 	[[nodiscard]] std::vector<int> getBlocksInSight(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY) const;
-	bool isIntersectWithOthers(WorldObject* object, const std::vector<WorldObject*>& visibleTerrain, bool isDotAdjusted = false) const;
+	bool isIntersectWithOthers(world_object* object, const std::vector<world_object*>& visibleTerrain, bool isDotAdjusted = false) const;
 
 	std::vector<std::vector<bool>> microBlockMatrix;
 	std::vector<std::vector<bool>>* dynamicMicroBlockMatrix = nullptr;
@@ -54,7 +54,7 @@ public:
 private:
 	int width, height;
 	Vector2f size = { 0, 0 }, microSize = { 0, 0 };
-	std::vector<std::vector<WorldObject*>> cells;
+	std::vector<std::vector<world_object*>> cells;
 	std::unordered_map<std::string, std::pair<int, int>> items;	
 	void bfs(int xBorder, int yBorder, int startX, int startY, int finishX, int finishY);
 	int width_to_size_x_{};

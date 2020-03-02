@@ -35,7 +35,7 @@ Vector2f bear::calculateTextureOffset()
 	return { textureBox.width / 2, textureBox.height * 7 / 8 };
 }
 
-void bear::behaviorWithStatic(WorldObject* target, long long elapsedTime)
+void bear::behaviorWithStatic(world_object* target, long long elapsedTime)
 {
 
 }
@@ -105,7 +105,7 @@ void bear::behavior(long long elapsedTime)
 	boundTarget = nullptr;
 }
 
-Vector2f bear::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f bear::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }

@@ -38,7 +38,7 @@ Vector2f owl::calculateTextureOffset()
 	return { textureBox.width / 2, textureBox.height * 7 / 8 };
 }
 
-void owl::setTarget(DynamicObject& object)
+void owl::setTarget(dynamic_object& object)
 {	
 	if (object.tag == Tag::noose || currentAction == absorbs)
 		return;
@@ -52,7 +52,7 @@ void owl::setTarget(DynamicObject& object)
 	}
 }
 
-void owl::behaviorWithStatic(WorldObject* target, long long elapsedTime)
+void owl::behaviorWithStatic(world_object* target, long long elapsedTime)
 {
 	if (currentAction == absorbs)
 		return;
@@ -167,7 +167,7 @@ void owl::behavior(long long elapsedTime)
 	}
 }
 
-Vector2f owl::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f owl::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }

@@ -1,16 +1,16 @@
 #pragma once
 
-#include "TerrainObject.h"
+#include "terrain_object.h"
 #include "hero_bag.h"
 
-class PickedObject : public TerrainObject
+class picked_object : public terrain_object
 {
 protected:
 	Tag id;
 	int count;
 public:
-	PickedObject::PickedObject(std::string objectName, Vector2f centerPosition);
-	virtual ~PickedObject();
+	picked_object::picked_object(std::string objectName, Vector2f centerPosition);
+	virtual ~picked_object();
 	bool pickUp(std::vector<hero_bag> *bags);
 	Tag getId() { return id; }
 	int getCount() { return count; }

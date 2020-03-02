@@ -4,7 +4,7 @@
 
 #include "Helper.h"
 
-brazier::brazier(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+brazier::brazier(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 1;
 	this->typeOfObject = typeOfObject;
@@ -135,7 +135,7 @@ void brazier::putItemToCraft(const Tag id)
 	craftResult = checkCraftResult();
 }
 
-Vector2f brazier::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f brazier::getBuildPosition(std::vector<world_object*>, float, Vector2f)
 {
 	return { -1, -1 };
 }

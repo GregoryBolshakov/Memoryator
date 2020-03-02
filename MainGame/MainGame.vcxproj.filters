@@ -5,30 +5,6 @@
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GridList.cpp" />
-    <ClCompile Include="WorldHandler.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
-    <ClCompile Include="WorldGenerator.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
-    <ClCompile Include="DynamicObject.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
-    <ClCompile Include="EmptyObject.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
-    <ClCompile Include="PickedObject.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
-    <ClCompile Include="StaticObject.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
-    <ClCompile Include="TerrainObject.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
-    <ClCompile Include="WorldObject.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
     <ClCompile Include="LightSystem.cpp" />
     <ClCompile Include="button.cpp">
       <Filter>Systems</Filter>
@@ -213,6 +189,30 @@
     <ClCompile Include="VisualEffects\ambient_light.cpp">
       <Filter>VisualEffects</Filter>
     </ClCompile>
+    <ClCompile Include="dynamic_object.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="empty_object.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="picked_object.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="static_object.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="terrain_object.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="world_generator.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="world_handler.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="world_object.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EventHandler.h" />
@@ -220,30 +220,6 @@
     <ClInclude Include="Structs.h" />
     <ClInclude Include="GridList.h" />
     <ClInclude Include="SpriteStructures.h" />
-    <ClInclude Include="WorldHandler.h">
-      <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="WorldGenerator.h">
-      <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="DynamicObject.h">
-      <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="EmptyObject.h">
-      <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="PickedObject.h">
-      <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="StaticObject.h">
-      <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="TerrainObject.h">
-      <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="WorldObject.h">
-      <Filter>World</Filter>
-    </ClInclude>
     <ClInclude Include="Tags.h">
       <Filter>World</Filter>
     </ClInclude>
@@ -433,6 +409,30 @@
     </ClInclude>
     <ClInclude Include="VisualEffects\visual_effect.hpp">
       <Filter>VisualEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="dynamic_object.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="empty_object.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="picked_object.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="static_object.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="terrain_object.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="world_generator.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="world_handler.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="world_object.h">
+      <Filter>World</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

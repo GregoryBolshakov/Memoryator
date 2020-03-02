@@ -1,13 +1,13 @@
 #pragma once
 
-#include "TerrainObject.h"
+#include "terrain_object.h"
 
 class pedestal_controller
 {
 public:
 	pedestal_controller();
 	~pedestal_controller();
-	void start(TerrainObject* object);
+	void start(terrain_object* object);
 	void stop();
 	void draw(RenderWindow* window, Vector2f cameraPosition, float scaleFactor);
 	void handleEvents(Event& event);
@@ -17,8 +17,8 @@ public:
 	
 private:
 	bool running = false;
-	TerrainObject* boundObject = nullptr;
-	Vector2f size = Vector2f(WorldObject::microBlockSize.x / 2, WorldObject::microBlockSize.y / 2);
+	terrain_object* boundObject = nullptr;
+	Vector2f size = Vector2f(world_object::microBlockSize.x / 2, world_object::microBlockSize.y / 2);
 	RectangleShape filedFigure;
 	CircleShape focusFigure, centerFigure;
 	std::vector<Vector2f> focuses;

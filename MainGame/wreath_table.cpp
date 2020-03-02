@@ -4,7 +4,7 @@
 
 #include "object_initializer.h"
 
-wreath_table::wreath_table(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+wreath_table::wreath_table(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 1;
 	this->typeOfObject = typeOfObject;
@@ -102,7 +102,7 @@ void wreath_table::putItemToCraft(Tag id)
 	craftResult = checkCraftResult();
 }
 
-Vector2f wreath_table::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f wreath_table::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }

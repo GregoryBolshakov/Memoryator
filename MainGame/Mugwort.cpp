@@ -2,7 +2,7 @@
 
 #include "Helper.h"
 
-mugwort::mugwort(std::string objectName, Vector2f centerPosition, int typeOfObject) : PickedObject(std::move(objectName), centerPosition)
+mugwort::mugwort(std::string objectName, Vector2f centerPosition, int typeOfObject) : picked_object(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 3;
 	this->typeOfObject = typeOfObject;
@@ -43,7 +43,7 @@ void mugwort::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f mugwort::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f mugwort::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }

@@ -2,7 +2,7 @@
 
 #include "Helper.h"
 
-bush::bush(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+bush::bush(std::string objectName, Vector2f centerPosition, int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 15; // BrichGrove: 1-8; SwampyTrees: 9-15
 	this->typeOfObject = typeOfObject;
@@ -168,7 +168,7 @@ void bush::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f bush::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f bush::getBuildPosition(std::vector<world_object*>, float, Vector2f)
 {
 	return { -1, -1 };
 }

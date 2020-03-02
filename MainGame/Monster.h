@@ -1,29 +1,29 @@
 #pragma once
 
-#include "DynamicObject.h"
+#include "dynamic_object.h"
 #include "Helper.h"
 
 using namespace sf;
 
-class monster : public DynamicObject
+class monster : public dynamic_object
 {
 public:
 	monster(std::string objectName, Vector2f centerPosition);
 	~monster();
-	void behaviorWithDynamic(DynamicObject* target, long long elapsedTime) override;
-	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
+	void behaviorWithDynamic(dynamic_object* target, long long elapsedTime) override;
+	void behaviorWithStatic(world_object* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;
 	virtual void endingPreviousAction();
 	void stopping(bool doStand, bool forgetBoundTarget);
-	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
+	Vector2f getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
 	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
-	[[nodiscard]] WorldObject* getVictim() const { return victim; }
-	void setTarget(DynamicObject& object) override;
+	[[nodiscard]] world_object* getVictim() const { return victim; }
+	void setTarget(dynamic_object& object) override;
 	void jerk(float power, float deceleration, Vector2f destinationPoint) override;
-	void fightInteract(long long elapsedTime, DynamicObject* target = nullptr) override;
-	virtual void doAttack(WorldObject* target) = 0;
+	void fightInteract(long long elapsedTime, dynamic_object* target = nullptr) override;
+	virtual void doAttack(world_object* target) = 0;
 protected:
-	WorldObject* victim = nullptr;
+	world_object* victim = nullptr;
 	std::map<Actions, bool> isAttack = { {commonHit, true}, {directHit, true} };
 	float hitDistance = 30;
 	int animationLength{};

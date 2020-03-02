@@ -2,7 +2,7 @@
 
 #include "Helper.h"
 
-hare_trap::hare_trap(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : PickedObject(std::move(objectName), centerPosition)
+hare_trap::hare_trap(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : picked_object(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 1;
 	this->typeOfObject = typeOfObject;
@@ -35,7 +35,7 @@ void hare_trap::initPedestal()
 	ellipseSizeMultipliers[0] = { 0 };
 }
 
-Vector2f hare_trap::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f hare_trap::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }

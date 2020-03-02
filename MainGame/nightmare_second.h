@@ -10,5 +10,5 @@ public:
 	Vector2f calculateTextureOffset() override;
 	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;
 private:
-	void doAttack(WorldObject* target) override;
+	void doAttack(world_object* target) override;
 };

@@ -1,10 +1,10 @@
 #pragma once
 
 #include "move_system.h"
-#include "TerrainObject.h"
-#include "WorldObject.h"
+#include "terrain_object.h"
+#include "world_object.h"
 
-class DynamicObject : public WorldObject
+class dynamic_object : public world_object
 {
 protected:
 	int ellipseSize{};
@@ -14,11 +14,11 @@ protected:
 	long long timeAfterHitSelf = 0;
 	
 	Actions currentAction, lastAction = relax;
-	WorldObject *boundTarget = nullptr;
+	world_object *boundTarget = nullptr;
 	bool routeGenerationAbility = true;
 
 	//fight logic
-	virtual void fightInteract(long long elapsedTime, DynamicObject* target = nullptr) = 0;
+	virtual void fightInteract(long long elapsedTime, dynamic_object* target = nullptr) = 0;
 	//-----------
 
 	const long long DEFAULT_PUSH_DURATION = long(2e5);
@@ -31,8 +31,8 @@ protected:
 	long long jerkTime = 0;
 	bool isJerking = false;
 public:
-	DynamicObject(std::string objectName, Vector2f centerPosition);
-	virtual ~DynamicObject();
+	dynamic_object(std::string objectName, Vector2f centerPosition);
+	virtual ~dynamic_object();
 	int getSpriteNumber() override { return currentSprite[0]; }
 	[[nodiscard]] int getEllipseSize() const { return ellipseSize; }
 	[[nodiscard]] move_system getMoveSystem() const { return moveSystem; }
@@ -44,7 +44,7 @@ public:
 	[[nodiscard]] Vector2f getFocus2() const { return focus2; }
 	[[nodiscard]] Vector2f getMovePosition() const { return movePosition; }
 	[[nodiscard]] Actions getCurrentAction() const { return currentAction; }
-	[[nodiscard]] WorldObject *getBoundTarget() const { return boundTarget; }
+	[[nodiscard]] world_object *getBoundTarget() const { return boundTarget; }
 
 	void setCurrentAction(Actions action) { this->currentAction = action; }	
 	virtual void changeMovePositionToRoute(Vector2f newPosition) { movePosition = newPosition; }
@@ -54,10 +54,10 @@ public:
 	void initMicroBlocks() override;
 	virtual void changeAction(Actions newAction, bool resetSpriteNumber = false, bool rememberLastAction = false);
 	virtual void handleInput(bool usedMouse = false);
-	virtual void behaviorWithDynamic(DynamicObject* target, long long elapsedTime) = 0;
-	virtual void behaviorWithStatic(WorldObject* target, long long elapsedTime) = 0;
+	virtual void behaviorWithDynamic(dynamic_object* target, long long elapsedTime) = 0;
+	virtual void behaviorWithStatic(world_object* target, long long elapsedTime) = 0;
 	virtual void behavior(long long elapsedTime) = 0;
-	virtual void setTarget(DynamicObject &object) = 0;
+	virtual void setTarget(dynamic_object &object) = 0;
 	virtual void jerk(float power, float deceleration, Vector2f destinationPoint) = 0;
 
 	move_system moveSystem;
@@ -67,12 +67,12 @@ public:
 	long long timeForNewHit = long(100000);
 	float sightRange = 0;
 	float shakeSpeed = -1;
-	bool isIntersectDynamic(Vector2f newPosition, DynamicObject& otherDynamic) const;
+	bool isIntersectDynamic(Vector2f newPosition, dynamic_object& otherDynamic) const;
 	
-	Vector2f ellipseSlip(DynamicObject *dynamic, Vector2f newPos, Vector2f destination, Vector2f f1, Vector2f f2, float ellipseSize, float height, long long elapsedTime) const;
+	Vector2f ellipseSlip(dynamic_object *dynamic, Vector2f newPos, Vector2f destination, Vector2f f1, Vector2f f2, float ellipseSize, float height, long long elapsedTime) const;
 	Vector2f doMove(long long elapsedTime);
-	Vector2f doSlip(Vector2f newPosition, const std::vector<StaticObject*>& localStaticItems, float height, long long elapsedTime);
-	Vector2f doSlipOffDynamic(Vector2f newPosition, const std::vector<DynamicObject*>& localDynamicItems, float height, long long elapsedTime);
+	Vector2f doSlip(Vector2f newPosition, const std::vector<static_object*>& localStaticItems, float height, long long elapsedTime);
+	Vector2f doSlipOffDynamic(Vector2f newPosition, const std::vector<dynamic_object*>& localDynamicItems, float height, long long elapsedTime);
 	Vector2f laxMovePosition = { -1, -1 };
 	std::string lastIntersected = "";
 	std::vector<std::pair<int, int>> route = { {} };

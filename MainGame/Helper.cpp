@@ -118,7 +118,7 @@ bool Helper::isIntersects(const Vector2f pos, const Vector2f circlePos, const fl
 	return getDist(pos, circlePos) <= radius;
 }
 
-bool Helper::isIntersectTerrain(const Vector2f position, TerrainObject& terrain, const float radius)
+bool Helper::isIntersectTerrain(const Vector2f position, terrain_object& terrain, const float radius)
 {
 	const auto f1 = terrain.getFocus1();
 	const auto f2 = terrain.getFocus2();

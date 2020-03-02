@@ -274,7 +274,7 @@ void GridList::bfs(const int xBorder, const int yBorder, int startX, int startY,
 	}
 }
 
-bool GridList::isIntersectWithOthers(WorldObject* object, const std::vector<WorldObject*>& visibleTerrain, bool isDotAdjusted) const
+bool GridList::isIntersectWithOthers(world_object* object, const std::vector<world_object*>& visibleTerrain, bool isDotAdjusted) const
 {
 	/*for (auto&anotherItem : visibleTerrain)
 	{
@@ -308,9 +308,9 @@ bool GridList::isIntersectWithOthers(WorldObject* object, const std::vector<Worl
 	return object->isLockedPlace(checkBlocks);
 }
 
-void GridList::setLockedMicroBlocks(WorldObject* item, const bool value, const bool dynamicMatrix)
+void GridList::setLockedMicroBlocks(world_object* item, const bool value, const bool dynamicMatrix)
 {
-	const auto worldItem = dynamic_cast<WorldObject*>(item);
+	const auto worldItem = dynamic_cast<world_object*>(item);
 	if (worldItem)
 		for (const auto block : worldItem->getLockedMicroBlocks())
 		{
@@ -324,7 +324,7 @@ void GridList::setLockedMicroBlocks(WorldObject* item, const bool value, const b
 		}
 }
 
-void GridList::addItem(WorldObject* item, const std::string& name, const float x, const float y)
+void GridList::addItem(world_object* item, const std::string& name, const float x, const float y)
 {
 	setLockedMicroBlocks(item);
 
@@ -357,7 +357,7 @@ void GridList::deleteItem(const std::string& name)
 	
 	for (unsigned int i = position.second; i < cells[position.first].size(); i++)
 	{
-		const auto itemToUpdate = dynamic_cast<WorldObject*>(cells[position.first][i]);
+		const auto itemToUpdate = dynamic_cast<world_object*>(cells[position.first][i]);
 		auto itemName = itemToUpdate->getName();
 		items.at(itemName).second -= 1;
 	}
@@ -366,20 +366,20 @@ void GridList::deleteItem(const std::string& name)
 	items.erase(items.find(name));
 }
 
-WorldObject* GridList::getItemByName(const std::string& name)
+world_object* GridList::getItemByName(const std::string& name)
 {
 	const auto position = items.at(name);
 	return cells[position.first][position.second];
 }
 
-std::vector<WorldObject*> GridList::getItems(const int blockIndex)
+std::vector<world_object*> GridList::getItems(const int blockIndex)
 {
 	return cells[blockIndex];
 }
 
-std::vector<WorldObject*> GridList::getItems(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY)
+std::vector<world_object*> GridList::getItems(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY)
 {
-	std::vector<WorldObject*> result = {};
+	std::vector<world_object*> result = {};
 	
 	if (upperLeftX < 0)
 	{
@@ -502,7 +502,7 @@ void GridList::updateItemPosition(const std::string& name, const float x, const 
 
 	for (unsigned int i = position.second; i < cells[position.first].size(); i++)
 	{
-		const auto itemToUpdate = dynamic_cast<WorldObject*>(cells[position.first][i]);
+		const auto itemToUpdate = dynamic_cast<world_object*>(cells[position.first][i]);
 		auto itemName = itemToUpdate->getName();
 		items.at(itemName).second -= 1;
 	}

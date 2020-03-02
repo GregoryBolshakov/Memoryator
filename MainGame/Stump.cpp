@@ -2,7 +2,7 @@
 
 #include "Helper.h"
 
-stump::stump(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+stump::stump(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 13; // BirchGrove: 1-4; DarkWoods: 5-10; SwampyTrees: 11-13
 	this->typeOfObject = typeOfObject;
@@ -161,7 +161,7 @@ void stump::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f stump::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f stump::getBuildPosition(std::vector<world_object*>, float, Vector2f)
 {
 	return { -1, -1 };
 }

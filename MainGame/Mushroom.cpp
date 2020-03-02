@@ -2,7 +2,7 @@
 
 #include "Helper.h"
 
-mushroom::mushroom(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : StaticObject(std::move(objectName), centerPosition)
+mushroom::mushroom(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : static_object(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 16; // BirchGrove: 1-3; DarkWoods: 4-12; SwampyTrees: 13-16
 	this->typeOfObject = typeOfObject;
@@ -64,7 +64,7 @@ Vector2f mushroom::calculateTextureOffset()
 	return { textureBox.width / 2.0f, textureBox.height / 2.0f };
 }
 
-Vector2f mushroom::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f mushroom::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }

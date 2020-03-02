@@ -2,7 +2,7 @@
 
 using namespace sf;
 
-neutral_mob::neutral_mob(std::string objectName, Vector2f centerPosition) : DynamicObject(std::move(objectName), centerPosition)
+neutral_mob::neutral_mob(std::string objectName, Vector2f centerPosition) : dynamic_object(std::move(objectName), centerPosition)
 {
 	currentSprite[0] = 1;
 	currentAction = relax;
@@ -11,7 +11,7 @@ neutral_mob::neutral_mob(std::string objectName, Vector2f centerPosition) : Dyna
 neutral_mob::~neutral_mob()
 = default;
 
-void neutral_mob::setTarget(DynamicObject& object)
+void neutral_mob::setTarget(dynamic_object& object)
 {
 	/*if (object.tag == Tag::noose)
 		return;
@@ -25,12 +25,12 @@ void neutral_mob::setTarget(DynamicObject& object)
 		boundTarget = &object;
 	}
 
-void neutral_mob::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
+void neutral_mob::behaviorWithDynamic(dynamic_object* target, long long elapsedTime)
 {
 	
 }
 
-void neutral_mob::behaviorWithStatic(WorldObject* target, long long elapsedTime)
+void neutral_mob::behaviorWithStatic(world_object* target, long long elapsedTime)
 {
 
 }
@@ -75,7 +75,7 @@ void neutral_mob::behavior(long long elapsedTime)
 	boundTarget = nullptr;
 }
 
-void neutral_mob::fightInteract(long long elapsedTime, DynamicObject* target)
+void neutral_mob::fightInteract(long long elapsedTime, dynamic_object* target)
 {
 	moveSystem.pushAway(elapsedTime);
 }

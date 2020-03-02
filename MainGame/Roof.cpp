@@ -2,7 +2,7 @@
 
 #include "Helper.h"
 
-roof::roof(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+roof::roof(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 4;
 	this->typeOfObject = typeOfObject;
@@ -80,7 +80,7 @@ void roof::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f roof::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f roof::getBuildPosition(std::vector<world_object*>, float, Vector2f)
 {
 	return { -1, -1 };
 }

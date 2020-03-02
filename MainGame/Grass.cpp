@@ -2,7 +2,7 @@
 
 #include "Helper.h"
 
-grass::grass(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : StaticObject(std::move(objectName), centerPosition)
+grass::grass(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : static_object(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 30; // BirchGrove: 1-8; DarkWoods: 9-21; SwampyTrees: 22-30
 	this->typeOfObject = typeOfObject;
@@ -89,7 +89,7 @@ Vector2f grass::calculateTextureOffset()
 	return { textureBox.width / 2.0f, textureBox.height / 1.2f };
 }
 
-Vector2f grass::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f grass::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }

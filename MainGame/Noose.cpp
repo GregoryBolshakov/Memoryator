@@ -6,7 +6,7 @@
 
 using namespace sf;
 
-noose::noose(const std::string& objectName, const Vector2f centerPosition, WorldObject* owner) : DynamicObject(objectName, centerPosition)
+noose::noose(const std::string& objectName, const Vector2f centerPosition, world_object* owner) : dynamic_object(objectName, centerPosition)
 {
 	conditionalSizeUnits = {360, 300};
 	currentSprite[0] = 1;
@@ -37,11 +37,11 @@ Vector2f noose::calculateTextureOffset()
 	return {0.0F, textureBox.height / 1.8F};
 }
 
-void noose::setTarget(DynamicObject& object)
+void noose::setTarget(dynamic_object& object)
 {
 }
 
-void noose::behaviorWithDynamic(DynamicObject* target, long long /*elapsedTime*/)
+void noose::behaviorWithDynamic(dynamic_object* target, long long /*elapsedTime*/)
 {
 	if (currentAction == dead)
 	{
@@ -67,7 +67,7 @@ void noose::behaviorWithDynamic(DynamicObject* target, long long /*elapsedTime*/
 	}
 }
 
-void noose::behaviorWithStatic(WorldObject* /*target*/, long long /*elapsedTime*/)
+void noose::behaviorWithStatic(world_object* /*target*/, long long /*elapsedTime*/)
 {
 	if (currentAction == dead)
 	{
@@ -117,7 +117,7 @@ void noose::behavior(long long elapsedTime)
 	}
 }
 
-Vector2f noose::getBuildPosition(std::vector<WorldObject*> /*visibleItems*/, float /*scaleFactor*/, Vector2f /*cameraPosition*/)
+Vector2f noose::getBuildPosition(std::vector<world_object*> /*visibleItems*/, float /*scaleFactor*/, Vector2f /*cameraPosition*/)
 {
 	return {-1, -1};
 }
@@ -185,7 +185,7 @@ void noose::jerk(const float power, const float deceleration, Vector2f /*destina
 	laxMovePosition = Vector2f(owner->getPosition().x + (mousePos.x - screenCenter.x) * coeff, owner->getPosition().y + (mousePos.y - screenCenter.y) * coeff);
 }
 
-void noose::fightInteract(long long elapsedTime, DynamicObject* target)
+void noose::fightInteract(long long elapsedTime, dynamic_object* target)
 {
 }
 

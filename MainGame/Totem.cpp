@@ -3,7 +3,7 @@
 #include "Helper.h"
 
 
-totem::totem(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+totem::totem(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 1;
 	this->typeOfObject = typeOfObject;
@@ -65,7 +65,7 @@ void totem::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f totem::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f totem::getBuildPosition(std::vector<world_object*>, float, Vector2f)
 {
 	return { -1, -1 };
 }

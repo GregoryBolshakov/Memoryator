@@ -33,7 +33,7 @@ Vector2f hare::calculateTextureOffset()
 	return { textureBox.width / 2, textureBox.height * 7 / 8 };
 }
 
-void hare::setTarget(DynamicObject& object)
+void hare::setTarget(dynamic_object& object)
 {
 	if (object.tag == Tag::noose || currentAction == absorbs)
 		return;
@@ -47,7 +47,7 @@ void hare::setTarget(DynamicObject& object)
 	}
 }
 
-void hare::behaviorWithStatic(WorldObject* target, long long elapsedTime)
+void hare::behaviorWithStatic(world_object* target, long long elapsedTime)
 {
 	if (currentAction == absorbs)
 		return;
@@ -163,7 +163,7 @@ void hare::behavior(long long elapsedTime)
 	}
 }
 
-Vector2f hare::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f hare::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }

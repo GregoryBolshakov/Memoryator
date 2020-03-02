@@ -2,7 +2,7 @@
 
 #include "Helper.h"
 
-ground_connection::ground_connection(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : StaticObject(std::move(objectName), centerPosition)
+ground_connection::ground_connection(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : static_object(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 12; // SwampyTrees: 1-4; DarkWoods: 5-8; BirchGrove: 9-12
 	this->typeOfObject = typeOfObject;
@@ -67,7 +67,7 @@ Vector2f ground_connection::calculateTextureOffset()
 	return { 0, 0 };
 }
 
-Vector2f ground_connection::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f ground_connection::getBuildPosition(std::vector<world_object*>, float, Vector2f)
 {
 	return { -1, -1 };
 }

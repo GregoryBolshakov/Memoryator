@@ -2,7 +2,7 @@
 
 #include "Helper.h"
 
-spawn::spawn(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+spawn::spawn(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 1;
 	this->typeOfObject = typeOfObject;
@@ -44,7 +44,7 @@ void spawn::initPedestal()
 	ellipseSizeMultipliers = { 1.08f, 1.2f, 1.3f };
 }
 
-Vector2f spawn::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f spawn::getBuildPosition(std::vector<world_object*>, float, Vector2f)
 {
 	return { -1, -1 };
 }

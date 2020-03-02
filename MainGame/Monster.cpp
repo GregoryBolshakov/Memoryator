@@ -2,7 +2,7 @@
 
 using namespace sf;
 
-monster::monster(std::string objectName, const Vector2f centerPosition) : DynamicObject(std::move(objectName), centerPosition)
+monster::monster(std::string objectName, const Vector2f centerPosition) : dynamic_object(std::move(objectName), centerPosition)
 {
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
@@ -16,7 +16,7 @@ monster::monster(std::string objectName, const Vector2f centerPosition) : Dynami
 monster::~monster()
 = default;
 
-void monster::behaviorWithStatic(WorldObject* target, long long elapsedTime)
+void monster::behaviorWithStatic(world_object* target, long long elapsedTime)
 {
 
 }
@@ -27,14 +27,14 @@ void monster::behavior(const long long elapsedTime)
 	fightInteract(elapsedTime);
 }
 
-void monster::setTarget(DynamicObject& object)
+void monster::setTarget(dynamic_object& object)
 {
 	boundTarget = nullptr;
 	if (object.tag == Tag::hero)
 		return; //targetPosition = object.getPosition();
 }
 
-void monster::behaviorWithDynamic(DynamicObject* target, const long long elapsedTime)
+void monster::behaviorWithDynamic(dynamic_object* target, const long long elapsedTime)
 {
 	if (healthPoint <= 0)
 	{
@@ -121,7 +121,7 @@ void monster::stopping(const bool doStand, const bool forgetBoundTarget)
 	}
 }
 
-Vector2f monster::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f monster::getBuildPosition(std::vector<world_object*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
@@ -135,7 +135,7 @@ void monster::jerk(float power, float deceleration, Vector2f destinationPoint)
 {
 }
 
-void monster::fightInteract(const long long elapsedTime, DynamicObject* target)
+void monster::fightInteract(const long long elapsedTime, dynamic_object* target)
 {
 	moveSystem.pushAway(elapsedTime);
 }

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "DynamicObject.h"
+#include "dynamic_object.h"
 #include "Helper.h"
 
 using namespace sf;
 
-class neutral_mob : public DynamicObject
+class neutral_mob : public dynamic_object
 {
 protected:
 	int morality{};
@@ -14,10 +14,10 @@ protected:
 public:
 	neutral_mob(std::string objectName, Vector2f centerPosition);
 	~neutral_mob();
-	void behaviorWithDynamic(DynamicObject* target, long long elapsedTime) override;
-	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
+	void behaviorWithDynamic(dynamic_object* target, long long elapsedTime) override;
+	void behaviorWithStatic(world_object* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;
-	void setTarget(DynamicObject& object) override;
+	void setTarget(dynamic_object& object) override;
 protected:
-	void fightInteract(long long elapsedTime, DynamicObject* target = nullptr) override;
+	void fightInteract(long long elapsedTime, dynamic_object* target = nullptr) override;
 };

@@ -27,12 +27,12 @@ wolf::wolf(std::string objectName, Vector2f centerPosition) : neutral_mob(std::m
 wolf::~wolf()
 = default;
 
-void wolf::setTarget(DynamicObject& object)
+void wolf::setTarget(dynamic_object& object)
 {
 	return;
 }
 
-void wolf::behaviorWithStatic(WorldObject* target, long long elapsedTime)
+void wolf::behaviorWithStatic(world_object* target, long long elapsedTime)
 {
 
 }
@@ -49,7 +49,7 @@ Vector2f wolf::calculateTextureOffset()
 	return { textureBox.width / 2, textureBox.height * 7 / 8 };
 }
 
-Vector2f wolf::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f wolf::getBuildPosition(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }

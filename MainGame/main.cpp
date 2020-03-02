@@ -20,7 +20,7 @@ int main() {
 
     draw_system draw_system;
 	menu_system menuSystem;
-	WorldHandler world(40000, 40000, &draw_system.packsMap);
+	world_handler world(40000, 40000, &draw_system.packsMap);
 	bool windowFocus = true;
 	console console(FloatRect(Helper::GetScreenSize().x * 0.2f, Helper::GetScreenSize().y * 0.8f, Helper::GetScreenSize().x * 0.6f, Helper::GetScreenSize().y * 0.03f), &world);
 
@@ -92,7 +92,7 @@ int main() {
 			if (event.type == Event::Closed)
 			{
 				world.Save();
-				world.~WorldHandler();
+				world.~world_handler();
 				mainWindow.close();
 				break;
 			}

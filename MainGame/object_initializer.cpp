@@ -26,7 +26,7 @@ object_initializer::~object_initializer()
 
 int object_initializer::newNameId = 0;
 
-StaticObject* object_initializer::initializeStaticItem(
+static_object* object_initializer::initializeStaticItem(
 	Tag itemClass,
 	Vector2f itemPosition,
 	int itemType,
@@ -37,7 +37,7 @@ StaticObject* object_initializer::initializeStaticItem(
 	bool mirrored,
 	const std::vector<std::pair<Tag, int>>& inventory)
 {
-	StaticObject* item = nullptr;
+	static_object* item = nullptr;
 
 	switch (itemClass)
 	{
@@ -195,14 +195,14 @@ StaticObject* object_initializer::initializeStaticItem(
 	return item;
 }
 
-DynamicObject* object_initializer::initializeDynamicItem(
+dynamic_object* object_initializer::initializeDynamicItem(
 	Tag itemClass,
 	Vector2f itemPosition,
 	const std::string& itemName,
 	std::map<PackTag, sprite_pack>* packsMap,
-	WorldObject* owner)
+	world_object* owner)
 {
-	DynamicObject* item;
+	dynamic_object* item;
 	std::string nameOfImage;
 
 	switch (itemClass)
@@ -309,7 +309,7 @@ DynamicObject* object_initializer::initializeDynamicItem(
 	return item;
 }
 
-int object_initializer::getRandomTypeByBiome(WorldObject* object, const Biomes biome)
+int object_initializer::getRandomTypeByBiome(world_object* object, const Biomes biome)
 {
 	switch (object->tag)
 	{
@@ -376,19 +376,19 @@ int object_initializer::getRandomTypeByBiome(WorldObject* object, const Biomes b
 	return 0;
 }
 
-std::vector<StaticObject*> object_initializer::vectorCastToStatic(const std::vector<WorldObject*>& items)
+std::vector<static_object*> object_initializer::vectorCastToStatic(const std::vector<world_object*>& items)
 {
-	std::vector<StaticObject*> staticItems = {};
+	std::vector<static_object*> staticItems = {};
 	for (auto item : items)
-		staticItems.push_back(dynamic_cast<StaticObject*>(item));
+		staticItems.push_back(dynamic_cast<static_object*>(item));
 	return staticItems;
 }
 
-std::vector<DynamicObject*> object_initializer::vectorCastToDynamic(std::vector<WorldObject*> items)
+std::vector<dynamic_object*> object_initializer::vectorCastToDynamic(std::vector<world_object*> items)
 {
-	auto dynamicItems = *(new std::vector<DynamicObject*>());
+	auto dynamicItems = *(new std::vector<dynamic_object*>());
 	for (auto& item : items)
-		dynamicItems.push_back(dynamic_cast<DynamicObject*>(item));
+		dynamicItems.push_back(dynamic_cast<dynamic_object*>(item));
 	return dynamicItems;
 }
 

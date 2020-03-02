@@ -1,14 +1,14 @@
 #include "deerchant.h"
 
 #include "brazier.h"
-#include "EmptyObject.h"
+#include "empty_object.h"
 #include "Helper.h"
 #include "noose.h"
-#include "PickedObject.h"
+#include "picked_object.h"
 
 using namespace sf;
 
-deerchant::deerchant(std::string objectName, const Vector2f centerPosition) : DynamicObject(std::move(objectName), centerPosition)
+deerchant::deerchant(std::string objectName, const Vector2f centerPosition) : dynamic_object(std::move(objectName), centerPosition)
 {
 	currentSprite.resize(3);
 	for (auto& number : currentSprite)
@@ -408,12 +408,12 @@ void deerchant::setHitDirection()
 					directionSystem.side = left;
 }
 
-void deerchant::setTarget(DynamicObject& object)
+void deerchant::setTarget(dynamic_object& object)
 {
 	nearTheTable = false;
 }
 
-void deerchant::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
+void deerchant::behaviorWithDynamic(dynamic_object* target, long long elapsedTime)
 {
 	if (Helper::getDist(position, target->getPosition()) <= radius + target->getRadius())
 		moveSystem.pushByBumping(target->getPosition(), target->getRadius(), target->getMoveSystem().canCrashIntoDynamic);
@@ -427,7 +427,7 @@ void deerchant::behaviorWithDynamic(DynamicObject* target, long long elapsedTime
 	}
 }
 
-void deerchant::behaviorWithStatic(WorldObject* target, long long elapsedTime)
+void deerchant::behaviorWithStatic(world_object* target, long long elapsedTime)
 {
 	if (!target)
 		return;
@@ -540,7 +540,7 @@ void deerchant::behavior(const long long elapsedTime)
 	}
 }
 
-void deerchant::onMouseUp(const int currentMouseButton, WorldObject *mouseSelectedObject, const Vector2f mouseWorldPos, const bool isBuilding)
+void deerchant::onMouseUp(const int currentMouseButton, world_object *mouseSelectedObject, const Vector2f mouseWorldPos, const bool isBuilding)
 {
 	if (isBuilding && currentMouseButton == 2)
 	{
@@ -549,7 +549,7 @@ void deerchant::onMouseUp(const int currentMouseButton, WorldObject *mouseSelect
 			boundTarget->isProcessed = false;
 			boundTarget = nullptr;			
 		}
-		boundTarget = new EmptyObject("buildItem", mouseWorldPos);
+		boundTarget = new empty_object("buildItem", mouseWorldPos);
 		boundTarget->tag = Tag::buildObject;
 		laxMovePosition = mouseWorldPos;
 		return;
@@ -578,7 +578,7 @@ void deerchant::onMouseUp(const int currentMouseButton, WorldObject *mouseSelect
 				boundTarget->isProcessed = false;
 				boundTarget = nullptr;				
 			}
-			boundTarget = new EmptyObject("droppedItem", mouseWorldPos);
+			boundTarget = new empty_object("droppedItem", mouseWorldPos);
 			boundTarget->tag = Tag::dropPoint;
 			laxMovePosition = mouseWorldPos;
 			return;
@@ -593,7 +593,7 @@ void deerchant::onMouseUp(const int currentMouseButton, WorldObject *mouseSelect
 					boundTarget->isProcessed = false;
 					boundTarget = nullptr;
 				}
-				boundTarget = new EmptyObject("droppedBag", mouseWorldPos);
+				boundTarget = new empty_object("droppedBag", mouseWorldPos);
 				boundTarget->tag = Tag::dropPoint;
 				laxMovePosition = mouseWorldPos;
 			}
@@ -708,7 +708,7 @@ void deerchant::endingPreviousAction()
 	{
 		if (boundTarget)
 		{
-			auto pickedItem = dynamic_cast<PickedObject*>(boundTarget);
+			auto pickedItem = dynamic_cast<picked_object*>(boundTarget);
 			if (pickedItem)
 			{
 				if (pickedItem->getType() == int(Tag::heroBag) || pickedItem->getId() == Tag::hareTrap)
@@ -885,7 +885,7 @@ void deerchant::jerkInteract(const long long elapsedTime)
 	}
 }
 
-Vector2f deerchant::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f deerchant::getBuildPosition(std::vector<world_object*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
@@ -918,7 +918,7 @@ void deerchant::jerk(const float power, const float deceleration, Vector2f)
 	laxMovePosition = Vector2f(position.x + cos(float(directionSystem.direction) * pi / 180) * jerkDistance, position.y - sin(float(directionSystem.direction) * pi / 180) * jerkDistance);
 }
 
-void deerchant::fightInteract(long long elapsedTime, DynamicObject* target)
+void deerchant::fightInteract(long long elapsedTime, dynamic_object* target)
 {
 	timeAfterHitSelf += elapsedTime;
 	moveSystem.pushAway(elapsedTime);

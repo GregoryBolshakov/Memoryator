@@ -1,22 +1,22 @@
-#include "WorldObject.h"
+#include "world_object.h"
 
 #include "Helper.h"
 
-Vector2f WorldObject::microBlockSize = {20, 20};
+Vector2f world_object::microBlockSize = {20, 20};
 
-WorldObject::WorldObject(std::string objectName, const Vector2f centerPosition)
+world_object::world_object(std::string objectName, const Vector2f centerPosition)
 {
 	name = std::move(objectName);
 	position = centerPosition;
-	WorldObject::initPedestal();
+	world_object::initPedestal();
 	currentSprite.resize(1);
 	currentSprite[0] = 1;
 }
 
-WorldObject::~WorldObject()
+world_object::~world_object()
 = default;
 
-void WorldObject::setTextureSize(const Vector2f textureSize)
+void world_object::setTextureSize(const Vector2f textureSize)
 {
 	textureBox.width = textureSize.x;
 	textureBox.height = textureSize.y;
@@ -29,12 +29,12 @@ void WorldObject::setTextureSize(const Vector2f textureSize)
 	initPedestal();
 }
 
-Vector2f WorldObject::getScaleRatio() const
+Vector2f world_object::getScaleRatio() const
 {
 	return { float(conditionalSizeUnits.x) / originalTextureBox.width, float(conditionalSizeUnits.y) / originalTextureBox.height };
 }
 
-void WorldObject::cancelMirroring()
+void world_object::cancelMirroring()
 {
 	if (!mirrored)
 		return;
@@ -43,16 +43,16 @@ void WorldObject::cancelMirroring()
 	mirrored = false;
 }
 
-void WorldObject::initPedestal()
+void world_object::initPedestal()
 {
 	initMicroBlocks();
 }
 
-void WorldObject::initMicroBlocks()
+void world_object::initMicroBlocks()
 {
 }
 
-bool WorldObject::isLockedPlace(const std::map<std::pair<int, int>, bool>& checkBlocks)
+bool world_object::isLockedPlace(const std::map<std::pair<int, int>, bool>& checkBlocks)
 {
 	for (auto& block : lockedMicroBlocks)
 		if (checkBlocks.count({ block.x, block.y }) > 0)
@@ -61,23 +61,23 @@ bool WorldObject::isLockedPlace(const std::map<std::pair<int, int>, bool>& check
 	return false;
 }
 
-void WorldObject::setPosition(const Vector2f newPosition)
+void world_object::setPosition(const Vector2f newPosition)
 {
 	position = Vector2f(newPosition);
 	textureBox.left = ceil(newPosition.x - textureBoxOffset.x);
 	textureBox.top = ceil(newPosition.y - textureBoxOffset.y);
 }
 
-void WorldObject::takeDamage(const float damage, Vector2f attackerPos)
+void world_object::takeDamage(const float damage, Vector2f attackerPos)
 {
 	this->healthPoint -= damage / this->armor;
 }
 
-void WorldObject::onSpriteChange()
+void world_object::onSpriteChange()
 {
 }
 
-float WorldObject::getMaxHealthPointValue() const
+float world_object::getMaxHealthPointValue() const
 {
 	return maxHealthPointValue;
 }

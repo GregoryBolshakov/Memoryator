@@ -1,6 +1,6 @@
 #pragma once
 
-#include "StaticObject.h"
+#include "static_object.h"
 #include "SpriteStructures.h"
 #include "sprite_pack.h"
 #include "rock.h"
@@ -50,7 +50,7 @@ class object_initializer
 public:
 	object_initializer();
 	~object_initializer();
-	static StaticObject* initializeStaticItem(
+	static static_object* initializeStaticItem(
 		Tag itemClass,
 		Vector2f itemPosition,
 		int itemType,
@@ -61,14 +61,14 @@ public:
 		bool mirrored = true,
 		const std::vector<std::pair<Tag, int>>& inventory = {});
 	static int newNameId;
-	static int getRandomTypeByBiome(WorldObject* object, Biomes biome);
-	static DynamicObject* initializeDynamicItem(Tag itemClass,
+	static int getRandomTypeByBiome(world_object* object, Biomes biome);
+	static dynamic_object* initializeDynamicItem(Tag itemClass,
 		Vector2f itemPosition,
 		const std::string& itemName,
 		std::map<PackTag, sprite_pack>* packsMap,
-		WorldObject* owner = nullptr);
-	static std::vector<StaticObject*> vectorCastToStatic(const std::vector<WorldObject*>& items);
-	static std::vector<DynamicObject*> vectorCastToDynamic(std::vector<WorldObject*> items);
+		world_object* owner = nullptr);
+	static std::vector<static_object*> vectorCastToStatic(const std::vector<world_object*>& items);
+	static std::vector<dynamic_object*> vectorCastToDynamic(std::vector<world_object*> items);
 
 	static std::map<Tag, std::string> mappedTags;
 	static std::map<std::string, Tag> mappedStrings;

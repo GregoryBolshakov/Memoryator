@@ -1,26 +1,26 @@
-#include "DynamicObject.h"
+#include "dynamic_object.h"
 
 #include "Helper.h"
 
-DynamicObject::DynamicObject(std::string objectName, const Vector2f centerPosition) : WorldObject(std::move(objectName), centerPosition), currentAction()
+dynamic_object::dynamic_object(std::string objectName, const Vector2f centerPosition) : world_object(std::move(objectName), centerPosition), currentAction()
 {
 	moveSystem.init(&radius, &position, &color);
 	directionSystem.init(&position, &movePosition);
 }
 
-DynamicObject::~DynamicObject()
+dynamic_object::~dynamic_object()
 = default;
 
-void DynamicObject::handleInput(bool usedMouse)
+void dynamic_object::handleInput(bool usedMouse)
 {
 }
 
-void DynamicObject::initMicroBlocks()
+void dynamic_object::initMicroBlocks()
 {
 	lockedMicroBlocks = { Vector2i(int(ceil(position.x / microBlockSize.x)), int(ceil(position.y / microBlockSize.y))) };
 }
 
-bool DynamicObject::isIntersectDynamic(Vector2f newPosition, DynamicObject& otherDynamic) const
+bool dynamic_object::isIntersectDynamic(Vector2f newPosition, dynamic_object& otherDynamic) const
 {
 	//Vector2f position1 = dynamic1.getPosition();
 	const auto position1 = newPosition;
@@ -29,7 +29,7 @@ bool DynamicObject::isIntersectDynamic(Vector2f newPosition, DynamicObject& othe
 	return sqrt(pow(position1.x - position2.x, 2) + pow(position1.y - position2.y, 2)) <= /*this->radius + */otherDynamic.radius;
 }
 
-Vector2f DynamicObject::ellipseSlip(DynamicObject *dynamic, Vector2f newPos, Vector2f destination, Vector2f f1, Vector2f f2, float ellipseSize, float height, long long elapsedTime) const
+Vector2f dynamic_object::ellipseSlip(dynamic_object *dynamic, Vector2f newPos, Vector2f destination, Vector2f f1, Vector2f f2, float ellipseSize, float height, long long elapsedTime) const
 {
 	const auto dynamicPos = Vector2f(dynamic->getPosition().x, height - dynamic->getPosition().y);
 	const auto focus1 = Vector2f(f1.x, height - f1.y);
@@ -152,7 +152,7 @@ Vector2f DynamicObject::ellipseSlip(DynamicObject *dynamic, Vector2f newPos, Vec
 //	moveOffset = { (movePosition.x - position.x) * k, (movePosition.y - position.y) * k };
 //}
 
-void DynamicObject::setMoveOffset(long long elapsedTime)
+void dynamic_object::setMoveOffset(long long elapsedTime)
 {
 	if (!(currentAction == move ||
 		currentAction == moveHit ||
@@ -195,7 +195,7 @@ void DynamicObject::setMoveOffset(long long elapsedTime)
 	moveSystem.moveOffset = { (movePosition.x - position.x) * k, (movePosition.y - position.y) * k };
 }
 
-Vector2f DynamicObject::doMove(long long elapsedTime)
+Vector2f dynamic_object::doMove(long long elapsedTime)
 {
 	setMoveOffset(elapsedTime);
 	auto position = this->position;
@@ -213,7 +213,7 @@ Vector2f DynamicObject::doMove(long long elapsedTime)
 	return position;
 }
 
-Vector2f DynamicObject::doSlip(Vector2f newPosition, const std::vector<StaticObject*> & localStaticItems, const float height, const long long elapsedTime)
+Vector2f dynamic_object::doSlip(Vector2f newPosition, const std::vector<static_object*> & localStaticItems, const float height, const long long elapsedTime)
 {
 	bool crashed = false;
 	if (!moveSystem.canCrashIntoStatic)
@@ -221,7 +221,7 @@ Vector2f DynamicObject::doSlip(Vector2f newPosition, const std::vector<StaticObj
 
 	for (auto& staticItem : localStaticItems)
 	{
-		auto terrain = dynamic_cast<TerrainObject*>(staticItem);
+		auto terrain = dynamic_cast<terrain_object*>(staticItem);
 		if (!terrain || staticItem->isBackground || staticItem->getRadius() == 0)
 			continue;
 
@@ -278,7 +278,7 @@ Vector2f DynamicObject::doSlip(Vector2f newPosition, const std::vector<StaticObj
 	return newPosition;
 }
 
-Vector2f DynamicObject::doSlipOffDynamic(Vector2f newPosition, const std::vector<DynamicObject*> & localDynamicItems, const float height, const long long elapsedTime)
+Vector2f dynamic_object::doSlipOffDynamic(Vector2f newPosition, const std::vector<dynamic_object*> & localDynamicItems, const float height, const long long elapsedTime)
 {
 	if (!moveSystem.canCrashIntoDynamic)
 		return newPosition;
@@ -308,7 +308,7 @@ Vector2f DynamicObject::doSlipOffDynamic(Vector2f newPosition, const std::vector
 	return newPosition;
 }
 
-void DynamicObject::changeAction(const Actions newAction, const bool resetSpriteNumber, const bool rememberLastAction)
+void dynamic_object::changeAction(const Actions newAction, const bool resetSpriteNumber, const bool rememberLastAction)
 {
 	if (rememberLastAction)
 		lastAction = currentAction;
@@ -320,7 +320,7 @@ void DynamicObject::changeAction(const Actions newAction, const bool resetSprite
 			number = 1;
 }
 
-void DynamicObject::takeDamage(const float damage, const Vector2f attackerPos)
+void dynamic_object::takeDamage(const float damage, const Vector2f attackerPos)
 {
 	if (timeAfterHitSelf < timeForNewHitSelf)
 		return;

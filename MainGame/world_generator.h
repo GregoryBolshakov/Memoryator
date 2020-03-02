@@ -3,7 +3,7 @@
 #include "object_initializer.h"
 #include "GridList.h"
 
-class WorldGenerator
+class world_generator
 {
 public:	
 	const float CLOSEST_SCALE = 1.7f;
@@ -23,7 +23,7 @@ public:
 		bool mirrored = true,
 		const std::vector<std::pair<Tag, int>>& inventory = {}) const;
 	
-	void initializeDynamicItem(Tag itemClass, Vector2f itemPosition, const std::string& itemName, WorldObject* owner = nullptr);
+	void initializeDynamicItem(Tag itemClass, Vector2f itemPosition, const std::string& itemName, world_object* owner = nullptr);
 
 	//active generation
 	void inBlockGenerate(int blockIndex);
@@ -32,12 +32,12 @@ public:
 	void perimeterGeneration();
 	void beyondScreenGeneration();
 
-	WorldGenerator();
-	~WorldGenerator();
+	world_generator();
+	~world_generator();
 
 	Biomes biomeMatrix[100][100]{};
 	std::map<int, bool> rememberedBlocks = { {0, true} };
-	DynamicObject* focusedObject = nullptr;
+	dynamic_object* focusedObject = nullptr;
 	float scaleFactor = 1;
 	float mainScale = 1;
 private:

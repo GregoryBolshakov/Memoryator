@@ -31,7 +31,7 @@ Vector2f nightmare_first::calculateTextureOffset()
 	return { textureBox.width / 2, textureBox.height * 7 / 8 };
 }
 
-void nightmare_first::doAttack(WorldObject* target)
+void nightmare_first::doAttack(world_object* target)
 {
 	if (timeAfterHit >= timeForNewHit)
 	{

@@ -6,7 +6,7 @@
 #include "Helper.h"
 #include "inventory_system.h"
 #include "sprite_pack.h"
-#include "WorldObject.h"
+#include "world_object.h"
 
 using namespace sf;
 
@@ -27,9 +27,9 @@ public:
 	void onMouseUp();
 	void buildHeldItem(Vector2f focusedObjectPosition, float scaleFactor);
 	void interact(Vector2f cameraPosition = {0, 0}, float scaleFactor = 1);
-	void clearHareBags(int block, GridList& staticGrid, std::vector<WorldObject*>* visibleItems);
+	void clearHareBags(int block, GridList& staticGrid, std::vector<world_object*>* visibleItems);
 	void wasPlaced();
-	std::vector<sprite_chain_element*> prepareSprites(GridList& staticGrid, const std::vector<WorldObject*>& visibleItems, std::map<PackTag, sprite_pack>* packsMap);
+	std::vector<sprite_chain_element*> prepareSprites(GridList& staticGrid, const std::vector<world_object*>& visibleItems, std::map<PackTag, sprite_pack>* packsMap);
 
 	int getCurrentObject() const { return currentObject; }
 	bool getUsedMouse() const { return usedMouse; }
