@@ -18,26 +18,30 @@ public:
 	move_system();
 	virtual ~move_system();
 	void init(float* radius, Vector2f* position, sf::Color* color);
-	void turnOff() { turnedOn = false; }
-	void pushAway(long long elapsedTime, float pushSpeed = 0);
-	void endPush(long long elapsedTime);
-	void pushByBumping(Vector2f position, float radius, bool canCrash);
+	void turn_off() { turned_on = false; }
+	void push_away(long long elapsed_time, float push_speed = 0);
+	void end_push(long long elapsed_time);
+	void push_by_bumping(Vector2f position, float radius, bool can_crash);
 
-	bool turnedOn = false;
-	bool canCrashIntoDynamic = true, canCrashIntoStatic = false;
-	Vector2f moveOffset = Vector2f(-1, -1);
-	float defaultSpeed = 0, speed = 0;
+	bool turned_on = false;
+	bool can_crash_into_dynamic = true;
+	bool can_crash_into_static = false;
+	Vector2f move_offset = Vector2f(-1, -1);
+	float default_speed = 0;
+	float speed = 0;
 
-	std::vector<bump_chain_element> bumpedPositions = {};
-	float bumpDistance = 0;
-	float pushDamage = 0, pushDistance = 0;
-	Vector2f pushDirection = { 0, 0 }, pushVector = { 0, 0 };
-	long long pushDuration = 0;
-	long long pushRestDuration = 0;
-	long long redDuration = 0;
-	long long redRestDuration = 0;
-	const long long DEFAULT_PUSH_DURATION = long(2e5);
-	const float DEFAULT_PUSH_SPEED = 0.00025f;
+	std::vector<bump_chain_element> bumped_positions = {};
+	float bump_distance = 0;
+	float push_damage = 0;
+	float push_distance = 0;
+	Vector2f push_direction = { 0, 0 };
+	Vector2f push_vector = { 0, 0 };
+	long long push_duration = 0;
+	long long push_rest_duration = 0;
+	long long red_duration = 0;
+	long long red_rest_duration = 0;
+	const long long default_push_duration = long(2e5);
+	const float default_push_speed = 0.00025f;
 
 	// owner info
 	float* radius = nullptr;

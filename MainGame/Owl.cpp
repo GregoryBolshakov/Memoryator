@@ -10,7 +10,7 @@ owl::owl(const std::string& objectName, Vector2f centerPosition) : neutral_mob(o
 	conditional_size_units_ = { 280, 200 };
 	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
-	moveSystem.defaultSpeed = 0.0006f;
+	moveSystem.default_speed = 0.0006f;
 	moveSystem.speed = 0.0006f;
 	animation_speed_ = 0.0008f;
 	animationLength = 8;
@@ -24,7 +24,7 @@ owl::owl(const std::string& objectName, Vector2f centerPosition) : neutral_mob(o
 	timeForNewHit = 1000000;
 	to_save_name_ = "owl";
 	tag = entity_tag::owl;
-	moveSystem.canCrashIntoStatic = false;
+	moveSystem.can_crash_into_static = false;
 	z_coordinate_ = 10;
 }
 
@@ -148,8 +148,8 @@ void owl::behavior(long long elapsedTime)
 	{
 		const float distanceToTarget = helper::getDist(this->position_, boundTarget->get_position());
 		directionSystem.side = direction_system::calculate_side(position_, movePosition);
-		moveSystem.speed = std::max(moveSystem.defaultSpeed, (moveSystem.defaultSpeed * 10) * (1 - (helper::getDist(position_, boundTarget->get_position()) / sightRange * 1.5f)));
-		animation_speed_ = std::max(0.0008f, 0.0008f * moveSystem.speed / moveSystem.defaultSpeed);
+		moveSystem.speed = std::max(moveSystem.default_speed, (moveSystem.default_speed * 10) * (1 - (helper::getDist(position_, boundTarget->get_position()) / sightRange * 1.5f)));
+		animation_speed_ = std::max(0.0008f, 0.0008f * moveSystem.speed / moveSystem.default_speed);
 		if (distanceToTarget <= sightRange)
 		{
 			changeAction(move, false, true);

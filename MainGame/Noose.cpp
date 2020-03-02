@@ -12,14 +12,14 @@ noose::noose(const std::string& objectName, const Vector2f centerPosition, world
 	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
 	this->owner = owner;
-	moveSystem.defaultSpeed = 0.0007F;
-	moveSystem.speed = moveSystem.defaultSpeed;
+	moveSystem.default_speed = 0.0007F;
+	moveSystem.speed = moveSystem.default_speed;
 	animation_speed_ = float(5e-4);
 	animationLength = 8;
 	radius_ = 50;
 	currentAction = move;
 	routeGenerationAbility = false;
-	moveSystem.canCrashIntoDynamic = false;
+	moveSystem.can_crash_into_dynamic = false;
 	noose::jerk(2, 1);
 	to_save_name_ = "noose";
 	tag = entity_tag::noose;
@@ -159,7 +159,7 @@ void noose::jerkInteract(const long long elapsedTime)
 		{
 			jerkTime -= elapsedTime;
 			moveSystem.speed = jerkDistance / float(jerkDuration) * jerkPower * float(pow(jerkTime / jerkDuration, jerkDeceleration));
-			moveSystem.speed = std::max(moveSystem.defaultSpeed / jerkDeceleration, moveSystem.speed);
+			moveSystem.speed = std::max(moveSystem.default_speed / jerkDeceleration, moveSystem.speed);
 		}
 		else
 		{

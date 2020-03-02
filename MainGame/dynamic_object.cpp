@@ -161,7 +161,7 @@ void dynamic_object::setMoveOffset(long long elapsedTime)
 		currentAction == throwNoose || 
 		currentAction == moveSlowly))
 	{
-		moveSystem.moveOffset = { -1, -1 };
+		moveSystem.move_offset = { -1, -1 };
 		return;
 	}
 
@@ -171,18 +171,18 @@ void dynamic_object::setMoveOffset(long long elapsedTime)
 		{
 			const auto angle = float(directionSystem.direction) * pi / 180;
 			const float k = moveSystem.speed * float(elapsedTime) / sqrt(pow(cos(angle), 2) + pow(sin(angle), 2));
-			moveSystem.moveOffset.x = float(k * cos(angle));
-			moveSystem.moveOffset.y = float(k * -sin(angle));
+			moveSystem.move_offset.x = float(k * cos(angle));
+			moveSystem.move_offset.y = float(k * -sin(angle));
 			return;
 		}
-		moveSystem.moveOffset = Vector2f(-1, -1);
+		moveSystem.move_offset = Vector2f(-1, -1);
 		return;
 	}
 
 	const auto distanceToTarget = float(sqrt(pow(movePosition.x - position_.x, 2) + pow(movePosition.y - position_.y, 2)));
 	if (distanceToTarget == 0)
 	{
-		moveSystem.moveOffset = Vector2f(-1, -1);
+		moveSystem.move_offset = Vector2f(-1, -1);
 		return;
 	}
 
@@ -192,22 +192,22 @@ void dynamic_object::setMoveOffset(long long elapsedTime)
 		moveOffset = Vector2f(-1, -1);
 		return;
 	}*/
-	moveSystem.moveOffset = { (movePosition.x - position_.x) * k, (movePosition.y - position_.y) * k };
+	moveSystem.move_offset = { (movePosition.x - position_.x) * k, (movePosition.y - position_.y) * k };
 }
 
 Vector2f dynamic_object::doMove(long long elapsedTime)
 {
 	setMoveOffset(elapsedTime);
 	auto position = this->position_;
-	position.x += moveSystem.pushVector.x; position.y += moveSystem.pushVector.y;
+	position.x += moveSystem.push_vector.x; position.y += moveSystem.push_vector.y;
 
 	//if (this->direction == Direction::STAND)
 		//return position;
 
-	if (moveSystem.moveOffset != Vector2f(-1, -1))
+	if (moveSystem.move_offset != Vector2f(-1, -1))
 	{
-		position.x += moveSystem.moveOffset.x;
-		position.y += moveSystem.moveOffset.y;
+		position.x += moveSystem.move_offset.x;
+		position.y += moveSystem.move_offset.y;
 	}
 
 	return position;
@@ -216,7 +216,7 @@ Vector2f dynamic_object::doMove(long long elapsedTime)
 Vector2f dynamic_object::doSlip(Vector2f newPosition, const std::vector<static_object*> & localStaticItems, const float height, const long long elapsedTime)
 {
 	bool crashed = false;
-	if (!moveSystem.canCrashIntoStatic)
+	if (!moveSystem.can_crash_into_static)
 		return newPosition;
 
 	for (auto& staticItem : localStaticItems)
@@ -280,7 +280,7 @@ Vector2f dynamic_object::doSlip(Vector2f newPosition, const std::vector<static_o
 
 Vector2f dynamic_object::doSlipOffDynamic(Vector2f newPosition, const std::vector<dynamic_object*> & localDynamicItems, const float height, const long long elapsedTime)
 {
-	if (!moveSystem.canCrashIntoDynamic)
+	if (!moveSystem.can_crash_into_dynamic)
 		return newPosition;
 
 	lastIntersected = "";
@@ -328,13 +328,13 @@ void dynamic_object::take_damage(const float damage, const Vector2f attackerPos)
 	this->timeAfterHitSelf = 0;
 	this->health_point_ -= damage / this->armor_;
 
-	moveSystem.pushDamage = damage;
-	moveSystem.pushDuration = moveSystem.DEFAULT_PUSH_DURATION;
-	moveSystem.pushRestDuration = moveSystem.pushDuration;
-	moveSystem.redDuration = 2 * moveSystem.pushDuration;
-	moveSystem.redRestDuration = moveSystem.redDuration;
+	moveSystem.push_damage = damage;
+	moveSystem.push_duration = moveSystem.default_push_duration;
+	moveSystem.push_rest_duration = moveSystem.push_duration;
+	moveSystem.red_duration = 2 * moveSystem.push_duration;
+	moveSystem.red_rest_duration = moveSystem.red_duration;
 
-	moveSystem.pushDistance = helper::getDist(this->get_position(), attackerPos);
+	moveSystem.push_distance = helper::getDist(this->get_position(), attackerPos);
 	if (attackerPos != Vector2f(-1, -1))
-		moveSystem.pushDirection = Vector2f(this->position_.x - attackerPos.x, this->position_.y - attackerPos.y);
+		moveSystem.push_direction = Vector2f(this->position_.x - attackerPos.x, this->position_.y - attackerPos.y);
 }

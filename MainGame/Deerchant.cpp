@@ -14,8 +14,8 @@ deerchant::deerchant(std::string objectName, const Vector2f centerPosition) : dy
 	for (auto& number : current_sprite_)
 		number = 1;	
 	time_for_new_sprite_ = 0;
-	moveSystem.defaultSpeed = 0.0006f;
-	moveSystem.speed = moveSystem.defaultSpeed;
+	moveSystem.default_speed = 0.0006f;
+	moveSystem.speed = moveSystem.default_speed;
 	animation_speed_ = 0.0010f;
 	radius_ = 50;
 	moveEndDistance = 55;
@@ -27,7 +27,7 @@ deerchant::deerchant(std::string objectName, const Vector2f centerPosition) : dy
 	currentAction = relax;
 	to_save_name_ = "hero";
 	tag = entity_tag::hero;
-	moveSystem.canCrashIntoStatic = true;
+	moveSystem.can_crash_into_static = true;
 
 	for (auto i = 0; i < 3; i++)
 		bags.emplace_back();
@@ -81,9 +81,9 @@ void deerchant::moveEnd(const bool animate, const bool invertDirection)
 	if (directionSystem.direction != direction::STAND)
 	{
 		setMoveOffset(10000);
-		pushPosition = position_ - moveSystem.moveOffset;
+		pushPosition = position_ - moveSystem.move_offset;
 		if (invertDirection)
-			pushPosition = position_ + moveSystem.moveOffset;
+			pushPosition = position_ + moveSystem.move_offset;
 	}
 	else
 	{
@@ -121,7 +121,7 @@ void deerchant::handleInput(const bool usedMouse)
 	//---------------------
 
 	setHitDirection();
-	moveSystem.moveOffset = Vector2f(-1, -1);
+	moveSystem.move_offset = Vector2f(-1, -1);
 	directionSystem.direction = direction::STAND;
 	if (Keyboard::isKeyPressed(Keyboard::A))					
 		directionSystem.direction = direction::LEFT;
@@ -141,10 +141,10 @@ void deerchant::handleInput(const bool usedMouse)
 		directionSystem.direction = direction::DOWNRIGHT;
 	if (directionSystem.direction != direction::STAND && currentAction != actions::moveEnd)
 	{
- 		for (auto i = 0u; i < moveSystem.bumpedPositions.size(); i++)
-			if (moveSystem.bumpedPositions[i].cancelable)
-				moveSystem.bumpedPositions.erase(moveSystem.bumpedPositions.begin() + i);
-		moveSystem.pushAway(0);
+ 		for (auto i = 0u; i < moveSystem.bumped_positions.size(); i++)
+			if (moveSystem.bumped_positions[i].cancelable)
+				moveSystem.bumped_positions.erase(moveSystem.bumped_positions.begin() + i);
+		moveSystem.push_away(0);
 
 		if (directionSystem.direction != directionSystem.last_direction)
 		{
@@ -366,7 +366,7 @@ void deerchant::stopping(const bool doStand, const bool forgetBoundTarget, const
 	if (doStand)
 	{
 		this->laxMovePosition = { -1, -1 };
-		moveSystem.moveOffset = { -1, -1 };
+		moveSystem.move_offset = { -1, -1 };
 		directionSystem.direction = directionSystem.last_direction;
 	}
 
@@ -416,7 +416,7 @@ void deerchant::setTarget(dynamic_object& object)
 void deerchant::behaviorWithDynamic(dynamic_object* target, long long elapsedTime)
 {
 	if (helper::getDist(position_, target->get_position()) <= radius_ + target->get_radius())
-		moveSystem.pushByBumping(target->get_position(), target->get_radius(), target->getMoveSystem().canCrashIntoDynamic);
+		moveSystem.push_by_bumping(target->get_position(), target->get_radius(), target->getMoveSystem().can_crash_into_dynamic);
 
 	const auto isIntersect = helper::getDist(position_, target->get_position()) <= this->radius_ + target->get_radius() + hitDistance;
 
@@ -862,9 +862,9 @@ void deerchant::speedInteract(const long long elapsedTime)
 	const auto partOfSpeed = 0.3f;
 	
 	if (moveTime < speedIncreaseTime)
-		moveSystem.speed = (partOfSpeed + float(moveTime) * (1 - partOfSpeed) / speedIncreaseTime) * moveSystem.defaultSpeed;
+		moveSystem.speed = (partOfSpeed + float(moveTime) * (1 - partOfSpeed) / speedIncreaseTime) * moveSystem.default_speed;
 	else
-		moveSystem.speed = moveSystem.defaultSpeed;
+		moveSystem.speed = moveSystem.default_speed;
 }
 
 void deerchant::jerkInteract(const long long elapsedTime)
@@ -875,12 +875,12 @@ void deerchant::jerkInteract(const long long elapsedTime)
 		{
 			jerkTime -= elapsedTime;
 			moveSystem.speed = jerkDistance / float(jerkDuration) * jerkPower * pow(float(jerkTime) / float(jerkDuration), jerkDeceleration);
-			moveSystem.speed = std::max(moveSystem.defaultSpeed / jerkDeceleration, moveSystem.speed);
+			moveSystem.speed = std::max(moveSystem.default_speed / jerkDeceleration, moveSystem.speed);
 		}
 		else
 		{
 			changeAction(relax, true, false);
-			moveSystem.speed = moveSystem.defaultSpeed;
+			moveSystem.speed = moveSystem.default_speed;
 		}
 	}
 }
@@ -921,7 +921,7 @@ void deerchant::jerk(const float power, const float deceleration, Vector2f)
 void deerchant::fightInteract(long long elapsedTime, dynamic_object* target)
 {
 	timeAfterHitSelf += elapsedTime;
-	moveSystem.pushAway(elapsedTime);
+	moveSystem.push_away(elapsedTime);
 }
 
 sprite_chain_element* deerchant::prepareSpeedLine()
@@ -1029,7 +1029,7 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 		break;
 	case move:
 	{
-		animation_speed_ = moveSystem.speed / moveSystem.defaultSpeed * 12;
+		animation_speed_ = moveSystem.speed / moveSystem.default_speed * 12;
 		if (animation_speed_ < 10)
 			animation_speed_ = 10;
 		bodySprite->animation_length = 8;
@@ -1065,7 +1065,7 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 
 	if (currentAction == moveHit)
 	{
-		animation_speed_ = moveSystem.speed / moveSystem.defaultSpeed * 12;
+		animation_speed_ = moveSystem.speed / moveSystem.default_speed * 12;
 		if (animation_speed_ < 10)
 			animation_speed_ = 10;
 		bodySprite->animation_length = 8;

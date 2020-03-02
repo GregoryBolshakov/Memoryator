@@ -77,5 +77,5 @@ void neutral_mob::behavior(long long elapsedTime)
 
 void neutral_mob::fightInteract(long long elapsedTime, dynamic_object* target)
 {
-	moveSystem.pushAway(elapsedTime);
+	moveSystem.push_away(elapsedTime);
 }

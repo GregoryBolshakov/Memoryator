@@ -7,9 +7,9 @@ deer::deer(const std::string& objectName, const Vector2f centerPosition) : neutr
 	conditional_size_units_ = {360, 300};
 	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
-	moveSystem.defaultSpeed = 0.00085F;
+	moveSystem.default_speed = 0.00085F;
 	//defaultSpeed = 0.0002f;
-	moveSystem.speed = moveSystem.defaultSpeed;
+	moveSystem.speed = moveSystem.default_speed;
 	animation_speed_ = 10;
 	animationLength = 8;
 	radius_ = 70;
@@ -55,7 +55,7 @@ void deer::behavior(const long long elapsedTime)
 
 	if (this->owner != nullptr)
 	{
-		moveSystem.speed = moveSystem.defaultSpeed;
+		moveSystem.speed = moveSystem.default_speed;
 		if (currentAction == commonHit)
 		{
 			laxMovePosition = {-1, -1};
@@ -84,7 +84,7 @@ void deer::behavior(const long long elapsedTime)
 
 	const auto distanceToTarget = helper::getDist(this->position_, boundTarget->get_position());
 	//speed = std::max(defaultSpeed, (defaultSpeed * 10) * (1 - (distanceToTarget) / sightRange * 1.5f));
-	animation_speed_ = std::max(0.0004F, 0.0003F * moveSystem.speed / moveSystem.defaultSpeed);
+	animation_speed_ = std::max(0.0004F, 0.0003F * moveSystem.speed / moveSystem.default_speed);
 
 	if (distanceToTarget <= sightRange)
 	{

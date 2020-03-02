@@ -15,82 +15,82 @@ void move_system::init(float* radius, Vector2f* position, sf::Color* color)
 	this->radius = radius;
 	this->position = position;
 	this->color = color;
-	turnedOn = true;
+	turned_on = true;
 }
 
-void move_system::pushByBumping(Vector2f position, float radius, bool canCrash)
+void move_system::push_by_bumping(Vector2f position, float radius, bool can_crash)
 {
-	if (canCrashIntoDynamic || canCrash || pushDamage != 0)
+	if (can_crash_into_dynamic || can_crash || push_damage != 0)
 		return;
-	bumpedPositions.emplace_back(position, false);
-	bumpDistance += radius;
+	bumped_positions.emplace_back(position, false);
+	bump_distance += radius;
 }
 
-void move_system::endPush(long long elapsedTime)
+void move_system::end_push(long long elapsed_time)
 {
-	pushDirection = { 0, 0 };
-	pushDuration = 0;
-	pushVector = { 0, 0 };
-	pushDamage = 0;
-	bumpedPositions.clear();
-	bumpDistance = 0;
+	push_direction = { 0, 0 };
+	push_duration = 0;
+	push_vector = { 0, 0 };
+	push_damage = 0;
+	bumped_positions.clear();
+	bump_distance = 0;
 }
 
-void move_system::pushAway(long long elapsedTime, float pushSpeed)
+void move_system::push_away(long long elapsed_time, float push_speed)
 {
-	if (pushSpeed == 0)
-		pushSpeed = DEFAULT_PUSH_SPEED;
+	if (push_speed == 0)
+		push_speed = default_push_speed;
 
-	const auto pushColor = sf::Color(255, 100, 100, 255);
+	const auto push_color = sf::Color(255, 100, 100, 255);
 
-	if (!bumpedPositions.empty() && this->canCrashIntoDynamic && pushDamage == 0)
+	if (!bumped_positions.empty() && this->can_crash_into_dynamic && push_damage == 0)
 	{
-		Vector2f bumpCenter = { 0, 0 };
-		auto bumpCount = 0;
-		for (const auto bump : bumpedPositions)
+		Vector2f bump_center = { 0, 0 };
+		auto bump_count = 0;
+		for (const auto bump : bumped_positions)
 		{
-			bumpCount++;
-			bumpCenter.x += bump.position.x;
-			bumpCenter.y += bump.position.y;
+			bump_count++;
+			bump_center.x += bump.position.x;
+			bump_center.y += bump.position.y;
 		}
-		if (bumpCount == 0 || pushSpeed == 0)
+		if (bump_count == 0 || push_speed == 0)
 			return;
-		bumpCenter.x /= float(bumpCount);
-		bumpCenter.y /= float(bumpCount);
-		pushDistance = (*radius + bumpDistance) - helper::getDist(*position, bumpCenter);
-		pushDirection = Vector2f(position->x - bumpCenter.x, position->y - bumpCenter.y);
-		pushDuration = long(pushDistance / pushSpeed);
-		pushRestDuration = pushDuration;
-		bumpDistance = 0;
-		bumpedPositions.clear();
-		*color = pushColor;
+		bump_center.x /= float(bump_count);
+		bump_center.y /= float(bump_count);
+		push_distance = (*radius + bump_distance) - helper::getDist(*position, bump_center);
+		push_direction = Vector2f(position->x - bump_center.x, position->y - bump_center.y);
+		push_duration = long(push_distance / push_speed);
+		push_rest_duration = push_duration;
+		bump_distance = 0;
+		bumped_positions.clear();
+		*color = push_color;
 	}
 
-	if (redRestDuration > 0)
+	if (red_rest_duration > 0)
 		*color = sf::Color(
 			255,
-			Uint8(pushColor.g + (255 - pushColor.g) * (1 - redRestDuration / redDuration)),
-			Uint8(pushColor.b + (255 - pushColor.b) * (1 - redRestDuration / redDuration)),
+			Uint8(push_color.g + (255 - push_color.g) * (1 - red_rest_duration / red_duration)),
+			Uint8(push_color.b + (255 - push_color.b) * (1 - red_rest_duration / red_duration)),
 			255);
 	else
 	{
 		*color = sf::Color::White;
-		redRestDuration = 0;
+		red_rest_duration = 0;
 	}
 
-	redRestDuration -= elapsedTime;
+	red_rest_duration -= elapsed_time;
 
-	if (pushRestDuration <= 0 || !turnedOn)
+	if (push_rest_duration <= 0 || !turned_on)
 	{
-		endPush(elapsedTime);
+		end_push(elapsed_time);
 		return;
 	}
 
-	pushRestDuration -= elapsedTime;
+	push_rest_duration -= elapsed_time;
 
-	const float elongationCoefficient = pushSpeed * float(elapsedTime) / sqrt(pow(pushDirection.x, 2) + pow(pushDirection.y, 2));
-	if (pushDirection != Vector2f(0, 0))
-		pushVector = { elongationCoefficient * pushDirection.x, elongationCoefficient * pushDirection.y };
+	const float elongation_coefficient = push_speed * float(elapsed_time) / sqrt(pow(push_direction.x, 2) + pow(push_direction.y, 2));
+	if (push_direction != Vector2f(0, 0))
+		push_vector = { elongation_coefficient * push_direction.x, elongation_coefficient * push_direction.y };
 	else
-		pushVector = { 0, 0 };
+		push_vector = { 0, 0 };
 }

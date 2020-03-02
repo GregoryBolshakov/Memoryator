@@ -9,7 +9,7 @@ hare::hare(const std::string& objectName, Vector2f centerPosition) : neutral_mob
 	conditional_size_units_ = { 180, 150 };
 	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
-	moveSystem.defaultSpeed = 0.0003f;
+	moveSystem.default_speed = 0.0003f;
 	moveSystem.speed = 0.0003f;
 	radius_ = 70;
 	strength = 10;
@@ -128,8 +128,8 @@ void hare::behavior(long long elapsedTime)
 	if (boundTarget->tag == entity_tag::hero)
 	{
 		directionSystem.side = direction_system::calculate_side(position_, laxMovePosition);
-		moveSystem.speed = std::max(moveSystem.defaultSpeed, (moveSystem.defaultSpeed * 10) * (1 - (helper::getDist(position_, boundTarget->get_position()) / sightRange * 1.5f)));
-		animation_speed_ = std::max(0.0004f, 0.0003f * moveSystem.speed / moveSystem.defaultSpeed);
+		moveSystem.speed = std::max(moveSystem.default_speed, (moveSystem.default_speed * 10) * (1 - (helper::getDist(position_, boundTarget->get_position()) / sightRange * 1.5f)));
+		animation_speed_ = std::max(0.0004f, 0.0003f * moveSystem.speed / moveSystem.default_speed);
 		if (distanceToTarget <= sightRange)
 		{
 			changeAction(move, false, true);

@@ -7,7 +7,7 @@ owl_boss::owl_boss(std::string objectName, Vector2f centerPosition) : dynamic_ob
 	conditional_size_units_ = { 600, 600 };
 	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
-	moveSystem.defaultSpeed = 0.0005f;
+	moveSystem.default_speed = 0.0005f;
 	animation_speed_ = 0.0005f;
 	animationLength = 1;
 	current_sprite_[0] = 1;
@@ -19,7 +19,7 @@ owl_boss::owl_boss(std::string objectName, Vector2f centerPosition) : dynamic_ob
 	timeForNewHitSelf = long(6e5);
 	timeForNewHit = 2000000;
 	routeGenerationAbility = false;
-	moveSystem.canCrashIntoDynamic = false;
+	moveSystem.can_crash_into_dynamic = false;
 
 	to_save_name_ = "monster";
 }
@@ -42,13 +42,13 @@ void owl_boss::behavior(long long elapsedTime)
 		{
 			jerkTime -= elapsedTime;
 			moveSystem.speed = jerkDistance / float(jerkDuration) * float(pow(jerkTime / jerkDuration, jerkDeceleration));
-			moveSystem.speed = std::max(moveSystem.defaultSpeed / jerkDeceleration, moveSystem.speed);
+			moveSystem.speed = std::max(moveSystem.default_speed / jerkDeceleration, moveSystem.speed);
 			//speed = defaultSpeed;
 		}
 		else
 		{
 			isJerking = false;
-			moveSystem.speed = moveSystem.defaultSpeed;
+			moveSystem.speed = moveSystem.default_speed;
 		}
 	}
 	//----------------
@@ -112,11 +112,11 @@ void owl_boss::behaviorWithDynamic(dynamic_object* target, const long long elaps
 	{
 		const auto dragCoefficient = 1.2f; // 1..2
 		const auto startPower = 1.1f; //1..2
-		moveSystem.speed = pow(moveSystem.defaultSpeed, dragCoefficient / (startPower + float(timeAfterHit) / float(timeForNewHit)));
+		moveSystem.speed = pow(moveSystem.default_speed, dragCoefficient / (startPower + float(timeAfterHit) / float(timeForNewHit)));
 		if (helper::getDist(this->position_, target->get_position()) / jerkDistance <= 0.2f)
 			moveSystem.speed *= helper::getDist(this->position_, target->get_position()) / jerkDistance;
 	}
-	moveSystem.speed = std::max(moveSystem.defaultSpeed / 10, moveSystem.speed);
+	moveSystem.speed = std::max(moveSystem.default_speed / 10, moveSystem.speed);
 
 	if (flapsBeforeJerkCount > 1)
 	{
@@ -128,11 +128,11 @@ void owl_boss::behaviorWithDynamic(dynamic_object* target, const long long elaps
 	if (flapsBeforeJerkCount == 0)
 	{
 		changeAction(move, false, true);
-		moveSystem.speed = moveSystem.defaultSpeed;
+		moveSystem.speed = moveSystem.default_speed;
 		jerkDistance = helper::getDist(this->position_, target->get_position());
 	}
 
-	if (moveSystem.speed <= moveSystem.defaultSpeed * 3) //with greater acceleration the owl loses the ability to coordinate the route
+	if (moveSystem.speed <= moveSystem.default_speed * 3) //with greater acceleration the owl loses the ability to coordinate the route
 	{
 		movePosition = Vector2f(target->get_position().x + (target->get_position().x - this->position_.x) / 1.0f, target->get_position().y + (target->get_position().y - this->position_.y) / 1.0f);
 	}
@@ -149,7 +149,7 @@ void owl_boss::behaviorWithDynamic(dynamic_object* target, const long long elaps
 		timeAfterHit = 0;
 		flapsBeforeJerkCount = rand() % 3 + 3;
 		changeAction(upFlap, true, true);
-		moveSystem.speed = moveSystem.defaultSpeed;
+		moveSystem.speed = moveSystem.default_speed;
 	}
 }
 
@@ -177,7 +177,7 @@ void owl_boss::jerk(const float power, const float deceleration, const Vector2f 
 
 void owl_boss::fightInteract(const long long elapsedTime, dynamic_object* target)
 {
-	moveSystem.pushAway(elapsedTime);
+	moveSystem.push_away(elapsedTime);
 }
 
 std::vector<sprite_chain_element*> owl_boss::prepare_sprites(long long elapsedTime)

@@ -7,7 +7,7 @@ bear::bear(const std::string& objectName, Vector2f centerPosition) : neutral_mob
 	conditional_size_units_ = { 432, 384 };
 	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
-	moveSystem.defaultSpeed = 0.0003f;
+	moveSystem.default_speed = 0.0003f;
 	moveSystem.speed = 0.0003f;
 	animation_speed_ = float(5e-4);
 	animationLength = 8;
@@ -53,7 +53,7 @@ void bear::behavior(long long elapsedTime)
 
 	if (this->owner != nullptr)
 	{
-		moveSystem.speed = moveSystem.defaultSpeed;
+		moveSystem.speed = moveSystem.default_speed;
 		if (currentAction == commonHit)
 		{
 			movePosition = position_;
@@ -79,7 +79,7 @@ void bear::behavior(long long elapsedTime)
 	if (boundTarget == nullptr)
 		return;
 	const float distanceToTarget = helper::getDist(this->position_, boundTarget->get_position());
-	moveSystem.speed = std::max(moveSystem.defaultSpeed, (moveSystem.defaultSpeed * 10) * (1 - (distanceToTarget) / sightRange * 1.5f));
+	moveSystem.speed = std::max(moveSystem.default_speed, (moveSystem.default_speed * 10) * (1 - (distanceToTarget) / sightRange * 1.5f));
 	//animationSpeed = std::max(0.0003f, 0.0003f * speed / defaultSpeed);
 
 	if (distanceToTarget <= sightRange)
