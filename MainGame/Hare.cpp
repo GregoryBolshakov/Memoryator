@@ -69,12 +69,12 @@ void hare::behavior(long long elapsedTime)
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);
-		directionSystem.direction = Direction::STAND;
+		directionSystem.direction = direction::STAND;
 		return;
 	}
 
-	directionSystem.calculateDirection();
-	if (directionSystem.direction != Direction::STAND)
+	directionSystem.calculate_direction();
+	if (directionSystem.direction != direction::STAND)
 		directionSystem.lastDirection = directionSystem.direction;
 
 	// first-priority actions
@@ -108,7 +108,7 @@ void hare::behavior(long long elapsedTime)
 	// bouncing to a trap
 	if (boundTarget->tag == entity_tag::hareTrap)
 	{
-		directionSystem.side = direction_system::calculateSide(position, boundTarget->getPosition(), elapsedTime);
+		directionSystem.side = direction_system::calculate_side(position, boundTarget->getPosition());
 		if (helper::getDist(position, boundTarget->getPosition()) <= radius)
 		{
 			const auto trap = dynamic_cast<hare_trap*>(boundTarget);
@@ -127,7 +127,7 @@ void hare::behavior(long long elapsedTime)
 	// runaway from enemy
 	if (boundTarget->tag == entity_tag::hero)
 	{
-		directionSystem.side = direction_system::calculateSide(position, laxMovePosition, elapsedTime);
+		directionSystem.side = direction_system::calculate_side(position, laxMovePosition);
 		moveSystem.speed = std::max(moveSystem.defaultSpeed, (moveSystem.defaultSpeed * 10) * (1 - (helper::getDist(position, boundTarget->getPosition()) / sightRange * 1.5f)));
 		animationSpeed = std::max(0.0004f, 0.0003f * moveSystem.speed / moveSystem.defaultSpeed);
 		if (distanceToTarget <= sightRange)
@@ -143,7 +143,7 @@ void hare::behavior(long long elapsedTime)
 				if (distanceToTarget >= sightRange * 1.5f)
 				{
 					changeAction(relax, true, true);
-					directionSystem.direction = Direction::STAND;
+					directionSystem.direction = direction::STAND;
 					laxMovePosition = { -1, -1 };
 				}
 				else
@@ -193,22 +193,22 @@ void hare::jerk(float power, float deceleration, Vector2f destinationPoint)
 
 std::vector<sprite_chain_element*> hare::prepareSprites(long long elapsedTime)
 {
-	auto body = new sprite_chain_element(pack_tag::hare, pack_part::full, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
+	auto body = new sprite_chain_element(pack_tag::hare, pack_part::full, direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	animationSpeed = 10;
 
-	Side spriteSide = directionSystem.side;
+	side spriteSide = directionSystem.side;
 
 	if (directionSystem.side == right)
 	{
 		spriteSide = left;
 		body->mirrored = true;
 	}
-	if (directionSystem.lastDirection == Direction::RIGHT || directionSystem.lastDirection == Direction::UPRIGHT || directionSystem.lastDirection == Direction::DOWNRIGHT)
+	if (directionSystem.lastDirection == direction::RIGHT || directionSystem.lastDirection == direction::UPRIGHT || directionSystem.lastDirection == direction::DOWNRIGHT)
 	{
 		body->mirrored = true;
 	}
 
-	body->direction = direction_system::sideToDirection(spriteSide);
+	body->direction = direction_system::side_to_direction(spriteSide);
 
 	switch (currentAction)
 	{

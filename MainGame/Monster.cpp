@@ -39,7 +39,7 @@ void monster::behaviorWithDynamic(dynamic_object* target, const long long elapse
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);
-		directionSystem.direction = Direction::STAND;
+		directionSystem.direction = direction::STAND;
 		return;
 	}
 
@@ -57,7 +57,7 @@ void monster::behaviorWithDynamic(dynamic_object* target, const long long elapse
 	}
 
 	boundTarget = target;
-	directionSystem.side = direction_system::calculateSide(position, boundTarget->getPosition(), elapsedTime);
+	directionSystem.side = direction_system::calculate_side(position, boundTarget->getPosition());
 
 	if (helper::getDist(position, boundTarget->getPosition()) <= sightRange && timeAfterHit >= timeForNewHit)
 		moveSystem.speed = std::max((1 - helper::getDist(position, boundTarget->getPosition()) / sightRange) * moveSystem.defaultSpeed / 2 + moveSystem.defaultSpeed, moveSystem.defaultSpeed);
@@ -111,7 +111,7 @@ void monster::stopping(const bool doStand, const bool forgetBoundTarget)
 	{
 		this->laxMovePosition = { -1, -1 };
 		moveSystem.moveOffset = { 0, 0 };
-		directionSystem.direction = Direction::STAND;
+		directionSystem.direction = direction::STAND;
 	}
 
 	if (forgetBoundTarget && boundTarget != nullptr)

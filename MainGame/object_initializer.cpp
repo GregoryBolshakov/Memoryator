@@ -173,13 +173,13 @@ static_object* object_initializer::initializeStaticItem(
 	item->setType(currentType);
 	auto sprites = item->prepareSprites(0);
 	
-	if (packsMap->count(sprites[0]->packTag) <= 0 ||
-		packsMap->at(sprites[0]->packTag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
+	if (packsMap->count(sprites[0]->pack_tag) <= 0 ||
+		packsMap->at(sprites[0]->pack_tag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
 	{
 		delete item;
 		return nullptr;
 	}
-	const auto info = packsMap->at(sprites[0]->packTag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number);
+	const auto info = packsMap->at(sprites[0]->pack_tag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number);
 	const auto textureSize = Vector2f(float(info.source_size.w), float(info.source_size.h));
 	item->setTextureSize(textureSize);
 	const auto name = itemName.empty()
@@ -297,13 +297,13 @@ dynamic_object* object_initializer::initializeDynamicItem(
 	item->setName(name);
 	item->setPosition(Vector2f(itemPosition));
     auto sprites = item->prepareSprites(0);
-	if (packsMap->count(sprites[0]->packTag) <= 0 || 
-		packsMap->at(sprites[0]->packTag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
+	if (packsMap->count(sprites[0]->pack_tag) <= 0 || 
+		packsMap->at(sprites[0]->pack_tag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
 	{
 		delete item;
 		return nullptr;
 	}
-	const auto info = packsMap->at(sprites[0]->packTag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number);
+	const auto info = packsMap->at(sprites[0]->pack_tag).getOriginalInfo(sprites[0]->packPart, sprites[0]->direction, sprites[0]->number);
 	const auto textureSize = Vector2f(float(info.source_size.w), float(info.source_size.h));
 	item->setTextureSize(textureSize);
 	return item;

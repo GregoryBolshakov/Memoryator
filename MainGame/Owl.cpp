@@ -86,7 +86,7 @@ void owl::behavior(long long elapsedTime)
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);
-		directionSystem.direction = Direction::STAND;
+		directionSystem.direction = direction::STAND;
 		return;
 	}
 
@@ -110,12 +110,12 @@ void owl::behavior(long long elapsedTime)
 			{				
 				changeAction(move, false, true);
 				movePosition = nearestTreeCasted->getOwlBase();
-				directionSystem.side = direction_system::calculateSide(position, movePosition, elapsedTime);
+				directionSystem.side = direction_system::calculate_side(position, movePosition);
 				return;
 			}
 
 		changeAction(relax, true, true);
-		directionSystem.direction = Direction::STAND;
+		directionSystem.direction = direction::STAND;
 		movePosition = position;
 		return;
 	}
@@ -123,7 +123,7 @@ void owl::behavior(long long elapsedTime)
 	// bouncing to a trap
 	if (boundTarget && boundTarget->tag == entity_tag::fern)
 	{
-		directionSystem.side = direction_system::calculateSide(position, boundTarget->getPosition(), elapsedTime);
+		directionSystem.side = direction_system::calculate_side(position, boundTarget->getPosition());
 		if (helper::getDist(position, boundTarget->getPosition()) <= radius)
 		{
 			const auto trap = dynamic_cast<fern*>(boundTarget);
@@ -147,7 +147,7 @@ void owl::behavior(long long elapsedTime)
 	if (boundTarget && boundTarget->tag == entity_tag::hero)
 	{
 		const float distanceToTarget = helper::getDist(this->position, boundTarget->getPosition());
-		directionSystem.side = direction_system::calculateSide(position, movePosition, elapsedTime);
+		directionSystem.side = direction_system::calculate_side(position, movePosition);
 		moveSystem.speed = std::max(moveSystem.defaultSpeed, (moveSystem.defaultSpeed * 10) * (1 - (helper::getDist(position, boundTarget->getPosition()) / sightRange * 1.5f)));
 		animationSpeed = std::max(0.0008f, 0.0008f * moveSystem.speed / moveSystem.defaultSpeed);
 		if (distanceToTarget <= sightRange)

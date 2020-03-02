@@ -132,7 +132,7 @@ void noose::stopping(bool doStand, bool forgetBoundTarget)
 	if (doStand)
 	{
 		this->movePosition = {-1, -1};
-		directionSystem.direction = Direction::STAND;
+		directionSystem.direction = direction::STAND;
 	}
 
 	if (forgetBoundTarget && boundTarget != nullptr)
@@ -236,8 +236,8 @@ void noose::rotateAndExtend(sprite_chain_element* rope, sprite_chain_element* lo
 std::vector<sprite_chain_element*> noose::prepareSprites(long long elapsedTime)
 {
 	std::vector<sprite_chain_element*> result = {};
-	auto ropeSprite = new sprite_chain_element(pack_tag::craftObjects, pack_part::noose, Direction::DOWN, 3, position, {conditionalSizeUnits.x, 30}, {0, 0}, color);
-	auto loopSprite = new sprite_chain_element(pack_tag::craftObjects, pack_part::noose, Direction::UP, 1, position, conditionalSizeUnits, textureBoxOffset, color);
+	auto ropeSprite = new sprite_chain_element(pack_tag::craftObjects, pack_part::noose, direction::DOWN, 3, position, {conditionalSizeUnits.x, 30}, {0, 0}, color);
+	auto loopSprite = new sprite_chain_element(pack_tag::craftObjects, pack_part::noose, direction::UP, 1, position, conditionalSizeUnits, textureBoxOffset, color);
 
 	loopSprite->number = currentSprite[0];
 
@@ -258,7 +258,7 @@ std::vector<sprite_chain_element*> noose::prepareSprites(long long elapsedTime)
 				}
 			}
 			loopSprite->number = 2;
-			loopSprite->direction = Direction::DOWN;
+			loopSprite->direction = direction::DOWN;
 			loopSprite->size = Vector2f(40, 30);
 			loopSprite->offset = Vector2f(loopSprite->size.x / 1.8F, loopSprite->size.y / 1.8F);
 			break;
@@ -280,8 +280,8 @@ std::vector<sprite_chain_element*> noose::prepareSprites(long long elapsedTime)
 
 			rotateAndExtend(ropeSprite, loopSprite);
 
-			ropeSprite->isBackground = true;
-			loopSprite->isBackground = true;
+			ropeSprite->is_background = true;
+			loopSprite->is_background = true;
 			isBackground = true;
 
 			result.push_back(ropeSprite);

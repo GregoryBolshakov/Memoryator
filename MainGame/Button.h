@@ -20,7 +20,7 @@ public:
 		Vector2f position,
 		Vector2f size,
 		bool is_selectable,
-		ButtonTag tag,
+		button_tag tag,
 		Vector2f offset = { 0, 0 });
 	
 	sprite_chain_element* prepare_sprite();
@@ -55,7 +55,7 @@ public:
 	
 	void set_size(Vector2f size) const;
 
-	[[nodiscard]] ButtonTag get_tag() const
+	[[nodiscard]] button_tag get_tag() const
 	{
 		return tag_;
 	}
@@ -72,7 +72,7 @@ private:
 	sprite_chain_element* button_enabled_ = new sprite_chain_element();
 	sprite_chain_element* button_selected_ = new sprite_chain_element();
 	sprite_chain_element* button_pressed_ = new sprite_chain_element();
-	ButtonTag tag_{};
+	button_tag tag_{};
 	bool selected_ = false;
 	bool is_gray_ = false;
 };

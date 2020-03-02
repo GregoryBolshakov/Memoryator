@@ -167,7 +167,7 @@ void dynamic_object::setMoveOffset(long long elapsedTime)
 
 	if (movePosition == Vector2f(-1, -1))
 	{
-		if (directionSystem.direction != Direction::STAND)
+		if (directionSystem.direction != direction::STAND)
 		{
 			const auto angle = float(directionSystem.direction) * pi / 180;
 			const float k = moveSystem.speed * float(elapsedTime) / sqrt(pow(cos(angle), 2) + pow(sin(angle), 2));
@@ -308,7 +308,7 @@ Vector2f dynamic_object::doSlipOffDynamic(Vector2f newPosition, const std::vecto
 	return newPosition;
 }
 
-void dynamic_object::changeAction(const Actions newAction, const bool resetSpriteNumber, const bool rememberLastAction)
+void dynamic_object::changeAction(const actions newAction, const bool resetSpriteNumber, const bool rememberLastAction)
 {
 	if (rememberLastAction)
 		lastAction = currentAction;

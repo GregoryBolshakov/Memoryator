@@ -47,7 +47,7 @@ void bear::behavior(long long elapsedTime)
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);
-		directionSystem.direction = Direction::STAND;
+		directionSystem.direction = direction::STAND;
 		return;
 	}
 
@@ -59,7 +59,7 @@ void bear::behavior(long long elapsedTime)
 			movePosition = position;
 			return;
 		}
-		directionSystem.side = direction_system::calculateSide(position, owner->getPosition(), elapsedTime);
+		directionSystem.side = direction_system::calculate_side(position, owner->getPosition());
 		if (helper::getDist(position, owner->getPosition()) > sightRange / 2)
 		{
 			changeAction(grab, false, false);
@@ -74,7 +74,7 @@ void bear::behavior(long long elapsedTime)
 		return;
 	}
 
-	directionSystem.side = direction_system::calculateSide(position, movePosition, elapsedTime);
+	directionSystem.side = direction_system::calculate_side(position, movePosition);
 
 	if (boundTarget == nullptr)
 		return;
@@ -94,7 +94,7 @@ void bear::behavior(long long elapsedTime)
 			if (distanceToTarget >= sightRange * 1.5)
 			{
 				changeAction(relax, true, true);
-				directionSystem.direction = Direction::STAND;
+				directionSystem.direction = direction::STAND;
 				movePosition = { -1, -1 };
 			}
 			else

@@ -49,30 +49,30 @@ int dropped_loot::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<sprite_chain_element*> dropped_loot::prepareSprites(long long elapsedTime)
 {
-	sprite_chain_element* body = new sprite_chain_element(pack_tag::empty, pack_part::full, Direction::DOWN, this->isSelected, position, conditionalSizeUnits, textureBoxOffset);	
+	sprite_chain_element* body = new sprite_chain_element(pack_tag::empty, pack_part::full, direction::DOWN, this->isSelected, position, conditionalSizeUnits, textureBoxOffset);	
 
 	switch (typeOfObject)
 	{
 	case 401:
-		body->setDrawInfo(pack_tag::icons, pack_part::flowers, Direction::DOWN, body->number + 1);	
+		body->set_draw_info(pack_tag::icons, pack_part::flowers, direction::DOWN, body->number + 1);	
 		break;
 	case 402:
-		body->setDrawInfo(pack_tag::icons, pack_part::flowers, Direction::DOWN, body->number + 9);
+		body->set_draw_info(pack_tag::icons, pack_part::flowers, direction::DOWN, body->number + 9);
 		break;
 	case 201:
-		body->setDrawInfo(pack_tag::inventory, pack_part::bag1, Direction::DOWN, body->number + 1);
+		body->set_draw_info(pack_tag::inventory, pack_part::bag1, direction::DOWN, body->number + 1);
 		break;
 	case 202:
-		body->setDrawInfo(pack_tag::icons, pack_part::craftObjects, Direction::DOWN, body->number + 5);
+		body->set_draw_info(pack_tag::icons, pack_part::craftObjects, direction::DOWN, body->number + 5);
 		break;
 	case 219:
-		body->setDrawInfo(pack_tag::icons, pack_part::notCraftObjects, Direction::DOWN, 1);
+		body->set_draw_info(pack_tag::icons, pack_part::notCraftObjects, direction::DOWN, 1);
 		break;
 	case 102:
-		body->setDrawInfo(pack_tag::icons, pack_part::mobs, Direction::DOWN, 3);
+		body->set_draw_info(pack_tag::icons, pack_part::mobs, direction::DOWN, 3);
 		break;
 	default:
-		body->setDrawInfo(pack_tag::inventory, pack_part::areas, Direction::DOWN, 1);
+		body->set_draw_info(pack_tag::inventory, pack_part::areas, direction::DOWN, 1);
 		break;
 	}
 

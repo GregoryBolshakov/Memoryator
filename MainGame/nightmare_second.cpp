@@ -44,50 +44,50 @@ void nightmare_second::doAttack(world_object* target)
 
 std::vector<sprite_chain_element*> nightmare_second::prepareSprites(long long elapsedTime)
 {
-	auto body = new sprite_chain_element(pack_tag::nightmare2Stand, pack_part::full, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
+	auto body = new sprite_chain_element(pack_tag::nightmare2Stand, pack_part::full, direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	shakeSpeed = -1;
 	animationSpeed = 10;
 
-	Side spriteSide = directionSystem.side;
-	Direction spriteDirection = directionSystem.lastDirection;
+	side spriteSide = directionSystem.side;
+	direction spriteDirection = directionSystem.lastDirection;
 
 	if (directionSystem.side == right)
 	{
 		spriteSide = left;
 		body->mirrored = true;
 	}
-	if (directionSystem.lastDirection == Direction::RIGHT || directionSystem.lastDirection == Direction::UPRIGHT || directionSystem.lastDirection == Direction::DOWNRIGHT)
+	if (directionSystem.lastDirection == direction::RIGHT || directionSystem.lastDirection == direction::UPRIGHT || directionSystem.lastDirection == direction::DOWNRIGHT)
 	{
-		spriteDirection = direction_system::cutRights(spriteDirection);
+		spriteDirection = direction_system::cut_rights(spriteDirection);
 		body->mirrored = true;
 	}
 
-	body->direction = direction_system::sideToDirection(spriteSide);
+	body->direction = direction_system::side_to_direction(spriteSide);
 
 	switch (currentAction)
 	{
 	case commonHit:
 	{
 		animationLength = 12;
-		body->packTag = pack_tag::nightmare2Hit;
+		body->pack_tag = pack_tag::nightmare2Hit;
 		break;
 	}
 	case combatState:
 	{
 		animationLength = 9;
-		body->packTag = pack_tag::nightmare2Stand;
+		body->pack_tag = pack_tag::nightmare2Stand;
 		break;
 	}
 	case relax:
 	{
 		animationLength = 9;
-		body->packTag = pack_tag::nightmare2Stand;
+		body->pack_tag = pack_tag::nightmare2Stand;
 		break;
 	}
 	case dead:
 	{
 		animationLength = 1;
-		body->packTag = pack_tag::nightmare2Stand;
+		body->pack_tag = pack_tag::nightmare2Stand;
 		currentSprite[0] = 1;
 		deletePromiseOn();
 		break;
@@ -95,7 +95,7 @@ std::vector<sprite_chain_element*> nightmare_second::prepareSprites(long long el
 	case move:
 	{
 		animationLength = 8;
-		body->packTag = pack_tag::nightmare2Move;
+		body->pack_tag = pack_tag::nightmare2Move;
 		if (currentSprite[0] == 2 || currentSprite[0] == 6)
 			shakeSpeed = 0;
 		break;

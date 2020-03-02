@@ -220,18 +220,18 @@ int rock::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<sprite_chain_element*> rock::prepareSprites(long long elapsedTime)
 {
-	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::rock, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::rock, direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	if (typeOfObject >= 1 && typeOfObject <= 8)
-		body->packTag = pack_tag::birchGrove;
+		body->pack_tag = pack_tag::birchGrove;
 	if (typeOfObject >= 9 && typeOfObject <= 13)
 	{
-		body->packTag = pack_tag::darkWoods;
+		body->pack_tag = pack_tag::darkWoods;
 		body->number -= 8;
 	}
 	if (typeOfObject >= 14 && typeOfObject <= 18)
 	{
-		body->packTag = pack_tag::swampyTrees;
+		body->pack_tag = pack_tag::swampyTrees;
 		body->number -= 13;
 	}
 

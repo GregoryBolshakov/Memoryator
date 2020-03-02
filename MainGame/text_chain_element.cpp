@@ -12,7 +12,7 @@ text_chain_element::text_chain_element(
 	sf::Color color,
 	std::string string,	
 	float characterSize,
-	FontName font,
+	font_name font,
 	float rotation) : drawable_chain_element(position, { 0, 0 }, offset, color)
 {
 	this->string = std::move(string);

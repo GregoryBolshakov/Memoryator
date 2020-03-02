@@ -80,17 +80,17 @@ class sprite_pack
 {
 public:
     void init(const std::string& path, const std::string& jsonPath, pack_tag tag);
-    Sprite getSprite(pack_part part, Direction direction, int number, bool mirrored = false);
-	sprite_pack_structure::sprite getOriginalInfo(pack_part part, Direction direction, int number);
+    Sprite getSprite(pack_part part, direction direction, int number, bool mirrored = false);
+	sprite_pack_structure::sprite getOriginalInfo(pack_part part, direction direction, int number);
 	static sprite_chain_element* tagToIcon(entity_tag object, bool selected = false, int typeOfObject = 1);
 
     pack_tag tag;
     static std::map<std::string, pack_tag> mappedPackTag;
     static std::map<std::string, pack_part> mappedPackPart;
-    static std::map<std::string, Direction> mappedDirection;
+    static std::map<std::string, direction> mappedDirection;
 	static const Vector2f iconSize;
 	static Vector2f iconWithoutSpaceSize;
 private:
     Texture texture;
-    std::map<pack_part, std::map<Direction, std::map<int, sprite_pack_structure::sprite>>> pack;
+    std::map<pack_part, std::map<direction, std::map<int, sprite_pack_structure::sprite>>> pack;
 };

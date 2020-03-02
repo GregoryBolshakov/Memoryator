@@ -126,7 +126,7 @@ bool helper::isIntersectTerrain(const Vector2f position, terrain_object& terrain
 		sqrt((position.x - f2.x) * (position.x - f2.x) + (position.y - f2.y) * (position.y - f2.y))/* - dynamic.radius*/ <= terrain.getEllipseSize() + radius;
 }
 
-Side helper::getSide(const Vector2f position, const Vector2f anotherPosition)
+side helper::getSide(const Vector2f position, const Vector2f anotherPosition)
 {
 	auto answer = undefined;
 	const auto alpha = atan((float(anotherPosition.y) - position.y) / (float(anotherPosition.x) - position.x)) * 180 / pi;

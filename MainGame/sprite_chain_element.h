@@ -12,7 +12,7 @@ public:
     sprite_chain_element(
         pack_tag tag,
         pack_part part,
-        Direction direction,
+        direction direction,
         int number = 1,
         Vector2f position = {0, 0},
         Vector2f size = {0, 0},
@@ -30,11 +30,17 @@ public:
 		bool unscaled = false,
 		float rotation = 0);
     virtual ~sprite_chain_element();
-	void setDrawInfo(pack_tag tag, pack_part part, Direction direction, int number = 1);
-	drawable_chain_element* upCast() { drawable_chain_element* result = this; return result; }
+	void set_draw_info(pack_tag tag, pack_part part, direction direction, int number = 1);
+	drawable_chain_element* up_cast() { drawable_chain_element* result = this; return result; }
 
-	pack_tag packTag = pack_tag::empty; pack_part packPart = pack_part::full; Direction direction = Direction::DOWN;
-	
-	int number = 1, animationLength = 1; int zCoord = 1, finishSprite = 0;
-    bool isBackground = false, mirrored = false, antiTransparent = false, unscaled = false;	
+	pack_tag pack_tag = pack_tag::empty; pack_part packPart = pack_part::full; direction direction = direction::DOWN;
+
+    int number = 1;
+    int animation_length = 1;
+    int z_coordinate = 1;
+    int finish_sprite = 0;
+    bool is_background = false;
+    bool mirrored = false;
+    bool anti_transparent = false;
+    bool unscaled = false;
 };

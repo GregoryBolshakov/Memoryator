@@ -87,8 +87,8 @@ std::map<std::string, pack_part> sprite_pack::mappedPackPart = {
 	{"cell", pack_part::cell} // book's parts
 };
 
-std::map<std::string, Direction> sprite_pack::mappedDirection = { {"up", Direction::UP}, {"up-right", Direction::UPRIGHT}, {"right", Direction::RIGHT}, {"down-right", Direction::DOWNRIGHT},
-{"down", Direction::DOWN}, {"down-left", Direction::DOWNLEFT}, {"left", Direction::LEFT}, {"up-left", Direction::UPLEFT} };
+std::map<std::string, direction> sprite_pack::mappedDirection = { {"up", direction::UP}, {"up-right", direction::UPRIGHT}, {"right", direction::RIGHT}, {"down-right", direction::DOWNRIGHT},
+{"down", direction::DOWN}, {"down-left", direction::DOWNLEFT}, {"left", direction::LEFT}, {"up-left", direction::UPLEFT} };
 
 void sprite_pack::init(const std::string& path, const std::string& jsonPath, const pack_tag tag)
 {
@@ -107,7 +107,7 @@ void sprite_pack::init(const std::string& path, const std::string& jsonPath, con
         auto keyWords = helper::split(frame.frame_name, '/');
 
         auto part = pack_part::full;
-        auto direction = Direction::DOWN;
+        auto direction = direction::DOWN;
         auto number = 1;
         if (!keyWords.empty() && mappedPackPart.count(keyWords[0]) > 0)
         {
@@ -127,7 +127,7 @@ void sprite_pack::init(const std::string& path, const std::string& jsonPath, con
     }
 }
 
-sprite_pack_structure::sprite sprite_pack::getOriginalInfo(const pack_part part, const Direction direction, const int number)
+sprite_pack_structure::sprite sprite_pack::getOriginalInfo(const pack_part part, const direction direction, const int number)
 {
 	if (pack.count(part) <= 0 || pack.at(part).count(direction) <= 0 || pack.at(part).at(direction).count(number) <= 0)
 		return sprite_pack_structure::sprite();
@@ -137,7 +137,7 @@ sprite_pack_structure::sprite sprite_pack::getOriginalInfo(const pack_part part,
 
 sprite_chain_element* sprite_pack::tagToIcon(const entity_tag object, const bool selected, const int typeOfObject)
 {
-	auto result = new sprite_chain_element(pack_tag::empty, pack_part::full, Direction::DOWN, 1, { 0, 0 }, iconSize, { iconSize.x / 2, iconSize.y / 2 });
+	auto result = new sprite_chain_element(pack_tag::empty, pack_part::full, direction::DOWN, 1, { 0, 0 }, iconSize, { iconSize.x / 2, iconSize.y / 2 });
 
 	auto spriteNumber = int(selected);
 
@@ -146,11 +146,11 @@ sprite_chain_element* sprite_pack::tagToIcon(const entity_tag object, const bool
 	// craftObjects
 	case entity_tag::cageBear:
 		spriteNumber += 1;
-		result->setDrawInfo(pack_tag::icons, pack_part::craftObjects, Direction::DOWN, spriteNumber);
+		result->set_draw_info(pack_tag::icons, pack_part::craftObjects, direction::DOWN, spriteNumber);
 		return result;
 	case entity_tag::noose:
 		spriteNumber += 3;
-		result->setDrawInfo(pack_tag::icons, pack_part::craftObjects, Direction::DOWN, spriteNumber);
+		result->set_draw_info(pack_tag::icons, pack_part::craftObjects, direction::DOWN, spriteNumber);
 		return result;
 	case entity_tag::totem:
 		if (typeOfObject == 1)
@@ -159,78 +159,78 @@ sprite_chain_element* sprite_pack::tagToIcon(const entity_tag object, const bool
 			spriteNumber += 9;
 		if (typeOfObject == 3)
 			spriteNumber += 11;
-		result->setDrawInfo(pack_tag::icons, pack_part::craftObjects, Direction::DOWN, spriteNumber);
+		result->set_draw_info(pack_tag::icons, pack_part::craftObjects, direction::DOWN, spriteNumber);
 		return result;
 	//-------------
 	// flowers
 	case entity_tag::chamomile:
 		spriteNumber += 1;
-		result->setDrawInfo(pack_tag::icons, pack_part::flowers, Direction::DOWN, spriteNumber);
+		result->set_draw_info(pack_tag::icons, pack_part::flowers, direction::DOWN, spriteNumber);
 		return result;
 	case entity_tag::fern:
 		spriteNumber += 3;
-		result->setDrawInfo(pack_tag::icons, pack_part::flowers, Direction::DOWN, spriteNumber);
+		result->set_draw_info(pack_tag::icons, pack_part::flowers, direction::DOWN, spriteNumber);
 		return result;
 	case entity_tag::mugwort:
 		spriteNumber += 5;
-		result->setDrawInfo(pack_tag::icons, pack_part::flowers, Direction::DOWN, spriteNumber);
+		result->set_draw_info(pack_tag::icons, pack_part::flowers, direction::DOWN, spriteNumber);
 		return result;
 	case entity_tag::poppy:
 		spriteNumber += 7;
-		result->setDrawInfo(pack_tag::icons, pack_part::flowers, Direction::DOWN, spriteNumber);
+		result->set_draw_info(pack_tag::icons, pack_part::flowers, direction::DOWN, spriteNumber);
 		return result;
 	case entity_tag::yarrow:
 		spriteNumber += 9;
-		result->setDrawInfo(pack_tag::icons, pack_part::flowers, Direction::DOWN, spriteNumber);
+		result->set_draw_info(pack_tag::icons, pack_part::flowers, direction::DOWN, spriteNumber);
 		return result;
 	//-------
 	//mobs
 	case entity_tag::bear:
 		spriteNumber = 1;
-		result->setDrawInfo(pack_tag::icons, pack_part::mobs, Direction::DOWN, spriteNumber);
+		result->set_draw_info(pack_tag::icons, pack_part::mobs, direction::DOWN, spriteNumber);
 		return result;
 	case entity_tag::deer:
 		spriteNumber = 2;
-		result->setDrawInfo(pack_tag::icons, pack_part::mobs, Direction::DOWN, spriteNumber);
+		result->set_draw_info(pack_tag::icons, pack_part::mobs, direction::DOWN, spriteNumber);
 		return result;
 	case entity_tag::hare:
 		spriteNumber = 3;
-		result->setDrawInfo(pack_tag::icons, pack_part::mobs, Direction::DOWN, spriteNumber);
+		result->set_draw_info(pack_tag::icons, pack_part::mobs, direction::DOWN, spriteNumber);
 		return result;
 	case entity_tag::nightmare1:
 	case entity_tag::nightmare2:
 	case entity_tag::nightmare3:
 		spriteNumber = 4;
-		result->setDrawInfo(pack_tag::icons, pack_part::mobs, Direction::DOWN, spriteNumber);
+		result->set_draw_info(pack_tag::icons, pack_part::mobs, direction::DOWN, spriteNumber);
 		return result;
 	case entity_tag::owlBoss:
 		spriteNumber = 5;
-		result->setDrawInfo(pack_tag::icons, pack_part::mobs, Direction::DOWN, spriteNumber);
+		result->set_draw_info(pack_tag::icons, pack_part::mobs, direction::DOWN, spriteNumber);
 		return result;
 	case entity_tag::owl:
 		spriteNumber = 6;
-		result->setDrawInfo(pack_tag::icons, pack_part::mobs, Direction::DOWN, spriteNumber);
+		result->set_draw_info(pack_tag::icons, pack_part::mobs, direction::DOWN, spriteNumber);
 		return result;
 	case entity_tag::wolf:
 		spriteNumber = 7;
-		result->setDrawInfo(pack_tag::icons, pack_part::mobs, Direction::DOWN, spriteNumber);
+		result->set_draw_info(pack_tag::icons, pack_part::mobs, direction::DOWN, spriteNumber);
 		return result;
 	//----
 	// notCraftObjects
 	case entity_tag::inkyBlackPen:
 		spriteNumber = 1;
-		result->setDrawInfo(pack_tag::icons, pack_part::notCraftObjects, Direction::DOWN, spriteNumber);
+		result->set_draw_info(pack_tag::icons, pack_part::notCraftObjects, direction::DOWN, spriteNumber);
 		return result;
 	//----------------
 	case entity_tag::emptyObject:
-		result->setDrawInfo(pack_tag::inventory, pack_part::areas, Direction::DOWN, 1);
+		result->set_draw_info(pack_tag::inventory, pack_part::areas, direction::DOWN, 1);
 		return result;
 	}
 
 	return result;
 }
 
-Sprite sprite_pack::getSprite(const pack_part part, const Direction direction, const int number, const bool mirrored)
+Sprite sprite_pack::getSprite(const pack_part part, const direction direction, const int number, const bool mirrored)
 {
     Sprite result;
     if (pack.count(part) <= 0 || pack.at(part).count(direction) <= 0 || pack.at(part).at(direction).count(number) <= 0)

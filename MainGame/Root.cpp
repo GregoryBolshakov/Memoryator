@@ -101,7 +101,7 @@ int root::getBuildType(Vector2f, Vector2f)
 
 std::vector<sprite_chain_element*> root::prepareSprites(long long)
 {
-	const auto body = new sprite_chain_element(pack_tag::swampyTrees, pack_part::root, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	const auto body = new sprite_chain_element(pack_tag::swampyTrees, pack_part::root, direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	return { body };
 }

@@ -52,8 +52,8 @@ int hare_trap::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<sprite_chain_element*> hare_trap::prepareSprites(long long elapsedTime)
 {
-	const auto body = new sprite_chain_element(pack_tag::craftObjects, pack_part::hareTrap, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
-	body->isBackground = true;
+	const auto body = new sprite_chain_element(pack_tag::craftObjects, pack_part::hareTrap, direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	body->is_background = true;
 
 	return { body };
 }

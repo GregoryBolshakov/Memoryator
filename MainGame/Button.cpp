@@ -12,13 +12,13 @@ void button::initialize(
 	const Vector2f position,
 	const Vector2f size,
 	const bool is_selectable,
-	const ButtonTag tag,
+	const button_tag tag,
 	const Vector2f offset)
 {
 	tag_ = tag;
-	button_enabled_->packTag = pack;
-	this->button_selected_->packTag = pack;
-	this->button_pressed_->packTag = pack;
+	button_enabled_->pack_tag = pack;
+	this->button_selected_->pack_tag = pack;
+	this->button_pressed_->pack_tag = pack;
 	button_enabled_->packPart = pack_part;
 	this->button_selected_->packPart = pack_part;
 	this->button_pressed_->packPart = pack_part;
@@ -90,7 +90,7 @@ sprite_chain_element* button::prepare_sprite()
 		if (Mouse::isButtonPressed(Mouse::Left) || Mouse::isButtonPressed(Mouse::Right))
 		{
 			result = new sprite_chain_element(
-				button_pressed_->packTag,
+				button_pressed_->pack_tag,
 				button_pressed_->packPart,
 				button_pressed_->direction,
 				button_pressed_->number,
@@ -105,7 +105,7 @@ sprite_chain_element* button::prepare_sprite()
 		else
 		{
 			result = new sprite_chain_element(
-				button_selected_->packTag,
+				button_selected_->pack_tag,
 				button_selected_->packPart,
 				button_selected_->direction,
 				button_selected_->number,
@@ -121,7 +121,7 @@ sprite_chain_element* button::prepare_sprite()
 	else
 	{
 		result = new sprite_chain_element(
-			button_enabled_->packTag,
+			button_enabled_->pack_tag,
 			button_enabled_->packPart,
 			button_enabled_->direction,
 			button_enabled_->number,

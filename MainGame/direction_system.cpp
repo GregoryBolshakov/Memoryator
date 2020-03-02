@@ -7,97 +7,97 @@ direction_system::direction_system()
 direction_system::~direction_system()
 = default;
 
-void direction_system::calculateDirection()
+void direction_system::calculate_direction()
 {
-	const Vector2f curPos = *position;
-	const Vector2f tarPos = *movePosition;
+	const auto cur_pos = *position;
+	const auto tar_pos = *movePosition;
 
-	if (tarPos == Vector2f(-1, -1))
+	if (tar_pos == Vector2f(-1, -1))
 	{
-		direction = Direction::STAND;
+		direction = direction::STAND;
 		return;
 	}
 
-	const float directionCorridor = 50;
+	const float direction_corridor = 50;
 
-	if (abs(curPos.x - tarPos.x) <= directionCorridor && abs(curPos.y - tarPos.y) <= directionCorridor)
+	if (abs(cur_pos.x - tar_pos.x) <= direction_corridor && abs(cur_pos.y - tar_pos.y) <= direction_corridor)
 	{
-		if (abs(curPos.x - tarPos.x) > abs(curPos.y - tarPos.y))
+		if (abs(cur_pos.x - tar_pos.x) > abs(cur_pos.y - tar_pos.y))
 		{
-			if (curPos.x >= tarPos.x)
-				direction = Direction::LEFT;
+			if (cur_pos.x >= tar_pos.x)
+				direction = direction::LEFT;
 			else
-				direction = Direction::RIGHT;
+				direction = direction::RIGHT;
 		}
 		else
 		{
-			if (curPos.y >= tarPos.y)
-				direction = Direction::UP;
+			if (cur_pos.y >= tar_pos.y)
+				direction = direction::UP;
 			else
-				direction = Direction::DOWN;
+				direction = direction::DOWN;
 		}
 		lastDirection = direction;
 		return;
 	}
 
-	if (abs(curPos.x - tarPos.x) <= directionCorridor)
+	if (abs(cur_pos.x - tar_pos.x) <= direction_corridor)
 	{
-		if (curPos.y < tarPos.y)
-			direction = Direction::DOWN;
+		if (cur_pos.y < tar_pos.y)
+			direction = direction::DOWN;
 		else
-			direction = Direction::UP;
+			direction = direction::UP;
 	}
 	else
-		if (abs(curPos.y - tarPos.y) <= directionCorridor)
+		if (abs(cur_pos.y - tar_pos.y) <= direction_corridor)
 		{
-			if (curPos.x < tarPos.x)
-				direction = Direction::RIGHT;
+			if (cur_pos.x < tar_pos.x)
+				direction = direction::RIGHT;
 			else
-				direction = Direction::LEFT;
+				direction = direction::LEFT;
 		}
 		else
-			if (curPos.x < tarPos.x)
+			if (cur_pos.x < tar_pos.x)
 			{
-				if (curPos.y < tarPos.y)
-					direction = Direction::DOWNRIGHT;
+				if (cur_pos.y < tar_pos.y)
+					direction = direction::DOWNRIGHT;
 				else
-					if (curPos.y > tarPos.y)
-						direction = Direction::UPRIGHT;
+					if (cur_pos.y > tar_pos.y)
+						direction = direction::UPRIGHT;
 			}
 			else
-				if (curPos.x > tarPos.x)
+				if (cur_pos.x > tar_pos.x)
 				{
-					if (curPos.y < tarPos.y)
-						direction = Direction::DOWNLEFT;
+					if (cur_pos.y < tar_pos.y)
+						direction = direction::DOWNLEFT;
 					else
-						if (curPos.y > tarPos.y)
-							direction = Direction::UPLEFT;
+						if (cur_pos.y > tar_pos.y)
+							direction = direction::UPLEFT;
 				}
 
-	if (direction != Direction::STAND)
+	if (direction != direction::STAND)
 		lastDirection = direction;
 }
 
-Side direction_system::calculateSide(Vector2f position, Vector2f otherObjectPosition, long long elapsedTime)
+side direction_system::calculate_side(const Vector2f position, const Vector2f other_object_position)
 {
-	Side answer = down;
+	auto answer = down;
 
-	const float alpha = atan((float(otherObjectPosition.y) - position.y) / (float(otherObjectPosition.x) - position.x)) * 180 / pi;
-	if (position.y >= otherObjectPosition.y && abs(alpha) >= 45 && abs(alpha) <= 90)
+	const auto alpha = atan((float(other_object_position.y) - position.y) / (float(other_object_position.x) - position.x)) * 180 / pi;
+	if (position.y >= other_object_position.y && abs(alpha) >= 45 && abs(alpha) <= 90)
 		answer = up;
 	else
-		if (position.x <= otherObjectPosition.x && abs(alpha) >= 0 && abs(alpha) <= 45)
+		if (position.x <= other_object_position.x && abs(alpha) >= 0 && abs(alpha) <= 45)
 			answer = right;
 		else
-			if (position.y <= otherObjectPosition.y && abs(alpha) >= 45 && abs(alpha) <= 90)
+			if (position.y <= other_object_position.y && abs(alpha) >= 45 && abs(alpha) <= 90)
 				answer = down;
 			else
-				if (position.x >= otherObjectPosition.x && abs(alpha) >= 0 && abs(alpha) <= 45)
+				if (position.x >= other_object_position.x && abs(alpha) >= 0 && abs(alpha) <= 45)
 					answer = left;
 	return answer;
 }
 
-Side direction_system::invertSide(Side side)
+side direction_system::invert_side(const ::side side)
 {
 	switch (side)
 	{
@@ -109,11 +109,12 @@ Side direction_system::invertSide(Side side)
 		return right;
 	case right:
 		return left;
+	default:
+		return down;
 	}
-	return down;
 }
 
-std::string direction_system::sideToString(Side side)
+std::string direction_system::side_to_string(const ::side side)
 {
 	switch (side)
 	{
@@ -125,103 +126,106 @@ std::string direction_system::sideToString(Side side)
 		return "down";
 	case  left:
 		return "left";
+	default:
+		return "";
 	}
-	return "";
 }
 
-std::string direction_system::directionToString(Direction direction)
+std::string direction_system::direction_to_string(const ::direction direction)
 {
 	switch (direction)
 	{
-	case Direction::UP:
+	case direction::UP:
 		return "up";
-	case Direction::UPRIGHT:
+	case direction::UPRIGHT:
 		return "up-left";
-	case Direction::RIGHT:
+	case direction::RIGHT:
 		return "left";
-	case Direction::DOWNRIGHT:
+	case direction::DOWNRIGHT:
 		return "down-left";
-	case Direction::DOWN:
+	case direction::DOWN:
 		return "down";
-	case Direction::DOWNLEFT:
+	case direction::DOWNLEFT:
 		return "down-left";
-	case Direction::LEFT:
+	case direction::LEFT:
 		return "left";
-	case Direction::UPLEFT:
+	case direction::UPLEFT:
 		return "up-left";
-	default: ;
+	default:;
 	}
 	return "";
 }
 
-Direction direction_system::sideToDirection(Side side)
+direction direction_system::side_to_direction(const ::side side)
 {
 	switch (side)
 	{
 	case up:
-		return Direction::UP;
+		return direction::UP;
 	case right:
-		return Direction::RIGHT;
+		return direction::RIGHT;
 	case down:
-		return Direction::DOWN;
+		return direction::DOWN;
 	case  left:
-		return Direction::LEFT;
+		return direction::LEFT;
+	default:
+		return direction::DOWN;
 	}
-	return Direction::DOWN;
 }
 
-Direction direction_system::invertDirection(Direction dir)
+direction direction_system::invert_direction(const ::direction dir)
 {
 	switch (dir)
 	{
-	case Direction::UP:
-		return Direction::DOWN;
-	case Direction::DOWN:
-		return Direction::UP;
-	case Direction::LEFT:
-		return Direction::RIGHT;
-	case Direction::RIGHT:
-		return Direction::LEFT;
-	case Direction::UPLEFT:
-		return Direction::DOWNRIGHT;
-	case Direction::UPRIGHT:
-		return Direction::DOWNLEFT;
-	case Direction::DOWNLEFT:
-		return Direction::UPRIGHT;
-	case Direction::DOWNRIGHT:
-		return Direction::UPLEFT;
-	default: ;
+	case direction::UP:
+		return direction::DOWN;
+	case direction::DOWN:
+		return direction::UP;
+	case direction::LEFT:
+		return direction::RIGHT;
+	case direction::RIGHT:
+		return direction::LEFT;
+	case direction::UPLEFT:
+		return direction::DOWNRIGHT;
+	case direction::UPRIGHT:
+		return direction::DOWNLEFT;
+	case direction::DOWNLEFT:
+		return direction::UPRIGHT;
+	case direction::DOWNRIGHT:
+		return direction::UPLEFT;
+	default:;
 	}
 	return {};
 }
 
-Direction direction_system::cutRights(Direction direction)
+direction direction_system::cut_rights(const ::direction direction)
 {
 	switch (direction)
 	{
-	case Direction::UPRIGHT:
-		return Direction::UPLEFT;
-	case Direction::RIGHT:
-		return Direction::LEFT;
-	case Direction::DOWNRIGHT:
-		return Direction::DOWNLEFT;
+	case direction::UPRIGHT:
+		return direction::UPLEFT;
+	case direction::RIGHT:
+		return direction::LEFT;
+	case direction::DOWNRIGHT:
+		return direction::DOWNLEFT;
 	default: return direction;
 	}
 }
 
-Side direction_system::cutRights(Side side)
+side direction_system::cut_rights(const ::side side)
 {
 	if (side == right)
 		return left;
+	
 	return side;
 }
 
-Direction direction_system::cutDiagonals(Direction dir)
+direction direction_system::cut_diagonals(const ::direction dir)
 {
-	if (dir == Direction::UPLEFT || dir == Direction::DOWNLEFT)
-		return Direction::LEFT;
-	if (dir == Direction::UPRIGHT || dir == Direction::DOWNRIGHT)
-		return Direction::RIGHT;
+	if (dir == direction::UPLEFT || dir == direction::DOWNLEFT)
+		return direction::LEFT;
+	if (dir == direction::UPRIGHT || dir == direction::DOWNRIGHT)
+		return direction::RIGHT;
 
 	return dir;
 }

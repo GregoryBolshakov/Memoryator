@@ -585,12 +585,12 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 
 bool cmpImgDraw(sprite_chain_element* first, sprite_chain_element* second)
 {
-	if (first->isBackground && !second->isBackground)
+	if (first->is_background && !second->is_background)
 		return true;
-	if (!first->isBackground && second->isBackground)
+	if (!first->is_background && second->is_background)
 		return false;
 
-	if (first->zCoord == second->zCoord)
+	if (first->z_coordinate == second->z_coordinate)
 	{
 		if (first->position.y == second->position.y)
 		{
@@ -601,7 +601,7 @@ bool cmpImgDraw(sprite_chain_element* first, sprite_chain_element* second)
 		return first->position.y < second->position.y;
 	}
 
-	return first->zCoord < second->zCoord;
+	return first->z_coordinate < second->z_coordinate;
 }
 
 std::vector<sprite_chain_element*> world_handler::prepareSprites(const long long elapsedTime, const bool onlyBackground)

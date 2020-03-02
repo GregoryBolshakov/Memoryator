@@ -33,8 +33,8 @@ public:
 	
 	void boundHeldItem() { this->worldHeldItem = worldHeldItem; }
 	std::string debugInfo = "";
-	Vector2f getHpLinePosition() { return {	buttonList.at(ButtonTag::bookStandTag).get_position().x + buttonList.at(ButtonTag::bookStandTag).get_global_bounds().width - 40,
-		buttonList.at(ButtonTag::bookStandTag).get_position().y + buttonList.at(ButtonTag::bookStandTag).get_global_bounds().height / 2 - 20 }; }
+	Vector2f getHpLinePosition() { return {	buttonList.at(button_tag::bookStandTag).get_position().x + buttonList.at(button_tag::bookStandTag).get_global_bounds().width - 40,
+		buttonList.at(button_tag::bookStandTag).get_position().y + buttonList.at(button_tag::bookStandTag).get_global_bounds().height / 2 - 20 }; }
 private:
 	hero_book_page somePage;
 	std::vector<sprite_chain_element*> prepareHpLine(float hpRatio);
@@ -47,7 +47,7 @@ private:
 	void initContent();
 
 	std::string buttonsInfoFileDirectory = "Game/bookButtons.txt";
-	std::unordered_map<ButtonTag, button> buttonList;
+	std::unordered_map<button_tag, button> buttonList;
 	int currentPage = 0;
 	/////////////////////////
 	// creatures 101 - 199 //

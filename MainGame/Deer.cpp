@@ -43,13 +43,13 @@ void deer::behaviorWithStatic(world_object* target, long long elapsedTime)
 void deer::behavior(const long long elapsedTime)
 {
 	endingPreviousAction();
-	directionSystem.calculateDirection();
+	directionSystem.calculate_direction();
 	fightInteract(elapsedTime);
 
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);
-		directionSystem.direction = Direction::STAND;
+		directionSystem.direction = direction::STAND;
 		return;
 	}
 
@@ -61,7 +61,7 @@ void deer::behavior(const long long elapsedTime)
 			laxMovePosition = {-1, -1};
 			return;
 		}
-		directionSystem.side = direction_system::calculateSide(position, owner->getPosition(), elapsedTime);
+		directionSystem.side = direction_system::calculate_side(position, owner->getPosition());
 		if (helper::getDist(position, owner->getPosition()) > sightRange / 2)
 		{
 			changeAction(moveSlowly, false, false);
@@ -75,7 +75,7 @@ void deer::behavior(const long long elapsedTime)
 		return;
 	}
 
-	directionSystem.side = direction_system::calculateSide(position, laxMovePosition, elapsedTime);
+	directionSystem.side = direction_system::calculate_side(position, laxMovePosition);
 
 	if (boundTarget == nullptr)
 	{
@@ -98,7 +98,7 @@ void deer::behavior(const long long elapsedTime)
 			if (distanceToTarget >= sightRange * 1.5)
 			{
 				changeAction(relax, true, true);
-				directionSystem.direction = Direction::STAND;
+				directionSystem.direction = direction::STAND;
 				laxMovePosition = {-1, -1};
 			}
 			else
@@ -139,7 +139,7 @@ Vector2f deer::getHeadPosition()
 {
 	const auto upperLeft = Vector2f(position.x - textureBoxOffset.x, position.y - textureBoxOffset.y);
 
-	if (directionSystem.lastDirection == Direction::UP)
+	if (directionSystem.lastDirection == direction::UP)
 	{
 		if (currentSprite[0] == 1)
 		{
@@ -170,7 +170,7 @@ Vector2f deer::getHeadPosition()
 			return {upperLeft.x + conditionalSizeUnits.x * 0.575F, upperLeft.y + conditionalSizeUnits.y * 0.075F};
 		}
 	}
-	if (directionSystem.lastDirection == Direction::DOWN)
+	if (directionSystem.lastDirection == direction::DOWN)
 	{
 		if (currentSprite[0] == 1)
 		{
@@ -201,7 +201,7 @@ Vector2f deer::getHeadPosition()
 			return {upperLeft.x + conditionalSizeUnits.x * 0.445F, upperLeft.y + conditionalSizeUnits.y * 0.182F};
 		}
 	}
-	if (direction_system::cutDiagonals(directionSystem.lastDirection) == Direction::LEFT)
+	if (direction_system::cut_diagonals(directionSystem.lastDirection) == direction::LEFT)
 	{
 		if (currentSprite[0] == 1)
 		{
@@ -232,7 +232,7 @@ Vector2f deer::getHeadPosition()
 			return {upperLeft.x + conditionalSizeUnits.x * 0.277F, upperLeft.y + conditionalSizeUnits.y * 0.138F};
 		}
 	}
-	if (direction_system::cutDiagonals(directionSystem.lastDirection) == Direction::RIGHT)
+	if (direction_system::cut_diagonals(directionSystem.lastDirection) == direction::RIGHT)
 	{
 		if (currentSprite[0] == 1)
 		{
@@ -268,18 +268,18 @@ Vector2f deer::getHeadPosition()
 
 std::vector<sprite_chain_element*> deer::prepareSprites(long long elapsedTime)
 {
-	auto body = new sprite_chain_element(pack_tag::deer, pack_part::stand, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
+	auto body = new sprite_chain_element(pack_tag::deer, pack_part::stand, direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	animationSpeed = 10;
 
-	auto spriteDirection = direction_system::cutDiagonals(directionSystem.lastDirection);
+	auto spriteDirection = direction_system::cut_diagonals(directionSystem.lastDirection);
 
 	if (directionSystem.side == right)
 	{
 		body->mirrored = true;
 	}
-	if (directionSystem.lastDirection == Direction::RIGHT || directionSystem.lastDirection == Direction::UPRIGHT || directionSystem.lastDirection == Direction::DOWNRIGHT)
+	if (directionSystem.lastDirection == direction::RIGHT || directionSystem.lastDirection == direction::UPRIGHT || directionSystem.lastDirection == direction::DOWNRIGHT)
 	{
-		spriteDirection = direction_system::cutRights(spriteDirection);
+		spriteDirection = direction_system::cut_rights(spriteDirection);
 		body->mirrored = true;
 	}
 
@@ -301,7 +301,7 @@ std::vector<sprite_chain_element*> deer::prepareSprites(long long elapsedTime)
 	case dead:
 		{
 			animationLength = 1;
-			body->direction = Direction::DOWN;
+			body->direction = direction::DOWN;
 			currentSprite[0] = 1;
 			break;
 		}

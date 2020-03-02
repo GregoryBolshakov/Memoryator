@@ -57,16 +57,16 @@ void hero_bag::initialize(const Vector2f position, const bool isSelectable, std:
 	}
 
 	// set sprites from pack
-	if (bagSpriteChain.ClosedBag->packTag == pack_tag::empty)
-		bagSpriteChain.ClosedBag->setDrawInfo(pack_tag::inventory, pack_part::bag1, Direction::DOWN, 1);
-	if (bagSpriteChain.ClosedBagSelected->packTag == pack_tag::empty)
-		bagSpriteChain.ClosedBagSelected->setDrawInfo(pack_tag::inventory, pack_part::bag1, Direction::DOWN, 2);
-	if (bagSpriteChain.ClosedBagBig->packTag == pack_tag::empty)
-		bagSpriteChain.ClosedBagBig->setDrawInfo(pack_tag::inventory, pack_part::bag1, Direction::DOWN, 3);
-	if (bagSpriteChain.OpenedBag->packTag == pack_tag::empty)
-		bagSpriteChain.OpenedBag->setDrawInfo(pack_tag::inventory, pack_part::bag1, Direction::DOWN, 4);
-	if (bagSpriteChain.OpenedBagSelected->packTag == pack_tag::empty)
-		bagSpriteChain.OpenedBagSelected->setDrawInfo(pack_tag::inventory, pack_part::bag1, Direction::DOWN, 5);
+	if (bagSpriteChain.ClosedBag->pack_tag == pack_tag::empty)
+		bagSpriteChain.ClosedBag->set_draw_info(pack_tag::inventory, pack_part::bag1, direction::DOWN, 1);
+	if (bagSpriteChain.ClosedBagSelected->pack_tag == pack_tag::empty)
+		bagSpriteChain.ClosedBagSelected->set_draw_info(pack_tag::inventory, pack_part::bag1, direction::DOWN, 2);
+	if (bagSpriteChain.ClosedBagBig->pack_tag == pack_tag::empty)
+		bagSpriteChain.ClosedBagBig->set_draw_info(pack_tag::inventory, pack_part::bag1, direction::DOWN, 3);
+	if (bagSpriteChain.OpenedBag->pack_tag == pack_tag::empty)
+		bagSpriteChain.OpenedBag->set_draw_info(pack_tag::inventory, pack_part::bag1, direction::DOWN, 4);
+	if (bagSpriteChain.OpenedBagSelected->pack_tag == pack_tag::empty)
+		bagSpriteChain.OpenedBagSelected->set_draw_info(pack_tag::inventory, pack_part::bag1, direction::DOWN, 5);
 	//----------------------
 }
 
@@ -363,7 +363,7 @@ sprite_chain_element* hero_bag::prepareSprite(const long long elapsedTime, std::
 			fixPos();
 			position.x += shiftVector.x; position.y += shiftVector.y;
 
-			const auto textureSize = packsMap->at(pack_tag::inventory).getOriginalInfo(pack_part::bag1, Direction::DOWN, 4).source_size;
+			const auto textureSize = packsMap->at(pack_tag::inventory).getOriginalInfo(pack_part::bag1, direction::DOWN, 4).source_size;
 			const auto changing_to_change_time = float(stateChangingTime)/float(stateChangeTime);
 			const Vector2f scaleValue = {
 				(sizeClosed.x + (sizeOpen.x - sizeClosed.x) * changing_to_change_time) / textureSize.w,

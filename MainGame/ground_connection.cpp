@@ -2,55 +2,55 @@
 
 #include "helper.h"
 
-ground_connection::ground_connection(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : static_object(std::move(objectName), centerPosition)
+ground_connection::ground_connection(std::string object_name, const Vector2f center_position, const int type_of_object) : static_object(std::move(object_name), center_position)
 {
 	varietyOfTypes = 12; // SwampyTrees: 1-4; DarkWoods: 5-8; BirchGrove: 9-12
-	this->typeOfObject = typeOfObject;
+	this->typeOfObject = type_of_object;
 	isBackground = true;
 	toSaveName = "groundConnection";
-	ground_connection::setType(typeOfObject);
+	ground_connection::setType(type_of_object);
 	tag = entity_tag::groundConnection;
 }
 
-void ground_connection::setType(int typeOfObject)
+void ground_connection::setType(const int type_of_object)
 {
-	if (typeOfObject == -1)
+	if (type_of_object == -1)
 		return;
 
-	this->typeOfObject = typeOfObject;
-    if (typeOfObject % 4 == 1)
+	this->typeOfObject = type_of_object;
+	if (type_of_object % 4 == 1)
 	{
 		this->conditionalSizeUnits = { 1000, 250 };
 	}
 	else
-		if (typeOfObject % 4 == 2)
+		if (type_of_object % 4 == 2)
 		{
 			this->conditionalSizeUnits = { 1000, 250 };
 		}
-        else
-            if (typeOfObject % 4 == 3)
-            {
+		else
+			if (type_of_object % 4 == 3)
+			{
 				this->conditionalSizeUnits = { 250, 1000 };
-            }
-            else
-                if (typeOfObject % 4 == 0)
-                {
+			}
+			else
+				if (type_of_object % 4 == 0)
+				{
 					this->conditionalSizeUnits = { 250, 1000 };
-                }
-	
-	if (typeOfObject >= 1 && typeOfObject <= 4)
+				}
+
+	if (type_of_object >= 1 && type_of_object <= 4)
 		this->zCoord = 10;
 	else
-		if (typeOfObject >= 5 && typeOfObject <= 8)
+		if (type_of_object >= 5 && type_of_object <= 8)
 			this->zCoord = 20;
 		else
-			if (typeOfObject >= 9 && typeOfObject <= 12)
+			if (type_of_object >= 9 && type_of_object <= 12)
 				this->zCoord = 30;
 			else
-				if (typeOfObject >= 13 && typeOfObject <= 16)
+				if (type_of_object >= 13 && type_of_object <= 16)
 					this->zCoord = 40;
 				else
-					if (typeOfObject >= 17 && typeOfObject <= 20)
+					if (type_of_object >= 17 && type_of_object <= 20)
 						this->zCoord = 50;
 }
 
@@ -78,25 +78,25 @@ int ground_connection::getBuildType(Vector2f, Vector2f)
 }
 
 std::vector<sprite_chain_element*> ground_connection::prepareSprites(long long)
-{	
+{
 	if (typeOfObject >= 1 && typeOfObject <= 4)
 		return { new sprite_chain_element() };
 
-    int spriteType = typeOfObject % 4 + 1;
+	int spriteType = typeOfObject % 4 + 1;
 	if (spriteType == 1)
 		spriteType = 5;
 
-	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::ground, Direction::DOWN, spriteType, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
-	
-	body->zCoord = zCoord;
+	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::ground, direction::DOWN, spriteType, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+
+	body->z_coordinate = zCoord;
 
 	//if (typeOfObject >= 1 && typeOfObject <= 4)
 		//body->packTag = PackTag::darkWoods;
 	if (typeOfObject >= 5 && typeOfObject <= 8)
-		body->packTag = pack_tag::darkWoods;
+		body->pack_tag = pack_tag::darkWoods;
 	if (typeOfObject >= 9 && typeOfObject <= 12)
-		body->packTag = pack_tag::birchGrove;
+		body->pack_tag = pack_tag::birchGrove;
 
-	body->isBackground = true;
-    return { body };
+	body->is_background = true;
+	return { body };
 }

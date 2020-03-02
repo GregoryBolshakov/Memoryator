@@ -61,7 +61,7 @@ void owl_boss::behavior(long long elapsedTime)
 			if (flapsBeforeJerkCount == 1)
 				changeAction(startFlap, true, false);
 			else
-				changeAction(Actions(30 + rand() % 3), true, false);
+				changeAction(actions(30 + rand() % 3), true, false);
 		}
 		lastAction = relax;
 		//changeAction(rightFlap, false, true);
@@ -97,14 +97,14 @@ void owl_boss::behaviorWithDynamic(dynamic_object* target, const long long elaps
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true, false);
-		directionSystem.direction = Direction::STAND;
+		directionSystem.direction = direction::STAND;
 		return;
 	}
 
 	if (target->tag != entity_tag::hero)
 		return;
 
-	directionSystem.side = direction_system::calculateSide(position, movePosition, elapsedTime);
+	directionSystem.side = direction_system::calculate_side(position, movePosition);
 
 	timeAfterHit += elapsedTime;
 

@@ -39,17 +39,17 @@ int ground::getBuildType(Vector2f, Vector2f)
 
 std::vector<sprite_chain_element*> ground::prepareSprites(long long)
 {
-	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::ground, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::ground, direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	
-	body->zCoord = zCoord;
-	body->isBackground = true;
+	body->z_coordinate = zCoord;
+	body->is_background = true;
 
 	if (typeOfObject == 1)
-		body->packTag = pack_tag::swampyTrees;
+		body->pack_tag = pack_tag::swampyTrees;
 	if (typeOfObject == 2)
-		body->packTag = pack_tag::darkWoods;
+		body->pack_tag = pack_tag::darkWoods;
 	if (typeOfObject == 3)
-		body->packTag = pack_tag::birchGrove;
+		body->pack_tag = pack_tag::birchGrove;
 
     return { body };
 }

@@ -33,9 +33,9 @@ enum class pack_part
 	arrowBig = 801, arrowSmall = 802, bookmarks = 803, cover = 804, frame1 = 805, frame2 = 806, pages = 807, plus = 808, cell = 809 // book's parts
 };
 
-enum class Direction { RIGHT = 0, UPRIGHT = 45, UP = 90, UPLEFT = 135, LEFT = 180, DOWNLEFT = 225, DOWN = 270, DOWNRIGHT = 315, STAND = 360 };
+enum class direction { RIGHT = 0, UPRIGHT = 45, UP = 90, UPLEFT = 135, LEFT = 180, DOWNLEFT = 225, DOWN = 270, DOWNRIGHT = 315, STAND = 360 };
 
-enum class ButtonTag { playTag = 0, continueTag = 1, newRunTag = 2, settingsTag = 3, exitTag = 4, buildStartTag = 5, menuTag = 6, openMenu = 7,
+enum class button_tag { playTag = 0, continueTag = 1, newRunTag = 2, settingsTag = 3, exitTag = 4, buildStartTag = 5, menuTag = 6, openMenu = 7,
 	nextPage = 16, previousPage = 17, bookCover = 18, bookmark = 19, pageBackground = 20, pagePattern = 21, bookmarksList = 22, sketching = 46,
 	bookmarkMobs = 31, bookmarkItems = 32, bookmarkWorld = 33, bookmarkFlowers = 34, bookmarkWreathes = 35, bookmarkNightmare = 36, bookButtonTag = 40,
 	bookStandTag = 41, bookGlowTag = 42, bookLightningTag = 43, hpLineTag = 44, hpFrameTag = 45, cell = 47, cellSelected = 48, iconFrame1 = 49, iconFrame2 = 50, plus = 51, makeWreath = 52,
@@ -44,7 +44,7 @@ enum class ButtonTag { playTag = 0, continueTag = 1, newRunTag = 2, settingsTag 
 	heroBag = 201
 };
 
-enum Actions { directHit = 2, relax = 3, combatState = 4, move = 5, dead = 6, moveSlowly = 7, commonHit = 9, moveHit = 10, dropping = 11, transitionToEnotherWorld = 12,
+enum actions { directHit = 2, relax = 3, combatState = 4, move = 5, dead = 6, moveSlowly = 7, commonHit = 9, moveHit = 10, dropping = 11, transitionToEnotherWorld = 12,
 	open = 13, absorbs = 14, grab = 15, builds = 16, jerking = 17, moveEnd = 18, upFlap = 30, leftFlap = 31, rightFlap = 32, startFlap = 33, stopFlap = 34, throwNoose = 35 };
 
-enum Side { undefined = 0, up = 1, right = 2, down = 3, left = 4 };
+enum side { undefined = 0, up = 1, right = 2, down = 3, left = 4 };

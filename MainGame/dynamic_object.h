@@ -13,7 +13,7 @@ protected:
 	float strength = 0;
 	long long timeAfterHitSelf = 0;
 	
-	Actions currentAction, lastAction = relax;
+	actions currentAction, lastAction = relax;
 	world_object *boundTarget = nullptr;
 	bool routeGenerationAbility = true;
 
@@ -43,16 +43,16 @@ public:
 	[[nodiscard]] Vector2f getFocus1() const { return focus1; }
 	[[nodiscard]] Vector2f getFocus2() const { return focus2; }
 	[[nodiscard]] Vector2f getMovePosition() const { return movePosition; }
-	[[nodiscard]] Actions getCurrentAction() const { return currentAction; }
+	[[nodiscard]] actions getCurrentAction() const { return currentAction; }
 	[[nodiscard]] world_object *getBoundTarget() const { return boundTarget; }
 
-	void setCurrentAction(Actions action) { this->currentAction = action; }	
+	void setCurrentAction(actions action) { this->currentAction = action; }	
 	virtual void changeMovePositionToRoute(Vector2f newPosition) { movePosition = newPosition; }
 	void takeDamage(float damage, Vector2f attackerPos = {-1, -1}) override;
 	void setMoveOffset(long long elapsedTime);
 	void setRoute(std::vector<std::pair<int, int>> route) { this->route = std::move(route); }
 	void initMicroBlocks() override;
-	virtual void changeAction(Actions newAction, bool resetSpriteNumber = false, bool rememberLastAction = false);
+	virtual void changeAction(actions newAction, bool resetSpriteNumber = false, bool rememberLastAction = false);
 	virtual void handleInput(bool usedMouse = false);
 	virtual void behaviorWithDynamic(dynamic_object* target, long long elapsedTime) = 0;
 	virtual void behaviorWithStatic(world_object* target, long long elapsedTime) = 0;

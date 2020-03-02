@@ -373,11 +373,11 @@ std::vector<drawable_chain_element*> inventory_system::prepareSprites(long long 
 	{
 		result.push_back(new text_chain_element(
 			cursorTextPos,
-			{ text_system::getTextBoxSize(cursorText, text_chain_element::defaultCharacterSize * 1.5f, FontName::NormalFont).x / 2.0f, 0 },
+			{ text_system::getTextBoxSize(cursorText, text_chain_element::defaultCharacterSize * 1.5f, font_name::NormalFont).x / 2.0f, 0 },
 			sf::Color(0, 0, 0, 180),
 			cursorText, 
 			text_chain_element::defaultCharacterSize * 1.5f));
-		result.push_back(new sprite_chain_element(pack_tag::inventory, pack_part::areas, Direction::DOWN, 2, { 0, 0 }, helper::GetScreenSize()));
+		result.push_back(new sprite_chain_element(pack_tag::inventory, pack_part::areas, direction::DOWN, 2, { 0, 0 }, helper::GetScreenSize()));
 	}
 	//if (bagPosDot.getPosition() != Vector2f(0, 0))
 		//window.draw(bagPosDot);

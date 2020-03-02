@@ -27,8 +27,8 @@ public:
 	void setTarget(dynamic_object& object) override;
 	void endingPreviousAction();
 	void stopping(bool doStand = false, bool forgetBoundTarget = false, bool offUnsealInventory = false);
-	void calculateSpeedLineDirection(Direction lastDirection = Direction::STAND, Direction direction = Direction::STAND);
-	void changeAction(Actions newAction, bool resetSpriteNumber, bool rememberLastAction) override;
+	void calculateSpeedLineDirection(direction lastDirection = direction::STAND, direction direction = direction::STAND);
+	void changeAction(actions newAction, bool resetSpriteNumber, bool rememberLastAction) override;
 	void changeMovePositionToRoute(Vector2f newPosition) override { if (currentAction != jerking) movePosition = newPosition; };
 	[[nodiscard]] Vector2f getBeltPosition() const;
 
@@ -52,11 +52,11 @@ private:
 	float moveEndDistance = 0;
 	long long moveTime = 0;
 	long long smoothMoveTime = 0;
-	Direction smoothDirection = Direction::STAND;
+	direction smoothDirection = direction::STAND;
 	world_object* owner = nullptr, *unsealInventoryOwner = nullptr;
 	int strikingSprite = 0;
 	Vector2f lastPosition = { 0, 0 };
-	Direction speedLineDirection = Direction::STAND;
+	direction speedLineDirection = direction::STAND;
 	bool wasPushedAfterMovement = false, mirroredSpeedLine = false, reverseSpeedLine = false;
-	std::vector<Direction> smoothDirections = {};
+	std::vector<direction> smoothDirections = {};
 };

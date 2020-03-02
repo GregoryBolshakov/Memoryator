@@ -14,9 +14,9 @@ void menu_system::initButtons()
 {
 	Vector2f screenSize = helper::GetScreenSize();
 
-    buttonList[ButtonTag::newRunTag].initialize(pack_tag::interfaceElements, pack_part::menu, 1, 1, 1, NEW_RUN_BUTTON_POSITION, BUTTON_SIZE, true, ButtonTag::newRunTag);
-    buttonList[ButtonTag::continueTag].initialize(pack_tag::interfaceElements, pack_part::menu, 2, 2, 2, CONTINUE_BUTTON_POSITION, BUTTON_SIZE, true, ButtonTag::continueTag);
-    buttonList[ButtonTag::exitTag].initialize(pack_tag::interfaceElements, pack_part::menu, 4, 4, 4, EXIT_BUTTON_POSITION, BUTTON_SIZE, true, ButtonTag::exitTag);
+    buttonList[button_tag::newRunTag].initialize(pack_tag::interfaceElements, pack_part::menu, 1, 1, 1, NEW_RUN_BUTTON_POSITION, BUTTON_SIZE, true, button_tag::newRunTag);
+    buttonList[button_tag::continueTag].initialize(pack_tag::interfaceElements, pack_part::menu, 2, 2, 2, CONTINUE_BUTTON_POSITION, BUTTON_SIZE, true, button_tag::continueTag);
+    buttonList[button_tag::exitTag].initialize(pack_tag::interfaceElements, pack_part::menu, 4, 4, 4, EXIT_BUTTON_POSITION, BUTTON_SIZE, true, button_tag::exitTag);
 }
 
 menu_system::~menu_system()
@@ -46,7 +46,7 @@ void menu_system::interact(world_handler &world, RenderWindow &window)
 
 	if (menuState == mainMenu)
 	{
-		if (buttonList[ButtonTag::newRunTag].is_selected(mousePos))
+		if (buttonList[button_tag::newRunTag].is_selected(mousePos))
 		{
 			world.runWorldGenerator();
 			menuState = closed;
@@ -54,7 +54,7 @@ void menu_system::interact(world_handler &world, RenderWindow &window)
 			return;
 		}
 
-		if (buttonList[ButtonTag::continueTag].is_selected(mousePos))
+		if (buttonList[button_tag::continueTag].is_selected(mousePos))
 		{
 			//world.Load();
             world.runWorldGenerator();
@@ -63,7 +63,7 @@ void menu_system::interact(world_handler &world, RenderWindow &window)
 			return;
 		}
 
-		if (buttonList[ButtonTag::exitTag].is_selected(mousePos))
+		if (buttonList[button_tag::exitTag].is_selected(mousePos))
 		{
 			menuState = closed;
 			window.close();
@@ -76,7 +76,7 @@ void menu_system::interact(world_handler &world, RenderWindow &window)
 
 	if (menuState == gameMenu)
 	{
-		if (buttonList[ButtonTag::newRunTag].is_selected(mousePos))
+		if (buttonList[button_tag::newRunTag].is_selected(mousePos))
 		{
 			world.runWorldGenerator();
 			menuState = closed;
@@ -84,14 +84,14 @@ void menu_system::interact(world_handler &world, RenderWindow &window)
 			return;
 		}
 
-		if (buttonList[ButtonTag::continueTag].is_selected(mousePos))
+		if (buttonList[button_tag::continueTag].is_selected(mousePos))
 		{
 			menuState = closed;
 			wasActive = true;
 			return;
 		}
 
-		if (buttonList[ButtonTag::exitTag].is_selected(mousePos))
+		if (buttonList[button_tag::exitTag].is_selected(mousePos))
 		{
 			world.Save();
 			menuState = mainMenu;
@@ -118,16 +118,16 @@ std::vector<sprite_chain_element*> menu_system::prepareSprites()
     std::vector<sprite_chain_element*> result = {};
 	if (menuState == mainMenu)
 	{
-        result.push_back(buttonList.at(ButtonTag::newRunTag).prepare_sprite());
-		result.push_back(buttonList.at(ButtonTag::continueTag).prepare_sprite());
-		result.push_back(buttonList.at(ButtonTag::exitTag).prepare_sprite());		
+        result.push_back(buttonList.at(button_tag::newRunTag).prepare_sprite());
+		result.push_back(buttonList.at(button_tag::continueTag).prepare_sprite());
+		result.push_back(buttonList.at(button_tag::exitTag).prepare_sprite());		
 	}
 
 	if (menuState == gameMenu)
 	{
-		result.push_back(buttonList.at(ButtonTag::newRunTag).prepare_sprite());
-		result.push_back(buttonList.at(ButtonTag::continueTag).prepare_sprite());
-		result.push_back(buttonList.at(ButtonTag::exitTag).prepare_sprite());
+		result.push_back(buttonList.at(button_tag::newRunTag).prepare_sprite());
+		result.push_back(buttonList.at(button_tag::continueTag).prepare_sprite());
+		result.push_back(buttonList.at(button_tag::exitTag).prepare_sprite());
 	}
 
 	if (menuState == closed)

@@ -180,13 +180,13 @@ int bush::getBuildType(Vector2f, Vector2f)
 
 std::vector<sprite_chain_element*> bush::prepareSprites(long long)
 {
-	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::bush, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::bush, direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	if (typeOfObject >= 1 && typeOfObject <= 8)
-		body->packTag = pack_tag::birchGrove;
+		body->pack_tag = pack_tag::birchGrove;
 	if (typeOfObject >= 9 && typeOfObject <= 15)
 	{
-		body->packTag = pack_tag::swampyTrees;
+		body->pack_tag = pack_tag::swampyTrees;
 		body->number -= 8;
 	}
 

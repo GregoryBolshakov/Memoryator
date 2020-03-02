@@ -94,8 +94,8 @@ void draw_system::initPacksMap()
 {
 	searchFiles("Game/spritePacks/*.png", initSpritePack, true);
 	sprite_pack::iconWithoutSpaceSize = Vector2f(
-		float(packsMap.at(pack_tag::inventory).getOriginalInfo(pack_part::areas, Direction::DOWN, 1).frame.w),
-		float(packsMap.at(pack_tag::inventory).getOriginalInfo(pack_part::areas, Direction::DOWN, 1).frame.h));
+		float(packsMap.at(pack_tag::inventory).getOriginalInfo(pack_part::areas, direction::DOWN, 1).frame.w),
+		float(packsMap.at(pack_tag::inventory).getOriginalInfo(pack_part::areas, direction::DOWN, 1).frame.h));
 }
 
 void draw_system::advancedScale(sprite_chain_element& item, Sprite& sprite, const sprite_pack_structure::sprite& originalInfo, const float scale) const
@@ -112,7 +112,7 @@ void draw_system::advancedScale(sprite_chain_element& item, Sprite& sprite, cons
 			scale * item.size.y / size_h,
 			scale * item.size.x / size_w);
 
-	if (!item.isBackground && !item.unscaled)
+	if (!item.is_background && !item.unscaled)
 	{
 		if (!originalInfo.rotated)
 		{
@@ -151,17 +151,17 @@ std::vector<sprite_chain_element*> draw_system::DowncastToSpriteChain(const std:
 
 void draw_system::drawSpriteChainElement(RenderTarget& target, sprite_chain_element* spriteChainItem, const Vector2f cameraPosition, const Vector2f screenCenter, const float scale)
 {
-	if (spriteChainItem->packTag == pack_tag::empty)
+	if (spriteChainItem->pack_tag == pack_tag::empty)
 		return;
 
-	auto sprite = packsMap.at(spriteChainItem->packTag).getSprite(spriteChainItem->packPart, spriteChainItem->direction, spriteChainItem->number, spriteChainItem->mirrored);
+	auto sprite = packsMap.at(spriteChainItem->pack_tag).getSprite(spriteChainItem->packPart, spriteChainItem->direction, spriteChainItem->number, spriteChainItem->mirrored);
 	if (sprite.getTextureRect() == IntRect())
 		return;
 
-	const auto originalInfo = packsMap.at(spriteChainItem->packTag).getOriginalInfo(spriteChainItem->packPart, spriteChainItem->direction, spriteChainItem->number);
+	const auto originalInfo = packsMap.at(spriteChainItem->pack_tag).getOriginalInfo(spriteChainItem->packPart, spriteChainItem->direction, spriteChainItem->number);
 	const Vector2f spritePos = { (spriteChainItem->position.x - cameraPosition.x - spriteChainItem->offset.x) * scale + screenCenter.x,
 	(spriteChainItem->position.y - cameraPosition.y - spriteChainItem->offset.y) * scale + screenCenter.y };
-	if (spriteChainItem->antiTransparent)
+	if (spriteChainItem->anti_transparent)
 		spriteChainItem->color.a = 255;
 
 	sprite.setColor(spriteChainItem->color);

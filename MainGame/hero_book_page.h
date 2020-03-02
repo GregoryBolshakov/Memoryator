@@ -34,7 +34,7 @@ struct book_object_info
 
 struct page_content
 {
-	std::vector<ButtonTag> buttons;
+	std::vector<button_tag> buttons;
 	std::string blockDescription;
 	std::string pageDescription;
 	std::vector<RectangleShape> connections;
@@ -46,22 +46,22 @@ public:
 	hero_book_page();
 	~hero_book_page();
 	void initAuxiliarySpriteMap();
-	void buttonListBounding(std::unordered_map<ButtonTag, button>* buttonList);
+	void buttonListBounding(std::unordered_map<button_tag, button>* buttonList);
 	void setPage(int page) { this->currentPage = page; }
 
 	// object information (creatures, craft, plants, wreaths, nightmare)
 	void initObjectInfo();
 	static entity_tag pageToObjectId(int page);
-	int buttonToPage(ButtonTag button);
-	void setButtonLock(ButtonTag button, ButtonTag changedButton);
-	sprite_chain_element* prepareIconFrame(ButtonTag button, int type = 1);
+	int buttonToPage(button_tag button);
+	void setButtonLock(button_tag button, button_tag changedButton);
+	sprite_chain_element* prepareIconFrame(button_tag button, int type = 1);
 	std::vector<sprite_chain_element*> prepareAllIcons(const page_content& content);
 	std::vector<sprite_chain_element*> prepareLines();
 	std::vector<text_chain_element*> prepareHeadingText();
 	void unlockObject(entity_tag object);
 	static int getHeadingPage(entity_tag object);
 	std::unordered_map<entity_tag, book_object_info>* getObjectInfo() { return &objectInfo; }
-	static std::string buttonToString(ButtonTag button);
+	static std::string buttonToString(button_tag button);
 	static entity_tag tagToWreath(entity_tag item);
 	//------------------------------------------------------------------
 
@@ -90,10 +90,10 @@ public:
 	std::vector<hero_bag>* boundBags{};
 private:
 	static int div_up(int n, int d) { return n / d + (((n < 0) ^ (d > 0)) && (n % d)); }
-	std::unordered_map<ButtonTag, button>* buttonList{};
+	std::unordered_map<button_tag, button>* buttonList{};
 	void setBookmarkPosition() const;
 	void preparePageBase();
-	void putHeadingsToPositions(std::vector<ButtonTag> buttons);
+	void putHeadingsToPositions(std::vector<button_tag> buttons);
 	void setArrowsPosition() const;
 	
 	int currentPage = 0;

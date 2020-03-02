@@ -173,18 +173,18 @@ int stump::getBuildType(Vector2f, Vector2f)
 
 std::vector<sprite_chain_element*> stump::prepareSprites(long long)
 {
-	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::stump, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::stump, direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	if (typeOfObject >= 1 && typeOfObject <= 4)
-		body->packTag = pack_tag::birchGrove;
+		body->pack_tag = pack_tag::birchGrove;
 	if (typeOfObject >= 5 && typeOfObject <= 10)
 	{
-		body->packTag = pack_tag::darkWoods;
+		body->pack_tag = pack_tag::darkWoods;
 		body->number -= 4;
 	}
 	if (typeOfObject >= 11 && typeOfObject <= 13)
 	{
-		body->packTag = pack_tag::swampyTrees;
+		body->pack_tag = pack_tag::swampyTrees;
 		body->number -= 10;
 	}
 

@@ -243,25 +243,25 @@ int forest_tree::getBuildType(Vector2f, Vector2f)
 
 std::vector<sprite_chain_element*> forest_tree::prepareSprites(const long long elapsedTime)
 {
-	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::tree, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::tree, direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	if (typeOfObject >= 1 && typeOfObject <= 7)
-		body->packTag = pack_tag::birchGrove;
+		body->pack_tag = pack_tag::birchGrove;
 	if (typeOfObject >= 8 && typeOfObject <= 13)
 	{
-		body->packTag = pack_tag::darkWoods;
+		body->pack_tag = pack_tag::darkWoods;
 		body->number -= 7;
 	}
 	if (typeOfObject >= 14 && typeOfObject <= 18)
 	{
-		body->packTag = pack_tag::swampyTrees;
+		body->pack_tag = pack_tag::swampyTrees;
 		body->number -= 13;
 	}
 
 	if (state == absorbed)
 	{
-		body->animationLength = 15;
-		color.a = 255 - currentSprite[0] * 255 / body->animationLength;
+		body->animation_length = 15;
+		color.a = 255 - currentSprite[0] * 255 / body->animation_length;
 	}
 
 	timeForNewSprite += elapsedTime;
@@ -270,7 +270,7 @@ std::vector<sprite_chain_element*> forest_tree::prepareSprites(const long long e
 	{
 		timeForNewSprite = 0;
 
-		if (++currentSprite[0] > body->animationLength)
+		if (++currentSprite[0] > body->animation_length)
 		{
 			if (state == absorbed)
 			{

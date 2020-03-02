@@ -76,19 +76,19 @@ int mushroom::getBuildType(Vector2f ounPos, Vector2f otherPos)
 
 std::vector<sprite_chain_element*> mushroom::prepareSprites(long long elapsedTime)
 {
-	sprite_chain_element* body = new sprite_chain_element(pack_tag::darkWoods, pack_part::mushroom, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	sprite_chain_element* body = new sprite_chain_element(pack_tag::darkWoods, pack_part::mushroom, direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	body->unscaled = true;
 
 	if (typeOfObject >= 1 && typeOfObject <= 3)
-		body->packTag = pack_tag::birchGrove;
+		body->pack_tag = pack_tag::birchGrove;
 	if (typeOfObject >= 4 && typeOfObject <= 12)
 	{
-		body->packTag = pack_tag::darkWoods;
+		body->pack_tag = pack_tag::darkWoods;
 		body->number -= 3;
 	}
 	if (typeOfObject >= 13 && typeOfObject <= 16)
 	{
-		body->packTag = pack_tag::swampyTrees;
+		body->pack_tag = pack_tag::swampyTrees;
 		body->number -= 12;
 	}
 

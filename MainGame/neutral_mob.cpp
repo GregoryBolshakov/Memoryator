@@ -40,12 +40,12 @@ void neutral_mob::behavior(long long elapsedTime)
 	if (healthPoint <= 0)
 	{
 		changeAction(dead, true);
-		directionSystem.direction = Direction::STAND;
+		directionSystem.direction = direction::STAND;
 		return;
 	}
 	fightInteract(elapsedTime);
 
-	directionSystem.side = direction_system::calculateSide(position, movePosition, elapsedTime);
+	directionSystem.side = direction_system::calculate_side(position, movePosition);
 	//return;
 	if (boundTarget == nullptr)
 		return;
@@ -63,7 +63,7 @@ void neutral_mob::behavior(long long elapsedTime)
 			if (distanceToTarget >= sightRange * 1.5)
 			{
 				changeAction(relax, true, true);
-				directionSystem.direction = Direction::STAND;
+				directionSystem.direction = direction::STAND;
 				movePosition = { -1, -1 };
 			}
 			else

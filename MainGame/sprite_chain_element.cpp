@@ -5,19 +5,19 @@ sprite_chain_element::sprite_chain_element() : drawable_chain_element()
 }
 
 sprite_chain_element::sprite_chain_element(
-    pack_tag tag,
-    pack_part part,
-    Direction direction,
-    int number, 
-    Vector2f position,
-    Vector2f size,
-    Vector2f offset,
-	Color color,
-	bool mirrored,
-	bool unscaled,
-    float rotation) : drawable_chain_element(position, size, offset, color)
+	const ::pack_tag tag,
+	const pack_part part,
+	const ::direction direction,
+	const int number,
+	const Vector2f position,
+	const Vector2f size,
+	const Vector2f offset,
+	const Color color,
+	const bool mirrored,
+	const bool unscaled,
+	const float rotation) : drawable_chain_element(position, size, offset, color)
 {
-    this->packTag = tag;
+    this->pack_tag = tag;
     this->packPart = part;
     this->direction = direction;
     this->number = number;
@@ -27,13 +27,13 @@ sprite_chain_element::sprite_chain_element(
 }
 
 sprite_chain_element::sprite_chain_element(
-	Vector2f position,
-	Vector2f size,
-	Vector2f offset,
-	Color color,
-	bool mirrored,
-	bool unscaled,
-	float rotation) : drawable_chain_element(position, size, offset, color)
+	const Vector2f position,
+	const Vector2f size,
+	const Vector2f offset,
+	const Color color,
+	const bool mirrored,
+	const bool unscaled,
+	const float rotation) : drawable_chain_element(position, size, offset, color)
 {
 	this->mirrored = mirrored;
 	this->unscaled = unscaled;
@@ -43,9 +43,9 @@ sprite_chain_element::sprite_chain_element(
 sprite_chain_element::~sprite_chain_element()
 = default;
 
-void sprite_chain_element::setDrawInfo(pack_tag tag, pack_part part, Direction direction, int number) 
+void sprite_chain_element::set_draw_info(const ::pack_tag tag, const pack_part part, const ::direction direction, const int number) 
 {
-	this->packTag = tag;
+	this->pack_tag = tag;
 	this->packPart = part;
 	this->direction = direction;
 	this->number = number;

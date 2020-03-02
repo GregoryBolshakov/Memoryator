@@ -292,7 +292,7 @@ void world_generator::perimeterGeneration()
 		ceil(characterPosition.x + (screenSize.x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)),
 		ceil(characterPosition.y + (screenSize.y / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)));
 
-	if (focusedObject->getDirectionSystem().direction != Direction::STAND)
+	if (focusedObject->getDirectionSystem().direction != direction::STAND)
 	{
 		for (auto& block : staticGrid->getBlocksAround(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y))
 		{

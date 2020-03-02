@@ -15,19 +15,19 @@ public:
 	direction_system();
 	~direction_system();
 	void init(Vector2f* position, Vector2f* movePosition) { this->position = position; this->movePosition = movePosition; }
-	void calculateDirection();
-	static Side calculateSide(Vector2f position, sf::Vector2f otherObjectPosition, long long elapsedTime);
-	static Side invertSide(Side side);
-	static std::string sideToString(Side side);
-	static std::string directionToString(Direction direction);
-	static Direction cutRights(Direction direction);
-	static Side cutRights(Side side);
-	static Direction sideToDirection(Side side);
-	static Direction invertDirection(Direction dir);
-	static Direction cutDiagonals(Direction dir);
+	void calculate_direction();
+	static side calculate_side(Vector2f position, sf::Vector2f other_object_position);
+	static side invert_side(side side);
+	static std::string side_to_string(side side);
+	static std::string direction_to_string(direction direction);
+	static direction cut_rights(direction direction);
+	static side cut_rights(side side);
+	static direction side_to_direction(side side);
+	static direction invert_direction(direction dir);
+	static direction cut_diagonals(direction dir);
 
-	Side side = down;
-	Direction direction = Direction::STAND, lastDirection = Direction::DOWN;
+	side side = down;
+	direction direction = direction::STAND, lastDirection = direction::DOWN;
 
 	// owner info
 	Vector2f* position = nullptr;
