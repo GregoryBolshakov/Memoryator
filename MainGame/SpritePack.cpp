@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-#include "Button.h"
+#include "button.h"
 #include "Helper.h"
 
 const Vector2f SpritePack::iconSize = { Helper::GetScreenSize().y / 13.8f, Helper::GetScreenSize().y / 13.8f };

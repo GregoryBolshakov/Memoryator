@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Button.h"
+#include "button.h"
 #include "Helper.h"
 #include "WorldHandler.h"
 

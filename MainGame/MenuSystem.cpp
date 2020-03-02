@@ -46,7 +46,7 @@ void MenuSystem::interact(WorldHandler &world, RenderWindow &window)
 
 	if (menuState == mainMenu)
 	{
-		if (buttonList[ButtonTag::newRunTag].isSelected(mousePos))
+		if (buttonList[ButtonTag::newRunTag].is_selected(mousePos))
 		{
 			world.runWorldGenerator();
 			menuState = closed;
@@ -54,7 +54,7 @@ void MenuSystem::interact(WorldHandler &world, RenderWindow &window)
 			return;
 		}
 
-		if (buttonList[ButtonTag::continueTag].isSelected(mousePos))
+		if (buttonList[ButtonTag::continueTag].is_selected(mousePos))
 		{
 			//world.Load();
             world.runWorldGenerator();
@@ -63,7 +63,7 @@ void MenuSystem::interact(WorldHandler &world, RenderWindow &window)
 			return;
 		}
 
-		if (buttonList[ButtonTag::exitTag].isSelected(mousePos))
+		if (buttonList[ButtonTag::exitTag].is_selected(mousePos))
 		{
 			menuState = closed;
 			window.close();
@@ -76,7 +76,7 @@ void MenuSystem::interact(WorldHandler &world, RenderWindow &window)
 
 	if (menuState == gameMenu)
 	{
-		if (buttonList[ButtonTag::newRunTag].isSelected(mousePos))
+		if (buttonList[ButtonTag::newRunTag].is_selected(mousePos))
 		{
 			world.runWorldGenerator();
 			menuState = closed;
@@ -84,14 +84,14 @@ void MenuSystem::interact(WorldHandler &world, RenderWindow &window)
 			return;
 		}
 
-		if (buttonList[ButtonTag::continueTag].isSelected(mousePos))
+		if (buttonList[ButtonTag::continueTag].is_selected(mousePos))
 		{
 			menuState = closed;
 			wasActive = true;
 			return;
 		}
 
-		if (buttonList[ButtonTag::exitTag].isSelected(mousePos))
+		if (buttonList[ButtonTag::exitTag].is_selected(mousePos))
 		{
 			world.Save();
 			menuState = mainMenu;
@@ -118,16 +118,16 @@ std::vector<SpriteChainElement*> MenuSystem::prepareSprites()
     std::vector<SpriteChainElement*> result = {};
 	if (menuState == mainMenu)
 	{
-        result.push_back(buttonList.at(ButtonTag::newRunTag).prepareSprite());
-		result.push_back(buttonList.at(ButtonTag::continueTag).prepareSprite());
-		result.push_back(buttonList.at(ButtonTag::exitTag).prepareSprite());		
+        result.push_back(buttonList.at(ButtonTag::newRunTag).prepare_sprite());
+		result.push_back(buttonList.at(ButtonTag::continueTag).prepare_sprite());
+		result.push_back(buttonList.at(ButtonTag::exitTag).prepare_sprite());		
 	}
 
 	if (menuState == gameMenu)
 	{
-		result.push_back(buttonList.at(ButtonTag::newRunTag).prepareSprite());
-		result.push_back(buttonList.at(ButtonTag::continueTag).prepareSprite());
-		result.push_back(buttonList.at(ButtonTag::exitTag).prepareSprite());
+		result.push_back(buttonList.at(ButtonTag::newRunTag).prepare_sprite());
+		result.push_back(buttonList.at(ButtonTag::continueTag).prepare_sprite());
+		result.push_back(buttonList.at(ButtonTag::exitTag).prepare_sprite());
 	}
 
 	if (menuState == closed)

@@ -186,9 +186,6 @@
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="LightSystem.cpp" />
-    <ClCompile Include="Button.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="MenuSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -212,6 +209,9 @@
     </ClCompile>
     <ClCompile Include="VisualEffects\AmbientLight.cpp">
       <Filter>VisualEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="button.cpp">
+      <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -404,9 +404,6 @@
       <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="LightSystem.h" />
-    <ClInclude Include="Button.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="MenuSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -433,6 +430,9 @@
     </ClInclude>
     <ClInclude Include="VisualEffects\VisualEffect.hpp">
       <Filter>VisualEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="button.h">
+      <Filter>Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

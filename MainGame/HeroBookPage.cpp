@@ -39,56 +39,56 @@ void HeroBookPage::setBookmarkPosition() const
 	FloatRect pageGlobalBounds;
 	
 	if (currentPage == 0)
-		pageGlobalBounds = buttonList->at(ButtonTag::bookCover).getGlobalBounds();
+		pageGlobalBounds = buttonList->at(ButtonTag::bookCover).get_global_bounds();
 	else
-		pageGlobalBounds = buttonList->at(ButtonTag::pageBackground).getGlobalBounds();
+		pageGlobalBounds = buttonList->at(ButtonTag::pageBackground).get_global_bounds();
 
 	float bookmarkApproximateX;
 	if (currentPage == 0)
 		bookmarkApproximateX = pageGlobalBounds.left + pageGlobalBounds.width * 8.9f / 10.0f;
 	else
 		bookmarkApproximateX = pageGlobalBounds.left + pageGlobalBounds.width * 9.38f / 10.0f;
-	buttonList->at(ButtonTag::bookmarkMobs).setPosition(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 1.2f / 10.0f));
-	buttonList->at(ButtonTag::bookmarkItems).setPosition(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 2.2f / 10.0f));
-	buttonList->at(ButtonTag::bookmarkWorld).setPosition(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 3.2f / 10.0f));
-	buttonList->at(ButtonTag::bookmarkFlowers).setPosition(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 4.2f / 10.0f));
-	buttonList->at(ButtonTag::bookmarkWreathes).setPosition(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 5.2f / 10.0f));
-	buttonList->at(ButtonTag::bookmarkNightmare).setPosition(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 7.2f / 10.0f));
-	buttonList->at(ButtonTag::plus).setPosition(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 8.2f / 10.0f));
-	buttonList->at(ButtonTag::makeWreath).setPosition(Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.35f / 10.0f, pageGlobalBounds.top + pageGlobalBounds.height * 6.6f / 10.0f));
+	buttonList->at(ButtonTag::bookmarkMobs).set_position(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 1.2f / 10.0f));
+	buttonList->at(ButtonTag::bookmarkItems).set_position(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 2.2f / 10.0f));
+	buttonList->at(ButtonTag::bookmarkWorld).set_position(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 3.2f / 10.0f));
+	buttonList->at(ButtonTag::bookmarkFlowers).set_position(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 4.2f / 10.0f));
+	buttonList->at(ButtonTag::bookmarkWreathes).set_position(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 5.2f / 10.0f));
+	buttonList->at(ButtonTag::bookmarkNightmare).set_position(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 7.2f / 10.0f));
+	buttonList->at(ButtonTag::plus).set_position(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 8.2f / 10.0f));
+	buttonList->at(ButtonTag::makeWreath).set_position(Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.35f / 10.0f, pageGlobalBounds.top + pageGlobalBounds.height * 6.6f / 10.0f));
 }
 
 void HeroBookPage::setArrowsPosition() const
 {
-	const auto pagePatternGlobalBounds = buttonList->at(ButtonTag::pagePattern).getGlobalBounds();
+	const auto pagePatternGlobalBounds = buttonList->at(ButtonTag::pagePattern).get_global_bounds();
 	auto nextPagePos = Vector2f(pagePatternGlobalBounds.left + pagePatternGlobalBounds.width - arrowToPageGlobalBounds.width,
 	                            pagePatternGlobalBounds.top + pagePatternGlobalBounds.height - arrowToPageGlobalBounds.height);
 	const auto previousPagePos = Vector2f(Vector2f(pagePatternGlobalBounds.left,
 	                                               pagePatternGlobalBounds.top + pagePatternGlobalBounds.height - arrowToPageGlobalBounds.height));
 	
 	if (currentPage == 0)
-		nextPagePos.x -= buttonList->at(ButtonTag::bookmarksList).getGlobalBounds().width / 2;
+		nextPagePos.x -= buttonList->at(ButtonTag::bookmarksList).get_global_bounds().width / 2;
 
-	buttonList->at(ButtonTag::nextPage).setPosition(nextPagePos);
-	buttonList->at(ButtonTag::previousPage).setPosition(previousPagePos);	
+	buttonList->at(ButtonTag::nextPage).set_position(nextPagePos);
+	buttonList->at(ButtonTag::previousPage).set_position(previousPagePos);	
 }
 
 void HeroBookPage::preparePageBase()
 {
-	buttonList->at(ButtonTag::pageBackground).setPosition(Vector2f(buttonList->at(ButtonTag::bookCover).getPosition().x - buttonList->at(ButtonTag::bookCover).getGlobalBounds().width,
-		buttonList->at(ButtonTag::bookCover).getPosition().y));
+	buttonList->at(ButtonTag::pageBackground).set_position(Vector2f(buttonList->at(ButtonTag::bookCover).get_position().x - buttonList->at(ButtonTag::bookCover).get_global_bounds().width,
+		buttonList->at(ButtonTag::bookCover).get_position().y));
 
 	if (currentPage == 0)
-		pageGlobalBounds = buttonList->at(ButtonTag::bookCover).getGlobalBounds();
+		pageGlobalBounds = buttonList->at(ButtonTag::bookCover).get_global_bounds();
 	else
-		pageGlobalBounds = buttonList->at(ButtonTag::pageBackground).getGlobalBounds();
+		pageGlobalBounds = buttonList->at(ButtonTag::pageBackground).get_global_bounds();
 
-	buttonList->at(ButtonTag::pagePattern).setPosition(Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.0f / 13.0f, pageGlobalBounds.top + pageGlobalBounds.height * 1.0f / 21.0f));	
-	buttonList->at(ButtonTag::bookmarksList).setPosition(Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.0f / 13.0f, pageGlobalBounds.top + pageGlobalBounds.height * 1.0f / 21.0f));	
-	buttonList->at(ButtonTag::sketching).setPosition(Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.0f / 13.0f, pageGlobalBounds.top + pageGlobalBounds.height * 1.0f / 21.0f));	
+	buttonList->at(ButtonTag::pagePattern).set_position(Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.0f / 13.0f, pageGlobalBounds.top + pageGlobalBounds.height * 1.0f / 21.0f));	
+	buttonList->at(ButtonTag::bookmarksList).set_position(Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.0f / 13.0f, pageGlobalBounds.top + pageGlobalBounds.height * 1.0f / 21.0f));	
+	buttonList->at(ButtonTag::sketching).set_position(Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.0f / 13.0f, pageGlobalBounds.top + pageGlobalBounds.height * 1.0f / 21.0f));	
 
-	blockGlobalBounds = buttonList->at(ButtonTag::yarrow).getGlobalBounds();
-	arrowToPageGlobalBounds = buttonList->at(ButtonTag::nextPage).getGlobalBounds();
+	blockGlobalBounds = buttonList->at(ButtonTag::yarrow).get_global_bounds();
+	arrowToPageGlobalBounds = buttonList->at(ButtonTag::nextPage).get_global_bounds();
 	leftPagePosition = Vector2f(pageGlobalBounds.left, pageGlobalBounds.top);
 	rightPagePosition = Vector2f(pageGlobalBounds.left + pageGlobalBounds.width / 2.0f, pageGlobalBounds.top);
 
@@ -102,15 +102,15 @@ void HeroBookPage::buttonListBounding(std::unordered_map<ButtonTag, Button>* but
 
 void HeroBookPage::putHeadingsToPositions(std::vector<ButtonTag> buttons)
 {
-	const auto upperLeftCorner = buttonList->at(ButtonTag::bookmarksList).getPosition();
-	const auto x = buttonList->at(ButtonTag::bookmarksList).getGlobalBounds().width;
-	const auto y = buttonList->at(ButtonTag::bookmarksList).getGlobalBounds().height;
+	const auto upperLeftCorner = buttonList->at(ButtonTag::bookmarksList).get_position();
+	const auto x = buttonList->at(ButtonTag::bookmarksList).get_global_bounds().width;
+	const auto y = buttonList->at(ButtonTag::bookmarksList).get_global_bounds().height;
 
 	for (auto i = 0u; i < buttons.size(); i++)
 	{
 		if (i >= headingPedestals.size())
 			return;
-		buttonList->at(buttons[i]).setPosition(Vector2f(headingPedestals[i].x * x + upperLeftCorner.x, headingPedestals[i].y * y + upperLeftCorner.y));
+		buttonList->at(buttons[i]).set_position(Vector2f(headingPedestals[i].x * x + upperLeftCorner.x, headingPedestals[i].y * y + upperLeftCorner.y));
 	}
 }
 
@@ -177,9 +177,9 @@ void HeroBookPage::initObjectInfo()
 
 Vector2f HeroBookPage::getConnectionPosition(int numberInOrder)
 {
-	const auto upperLeft = Vector2f(buttonList->at(ButtonTag::pagePattern).getGlobalBounds().left, buttonList->at(ButtonTag::pagePattern).getGlobalBounds().top);
-	const auto pageSize = Vector2f(buttonList->at(ButtonTag::pagePattern).getGlobalBounds().width, buttonList->at(ButtonTag::pagePattern).getGlobalBounds().height);
-	const auto frameOffset = buttonList->at(ButtonTag::iconFrame2).getGlobalBounds().height / 2;
+	const auto upperLeft = Vector2f(buttonList->at(ButtonTag::pagePattern).get_global_bounds().left, buttonList->at(ButtonTag::pagePattern).get_global_bounds().top);
+	const auto pageSize = Vector2f(buttonList->at(ButtonTag::pagePattern).get_global_bounds().width, buttonList->at(ButtonTag::pagePattern).get_global_bounds().height);
+	const auto frameOffset = buttonList->at(ButtonTag::iconFrame2).get_global_bounds().height / 2;
 	return { upperLeft.x + connectionPedestals[numberInOrder].x * pageSize.x - frameOffset, upperLeft.y + connectionPedestals[numberInOrder].y * pageSize.y - frameOffset };
 }
 
@@ -219,9 +219,9 @@ int HeroBookPage::buttonToPage(ButtonTag button)
 std::vector<TextChainElement*> HeroBookPage::prepareHeadingText()
 {
 	std::vector<TextChainElement*> result = {};
-	const auto upperLeftCorner = buttonList->at(ButtonTag::bookmarksList).getPosition();
-	const auto x = buttonList->at(ButtonTag::bookmarksList).getGlobalBounds().width;
-	const auto y = buttonList->at(ButtonTag::bookmarksList).getGlobalBounds().height;
+	const auto upperLeftCorner = buttonList->at(ButtonTag::bookmarksList).get_position();
+	const auto x = buttonList->at(ButtonTag::bookmarksList).get_global_bounds().width;
+	const auto y = buttonList->at(ButtonTag::bookmarksList).get_global_bounds().height;
 
 	const auto textColor = sf::Color(100, 68, 34, 180);
 
@@ -289,18 +289,18 @@ void HeroBookPage::setButtonLock(ButtonTag button, const ButtonTag changedButton
 
 	if (currentPage == 5)
 	{
-		buttonList->at(changedButton).stopBeingGray();
+		buttonList->at(changedButton).stop_being_gray();
 		return;
 	}
 
 	if (objectInfo.find(Tag(int(button))) != objectInfo.end())
 		if (objectInfo.at(Tag(int(button))).isUnlocked)
 		{
-			buttonList->at(changedButton).stopBeingGray();
+			buttonList->at(changedButton).stop_being_gray();
 			return;
 		}	
 
-	buttonList->at(changedButton).bekomeGray();
+	buttonList->at(changedButton).become_gray();
 }
 
 SpriteChainElement* HeroBookPage::prepareIconFrame(const ButtonTag button, const int type)
@@ -311,9 +311,9 @@ SpriteChainElement* HeroBookPage::prepareIconFrame(const ButtonTag button, const
 	else
 		currentIcon = ButtonTag::iconFrame2;
 
-	buttonList->at(currentIcon).setPosition(buttonList->at(button).getPosition());
+	buttonList->at(currentIcon).set_position(buttonList->at(button).get_position());
 	setButtonLock(button, currentIcon);
-	return buttonList->at(currentIcon).prepareSprite();
+	return buttonList->at(currentIcon).prepare_sprite();
 }
 
 std::vector<SpriteChainElement*> HeroBookPage::prepareAllIcons(const pageContent& content)
@@ -323,7 +323,7 @@ std::vector<SpriteChainElement*> HeroBookPage::prepareAllIcons(const pageContent
 	for (auto& item : content.buttons)
 	{
 		setButtonLock(item, item);
-		result.push_back(buttonList->at(item).prepareSprite());
+		result.push_back(buttonList->at(item).prepare_sprite());
 
 		if (int(item) >= 101 && int(item) <= 499) // items with description page
 		{
@@ -532,10 +532,10 @@ std::pair<int, int> HeroBookPage::getSelectedWreathCell()
 		{
 			if (wreathMatrix[cnt1][cnt2] == Tag::selectedCell)
 				wreathMatrix[cnt1][cnt2] = Tag::emptyCell;
-			const auto curPos = Vector2f(wreathMatrixPositions[cnt1][cnt2].x + buttonList->at(ButtonTag::cell).getGlobalBounds().width / 2.0f,
-			                             wreathMatrixPositions[cnt1][cnt2].y + buttonList->at(ButtonTag::cell).getGlobalBounds().height / 2.0f);
+			const auto curPos = Vector2f(wreathMatrixPositions[cnt1][cnt2].x + buttonList->at(ButtonTag::cell).get_global_bounds().width / 2.0f,
+			                             wreathMatrixPositions[cnt1][cnt2].y + buttonList->at(ButtonTag::cell).get_global_bounds().height / 2.0f);
 			if (Helper::getDist(Vector2f(mousePos), curPos) < minD &&
-				Helper::getDist(Vector2f(mousePos), curPos) <= buttonList->at(ButtonTag::cell).getGlobalBounds().width / 2)
+				Helper::getDist(Vector2f(mousePos), curPos) <= buttonList->at(ButtonTag::cell).get_global_bounds().width / 2)
 			{
 				minD = Helper::getDist(Vector2f(mousePos), curPos);
 				ans = std::make_pair(cnt1, cnt2);
@@ -549,11 +549,11 @@ std::pair<int, int> HeroBookPage::getSelectedPlantsCell()
 {
 	const auto mousePos = Vector2f(Mouse::getPosition());
 	const auto upperLeftCorner = Vector2f(
-		buttonList->at(ButtonTag::sketching).getGlobalBounds().left + buttonList->at(ButtonTag::sketching).getGlobalBounds().width * 0.066f,
-		buttonList->at(ButtonTag::sketching).getGlobalBounds().top + buttonList->at(ButtonTag::sketching).getGlobalBounds().height * 0.55f);
+		buttonList->at(ButtonTag::sketching).get_global_bounds().left + buttonList->at(ButtonTag::sketching).get_global_bounds().width * 0.066f,
+		buttonList->at(ButtonTag::sketching).get_global_bounds().top + buttonList->at(ButtonTag::sketching).get_global_bounds().height * 0.55f);
 
-	const auto size = Vector2f(buttonList->at(ButtonTag::chamomile).getGlobalBounds().width,
-	                           buttonList->at(ButtonTag::chamomile).getGlobalBounds().height);
+	const auto size = Vector2f(buttonList->at(ButtonTag::chamomile).get_global_bounds().width,
+	                           buttonList->at(ButtonTag::chamomile).get_global_bounds().height);
 
 	if (mousePos.x < upperLeftCorner.x || mousePos.y < upperLeftCorner.y ||
 		mousePos.x > upperLeftCorner.x + size.x * plantsMatrix[0].size() || mousePos.y > upperLeftCorner.y + size.y * plantsMatrix.size())
@@ -654,8 +654,8 @@ std::vector<DrawableChainElement*> HeroBookPage::prepareConnectableFlowers(Tag c
 
 	std::vector<DrawableChainElement*> result = {};
 
-	const auto upperLeftCorner = Vector2f(buttonList->at(ButtonTag::sketching).getGlobalBounds().left, buttonList->at(ButtonTag::sketching).getGlobalBounds().top);
-	const auto pageSize = Vector2f(buttonList->at(ButtonTag::sketching).getGlobalBounds().width, buttonList->at(ButtonTag::sketching).getGlobalBounds().height);
+	const auto upperLeftCorner = Vector2f(buttonList->at(ButtonTag::sketching).get_global_bounds().left, buttonList->at(ButtonTag::sketching).get_global_bounds().top);
+	const auto pageSize = Vector2f(buttonList->at(ButtonTag::sketching).get_global_bounds().width, buttonList->at(ButtonTag::sketching).get_global_bounds().height);
 	const auto headingPos = Vector2f(upperLeftCorner.x + 0.072f * pageSize.x, upperLeftCorner.y + 0.28f * pageSize.y);
 
 	result.push_back(new TextChainElement({ headingPos.x, headingPos.y }, { 0, 0 }, sf::Color(100, 68, 34, 180), "Connected with:"));
@@ -665,9 +665,9 @@ std::vector<DrawableChainElement*> HeroBookPage::prepareConnectableFlowers(Tag c
 	{
 		if (buttonList->find(ButtonTag(int(connection))) == buttonList->end())
 			continue;
-		buttonList->at(ButtonTag(int(connection))).setPosition(Vector2f(upperLeftCorner.x + flowerConnectionsPedestals[cnt].x * pageSize.x,
+		buttonList->at(ButtonTag(int(connection))).set_position(Vector2f(upperLeftCorner.x + flowerConnectionsPedestals[cnt].x * pageSize.x,
 			upperLeftCorner.y + flowerConnectionsPedestals[cnt].y * pageSize.y));
-		result.push_back(buttonList->at(ButtonTag(int(connection))).prepareSprite());
+		result.push_back(buttonList->at(ButtonTag(int(connection))).prepare_sprite());
 		cnt++;
 	}
 
@@ -718,9 +718,9 @@ pageContent HeroBookPage::getPreparedContent(int pageNumber, Tag currentDraft)
 		result.buttons.push_back(ButtonTag::sketching);
 		if (readyToFinishDraft)
 		{
-			const auto plusPos = Vector2f(wreathMatrixPositions[8][2].x - (buttonList->at(ButtonTag::plus).getGlobalBounds().width - buttonList->at(ButtonTag::cell).getGlobalBounds().width) / 2,
-			                              wreathMatrixPositions[8][2].y - (buttonList->at(ButtonTag::plus).getGlobalBounds().height - buttonList->at(ButtonTag::cell).getGlobalBounds().height) / 2);
-			buttonList->at(ButtonTag::plus).setPosition(plusPos);
+			const auto plusPos = Vector2f(wreathMatrixPositions[8][2].x - (buttonList->at(ButtonTag::plus).get_global_bounds().width - buttonList->at(ButtonTag::cell).get_global_bounds().width) / 2,
+			                              wreathMatrixPositions[8][2].y - (buttonList->at(ButtonTag::plus).get_global_bounds().height - buttonList->at(ButtonTag::cell).get_global_bounds().height) / 2);
+			buttonList->at(ButtonTag::plus).set_position(plusPos);
 			result.buttons.push_back(ButtonTag::plus);
 		}
 	}	
@@ -738,9 +738,9 @@ pageContent HeroBookPage::getPreparedContent(int pageNumber, Tag currentDraft)
 		for (auto& connection : objectInfo.at(pageToObjectId(currentPage)).connections)
 		{
 			result.buttons.push_back(ButtonTag(connection.id));
-			buttonList->at(ButtonTag(connection.id)).setPosition(getConnectionPosition(connection.pedestal));
+			buttonList->at(ButtonTag(connection.id)).set_position(getConnectionPosition(connection.pedestal));
 			
-			if (buttonList->at(ButtonTag(connection.id)).isSelected(Vector2f(Mouse::getPosition())))
+			if (buttonList->at(ButtonTag(connection.id)).is_selected(Vector2f(Mouse::getPosition())))
 				result.blockDescription = connection.description;
 		}
 		//--------------------------
@@ -755,7 +755,7 @@ pageContent HeroBookPage::getPreparedContent(int pageNumber, Tag currentDraft)
 
 	// turn on result buttons
 	for (auto& button : result.buttons)	
-		buttonList->at(button).isActive = true;	
+		buttonList->at(button).is_active = true;	
 	//-----------------------------
 	return  result;
 }

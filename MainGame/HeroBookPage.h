@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
 
-#include "Button.h"
+#include "button.h"
 #include "WreathDraft.h"
 #include "SpriteStructures.h"
 #include "TextSystem.h"

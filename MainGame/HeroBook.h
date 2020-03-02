@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 #include "HeroBookPage.h"
-#include "Button.h"
+#include "button.h"
 #include "HeroBag.h"
 #include "TextSystem.h"
 #include "WorldObject.h"
@@ -33,8 +33,8 @@ public:
 	
 	void boundHeldItem() { this->worldHeldItem = worldHeldItem; }
 	std::string debugInfo = "";
-	Vector2f getHpLinePosition() { return {	buttonList.at(ButtonTag::bookStandTag).getPosition().x + buttonList.at(ButtonTag::bookStandTag).getGlobalBounds().width - 40,
-		buttonList.at(ButtonTag::bookStandTag).getPosition().y + buttonList.at(ButtonTag::bookStandTag).getGlobalBounds().height / 2 - 20 }; }
+	Vector2f getHpLinePosition() { return {	buttonList.at(ButtonTag::bookStandTag).get_position().x + buttonList.at(ButtonTag::bookStandTag).get_global_bounds().width - 40,
+		buttonList.at(ButtonTag::bookStandTag).get_position().y + buttonList.at(ButtonTag::bookStandTag).get_global_bounds().height / 2 - 20 }; }
 private:
 	HeroBookPage somePage;
 	std::vector<SpriteChainElement*> prepareHpLine(float hpRatio);
