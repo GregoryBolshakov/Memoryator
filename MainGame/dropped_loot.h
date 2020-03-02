@@ -2,10 +2,10 @@
 
 #include "PickedObject.h"
 
-class DroppedLoot : public PickedObject
+class dropped_loot : public PickedObject
 {
 public:
-	DroppedLoot(std::string objectName, Vector2f centerPosition, int typeOfObject, int count = 1);
+	dropped_loot(std::string objectName, Vector2f centerPosition, int typeOfObject, int count = 1);
 	Vector2f calculateTextureOffset() override;
 	void initPedestal() override;
 	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;

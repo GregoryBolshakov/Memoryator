@@ -1,7 +1,7 @@
 #include "owl.h"
 
-#include "Fern.h"
-#include "ForestTree.h"
+#include "fern.h"
+#include "forest_tree.h"
 
 using namespace sf;
 
@@ -69,7 +69,7 @@ void owl::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 	else
 	if (target->tag == Tag::tree)
 	{
-		auto nearestTreeCasted = dynamic_cast<ForestTree*>(target);
+		auto nearestTreeCasted = dynamic_cast<forest_tree*>(target);
 		if (nearestTreeCasted && !(boundTarget && boundTarget->tag == Tag::fern))
 			if (boundTarget != nullptr && boundTarget->tag == Tag::hero && Helper::getDist(nearestTreeCasted->getOwlBase(), position) < Helper::getDist(nearestTreeCasted->getOwlBase(), boundTarget->getPosition()) &&
 				Helper::getDist(nearestTreeCasted->getOwlBase(), boundTarget->getPosition()) > Helper::getDist(position, boundTarget->getPosition()))
@@ -105,7 +105,7 @@ void owl::behavior(long long elapsedTime)
 
 	if (boundTarget == nullptr || boundTarget && boundTarget->tag == Tag::hero && Helper::getDist(position, boundTarget->getPosition()) > sightRange)
 	{
-		auto nearestTreeCasted = dynamic_cast<ForestTree*>(nearestTree);
+		auto nearestTreeCasted = dynamic_cast<forest_tree*>(nearestTree);
 		if (nearestTree && Helper::getDist(position, nearestTreeCasted->getOwlBase()) > radius)
 			{				
 				changeAction(move, false, true);
@@ -126,7 +126,7 @@ void owl::behavior(long long elapsedTime)
 		directionSystem.side = direction_system::calculateSide(position, boundTarget->getPosition(), elapsedTime);
 		if (Helper::getDist(position, boundTarget->getPosition()) <= radius)
 		{
-			const auto trap = dynamic_cast<Fern*>(boundTarget);
+			const auto trap = dynamic_cast<fern*>(boundTarget);
 			if (directionSystem.side == right)
 				mirrored = true;
 			else
@@ -183,7 +183,7 @@ void owl::endingPreviousAction()
 		currentAction = relax;
 	if (lastAction == absorbs)
 	{
-		auto trap = dynamic_cast<Fern*>(boundTarget);
+		auto trap = dynamic_cast<fern*>(boundTarget);
 		trap->inventory.emplace_back(Tag::owl, 1);
 		deletePromiseOn();
 	}

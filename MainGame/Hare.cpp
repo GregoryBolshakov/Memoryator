@@ -1,6 +1,6 @@
 #include "hare.h"
 
-#include "HareTrap.h"
+#include "hare_trap.h"
 
 using namespace sf;
 
@@ -111,7 +111,7 @@ void hare::behavior(long long elapsedTime)
 		directionSystem.side = direction_system::calculateSide(position, boundTarget->getPosition(), elapsedTime);
 		if (Helper::getDist(position, boundTarget->getPosition()) <= radius)
 		{
-			const auto trap = dynamic_cast<HareTrap*>(boundTarget);
+			const auto trap = dynamic_cast<hare_trap*>(boundTarget);
 			position = trap->getEnterPosition();
 			changeAction(absorbs, true, false);
 			laxMovePosition = { -1, -1 };
@@ -179,7 +179,7 @@ void hare::endingPreviousAction()
 		currentAction = relax;
 	if (lastAction == absorbs)
 	{
-		auto trap = dynamic_cast<HareTrap*>(boundTarget);
+		auto trap = dynamic_cast<hare_trap*>(boundTarget);
 		trap->inventory[0] = std::make_pair(Tag::hare, 1);
 		deletePromiseOn();
 	}

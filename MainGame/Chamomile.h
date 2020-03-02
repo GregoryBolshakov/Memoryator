@@ -2,10 +2,10 @@
 
 #include "PickedObject.h"
 
-class Chamomile : public PickedObject
+class chamomile : public PickedObject
 {
 public:
-	Chamomile(std::string objectName, Vector2f centerPosition, int typeOfObject);
+	chamomile(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;
 	void initPedestal() override;
 	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;

@@ -5,7 +5,7 @@
 #include "draw_system.h"
 #include "hero_book.h"
 #include "menu_system.h"
-#include "VisualEffects/AmbientLight.hpp"
+#include "VisualEffects/ambient_light.hpp"
 
 
 using namespace sf;
@@ -42,7 +42,7 @@ int main() {
 	auto visual_effect_texture = surface.getTexture();
 	auto visual_effect_sprite = Sprite(visual_effect_texture);
 
-	AmbientLight ambient_light(screenSize);
+	ambient_light ambient_light(screenSize);
 	ambient_light.load();
 	
 	while (mainWindow.isOpen())

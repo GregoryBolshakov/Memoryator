@@ -1,8 +1,8 @@
-#include "Lake.h"
+#include "lake.h"
 
 #include "Helper.h"
 
-Lake::Lake(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+lake::lake(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 4; // SwampyTrees: 1-4
 	this->typeOfObject = typeOfObject;
@@ -11,11 +11,11 @@ Lake::Lake(std::string objectName, const Vector2f centerPosition, const int type
 	animationSpeed = 10;
 	toSaveName = "lake";
 	isMultiEllipse = true;
-	Lake::setType(typeOfObject);
+	lake::setType(typeOfObject);
 	tag = Tag::lake;
 }
 
-void Lake::setType(const int typeOfObject)
+void lake::setType(const int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
@@ -28,7 +28,7 @@ void Lake::setType(const int typeOfObject)
 		conditionalSizeUnits = { 473, 388 };
 }
 
-Vector2f Lake::calculateTextureOffset()
+Vector2f lake::calculateTextureOffset()
 {
 	switch (typeOfObject)
 	{
@@ -45,7 +45,7 @@ Vector2f Lake::calculateTextureOffset()
 	}
 }
 
-void Lake::initPedestal()
+void lake::initPedestal()
 {
 	std::pair<Vector2f, Vector2f> microEllipse;
 	switch (typeOfObject)
@@ -138,17 +138,17 @@ void Lake::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f Lake::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f lake::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Lake::getBuildType(Vector2f, Vector2f)
+int lake::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> Lake::prepareSprites(long long)
+std::vector<sprite_chain_element*> lake::prepareSprites(long long)
 {
 	std::vector<sprite_chain_element*> result = {};
 	const auto body = new sprite_chain_element(PackTag::swampyTrees, PackPart::lake, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));

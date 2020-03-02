@@ -43,7 +43,7 @@ StaticObject* object_initializer::initializeStaticItem(
 	{
 		case Tag::tree:
 		{
-			item = new ForestTree("item", Vector2f(0, 0), -1);
+			item = new forest_tree("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::grass:
@@ -53,7 +53,7 @@ StaticObject* object_initializer::initializeStaticItem(
 		}
 		case Tag::spawn:
 		{
-			item = new Spawn("item", Vector2f(0, 0), -1);
+			item = new spawn("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::ground:
@@ -68,62 +68,62 @@ StaticObject* object_initializer::initializeStaticItem(
 		}
 		case Tag::chamomile:
 		{
-			item = new Chamomile("item", Vector2f(0, 0), -1);
+			item = new chamomile("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::brazier:
 		{
-			item = new Brazier("item", Vector2f(0, 0), -1);
+			item = new brazier("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::wreathTable:
 		{
-			item = new WreathTable("item", Vector2f(0, 0), -1);
+			item = new wreath_table("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::yarrow:
 		{
-			item = new Yarrow("item", Vector2f(0, 0), -1);
+			item = new yarrow("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::fern:
 		{
-			item = new Fern("item", Vector2f(0, 0), -1);
+			item = new fern("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::hareTrap:
 		{
-			item = new HareTrap("item", Vector2f(0, 0), -1);
+			item = new hare_trap("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::rock:
 		{
-			item = new Rock("item", Vector2f(0, 0), -1);
+			item = new rock("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::fence:
 		{
-			item = new Fence("item", Vector2f(0, 0), -1);
+			item = new fence("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::stump:
 		{
-			item = new Stump("item", Vector2f(0, 0), -1);
+			item = new stump("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::droppedLoot:
 		{
-			item = new DroppedLoot("item", Vector2f(0, 0), -1, count);
+			item = new dropped_loot("item", Vector2f(0, 0), -1, count);
 			break;
 		}
 		case Tag::mugwort:
 		{
-			item = new Mugwort("item", Vector2f(0, 0), -1);
+			item = new mugwort("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::totem:
 		{
-			item = new Totem("item", Vector2f(0, 0), -1);
+			item = new totem("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::mushroom:
@@ -133,32 +133,32 @@ StaticObject* object_initializer::initializeStaticItem(
 		}
 		case Tag::log:
 		{
-			item = new Log("item", Vector2f(0, 0), -1);
+			item = new mr::log("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::bush:
 		{
-			item = new Bush("item", Vector2f(0, 0), -1);
+			item = new bush("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::lake:
 		{
-			item = new Lake("item", Vector2f(0, 0), -1);
+			item = new lake("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::root:
 		{
-			item = new Root("item", Vector2f(0, 0), -1);
+			item = new root("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::roof:
 		{
-			item = new Roof("item", Vector2f(0, 0), -1);
+			item = new roof("item", Vector2f(0, 0), -1);
 			break;
 		}
 		default:
 		{
-			item = new Spawn("item", Vector2f(0, 0), -1);
+			item = new spawn("item", Vector2f(0, 0), -1);
 			break;
 		}
 	}

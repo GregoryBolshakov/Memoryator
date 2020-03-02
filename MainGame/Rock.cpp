@@ -1,8 +1,8 @@
-#include "Rock.h"
+#include "rock.h"
 
 #include "Helper.h"
 
-Rock::Rock(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+rock::rock(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 18; // BirchGrove: 1-8; DarkWoods: 9-13; SwampyTrees: 14-18
 	this->typeOfObject = typeOfObject;
@@ -10,11 +10,11 @@ Rock::Rock(std::string objectName, const Vector2f centerPosition, const int type
 	radius = 50;
 	animationSpeed = 10;
 	toSaveName = "rock";
-	Rock::setType(typeOfObject);
+	rock::setType(typeOfObject);
 	tag = Tag::rock;
 }
 
-void Rock::setType(const int typeOfObject)
+void rock::setType(const int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
@@ -57,7 +57,7 @@ void Rock::setType(const int typeOfObject)
 	radius = std::max(conditionalSizeUnits.x, conditionalSizeUnits.y) / 2;
 }
 
-Vector2f Rock::calculateTextureOffset()
+Vector2f rock::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
@@ -105,7 +105,7 @@ Vector2f Rock::calculateTextureOffset()
 	}
 }
 
-void Rock::initPedestal()
+void rock::initPedestal()
 {
 	switch (typeOfObject)
 	{
@@ -208,17 +208,17 @@ void Rock::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f Rock::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f rock::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int Rock::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int rock::getBuildType(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> Rock::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> rock::prepareSprites(long long elapsedTime)
 {
 	auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::rock, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 

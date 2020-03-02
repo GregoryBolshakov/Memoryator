@@ -1,8 +1,8 @@
-#include "Stump.h"
+#include "stump.h"
 
 #include "Helper.h"
 
-Stump::Stump(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+stump::stump(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 13; // BirchGrove: 1-4; DarkWoods: 5-10; SwampyTrees: 11-13
 	this->typeOfObject = typeOfObject;
@@ -10,11 +10,11 @@ Stump::Stump(std::string objectName, const Vector2f centerPosition, const int ty
 	radius = 50;
 	animationSpeed = 10;
 	toSaveName = "stump";
-	Stump::setType(typeOfObject);
+	stump::setType(typeOfObject);
 	tag = Tag::stump;
 }
 
-void Stump::setType(const int typeOfObject)
+void stump::setType(const int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
@@ -45,7 +45,7 @@ void Stump::setType(const int typeOfObject)
 		conditionalSizeUnits = { 267, 434 };
 }
 
-Vector2f Stump::calculateTextureOffset()
+Vector2f stump::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
@@ -83,7 +83,7 @@ Vector2f Stump::calculateTextureOffset()
 	}	
 }
 
-void Stump::initPedestal()
+void stump::initPedestal()
 {
 	switch (typeOfObject)
 	{
@@ -161,17 +161,17 @@ void Stump::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f Stump::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f stump::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Stump::getBuildType(Vector2f, Vector2f)
+int stump::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> Stump::prepareSprites(long long)
+std::vector<sprite_chain_element*> stump::prepareSprites(long long)
 {
 	auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::stump, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 

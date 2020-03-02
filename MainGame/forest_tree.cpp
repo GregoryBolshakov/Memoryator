@@ -1,8 +1,8 @@
-#include "ForestTree.h"
+#include "forest_tree.h"
 
 #include "Helper.h"
 
-ForestTree::ForestTree(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+forest_tree::forest_tree(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 18; // BirchGrove: 1-7; DarkWoods: 8-13; SwampyTrees: 14-18
 	this->typeOfObject = typeOfObject;
@@ -10,11 +10,11 @@ ForestTree::ForestTree(std::string objectName, const Vector2f centerPosition, co
 	radius = 50;
 	animationSpeed = 10;
 	toSaveName = "ForestTree";
-	ForestTree::setType(typeOfObject);
+	forest_tree::setType(typeOfObject);
 	tag = Tag::tree;
 }
 
-void ForestTree::setType(const int typeOfObject)
+void forest_tree::setType(const int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
@@ -58,7 +58,7 @@ void ForestTree::setType(const int typeOfObject)
 	//conditionalSizeUnits.x *= extension; conditionalSizeUnits.y *= extension;
 }
 
-Vector2f ForestTree::calculateTextureOffset()
+Vector2f forest_tree::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
@@ -105,7 +105,7 @@ Vector2f ForestTree::calculateTextureOffset()
 	}
 }
 
-void ForestTree::initPedestal()
+void forest_tree::initPedestal()
 {
 	std::pair<Vector2f, Vector2f> microEllipse;
 	switch (typeOfObject)
@@ -226,22 +226,22 @@ void ForestTree::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f ForestTree::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f forest_tree::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-Vector2f ForestTree::getOwlBase() const
+Vector2f forest_tree::getOwlBase() const
 {
 	return { position.x, position.y - conditionalSizeUnits.y / 2 };
 }
 
-int ForestTree::getBuildType(Vector2f, Vector2f)
+int forest_tree::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> ForestTree::prepareSprites(const long long elapsedTime)
+std::vector<sprite_chain_element*> forest_tree::prepareSprites(const long long elapsedTime)
 {
 	auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::tree, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 

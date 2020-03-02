@@ -1,19 +1,19 @@
-#include "Fence.h"
+#include "fence.h"
 
 #include "Helper.h"
 
-Fence::Fence(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+fence::fence(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 3;
 	this->typeOfObject = typeOfObject;
 	radius = 120;
 	toSaveName = "fence";
-	Fence::setType(typeOfObject);
+	fence::setType(typeOfObject);
 	isDotsAdjusted = true;
 	tag = Tag::fence;
 }
 
-void Fence::setType(const int typeOfObject)
+void fence::setType(const int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	switch (typeOfObject)
@@ -38,7 +38,7 @@ void Fence::setType(const int typeOfObject)
 	}
 }
 
-Vector2f Fence::calculateTextureOffset()
+Vector2f fence::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
@@ -55,7 +55,7 @@ Vector2f Fence::calculateTextureOffset()
 	}
 }
 
-void Fence::initPedestal()
+void fence::initPedestal()
 {
 	switch (typeOfObject)
 	{
@@ -89,7 +89,7 @@ void Fence::initPedestal()
 	//radius = sqrt(pow(dot1.x - dot2.x, 2) + pow(dot1.y + dot2.y, 2)) / 2 - 10;
 }
 
-Vector2f Fence::getBuildPosition(std::vector<WorldObject*> visibleItems, const float scaleFactor, const Vector2f cameraPosition)
+Vector2f fence::getBuildPosition(std::vector<WorldObject*> visibleItems, const float scaleFactor, const Vector2f cameraPosition)
 {
 	const auto mousePos = Vector2f (Mouse::getPosition());
 	const auto mouseWorldPos = Vector2f ((mousePos.x - Helper::GetScreenSize().x / 2 + cameraPosition.x * scaleFactor) / scaleFactor,
@@ -102,7 +102,7 @@ Vector2f Fence::getBuildPosition(std::vector<WorldObject*> visibleItems, const f
 	{
 		if (item->tag == Tag::fence)
 		{
-			const auto object = dynamic_cast<Fence*>(item);
+			const auto object = dynamic_cast<fence*>(item);
 
 			auto const dist1 = sqrt(pow(dot1.x - object->getDot2().x, 2) + pow(dot1.y - object->getDot2().y, 2));
 			auto const dist2 = sqrt(pow(dot2.x - object->getDot1().x, 2) + pow(dot2.y - object->getDot1().y, 2));
@@ -143,7 +143,7 @@ Vector2f Fence::getBuildPosition(std::vector<WorldObject*> visibleItems, const f
 	return { -1, -1 };
 }
 
-int Fence::getBuildType(const Vector2f ounPos, const Vector2f otherPos)
+int fence::getBuildType(const Vector2f ounPos, const Vector2f otherPos)
 {
 	if (otherPos != Vector2f (-1, -1))
 	{
@@ -161,7 +161,7 @@ int Fence::getBuildType(const Vector2f ounPos, const Vector2f otherPos)
 	return 1;
 }
 
-std::vector<sprite_chain_element*> Fence::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> fence::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*additionalSprites.clear();

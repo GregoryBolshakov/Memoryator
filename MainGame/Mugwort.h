@@ -2,12 +2,12 @@
 
 #include "PickedObject.h"
 
-class Mugwort : public PickedObject
+class mugwort : public PickedObject
 {
 protected:
 
 public:
-	Mugwort(std::string objectName, Vector2f centerPosition, int typeOfObject);
+	mugwort(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;
 	void initPedestal() override;
 	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;

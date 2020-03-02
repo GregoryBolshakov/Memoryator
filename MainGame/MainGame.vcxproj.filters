@@ -4,66 +4,12 @@
     <ClCompile Include="EventHandler.cpp" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Chamomile.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="ForestTree.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Spawn.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Brazier.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Yarrow.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="HareTrap.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
     <ClCompile Include="GridList.cpp" />
-    <ClCompile Include="Stump.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Rock.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Fence.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Mugwort.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="DroppedLoot.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Fern.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Totem.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="WreathTable.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
     <ClCompile Include="WorldHandler.cpp">
       <Filter>World</Filter>
     </ClCompile>
     <ClCompile Include="WorldGenerator.cpp">
       <Filter>World</Filter>
-    </ClCompile>
-    <ClCompile Include="Log.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Bush.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Roof.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Root.cpp">
-      <Filter>Terrain</Filter>
     </ClCompile>
     <ClCompile Include="DynamicObject.cpp">
       <Filter>World</Filter>
@@ -83,13 +29,7 @@
     <ClCompile Include="WorldObject.cpp">
       <Filter>World</Filter>
     </ClCompile>
-    <ClCompile Include="Lake.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
     <ClCompile Include="LightSystem.cpp" />
-    <ClCompile Include="VisualEffects\AmbientLight.cpp">
-      <Filter>VisualEffects</Filter>
-    </ClCompile>
     <ClCompile Include="button.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -213,72 +153,78 @@
     <ClCompile Include="time_system.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="brazier.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="bush.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="chamomile.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="dropped_loot.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="fence.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="fern.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="forest_tree.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="hare_trap.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="lake.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="log.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="mugwort.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="rock.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="roof.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="root.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="spawn.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="stump.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="totem.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="wreath_table.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="yarrow.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="VisualEffects\ambient_light.cpp">
+      <Filter>VisualEffects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EventHandler.h" />
     <ClInclude Include="Helper.h" />
     <ClInclude Include="Structs.h" />
-    <ClInclude Include="Chamomile.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="ForestTree.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Spawn.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Brazier.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Yarrow.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="HareTrap.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
     <ClInclude Include="GridList.h" />
-    <ClInclude Include="Stump.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Rock.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Fence.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Mugwort.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="DroppedLoot.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
     <ClInclude Include="SpriteStructures.h" />
-    <ClInclude Include="Fern.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Totem.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="WreathTable.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
     <ClInclude Include="WorldHandler.h">
       <Filter>World</Filter>
     </ClInclude>
     <ClInclude Include="WorldGenerator.h">
       <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="Log.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Bush.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Roof.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Root.h">
-      <Filter>Terrain</Filter>
     </ClInclude>
     <ClInclude Include="DynamicObject.h">
       <Filter>World</Filter>
@@ -301,16 +247,7 @@
     <ClInclude Include="Tags.h">
       <Filter>World</Filter>
     </ClInclude>
-    <ClInclude Include="Lake.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
     <ClInclude Include="LightSystem.h" />
-    <ClInclude Include="VisualEffects\AmbientLight.hpp">
-      <Filter>VisualEffects</Filter>
-    </ClInclude>
-    <ClInclude Include="VisualEffects\VisualEffect.hpp">
-      <Filter>VisualEffects</Filter>
-    </ClInclude>
     <ClInclude Include="button.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -433,6 +370,69 @@
     </ClInclude>
     <ClInclude Include="time_system.h">
       <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="brazier.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="bush.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="chamomile.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="dropped_loot.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="fence.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="fern.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="forest_tree.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="hare_trap.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="lake.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="log.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="mugwort.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="rock.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="roof.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="root.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="spawn.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="stump.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="totem.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="wreath_table.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="yarrow.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="VisualEffects\ambient_light.hpp">
+      <Filter>VisualEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="VisualEffects\visual_effect.hpp">
+      <Filter>VisualEffects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

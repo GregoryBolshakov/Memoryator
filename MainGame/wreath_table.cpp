@@ -1,36 +1,36 @@
-#include "WreathTable.h"
+#include "wreath_table.h"
 
 #include <fstream>
 
 #include "object_initializer.h"
 
-WreathTable::WreathTable(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+wreath_table::wreath_table(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 1;
 	this->typeOfObject = typeOfObject;
 	radius = 200;
 	plateRadius = 100;
 	toSaveName = "wreathTable";
-	WreathTable::setType(typeOfObject);
+	wreath_table::setType(typeOfObject);
 	mirrored = false;
 	initCraftRecipes();
 	tag = Tag::wreathTable;
 }
 
-void WreathTable::setType(int typeOfObject)
+void wreath_table::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	this->conditionalSizeUnits = { 588, 523 };
 }
 
-Vector2f WreathTable::calculateTextureOffset()
+Vector2f wreath_table::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
 	return { textureBox.width / 2.0f, textureBox.height / 1.3f };
 }
 
-void WreathTable::initPedestal()
+void wreath_table::initPedestal()
 {
 	focus1 = Vector2f(position.x - textureBox.width / 4, position.y);
 	focus2 = Vector2f(position.x + textureBox.width / 4, position.y);
@@ -38,7 +38,7 @@ void WreathTable::initPedestal()
 	initMicroBlocks();
 }
 
-void WreathTable::initCraftRecipes()
+void wreath_table::initCraftRecipes()
 {
 	std::ifstream fin(craftRecipesPath);
 
@@ -59,7 +59,7 @@ void WreathTable::initCraftRecipes()
 	fin.close();
 }
 
-void WreathTable::resultAnalysis() const
+void wreath_table::resultAnalysis() const
 {
 	if (craftResult == Tag::emptyCell)
 		return;
@@ -70,7 +70,7 @@ void WreathTable::resultAnalysis() const
 	}
 }
 
-Tag WreathTable::checkCraftResult()
+Tag wreath_table::checkCraftResult()
 {
 	for (auto& recipes : craftRecipes)
 		for (auto& recipe : recipes.second)
@@ -92,7 +92,7 @@ Tag WreathTable::checkCraftResult()
 	return Tag::emptyCell;
 }
 
-void WreathTable::putItemToCraft(Tag id)
+void wreath_table::putItemToCraft(Tag id)
 {
 	if (currentCraft.count(id) > 0)
 		currentCraft.at(id)++;
@@ -102,17 +102,17 @@ void WreathTable::putItemToCraft(Tag id)
 	craftResult = checkCraftResult();
 }
 
-Vector2f WreathTable::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f wreath_table::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int WreathTable::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int wreath_table::getBuildType(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> WreathTable::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> wreath_table::prepareSprites(long long elapsedTime)
 {
 	const auto body = new sprite_chain_element(PackTag::locations, PackPart::wreathTable, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 

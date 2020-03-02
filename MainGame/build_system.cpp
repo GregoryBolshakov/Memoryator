@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-#include "DroppedLoot.h"
+#include "dropped_loot.h"
 #include "object_initializer.h"
 
 build_system::build_system()
@@ -67,7 +67,7 @@ std::vector <sprite_chain_element*> build_system::prepareSprites(GridList& stati
 				if (staticGrid.getIndexByPoint(item->getPosition().x, item->getPosition().y) != staticGrid.getIndexByPoint(mouseWorldPos.x, mouseWorldPos.y))
 					continue;
 				bool match = false;
-				auto droppedLoot = dynamic_cast<DroppedLoot*>(item);
+				auto droppedLoot = dynamic_cast<dropped_loot*>(item);
 				if (droppedLoot && droppedLoot->getType() == 201)
 				{
 					for (auto& cell : droppedLoot->inventory)
@@ -193,7 +193,7 @@ void build_system::clearHareBags(int block, GridList& staticGrid, std::vector<Wo
 		if (staticGrid.getIndexByPoint(item->getPosition().x, item->getPosition().y) != staticGrid.getIndexByPoint(mouseWorldPos.x, mouseWorldPos.y))
 			continue;
 		bool match = false;
-		auto droppedLoot = dynamic_cast<DroppedLoot*>(item);
+		auto droppedLoot = dynamic_cast<dropped_loot*>(item);
 		if (droppedLoot && droppedLoot->getType() == 201)
 		{
 			for (auto& cell : droppedLoot->inventory)

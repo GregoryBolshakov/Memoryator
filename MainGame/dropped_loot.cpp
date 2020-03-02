@@ -1,19 +1,19 @@
-#include "DroppedLoot.h"
+#include "dropped_loot.h"
 
 #include "Helper.h"
 
-DroppedLoot::DroppedLoot(std::string objectName, Vector2f centerPosition, int typeOfObject, int count) : PickedObject(std::move(objectName), centerPosition)
+dropped_loot::dropped_loot(std::string objectName, Vector2f centerPosition, int typeOfObject, int count) : PickedObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 5;
 	this->typeOfObject = typeOfObject;
 	toSaveName = "drop";
-	DroppedLoot::setType(typeOfObject);
+	dropped_loot::setType(typeOfObject);
 	radius = sprite_pack::iconSize.x / 2;
 	tag = Tag::droppedLoot;
 	this->count = count;
 }
 
-void DroppedLoot::setType(int typeOfObject)
+void dropped_loot::setType(int typeOfObject)
 {
 	if (typeOfObject == -1)
 		return;
@@ -23,31 +23,31 @@ void DroppedLoot::setType(int typeOfObject)
 	conditionalSizeUnits = sprite_pack::iconSize;
 }
 
-Vector2f DroppedLoot::calculateTextureOffset()
+Vector2f dropped_loot::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
 	return { textureBox.width / 2.0f, textureBox.height / 2.0f };
 }
 
-void DroppedLoot::initPedestal()
+void dropped_loot::initPedestal()
 {
 	focus1 = position;
 	focus2 = position;
 	ellipseSizeMultipliers[0] = { 0 };
 }
 
-Vector2f DroppedLoot::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f dropped_loot::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int DroppedLoot::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int dropped_loot::getBuildType(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> DroppedLoot::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> dropped_loot::prepareSprites(long long elapsedTime)
 {
 	sprite_chain_element* body = new sprite_chain_element(PackTag::empty, PackPart::full, Direction::DOWN, this->isSelected, position, conditionalSizeUnits, textureBoxOffset);	
 

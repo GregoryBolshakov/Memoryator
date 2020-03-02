@@ -2,11 +2,11 @@
 
 #include "TerrainObject.h"
 
-class Lake : public TerrainObject
+class lake : public TerrainObject
 {
 protected:
 public:
-	Lake(std::string objectName, Vector2f centerPosition, int typeOfObject);
+	lake(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;
 	void initPedestal() override;
 	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;

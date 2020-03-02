@@ -1,20 +1,20 @@
-#include "Chamomile.h"
+#include "chamomile.h"
 
 #include "Helper.h"
 
-Chamomile::Chamomile(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : PickedObject(std::move(objectName), centerPosition)
+chamomile::chamomile(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : PickedObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 5;
 	this->typeOfObject = typeOfObject;
 	toSaveName = "chamomile";
-	Chamomile::setType(typeOfObject);
+	chamomile::setType(typeOfObject);
 	tag = Tag::chamomile;
 
 	count = 1;
 	id = Tag::chamomile;	
 }
 
-void Chamomile::setType(int typeOfObject)
+void chamomile::setType(int typeOfObject)
 {
 	if (typeOfObject == -1)
 		return;
@@ -32,14 +32,14 @@ void Chamomile::setType(int typeOfObject)
 		conditionalSizeUnits = { 203, 206 };
 }
 
-Vector2f Chamomile::calculateTextureOffset()
+Vector2f chamomile::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
 	return { textureBox.width / 2.0f, textureBox.height / 1.2f };
 }
 
-void Chamomile::initPedestal()
+void chamomile::initPedestal()
 {
 	focus1 = position;
 	focus2 = position;
@@ -47,17 +47,17 @@ void Chamomile::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f Chamomile::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f chamomile::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int Chamomile::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int chamomile::getBuildType(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> Chamomile::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> chamomile::prepareSprites(long long elapsedTime)
 {
     return {};
     /*additionalSprites.clear();

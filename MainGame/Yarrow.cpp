@@ -1,13 +1,13 @@
-#include "Yarrow.h"
+#include "yarrow.h"
 
 #include "Helper.h"
 
-Yarrow::Yarrow(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : PickedObject(std::move(objectName), centerPosition)
+yarrow::yarrow(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : PickedObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 5;
 	this->typeOfObject = typeOfObject;
 	toSaveName = "yarrow";
-	Yarrow::setType(typeOfObject);
+	yarrow::setType(typeOfObject);
 	radius = 50;
 	tag = Tag::yarrow;
 
@@ -15,7 +15,7 @@ Yarrow::Yarrow(std::string objectName, const Vector2f centerPosition, const int 
 	id = Tag::yarrow;
 }
 
-void Yarrow::setType(int typeOfObject)
+void yarrow::setType(int typeOfObject)
 {
 	if (typeOfObject == -1)
 		return;
@@ -33,14 +33,14 @@ void Yarrow::setType(int typeOfObject)
 		conditionalSizeUnits = { 212, 531 };
 }
 
-Vector2f Yarrow::calculateTextureOffset()
+Vector2f yarrow::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
 	return { textureBox.width / 2.0f, textureBox.height / 1.2f };
 }
 
-void Yarrow::initPedestal()
+void yarrow::initPedestal()
 {
 	focus1 = position;
 	focus2 = position;
@@ -48,17 +48,17 @@ void Yarrow::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f Yarrow::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f yarrow::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int Yarrow::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int yarrow::getBuildType(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> Yarrow::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> yarrow::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*additionalSprites.clear();

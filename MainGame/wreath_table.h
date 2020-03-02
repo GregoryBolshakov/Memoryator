@@ -3,10 +3,10 @@
 #include "TerrainObject.h"
 #include "build_system.h"
 
-class WreathTable : public TerrainObject
+class wreath_table : public TerrainObject
 {
 public:
-	WreathTable(std::string objectName, Vector2f centerPosition, int typeOfObject);
+	wreath_table(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;
 	void initPedestal() override;
 	void initCraftRecipes();

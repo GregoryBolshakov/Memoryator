@@ -1,11 +1,11 @@
 #pragma once
 
-#include "VisualEffect.hpp"
+#include "visual_effect.hpp"
 
-class AmbientLight final : public VisualEffect
+class ambient_light final : public visual_effect
 {
 public:
-	explicit AmbientLight(sf::Vector2f render_target_size);
+	explicit ambient_light(sf::Vector2f render_target_size);
 
 private:
 	const float light_radius_ = 0.5f; // render target percent

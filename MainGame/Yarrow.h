@@ -2,12 +2,12 @@
 
 #include "PickedObject.h"
 
-class Yarrow : public PickedObject
+class yarrow : public PickedObject
 {
 protected:
 
 public:
-	Yarrow(std::string objectName, Vector2f centerPosition, int typeOfObject);
+	yarrow(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;
 	void initPedestal() override;
 	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;

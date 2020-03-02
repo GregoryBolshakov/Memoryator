@@ -3,10 +3,10 @@
 #include "TerrainObject.h"
 #include "build_system.h"
 
-class Brazier : public TerrainObject
+class brazier : public TerrainObject
 {
 public:
-	Brazier(std::string objectName, Vector2f centerPosition, int typeOfObject);
+	brazier(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;
 	void initPedestal() override;
 	void initCraftRecipes();

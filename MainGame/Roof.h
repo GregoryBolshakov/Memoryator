@@ -2,10 +2,10 @@
 
 #include "TerrainObject.h"
 
-class Roof : public TerrainObject
+class roof : public TerrainObject
 {
 public:
-	Roof(std::string objectName, Vector2f centerPosition, int typeOfObject);
+	roof(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;
 	void initPedestal() override;
 	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;

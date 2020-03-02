@@ -1,8 +1,8 @@
-#include "Roof.h"
+#include "roof.h"
 
 #include "Helper.h"
 
-Roof::Roof(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+roof::roof(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 4;
 	this->typeOfObject = typeOfObject;
@@ -10,11 +10,11 @@ Roof::Roof(std::string objectName, const Vector2f centerPosition, const int type
 	radius = 50;
 	animationSpeed = 10;
 	toSaveName = "roof";
-	Roof::setType(typeOfObject);
+	roof::setType(typeOfObject);
 	tag = Tag::roof;
 }
 
-void Roof::setType(const int typeOfObject)
+void roof::setType(const int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
@@ -27,7 +27,7 @@ void Roof::setType(const int typeOfObject)
 		conditionalSizeUnits = {239, 474};
 }
 
-Vector2f Roof::calculateTextureOffset()
+Vector2f roof::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
@@ -47,7 +47,7 @@ Vector2f Roof::calculateTextureOffset()
 	}
 }
 
-void Roof::initPedestal()
+void roof::initPedestal()
 {
 	switch (typeOfObject)
 	{
@@ -80,17 +80,17 @@ void Roof::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f Roof::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f roof::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Roof::getBuildType(Vector2f, Vector2f)
+int roof::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> Roof::prepareSprites(long long)
+std::vector<sprite_chain_element*> roof::prepareSprites(long long)
 {
 	const auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::roof, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 

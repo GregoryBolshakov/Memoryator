@@ -1,37 +1,37 @@
-#include "Brazier.h"
+#include "brazier.h"
 
 #include <fstream>
 
 #include "Helper.h"
 
-Brazier::Brazier(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+brazier::brazier(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 1;
 	this->typeOfObject = typeOfObject;
 	radius = 450.0f;
 	plateRadius = 100.0f;
 	toSaveName = "brazier";
-	Brazier::setType(typeOfObject);
+	brazier::setType(typeOfObject);
 	isMultiEllipse = true;
 	mirrored = false;
 	initCraftRecipes();
 	tag = Tag::brazier;
 }
 
-void Brazier::setType(int typeOfObject)
+void brazier::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	this->conditionalSizeUnits = {900, 900};
 }
 
-Vector2f Brazier::calculateTextureOffset()
+Vector2f brazier::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
 	return { textureBox.width * 0.5f, textureBox.height * 0.762f };
 }
 
-void Brazier::initPedestal()
+void brazier::initPedestal()
 {
 	if (typeOfObject == 1)
 	{
@@ -70,7 +70,7 @@ void Brazier::initPedestal()
 	initMicroBlocks();
 }
 
-void Brazier::initCraftRecipes()
+void brazier::initCraftRecipes()
 {
 	std::ifstream fin(craftRecipesPath);
 
@@ -91,7 +91,7 @@ void Brazier::initCraftRecipes()
 	fin.close();
 }
 
-void Brazier::resultAnalysis() const
+void brazier::resultAnalysis() const
 {
 	if (craftResult == Tag::emptyCell)
 		return;
@@ -102,7 +102,7 @@ void Brazier::resultAnalysis() const
 	}
 }
 
-Tag Brazier::checkCraftResult()
+Tag brazier::checkCraftResult()
 {
 	for (auto& recipes : craftRecipes)
 		for (auto& recipe : recipes.second)
@@ -125,7 +125,7 @@ Tag Brazier::checkCraftResult()
 	return Tag::emptyCell;
 }
 
-void Brazier::putItemToCraft(const Tag id)
+void brazier::putItemToCraft(const Tag id)
 {
 	if (currentCraft.count(id) > 0)
 		currentCraft.at(id)++;
@@ -135,17 +135,17 @@ void Brazier::putItemToCraft(const Tag id)
 	craftResult = checkCraftResult();
 }
 
-Vector2f Brazier::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f brazier::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Brazier::getBuildType(Vector2f, Vector2f)
+int brazier::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> Brazier::prepareSprites(long long)
+std::vector<sprite_chain_element*> brazier::prepareSprites(long long)
 {
     const Vector2f frontOffset(textureBox.width * 0.506f, textureBox.height * 0.949f);
 	const Vector2f frontPosition(position.x - textureBoxOffset.x + frontOffset.x, position.y - textureBoxOffset.y + frontOffset.y);

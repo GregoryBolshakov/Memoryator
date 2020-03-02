@@ -1,8 +1,8 @@
-#include "Bush.h"
+#include "bush.h"
 
 #include "Helper.h"
 
-Bush::Bush(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+bush::bush(std::string objectName, Vector2f centerPosition, int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 15; // BrichGrove: 1-8; SwampyTrees: 9-15
 	this->typeOfObject = typeOfObject;
@@ -10,11 +10,11 @@ Bush::Bush(std::string objectName, Vector2f centerPosition, int typeOfObject) : 
 	radius = 50;
 	animationSpeed = 10;
 	toSaveName = "bush";
-	Bush::setType(typeOfObject);
+	bush::setType(typeOfObject);
 	tag = Tag::bush;
 }
 
-void Bush::setType(int typeOfObject)
+void bush::setType(int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
@@ -49,7 +49,7 @@ void Bush::setType(int typeOfObject)
 		conditionalSizeUnits = { 189, 188 };
 }
 
-Vector2f Bush::calculateTextureOffset()
+Vector2f bush::calculateTextureOffset()
 {
 	switch (typeOfObject)
 	{
@@ -88,7 +88,7 @@ Vector2f Bush::calculateTextureOffset()
 	}
 }
 
-void Bush::initPedestal()
+void bush::initPedestal()
 {
 	switch (typeOfObject)
 	{
@@ -168,17 +168,17 @@ void Bush::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f Bush::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f bush::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Bush::getBuildType(Vector2f, Vector2f)
+int bush::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> Bush::prepareSprites(long long)
+std::vector<sprite_chain_element*> bush::prepareSprites(long long)
 {
 	auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::bush, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 

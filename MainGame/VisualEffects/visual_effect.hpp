@@ -5,7 +5,7 @@
 using namespace sf;
 
 
-class VisualEffect: public RenderStates, public NonCopyable
+class visual_effect: public RenderStates, public NonCopyable
 {
 public:
 	void load();
@@ -14,8 +14,8 @@ public:
 	Shader* shader;
 
 protected:
-	~VisualEffect();
-	explicit VisualEffect(std::string name);
+	~visual_effect();
+	explicit visual_effect(std::string name);
 	Shader shader_;
 
 private:
@@ -26,21 +26,21 @@ private:
 	bool is_loaded_;
 };
 
-inline VisualEffect::~VisualEffect() = default;
+inline visual_effect::~visual_effect() = default;
 
-inline VisualEffect::VisualEffect(std::string name) :
+inline visual_effect::visual_effect(std::string name) :
 	name_(std::move(name)),
 	is_loaded_(false)
 {
 	shader = &shader_;
 }
 
-inline void VisualEffect::load()
+inline void visual_effect::load()
 {
 	is_loaded_ = Shader::isAvailable() && on_load();
 }
 
-inline void VisualEffect::update(const float x, const float y, const long long time = 0)
+inline void visual_effect::update(const float x, const float y, const long long time = 0)
 {
 	if (is_loaded_)
 		on_update(x, y, time);

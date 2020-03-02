@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <windows.h>
 
-#include "Brazier.h"
+#include "brazier.h"
 #include "camera_system.h"
 #include "DynamicObject.h"
 #include "effects_system.h"
@@ -66,7 +66,7 @@ public:
 
 	// Hero
 	DynamicObject* focusedObject = nullptr;
-	Brazier* brazier{};
+	brazier* brazier{};
 
 	// Events
 	void onMouseUp(int currentMouseButton);

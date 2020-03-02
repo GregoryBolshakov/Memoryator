@@ -1,20 +1,20 @@
-#include "Mugwort.h"
+#include "mugwort.h"
 
 #include "Helper.h"
 
-Mugwort::Mugwort(std::string objectName, Vector2f centerPosition, int typeOfObject) : PickedObject(std::move(objectName), centerPosition)
+mugwort::mugwort(std::string objectName, Vector2f centerPosition, int typeOfObject) : PickedObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 3;
 	this->typeOfObject = typeOfObject;
 	toSaveName = "mugwort";
-	Mugwort::setType(typeOfObject);
+	mugwort::setType(typeOfObject);
 	radius = 50;
 	tag = Tag::mugwort;
 	count = 1;
 	id = Tag::yarrow;
 }
 
-void Mugwort::setType(int typeOfObject)
+void mugwort::setType(int typeOfObject)
 {
 	if (typeOfObject == -1)
 		return;
@@ -28,14 +28,14 @@ void Mugwort::setType(int typeOfObject)
 		conditionalSizeUnits = { 250, 271 };
 }
 
-Vector2f Mugwort::calculateTextureOffset()
+Vector2f mugwort::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
 	return { textureBox.width / 2.0f, textureBox.height / 1.2f };
 }
 
-void Mugwort::initPedestal()
+void mugwort::initPedestal()
 {
 	focus1 = position;
 	focus2 = position;
@@ -43,17 +43,17 @@ void Mugwort::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f Mugwort::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f mugwort::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int Mugwort::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int mugwort::getBuildType(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> Mugwort::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> mugwort::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*additionalSprites.clear();

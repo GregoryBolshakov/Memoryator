@@ -1,6 +1,6 @@
 #include "deerchant.h"
 
-#include "Brazier.h"
+#include "brazier.h"
 #include "EmptyObject.h"
 #include "Helper.h"
 #include "noose.h"
@@ -557,7 +557,7 @@ void deerchant::onMouseUp(const int currentMouseButton, WorldObject *mouseSelect
 
 	if (mouseSelectedObject && mouseSelectedObject->tag == Tag::brazier)
 	{
-		auto brazier = dynamic_cast<Brazier*>(mouseSelectedObject);
+		auto brazier = dynamic_cast<::brazier*>(mouseSelectedObject);
 		if (heldItem->content.first != Tag::emptyCell &&
 			Helper::getDist(brazier->getPlatePosition(), position) <= brazier->getPlateRadius() + radius)
 		{

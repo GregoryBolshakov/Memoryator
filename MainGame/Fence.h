@@ -2,10 +2,10 @@
 
 #include "TerrainObject.h"
 
-class Fence : public TerrainObject
+class fence : public TerrainObject
 {
 public:
-	Fence(std::string objectName, Vector2f centerPosition, int typeOfObject);
+	fence(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;
 	void initPedestal() override;
 	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;

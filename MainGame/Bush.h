@@ -2,10 +2,10 @@
 
 #include "TerrainObject.h"
 
-class Bush : public TerrainObject
+class bush : public TerrainObject
 {
 public:
-	Bush(std::string objectName, Vector2f centerPosition, int typeOfObject);
+	bush(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;
 	void initPedestal() override;
 	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;

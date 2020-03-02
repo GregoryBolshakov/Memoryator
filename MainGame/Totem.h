@@ -2,10 +2,10 @@
 
 #include "TerrainObject.h"
 
-class Totem : public TerrainObject
+class totem : public TerrainObject
 {
 public:
-	Totem(std::string objectName, Vector2f centerPosition, int typeOfObject);
+	totem(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;
 	void initPedestal() override;
 	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;

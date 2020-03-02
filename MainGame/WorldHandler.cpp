@@ -49,7 +49,7 @@ void WorldHandler::runWorldGenerator()
 			j = SwampyTrees;
 	worldGenerator.generate();
 	this->focusedObject = worldGenerator.focusedObject;
-	brazier = dynamic_cast<Brazier*>(staticGrid.getItemByName("brazier"));
+	brazier = dynamic_cast<::brazier*>(staticGrid.getItemByName("brazier"));
 	//brazier->linkWithBuildSystem(&buildSystem);
 	worldGenerator.rememberedBlocks = { { staticGrid.getIndexByPoint(brazier->getPosition().x, brazier->getPosition().y), true } };
 	cameraSystem.position = Vector2f(focusedObject->getPosition().x + Helper::GetScreenSize().x * camera_system::camOffset.x, focusedObject->getPosition().y + Helper::GetScreenSize().y * camera_system::camOffset.y);
@@ -182,7 +182,7 @@ void WorldHandler::Load()
 			if (saveName == ground("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
 				worldGenerator.initializeStaticItem(Tag::ground, Vector2f(posX, posY), typeOfObject, "", 1);
 			else
-				if (saveName == ForestTree("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
+				if (saveName == forest_tree("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
 					worldGenerator.initializeStaticItem(Tag::tree, Vector2f(posX, posY), typeOfObject, "", 1);
 				else
 					if (saveName == grass("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())

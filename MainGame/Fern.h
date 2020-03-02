@@ -2,10 +2,10 @@
 
 #include "PickedObject.h"
 
-class Fern : public PickedObject
+class fern : public PickedObject
 {
 public:
-	Fern(std::string objectName, Vector2f centerPosition, int typeOfObject);
+	fern(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;
 	void initPedestal() override;
 	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;

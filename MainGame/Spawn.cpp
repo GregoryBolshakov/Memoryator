@@ -1,30 +1,30 @@
-#include "Spawn.h"
+#include "spawn.h"
 
 #include "Helper.h"
 
-Spawn::Spawn(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+spawn::spawn(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 1;
 	this->typeOfObject = typeOfObject;
 	radius = 200;
 	toSaveName = "spawn";
-	Spawn::setType(typeOfObject);
+	spawn::setType(typeOfObject);
 }
 
-void Spawn::setType(const int typeOfObject)
+void spawn::setType(const int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	this->conditionalSizeUnits = { 1000, 1000 };
 }
 
-Vector2f Spawn::calculateTextureOffset()
+Vector2f spawn::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
 	return { textureBox.width / 2.0f, textureBox.height / 1.6f };
 }
 
-void Spawn::initPedestal()
+void spawn::initPedestal()
 {
 	if (typeOfObject == 1)
 	{
@@ -44,17 +44,17 @@ void Spawn::initPedestal()
 	ellipseSizeMultipliers = { 1.08f, 1.2f, 1.3f };
 }
 
-Vector2f Spawn::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f spawn::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Spawn::getBuildType(Vector2f, Vector2f)
+int spawn::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> Spawn::prepareSprites(long long)
+std::vector<sprite_chain_element*> spawn::prepareSprites(long long)
 {
     return {};
 	/*additionalSprites.clear();

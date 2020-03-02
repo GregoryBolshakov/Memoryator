@@ -1,20 +1,20 @@
-#include "Totem.h"
+#include "totem.h"
 
 #include "Helper.h"
 
 
-Totem::Totem(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+totem::totem(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 1;
 	this->typeOfObject = typeOfObject;
 	strength = 0;
 	radius = 20;
 	toSaveName = "totem";
-	Totem::setType(typeOfObject);
+	totem::setType(typeOfObject);
 	tag = Tag::totem;
 }
 
-void Totem::setType(const int typeOfObject)
+void totem::setType(const int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
@@ -33,7 +33,7 @@ void Totem::setType(const int typeOfObject)
 	radius = std::max(conditionalSizeUnits.x, conditionalSizeUnits.y) / 2;
 }
 
-Vector2f Totem::calculateTextureOffset()
+Vector2f totem::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
@@ -54,7 +54,7 @@ Vector2f Totem::calculateTextureOffset()
 	throw std::logic_error("Invalid type of object.");
 }
 
-void Totem::initPedestal()
+void totem::initPedestal()
 {
 	//if (typeOfObject == 1)
 	{
@@ -65,17 +65,17 @@ void Totem::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f Totem::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f totem::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Totem::getBuildType(Vector2f, Vector2f)
+int totem::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> Totem::prepareSprites(long long)
+std::vector<sprite_chain_element*> totem::prepareSprites(long long)
 {
 	const auto body = new sprite_chain_element(PackTag::craftObjects, PackPart::totem, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 

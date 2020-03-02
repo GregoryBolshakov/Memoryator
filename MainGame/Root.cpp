@@ -1,8 +1,8 @@
-#include "Root.h"
+#include "root.h"
 
 #include "Helper.h"
 
-Root::Root(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
+root::root(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : TerrainObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 5; // 1-5
 	this->typeOfObject = typeOfObject;
@@ -10,11 +10,11 @@ Root::Root(std::string objectName, const Vector2f centerPosition, const int type
 	radius = 50;
 	animationSpeed = 10;
 	toSaveName = "root";
-	Root::setType(typeOfObject);
+	root::setType(typeOfObject);
 	tag = Tag::root;
 }
 
-void Root::setType(const int typeOfObject)
+void root::setType(const int typeOfObject)
 {
 	this->typeOfObject = typeOfObject;
 	if (typeOfObject == 1)
@@ -29,7 +29,7 @@ void Root::setType(const int typeOfObject)
 		conditionalSizeUnits = { 339, 132 };
 }
 
-Vector2f Root::calculateTextureOffset()
+Vector2f root::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
@@ -51,7 +51,7 @@ Vector2f Root::calculateTextureOffset()
 	}
 }
 
-void Root::initPedestal()
+void root::initPedestal()
 {
 	switch (typeOfObject)
 	{
@@ -89,17 +89,17 @@ void Root::initPedestal()
 	initMicroBlocks();
 }
 
-Vector2f Root::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f root::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Root::getBuildType(Vector2f, Vector2f)
+int root::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<sprite_chain_element*> Root::prepareSprites(long long)
+std::vector<sprite_chain_element*> root::prepareSprites(long long)
 {
 	const auto body = new sprite_chain_element(PackTag::swampyTrees, PackPart::root, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 

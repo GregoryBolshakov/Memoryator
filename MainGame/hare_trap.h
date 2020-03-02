@@ -2,10 +2,10 @@
 
 #include "PickedObject.h"
 
-class HareTrap : public PickedObject
+class hare_trap : public PickedObject
 {
 public:
-	HareTrap(std::string objectName, Vector2f centerPosition, int typeOfObject);
+	hare_trap(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;
 	void initPedestal() override;
 	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;
