@@ -1,6 +1,6 @@
 #include "object_initializer.h"
 
-std::map<entity_tag, std::string> object_initializer::mappedTags = { {entity_tag::hero, "hero"}, {entity_tag::hare, "hare"}, {entity_tag::owl, "owl"}, {entity_tag::deer, "deer"}, {entity_tag::fox, "fox"}, {entity_tag::bear, "beer"}, {entity_tag::wolf, "wolf"},
+std::map<entity_tag, std::string> object_initializer::mapped_tags = { {entity_tag::hero, "hero"}, {entity_tag::hare, "hare"}, {entity_tag::owl, "owl"}, {entity_tag::deer, "deer"}, {entity_tag::fox, "fox"}, {entity_tag::bear, "beer"}, {entity_tag::wolf, "wolf"},
 {entity_tag::monster, "monster"}, {entity_tag::owlBoss, "owlBoss"}, {entity_tag::nightmare1, "nightmare1"}, {entity_tag::nightmare2, "nightmare2"}, {entity_tag::nightmare3, "nightmare3"},
 {entity_tag::heroBag, "heroBag"}, {entity_tag::noose, "noose"}, {entity_tag::totem, "totem"}, {entity_tag::hareTrap, "hareTrap"}, {entity_tag::fence, "fence"}, {entity_tag::inkyBlackPen, "inkyBlackPen"},
 	{entity_tag::unknownWreath, "inknownWreath"}, {entity_tag::hareWreath, "hareWreath"}, {entity_tag::owlWreath, "owlWreath"}, {entity_tag::tree, "tree"}, {entity_tag::grass, "grass"}, {entity_tag::spawn, "spawn"},
@@ -9,7 +9,7 @@ std::map<entity_tag, std::string> object_initializer::mappedTags = { {entity_tag
 	{entity_tag::chamomile, "chamomile"}, {entity_tag::yarrow, "yarrow"}, {entity_tag::fern, "fern"}, {entity_tag::mugwort, "mugwort"}, {entity_tag::poppy, "poppy"}, {entity_tag::buildObject, "buildObject"}, {entity_tag::dropPoint, "dropPoint"},
 	{entity_tag::emptyDraft, "emptyDraft"}, {entity_tag::emptyPage, "emptyPage"}, {entity_tag::emptyCell, "emptyCell"}, {entity_tag::selectedCell, "selectedCell"}, {entity_tag::clapWhirl, "clapWhirl"}, {entity_tag::emptyObject, "emptyObject"} };
 
-std::map<std::string, entity_tag> object_initializer::mappedStrings = { {"hero", entity_tag::hero}, {"hare", entity_tag::hare}, {"owl", entity_tag::owl}, {"deer", entity_tag::deer}, {"fox", entity_tag::fox}, {"bear", entity_tag::bear}, {"wolf", entity_tag::wolf},
+std::map<std::string, entity_tag> object_initializer::mapped_strings = { {"hero", entity_tag::hero}, {"hare", entity_tag::hare}, {"owl", entity_tag::owl}, {"deer", entity_tag::deer}, {"fox", entity_tag::fox}, {"bear", entity_tag::bear}, {"wolf", entity_tag::wolf},
 {"monster", entity_tag::monster}, {"owlBoss", entity_tag::owlBoss}, {"nightmare1", entity_tag::nightmare1}, {"nightmare2", entity_tag::nightmare2}, {"nightmare3", entity_tag::nightmare3},
 {"heroBag", entity_tag::heroBag}, {"noose", entity_tag::noose}, {"totem", entity_tag::totem}, {"hareTrap", entity_tag::hareTrap}, {"fence", entity_tag::fence}, {"inkyBlackPen", entity_tag::inkyBlackPen},
 	{"unknownWreath", entity_tag::unknownWreath}, {"hareWreath", entity_tag::hareWreath}, {"owlWreath", entity_tag::owlWreath}, {"tree", entity_tag::tree}, {"grass", entity_tag::grass}, {"spawn", entity_tag::spawn},
@@ -24,22 +24,22 @@ object_initializer::object_initializer()
 object_initializer::~object_initializer()
 = default;
 
-int object_initializer::newNameId = 0;
+int object_initializer::new_name_id = 0;
 
-static_object* object_initializer::initializeStaticItem(
-	entity_tag itemClass,
-	Vector2f itemPosition,
-	int itemType,
-	const std::string& itemName,
-	int count,
-	biomes biome,	
-	std::map<pack_tag, sprite_pack>* packsMap,
-	bool mirrored,
+static_object* object_initializer::initialize_static_item(
+	const entity_tag item_class,
+	const Vector2f item_position,
+	const int item_type,
+	const std::string& item_name,
+	const int count,
+	const biomes biome,	
+	std::map<pack_tag, sprite_pack>* packs_map,
+	const bool mirrored,
 	const std::vector<std::pair<entity_tag, int>>& inventory)
 {
-	static_object* item = nullptr;
+	static_object* item;
 
-	switch (itemClass)
+	switch (item_class)
 	{
 		case entity_tag::tree:
 		{
@@ -163,28 +163,28 @@ static_object* object_initializer::initializeStaticItem(
 		}
 	}
 
-	const auto currentType = itemType == -1
-		 ? getRandomTypeByBiome(item, biome)
-		 : itemType;
+	const auto current_type = item_type == -1
+		 ? get_random_type_by_biome(item, biome)
+		 : item_type;
 
-	newNameId++;
+	new_name_id++;
 
-	item->set_position(Vector2f(itemPosition));
-	item->setType(currentType);
+	item->set_position(Vector2f(item_position));
+	item->setType(current_type);
 	auto sprites = item->prepare_sprites(0);
 	
-	if (packsMap->count(sprites[0]->pack_tag) <= 0 ||
-		packsMap->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
+	if (packs_map->count(sprites[0]->pack_tag) <= 0 ||
+		packs_map->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
 	{
 		delete item;
 		return nullptr;
 	}
-	const auto info = packsMap->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number);
-	const auto textureSize = Vector2f(float(info.source_size.w), float(info.source_size.h));
-	item->set_texture_size(textureSize);
-	const auto name = itemName.empty()
-		                  ? std::to_string(newNameId)
-		                  : itemName;
+	const auto info = packs_map->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number);
+	const auto texture_size = Vector2f(float(info.source_size.w), float(info.source_size.h));
+	item->set_texture_size(texture_size);
+	const auto name = item_name.empty()
+		                  ? std::to_string(new_name_id)
+		                  : item_name;
 	item->set_name(name);
 	if (!inventory.empty())
 		item->inventory = inventory;
@@ -195,58 +195,58 @@ static_object* object_initializer::initializeStaticItem(
 	return item;
 }
 
-dynamic_object* object_initializer::initializeDynamicItem(
-	entity_tag itemClass,
-	Vector2f itemPosition,
-	const std::string& itemName,
-	std::map<pack_tag, sprite_pack>* packsMap,
+dynamic_object* object_initializer::initialize_dynamic_item(
+	entity_tag item_class,
+	Vector2f item_position,
+	const std::string& item_name,
+	std::map<pack_tag, sprite_pack>* packs_map,
 	world_object* owner)
 {
 	dynamic_object* item;
-	std::string nameOfImage;
+	std::string name_of_image;
 
-	switch (itemClass)
+	switch (item_class)
 	{
 	case entity_tag::hero:
 	{
 		item = new deerchant("item", Vector2f(0, 0));
-		nameOfImage = "Game/worldSprites/hero/stand/down/1";		
+		name_of_image = "Game/worldSprites/hero/stand/down/1";		
 		break;
 	}
 	case entity_tag::wolf:
 	{
 		item = new wolf("item", Vector2f(0, 0));
-		nameOfImage = "Game/worldSprites/wolf/stand/down/1";
+		name_of_image = "Game/worldSprites/wolf/stand/down/1";
 		break;
 	}
 	case entity_tag::hare:
 	{
 		item = new hare("item", Vector2f(0, 0));
-		nameOfImage = "Game/worldSprites/hare/stand/down/1";
+		name_of_image = "Game/worldSprites/hare/stand/down/1";
 		break;
 	}
 	case entity_tag::deer:
 	{
 		item = new deer("item", Vector2f(0, 0));
-		nameOfImage = "Game/worldSprites/deer/stand/down/1";
+		name_of_image = "Game/worldSprites/deer/stand/down/1";
 		break;
 	}
 	case entity_tag::bear:
 	{
 		item = new bear("item", Vector2f(0, 0));
-		nameOfImage = "Game/worldSprites/deer/stand/down/1";
+		name_of_image = "Game/worldSprites/deer/stand/down/1";
 		break;
 	}
 	case entity_tag::owl:
 	{
 		item = new owl("item", Vector2f(0, 0));
-		nameOfImage = "Game/worldSprites/deer/stand/down/1";
+		name_of_image = "Game/worldSprites/deer/stand/down/1";
 		break;
 	}
 	case entity_tag::noose:
 	{
 		item = new noose("item", Vector2f(0, 0), owner);
-		nameOfImage = "Game/worldSprites/noose/nooseLoop/1";
+		name_of_image = "Game/worldSprites/noose/nooseLoop/1";
 		break;
 	}
 	/*case Tag::clapWhirl:
@@ -258,116 +258,116 @@ dynamic_object* object_initializer::initializeDynamicItem(
 	case entity_tag::owlBoss:
 	{
 		item = new owl_boss("item", Vector2f(0, 0));
-		nameOfImage = "Game/worldSprites/owlBoss/stand/down/1";
+		name_of_image = "Game/worldSprites/owlBoss/stand/down/1";
 		break;
 	}
 	case entity_tag::nightmare1:
 	{
 		item = new nightmare_first("item", Vector2f(0, 0));
-		nameOfImage = "Game/worldSprites/nightmare1/stand/down/1";
+		name_of_image = "Game/worldSprites/nightmare1/stand/down/1";
 		break;
 	}
 	case entity_tag::nightmare2:
 	{
 		item = new nightmare_second("item", Vector2f(0, 0));
-		nameOfImage = "Game/worldSprites/nightmare2/stand/down/1";
+		name_of_image = "Game/worldSprites/nightmare2/stand/down/1";
 		break;
 	}
 	case entity_tag::nightmare3:
 	{
 		item = new nightmare_third("item", Vector2f(0, 0));
-		nameOfImage = "Game/worldSprites/nightmare2/stand/down/1";
+		name_of_image = "Game/worldSprites/nightmare2/stand/down/1";
 		break;
 	}
 	default:
 	{
 		item = new nightmare_second("item", Vector2f(0, 0));
-		nameOfImage = "Game/worldSprites/nightmare2/stand/down/1";
+		name_of_image = "Game/worldSprites/nightmare2/stand/down/1";
 		break;
 	}
 	}
 
-	newNameId++;
-	nameOfImage += ".png";
+	new_name_id++;
+	name_of_image += ".png";
 
-	const auto name = itemName.empty()
-		                  ? std::string(item->get_to_save_name()) + "_" + std::to_string(newNameId)
-		                  : itemName;
+	const auto name = item_name.empty()
+		                  ? std::string(item->get_to_save_name()) + "_" + std::to_string(new_name_id)
+		                  : item_name;
 
 	item->set_name(name);
-	item->set_position(Vector2f(itemPosition));
+	item->set_position(Vector2f(item_position));
     auto sprites = item->prepare_sprites(0);
-	if (packsMap->count(sprites[0]->pack_tag) <= 0 || 
-		packsMap->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
+	if (packs_map->count(sprites[0]->pack_tag) <= 0 || 
+		packs_map->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
 	{
 		delete item;
 		return nullptr;
 	}
-	const auto info = packsMap->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number);
-	const auto textureSize = Vector2f(float(info.source_size.w), float(info.source_size.h));
-	item->set_texture_size(textureSize);
+	const auto info = packs_map->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number);
+	const auto texture_size = Vector2f(float(info.source_size.w), float(info.source_size.h));
+	item->set_texture_size(texture_size);
 	return item;
 }
 
-int object_initializer::getRandomTypeByBiome(world_object* object, const biomes biome)
+int object_initializer::get_random_type_by_biome(world_object* object, const biomes biome)
 {
 	switch (object->tag)
 	{
 		case entity_tag::tree:
 		{
-			if (biome == BirchGrove)
+			if (biome == birch_grove)
 				return rand() % 7 + 1;
-			if (biome == DarkWoods)
+			if (biome == dark_woods)
 				return rand() % 6 + 8;
-			if (biome == SwampyTrees)
+			if (biome == swampy_trees)
 				return rand() % 5 + 14;
 			break;
 		}
 		case entity_tag::grass:
 		{
-			if (biome == BirchGrove)
+			if (biome == birch_grove)
 				return rand() % 8 + 1;
-			if (biome == DarkWoods)
+			if (biome == dark_woods)
 				return rand() % 13 + 9;
-			if (biome == SwampyTrees)
+			if (biome == swampy_trees)
 				return rand() % 9 + 22;
 			break;
 		}
 		case entity_tag::rock:
 		{
-			if (biome == BirchGrove)
+			if (biome == birch_grove)
 				return rand() % 8 + 1;
-			if (biome == DarkWoods)
+			if (biome == dark_woods)
 				return rand() % 5 + 9;
-			if (biome == SwampyTrees)
+			if (biome == swampy_trees)
 				return  rand() % 5 + 14;
 			break;
 		}
 		case entity_tag::stump:
 		{
-			if (biome == BirchGrove)
+			if (biome == birch_grove)
 				return rand() % 4 + 1;
-			if (biome == DarkWoods)
+			if (biome == dark_woods)
 				return rand() % 6 + 5;
-			if (biome == SwampyTrees)
+			if (biome == swampy_trees)
 				return rand() % 3 + 11;
 			break;
 		}
 		case entity_tag::bush:
 		{
-			if (biome == BirchGrove)
+			if (biome == birch_grove)
 				return rand() % 8 + 1;
-			if (biome == SwampyTrees)
+			if (biome == swampy_trees)
 				return rand() % 7 + 9;
 			break;
 		}
 		case entity_tag::mushroom:
 		{
-			if (biome == BirchGrove)
+			if (biome == birch_grove)
 				return rand() % 3 + 1;
-			if (biome == DarkWoods)
+			if (biome == dark_woods)
 				return rand() % 9 + 4;
-			if (biome == SwampyTrees)
+			if (biome == swampy_trees)
 				return rand() % 4 + 13;
 			break;
 		}
@@ -376,19 +376,19 @@ int object_initializer::getRandomTypeByBiome(world_object* object, const biomes 
 	return 0;
 }
 
-std::vector<static_object*> object_initializer::vectorCastToStatic(const std::vector<world_object*>& items)
+std::vector<static_object*> object_initializer::vector_cast_to_static(const std::vector<world_object*>& items)
 {
-	std::vector<static_object*> staticItems = {};
+	std::vector<static_object*> static_items = {};
 	for (auto item : items)
-		staticItems.push_back(dynamic_cast<static_object*>(item));
-	return staticItems;
+		static_items.push_back(dynamic_cast<static_object*>(item));
+	return static_items;
 }
 
-std::vector<dynamic_object*> object_initializer::vectorCastToDynamic(std::vector<world_object*> items)
+std::vector<dynamic_object*> object_initializer::vector_cast_to_dynamic(std::vector<world_object*> items)
 {
-	auto dynamicItems = *(new std::vector<dynamic_object*>());
+	auto dynamic_items = *(new std::vector<dynamic_object*>());
 	for (auto& item : items)
-		dynamicItems.push_back(dynamic_cast<dynamic_object*>(item));
-	return dynamicItems;
+		dynamic_items.push_back(dynamic_cast<dynamic_object*>(item));
+	return dynamic_items;
 }
 

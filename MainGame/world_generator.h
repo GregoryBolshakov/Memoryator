@@ -19,7 +19,7 @@ public:
 		int itemType,
 		const std::string& itemName,
 		int count = 1,
-		biomes biome = DarkWoods,
+		biomes biome = dark_woods,
 		bool mirrored = true,
 		const std::vector<std::pair<entity_tag, int>>& inventory = {}) const;
 	

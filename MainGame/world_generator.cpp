@@ -46,7 +46,7 @@ void world_generator::initializeStaticItem(
 	bool mirrored,
 	const std::vector<std::pair<entity_tag, int>>& inventory) const
 {
-	auto item = object_initializer::initializeStaticItem(itemClass, itemPosition, itemType, itemName, count, biome, packsMap, mirrored, inventory);
+	auto item = object_initializer::initialize_static_item(itemClass, itemPosition, itemType, itemName, count, biome, packsMap, mirrored, inventory);
 	
 	if (item == nullptr)
 		return;
@@ -88,7 +88,7 @@ void world_generator::initializeStaticItem(
 
 void world_generator::initializeDynamicItem(const entity_tag itemClass, const Vector2f itemPosition, const std::string& itemName, world_object* owner)
 {
-	const auto item = object_initializer::initializeDynamicItem(itemClass, itemPosition, itemName, packsMap, owner);
+	const auto item = object_initializer::initialize_dynamic_item(itemClass, itemPosition, itemName, packsMap, owner);
 	
 	if (item == nullptr)
 		return;
@@ -134,7 +134,7 @@ void world_generator::inBlockGenerate(const int blockIndex)
 	std::vector<std::pair<entity_tag, int>> roomedBlocksContent = {};
 	std::vector<std::pair<entity_tag, int>> otherBlocksContent = {};
 
-	if (biomeMatrix[groundIndX][groundIndY] == DarkWoods)
+	if (biomeMatrix[groundIndX][groundIndY] == dark_woods)
 	{
 		if (blockTypeProbability <= 10) // block with roofs		
 			roomedBlocksContent = { {entity_tag::roof, 10}, {entity_tag::rock, 2}, {entity_tag::stump, 2}, {entity_tag::tree, 7} };
@@ -147,7 +147,7 @@ void world_generator::inBlockGenerate(const int blockIndex)
 		otherBlocksContent = { {entity_tag::grass, 6} , {entity_tag::mushroom, 4} };
 	}
 	else
-		if (biomeMatrix[groundIndX][groundIndY] == BirchGrove)
+		if (biomeMatrix[groundIndX][groundIndY] == birch_grove)
 		{
 			if (blockTypeProbability <= 30) // block with chamomile
 				roomedBlocksContent = { {entity_tag::chamomile, 0}, {entity_tag::rock, 2}, {entity_tag::stump, 2}, {entity_tag::log, 2}, {entity_tag::bush, 5}, {entity_tag::tree, 7} };
@@ -157,7 +157,7 @@ void world_generator::inBlockGenerate(const int blockIndex)
 			otherBlocksContent = { {entity_tag::grass, 6} , {entity_tag::mushroom, 3} };
 		}
 		else
-			if (biomeMatrix[groundIndX][groundIndY] == SwampyTrees)
+			if (biomeMatrix[groundIndX][groundIndY] == swampy_trees)
 			{
 				if (blockTypeProbability <= 30) // block with chamomile
 					roomedBlocksContent = { {entity_tag::rock, 2}, {entity_tag::lake, 2}, {entity_tag::stump, 2}, {entity_tag::root, 2}, {entity_tag::bush, 5}, {entity_tag::tree, 7} };

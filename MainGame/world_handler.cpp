@@ -46,7 +46,7 @@ void world_handler::runWorldGenerator()
 	dynamicGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
 	for (auto& i : worldGenerator.biomeMatrix)
 		for (auto& j : i)
-			j = SwampyTrees;
+			j = swampy_trees;
 	worldGenerator.generate();
 	this->focusedObject = worldGenerator.focusedObject;
 	brazier = dynamic_cast<::brazier*>(staticGrid.get_item_by_name("brazier"));
@@ -210,8 +210,8 @@ void world_handler::Save()
 	
 	std::ofstream fout("save.txt");
 	fout.clear();
-	auto staticItems = object_initializer::vectorCastToStatic(staticGrid.get_items(0, 0, float(width), float(height)));
-	auto dynamicItems = object_initializer::vectorCastToDynamic(dynamicGrid.get_items(0, 0, float(width), float(height)));
+	auto staticItems = object_initializer::vector_cast_to_static(staticGrid.get_items(0, 0, float(width), float(height)));
+	auto dynamicItems = object_initializer::vector_cast_to_dynamic(dynamicGrid.get_items(0, 0, float(width), float(height)));
 
 	fout << dynamicItems.size() << std::endl;
 	for (auto& dynamicItem : dynamicItems)
@@ -454,8 +454,8 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 	worldGenerator.beyondScreenGeneration();
 
 	auto localItems = staticGrid.get_items(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y);
-	auto localStaticItems = object_initializer::vectorCastToStatic(localItems);
-	auto localDynamicItems = object_initializer::vectorCastToDynamic(dynamicGrid.get_items(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y));
+	auto localStaticItems = object_initializer::vector_cast_to_static(localItems);
+	auto localDynamicItems = object_initializer::vector_cast_to_dynamic(dynamicGrid.get_items(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y));
 
 	localTerrain.clear();
 	for (auto& item : localStaticItems)

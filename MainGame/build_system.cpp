@@ -57,7 +57,7 @@ std::vector <sprite_chain_element*> build_system::prepare_sprites(grid_list& sta
 
 	static_object* terrain = nullptr;
 	if (dropped_loot_id_list.count(selected_object) > 0)
-		terrain = object_initializer::initializeStaticItem(entity_tag::droppedLoot, mouse_world_pos_, int(selected_object), "", 1, DarkWoods, packs_map);
+		terrain = object_initializer::initialize_static_item(entity_tag::droppedLoot, mouse_world_pos_, int(selected_object), "", 1, dark_woods, packs_map);
 	else
 	{
 		if (selected_object == entity_tag::totem)
@@ -84,7 +84,7 @@ std::vector <sprite_chain_element*> build_system::prepare_sprites(grid_list& sta
 				}
 			}
 		}
-		terrain = object_initializer::initializeStaticItem(selected_object, mouse_world_pos_, build_type, "", 1, DarkWoods, packs_map, false);
+		terrain = object_initializer::initialize_static_item(selected_object, mouse_world_pos_, build_type, "", 1, dark_woods, packs_map, false);
 	}
 
 	auto sprites = terrain->prepare_sprites(0);

@@ -59,7 +59,7 @@ void pedestal_controller::writeToFile()
 	std::ofstream stream_out("Game/pedestalsInfo.txt");
 
 	stream_out.clear();
-	stream_out << std::setprecision(3) << "Tag: " << object_initializer::mappedTags.at(boundObject->tag) + " " << '\n';
+	stream_out << std::setprecision(3) << "Tag: " << object_initializer::mapped_tags.at(boundObject->tag) + " " << '\n';
 	stream_out << std::setprecision(3) << "Type: " << boundObject->get_type() << '\n';
 	stream_out << std::setprecision(3) << "Mirrored: " << boundObject->get_mirrored_state() << '\n';
 

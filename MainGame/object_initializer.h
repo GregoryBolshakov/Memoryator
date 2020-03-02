@@ -43,33 +43,34 @@
 //#include "clap_whirl.h"
 #include <unordered_map>
 
-enum biomes { SwampyTrees = 1, DarkWoods = 2, BirchGrove = 3, FlowerValley = 4 };
+enum biomes { swampy_trees = 1, dark_woods = 2, birch_grove = 3, flower_valley = 4 };
 
 class object_initializer
 {
 public:
 	object_initializer();
 	~object_initializer();
-	static static_object* initializeStaticItem(
-		entity_tag itemClass,
-		Vector2f itemPosition,
-		int itemType,
-		const std::string& itemName, 
+	static static_object* initialize_static_item(
+		entity_tag item_class,
+		Vector2f item_position,
+		int item_type,
+		const std::string& item_name, 
 		int count,
 		biomes biome,		
-		std::map<pack_tag, sprite_pack>* packsMap,
+		std::map<pack_tag, sprite_pack>* packs_map,
 		bool mirrored = true,
 		const std::vector<std::pair<entity_tag, int>>& inventory = {});
-	static int newNameId;
-	static int getRandomTypeByBiome(world_object* object, biomes biome);
-	static dynamic_object* initializeDynamicItem(entity_tag itemClass,
-		Vector2f itemPosition,
-		const std::string& itemName,
-		std::map<pack_tag, sprite_pack>* packsMap,
+	static int new_name_id;
+	static int get_random_type_by_biome(world_object* object, biomes biome);
+	static dynamic_object* initialize_dynamic_item(
+		entity_tag item_class,
+		Vector2f item_position,
+		const std::string& item_name,
+		std::map<pack_tag, sprite_pack>* packs_map,
 		world_object* owner = nullptr);
-	static std::vector<static_object*> vectorCastToStatic(const std::vector<world_object*>& items);
-	static std::vector<dynamic_object*> vectorCastToDynamic(std::vector<world_object*> items);
+	static std::vector<static_object*> vector_cast_to_static(const std::vector<world_object*>& items);
+	static std::vector<dynamic_object*> vector_cast_to_dynamic(std::vector<world_object*> items);
 
-	static std::map<entity_tag, std::string> mappedTags;
-	static std::map<std::string, entity_tag> mappedStrings;
+	static std::map<entity_tag, std::string> mapped_tags;
+	static std::map<std::string, entity_tag> mapped_strings;
 };

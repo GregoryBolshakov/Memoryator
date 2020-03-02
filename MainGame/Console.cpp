@@ -117,18 +117,18 @@ void console::do_command()
 		std::transform(command.begin(), command.end(), command.begin(), tolower);
 	if (commands.size() >= 2)
 	{
-		if (commands[0] == "spawn" && object_initializer::mappedStrings.count(commands[1]) > 0)
+		if (commands[0] == "spawn" && object_initializer::mapped_strings.count(commands[1]) > 0)
 		{
-			auto object = object_initializer::mappedStrings.at(commands[1]);
+			auto object = object_initializer::mapped_strings.at(commands[1]);
 			if (int(object) >= 102 && int(object) <= 112)
 				world_->getWorldGenerator().initializeDynamicItem(object, { world_->focusedObject->get_position().x + 50, world_->focusedObject->get_position().y + 50 }, "");
 		}
-		if (commands[0] == "build" && object_initializer::mappedStrings.count(commands[1]) > 0)
+		if (commands[0] == "build" && object_initializer::mapped_strings.count(commands[1]) > 0)
 		{
 			auto typeOfObject = 1;
 			if (commands.size() >= 3 && std::stoi(commands[2]) >= 1 && std::stoi(commands[2]) <= 1000)
 				typeOfObject = std::stoi(commands[2]);
-			auto object = object_initializer::mappedStrings.at(commands[1]);
+			auto object = object_initializer::mapped_strings.at(commands[1]);
 
 			if (int(object) >= 211 || int(object) >= 301 && int(object) <= 405)
 				world_->setObjectToBuild(object, typeOfObject, true);	
