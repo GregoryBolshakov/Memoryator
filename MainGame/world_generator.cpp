@@ -69,7 +69,7 @@ void world_generator::initializeStaticItem(
 			auto j = int((item->getPosition().y - item->getMicroBlockCheckAreaBounds().y) / microBlockSize.y);
 			while (j <= end_j)
 			{
-				if (!(i < 0 || i >width_to_micro_x || j < 0 || j >height_to_micro_y) && !staticGrid->microBlockMatrix[int(round(i))][int(round(j))])
+				if (!(i < 0 || i >width_to_micro_x || j < 0 || j >height_to_micro_y) && !staticGrid->micro_block_matrix[int(round(i))][int(round(j))])
 					checkBlocks[{i, j}] = true;
 				j++;
 			}
@@ -83,7 +83,7 @@ void world_generator::initializeStaticItem(
 		}
 	}
 	
-	staticGrid->addItem(item, item->getName(), itemPosition.x, itemPosition.y);
+	staticGrid->add_item(item, item->getName(), itemPosition.x, itemPosition.y);
 }
 
 void world_generator::initializeDynamicItem(const entity_tag itemClass, const Vector2f itemPosition, const std::string& itemName, world_object* owner)
@@ -96,12 +96,12 @@ void world_generator::initializeDynamicItem(const entity_tag itemClass, const Ve
 	if (itemClass == entity_tag::hero)	
 		focusedObject = item;			
 
-	dynamicGrid->addItem(item, item->getName(), itemPosition.x, itemPosition.y);
+	dynamicGrid->add_item(item, item->getName(), itemPosition.x, itemPosition.y);
 }
 
 void world_generator::generate()
 {	
-	staticGrid->boundDynamicMatrix(&dynamicGrid->microBlockMatrix);	
+	staticGrid->bound_dynamic_matrix(&dynamicGrid->micro_block_matrix);	
 
 	initializeDynamicItem(entity_tag::hero, Vector2f(15800, 15800), "hero");	
 	initializeStaticItem(entity_tag::brazier, Vector2f(16300, 16300), 1, "brazier");
@@ -116,7 +116,7 @@ void world_generator::generate()
 		floor(focusedObject->getPosition().x + (helper::GetScreenSize().x / 2.0f + blockSize.y) / (FARTHEST_SCALE * mainScale)),
 		floor(focusedObject->getPosition().y + (helper::GetScreenSize().y / 2.0f + blockSize.y) / (FARTHEST_SCALE * mainScale)));
 
-	for (auto& block : staticGrid->getBlocksInSight(upperLeft.x, upperLeft.y, bottomRight.x, bottomRight.y))	
+	for (auto& block : staticGrid->get_blocks_in_sight(upperLeft.x, upperLeft.y, bottomRight.x, bottomRight.y))	
 		inBlockGenerate(block);	
 }
 
@@ -128,8 +128,8 @@ bool cmpByChance(const std::pair<entity_tag, int> a, const std::pair<entity_tag,
 void world_generator::inBlockGenerate(const int blockIndex)
 {
 	const auto blockTypeProbability = rand() % 100;
-	const auto groundIndX = int(ceil(staticGrid->getPointByIndex(blockIndex).x / blockSize.x));
-	const auto groundIndY = int(ceil(staticGrid->getPointByIndex(blockIndex).y / blockSize.y));
+	const auto groundIndX = int(ceil(staticGrid->get_point_by_index(blockIndex).x / blockSize.x));
+	const auto groundIndY = int(ceil(staticGrid->get_point_by_index(blockIndex).y / blockSize.y));
 
 	std::vector<std::pair<entity_tag, int>> roomedBlocksContent = {};
 	std::vector<std::pair<entity_tag, int>> otherBlocksContent = {};
@@ -170,8 +170,8 @@ void world_generator::inBlockGenerate(const int blockIndex)
 	std::sort(roomedBlocksContent.begin(), roomedBlocksContent.end(), cmpByChance);
 
 	const auto blockTransform = IntRect(
-		int(staticGrid->getPointByIndex(blockIndex).x),
-		int(staticGrid->getPointByIndex(blockIndex).y),
+		int(staticGrid->get_point_by_index(blockIndex).x),
+		int(staticGrid->get_point_by_index(blockIndex).y),
 		int(Vector2f(blockSize).x),
 		int(Vector2f(blockSize).y));
 	
@@ -212,7 +212,7 @@ void world_generator::inBlockGenerate(const int blockIndex)
 
 void world_generator::generateGround(const int blockIndex)
 {
-	const auto position = staticGrid->getPointByIndex(blockIndex);
+	const auto position = staticGrid->get_point_by_index(blockIndex);
 	const auto groundIndX = int(ceil(position.x / blockSize.x));
 	const auto groundIndY = int(ceil(position.y / blockSize.y));
 	const auto biome = biomeMatrix[groundIndX][groundIndY];
@@ -294,12 +294,12 @@ void world_generator::perimeterGeneration()
 
 	if (focusedObject->getDirectionSystem().direction != direction::STAND)
 	{
-		for (auto& block : staticGrid->getBlocksAround(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y))
+		for (auto& block : staticGrid->get_blocks_around(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y))
 		{
 			if (canBeRegenerated(block))
 			{
-				staticGrid->clearCell(block);
-				dynamicGrid->clearCell(block);
+				staticGrid->clear_cell(block);
+				dynamicGrid->clear_cell(block);
 				inBlockGenerate(block);
 			}
 		}
@@ -326,7 +326,7 @@ bool world_generator::canBeRegenerated(const int blockIndex) const
 	if (rememberedBlocks.count(blockIndex) > 0)
 		return false;
 
-	for (auto& item : dynamicGrid->getItems(blockIndex))
+	for (auto& item : dynamicGrid->get_items(blockIndex))
 	{
 		const auto dynamicItem = dynamic_cast<dynamic_object*>(item);
 		if (dynamicItem)

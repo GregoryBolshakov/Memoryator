@@ -64,7 +64,7 @@ std::vector <sprite_chain_element*> build_system::prepareSprites(grid_list& stat
 		{
 			for (auto item : visibleItems)
 			{
-				if (staticGrid.getIndexByPoint(item->getPosition().x, item->getPosition().y) != staticGrid.getIndexByPoint(mouseWorldPos.x, mouseWorldPos.y))
+				if (staticGrid.get_index_by_point(item->getPosition().x, item->getPosition().y) != staticGrid.get_index_by_point(mouseWorldPos.x, mouseWorldPos.y))
 					continue;
 				bool match = false;
 				auto droppedLoot = dynamic_cast<dropped_loot*>(item);
@@ -90,7 +90,7 @@ std::vector <sprite_chain_element*> build_system::prepareSprites(grid_list& stat
 	auto sprites = terrain->prepareSprites(0);
 	canBePlaced = true;
 
-	if (staticGrid.isIntersectWithOthers(terrain, visibleItems, terrain->isDotsAdjusted))
+	if (staticGrid.is_intersect_with_others(terrain, visibleItems, terrain->isDotsAdjusted))
 	{
 		for (auto& sprite : sprites)
 			sprite->color = sf::Color(255,99,71);
@@ -190,7 +190,7 @@ void build_system::clearHareBags(int block, grid_list& staticGrid, std::vector<w
 {
 	for (auto& item : *visibleItems)
 	{
-		if (staticGrid.getIndexByPoint(item->getPosition().x, item->getPosition().y) != staticGrid.getIndexByPoint(mouseWorldPos.x, mouseWorldPos.y))
+		if (staticGrid.get_index_by_point(item->getPosition().x, item->getPosition().y) != staticGrid.get_index_by_point(mouseWorldPos.x, mouseWorldPos.y))
 			continue;
 		bool match = false;
 		auto droppedLoot = dynamic_cast<dropped_loot*>(item);

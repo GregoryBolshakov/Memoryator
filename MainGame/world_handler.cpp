@@ -49,9 +49,9 @@ void world_handler::runWorldGenerator()
 			j = SwampyTrees;
 	worldGenerator.generate();
 	this->focusedObject = worldGenerator.focusedObject;
-	brazier = dynamic_cast<::brazier*>(staticGrid.getItemByName("brazier"));
+	brazier = dynamic_cast<::brazier*>(staticGrid.get_item_by_name("brazier"));
 	//brazier->linkWithBuildSystem(&buildSystem);
-	worldGenerator.rememberedBlocks = { { staticGrid.getIndexByPoint(brazier->getPosition().x, brazier->getPosition().y), true } };
+	worldGenerator.rememberedBlocks = { { staticGrid.get_index_by_point(brazier->getPosition().x, brazier->getPosition().y), true } };
 	cameraSystem.position = Vector2f(focusedObject->getPosition().x + helper::GetScreenSize().x * camera_system::camOffset.x, focusedObject->getPosition().y + helper::GetScreenSize().y * camera_system::camOffset.y);
 
 	const auto hero = dynamic_cast<deerchant*>(focusedObject);
@@ -150,7 +150,7 @@ void world_handler::Load()
 {
 	staticGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
 	dynamicGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
-	staticGrid.boundDynamicMatrix(&dynamicGrid.microBlockMatrix);
+	staticGrid.bound_dynamic_matrix(&dynamicGrid.micro_block_matrix);
 
 	std::ifstream fin("save.txt");
 	std::string saveName;
@@ -192,7 +192,7 @@ void world_handler::Load()
 	fin.close();
 
 	//preparations for the inventory system 
-	auto hero = dynamic_cast<deerchant*>(dynamicGrid.getItemByName(focusedObject->getName()));
+	auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->getName()));
 
 	inventorySystem.inventoryBounding(&hero->bags);
 	//------------------------------------
@@ -205,13 +205,13 @@ void world_handler::Load()
 
 void world_handler::Save()
 {
-	if (staticGrid.getSize() == 0)
+	if (staticGrid.get_size() == 0)
 		return;
 	
 	std::ofstream fout("save.txt");
 	fout.clear();
-	auto staticItems = object_initializer::vectorCastToStatic(staticGrid.getItems(0, 0, float(width), float(height)));
-	auto dynamicItems = object_initializer::vectorCastToDynamic(dynamicGrid.getItems(0, 0, float(width), float(height)));
+	auto staticItems = object_initializer::vectorCastToStatic(staticGrid.get_items(0, 0, float(width), float(height)));
+	auto dynamicItems = object_initializer::vectorCastToDynamic(dynamicGrid.get_items(0, 0, float(width), float(height)));
 
 	fout << dynamicItems.size() << std::endl;
 	for (auto& dynamicItem : dynamicItems)
@@ -352,7 +352,7 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 bool world_handler::fixedClimbingBeyond(Vector2f &pos) const
 {
 	const auto screenSize = helper::GetScreenSize();
-	const auto extra = staticGrid.getBlockSize();
+	const auto extra = staticGrid.get_block_size();
 
 	const auto limit_x = (screenSize.x / 2.0f + extra.x) * 1.5f;
 	const auto limit_y = (screenSize.y / 2.0f + extra.y) * 1.5f;
@@ -395,7 +395,7 @@ void world_handler::setItemFromBuildSystem()
 		if (buildSystem.selectedObject == entity_tag::totem)
 		{
 			if (buildSystem.buildType == 2)
-				buildSystem.clearHareBags(staticGrid.getIndexByPoint(buildSystem.buildingPosition.x, buildSystem.buildingPosition.y), staticGrid, &localTerrain);
+				buildSystem.clearHareBags(staticGrid.get_index_by_point(buildSystem.buildingPosition.x, buildSystem.buildingPosition.y), staticGrid, &localTerrain);
 		}
 		buildSystem.wasPlaced();
 		buildSystem.instantBuild = false;
@@ -427,7 +427,7 @@ void world_handler::onMouseUp(const int currentMouseButton)
 	if (mouseDisplayName.empty())
 		selectedObject = nullptr;
 
-	auto hero = dynamic_cast<deerchant*>(dynamicGrid.getItemByName(focusedObject->getName()));
+	auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->getName()));
 	hero->onMouseUp(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.buildingPosition != Vector2f(-1, -1) && !buildSystem.instantBuild));
 }
 
@@ -445,7 +445,7 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 	timeForScaleDecrease += scaleDecreaseClock.getElapsedTime().asMicroseconds();
 	scaleDecreaseClock.restart();
 
-	const auto extra = staticGrid.getBlockSize();
+	const auto extra = staticGrid.get_block_size();
 	const auto characterPosition = focusedObject->getPosition();
 
 	const Vector2f worldUpperLeft(characterPosition.x - render_target_size.x / 2, characterPosition.y - render_target_size.y / 2);
@@ -453,9 +453,9 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 
 	worldGenerator.beyondScreenGeneration();
 
-	auto localItems = staticGrid.getItems(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y);
+	auto localItems = staticGrid.get_items(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y);
 	auto localStaticItems = object_initializer::vectorCastToStatic(localItems);
-	auto localDynamicItems = object_initializer::vectorCastToDynamic(dynamicGrid.getItems(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y));
+	auto localDynamicItems = object_initializer::vectorCastToDynamic(dynamicGrid.get_items(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y));
 
 	localTerrain.clear();
 	for (auto& item : localStaticItems)
@@ -466,7 +466,7 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 
 	setTransparent(localTerrain);
 
-	const auto hero = dynamic_cast<deerchant*>(dynamicGrid.getItemByName(focusedObject->getName()));
+	const auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->getName()));
 	hero->heldItem = &inventorySystem.getHeldItem();
 
 	//making route to the desire position
@@ -482,13 +482,13 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 			{
 				const auto permissibleDistance = 10;			
 				timeAfterNewRoute = 0;
-				staticGrid.makeRoute(dynamicItem->getPosition(), dynamicItem->laxMovePosition,
+				staticGrid.make_route(dynamicItem->getPosition(), dynamicItem->laxMovePosition,
 				                     dynamicItem->getPosition().x - dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale),
 				                     dynamicItem->getPosition().y - dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale),
 				                     dynamicItem->getPosition().x + dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale),
 				                     dynamicItem->getPosition().y + dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale), permissibleDistance);
 				dynamicItem->setRoute(staticGrid.route);
-				staticGrid.setLockedMicroBlocks(dynamicItem, false, true);
+				staticGrid.set_locked_micro_blocks(dynamicItem, false, true);
 			}
 			else			
 				dynamicItem->changeMovePositionToRoute(dynamicItem->laxMovePosition);
@@ -553,7 +553,7 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 		if (!fixedClimbingBeyond(newPosition))
 			newPosition = dynamicItem->getPosition();				
 		dynamicItem->setPosition(newPosition);
-		dynamicGrid.updateItemPosition(dynamicItem->getName(), newPosition.x, newPosition.y);		
+		dynamicGrid.update_item_position(dynamicItem->getName(), newPosition.x, newPosition.y);		
 	}
 
 	//if (focusedObject->getCurrentAction() == builds)
@@ -568,10 +568,10 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 	//deleting items
 	for (auto& item : localStaticItems)	
 		if (item->getDeletePromise())		
-			staticGrid.deleteItem(item->getName());
+			staticGrid.delete_item(item->getName());
 	for (auto& item : localDynamicItems)
 		if (item->getDeletePromise())
-			dynamicGrid.deleteItem(item->getName());
+			dynamicGrid.delete_item(item->getName());
 	//--------------
 
 	//saving world
@@ -608,7 +608,7 @@ std::vector<sprite_chain_element*> world_handler::prepareSprites(const long long
 {
     std::vector<sprite_chain_element*> result = {};
 
-    const auto extra = staticGrid.getBlockSize();
+    const auto extra = staticGrid.get_block_size();
 
 	const auto screenSize = helper::GetScreenSize();
 	const auto screenCenter = Vector2f(screenSize.x / 2, screenSize.y / 2);
@@ -637,8 +637,8 @@ std::vector<sprite_chain_element*> world_handler::prepareSprites(const long long
 	if (worldBottomRight.y > float(height))
 		worldBottomRight.y = float(height);
 
-    auto localStaticItems = staticGrid.getItems(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y);
-	auto localDynamicItems = dynamicGrid.getItems(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y);
+    auto localStaticItems = staticGrid.get_items(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y);
+	auto localDynamicItems = dynamicGrid.get_items(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y);
 
 	for (auto& item : localStaticItems)
 	{

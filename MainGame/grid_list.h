@@ -13,50 +13,53 @@ const float inf = 1e3;
 class grid_list
 {
 public:
-	[[nodiscard]] std::unordered_map<std::string, std::pair<int, int>> getItemsOfGreed() const { return items; }
 	grid_list();
-	grid_list(int width, int height, Vector2f size, Vector2f microSize);
+	grid_list(int width, int height, Vector2f size, Vector2f micro_size);
 	~grid_list();
-	[[nodiscard]] Vector2f getBlockSize() const;
-	size_t getBlockItemsAmount(const int index) { return cells[index].size(); }
-	[[nodiscard]] int getIndexByPoint(float x, float y) const;
-	[[nodiscard]] Vector2f getPointByIndex(int index) const;
-	[[nodiscard]] int getMicroBlockByPoint(float x, float y) const;
-	[[nodiscard]] Vector2f getPointByMicroBlock(int microBlockIndex) const;
-	
-	void makeRoute(Vector2f startPos, Vector2f finishPos, float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY, int permissibleDistance = 1);
-	void addItem(world_object* item, const std::string& name, float x, float y);
-	world_object* getItemByName(const std::string& name);
-	std::vector<world_object*> getItems(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY);
-	std::vector<world_object*> getItems(int blockIndex);
-	void updateItemPosition(const std::string& name, const float x, const float y);
 
-	[[nodiscard]] std::vector<std::vector<world_object*>> getCells() const { return cells; }
+	[[nodiscard]] std::unordered_map<std::string, std::pair<int, int>> get_items_of_greed() const { return items_; }
+	[[nodiscard]] Vector2f get_block_size() const;
+	[[nodiscard]] int get_index_by_point(float x, float y) const;
+	[[nodiscard]] Vector2f get_point_by_index(int index) const;
+	[[nodiscard]] int get_micro_block_by_point(float x, float y) const;
+	[[nodiscard]] Vector2f get_point_by_micro_block(int micro_block_index) const;
+	[[nodiscard]] std::vector<std::vector<world_object*>> getCells() const { return cells_; }
 	
-	void clearCell(int cellIndex);
-	void deleteItem(const std::string& name);
-	void setLockedMicroBlocks(world_object* item, bool value = false, bool dynamicMatrix = false);
-	void boundDynamicMatrix(std::vector<std::vector<bool>>* matrix) { this->dynamicMicroBlockMatrix = matrix; }
+	size_t get_block_items_amount(const int index) { return cells_[index].size(); }
+	void make_route(Vector2f start_pos, Vector2f finish_pos, float upper_left_x, float upper_left_y, float bottom_right_x, float bottom_right_y, int permissible_distance = 1);
+	void add_item(world_object* item, const std::string& name, float x, float y);
+	world_object* get_item_by_name(const std::string& name);
+	std::vector<world_object*> get_items(float upper_left_x, float upper_left_y, float bottom_right_x, float bottom_right_y);
+	std::vector<world_object*> get_items(int block_index);
+	void update_item_position(const std::string& name, const float x, const float y);
+
 	
-	[[nodiscard]] size_t getSize() const { return items.size(); }
+	void clear_cell(int cell_index);
+	void delete_item(const std::string& name);
+	void set_locked_micro_blocks(world_object* item, bool value = false, bool dynamic_matrix = false);
+	void bound_dynamic_matrix(std::vector<std::vector<bool>>* matrix) { this->dynamic_micro_block_matrix = matrix; }
+	
+	[[nodiscard]] size_t get_size() const { return items_.size(); }
 
-	[[nodiscard]] std::vector<int> getBlocksAround(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY) const;
-	[[nodiscard]] std::vector<int> getBlocksInSight(float upperLeftX, float upperLeftY, float bottomRightX, float bottomRightY) const;
-	bool isIntersectWithOthers(world_object* object, const std::vector<world_object*>& visibleTerrain, bool isDotAdjusted = false) const;
+	[[nodiscard]] std::vector<int> get_blocks_around(float upper_left_x, float upper_left_y, float bottom_right_x, float bottom_right_y) const;
+	[[nodiscard]] std::vector<int> get_blocks_in_sight(float upper_left_x, float upper_left_y, float bottom_right_x, float bottom_right_y) const;
+	bool is_intersect_with_others(world_object* object, const std::vector<world_object*>& visible_terrain, bool is_dot_adjusted = false) const;
 
-	std::vector<std::vector<bool>> microBlockMatrix;
-	std::vector<std::vector<bool>>* dynamicMicroBlockMatrix = nullptr;
+	std::vector<std::vector<bool>> micro_block_matrix;
+	std::vector<std::vector<bool>>* dynamic_micro_block_matrix = nullptr;
 	std::vector<std::vector<float>> distances;
 	std::vector<std::vector<std::pair<int, int>>> previous;
 	std::vector<std::pair<int, int>> route = {{}};
-	std::pair<int, int> reserveDestination = std::make_pair(-1, -1);
+	std::pair<int, int> reserve_destination = std::make_pair(-1, -1);
 
 private:
-	int width, height;
-	Vector2f size = { 0, 0 }, microSize = { 0, 0 };
-	std::vector<std::vector<world_object*>> cells;
-	std::unordered_map<std::string, std::pair<int, int>> items;	
-	void bfs(int xBorder, int yBorder, int startX, int startY, int finishX, int finishY);
+	int width_;
+	int height_;
+	Vector2f size_ = { 0, 0 };
+	Vector2f micro_size_ = { 0, 0 };
+	std::vector<std::vector<world_object*>> cells_;
+	std::unordered_map<std::string, std::pair<int, int>> items_;	
+	void bfs(int x_border, int y_border, int start_x, int start_y, int finish_x, int finish_y);
 	int width_to_size_x_{};
 	int height_to_size_y_{};
 	int width_to_micro_x_{};
