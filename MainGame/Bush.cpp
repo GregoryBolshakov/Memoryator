@@ -178,9 +178,9 @@ int Bush::getBuildType(Vector2f, Vector2f)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Bush::prepareSprites(long long)
+std::vector<sprite_chain_element*> Bush::prepareSprites(long long)
 {
-	auto body = new SpriteChainElement(PackTag::darkWoods, PackPart::bush, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::bush, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	if (typeOfObject >= 1 && typeOfObject <= 8)
 		body->packTag = PackTag::birchGrove;

@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <stack>
 
-#include "SpriteChainElement.h"
+#include "sprite_chain_element.h"
 
 class WorldObject;
 using namespace sf;
@@ -43,7 +43,7 @@ public:
 	[[nodiscard]] float getPermissibleDistance() const { return permissibleDistance; }
 	[[nodiscard]] std::string getToSaveName() const { return toSaveName; }
 	[[nodiscard]] std::string getName() const { return name; }
-	virtual std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) = 0;
+	virtual std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) = 0;
 	virtual void onSpriteChange();
 	virtual int getSpriteNumber() = 0;
 	[[nodiscard]] Vector2f getPosition() const { return position; }
@@ -67,7 +67,7 @@ public:
 	void setHealthPoint(float healthPoint) { this->healthPoint = healthPoint; }
 	void setName(std::string name) { this->name = std::move(name); }
 	void deletePromiseOn() { deletePromise = true; }
-	static void setUnscaled(const std::vector<SpriteChainElement*>& items) { for (auto& item : items) item->unscaled = true; }
+	static void setUnscaled(const std::vector<sprite_chain_element*>& items) { for (auto& item : items) item->unscaled = true; }
 	virtual void setTextureSize(Vector2f textureSize);
 	void setState(State state) { this->state = state; }
 	virtual void takeDamage(float damage, Vector2f attackerPos = { -1, -1 });

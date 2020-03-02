@@ -274,9 +274,9 @@ void InventorySystem::onMouseUp()
 	currentMovingBag = -1;
 }
 
-std::vector<DrawableChainElement*> InventorySystem::prepareSprites(long long elapsedTime, std::map<PackTag, SpritePack>* packsMap)
+std::vector<drawable_chain_element*> InventorySystem::prepareSprites(long long elapsedTime, std::map<PackTag, SpritePack>* packsMap)
 {
-	std::vector<DrawableChainElement*> result = {};
+	std::vector<drawable_chain_element*> result = {};
 	usedMouse = false;
 	const auto mousePos = Vector2f(Mouse::getPosition());
 	// draw bags
@@ -377,7 +377,7 @@ std::vector<DrawableChainElement*> InventorySystem::prepareSprites(long long ela
 			sf::Color(0, 0, 0, 180),
 			cursorText, 
 			TextChainElement::defaultCharacterSize * 1.5f));
-		result.push_back(new SpriteChainElement(PackTag::inventory, PackPart::areas, Direction::DOWN, 2, { 0, 0 }, Helper::GetScreenSize()));
+		result.push_back(new sprite_chain_element(PackTag::inventory, PackPart::areas, Direction::DOWN, 2, { 0, 0 }, Helper::GetScreenSize()));
 	}
 	//if (bagPosDot.getPosition() != Vector2f(0, 0))
 		//window.draw(bagPosDot);

@@ -95,9 +95,9 @@ int Log::getBuildType(Vector2f, Vector2f)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Log::prepareSprites(long long)
+std::vector<sprite_chain_element*> Log::prepareSprites(long long)
 {
-	const auto body = new SpriteChainElement(PackTag::birchGrove, PackPart::log, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);	
+	const auto body = new sprite_chain_element(PackTag::birchGrove, PackPart::log, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);	
 
 	return { body };
 }

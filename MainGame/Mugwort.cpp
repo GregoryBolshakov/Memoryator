@@ -53,7 +53,7 @@ int Mugwort::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Mugwort::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> Mugwort::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*additionalSprites.clear();

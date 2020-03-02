@@ -90,9 +90,9 @@ int Roof::getBuildType(Vector2f, Vector2f)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Roof::prepareSprites(long long)
+std::vector<sprite_chain_element*> Roof::prepareSprites(long long)
 {
-	const auto body = new SpriteChainElement(PackTag::darkWoods, PackPart::roof, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	const auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::roof, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	return { body };
 }

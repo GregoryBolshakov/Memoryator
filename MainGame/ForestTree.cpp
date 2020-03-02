@@ -241,9 +241,9 @@ int ForestTree::getBuildType(Vector2f, Vector2f)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> ForestTree::prepareSprites(const long long elapsedTime)
+std::vector<sprite_chain_element*> ForestTree::prepareSprites(const long long elapsedTime)
 {
-	auto body = new SpriteChainElement(PackTag::darkWoods, PackPart::tree, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::tree, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	if (typeOfObject >= 1 && typeOfObject <= 7)
 		body->packTag = PackTag::birchGrove;

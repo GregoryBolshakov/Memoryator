@@ -54,7 +54,7 @@ int Spawn::getBuildType(Vector2f, Vector2f)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Spawn::prepareSprites(long long)
+std::vector<sprite_chain_element*> Spawn::prepareSprites(long long)
 {
     return {};
 	/*additionalSprites.clear();

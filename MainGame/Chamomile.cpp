@@ -57,7 +57,7 @@ int Chamomile::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Chamomile::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> Chamomile::prepareSprites(long long elapsedTime)
 {
     return {};
     /*additionalSprites.clear();

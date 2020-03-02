@@ -171,9 +171,9 @@ int Stump::getBuildType(Vector2f, Vector2f)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Stump::prepareSprites(long long)
+std::vector<sprite_chain_element*> Stump::prepareSprites(long long)
 {
-	auto body = new SpriteChainElement(PackTag::darkWoods, PackPart::stump, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::stump, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	if (typeOfObject >= 1 && typeOfObject <= 4)
 		body->packTag = PackTag::birchGrove;

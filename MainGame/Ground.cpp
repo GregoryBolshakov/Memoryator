@@ -37,9 +37,9 @@ int ground::getBuildType(Vector2f, Vector2f)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> ground::prepareSprites(long long)
+std::vector<sprite_chain_element*> ground::prepareSprites(long long)
 {
-	auto body = new SpriteChainElement(PackTag::darkWoods, PackPart::ground, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::ground, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	
 	body->zCoord = zCoord;
 	body->isBackground = true;

@@ -72,7 +72,7 @@ void nightmare_third::onSpriteChange()
 	}
 }
 
-std::vector<SpriteChainElement*> nightmare_third::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> nightmare_third::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*spriteChainElement fullSprite;

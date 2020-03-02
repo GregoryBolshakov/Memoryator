@@ -74,9 +74,9 @@ int mushroom::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> mushroom::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> mushroom::prepareSprites(long long elapsedTime)
 {
-	SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::mushroom, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	sprite_chain_element* body = new sprite_chain_element(PackTag::darkWoods, PackPart::mushroom, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	body->unscaled = true;
 
 	if (typeOfObject >= 1 && typeOfObject <= 3)

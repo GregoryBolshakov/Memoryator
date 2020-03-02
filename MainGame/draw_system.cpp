@@ -1,15 +1,15 @@
-#include "DrawSystem.h"
+#include "draw_system.h"
 
 #include "TextSystem.h"
 
-DrawSystem::DrawSystem()
+draw_system::draw_system()
 {
 	initPacksMap();
 }
 
-DrawSystem::~DrawSystem() = default;
+draw_system::~draw_system() = default;
 
-bool DrawSystem::searchFiles(const LPCTSTR lpszFileName, const LPSEARCHFUNC lpSearchFunc, const bool bInnerFolders)
+bool draw_system::searchFiles(const LPCTSTR lpszFileName, const LPSEARCHFUNC lpSearchFunc, const bool bInnerFolders)
 {
 	LPTSTR part;
 	char tmp[MAX_PATH];
@@ -90,7 +90,7 @@ void initSpritePack(const LPCTSTR lpszFileName, std::map<PackTag, SpritePack>& p
 	packs_map[tag].init(packPath, jsonPath, tag);
 }
 
-void DrawSystem::initPacksMap()
+void draw_system::initPacksMap()
 {
 	searchFiles("Game/spritePacks/*.png", initSpritePack, true);
 	SpritePack::iconWithoutSpaceSize = Vector2f(
@@ -98,53 +98,58 @@ void DrawSystem::initPacksMap()
 		float(packsMap.at(PackTag::inventory).getOriginalInfo(PackPart::areas, Direction::DOWN, 1).frame.h));
 }
 
-void DrawSystem::advancedScale(SpriteChainElement& item, Sprite& sprite, const sprite_pack::sprite& originalInfo, const float scale) const
+void draw_system::advancedScale(sprite_chain_element& item, Sprite& sprite, const sprite_pack::sprite& originalInfo, const float scale) const
 {
+	const auto size_w = float(originalInfo.source_size.w);
+	const auto size_h = float(originalInfo.source_size.h);
+	
 	if (!originalInfo.rotated)
-		sprite.setScale(scale * item.size.x / originalInfo.source_size.w,
-			scale * item.size.y / originalInfo.source_size.h);
+		sprite.setScale(
+			scale * item.size.x / size_w,
+			scale * item.size.y / size_h);
 	else
-		sprite.setScale(scale * item.size.y / originalInfo.source_size.h,
-			scale * item.size.x / originalInfo.source_size.w);
+		sprite.setScale(
+			scale * item.size.y / size_h,
+			scale * item.size.x / size_w);
 
 	if (!item.isBackground && !item.unscaled)
 	{
 		if (!originalInfo.rotated)
 		{
 			sprite.scale(1, pow(scale, 1.0f / 6));
-			sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - (pow(scale, 1.0f / 6) - 1) * originalInfo.source_size.h);
+			sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - (pow(scale, 1.0f / 6) - 1) * size_h);
 		}
 		else
 		{
 			sprite.scale(pow(scale, 1.0f / 6), 1);
-			sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - (pow(scale, 1.0f / 6) - 1) * originalInfo.source_size.w);
+			sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - (pow(scale, 1.0f / 6) - 1) * size_w);
 		}
 	}
 }
 
-std::vector<DrawableChainElement*> DrawSystem::UpcastChain(const std::vector<SpriteChainElement*>& chain)
+std::vector<drawable_chain_element*> draw_system::UpcastChain(const std::vector<sprite_chain_element*>& chain)
 {
-	std::vector<DrawableChainElement*> result = {};
+	std::vector<drawable_chain_element*> result = {};
 	for (auto spriteChainItem : chain)
 	{
-		auto item = static_cast<DrawableChainElement*>(spriteChainItem);
+		auto item = static_cast<drawable_chain_element*>(spriteChainItem);
 		result.push_back(item);
 	}
 	return result;
 }
 
-std::vector<SpriteChainElement*> DrawSystem::DowncastToSpriteChain(const std::vector<DrawableChainElement*>& chain)
+std::vector<sprite_chain_element*> draw_system::DowncastToSpriteChain(const std::vector<drawable_chain_element*>& chain)
 {
-	std::vector<SpriteChainElement*> result = {};
+	std::vector<sprite_chain_element*> result = {};
 	for (auto item : chain)
 	{
-		auto spriteChainItem = dynamic_cast<SpriteChainElement*>(item);
+		auto spriteChainItem = dynamic_cast<sprite_chain_element*>(item);
 		result.push_back(spriteChainItem);
 	}
 	return result;
 }
 
-void DrawSystem::drawSpriteChainElement(RenderTarget& target, SpriteChainElement* spriteChainItem, const Vector2f cameraPosition, const Vector2f screenCenter, const float scale)
+void draw_system::drawSpriteChainElement(RenderTarget& target, sprite_chain_element* spriteChainItem, const Vector2f cameraPosition, const Vector2f screenCenter, const float scale)
 {
 	if (spriteChainItem->packTag == PackTag::empty)
 		return;
@@ -168,7 +173,7 @@ void DrawSystem::drawSpriteChainElement(RenderTarget& target, SpriteChainElement
 	target.draw(sprite);
 }
 
-void DrawSystem::drawTextChainElement(RenderTarget& target, TextChainElement* textChainItem)
+void draw_system::drawTextChainElement(RenderTarget& target, TextChainElement* textChainItem)
 {
 	TextSystem::drawString(
 		textChainItem->string,
@@ -180,7 +185,7 @@ void DrawSystem::drawTextChainElement(RenderTarget& target, TextChainElement* te
 		textChainItem->color);
 }
 
-void DrawSystem::draw(RenderTarget& target, const std::vector<DrawableChainElement*>& drawableItems, const float scale, const Vector2f cameraPosition)
+void draw_system::draw(RenderTarget& target, const std::vector<drawable_chain_element*>& drawableItems, const float scale, const Vector2f cameraPosition)
 {
 	if (drawableItems.empty())
 		return;
@@ -194,7 +199,7 @@ void DrawSystem::draw(RenderTarget& target, const std::vector<DrawableChainEleme
 		if (!drawableChainItem->initialized)		
 			continue;		
 
-		const auto spriteChainItem = dynamic_cast<SpriteChainElement*>(drawableChainItem);
+		const auto spriteChainItem = dynamic_cast<sprite_chain_element*>(drawableChainItem);
 		if (spriteChainItem)
 			drawSpriteChainElement(target, spriteChainItem, cameraPosition, screenCenter, scale);
 

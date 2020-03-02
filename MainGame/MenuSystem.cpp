@@ -113,9 +113,9 @@ void MenuSystem::interact(WorldHandler &world, RenderWindow &window)
 	}
 }
 
-std::vector<SpriteChainElement*> MenuSystem::prepareSprites()
+std::vector<sprite_chain_element*> MenuSystem::prepareSprites()
 {
-    std::vector<SpriteChainElement*> result = {};
+    std::vector<sprite_chain_element*> result = {};
 	if (menuState == mainMenu)
 	{
         result.push_back(buttonList.at(ButtonTag::newRunTag).prepare_sprite());

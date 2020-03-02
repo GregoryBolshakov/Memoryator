@@ -303,7 +303,7 @@ void hero_book_page::setButtonLock(ButtonTag button, const ButtonTag changedButt
 	buttonList->at(changedButton).become_gray();
 }
 
-SpriteChainElement* hero_book_page::prepareIconFrame(const ButtonTag button, const int type)
+sprite_chain_element* hero_book_page::prepareIconFrame(const ButtonTag button, const int type)
 {	
 	ButtonTag currentIcon;
 	if (type == 1)
@@ -316,9 +316,9 @@ SpriteChainElement* hero_book_page::prepareIconFrame(const ButtonTag button, con
 	return buttonList->at(currentIcon).prepare_sprite();
 }
 
-std::vector<SpriteChainElement*> hero_book_page::prepareAllIcons(const pageContent& content)
+std::vector<sprite_chain_element*> hero_book_page::prepareAllIcons(const pageContent& content)
 {
-	std::vector<SpriteChainElement*> result = {};
+	std::vector<sprite_chain_element*> result = {};
 
 	for (auto& item : content.buttons)
 	{
@@ -337,7 +337,7 @@ std::vector<SpriteChainElement*> hero_book_page::prepareAllIcons(const pageConte
 	return result;
 }
 
-std::vector<SpriteChainElement*> hero_book_page::prepareLines()
+std::vector<sprite_chain_element*> hero_book_page::prepareLines()
 {
 	if (!(currentPage >= 101 && currentPage <= 499))
 		return {};
@@ -345,7 +345,7 @@ std::vector<SpriteChainElement*> hero_book_page::prepareLines()
 	if (objectInfo.find(pageToObjectId(currentPage)) == objectInfo.end())
 		return {};
 
-	std::vector<SpriteChainElement*> result = {};
+	std::vector<sprite_chain_element*> result = {};
 
 	/*auto upperFramePos = getConnectionPosition(0);
 	
@@ -647,12 +647,12 @@ bool hero_book_page::isCenterSurrounded()
 	return coloredMatrix[center.first][center.second] == 1;
 }
 
-std::vector<DrawableChainElement*> hero_book_page::prepareConnectableFlowers(Tag currentFlower)
+std::vector<drawable_chain_element*> hero_book_page::prepareConnectableFlowers(Tag currentFlower)
 {
 	if (plantsConnections.find(Tag(int(currentFlower))) == plantsConnections.end())
 		return {};	
 
-	std::vector<DrawableChainElement*> result = {};
+	std::vector<drawable_chain_element*> result = {};
 
 	const auto upperLeftCorner = Vector2f(buttonList->at(ButtonTag::sketching).get_global_bounds().left, buttonList->at(ButtonTag::sketching).get_global_bounds().top);
 	const auto pageSize = Vector2f(buttonList->at(ButtonTag::sketching).get_global_bounds().width, buttonList->at(ButtonTag::sketching).get_global_bounds().height);

@@ -1,10 +1,10 @@
-#include "DrawableChainElement.h"
+#include "drawable_chain_element.h"
 
 
-DrawableChainElement::DrawableChainElement()
+drawable_chain_element::drawable_chain_element()
 = default;
 
-DrawableChainElement::DrawableChainElement(
+drawable_chain_element::drawable_chain_element(
 	Vector2f position,
 	Vector2f size,
 	Vector2f offset,
@@ -19,5 +19,5 @@ DrawableChainElement::DrawableChainElement(
 	initialized = true;
 }
 
-DrawableChainElement::~DrawableChainElement()
+drawable_chain_element::~drawable_chain_element()
 = default;

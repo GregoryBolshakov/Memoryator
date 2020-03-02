@@ -312,7 +312,7 @@ void HeroBag::mouseMove()
 	lastMousePos = Vector2f(Mouse::getPosition());
 }
 
-SpriteChainElement* HeroBag::prepareSprite(const long long elapsedTime, std::map<PackTag, SpritePack> * packsMap)
+sprite_chain_element* HeroBag::prepareSprite(const long long elapsedTime, std::map<PackTag, SpritePack> * packsMap)
 {
 	const auto screenCenter = Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2);
 	bagSpriteChain.ClosedBag->size = sizeClosed; bagSpriteChain.ClosedBagSelected->size = sizeClosed; bagSpriteChain.ClosedBagBig->size = sizeClosed;
@@ -412,5 +412,5 @@ SpriteChainElement* HeroBag::prepareSprite(const long long elapsedTime, std::map
 		}
 		return  bagSpriteChain.ClosedBag;
 	}
-	return new SpriteChainElement();
+	return new sprite_chain_element();
 }

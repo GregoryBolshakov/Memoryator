@@ -54,9 +54,9 @@ public:
 	static Tag pageToObjectId(int page);
 	int buttonToPage(ButtonTag button);
 	void setButtonLock(ButtonTag button, ButtonTag changedButton);
-	SpriteChainElement* prepareIconFrame(ButtonTag button, int type = 1);
-	std::vector<SpriteChainElement*> prepareAllIcons(const pageContent& content);
-	std::vector<SpriteChainElement*> prepareLines();
+	sprite_chain_element* prepareIconFrame(ButtonTag button, int type = 1);
+	std::vector<sprite_chain_element*> prepareAllIcons(const pageContent& content);
+	std::vector<sprite_chain_element*> prepareLines();
 	std::vector<TextChainElement*> prepareHeadingText();
 	void unlockObject(Tag object);
 	static int getHeadingPage(Tag object);
@@ -73,7 +73,7 @@ public:
 	static bool checkWreathCellFit(int i, int j, const std::vector<int>& rings = std::vector<int>());
 	void setPlantsOnMatrix(const std::vector<std::pair<Tag, std::pair<int, int>>>& plants);
 	bool isCenterSurrounded();
-	std::vector<DrawableChainElement*> prepareConnectableFlowers(Tag currentFlower);
+	std::vector<drawable_chain_element*> prepareConnectableFlowers(Tag currentFlower);
 
 	std::vector<std::vector<Vector2f>> wreathMatrixPositions;
 	std::vector<std::vector<Tag>> wreathMatrix;

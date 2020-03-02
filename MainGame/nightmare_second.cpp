@@ -42,9 +42,9 @@ void nightmare_second::doAttack(WorldObject* target)
 	}
 }
 
-std::vector<SpriteChainElement*> nightmare_second::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> nightmare_second::prepareSprites(long long elapsedTime)
 {
-	auto body = new SpriteChainElement(PackTag::nightmare2Stand, PackPart::full, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
+	auto body = new sprite_chain_element(PackTag::nightmare2Stand, PackPart::full, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	shakeSpeed = -1;
 	animationSpeed = 10;
 

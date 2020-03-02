@@ -2,7 +2,7 @@
 
 const float TextChainElement::defaultCharacterSize = Helper::GetScreenSize().y * 0.024f;
 
-TextChainElement::TextChainElement() : DrawableChainElement()
+TextChainElement::TextChainElement() : drawable_chain_element()
 {
 }
 
@@ -13,7 +13,7 @@ TextChainElement::TextChainElement(
 	std::string string,	
 	float characterSize,
 	FontName font,
-	float rotation) : DrawableChainElement(position, { 0, 0 }, offset, color)
+	float rotation) : drawable_chain_element(position, { 0, 0 }, offset, color)
 {
 	this->string = std::move(string);
 	this->font = font;

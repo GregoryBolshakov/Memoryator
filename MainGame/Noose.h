@@ -11,7 +11,7 @@ public:
 	noose(const std::string& objectName, Vector2f centerPosition, WorldObject* owner);
 	~noose();
 	Vector2f calculateTextureOffset() override;
-	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;
+	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;
     void behaviorWithDynamic(DynamicObject* target, long long elapsedTime) override;
 	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;
@@ -26,7 +26,7 @@ public:
 private:
 	void stopping(bool doStand = false, bool forgetBoundTarget = false);
     void endingPreviousAction();
-	void rotateAndExtend(SpriteChainElement* rope, SpriteChainElement* loop) const;
+	void rotateAndExtend(sprite_chain_element* rope, sprite_chain_element* loop) const;
 
     long long timeForNewSprite;
     float ropeElongation = 0;

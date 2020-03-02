@@ -50,7 +50,7 @@ void BuildSystem::initializeObjectsInfo()
 	fin.close();
 }
 
-std::vector <SpriteChainElement*> BuildSystem::prepareSprites(GridList& staticGrid, const std::vector<WorldObject*>& visibleItems, std::map<PackTag, SpritePack>* packsMap)
+std::vector <sprite_chain_element*> BuildSystem::prepareSprites(GridList& staticGrid, const std::vector<WorldObject*>& visibleItems, std::map<PackTag, SpritePack>* packsMap)
 {
 	if (selectedObject == Tag::emptyCell)
 		return {};

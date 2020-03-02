@@ -161,7 +161,7 @@ int Fence::getBuildType(const Vector2f ounPos, const Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Fence::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> Fence::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*additionalSprites.clear();

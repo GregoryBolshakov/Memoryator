@@ -47,9 +47,9 @@ int DroppedLoot::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> DroppedLoot::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> DroppedLoot::prepareSprites(long long elapsedTime)
 {
-	SpriteChainElement* body = new SpriteChainElement(PackTag::empty, PackPart::full, Direction::DOWN, this->isSelected, position, conditionalSizeUnits, textureBoxOffset);	
+	sprite_chain_element* body = new sprite_chain_element(PackTag::empty, PackPart::full, Direction::DOWN, this->isSelected, position, conditionalSizeUnits, textureBoxOffset);	
 
 	switch (typeOfObject)
 	{

@@ -180,7 +180,7 @@ void owl_boss::fightInteract(const long long elapsedTime, DynamicObject* target)
 	moveSystem.pushAway(elapsedTime);
 }
 
-std::vector<SpriteChainElement*> owl_boss::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> owl_boss::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*spriteChainElement legsSprite, bodySprite, fullSprite;

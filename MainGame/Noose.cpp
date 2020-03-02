@@ -189,7 +189,7 @@ void noose::fightInteract(long long elapsedTime, DynamicObject* target)
 {
 }
 
-void noose::rotateAndExtend(SpriteChainElement* rope, SpriteChainElement* loop) const
+void noose::rotateAndExtend(sprite_chain_element* rope, sprite_chain_element* loop) const
 {
 	auto localElongation = ropeElongation;
 	if (currentAction == relax)
@@ -233,11 +233,11 @@ void noose::rotateAndExtend(SpriteChainElement* rope, SpriteChainElement* loop) 
 	}
 }
 
-std::vector<SpriteChainElement*> noose::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> noose::prepareSprites(long long elapsedTime)
 {
-	std::vector<SpriteChainElement*> result = {};
-	auto ropeSprite = new SpriteChainElement(PackTag::craftObjects, PackPart::noose, Direction::DOWN, 3, position, {conditionalSizeUnits.x, 30}, {0, 0}, color);
-	auto loopSprite = new SpriteChainElement(PackTag::craftObjects, PackPart::noose, Direction::UP, 1, position, conditionalSizeUnits, textureBoxOffset, color);
+	std::vector<sprite_chain_element*> result = {};
+	auto ropeSprite = new sprite_chain_element(PackTag::craftObjects, PackPart::noose, Direction::DOWN, 3, position, {conditionalSizeUnits.x, 30}, {0, 0}, color);
+	auto loopSprite = new sprite_chain_element(PackTag::craftObjects, PackPart::noose, Direction::UP, 1, position, conditionalSizeUnits, textureBoxOffset, color);
 
 	loopSprite->number = currentSprite[0];
 

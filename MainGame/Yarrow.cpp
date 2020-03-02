@@ -58,7 +58,7 @@ int Yarrow::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Yarrow::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> Yarrow::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*additionalSprites.clear();

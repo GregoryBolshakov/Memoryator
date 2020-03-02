@@ -48,7 +48,7 @@ public:
 	std::map<PackTag, SpritePack>* packsMap;
 	void interact(Vector2f render_target_size, long long elapsedTime, Event event);
 	void handleEvents(Event& event);
-    std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime, bool onlyBackground = false);
+    std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime, bool onlyBackground = false);
 	//void draw(RenderWindow& window, long long elapsedTime);
 	void setItemFromBuildSystem();
 	//void drawVisibleItems(RenderWindow& window, long long elapsedTime, std::vector<SpriteChainElement*> sprites);
@@ -119,7 +119,7 @@ private:
 	// Grids
 	GridList staticGrid;
 	GridList dynamicGrid;
-	std::vector<SpriteChainElement*> visibleBackground, visibleTerrain;
+	std::vector<sprite_chain_element*> visibleBackground, visibleTerrain;
 	std::vector<WorldObject*> localTerrain;
 
 	// Test

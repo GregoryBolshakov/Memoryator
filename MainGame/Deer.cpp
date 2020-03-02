@@ -266,9 +266,9 @@ Vector2f deer::getHeadPosition()
 	return position;
 }
 
-std::vector<SpriteChainElement*> deer::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> deer::prepareSprites(long long elapsedTime)
 {
-	auto body = new SpriteChainElement(PackTag::deer, PackPart::stand, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
+	auto body = new sprite_chain_element(PackTag::deer, PackPart::stand, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	animationSpeed = 10;
 
 	auto spriteDirection = DirectionSystem::cutDiagonals(directionSystem.lastDirection);

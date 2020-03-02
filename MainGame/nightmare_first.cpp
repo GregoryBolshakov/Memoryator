@@ -43,9 +43,9 @@ void nightmare_first::doAttack(WorldObject* target)
 	}
 }
 
-std::vector<SpriteChainElement*> nightmare_first::prepareSprites(const long long elapsedTime)
+std::vector<sprite_chain_element*> nightmare_first::prepareSprites(const long long elapsedTime)
 {
-	auto body = new SpriteChainElement(PackTag::nightmare1, PackPart::stand, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
+	auto body = new sprite_chain_element(PackTag::nightmare1, PackPart::stand, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	animationSpeed = 10;
 
 	Side spriteSide = directionSystem.side;

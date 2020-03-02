@@ -112,9 +112,9 @@ int WreathTable::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> WreathTable::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> WreathTable::prepareSprites(long long elapsedTime)
 {
-	const auto body = new SpriteChainElement(PackTag::locations, PackPart::wreathTable, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	const auto body = new sprite_chain_element(PackTag::locations, PackPart::wreathTable, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	return { body };
 }

@@ -145,13 +145,13 @@ int Brazier::getBuildType(Vector2f, Vector2f)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Brazier::prepareSprites(long long)
+std::vector<sprite_chain_element*> Brazier::prepareSprites(long long)
 {
     const Vector2f frontOffset(textureBox.width * 0.506f, textureBox.height * 0.949f);
 	const Vector2f frontPosition(position.x - textureBoxOffset.x + frontOffset.x, position.y - textureBoxOffset.y + frontOffset.y);
 	
-    const auto back = new SpriteChainElement(PackTag::locations, PackPart::brazier, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
-    const auto front = new SpriteChainElement(PackTag::locations, PackPart::brazier, Direction::DOWN, 2, frontPosition, conditionalSizeUnits, frontOffset);
+    const auto back = new sprite_chain_element(PackTag::locations, PackPart::brazier, Direction::DOWN, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+    const auto front = new sprite_chain_element(PackTag::locations, PackPart::brazier, Direction::DOWN, 2, frontPosition, conditionalSizeUnits, frontOffset);
 	
     return {back, front};
 	

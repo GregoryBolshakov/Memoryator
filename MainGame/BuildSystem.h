@@ -29,7 +29,7 @@ public:
 	void interact(Vector2f cameraPosition = {0, 0}, float scaleFactor = 1);
 	void clearHareBags(int block, GridList& staticGrid, std::vector<WorldObject*>* visibleItems);
 	void wasPlaced();
-	std::vector<SpriteChainElement*> prepareSprites(GridList& staticGrid, const std::vector<WorldObject*>& visibleItems, std::map<PackTag, SpritePack>* packsMap);
+	std::vector<sprite_chain_element*> prepareSprites(GridList& staticGrid, const std::vector<WorldObject*>& visibleItems, std::map<PackTag, SpritePack>* packsMap);
 
 	int getCurrentObject() const { return currentObject; }
 	bool getUsedMouse() const { return usedMouse; }

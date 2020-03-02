@@ -11,11 +11,11 @@ enum BagState { bagOpen = 1, bagClosed = 2, bagOpening = 3, bagClosing = 4, ejec
 
 struct BagSpriteChain
 {
-	SpriteChainElement* ClosedBag = new SpriteChainElement();
-	SpriteChainElement* ClosedBagSelected = new SpriteChainElement();
-	SpriteChainElement* ClosedBagBig = new SpriteChainElement();
-	SpriteChainElement* OpenedBag = new SpriteChainElement();
-	SpriteChainElement* OpenedBagSelected = new SpriteChainElement();
+	sprite_chain_element* ClosedBag = new sprite_chain_element();
+	sprite_chain_element* ClosedBagSelected = new sprite_chain_element();
+	sprite_chain_element* ClosedBagBig = new sprite_chain_element();
+	sprite_chain_element* OpenedBag = new sprite_chain_element();
+	sprite_chain_element* OpenedBagSelected = new sprite_chain_element();
 };
 
 struct Cell
@@ -55,7 +55,7 @@ public:
 	std::vector<Cell> cells;
 
 	//animation
-	SpriteChainElement* prepareSprite(long long elapsedTime, std::map<PackTag, SpritePack>* packsMap);
+	sprite_chain_element* prepareSprite(long long elapsedTime, std::map<PackTag, SpritePack>* packsMap);
 	void drawCircuit(RenderWindow* window);
 
 	long long stateChangeTime = 100000;

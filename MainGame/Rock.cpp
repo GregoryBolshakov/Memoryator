@@ -218,9 +218,9 @@ int Rock::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Rock::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> Rock::prepareSprites(long long elapsedTime)
 {
-	auto body = new SpriteChainElement(PackTag::darkWoods, PackPart::rock, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::rock, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	if (typeOfObject >= 1 && typeOfObject <= 8)
 		body->packTag = PackTag::birchGrove;

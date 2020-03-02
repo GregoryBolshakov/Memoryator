@@ -99,10 +99,10 @@ int grass::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> grass::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> grass::prepareSprites(long long elapsedTime)
 {
-	std::vector<SpriteChainElement*> result = {};
-	SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::plant, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	std::vector<sprite_chain_element*> result = {};
+	sprite_chain_element* body = new sprite_chain_element(PackTag::darkWoods, PackPart::plant, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	body->unscaled = true;
 
 	if (typeOfObject >= 1 && typeOfObject <= 8)

@@ -16,7 +16,7 @@ public:
 	MenuSystem();
 	~MenuSystem();
 	void interact(WorldHandler &world, RenderWindow &window);
-	std::vector<SpriteChainElement*> prepareSprites();
+	std::vector<sprite_chain_element*> prepareSprites();
 	MenuStates getState() { return menuState; }
 	void setState(MenuStates state) { menuState = state; }
 	void onKeyDown(Event event, WorldHandler &world);

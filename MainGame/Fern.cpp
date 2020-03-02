@@ -54,7 +54,7 @@ int Fern::getBuildType(Vector2f ounPos, Vector2f otherPos)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Fern::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> Fern::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*additionalSprites.clear();

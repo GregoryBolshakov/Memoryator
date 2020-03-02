@@ -1,10 +1,10 @@
-#include "SpriteChainElement.h"
+#include "sprite_chain_element.h"
 
-SpriteChainElement::SpriteChainElement() : DrawableChainElement()
+sprite_chain_element::sprite_chain_element() : drawable_chain_element()
 {
 }
 
-SpriteChainElement::SpriteChainElement(
+sprite_chain_element::sprite_chain_element(
     PackTag tag,
     PackPart part,
     Direction direction,
@@ -15,7 +15,7 @@ SpriteChainElement::SpriteChainElement(
 	Color color,
 	bool mirrored,
 	bool unscaled,
-    float rotation) : DrawableChainElement(position, size, offset, color)
+    float rotation) : drawable_chain_element(position, size, offset, color)
 {
     this->packTag = tag;
     this->packPart = part;
@@ -26,24 +26,24 @@ SpriteChainElement::SpriteChainElement(
     this->rotation = rotation;
 }
 
-SpriteChainElement::SpriteChainElement(
+sprite_chain_element::sprite_chain_element(
 	Vector2f position,
 	Vector2f size,
 	Vector2f offset,
 	Color color,
 	bool mirrored,
 	bool unscaled,
-	float rotation) : DrawableChainElement(position, size, offset, color)
+	float rotation) : drawable_chain_element(position, size, offset, color)
 {
 	this->mirrored = mirrored;
 	this->unscaled = unscaled;
 	this->rotation = rotation;
 }
 
-SpriteChainElement::~SpriteChainElement()
+sprite_chain_element::~sprite_chain_element()
 = default;
 
-void SpriteChainElement::setDrawInfo(PackTag tag, PackPart part, Direction direction, int number) 
+void sprite_chain_element::setDrawInfo(PackTag tag, PackPart part, Direction direction, int number) 
 {
 	this->packTag = tag;
 	this->packPart = part;

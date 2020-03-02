@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "SpriteChainElement.h"
+#include "sprite_chain_element.h"
 
 using namespace sf;
 
@@ -23,7 +23,7 @@ public:
 		ButtonTag tag,
 		Vector2f offset = { 0, 0 });
 	
-	SpriteChainElement* prepare_sprite();
+	sprite_chain_element* prepare_sprite();
 	
 	void become_gray();
 	
@@ -69,9 +69,9 @@ public:
 	bool is_active = true;
 
 private:
-	SpriteChainElement* button_enabled_ = new SpriteChainElement();
-	SpriteChainElement* button_selected_ = new SpriteChainElement();
-	SpriteChainElement* button_pressed_ = new SpriteChainElement();
+	sprite_chain_element* button_enabled_ = new sprite_chain_element();
+	sprite_chain_element* button_selected_ = new sprite_chain_element();
+	sprite_chain_element* button_pressed_ = new sprite_chain_element();
 	ButtonTag tag_{};
 	bool selected_ = false;
 	bool is_gray_ = false;

@@ -191,9 +191,9 @@ void hare::jerk(float power, float deceleration, Vector2f destinationPoint)
 	return;
 }
 
-std::vector<SpriteChainElement*> hare::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> hare::prepareSprites(long long elapsedTime)
 {
-	auto body = new SpriteChainElement(PackTag::hare, PackPart::full, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
+	auto body = new sprite_chain_element(PackTag::hare, PackPart::full, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	animationSpeed = 10;
 
 	Side spriteSide = directionSystem.side;

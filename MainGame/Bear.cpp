@@ -128,7 +128,7 @@ void bear::jerk(float power, float deceleration, Vector2f destinationPoint)
 	return;
 }
 
-std::vector<SpriteChainElement*> bear::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> bear::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*spriteChainElement fullSprite;

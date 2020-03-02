@@ -924,9 +924,9 @@ void deerchant::fightInteract(long long elapsedTime, DynamicObject* target)
 	moveSystem.pushAway(elapsedTime);
 }
 
-SpriteChainElement* deerchant::prepareSpeedLine()
+sprite_chain_element* deerchant::prepareSpeedLine()
 {
-	auto speedLine = new SpriteChainElement(PackTag::heroMove, PackPart::lines, Direction::STAND, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	auto speedLine = new sprite_chain_element(PackTag::heroMove, PackPart::lines, Direction::STAND, 1, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	speedLine->animationLength = 3;
 	if (speedLineDirection == Direction::STAND || currentSprite[2] > speedLine->animationLength)
 		return speedLine;
@@ -944,13 +944,13 @@ SpriteChainElement* deerchant::prepareSpeedLine()
 	return speedLine;
 }
 
-std::vector<SpriteChainElement*> deerchant::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> deerchant::prepareSprites(long long elapsedTime)
 {
-	auto legsSprite = new SpriteChainElement(Vector2f(position.x, position.y - 1), conditionalSizeUnits, { textureBoxOffset.x, textureBoxOffset.y + 1 }, color);
-	auto* bodySprite = new SpriteChainElement(position, conditionalSizeUnits, textureBoxOffset, color);
+	auto legsSprite = new sprite_chain_element(Vector2f(position.x, position.y - 1), conditionalSizeUnits, { textureBoxOffset.x, textureBoxOffset.y + 1 }, color);
+	auto* bodySprite = new sprite_chain_element(position, conditionalSizeUnits, textureBoxOffset, color);
 
 	const auto speedLine = prepareSpeedLine();
-	std::vector<SpriteChainElement*> result = {};
+	std::vector<sprite_chain_element*> result = {};
 	auto legsInverse = false, bodyInverse = false;
 	legsSprite->animationLength = 8;
 

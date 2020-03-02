@@ -15,7 +15,7 @@ public:
 	InventorySystem();
 	~InventorySystem();
 	void init();
-	std::vector<DrawableChainElement*> prepareSprites(long long elapsedTime, std::map<PackTag, SpritePack>* packsMap);
+	std::vector<drawable_chain_element*> prepareSprites(long long elapsedTime, std::map<PackTag, SpritePack>* packsMap);
 	//void drawInventory(std::vector<std::pair<Tag, int>>* inventory, Vector2f position, RenderWindow& window);
 	void resetAnimationValues();
 	void onMouseUp();

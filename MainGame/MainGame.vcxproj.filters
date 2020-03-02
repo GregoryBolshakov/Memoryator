@@ -80,9 +80,6 @@
     <ClCompile Include="Root.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteChainElement.cpp">
-      <Filter>Systems\DrawSystem</Filter>
-    </ClCompile>
     <ClCompile Include="DynamicObject.cpp">
       <Filter>World</Filter>
     </ClCompile>
@@ -100,9 +97,6 @@
     </ClCompile>
     <ClCompile Include="WorldObject.cpp">
       <Filter>World</Filter>
-    </ClCompile>
-    <ClCompile Include="DrawSystem.cpp">
-      <Filter>Systems\DrawSystem</Filter>
     </ClCompile>
     <ClCompile Include="Lake.cpp">
       <Filter>Terrain</Filter>
@@ -128,9 +122,6 @@
     </ClCompile>
     <ClCompile Include="EffectsSystem.cpp">
       <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="DrawableChainElement.cpp">
-      <Filter>Systems\DrawSystem</Filter>
     </ClCompile>
     <ClCompile Include="TextChainElement.cpp">
       <Filter>Systems\DrawSystem</Filter>
@@ -212,6 +203,15 @@
     </ClCompile>
     <ClCompile Include="wreath_draft.cpp">
       <Filter>HeroBook</Filter>
+    </ClCompile>
+    <ClCompile Include="drawable_chain_element.cpp">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_system.cpp">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite_chain_element.cpp">
+      <Filter>Systems\DrawSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -295,9 +295,6 @@
     <ClInclude Include="Root.h">
       <Filter>Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteChainElement.h">
-      <Filter>Systems\DrawSystem</Filter>
-    </ClInclude>
     <ClInclude Include="DynamicObject.h">
       <Filter>World</Filter>
     </ClInclude>
@@ -318,9 +315,6 @@
     </ClInclude>
     <ClInclude Include="Tags.h">
       <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="DrawSystem.h">
-      <Filter>Systems\DrawSystem</Filter>
     </ClInclude>
     <ClInclude Include="Lake.h">
       <Filter>Terrain</Filter>
@@ -346,9 +340,6 @@
     </ClInclude>
     <ClInclude Include="EffectsSystem.h">
       <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="DrawableChainElement.h">
-      <Filter>Systems\DrawSystem</Filter>
     </ClInclude>
     <ClInclude Include="TextChainElement.h">
       <Filter>Systems\DrawSystem</Filter>
@@ -433,6 +424,15 @@
     </ClInclude>
     <ClInclude Include="wreath_draft.h">
       <Filter>HeroBook</Filter>
+    </ClInclude>
+    <ClInclude Include="drawable_chain_element.h">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="draw_system.h">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite_chain_element.h">
+      <Filter>Systems\DrawSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

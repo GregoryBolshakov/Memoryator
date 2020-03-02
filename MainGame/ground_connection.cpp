@@ -77,16 +77,16 @@ int ground_connection::getBuildType(Vector2f, Vector2f)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> ground_connection::prepareSprites(long long)
+std::vector<sprite_chain_element*> ground_connection::prepareSprites(long long)
 {	
 	if (typeOfObject >= 1 && typeOfObject <= 4)
-		return { new SpriteChainElement() };
+		return { new sprite_chain_element() };
 
     int spriteType = typeOfObject % 4 + 1;
 	if (spriteType == 1)
 		spriteType = 5;
 
-	auto body = new SpriteChainElement(PackTag::darkWoods, PackPart::ground, Direction::DOWN, spriteType, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	auto body = new sprite_chain_element(PackTag::darkWoods, PackPart::ground, Direction::DOWN, spriteType, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	
 	body->zCoord = zCoord;
 

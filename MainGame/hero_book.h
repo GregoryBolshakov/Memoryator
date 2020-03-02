@@ -17,7 +17,7 @@ public:
 	hero_book();
 	~hero_book();
 	void init(std::map<PackTag, SpritePack>* packsMap);
-	std::vector<DrawableChainElement*> prepareSprites(float hpRatio, long long elapsedTime);
+	std::vector<drawable_chain_element*> prepareSprites(float hpRatio, long long elapsedTime);
 	void interact();
 	void onMouseUp();
 	void getAllOuterInfo(
@@ -37,12 +37,12 @@ public:
 		buttonList.at(ButtonTag::bookStandTag).get_position().y + buttonList.at(ButtonTag::bookStandTag).get_global_bounds().height / 2 - 20 }; }
 private:
 	hero_book_page somePage;
-	std::vector<SpriteChainElement*> prepareHpLine(float hpRatio);
-	std::vector<SpriteChainElement*> prepareWreathMatrix();
-	std::vector<SpriteChainElement*> preparePlantsMatrix();
-	std::vector <SpriteChainElement*> prepareLineMatrix();
-	std::vector<SpriteChainElement*> preparePlantsList();
-	std::vector<DrawableChainElement*> prepareWreathCost(Vector2f pos);
+	std::vector<sprite_chain_element*> prepareHpLine(float hpRatio);
+	std::vector<sprite_chain_element*> prepareWreathMatrix();
+	std::vector<sprite_chain_element*> preparePlantsMatrix();
+	std::vector <sprite_chain_element*> prepareLineMatrix();
+	std::vector<sprite_chain_element*> preparePlantsList();
+	std::vector<drawable_chain_element*> prepareWreathCost(Vector2f pos);
 	void initButtons(std::map<PackTag, SpritePack>* packsMap);
 	void initContent();
 

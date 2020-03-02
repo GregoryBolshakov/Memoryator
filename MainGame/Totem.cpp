@@ -75,9 +75,9 @@ int Totem::getBuildType(Vector2f, Vector2f)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Totem::prepareSprites(long long)
+std::vector<sprite_chain_element*> Totem::prepareSprites(long long)
 {
-	const auto body = new SpriteChainElement(PackTag::craftObjects, PackPart::totem, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
+	const auto body = new sprite_chain_element(PackTag::craftObjects, PackPart::totem, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset), color, mirrored);
 
 	return { body };
 }

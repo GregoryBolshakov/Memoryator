@@ -2,7 +2,7 @@
 
 #include "Console.h"
 #include "deerchant.h"
-#include "DrawSystem.h"
+#include "draw_system.h"
 #include "hero_book.h"
 #include "MenuSystem.h"
 #include "VisualEffects/AmbientLight.hpp"
@@ -18,9 +18,9 @@ int main() {
 	const auto screenSize = Helper::GetScreenSize();
 	RenderWindow mainWindow(VideoMode(static_cast<unsigned int>(screenSize.x), static_cast<unsigned int>(screenSize.y), 32), "game");//, Style::Fullscreen);
 
-    DrawSystem drawSystem;
+    draw_system draw_system;
 	MenuSystem menuSystem;
-	WorldHandler world(40000, 40000, &drawSystem.packsMap);
+	WorldHandler world(40000, 40000, &draw_system.packsMap);
 	bool windowFocus = true;
 	Console console(FloatRect(Helper::GetScreenSize().x * 0.2f, Helper::GetScreenSize().y * 0.8f, Helper::GetScreenSize().x * 0.6f, Helper::GetScreenSize().y * 0.03f), &world);
 
@@ -29,7 +29,7 @@ int main() {
 	int currentMouseButton = 0;
 
 	hero_book mainBook;
-	mainBook.init(&drawSystem.packsMap);
+	mainBook.init(&draw_system.packsMap);
 
 	TextSystem textWriter;
 	
@@ -102,7 +102,7 @@ int main() {
 		if (menuSystem.getState() == mainMenu)
 		{		
 			mainWindow.clear(sf::Color::White);
-			drawSystem.draw(mainWindow, DrawSystem::UpcastChain(menuSystem.prepareSprites()));
+			draw_system.draw(mainWindow, draw_system::UpcastChain(menuSystem.prepareSprites()));
 			mainWindow.display();
 
 			clock.restart();
@@ -127,23 +127,23 @@ int main() {
 
 			mainWindow.clear(sf::Color::White);
 			
-            drawSystem.draw(mainWindow, DrawSystem::UpcastChain(world.prepareSprites(time_micro_sec, true)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
-            drawSystem.draw(mainWindow, DrawSystem::UpcastChain(world.prepareSprites(time_micro_sec, false)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+            draw_system.draw(mainWindow, draw_system::UpcastChain(world.prepareSprites(time_micro_sec, true)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+            draw_system.draw(mainWindow, draw_system::UpcastChain(world.prepareSprites(time_micro_sec, false)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
             
 			//visual_effect_texture.update(mainWindow);
 			//mainWindow.draw(visual_effect_sprite, ambient_light.shader);
 
-			drawSystem.draw(mainWindow, DrawSystem::UpcastChain(world.getBuildSystem().prepareSprites(world.getStaticGrid(), world.getLocalTerrain(), &drawSystem.packsMap)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+			draw_system.draw(mainWindow, draw_system::UpcastChain(world.getBuildSystem().prepareSprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packsMap)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
 			TextSystem::drawString(world.getMouseDisplayName(), FontName::NormalFont, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), mainWindow, sf::Color(255, 255, 255, 180));
 			world.pedestalController.draw(&mainWindow, world.getCameraPosition(), world.getWorldGenerator().scaleFactor);
-			drawSystem.draw(mainWindow, mainBook.prepareSprites(world.focusedObject->getHealthPoint() / world.focusedObject->getMaxHealthPointValue(), time_micro_sec));
-			drawSystem.draw(mainWindow, world.getInventorySystem().prepareSprites(time_micro_sec, world.packsMap));			
+			draw_system.draw(mainWindow, mainBook.prepareSprites(world.focusedObject->getHealthPoint() / world.focusedObject->getMaxHealthPointValue(), time_micro_sec));
+			draw_system.draw(mainWindow, world.getInventorySystem().prepareSprites(time_micro_sec, world.packsMap));			
 			//world.runInventorySystemDrawing(mainWindow, time);
 		}
 		else
 			clock.restart();
 
-		drawSystem.draw(mainWindow, DrawSystem::UpcastChain(menuSystem.prepareSprites()));
+		draw_system.draw(mainWindow, draw_system::UpcastChain(menuSystem.prepareSprites()));
 
 		//textWriter.drawString(std::to_string(world.getWorldGenerator().scaleFactor), FontName::NormalFont, TextChainElement::defaultCharacterSize, 200, 200, mainWindow);
 

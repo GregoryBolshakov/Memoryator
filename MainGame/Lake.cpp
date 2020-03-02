@@ -148,10 +148,10 @@ int Lake::getBuildType(Vector2f, Vector2f)
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Lake::prepareSprites(long long)
+std::vector<sprite_chain_element*> Lake::prepareSprites(long long)
 {
-	std::vector<SpriteChainElement*> result = {};
-	const auto body = new SpriteChainElement(PackTag::swampyTrees, PackPart::lake, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
+	std::vector<sprite_chain_element*> result = {};
+	const auto body = new sprite_chain_element(PackTag::swampyTrees, PackPart::lake, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 
 	result.push_back(body);
 

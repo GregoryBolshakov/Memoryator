@@ -135,9 +135,9 @@ sprite_pack::sprite SpritePack::getOriginalInfo(const PackPart part, const Direc
 	return pack.at(part).at(direction).at(number);
 }
 
-SpriteChainElement* SpritePack::tagToIcon(const Tag object, const bool selected, const int typeOfObject)
+sprite_chain_element* SpritePack::tagToIcon(const Tag object, const bool selected, const int typeOfObject)
 {
-	auto result = new SpriteChainElement(PackTag::empty, PackPart::full, Direction::DOWN, 1, { 0, 0 }, iconSize, { iconSize.x / 2, iconSize.y / 2 });
+	auto result = new sprite_chain_element(PackTag::empty, PackPart::full, Direction::DOWN, 1, { 0, 0 }, iconSize, { iconSize.x / 2, iconSize.y / 2 });
 
 	auto spriteNumber = int(selected);
 

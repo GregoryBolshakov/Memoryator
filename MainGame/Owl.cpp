@@ -195,7 +195,7 @@ void owl::jerk(float power, float deceleration, Vector2f destinationPoint)
 	return;
 }
 
-std::vector<SpriteChainElement*> owl::prepareSprites(long long elapsedTime)
+std::vector<sprite_chain_element*> owl::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*spriteChainElement fullSprite;

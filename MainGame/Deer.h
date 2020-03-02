@@ -12,7 +12,7 @@ public:
 	deer(const std::string& objectName, Vector2f centerPosition);
 	~deer() override;
 	Vector2f calculateTextureOffset() override;
-	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;
+	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;
 	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;
 	void endingPreviousAction();

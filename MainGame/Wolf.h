@@ -17,7 +17,7 @@ public:
 	wolf(std::string objectName, Vector2f centerPosition);
 	~wolf();
 	Vector2f calculateTextureOffset() override;
-	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;
+	std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime) override;
 	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;
 	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;

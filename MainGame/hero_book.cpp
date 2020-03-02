@@ -86,9 +86,9 @@ void hero_book::setPage(int page)
 	somePage.setPage(page);
 }
 
-std::vector<SpriteChainElement*> hero_book::prepareHpLine(float hpRatio)
+std::vector<sprite_chain_element*> hero_book::prepareHpLine(float hpRatio)
 {
-	std::vector<SpriteChainElement*> result = {};
+	std::vector<sprite_chain_element*> result = {};
 	buttonList.at(ButtonTag::hpFrameTag).set_position(getHpLinePosition());
 	buttonList.at(ButtonTag::hpLineTag).set_size(Vector2f(hpRatio * buttonList.at(ButtonTag::hpFrameTag).get_global_bounds().width, buttonList.at(ButtonTag::hpFrameTag).get_global_bounds().height));
 	buttonList.at(ButtonTag::hpLineTag).set_position(getHpLinePosition());
@@ -99,12 +99,12 @@ std::vector<SpriteChainElement*> hero_book::prepareHpLine(float hpRatio)
 	return result;
 }
 
-std::vector<SpriteChainElement*> hero_book::prepareWreathMatrix()
+std::vector<sprite_chain_element*> hero_book::prepareWreathMatrix()
 {	
 	if (currentPage != 5 || somePage.getOriginalSetups()[currentDraft].id != currentDraft)
 		return {};
 
-	std::vector<SpriteChainElement*> result = {};
+	std::vector<sprite_chain_element*> result = {};
 
 	const auto upperLeftCorner = Vector2f(
 		buttonList.at(ButtonTag::sketching).get_global_bounds().left + buttonList.at(ButtonTag::sketching).get_global_bounds().width / 1.875f,
@@ -145,9 +145,9 @@ std::vector<SpriteChainElement*> hero_book::prepareWreathMatrix()
 	return result;
 }
 
-std::vector<SpriteChainElement*> hero_book::prepareLineMatrix()
+std::vector<sprite_chain_element*> hero_book::prepareLineMatrix()
 {
-	std::vector<SpriteChainElement*> result = {};
+	std::vector<sprite_chain_element*> result = {};
 
 	Vector2f distance = Vector2f(buttonList.at(ButtonTag::cell).get_global_bounds().width * 6 / 4,
 		distance.y = buttonList.at(ButtonTag::cell).get_global_bounds().height / 2);
@@ -187,9 +187,9 @@ std::vector<SpriteChainElement*> hero_book::prepareLineMatrix()
 	return result;
 }
 
-std::vector<SpriteChainElement*> hero_book::preparePlantsMatrix()
+std::vector<sprite_chain_element*> hero_book::preparePlantsMatrix()
 {
-	std::vector<SpriteChainElement*> result = {};
+	std::vector<sprite_chain_element*> result = {};
 
 	for (auto raw = 0u; raw < somePage.wreathMatrix.size(); raw++)
 	{
@@ -222,12 +222,12 @@ std::vector<SpriteChainElement*> hero_book::preparePlantsMatrix()
 	return result;
 }
 
-std::vector<SpriteChainElement*> hero_book::preparePlantsList()
+std::vector<sprite_chain_element*> hero_book::preparePlantsList()
 {
 	if (currentPage != 5)
 		return {};
 
-	std::vector<SpriteChainElement*> result = {};
+	std::vector<sprite_chain_element*> result = {};
 
 	const auto upperLeftCorner = Vector2f(
 		buttonList.at(ButtonTag::sketching).get_global_bounds().left + buttonList.at(ButtonTag::sketching).get_global_bounds().width * 0.066f,
@@ -255,13 +255,13 @@ std::vector<SpriteChainElement*> hero_book::preparePlantsList()
 	return result;
 }
 
-std::vector<DrawableChainElement*> hero_book::prepareWreathCost(Vector2f pos)
+std::vector<drawable_chain_element*> hero_book::prepareWreathCost(Vector2f pos)
 {
 	const Tag currentObject = hero_book_page::pageToObjectId(currentPage);
 	if (!somePage.nearTheTable || !somePage.getObjectInfo()->at(currentObject).isUnlocked || somePage.doneRecipes.count(currentObject) == 0)
 		return {};
 
-	std::vector<DrawableChainElement*> result = {};
+	std::vector<drawable_chain_element*> result = {};
 
 	Vector2f drawPos = pos;
 
@@ -280,9 +280,9 @@ std::vector<DrawableChainElement*> hero_book::prepareWreathCost(Vector2f pos)
 	return result;
 }
 
-std::vector<DrawableChainElement*> hero_book::prepareSprites(float hpRatio, long long elapsedTime)
+std::vector<drawable_chain_element*> hero_book::prepareSprites(float hpRatio, long long elapsedTime)
 {
-	std::vector<DrawableChainElement*> result = {};
+	std::vector<drawable_chain_element*> result = {};
 
 	auto hpLineElements = prepareHpLine(hpRatio);
 	result.insert(result.end(), hpLineElements.begin(), hpLineElements.end());

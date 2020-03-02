@@ -583,7 +583,7 @@ void WorldHandler::interact(Vector2f render_target_size, long long elapsedTime, 
 	}
 }
 
-bool cmpImgDraw(SpriteChainElement* first, SpriteChainElement* second)
+bool cmpImgDraw(sprite_chain_element* first, sprite_chain_element* second)
 {
 	if (first->isBackground && !second->isBackground)
 		return true;
@@ -604,9 +604,9 @@ bool cmpImgDraw(SpriteChainElement* first, SpriteChainElement* second)
 	return first->zCoord < second->zCoord;
 }
 
-std::vector<SpriteChainElement*> WorldHandler::prepareSprites(const long long elapsedTime, const bool onlyBackground)
+std::vector<sprite_chain_element*> WorldHandler::prepareSprites(const long long elapsedTime, const bool onlyBackground)
 {
-    std::vector<SpriteChainElement*> result = {};
+    std::vector<sprite_chain_element*> result = {};
 
     const auto extra = staticGrid.getBlockSize();
 
