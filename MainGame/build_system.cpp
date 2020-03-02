@@ -90,7 +90,7 @@ std::vector <sprite_chain_element*> build_system::prepareSprites(grid_list& stat
 	auto sprites = terrain->prepareSprites(0);
 	canBePlaced = true;
 
-	if (staticGrid.is_intersect_with_others(terrain, visibleItems, terrain->isDotsAdjusted))
+	if (staticGrid.is_intersect_with_others(terrain))
 	{
 		for (auto& sprite : sprites)
 			sprite->color = sf::Color(255,99,71);

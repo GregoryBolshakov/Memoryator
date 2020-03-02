@@ -6,8 +6,6 @@
 
 #include "world_object.h"
 
-using namespace sf;
-
 const float inf = 1e3;
 
 class grid_list
@@ -23,7 +21,7 @@ public:
 	[[nodiscard]] Vector2f get_point_by_index(int index) const;
 	[[nodiscard]] int get_micro_block_by_point(float x, float y) const;
 	[[nodiscard]] Vector2f get_point_by_micro_block(int micro_block_index) const;
-	[[nodiscard]] std::vector<std::vector<world_object*>> getCells() const { return cells_; }
+	[[nodiscard]] std::vector<std::vector<world_object*>> get_cells() const { return cells_; }
 	
 	size_t get_block_items_amount(const int index) { return cells_[index].size(); }
 	void make_route(Vector2f start_pos, Vector2f finish_pos, float upper_left_x, float upper_left_y, float bottom_right_x, float bottom_right_y, int permissible_distance = 1);
@@ -31,7 +29,7 @@ public:
 	world_object* get_item_by_name(const std::string& name);
 	std::vector<world_object*> get_items(float upper_left_x, float upper_left_y, float bottom_right_x, float bottom_right_y);
 	std::vector<world_object*> get_items(int block_index);
-	void update_item_position(const std::string& name, const float x, const float y);
+	void update_item_position(const std::string& name, float x, float y);
 
 	
 	void clear_cell(int cell_index);
@@ -43,7 +41,7 @@ public:
 
 	[[nodiscard]] std::vector<int> get_blocks_around(float upper_left_x, float upper_left_y, float bottom_right_x, float bottom_right_y) const;
 	[[nodiscard]] std::vector<int> get_blocks_in_sight(float upper_left_x, float upper_left_y, float bottom_right_x, float bottom_right_y) const;
-	bool is_intersect_with_others(world_object* object, const std::vector<world_object*>& visible_terrain, bool is_dot_adjusted = false) const;
+	bool is_intersect_with_others(world_object* object) const;
 
 	std::vector<std::vector<bool>> micro_block_matrix;
 	std::vector<std::vector<bool>>* dynamic_micro_block_matrix = nullptr;

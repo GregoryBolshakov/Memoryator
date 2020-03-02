@@ -9,147 +9,145 @@
 
 
 using namespace sf;
-using namespace std;
-
 
 int main() {	
 	srand(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
 	
-	const auto screenSize = helper::GetScreenSize();
-	RenderWindow mainWindow(VideoMode(static_cast<unsigned int>(screenSize.x), static_cast<unsigned int>(screenSize.y), 32), "game");//, Style::Fullscreen);
+	const auto screen_size = helper::GetScreenSize();
+	RenderWindow main_window(VideoMode(static_cast<unsigned int>(screen_size.x), static_cast<unsigned int>(screen_size.y), 32), "game");//, Style::Fullscreen);
 
     draw_system draw_system;
-	menu_system menuSystem;
-	world_handler world(40000, 40000, &draw_system.packsMap);
-	bool windowFocus = true;
+	menu_system menu_system;
+	world_handler world(40000, 40000, &draw_system.packs_map);
+	auto window_focus = true;
 	console console(FloatRect(helper::GetScreenSize().x * 0.2f, helper::GetScreenSize().y * 0.8f, helper::GetScreenSize().x * 0.6f, helper::GetScreenSize().y * 0.03f), &world);
 
 	Clock clock;
 	long long time_micro_sec = 0;
-	int currentMouseButton = 0;
+	auto current_mouse_button = 0;
 
-	hero_book mainBook;
-	mainBook.init(&draw_system.packsMap);
+	hero_book main_book;
+	main_book.init(&draw_system.packs_map);
 
-	text_system textWriter;
+	text_system text_writer;
 	
 	RenderTexture surface;
 
-	if (!surface.create(static_cast<unsigned int>(screenSize.x), static_cast<unsigned int>(screenSize.y))) {
+	if (!surface.create(static_cast<unsigned int>(screen_size.x), static_cast<unsigned int>(screen_size.y))) {
 		err() << "Error creating renderer texture." << std::endl;
 		return EXIT_FAILURE;
 	}
 	auto visual_effect_texture = surface.getTexture();
 	auto visual_effect_sprite = Sprite(visual_effect_texture);
 
-	ambient_light ambient_light(screenSize);
+	ambient_light ambient_light(screen_size);
 	ambient_light.load();
 	
-	while (mainWindow.isOpen())
+	while (main_window.isOpen())
 	{
 		Event event{};
 
-		while (mainWindow.pollEvent(event))
+		while (main_window.pollEvent(event))
 		{			
 			world.handleEvents(event);
 			if (Mouse::isButtonPressed(Mouse::Left))
-				currentMouseButton = 1;
+				current_mouse_button = 1;
 			else
 				if (Mouse::isButtonPressed(Mouse::Right))
-					currentMouseButton = 2;
+					current_mouse_button = 2;
 
 			if (event.type == sf::Event::MouseWheelMoved)
 			{
-				if (menuSystem.getState() == closed)
+				if (menu_system.getState() == closed)
 					world.setScaleFactor(event.mouseWheel.delta);
 			}	
 
 			if (event.type == Event::MouseButtonReleased)
 			{			
-				if (menuSystem.getState() == closed && world.getBuildSystem().getSuccessInit())
+				if (menu_system.getState() == closed && world.getBuildSystem().getSuccessInit())
 				{
-					world.onMouseUp(currentMouseButton);					
-					mainBook.onMouseUp();
+					world.onMouseUp(current_mouse_button);					
+					main_book.onMouseUp();
 				}
 					
-				if (currentMouseButton == 1)
-					menuSystem.interact(world, mainWindow);
+				if (current_mouse_button == 1)
+					menu_system.interact(world, main_window);
 			}
 
 			if (event.type == Event::KeyReleased)
 			{
-				menuSystem.onKeyDown(event, world);
+				menu_system.onKeyDown(event, world);
 				if (event.key.code == Keyboard::Escape)
 					world.pedestalController.stop();
 			}
 
 			if (event.type == Event::GainedFocus)			
-				windowFocus = true;	
+				window_focus = true;	
 
 			if (event.type == Event::LostFocus)			
-				windowFocus = false;			
+				window_focus = false;			
 
 			if (event.type == Event::Closed)
 			{
 				world.Save();
 				world.~world_handler();
-				mainWindow.close();
+				main_window.close();
 				break;
 			}
 			console.handleEvents(event);
 		}
 
-		if (menuSystem.getState() == mainMenu)
+		if (menu_system.getState() == mainMenu)
 		{		
-			mainWindow.clear(sf::Color::White);
-			draw_system.draw(mainWindow, draw_system::UpcastChain(menuSystem.prepareSprites()));
-			mainWindow.display();
+			main_window.clear(sf::Color::White);
+			draw_system.draw(main_window, draw_system::upcast_chain(menu_system.prepareSprites()));
+			main_window.display();
 
 			clock.restart();
 			continue;
 		}
 
-		if (windowFocus && menuSystem.getState() != gameMenu)
+		if (window_focus && menu_system.getState() != gameMenu)
 		{
 			time_micro_sec = clock.getElapsedTime().asMicroseconds();
 			clock.restart();
 
 			if (!console.getState())
 			{				
-				world.interact(screenSize, time_micro_sec, event);
+				world.interact(screen_size, time_micro_sec, event);
 				world.focusedObject->handleInput(world.getInventorySystem().getUsedMouse());
-				ambient_light.update(screenSize.x / 2, screenSize.y / 2);
+				ambient_light.update(screen_size.x / 2, screen_size.y / 2);
 			}
 
 			auto hero = dynamic_cast<deerchant*>(world.focusedObject);
-			mainBook.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().getHeldItem(), hero->nearTheTable);
-			mainBook.interact();
+			main_book.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().getHeldItem(), hero->nearTheTable);
+			main_book.interact();
 
-			mainWindow.clear(sf::Color::White);
+			main_window.clear(sf::Color::White);
 			
-            draw_system.draw(mainWindow, draw_system::UpcastChain(world.prepareSprites(time_micro_sec, true)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
-            draw_system.draw(mainWindow, draw_system::UpcastChain(world.prepareSprites(time_micro_sec, false)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+            draw_system.draw(main_window, draw_system::upcast_chain(world.prepareSprites(time_micro_sec, true)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+            draw_system.draw(main_window, draw_system::upcast_chain(world.prepareSprites(time_micro_sec, false)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
             
 			//visual_effect_texture.update(mainWindow);
 			//mainWindow.draw(visual_effect_sprite, ambient_light.shader);
 
-			draw_system.draw(mainWindow, draw_system::UpcastChain(world.getBuildSystem().prepareSprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packsMap)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
-			text_system::drawString(world.getMouseDisplayName(), font_name::NormalFont, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), mainWindow, sf::Color(255, 255, 255, 180));
-			world.pedestalController.draw(&mainWindow, world.getCameraPosition(), world.getWorldGenerator().scaleFactor);
-			draw_system.draw(mainWindow, mainBook.prepareSprites(world.focusedObject->getHealthPoint() / world.focusedObject->getMaxHealthPointValue(), time_micro_sec));
-			draw_system.draw(mainWindow, world.getInventorySystem().prepareSprites(time_micro_sec, world.packsMap));			
+			draw_system.draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepareSprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packs_map)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+			text_system::drawString(world.getMouseDisplayName(), font_name::NormalFont, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));
+			world.pedestalController.draw(&main_window, world.getCameraPosition(), world.getWorldGenerator().scaleFactor);
+			draw_system.draw(main_window, main_book.prepareSprites(world.focusedObject->getHealthPoint() / world.focusedObject->getMaxHealthPointValue(), time_micro_sec));
+			draw_system.draw(main_window, world.getInventorySystem().prepareSprites(time_micro_sec, world.packsMap));			
 			//world.runInventorySystemDrawing(mainWindow, time);
 		}
 		else
 			clock.restart();
 
-		draw_system.draw(mainWindow, draw_system::UpcastChain(menuSystem.prepareSprites()));
+		draw_system.draw(main_window, draw_system::upcast_chain(menu_system.prepareSprites()));
 
 		//textWriter.drawString(std::to_string(world.getWorldGenerator().scaleFactor), FontName::NormalFont, TextChainElement::defaultCharacterSize, 200, 200, mainWindow);
 
 		console.interact(time_micro_sec);
-		console.draw(mainWindow);
+		console.draw(main_window);
 
-		mainWindow.display();
+		main_window.display();
 	}
 }

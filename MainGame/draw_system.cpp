@@ -4,29 +4,29 @@
 
 draw_system::draw_system()
 {
-	initPacksMap();
+	init_packs_map();
 }
 
 draw_system::~draw_system() = default;
 
-bool draw_system::searchFiles(const LPCTSTR lpszFileName, const LPSEARCHFUNC lpSearchFunc, const bool bInnerFolders)
+bool draw_system::search_files(const LPCTSTR lpsz_file_name, const lpsearchfunc lp_search_func, const bool b_inner_folders)
 {
 	LPTSTR part;
 	char tmp[MAX_PATH];
 	char name[MAX_PATH];
 
-	HANDLE hSearch;
+	HANDLE h_search;
 	WIN32_FIND_DATA wfd;
 	memset(&wfd, 0, sizeof(WIN32_FIND_DATA));
 
-	if (bInnerFolders)
+	if (b_inner_folders)
 	{
-		if (GetFullPathName(lpszFileName, MAX_PATH, tmp, &part) == 0) return FALSE;
+		if (GetFullPathName(lpsz_file_name, MAX_PATH, tmp, &part) == 0) return FALSE;
 		strcpy(name, part);
 		strcpy(part, "*.*");
 
 		wfd.dwFileAttributes = FILE_ATTRIBUTE_DIRECTORY;
-		if (!((hSearch = FindFirstFile(tmp, &wfd)) == INVALID_HANDLE_VALUE))
+		if (!((h_search = FindFirstFile(tmp, &wfd)) == INVALID_HANDLE_VALUE))
 			do
 			{
 				if (!strncmp(wfd.cFileName, ".", 1) || !strncmp(wfd.cFileName, "..", 2))
@@ -35,75 +35,75 @@ bool draw_system::searchFiles(const LPCTSTR lpszFileName, const LPSEARCHFUNC lpS
 				if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 				{
 					char next[MAX_PATH];
-					if (GetFullPathName(lpszFileName, MAX_PATH, next, &part) == 0) return FALSE;
+					if (GetFullPathName(lpsz_file_name, MAX_PATH, next, &part) == 0) return FALSE;
 					strcpy(part, wfd.cFileName);
 					strcat(next, "\\");
 					strcat(next, name);
 
-					searchFiles(next, lpSearchFunc, true);
+					search_files(next, lp_search_func, true);
 				}
-			} while (FindNextFile(hSearch, &wfd));
+			} while (FindNextFile(h_search, &wfd));
 
-		FindClose(hSearch);
+		FindClose(h_search);
 	}
 
-	if ((hSearch = FindFirstFile(lpszFileName, &wfd)) == INVALID_HANDLE_VALUE)
+	if ((h_search = FindFirstFile(lpsz_file_name, &wfd)) == INVALID_HANDLE_VALUE)
 		return TRUE;
 	do
 		if (!(wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
 		{
 			char file[MAX_PATH];
-			if (GetFullPathName(lpszFileName, MAX_PATH, file, &part) == 0) return FALSE;
+			if (GetFullPathName(lpsz_file_name, MAX_PATH, file, &part) == 0) return FALSE;
 			strcpy(part, wfd.cFileName);
 
-			lpSearchFunc(file, packsMap);
+			lp_search_func(file, packs_map);
 		}
-	while (FindNextFile(hSearch, &wfd));
-	FindClose(hSearch);
+	while (FindNextFile(h_search, &wfd));
+	FindClose(h_search);
 
 	return TRUE;
 }
 
-void initSpritePack(const LPCTSTR lpszFileName, std::map<pack_tag, sprite_pack>& packs_map)
+void init_sprite_pack(const LPCTSTR lpsz_file_name, std::map<pack_tag, sprite_pack>& packs_map)
 {
-	std::string packPath = lpszFileName;
-	packPath.erase(0, packPath.find("\\Game\\spritePacks") + 1);
-	std::replace(packPath.begin(), packPath.end(), '\\', '/');
-	std::string jsonPath = packPath;
-	const int pngExtensionLength = 3;
-	jsonPath.erase(jsonPath.size() - pngExtensionLength, pngExtensionLength);
-	jsonPath.insert(jsonPath.size(), "json");
+	std::string pack_path = lpsz_file_name;
+	pack_path.erase(0, pack_path.find("\\Game\\spritePacks") + 1);
+	std::replace(pack_path.begin(), pack_path.end(), '\\', '/');
+	std::string json_path = pack_path;
+	const int png_extension_length = 3;
+	json_path.erase(json_path.size() - png_extension_length, png_extension_length);
+	json_path.insert(json_path.size(), "json");
 
-	auto packName = packPath;
+	auto pack_name = pack_path;
 	while (true)
 	{
-		const auto delimiter = packName.find('/');
-		if (delimiter <= 0 || delimiter >= packName.size())
+		const auto delimiter = pack_name.find('/');
+		if (delimiter <= 0 || delimiter >= pack_name.size())
 			break;
-		packName.erase(0, delimiter + 1);
+		pack_name.erase(0, delimiter + 1);
 	}
-	const int pngExtensionWithDotLength = 4;
-	packName.erase(packName.size() - pngExtensionWithDotLength, pngExtensionWithDotLength);
-	if (sprite_pack::mappedPackTag.count(packName) == 0)
+	const int png_extension_with_dot_length = 4;
+	pack_name.erase(pack_name.size() - png_extension_with_dot_length, png_extension_with_dot_length);
+	if (sprite_pack::mappedPackTag.count(pack_name) == 0)
 		return;
-	const auto tag = sprite_pack::mappedPackTag.at(packName);
-	packs_map[tag].init(packPath, jsonPath, tag);
+	const auto tag = sprite_pack::mappedPackTag.at(pack_name);
+	packs_map[tag].init(pack_path, json_path, tag);
 }
 
-void draw_system::initPacksMap()
+void draw_system::init_packs_map()
 {
-	searchFiles("Game/spritePacks/*.png", initSpritePack, true);
+	search_files("Game/spritePacks/*.png", init_sprite_pack, true);
 	sprite_pack::iconWithoutSpaceSize = Vector2f(
-		float(packsMap.at(pack_tag::inventory).getOriginalInfo(pack_part::areas, direction::DOWN, 1).frame.w),
-		float(packsMap.at(pack_tag::inventory).getOriginalInfo(pack_part::areas, direction::DOWN, 1).frame.h));
+		float(packs_map.at(pack_tag::inventory).getOriginalInfo(pack_part::areas, direction::DOWN, 1).frame.w),
+		float(packs_map.at(pack_tag::inventory).getOriginalInfo(pack_part::areas, direction::DOWN, 1).frame.h));
 }
 
-void draw_system::advancedScale(sprite_chain_element& item, Sprite& sprite, const sprite_pack_structure::sprite& originalInfo, const float scale) const
+void draw_system::advanced_scale(sprite_chain_element& item, Sprite& sprite, const sprite_pack_structure::sprite& original_info, const float scale) const
 {
-	const auto size_w = float(originalInfo.source_size.w);
-	const auto size_h = float(originalInfo.source_size.h);
+	const auto size_w = float(original_info.source_size.w);
+	const auto size_h = float(original_info.source_size.h);
 	
-	if (!originalInfo.rotated)
+	if (!original_info.rotated)
 		sprite.setScale(
 			scale * item.size.x / size_w,
 			scale * item.size.y / size_h);
@@ -114,7 +114,7 @@ void draw_system::advancedScale(sprite_chain_element& item, Sprite& sprite, cons
 
 	if (!item.is_background && !item.unscaled)
 	{
-		if (!originalInfo.rotated)
+		if (!original_info.rotated)
 		{
 			sprite.scale(1, pow(scale, 1.0f / 6));
 			sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - (pow(scale, 1.0f / 6) - 1) * size_h);
@@ -127,84 +127,84 @@ void draw_system::advancedScale(sprite_chain_element& item, Sprite& sprite, cons
 	}
 }
 
-std::vector<drawable_chain_element*> draw_system::UpcastChain(const std::vector<sprite_chain_element*>& chain)
+std::vector<drawable_chain_element*> draw_system::upcast_chain(const std::vector<sprite_chain_element*>& chain)
 {
 	std::vector<drawable_chain_element*> result = {};
-	for (auto spriteChainItem : chain)
+	for (auto sprite_chain_item : chain)
 	{
-		auto item = static_cast<drawable_chain_element*>(spriteChainItem);
+		auto item = static_cast<drawable_chain_element*>(sprite_chain_item);
 		result.push_back(item);
 	}
 	return result;
 }
 
-std::vector<sprite_chain_element*> draw_system::DowncastToSpriteChain(const std::vector<drawable_chain_element*>& chain)
+std::vector<sprite_chain_element*> draw_system::downcast_to_sprite_chain(const std::vector<drawable_chain_element*>& chain)
 {
 	std::vector<sprite_chain_element*> result = {};
 	for (auto item : chain)
 	{
-		auto spriteChainItem = dynamic_cast<sprite_chain_element*>(item);
-		result.push_back(spriteChainItem);
+		auto sprite_chain_item = dynamic_cast<sprite_chain_element*>(item);
+		result.push_back(sprite_chain_item);
 	}
 	return result;
 }
 
-void draw_system::drawSpriteChainElement(RenderTarget& target, sprite_chain_element* spriteChainItem, const Vector2f cameraPosition, const Vector2f screenCenter, const float scale)
+void draw_system::draw_sprite_chain_element(RenderTarget& target, sprite_chain_element* sprite_chain_item, const Vector2f camera_position, const Vector2f screen_center, const float scale)
 {
-	if (spriteChainItem->pack_tag == pack_tag::empty)
+	if (sprite_chain_item->pack_tag == pack_tag::empty)
 		return;
 
-	auto sprite = packsMap.at(spriteChainItem->pack_tag).getSprite(spriteChainItem->packPart, spriteChainItem->direction, spriteChainItem->number, spriteChainItem->mirrored);
+	auto sprite = packs_map.at(sprite_chain_item->pack_tag).getSprite(sprite_chain_item->packPart, sprite_chain_item->direction, sprite_chain_item->number, sprite_chain_item->mirrored);
 	if (sprite.getTextureRect() == IntRect())
 		return;
 
-	const auto originalInfo = packsMap.at(spriteChainItem->pack_tag).getOriginalInfo(spriteChainItem->packPart, spriteChainItem->direction, spriteChainItem->number);
-	const Vector2f spritePos = { (spriteChainItem->position.x - cameraPosition.x - spriteChainItem->offset.x) * scale + screenCenter.x,
-	(spriteChainItem->position.y - cameraPosition.y - spriteChainItem->offset.y) * scale + screenCenter.y };
-	if (spriteChainItem->anti_transparent)
-		spriteChainItem->color.a = 255;
+	const auto original_info = packs_map.at(sprite_chain_item->pack_tag).getOriginalInfo(sprite_chain_item->packPart, sprite_chain_item->direction, sprite_chain_item->number);
+	const Vector2f sprite_pos = { (sprite_chain_item->position.x - camera_position.x - sprite_chain_item->offset.x) * scale + screen_center.x,
+	(sprite_chain_item->position.y - camera_position.y - sprite_chain_item->offset.y) * scale + screen_center.y };
+	if (sprite_chain_item->anti_transparent)
+		sprite_chain_item->color.a = 255;
 
-	sprite.setColor(spriteChainItem->color);
-	sprite.rotate(spriteChainItem->rotation);
-	sprite.setPosition(spritePos);
+	sprite.setColor(sprite_chain_item->color);
+	sprite.rotate(sprite_chain_item->rotation);
+	sprite.setPosition(sprite_pos);
 
-	advancedScale(*spriteChainItem, sprite, originalInfo, scale);
+	advanced_scale(*sprite_chain_item, sprite, original_info, scale);
 
 	target.draw(sprite);
 }
 
-void draw_system::drawTextChainElement(RenderTarget& target, text_chain_element* textChainItem)
+void draw_system::draw_text_chain_element(RenderTarget& target, text_chain_element* text_chain_item)
 {
 	text_system::drawString(
-		textChainItem->string,
-		textChainItem->font,
-		textChainItem->characterSize,
-		textChainItem->position.x - textChainItem->offset.x,
-		textChainItem->position.y - textChainItem->offset.y,
+		text_chain_item->string,
+		text_chain_item->font,
+		text_chain_item->characterSize,
+		text_chain_item->position.x - text_chain_item->offset.x,
+		text_chain_item->position.y - text_chain_item->offset.y,
 		target,
-		textChainItem->color);
+		text_chain_item->color);
 }
 
-void draw_system::draw(RenderTarget& target, const std::vector<drawable_chain_element*>& drawableItems, const float scale, const Vector2f cameraPosition)
+void draw_system::draw(RenderTarget& target, const std::vector<drawable_chain_element*>& drawable_items, const float scale, const Vector2f camera_position)
 {
-	if (drawableItems.empty())
+	if (drawable_items.empty())
 		return;
 
-	const auto screenCenter = cameraPosition != Vector2f()
+	const auto screen_center = camera_position != Vector2f()
 		? Vector2f(target.getSize()) / 2.0f
 		: Vector2f();
 
-	for (auto drawableChainItem : drawableItems)
+	for (auto drawable_chain_item : drawable_items)
 	{
-		if (!drawableChainItem->initialized)		
+		if (!drawable_chain_item->initialized)		
 			continue;		
 
-		const auto spriteChainItem = dynamic_cast<sprite_chain_element*>(drawableChainItem);
-		if (spriteChainItem)
-			drawSpriteChainElement(target, spriteChainItem, cameraPosition, screenCenter, scale);
+		const auto sprite_chain_item = dynamic_cast<sprite_chain_element*>(drawable_chain_item);
+		if (sprite_chain_item)
+			draw_sprite_chain_element(target, sprite_chain_item, camera_position, screen_center, scale);
 
-		const auto textChainItem = dynamic_cast<text_chain_element*>(drawableChainItem);
-		if (textChainItem)		
-			drawTextChainElement(target, textChainItem);	
+		const auto text_chain_item = dynamic_cast<text_chain_element*>(drawable_chain_item);
+		if (text_chain_item)		
+			draw_text_chain_element(target, text_chain_item);	
 	}
 }

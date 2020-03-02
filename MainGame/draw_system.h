@@ -7,7 +7,7 @@
 #include "text_chain_element.h"
 
 using namespace  sf;
-typedef void(*LPSEARCHFUNC)(LPCTSTR lpszFileName, std::map<pack_tag, sprite_pack> &packs_map);
+typedef void(*lpsearchfunc)(LPCTSTR lpsz_file_name, std::map<pack_tag, sprite_pack> &packs_map);
 typedef bool(*func)(Vector2f &pos);
 
 class draw_system
@@ -15,15 +15,16 @@ class draw_system
 public:
     draw_system();
     ~draw_system();
-	void drawSpriteChainElement(RenderTarget& target, sprite_chain_element* spriteChainItem, Vector2f cameraPosition, Vector2f screenCenter, float scale);
-	static void drawTextChainElement(RenderTarget& target, text_chain_element* textChainItem);
-    void draw(RenderTarget& target, const std::vector<drawable_chain_element*>& drawableItems, float scale = 1, Vector2f cameraPosition = {0, 0});
-	static std::vector<drawable_chain_element*> UpcastChain(const std::vector<sprite_chain_element*>& chain);
-	static std::vector<sprite_chain_element*> DowncastToSpriteChain(const std::vector<drawable_chain_element*>& chain);
+	
+	void draw_sprite_chain_element(RenderTarget& target, sprite_chain_element* sprite_chain_item, Vector2f camera_position, Vector2f screen_center, float scale);
+	static void draw_text_chain_element(RenderTarget& target, text_chain_element* text_chain_item);
+    void draw(RenderTarget& target, const std::vector<drawable_chain_element*>& drawable_items, float scale = 1, Vector2f camera_position = {0, 0});
+	static std::vector<drawable_chain_element*> upcast_chain(const std::vector<sprite_chain_element*>& chain);
+	static std::vector<sprite_chain_element*> downcast_to_sprite_chain(const std::vector<drawable_chain_element*>& chain);
 
-    std::map<pack_tag, sprite_pack> packsMap;
+    std::map<pack_tag, sprite_pack> packs_map;
 private:
-    void initPacksMap();
-	bool searchFiles(LPCTSTR lpszFileName, LPSEARCHFUNC lpSearchFunc, bool bInnerFolders = true);
-	void advancedScale(sprite_chain_element& item, Sprite& sprite, const sprite_pack_structure::sprite& originalInfo, float scale = 1) const;
+    void init_packs_map();
+	bool search_files(LPCTSTR lpsz_file_name, lpsearchfunc lp_search_func, bool b_inner_folders = true);
+	void advanced_scale(sprite_chain_element& item, Sprite& sprite, const sprite_pack_structure::sprite& original_info, float scale = 1) const;
 };
