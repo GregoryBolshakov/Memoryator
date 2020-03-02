@@ -9,24 +9,28 @@ public:
 	~pedestal_controller();
 	void start(terrain_object* object);
 	void stop();
-	void draw(RenderWindow* window, Vector2f cameraPosition, float scaleFactor);
-	void handleEvents(Event& event);
-	void interact(long long elapsedTime, Event event);
-	bool isRunning() const { return running; }
-	bool readyToStart = false;
+	void draw(RenderWindow* window, Vector2f camera_position, float scale_factor);
+	void handle_events(Event& event);
+	void interact(long long elapsed_time, Event event);
+	bool is_running() const { return running_; }
+	bool ready_to_start = false;
 	
 private:
-	bool running = false;
-	terrain_object* boundObject = nullptr;
-	Vector2f size = Vector2f(world_object::micro_block_size.x / 2, world_object::micro_block_size.y / 2);
-	RectangleShape filedFigure;
-	CircleShape focusFigure, centerFigure;
-	std::vector<Vector2f> focuses;
-	Vector2f cameraPosition = { 0, 0 }, lastMousePos = { 0, 0 }, centerPosition = { 0, 0 };
-	float scaleFactor = 1;
-	long long doubleClickTimer = long(1e6);
-	long long elapsedTime = 0;
-	void writeToFile();
-	int selectedFocus = -1, selectedEllipse = -1;
-	bool selectedCenter = false;
+	bool running_ = false;
+	terrain_object* bound_object_ = nullptr;
+	Vector2f size_ = Vector2f(world_object::micro_block_size.x / 2, world_object::micro_block_size.y / 2);
+	RectangleShape filed_figure_;
+	CircleShape focus_figure_;
+	CircleShape center_figure_;
+	std::vector<Vector2f> focuses_;
+	Vector2f camera_position_ = { 0, 0 };
+	Vector2f last_mouse_pos_ = { 0, 0 };
+	Vector2f center_position_ = { 0, 0 };
+	float scale_factor_ = 1;
+	long long double_click_timer_ = long(1e6);
+	long long elapsed_time_ = 0;
+	void write_to_file();
+	int selected_focus_ = -1;
+	int selected_ellipse_ = -1;
+	bool selected_center_ = false;
 };

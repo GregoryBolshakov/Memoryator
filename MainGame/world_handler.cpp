@@ -275,7 +275,7 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 				minDistance = distanceToItemCenter;
 
 				const auto terrain = dynamic_cast<terrain_object*>(visibleItem);
-				if (terrain && pedestalController.readyToStart)				
+				if (terrain && pedestalController.ready_to_start)				
 					mouseDisplayName = "Set pedestal";
 				else
 					switch (visibleItem->tag)
@@ -413,7 +413,7 @@ void world_handler::onMouseUp(const int currentMouseButton)
 		const auto terrain = dynamic_cast<terrain_object*>(selectedObject);
 		pedestalController.start(terrain);
 	}
-	if (pedestalController.isRunning())
+	if (pedestalController.is_running())
 		return;
 	const auto mousePos = Mouse::getPosition();
 	const auto mouseWorldPos = Vector2f((mousePos.x - helper::GetScreenSize().x / 2 + cameraSystem.position.x*worldGenerator.scaleFactor) / worldGenerator.scaleFactor,
@@ -433,7 +433,7 @@ void world_handler::onMouseUp(const int currentMouseButton)
 
 void world_handler::handleEvents(Event& event)
 {
-	pedestalController.handleEvents(event);
+	pedestalController.handle_events(event);
 }
 
 void world_handler::interact(Vector2f render_target_size, long long elapsedTime, Event event)

@@ -134,7 +134,7 @@ void console::do_command()
 				world_->setObjectToBuild(object, typeOfObject, true);	
 		}
 		if (commands[0] == "set" && commands[1] == "pedestal")
-			world_->pedestalController.readyToStart = true;		
+			world_->pedestalController.ready_to_start = true;		
 	}
 
 	state_ = false;
