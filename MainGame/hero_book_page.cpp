@@ -1,11 +1,11 @@
 #include <fstream>
 
-#include "HeroBookPage.h"
+#include "hero_book_page.h"
 
 #include "Helper.h"
 #include "GridList.h"
 
-HeroBookPage::HeroBookPage()
+hero_book_page::hero_book_page()
 {
 	initDrafts();
 
@@ -31,10 +31,10 @@ HeroBookPage::HeroBookPage()
 	plantsConnections[Tag::poppy] = { Tag::mugwort, Tag::chamomile };
 }
 
-HeroBookPage::~HeroBookPage()
+hero_book_page::~hero_book_page()
 = default;
 
-void HeroBookPage::setBookmarkPosition() const
+void hero_book_page::setBookmarkPosition() const
 {
 	FloatRect pageGlobalBounds;
 	
@@ -58,7 +58,7 @@ void HeroBookPage::setBookmarkPosition() const
 	buttonList->at(ButtonTag::makeWreath).set_position(Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.35f / 10.0f, pageGlobalBounds.top + pageGlobalBounds.height * 6.6f / 10.0f));
 }
 
-void HeroBookPage::setArrowsPosition() const
+void hero_book_page::setArrowsPosition() const
 {
 	const auto pagePatternGlobalBounds = buttonList->at(ButtonTag::pagePattern).get_global_bounds();
 	auto nextPagePos = Vector2f(pagePatternGlobalBounds.left + pagePatternGlobalBounds.width - arrowToPageGlobalBounds.width,
@@ -73,7 +73,7 @@ void HeroBookPage::setArrowsPosition() const
 	buttonList->at(ButtonTag::previousPage).set_position(previousPagePos);	
 }
 
-void HeroBookPage::preparePageBase()
+void hero_book_page::preparePageBase()
 {
 	buttonList->at(ButtonTag::pageBackground).set_position(Vector2f(buttonList->at(ButtonTag::bookCover).get_position().x - buttonList->at(ButtonTag::bookCover).get_global_bounds().width,
 		buttonList->at(ButtonTag::bookCover).get_position().y));
@@ -95,12 +95,12 @@ void HeroBookPage::preparePageBase()
 	setArrowsPosition();
 }
 
-void HeroBookPage::buttonListBounding(std::unordered_map<ButtonTag, button>* buttonList)
+void hero_book_page::buttonListBounding(std::unordered_map<ButtonTag, button>* buttonList)
 {
 	this->buttonList = buttonList;
 }
 
-void HeroBookPage::putHeadingsToPositions(std::vector<ButtonTag> buttons)
+void hero_book_page::putHeadingsToPositions(std::vector<ButtonTag> buttons)
 {
 	const auto upperLeftCorner = buttonList->at(ButtonTag::bookmarksList).get_position();
 	const auto x = buttonList->at(ButtonTag::bookmarksList).get_global_bounds().width;
@@ -114,7 +114,7 @@ void HeroBookPage::putHeadingsToPositions(std::vector<ButtonTag> buttons)
 	}
 }
 
-void HeroBookPage::initAuxiliarySpriteMap()
+void hero_book_page::initAuxiliarySpriteMap()
 {
 	const auto screenSize = Helper::GetScreenSize();
 	std::string buttonImagePathDefault;
@@ -147,7 +147,7 @@ void HeroBookPage::initAuxiliarySpriteMap()
 }
 
 // object information (creatures, craft, plants, wreaths, nightmare)
-void HeroBookPage::initObjectInfo()
+void hero_book_page::initObjectInfo()
 {
 	int pageNumber;
 	int blocksCount;
@@ -175,7 +175,7 @@ void HeroBookPage::initObjectInfo()
 	fin.close();
 }
 
-Vector2f HeroBookPage::getConnectionPosition(int numberInOrder)
+Vector2f hero_book_page::getConnectionPosition(int numberInOrder)
 {
 	const auto upperLeft = Vector2f(buttonList->at(ButtonTag::pagePattern).get_global_bounds().left, buttonList->at(ButtonTag::pagePattern).get_global_bounds().top);
 	const auto pageSize = Vector2f(buttonList->at(ButtonTag::pagePattern).get_global_bounds().width, buttonList->at(ButtonTag::pagePattern).get_global_bounds().height);
@@ -183,14 +183,14 @@ Vector2f HeroBookPage::getConnectionPosition(int numberInOrder)
 	return { upperLeft.x + connectionPedestals[numberInOrder].x * pageSize.x - frameOffset, upperLeft.y + connectionPedestals[numberInOrder].y * pageSize.y - frameOffset };
 }
 
-Tag HeroBookPage::pageToObjectId(int page)
+Tag hero_book_page::pageToObjectId(int page)
 {
 	if (page < 101 || page > 499)
 		return Tag::emptyPage;
 	return Tag(page);
 }
 
-int HeroBookPage::buttonToPage(ButtonTag button)
+int hero_book_page::buttonToPage(ButtonTag button)
 {
 	if (int(button) >= 101 && int(button) <= 499)
 	{
@@ -216,7 +216,7 @@ int HeroBookPage::buttonToPage(ButtonTag button)
 	return -1;
 }
 
-std::vector<TextChainElement*> HeroBookPage::prepareHeadingText()
+std::vector<TextChainElement*> hero_book_page::prepareHeadingText()
 {
 	std::vector<TextChainElement*> result = {};
 	const auto upperLeftCorner = buttonList->at(ButtonTag::bookmarksList).get_position();
@@ -282,7 +282,7 @@ std::vector<TextChainElement*> HeroBookPage::prepareHeadingText()
 	return result;
 }
 
-void HeroBookPage::setButtonLock(ButtonTag button, const ButtonTag changedButton)
+void hero_book_page::setButtonLock(ButtonTag button, const ButtonTag changedButton)
 {
 	if (!(int(button) >= 101 && int(button) <= 499 || (button == ButtonTag::iconFrame1 || button == ButtonTag::iconFrame2)))
 		return;
@@ -303,7 +303,7 @@ void HeroBookPage::setButtonLock(ButtonTag button, const ButtonTag changedButton
 	buttonList->at(changedButton).become_gray();
 }
 
-SpriteChainElement* HeroBookPage::prepareIconFrame(const ButtonTag button, const int type)
+SpriteChainElement* hero_book_page::prepareIconFrame(const ButtonTag button, const int type)
 {	
 	ButtonTag currentIcon;
 	if (type == 1)
@@ -316,7 +316,7 @@ SpriteChainElement* HeroBookPage::prepareIconFrame(const ButtonTag button, const
 	return buttonList->at(currentIcon).prepare_sprite();
 }
 
-std::vector<SpriteChainElement*> HeroBookPage::prepareAllIcons(const pageContent& content)
+std::vector<SpriteChainElement*> hero_book_page::prepareAllIcons(const pageContent& content)
 {
 	std::vector<SpriteChainElement*> result = {};
 
@@ -337,7 +337,7 @@ std::vector<SpriteChainElement*> HeroBookPage::prepareAllIcons(const pageContent
 	return result;
 }
 
-std::vector<SpriteChainElement*> HeroBookPage::prepareLines()
+std::vector<SpriteChainElement*> hero_book_page::prepareLines()
 {
 	if (!(currentPage >= 101 && currentPage <= 499))
 		return {};
@@ -375,12 +375,12 @@ std::vector<SpriteChainElement*> HeroBookPage::prepareLines()
 	return result;
 }
 
-void HeroBookPage::unlockObject(Tag object)
+void hero_book_page::unlockObject(Tag object)
 {
 	objectInfo[object].isUnlocked = true;
 }
 
-int HeroBookPage::getHeadingPage(Tag object)
+int hero_book_page::getHeadingPage(Tag object)
 {
 	if (!(int(object) >= 101 && int(object) <= 499))
 		return -1;
@@ -388,7 +388,7 @@ int HeroBookPage::getHeadingPage(Tag object)
 	return int(object) / 100;
 }
 
-std::string HeroBookPage::buttonToString(const ButtonTag button)
+std::string hero_book_page::buttonToString(const ButtonTag button)
 {
 	switch (button)
 	{
@@ -420,7 +420,7 @@ std::string HeroBookPage::buttonToString(const ButtonTag button)
 //------------------------------------------------------------------
 
 // wreaths
-void HeroBookPage::initDrafts()
+void hero_book_page::initDrafts()
 {
 	int draftId;
 	int ringsCount;
@@ -450,7 +450,7 @@ void HeroBookPage::initDrafts()
 	fin.close();
 }
 
-Tag HeroBookPage::tagToWreath(Tag item)
+Tag hero_book_page::tagToWreath(Tag item)
 {
 	switch (item)
 	{
@@ -463,7 +463,7 @@ Tag HeroBookPage::tagToWreath(Tag item)
 	}	
 }
 
-bool HeroBookPage::checkWreathCellFit(int i, int j, const std::vector<int>& rings)
+bool hero_book_page::checkWreathCellFit(int i, int j, const std::vector<int>& rings)
 {
 	//all rings
 	if ((i == 0 || i == 16) && (j == 0 || j == 1 || j == 3 || j == 4))
@@ -522,7 +522,7 @@ bool HeroBookPage::checkWreathCellFit(int i, int j, const std::vector<int>& ring
 	return true;
 }
 
-std::pair<int, int> HeroBookPage::getSelectedWreathCell()
+std::pair<int, int> hero_book_page::getSelectedWreathCell()
 {
 	const auto mousePos = Vector2f(Mouse::getPosition());
 	auto minD = float(10e4);
@@ -545,7 +545,7 @@ std::pair<int, int> HeroBookPage::getSelectedWreathCell()
 	return ans;
 }
 
-std::pair<int, int> HeroBookPage::getSelectedPlantsCell()
+std::pair<int, int> hero_book_page::getSelectedPlantsCell()
 {
 	const auto mousePos = Vector2f(Mouse::getPosition());
 	const auto upperLeftCorner = Vector2f(
@@ -568,7 +568,7 @@ std::pair<int, int> HeroBookPage::getSelectedPlantsCell()
 	return ans;
 }
 
-std::vector<std::pair<int, int>> HeroBookPage::getBorderCells(const int raw, int column)
+std::vector<std::pair<int, int>> hero_book_page::getBorderCells(const int raw, int column)
 {
 	std::vector<std::pair<int, int>> ans;
 	
@@ -596,21 +596,21 @@ std::vector<std::pair<int, int>> HeroBookPage::getBorderCells(const int raw, int
 	return ans;
 }
 
-void HeroBookPage::clearWreathMatrix()
+void hero_book_page::clearWreathMatrix()
 {
 	for (auto& raw : wreathMatrix)
 		for (auto column = 0u; column < wreathMatrix[0].size(); column++)
 			raw[column] = Tag::emptyCell;	
 }
 
-void HeroBookPage::setPlantsOnMatrix(const std::vector<std::pair<Tag, std::pair<int, int>>>& plants)
+void hero_book_page::setPlantsOnMatrix(const std::vector<std::pair<Tag, std::pair<int, int>>>& plants)
 {
 	clearWreathMatrix();
 	for (auto& plant : plants)
 		wreathMatrix[plant.second.first][plant.second.second] = plant.first;
 }
 
-void HeroBookPage::coloredDfs(int raw, int column, int color, bool flowerPatency)
+void hero_book_page::coloredDfs(int raw, int column, int color, bool flowerPatency)
 {
 	coloredMatrix[raw][column] = color;
 	auto ways = getBorderCells(raw, column);
@@ -631,7 +631,7 @@ void HeroBookPage::coloredDfs(int raw, int column, int color, bool flowerPatency
 	}
 }
 
-bool HeroBookPage::isCenterSurrounded()
+bool hero_book_page::isCenterSurrounded()
 {
 	for (auto& raw : coloredMatrix)
 		for (auto& column : raw)
@@ -647,7 +647,7 @@ bool HeroBookPage::isCenterSurrounded()
 	return coloredMatrix[center.first][center.second] == 1;
 }
 
-std::vector<DrawableChainElement*> HeroBookPage::prepareConnectableFlowers(Tag currentFlower)
+std::vector<DrawableChainElement*> hero_book_page::prepareConnectableFlowers(Tag currentFlower)
 {
 	if (plantsConnections.find(Tag(int(currentFlower))) == plantsConnections.end())
 		return {};	
@@ -676,7 +676,7 @@ std::vector<DrawableChainElement*> HeroBookPage::prepareConnectableFlowers(Tag c
 
 //--------
 
-pageContent HeroBookPage::getPreparedContent(int pageNumber, Tag currentDraft)
+pageContent hero_book_page::getPreparedContent(int pageNumber, Tag currentDraft)
 {
 	pageContent result;
 

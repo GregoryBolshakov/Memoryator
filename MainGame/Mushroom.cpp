@@ -1,19 +1,19 @@
-#include "Mushroom.h"
+#include "mushroom.h"
 
 #include "Helper.h"
 
-Mushroom::Mushroom(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : StaticObject(std::move(objectName), centerPosition)
+mushroom::mushroom(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : StaticObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 16; // BirchGrove: 1-3; DarkWoods: 4-12; SwampyTrees: 13-16
 	this->typeOfObject = typeOfObject;
 	this->intangible = true;
 	toSaveName = "mushroom";
-	Mushroom::setType(typeOfObject);
+	mushroom::setType(typeOfObject);
 	tag = Tag::mushroom;
 	mirrored = bool(rand() % 2);
 }
 
-void Mushroom::setType(int typeOfObject)
+void mushroom::setType(int typeOfObject)
 {
 	if (typeOfObject == -1)
 		return;
@@ -53,7 +53,7 @@ void Mushroom::setType(int typeOfObject)
 		conditionalSizeUnits = { 77, 53 };
 }
 
-Vector2f Mushroom::calculateTextureOffset()
+Vector2f mushroom::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
@@ -64,17 +64,17 @@ Vector2f Mushroom::calculateTextureOffset()
 	return { textureBox.width / 2.0f, textureBox.height / 2.0f };
 }
 
-Vector2f Mushroom::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f mushroom::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int Mushroom::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int mushroom::getBuildType(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Mushroom::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> mushroom::prepareSprites(long long elapsedTime)
 {
 	SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::mushroom, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));
 	body->unscaled = true;

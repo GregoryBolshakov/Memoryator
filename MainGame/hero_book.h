@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
 
-#include "HeroBookPage.h"
+#include "hero_book_page.h"
 #include "button.h"
 #include "HeroBag.h"
 #include "TextSystem.h"
@@ -11,11 +11,11 @@
 
 using namespace sf;
 
-class HeroBook
+class hero_book
 {
 public:
-	HeroBook();
-	~HeroBook();
+	hero_book();
+	~hero_book();
 	void init(std::map<PackTag, SpritePack>* packsMap);
 	std::vector<DrawableChainElement*> prepareSprites(float hpRatio, long long elapsedTime);
 	void interact();
@@ -36,7 +36,7 @@ public:
 	Vector2f getHpLinePosition() { return {	buttonList.at(ButtonTag::bookStandTag).get_position().x + buttonList.at(ButtonTag::bookStandTag).get_global_bounds().width - 40,
 		buttonList.at(ButtonTag::bookStandTag).get_position().y + buttonList.at(ButtonTag::bookStandTag).get_global_bounds().height / 2 - 20 }; }
 private:
-	HeroBookPage somePage;
+	hero_book_page somePage;
 	std::vector<SpriteChainElement*> prepareHpLine(float hpRatio);
 	std::vector<SpriteChainElement*> prepareWreathMatrix();
 	std::vector<SpriteChainElement*> preparePlantsMatrix();

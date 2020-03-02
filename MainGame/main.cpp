@@ -3,7 +3,7 @@
 #include "Console.h"
 #include "deerchant.h"
 #include "DrawSystem.h"
-#include "HeroBook.h"
+#include "hero_book.h"
 #include "MenuSystem.h"
 #include "VisualEffects/AmbientLight.hpp"
 
@@ -28,7 +28,7 @@ int main() {
 	long long time_micro_sec = 0;
 	int currentMouseButton = 0;
 
-	HeroBook mainBook;
+	hero_book mainBook;
 	mainBook.init(&drawSystem.packsMap);
 
 	TextSystem textWriter;

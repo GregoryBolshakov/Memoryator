@@ -2,10 +2,10 @@
 
 #include "TerrainObject.h"
 
-class Grass : public StaticObject
+class grass : public StaticObject
 {
 public:
-	Grass(std::string objectName, Vector2f centerPosition, int typeOfObject);
+	grass(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;
 	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;
 	int strength{};

@@ -176,16 +176,16 @@ void WorldHandler::Load()
 	{
 		fin >> saveName >> typeOfObject >> posX >> posY;
 
-		if (saveName == GroundConnection("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
+		if (saveName == ground_connection("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
 			worldGenerator.initializeStaticItem(Tag::groundConnection, Vector2f(posX, posY), typeOfObject, "", 1);
 		else
-			if (saveName == Ground("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
+			if (saveName == ground("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
 				worldGenerator.initializeStaticItem(Tag::ground, Vector2f(posX, posY), typeOfObject, "", 1);
 			else
 				if (saveName == ForestTree("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
 					worldGenerator.initializeStaticItem(Tag::tree, Vector2f(posX, posY), typeOfObject, "", 1);
 				else
-					if (saveName == Grass("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
+					if (saveName == grass("loadInit", Vector2f(0, 0), typeOfObject).getToSaveName())
 						worldGenerator.initializeStaticItem(Tag::grass, Vector2f(posX, posY), typeOfObject, "", 1);																
 	}
 

@@ -13,12 +13,12 @@ struct DraftInfo
 	Tag id;
 };
 
-class WreathDraft
+class wreath_draft
 {
 	DraftInfo originalSetup;
 public:
-	WreathDraft();
-	~WreathDraft();
+	wreath_draft();
+	~wreath_draft();
 	void init(const DraftInfo& originalSetup);
 	[[nodiscard]] DraftInfo getOriginalSetup() const { return originalSetup; }
 

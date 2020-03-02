@@ -48,7 +48,7 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 		}
 		case Tag::grass:
 		{
-			item = new Grass("item", Vector2f(0, 0), -1);
+			item = new grass("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::spawn:
@@ -58,12 +58,12 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 		}
 		case Tag::ground:
 		{
-			item = new Ground("item", Vector2f(0, 0), -1);
+			item = new ground("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::groundConnection:
 		{
-			item = new GroundConnection("item", Vector2f(0, 0), -1);
+			item = new ground_connection("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::chamomile:
@@ -128,7 +128,7 @@ StaticObject* ObjectInitializer::initializeStaticItem(
 		}
 		case Tag::mushroom:
 		{
-			item = new Mushroom("item", Vector2f(0, 0), -1);
+			item = new mushroom("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case Tag::log:

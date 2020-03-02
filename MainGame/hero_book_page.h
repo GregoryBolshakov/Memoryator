@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 #include "button.h"
-#include "WreathDraft.h"
+#include "wreath_draft.h"
 #include "SpriteStructures.h"
 #include "TextSystem.h"
 #include "HeroBag.h"
@@ -40,11 +40,11 @@ struct pageContent
 	std::vector<RectangleShape> connections;
 };
 
-class HeroBookPage
+class hero_book_page
 {
 public:
-	HeroBookPage();
-	~HeroBookPage();
+	hero_book_page();
+	~hero_book_page();
 	void initAuxiliarySpriteMap();
 	void buttonListBounding(std::unordered_map<ButtonTag, button>* buttonList);
 	void setPage(int page) { this->currentPage = page; }

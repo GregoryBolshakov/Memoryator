@@ -2,11 +2,10 @@
 
 #include "TerrainObject.h"
 
-class Ground : public StaticObject
+class ground : public StaticObject
 {
-protected:
 public:
-	Ground(std::string objectName, Vector2f centerPosition, int typeOfObject);
+	ground(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;
 	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;
 	int strength{};

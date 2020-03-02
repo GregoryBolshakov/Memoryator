@@ -153,7 +153,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="InputBox.cpp" />
     <ClCompile Include="Lake.cpp" />
     <ClCompile Include="LightSystem.cpp" />
-    <ClCompile Include="Mushroom.cpp" />
+    <ClCompile Include="mushroom.cpp" />
     <ClCompile Include="bear.cpp" />
     <ClCompile Include="Brazier.cpp" />
     <ClCompile Include="BuildSystem.cpp" />
@@ -169,16 +169,16 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="EventHandler.cpp" />
     <ClCompile Include="Fence.cpp" />
     <ClCompile Include="Fern.cpp" />
-    <ClCompile Include="Grass.cpp" />
+    <ClCompile Include="grass.cpp" />
     <ClCompile Include="GridList.cpp" />
-    <ClCompile Include="Ground.cpp" />
-    <ClCompile Include="GroundConnection.cpp" />
+    <ClCompile Include="ground.cpp" />
+    <ClCompile Include="ground_connection.cpp" />
     <ClCompile Include="hare.cpp" />
     <ClCompile Include="HareTrap.cpp" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="HeroBag.cpp" />
-    <ClCompile Include="HeroBook.cpp" />
-    <ClCompile Include="HeroBookPage.cpp" />
+    <ClCompile Include="hero_book.cpp" />
+    <ClCompile Include="hero_book_page.cpp" />
     <ClCompile Include="InventorySystem.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
@@ -216,7 +216,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="WorldGenerator.cpp" />
     <ClCompile Include="WorldHandler.cpp" />
     <ClCompile Include="WorldObject.cpp" />
-    <ClCompile Include="WreathDraft.cpp" />
+    <ClCompile Include="wreath_draft.cpp" />
     <ClCompile Include="WreathTable.cpp" />
     <ClCompile Include="Yarrow.cpp" />
   </ItemGroup>
@@ -229,7 +229,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="InputBox.h" />
     <ClInclude Include="Lake.h" />
     <ClInclude Include="LightSystem.h" />
-    <ClInclude Include="Mushroom.h" />
+    <ClInclude Include="mushroom.h" />
     <ClInclude Include="bear.h" />
     <ClInclude Include="Bush.h" />
     <ClInclude Include="clap_whirl.h" />
@@ -258,16 +258,16 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="EmptyObject.h" />
     <ClInclude Include="EventHandler.h" />
     <ClInclude Include="Fence.h" />
-    <ClInclude Include="Grass.h" />
+    <ClInclude Include="grass.h" />
     <ClInclude Include="GridList.h" />
-    <ClInclude Include="Ground.h" />
-    <ClInclude Include="GroundConnection.h" />
+    <ClInclude Include="ground.h" />
+    <ClInclude Include="ground_connection.h" />
     <ClInclude Include="hare.h" />
     <ClInclude Include="HareTrap.h" />
     <ClInclude Include="Helper.h" />
     <ClInclude Include="HeroBag.h" />
-    <ClInclude Include="HeroBook.h" />
-    <ClInclude Include="HeroBookPage.h" />
+    <ClInclude Include="hero_book.h" />
+    <ClInclude Include="hero_book_page.h" />
     <ClInclude Include="InventorySystem.h" />
     <ClInclude Include="MenuSystem.h" />
     <ClInclude Include="monster.h" />
@@ -295,7 +295,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="WorldGenerator.h" />
     <ClInclude Include="WorldHandler.h" />
     <ClInclude Include="WorldObject.h" />
-    <ClInclude Include="WreathDraft.h" />
+    <ClInclude Include="wreath_draft.h" />
     <ClInclude Include="WreathTable.h" />
     <ClInclude Include="Yarrow.h" />
   </ItemGroup>

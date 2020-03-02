@@ -1,18 +1,18 @@
-#include "GroundConnection.h"
+#include "ground_connection.h"
 
 #include "Helper.h"
 
-GroundConnection::GroundConnection(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : StaticObject(std::move(objectName), centerPosition)
+ground_connection::ground_connection(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : StaticObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 12; // SwampyTrees: 1-4; DarkWoods: 5-8; BirchGrove: 9-12
 	this->typeOfObject = typeOfObject;
 	isBackground = true;
 	toSaveName = "groundConnection";
-	GroundConnection::setType(typeOfObject);
+	ground_connection::setType(typeOfObject);
 	tag = Tag::groundConnection;
 }
 
-void GroundConnection::setType(int typeOfObject)
+void ground_connection::setType(int typeOfObject)
 {
 	if (typeOfObject == -1)
 		return;
@@ -54,7 +54,7 @@ void GroundConnection::setType(int typeOfObject)
 						this->zCoord = 50;
 }
 
-Vector2f GroundConnection::calculateTextureOffset()
+Vector2f ground_connection::calculateTextureOffset()
 {
 	if (typeOfObject % 4 == 1)
 		return { 0, textureBox.height - 5 };
@@ -67,17 +67,17 @@ Vector2f GroundConnection::calculateTextureOffset()
 	return { 0, 0 };
 }
 
-Vector2f GroundConnection::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f ground_connection::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int GroundConnection::getBuildType(Vector2f, Vector2f)
+int ground_connection::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-std::vector<SpriteChainElement*> GroundConnection::prepareSprites(long long)
+std::vector<SpriteChainElement*> ground_connection::prepareSprites(long long)
 {	
 	if (typeOfObject >= 1 && typeOfObject <= 4)
 		return { new SpriteChainElement() };

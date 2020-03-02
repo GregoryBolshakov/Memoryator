@@ -1,19 +1,19 @@
-#include "Grass.h"
+#include "grass.h"
 
 #include "Helper.h"
 
-Grass::Grass(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : StaticObject(std::move(objectName), centerPosition)
+grass::grass(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : StaticObject(std::move(objectName), centerPosition)
 {
 	varietyOfTypes = 30; // BirchGrove: 1-8; DarkWoods: 9-21; SwampyTrees: 22-30
 	this->typeOfObject = typeOfObject;
 	this->intangible = true;
 	toSaveName = "grass";
-	Grass::setType(typeOfObject);
+	grass::setType(typeOfObject);
 	tag = Tag::grass;
 	mirrored = bool(rand() % 2);
 }
 
-void Grass::setType(int typeOfObject)
+void grass::setType(int typeOfObject)
 {
 	if (typeOfObject == -1)
 		return;
@@ -81,7 +81,7 @@ void Grass::setType(int typeOfObject)
 		conditionalSizeUnits = { 134, 84 };
 }
 
-Vector2f Grass::calculateTextureOffset()
+Vector2f grass::calculateTextureOffset()
 {	
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
@@ -89,17 +89,17 @@ Vector2f Grass::calculateTextureOffset()
 	return { textureBox.width / 2.0f, textureBox.height / 1.2f };
 }
 
-Vector2f Grass::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f grass::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int Grass::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int grass::getBuildType(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
 
-std::vector<SpriteChainElement*> Grass::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> grass::prepareSprites(long long elapsedTime)
 {
 	std::vector<SpriteChainElement*> result = {};
 	SpriteChainElement* body = new SpriteChainElement(PackTag::darkWoods, PackPart::plant, Direction::DOWN, typeOfObject, position, conditionalSizeUnits, Vector2f(textureBoxOffset));

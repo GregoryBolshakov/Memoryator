@@ -13,15 +13,6 @@
     <ClCompile Include="Spawn.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="Grass.cpp">
-      <Filter>Ground</Filter>
-    </ClCompile>
-    <ClCompile Include="Ground.cpp">
-      <Filter>Ground</Filter>
-    </ClCompile>
-    <ClCompile Include="GroundConnection.cpp">
-      <Filter>Ground</Filter>
-    </ClCompile>
     <ClCompile Include="Brazier.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
@@ -41,12 +32,6 @@
     <ClCompile Include="Fence.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="HeroBook.cpp">
-      <Filter>HeroBook</Filter>
-    </ClCompile>
-    <ClCompile Include="HeroBookPage.cpp">
-      <Filter>HeroBook</Filter>
-    </ClCompile>
     <ClCompile Include="Mugwort.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
@@ -55,9 +40,6 @@
     </ClCompile>
     <ClCompile Include="DroppedLoot.cpp">
       <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="WreathDraft.cpp">
-      <Filter>HeroBook</Filter>
     </ClCompile>
     <ClCompile Include="Fern.cpp">
       <Filter>Terrain</Filter>
@@ -82,9 +64,6 @@
     </ClCompile>
     <ClCompile Include="Bush.cpp">
       <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Mushroom.cpp">
-      <Filter>Ground</Filter>
     </ClCompile>
     <ClCompile Include="Roof.cpp">
       <Filter>Terrain</Filter>
@@ -213,6 +192,27 @@
     <ClCompile Include="noose.cpp">
       <Filter>DynamicObjects</Filter>
     </ClCompile>
+    <ClCompile Include="grass.cpp">
+      <Filter>Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="ground.cpp">
+      <Filter>Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="ground_connection.cpp">
+      <Filter>Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="mushroom.cpp">
+      <Filter>Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="hero_book.cpp">
+      <Filter>HeroBook</Filter>
+    </ClCompile>
+    <ClCompile Include="hero_book_page.cpp">
+      <Filter>HeroBook</Filter>
+    </ClCompile>
+    <ClCompile Include="wreath_draft.cpp">
+      <Filter>HeroBook</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EventHandler.h" />
@@ -226,15 +226,6 @@
     </ClInclude>
     <ClInclude Include="Spawn.h">
       <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Grass.h">
-      <Filter>Ground</Filter>
-    </ClInclude>
-    <ClInclude Include="Ground.h">
-      <Filter>Ground</Filter>
-    </ClInclude>
-    <ClInclude Include="GroundConnection.h">
-      <Filter>Ground</Filter>
     </ClInclude>
     <ClInclude Include="Brazier.h">
       <Filter>Terrain</Filter>
@@ -255,12 +246,6 @@
     <ClInclude Include="Fence.h">
       <Filter>Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="HeroBook.h">
-      <Filter>HeroBook</Filter>
-    </ClInclude>
-    <ClInclude Include="HeroBookPage.h">
-      <Filter>HeroBook</Filter>
-    </ClInclude>
     <ClInclude Include="Mugwort.h">
       <Filter>Terrain</Filter>
     </ClInclude>
@@ -269,9 +254,6 @@
     </ClInclude>
     <ClInclude Include="DroppedLoot.h">
       <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="WreathDraft.h">
-      <Filter>HeroBook</Filter>
     </ClInclude>
     <ClInclude Include="SpriteStructures.h" />
     <ClInclude Include="Fern.h">
@@ -297,9 +279,6 @@
     </ClInclude>
     <ClInclude Include="Bush.h">
       <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Mushroom.h">
-      <Filter>Ground</Filter>
     </ClInclude>
     <ClInclude Include="Roof.h">
       <Filter>Terrain</Filter>
@@ -433,6 +412,27 @@
     </ClInclude>
     <ClInclude Include="noose.h">
       <Filter>DynamicObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="grass.h">
+      <Filter>Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="ground.h">
+      <Filter>Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="ground_connection.h">
+      <Filter>Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="mushroom.h">
+      <Filter>Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="hero_book.h">
+      <Filter>HeroBook</Filter>
+    </ClInclude>
+    <ClInclude Include="hero_book_page.h">
+      <Filter>HeroBook</Filter>
+    </ClInclude>
+    <ClInclude Include="wreath_draft.h">
+      <Filter>HeroBook</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

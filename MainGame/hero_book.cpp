@@ -1,23 +1,23 @@
-#include "HeroBook.h"
+#include "hero_book.h"
 
 #include <fstream>
 
 #include "Helper.h"
 
-HeroBook::HeroBook()
+hero_book::hero_book()
 = default;
 
-HeroBook::~HeroBook()
+hero_book::~hero_book()
 = default;
 
-void HeroBook::init(std::map<PackTag, SpritePack>* packsMap)
+void hero_book::init(std::map<PackTag, SpritePack>* packsMap)
 {
 	initButtons(packsMap);
 	//initContent();
 	//somePage.initAuxiliarySpriteMap();
 }
 
-void HeroBook::initButtons(std::map<PackTag, SpritePack>* packsMap)
+void hero_book::initButtons(std::map<PackTag, SpritePack>* packsMap)
 {
 	const auto screenSize = Helper::GetScreenSize();
 
@@ -66,12 +66,12 @@ void HeroBook::initButtons(std::map<PackTag, SpritePack>* packsMap)
 	//-------------------------------
 }
 
-void HeroBook::initContent()
+void hero_book::initContent()
 {
 	somePage.initObjectInfo();
 }
 
-void HeroBook::getAllOuterInfo(std::vector<HeroBag>* bags, std::string name, WorldObject* object, Cell* worldHeldItem, bool nearTheTable)
+void hero_book::getAllOuterInfo(std::vector<HeroBag>* bags, std::string name, WorldObject* object, Cell* worldHeldItem, bool nearTheTable)
 {
 	boundBags = bags;
 	somePage.boundBags = bags;
@@ -80,13 +80,13 @@ void HeroBook::getAllOuterInfo(std::vector<HeroBag>* bags, std::string name, Wor
 	somePage.nearTheTable = nearTheTable;
 }
 
-void HeroBook::setPage(int page)
+void hero_book::setPage(int page)
 {
 	currentPage = page;
 	somePage.setPage(page);
 }
 
-std::vector<SpriteChainElement*> HeroBook::prepareHpLine(float hpRatio)
+std::vector<SpriteChainElement*> hero_book::prepareHpLine(float hpRatio)
 {
 	std::vector<SpriteChainElement*> result = {};
 	buttonList.at(ButtonTag::hpFrameTag).set_position(getHpLinePosition());
@@ -99,7 +99,7 @@ std::vector<SpriteChainElement*> HeroBook::prepareHpLine(float hpRatio)
 	return result;
 }
 
-std::vector<SpriteChainElement*> HeroBook::prepareWreathMatrix()
+std::vector<SpriteChainElement*> hero_book::prepareWreathMatrix()
 {	
 	if (currentPage != 5 || somePage.getOriginalSetups()[currentDraft].id != currentDraft)
 		return {};
@@ -131,7 +131,7 @@ std::vector<SpriteChainElement*> HeroBook::prepareWreathMatrix()
 			distance.y = buttonList.at(currentType).get_global_bounds().height / 2;
 			somePage.wreathMatrixPositions[raw][column] = Vector2f(upperLeftCorner.x + column * distance.x + offset, upperLeftCorner.y + raw * distance.y);
 
-			if (HeroBookPage::checkWreathCellFit(raw, column, somePage.getOriginalSetups().at(currentDraft).rings))
+			if (hero_book_page::checkWreathCellFit(raw, column, somePage.getOriginalSetups().at(currentDraft).rings))
 			{
 				// draw cell
 				buttonList.at(currentType).set_position(somePage.wreathMatrixPositions[raw][column]);
@@ -145,7 +145,7 @@ std::vector<SpriteChainElement*> HeroBook::prepareWreathMatrix()
 	return result;
 }
 
-std::vector<SpriteChainElement*> HeroBook::prepareLineMatrix()
+std::vector<SpriteChainElement*> hero_book::prepareLineMatrix()
 {
 	std::vector<SpriteChainElement*> result = {};
 
@@ -168,8 +168,8 @@ std::vector<SpriteChainElement*> HeroBook::prepareLineMatrix()
 					for (auto& connection : somePage.plantsConnections.at(somePage.wreathMatrix[raw][column]))
 						if (somePage.wreathMatrix[cell.first][cell.second] == connection)
 						{
-							if (HeroBookPage::checkWreathCellFit(raw, column, somePage.getOriginalSetups().at(currentDraft).rings) && 
-								HeroBookPage::checkWreathCellFit(cell.first, cell.second, somePage.getOriginalSetups().at(currentDraft).rings))
+							if (hero_book_page::checkWreathCellFit(raw, column, somePage.getOriginalSetups().at(currentDraft).rings) && 
+								hero_book_page::checkWreathCellFit(cell.first, cell.second, somePage.getOriginalSetups().at(currentDraft).rings))
 							{
 								const Vector2f firstLnDot = Vector2f(somePage.wreathMatrixPositions[raw][column].x + distance.y + contentOffset.x, somePage.wreathMatrixPositions[raw][column].y + distance.y + contentOffset.y);
 								const Vector2f secondLnDot = Vector2f(somePage.wreathMatrixPositions[cell.first][cell.second].x + distance.y + contentOffset.x, somePage.wreathMatrixPositions[cell.first][cell.second].y + distance.y + contentOffset.y);
@@ -187,7 +187,7 @@ std::vector<SpriteChainElement*> HeroBook::prepareLineMatrix()
 	return result;
 }
 
-std::vector<SpriteChainElement*> HeroBook::preparePlantsMatrix()
+std::vector<SpriteChainElement*> hero_book::preparePlantsMatrix()
 {
 	std::vector<SpriteChainElement*> result = {};
 
@@ -210,7 +210,7 @@ std::vector<SpriteChainElement*> HeroBook::preparePlantsMatrix()
 							buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).stop_being_gray();
 							break;
 						}
-				if (HeroBookPage::checkWreathCellFit(raw, column, somePage.getOriginalSetups().at(currentDraft).rings))
+				if (hero_book_page::checkWreathCellFit(raw, column, somePage.getOriginalSetups().at(currentDraft).rings))
 				{
 					buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).stop_being_gray();
 					result.push_back(buttonList.at(ButtonTag(somePage.wreathMatrix[raw][column])).prepare_sprite());					
@@ -222,7 +222,7 @@ std::vector<SpriteChainElement*> HeroBook::preparePlantsMatrix()
 	return result;
 }
 
-std::vector<SpriteChainElement*> HeroBook::preparePlantsList()
+std::vector<SpriteChainElement*> hero_book::preparePlantsList()
 {
 	if (currentPage != 5)
 		return {};
@@ -255,9 +255,9 @@ std::vector<SpriteChainElement*> HeroBook::preparePlantsList()
 	return result;
 }
 
-std::vector<DrawableChainElement*> HeroBook::prepareWreathCost(Vector2f pos)
+std::vector<DrawableChainElement*> hero_book::prepareWreathCost(Vector2f pos)
 {
-	const Tag currentObject = HeroBookPage::pageToObjectId(currentPage);
+	const Tag currentObject = hero_book_page::pageToObjectId(currentPage);
 	if (!somePage.nearTheTable || !somePage.getObjectInfo()->at(currentObject).isUnlocked || somePage.doneRecipes.count(currentObject) == 0)
 		return {};
 
@@ -280,7 +280,7 @@ std::vector<DrawableChainElement*> HeroBook::prepareWreathCost(Vector2f pos)
 	return result;
 }
 
-std::vector<DrawableChainElement*> HeroBook::prepareSprites(float hpRatio, long long elapsedTime)
+std::vector<DrawableChainElement*> hero_book::prepareSprites(float hpRatio, long long elapsedTime)
 {
 	std::vector<DrawableChainElement*> result = {};
 
@@ -380,13 +380,13 @@ std::vector<DrawableChainElement*> HeroBook::prepareSprites(float hpRatio, long 
 	return result;
 }
 
-void HeroBook::interact()
+void hero_book::interact()
 {
 	if (Mouse::isButtonPressed(Mouse::Left))
 		WhileMouseDown();
 }
 
-void HeroBook::onMouseUp()
+void hero_book::onMouseUp()
 {
 	// plant dragging to draft
 	if (currentPage == 5)
@@ -399,7 +399,7 @@ void HeroBook::onMouseUp()
 			for (auto& plant : plants)
 			{
 				if (selectedCell.first == int(plant.second.first) && selectedCell.second == (plant.second.second) ||
-					!HeroBookPage::checkWreathCellFit(selectedCell.first, selectedCell.second, somePage.getOriginalSetups().at(currentDraft).rings))
+					!hero_book_page::checkWreathCellFit(selectedCell.first, selectedCell.second, somePage.getOriginalSetups().at(currentDraft).rings))
 				{
 					canBePlaced = false;
 					break;
@@ -430,8 +430,8 @@ void HeroBook::onMouseUp()
 	if (buttonList.at(ButtonTag::makeWreath).is_active && somePage.nearTheTable)
 		if (buttonList.at(ButtonTag::makeWreath).is_selected(Vector2f(Mouse::getPosition())))		
 			if (boundBags)
-				if (HeroBookPage::tagToWreath(Tag(currentPage)) != Tag::emptyCell)
-				HeroBag::putItemIn(new std::pair<Tag, int>(HeroBookPage::tagToWreath(Tag(currentPage)), 1), boundBags);					
+				if (hero_book_page::tagToWreath(Tag(currentPage)) != Tag::emptyCell)
+				HeroBag::putItemIn(new std::pair<Tag, int>(hero_book_page::tagToWreath(Tag(currentPage)), 1), boundBags);					
 	//---------------
 
 	// clicking the plus in the draft center
@@ -445,7 +445,7 @@ void HeroBook::onMouseUp()
 						somePage.doneRecipes[currentDraft][column] += 1;
 
 			somePage.unlockObject(currentDraft);
-			setPage(HeroBookPage::getHeadingPage(currentDraft));
+			setPage(hero_book_page::getHeadingPage(currentDraft));
 			somePage.clearWreathMatrix();
 			currentDraft = Tag::emptyDraft;
 			somePage.readyToFinishDraft = false;
@@ -472,7 +472,7 @@ void HeroBook::onMouseUp()
 
 }
 
-void HeroBook::WhileMouseDown()
+void hero_book::WhileMouseDown()
 {
 	// flower to matrix transfer
 	if (currentPage == 5) 

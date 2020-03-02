@@ -2,11 +2,11 @@
 
 #include "TerrainObject.h"
 
-class Mushroom : public StaticObject
+class mushroom : public StaticObject
 {
 protected:
 public:
-	Mushroom(std::string objectName, Vector2f centerPosition, int typeOfObject);
+	mushroom(std::string objectName, Vector2f centerPosition, int typeOfObject);
 	Vector2f calculateTextureOffset() override;
 	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;
 	int strength{};
