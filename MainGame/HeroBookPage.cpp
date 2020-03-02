@@ -95,7 +95,7 @@ void HeroBookPage::preparePageBase()
 	setArrowsPosition();
 }
 
-void HeroBookPage::buttonListBounding(std::unordered_map<ButtonTag, Button>* buttonList)
+void HeroBookPage::buttonListBounding(std::unordered_map<ButtonTag, button>* buttonList)
 {
 	this->buttonList = buttonList;
 }

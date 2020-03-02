@@ -47,7 +47,7 @@ private:
 	void initContent();
 
 	std::string buttonsInfoFileDirectory = "Game/bookButtons.txt";
-	std::unordered_map<ButtonTag, Button> buttonList;
+	std::unordered_map<ButtonTag, button> buttonList;
 	int currentPage = 0;
 	/////////////////////////
 	// creatures 101 - 199 //

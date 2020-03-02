@@ -23,7 +23,7 @@ public:
 	bool getActivity() { return wasActive; }
 private:
 	MenuStates menuState = mainMenu;
-	std::unordered_map<ButtonTag, Button> buttonList;
+	std::unordered_map<ButtonTag, button> buttonList;
 	std::string buttonsInfoFileDirectory = "Game/MenuSystem/buttonsInfo.txt";
 	void initButtons();
 	bool wasActive;

@@ -46,7 +46,7 @@ public:
 	HeroBookPage();
 	~HeroBookPage();
 	void initAuxiliarySpriteMap();
-	void buttonListBounding(std::unordered_map<ButtonTag, Button>* buttonList);
+	void buttonListBounding(std::unordered_map<ButtonTag, button>* buttonList);
 	void setPage(int page) { this->currentPage = page; }
 
 	// object information (creatures, craft, plants, wreaths, nightmare)
@@ -90,7 +90,7 @@ public:
 	std::vector<HeroBag>* boundBags{};
 private:
 	static int div_up(int n, int d) { return n / d + (((n < 0) ^ (d > 0)) && (n % d)); }
-	std::unordered_map<ButtonTag, Button>* buttonList{};
+	std::unordered_map<ButtonTag, button>* buttonList{};
 	void setBookmarkPosition() const;
 	void preparePageBase();
 	void putHeadingsToPositions(std::vector<ButtonTag> buttons);
