@@ -1,15 +1,15 @@
 #pragma once
 
 #include "Helper.h"
-#include "NeutralMob.h"
+#include "neutral_mob.h"
 
 using namespace sf;
 
-class Hare : public NeutralMob
+class hare : public neutral_mob
 {
 public:
-	Hare(const std::string& objectName, Vector2f centerPosition);
-	~Hare();
+	hare(const std::string& objectName, Vector2f centerPosition);
+	~hare();
 	Vector2f calculateTextureOffset() override;
 	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;
 	void setTarget(DynamicObject& object) override;

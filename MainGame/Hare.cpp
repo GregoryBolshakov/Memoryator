@@ -1,10 +1,10 @@
-#include "Hare.h"
+#include "hare.h"
 
 #include "HareTrap.h"
 
 using namespace sf;
 
-Hare::Hare(const std::string& objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
+hare::hare(const std::string& objectName, Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
 {
 	conditionalSizeUnits = { 180, 150 };
 	currentSprite[0] = 1;
@@ -23,17 +23,17 @@ Hare::Hare(const std::string& objectName, Vector2f centerPosition) : NeutralMob(
 	tag = Tag::hare;
 }
 
-Hare::~Hare()
+hare::~hare()
 = default;
 
-Vector2f Hare::calculateTextureOffset()
+Vector2f hare::calculateTextureOffset()
 {
 	textureBox.width = float(textureBox.width)*getScaleRatio().x;
 	textureBox.height = float(textureBox.height)*getScaleRatio().y;
 	return { textureBox.width / 2, textureBox.height * 7 / 8 };
 }
 
-void Hare::setTarget(DynamicObject& object)
+void hare::setTarget(DynamicObject& object)
 {
 	if (object.tag == Tag::noose || currentAction == absorbs)
 		return;
@@ -47,7 +47,7 @@ void Hare::setTarget(DynamicObject& object)
 	}
 }
 
-void Hare::behaviorWithStatic(WorldObject* target, long long elapsedTime)
+void hare::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
 	if (currentAction == absorbs)
 		return;
@@ -62,7 +62,7 @@ void Hare::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 		}
 }
 
-void Hare::behavior(long long elapsedTime)
+void hare::behavior(long long elapsedTime)
 {	
 	endingPreviousAction();
 	fightInteract(elapsedTime);
@@ -163,17 +163,17 @@ void Hare::behavior(long long elapsedTime)
 	}
 }
 
-Vector2f Hare::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f hare::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int Hare::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int hare::getBuildType(Vector2f ounPos, Vector2f otherPos)
 {
 	return 1;
 }
 
-void Hare::endingPreviousAction()
+void hare::endingPreviousAction()
 {
 	if (lastAction == commonHit)
 		currentAction = relax;
@@ -186,18 +186,17 @@ void Hare::endingPreviousAction()
 	lastAction = relax;
 }
 
-void Hare::jerk(float power, float deceleration, Vector2f destinationPoint)
+void hare::jerk(float power, float deceleration, Vector2f destinationPoint)
 {
 	return;
 }
 
-std::vector<SpriteChainElement*> Hare::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> hare::prepareSprites(long long elapsedTime)
 {
 	auto body = new SpriteChainElement(PackTag::hare, PackPart::full, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	animationSpeed = 10;
 
 	Side spriteSide = directionSystem.side;
-	Direction spriteDirection = directionSystem.lastDirection;
 
 	if (directionSystem.side == right)
 	{
@@ -206,7 +205,6 @@ std::vector<SpriteChainElement*> Hare::prepareSprites(long long elapsedTime)
 	}
 	if (directionSystem.lastDirection == Direction::RIGHT || directionSystem.lastDirection == Direction::UPRIGHT || directionSystem.lastDirection == Direction::DOWNRIGHT)
 	{
-		spriteDirection = DirectionSystem::cutRights(spriteDirection);
 		body->mirrored = true;
 	}
 
@@ -246,7 +244,7 @@ std::vector<SpriteChainElement*> Hare::prepareSprites(long long elapsedTime)
 
 	timeForNewSprite += elapsedTime;
 
-	if (timeForNewSprite >= 1e6 / animationSpeed)
+	if (timeForNewSprite >= long(1e6 / animationSpeed))
 	{
 		timeForNewSprite = 0;
 

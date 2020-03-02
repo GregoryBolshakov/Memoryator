@@ -1,6 +1,6 @@
-#include "Nightmare1.h"
+#include "nightmare_first.h"
 
-Nightmare1::Nightmare1(std::string objectName, const Vector2f centerPosition) : Monster(std::move(objectName), centerPosition)
+nightmare_first::nightmare_first(std::string objectName, const Vector2f centerPosition) : monster(std::move(objectName), centerPosition)
 {
 	conditionalSizeUnits = { 375, 375 };
 	moveSystem.defaultSpeed = 0.0005f;
@@ -19,11 +19,11 @@ Nightmare1::Nightmare1(std::string objectName, const Vector2f centerPosition) : 
 }
 
 
-Nightmare1::~Nightmare1()
+nightmare_first::~nightmare_first()
 = default;
 
 
-Vector2f Nightmare1::calculateTextureOffset()
+Vector2f nightmare_first::calculateTextureOffset()
 {	
 	initMicroBlocks();
 	textureBox.width = textureBox.width * getScaleRatio().x;
@@ -31,7 +31,7 @@ Vector2f Nightmare1::calculateTextureOffset()
 	return { textureBox.width / 2, textureBox.height * 7 / 8 };
 }
 
-void Nightmare1::doAttack(WorldObject* target)
+void nightmare_first::doAttack(WorldObject* target)
 {
 	if (timeAfterHit >= timeForNewHit)
 	{
@@ -43,7 +43,7 @@ void Nightmare1::doAttack(WorldObject* target)
 	}
 }
 
-std::vector<SpriteChainElement*> Nightmare1::prepareSprites(const long long elapsedTime)
+std::vector<SpriteChainElement*> nightmare_first::prepareSprites(const long long elapsedTime)
 {
 	auto body = new SpriteChainElement(PackTag::nightmare1, PackPart::stand, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	animationSpeed = 10;

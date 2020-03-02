@@ -209,7 +209,7 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 	{
 	case Tag::hero:
 	{
-		item = new Deerchant("item", Vector2f(0, 0));
+		item = new deerchant("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/hero/stand/down/1";		
 		break;
 	}
@@ -221,7 +221,7 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 	}
 	case Tag::hare:
 	{
-		item = new Hare("item", Vector2f(0, 0));
+		item = new hare("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/hare/stand/down/1";
 		break;
 	}
@@ -263,25 +263,25 @@ DynamicObject* ObjectInitializer::initializeDynamicItem(
 	}
 	case Tag::nightmare1:
 	{
-		item = new Nightmare1("item", Vector2f(0, 0));
+		item = new nightmare_first("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/nightmare1/stand/down/1";
 		break;
 	}
 	case Tag::nightmare2:
 	{
-		item = new Nightmare2("item", Vector2f(0, 0));
+		item = new nightmare_second("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/nightmare2/stand/down/1";
 		break;
 	}
 	case Tag::nightmare3:
 	{
-		item = new Nightmare3("item", Vector2f(0, 0));
+		item = new nightmare_third("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/nightmare2/stand/down/1";
 		break;
 	}
 	default:
 	{
-		item = new Nightmare2("item", Vector2f(0, 0));
+		item = new nightmare_second("item", Vector2f(0, 0));
 		nameOfImage = "Game/worldSprites/nightmare2/stand/down/1";
 		break;
 	}

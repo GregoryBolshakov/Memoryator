@@ -5,7 +5,7 @@
 
 using namespace sf;
 
-Owl::Owl(const std::string& objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
+Owl::Owl(const std::string& objectName, Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
 {
 	conditionalSizeUnits = { 280, 200 };
 	currentSprite[0] = 1;

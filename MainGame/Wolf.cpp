@@ -2,7 +2,7 @@
 
 using namespace sf;
 
-Wolf::Wolf(std::string objectName, Vector2f centerPosition) : NeutralMob(std::move(objectName), centerPosition)
+Wolf::Wolf(std::string objectName, Vector2f centerPosition) : neutral_mob(std::move(objectName), centerPosition)
 {
 	conditionalSizeUnits = { 250, 200 };
 	currentSprite[0] = 1;

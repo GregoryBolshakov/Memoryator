@@ -1,11 +1,11 @@
 #pragma once
 
-#include "NeutralMob.h"
+#include "neutral_mob.h"
 #include "Helper.h"
 
 using namespace sf;
 
-class Owl : public NeutralMob
+class Owl : public neutral_mob
 {
 private:
 	float timeForNewSprite;

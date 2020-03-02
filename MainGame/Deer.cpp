@@ -2,7 +2,7 @@
 
 using namespace sf;
 
-deer::deer(const std::string& objectName, const Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
+deer::deer(const std::string& objectName, const Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
 {
 	conditionalSizeUnits = {360, 300};
 	currentSprite[0] = 1;

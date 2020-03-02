@@ -1,14 +1,15 @@
 #pragma once
 
-#include  "Monster.h"
+#include  "monster.h"
 
-class Nightmare2 : public Monster
+class nightmare_first : public monster
 {
 public:
-	Nightmare2(std::string objectName, Vector2f centerPosition);
-	~Nightmare2();
+	nightmare_first(std::string objectName, Vector2f centerPosition);
+	~nightmare_first();
 	Vector2f calculateTextureOffset() override;
 	std::vector<SpriteChainElement*> prepareSprites(long long elapsedTime) override;
 private:
 	void doAttack(WorldObject* target) override;
 };
+

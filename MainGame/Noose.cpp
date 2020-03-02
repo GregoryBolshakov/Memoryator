@@ -1,7 +1,7 @@
 #include "Noose.h"
 
 #include "deer.h"
-#include "Deerchant.h"
+#include "deerchant.h"
 
 
 using namespace sf;
@@ -224,7 +224,7 @@ void Noose::rotateAndExtend(SpriteChainElement* rope, SpriteChainElement* loop) 
 		rope->offset.y += (ownerPos.y - position.y) * localElongation / Helper::getDist(position, ownerPos);
 
 		// change position to hero belt
-		const auto dynOwner = dynamic_cast<Deerchant*>(owner);
+		const auto dynOwner = dynamic_cast<deerchant*>(owner);
 		if ((dynOwner != nullptr) && currentAction != dead)
 		{
 			rope->position = dynOwner->getBeltPosition();

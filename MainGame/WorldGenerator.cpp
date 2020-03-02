@@ -8,7 +8,7 @@ WorldGenerator::WorldGenerator()
 
 void WorldGenerator::initMainScale()
 {
-	auto mainObject = Deerchant("loadInit", Vector2f(0, 0));
+	auto mainObject = deerchant("loadInit", Vector2f(0, 0));
 	mainObject.calculateTextureOffset();
 	mainScale = Helper::GetScreenSize().y / (5 * mainObject.getConditionalSizeUnits().y);
 	mainScale = round(mainScale * 100) / 100;

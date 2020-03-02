@@ -162,7 +162,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="Chamomile.cpp" />
     <ClCompile Include="ClapWhirl.cpp" />
     <ClCompile Include="deer.cpp" />
-    <ClCompile Include="Deerchant.cpp" />
+    <ClCompile Include="deerchant.cpp" />
     <ClCompile Include="DroppedLoot.cpp" />
     <ClCompile Include="DynamicObject.cpp" />
     <ClCompile Include="EmptyObject.cpp" />
@@ -173,7 +173,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="GridList.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="GroundConnection.cpp" />
-    <ClCompile Include="Hare.cpp" />
+    <ClCompile Include="hare.cpp" />
     <ClCompile Include="HareTrap.cpp" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="HeroBag.cpp" />
@@ -183,12 +183,12 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuSystem.cpp" />
-    <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="monster.cpp" />
     <ClCompile Include="Mugwort.cpp" />
     <ClCompile Include="ForestTree.cpp" />
-    <ClCompile Include="Nightmare1.cpp" />
-    <ClCompile Include="Nightmare2.cpp" />
-    <ClCompile Include="Nightmare3.cpp" />
+    <ClCompile Include="nightmare_first.cpp" />
+    <ClCompile Include="nightmare_second.cpp" />
+    <ClCompile Include="nightmare_third.cpp" />
     <ClCompile Include="Noose.cpp" />
     <ClCompile Include="ObjectInitializer.cpp" />
     <ClCompile Include="Owl.cpp" />
@@ -205,7 +205,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClCompile Include="StaticObject.cpp" />
     <ClCompile Include="Stump.cpp" />
     <ClCompile Include="TerrainObject.cpp" />
-    <ClCompile Include="NeutralMob.cpp" />
+    <ClCompile Include="neutral_mob.cpp" />
     <ClCompile Include="TextChainElement.cpp" />
     <ClCompile Include="TextSystem.cpp" />
     <ClCompile Include="TimeSystem.cpp" />
@@ -235,9 +235,9 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="ClapWhirl.h" />
     <ClInclude Include="Fern.h" />
     <ClInclude Include="Log.h" />
-    <ClInclude Include="Nightmare1.h" />
-    <ClInclude Include="Nightmare2.h" />
-    <ClInclude Include="Nightmare3.h" />
+    <ClInclude Include="nightmare_first.h" />
+    <ClInclude Include="nightmare_second.h" />
+    <ClInclude Include="nightmare_third.h" />
     <ClInclude Include="ObjectInitializer.h" />
     <ClInclude Include="Owl.h" />
     <ClInclude Include="PedestalController.h" />
@@ -252,7 +252,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="button.h" />
     <ClInclude Include="Chamomile.h" />
     <ClInclude Include="deer.h" />
-    <ClInclude Include="Deerchant.h" />
+    <ClInclude Include="deerchant.h" />
     <ClInclude Include="DroppedLoot.h" />
     <ClInclude Include="DynamicObject.h" />
     <ClInclude Include="EmptyObject.h" />
@@ -262,7 +262,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="GridList.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="GroundConnection.h" />
-    <ClInclude Include="Hare.h" />
+    <ClInclude Include="hare.h" />
     <ClInclude Include="HareTrap.h" />
     <ClInclude Include="Helper.h" />
     <ClInclude Include="HeroBag.h" />
@@ -270,7 +270,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="HeroBookPage.h" />
     <ClInclude Include="InventorySystem.h" />
     <ClInclude Include="MenuSystem.h" />
-    <ClInclude Include="Monster.h" />
+    <ClInclude Include="monster.h" />
     <ClInclude Include="Mugwort.h" />
     <ClInclude Include="ForestTree.h" />
     <ClInclude Include="Noose.h" />
@@ -283,7 +283,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
     <ClInclude Include="Stump.h" />
     <ClInclude Include="Tags.h" />
     <ClInclude Include="TerrainObject.h" />
-    <ClInclude Include="NeutralMob.h" />
+    <ClInclude Include="neutral_mob.h" />
     <ClInclude Include="TextChainElement.h" />
     <ClInclude Include="TextSystem.h" />
     <ClInclude Include="TimeSystem.h" />

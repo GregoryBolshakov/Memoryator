@@ -1,6 +1,6 @@
-#include "Nightmare2.h"
+#include "nightmare_second.h"
 
-Nightmare2::Nightmare2(std::string objectName, Vector2f centerPosition) : Monster(std::move(objectName), centerPosition)
+nightmare_second::nightmare_second(std::string objectName, Vector2f centerPosition) : monster(std::move(objectName), centerPosition)
 {
 	conditionalSizeUnits = { 600, 600 };
 	moveSystem.defaultSpeed = 0.0005f;
@@ -19,18 +19,18 @@ Nightmare2::Nightmare2(std::string objectName, Vector2f centerPosition) : Monste
 }
 
 
-Nightmare2::~Nightmare2()
+nightmare_second::~nightmare_second()
 = default;
 
 
-Vector2f Nightmare2::calculateTextureOffset()
+Vector2f nightmare_second::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
 	return { textureBox.width / 2, textureBox.height * 6 / 8 };
 }
 
-void Nightmare2::doAttack(WorldObject* target)
+void nightmare_second::doAttack(WorldObject* target)
 {
 	if (timeAfterHit >= timeForNewHit)
 	{
@@ -42,7 +42,7 @@ void Nightmare2::doAttack(WorldObject* target)
 	}
 }
 
-std::vector<SpriteChainElement*> Nightmare2::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> nightmare_second::prepareSprites(long long elapsedTime)
 {
 	auto body = new SpriteChainElement(PackTag::nightmare2Stand, PackPart::full, Direction::DOWN, 1, position, conditionalSizeUnits, textureBoxOffset, color, mirrored, false);
 	shakeSpeed = -1;

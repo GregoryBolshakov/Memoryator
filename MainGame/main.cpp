@@ -1,7 +1,7 @@
 #include <thread>
 
 #include "Console.h"
-#include "Deerchant.h"
+#include "deerchant.h"
 #include "DrawSystem.h"
 #include "HeroBook.h"
 #include "MenuSystem.h"
@@ -121,7 +121,7 @@ int main() {
 				ambient_light.update(screenSize.x / 2, screenSize.y / 2);
 			}
 
-			auto hero = dynamic_cast<Deerchant*>(world.focusedObject);
+			auto hero = dynamic_cast<deerchant*>(world.focusedObject);
 			mainBook.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().getHeldItem(), hero->nearTheTable);
 			mainBook.interact();
 

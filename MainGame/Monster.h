@@ -5,11 +5,11 @@
 
 using namespace sf;
 
-class Monster : public DynamicObject
+class monster : public DynamicObject
 {
 public:
-	Monster(std::string objectName, Vector2f centerPosition);
-	~Monster();
+	monster(std::string objectName, Vector2f centerPosition);
+	~monster();
 	void behaviorWithDynamic(DynamicObject* target, long long elapsedTime) override;
 	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;

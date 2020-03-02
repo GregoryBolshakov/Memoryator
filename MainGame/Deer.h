@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Helper.h"
-#include "NeutralMob.h"
+#include "neutral_mob.h"
 
 
 using namespace sf;
 
-class deer : public NeutralMob
+class deer : public neutral_mob
 {
 public:
 	deer(const std::string& objectName, Vector2f centerPosition);

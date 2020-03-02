@@ -1,8 +1,8 @@
-#include "Monster.h"
+#include "monster.h"
 
 using namespace sf;
 
-Monster::Monster(std::string objectName, const Vector2f centerPosition) : DynamicObject(std::move(objectName), centerPosition)
+monster::monster(std::string objectName, const Vector2f centerPosition) : DynamicObject(std::move(objectName), centerPosition)
 {
 	currentSprite[0] = 1;
 	timeForNewSprite = 0;
@@ -13,28 +13,28 @@ Monster::Monster(std::string objectName, const Vector2f centerPosition) : Dynami
 	timeForNewHit = long(1e5);
 }
 
-Monster::~Monster()
+monster::~monster()
 = default;
 
-void Monster::behaviorWithStatic(WorldObject* target, long long elapsedTime)
+void monster::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
 
 }
 
-void Monster::behavior(const long long elapsedTime)
+void monster::behavior(const long long elapsedTime)
 {
 	endingPreviousAction();
 	fightInteract(elapsedTime);
 }
 
-void Monster::setTarget(DynamicObject& object)
+void monster::setTarget(DynamicObject& object)
 {
 	boundTarget = nullptr;
 	if (object.tag == Tag::hero)
 		return; //targetPosition = object.getPosition();
 }
 
-void Monster::behaviorWithDynamic(DynamicObject* target, const long long elapsedTime)
+void monster::behaviorWithDynamic(DynamicObject* target, const long long elapsedTime)
 {
 	if (healthPoint <= 0)
 	{
@@ -94,7 +94,7 @@ void Monster::behaviorWithDynamic(DynamicObject* target, const long long elapsed
 		stopping(true, false);
 }
 
-void Monster::endingPreviousAction()
+void monster::endingPreviousAction()
 {
 	if (lastAction == combatState)
 		changeAction(relax, true, false);
@@ -105,7 +105,7 @@ void Monster::endingPreviousAction()
 	lastAction = relax;
 }
 
-void Monster::stopping(const bool doStand, const bool forgetBoundTarget)
+void monster::stopping(const bool doStand, const bool forgetBoundTarget)
 {
 	if (doStand)
 	{
@@ -121,21 +121,21 @@ void Monster::stopping(const bool doStand, const bool forgetBoundTarget)
 	}
 }
 
-Vector2f Monster::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
+Vector2f monster::getBuildPosition(std::vector<WorldObject*>, float, Vector2f)
 {
 	return { -1, -1 };
 }
 
-int Monster::getBuildType(Vector2f, Vector2f)
+int monster::getBuildType(Vector2f, Vector2f)
 {
 	return 1;
 }
 
-void Monster::jerk(float power, float deceleration, Vector2f destinationPoint)
+void monster::jerk(float power, float deceleration, Vector2f destinationPoint)
 {
 }
 
-void Monster::fightInteract(const long long elapsedTime, DynamicObject* target)
+void monster::fightInteract(const long long elapsedTime, DynamicObject* target)
 {
 	moveSystem.pushAway(elapsedTime);
 }

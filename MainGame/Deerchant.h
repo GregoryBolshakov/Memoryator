@@ -5,11 +5,11 @@
 
 using namespace sf;
 
-class Deerchant : public DynamicObject
+class deerchant : public DynamicObject
 {
 public:	
-	Deerchant(std::string objectName, Vector2f centerPosition);
-	~Deerchant();
+	deerchant(std::string objectName, Vector2f centerPosition);
+	~deerchant();
 	//BuildSystem
 	bool isBuildSystem = false;
 	//draw

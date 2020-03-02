@@ -5,15 +5,15 @@
 
 using namespace sf;
 
-class NeutralMob : public DynamicObject
+class neutral_mob : public DynamicObject
 {
 protected:
 	int morality{};
 	int fear{};
 	float distanceToNearest = 10e6;
 public:
-	NeutralMob(std::string objectName, Vector2f centerPosition);
-	~NeutralMob();
+	neutral_mob(std::string objectName, Vector2f centerPosition);
+	~neutral_mob();
 	void behaviorWithDynamic(DynamicObject* target, long long elapsedTime) override;
 	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;

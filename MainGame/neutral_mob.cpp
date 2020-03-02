@@ -1,17 +1,17 @@
-#include "NeutralMob.h"
+#include "neutral_mob.h"
 
 using namespace sf;
 
-NeutralMob::NeutralMob(std::string objectName, Vector2f centerPosition) : DynamicObject(std::move(objectName), centerPosition)
+neutral_mob::neutral_mob(std::string objectName, Vector2f centerPosition) : DynamicObject(std::move(objectName), centerPosition)
 {
 	currentSprite[0] = 1;
 	currentAction = relax;
 }
 
-NeutralMob::~NeutralMob()
+neutral_mob::~neutral_mob()
 = default;
 
-void NeutralMob::setTarget(DynamicObject& object)
+void neutral_mob::setTarget(DynamicObject& object)
 {
 	/*if (object.tag == Tag::noose)
 		return;
@@ -25,17 +25,17 @@ void NeutralMob::setTarget(DynamicObject& object)
 		boundTarget = &object;
 	}
 
-void NeutralMob::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
+void neutral_mob::behaviorWithDynamic(DynamicObject* target, long long elapsedTime)
 {
 	
 }
 
-void NeutralMob::behaviorWithStatic(WorldObject* target, long long elapsedTime)
+void neutral_mob::behaviorWithStatic(WorldObject* target, long long elapsedTime)
 {
 
 }
 
-void NeutralMob::behavior(long long elapsedTime)
+void neutral_mob::behavior(long long elapsedTime)
 {
 	if (healthPoint <= 0)
 	{
@@ -75,7 +75,7 @@ void NeutralMob::behavior(long long elapsedTime)
 	boundTarget = nullptr;
 }
 
-void NeutralMob::fightInteract(long long elapsedTime, DynamicObject* target)
+void neutral_mob::fightInteract(long long elapsedTime, DynamicObject* target)
 {
 	moveSystem.pushAway(elapsedTime);
 }

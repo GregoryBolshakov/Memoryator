@@ -54,7 +54,7 @@ void WorldHandler::runWorldGenerator()
 	worldGenerator.rememberedBlocks = { { staticGrid.getIndexByPoint(brazier->getPosition().x, brazier->getPosition().y), true } };
 	cameraSystem.position = Vector2f(focusedObject->getPosition().x + Helper::GetScreenSize().x * CameraSystem::camOffset.x, focusedObject->getPosition().y + Helper::GetScreenSize().y * CameraSystem::camOffset.y);
 
-	const auto hero = dynamic_cast<Deerchant*>(focusedObject);
+	const auto hero = dynamic_cast<deerchant*>(focusedObject);
 	inventorySystem.inventoryBounding(&hero->bags);
 }
 
@@ -161,10 +161,10 @@ void WorldHandler::Load()
 	{
 		fin >> saveName >> posX >> posY;
 
-		if (saveName == Nightmare1("loadInit", Vector2f(0, 0)).getToSaveName())
+		if (saveName == nightmare_first("loadInit", Vector2f(0, 0)).getToSaveName())
 			worldGenerator.initializeDynamicItem(Tag::monster, Vector2f(posX, posY), "");
 		else
-			if (saveName == Deerchant("loadInit", Vector2f(0, 0)).getToSaveName())
+			if (saveName == deerchant("loadInit", Vector2f(0, 0)).getToSaveName())
 				worldGenerator.initializeDynamicItem(Tag::hero, Vector2f(posX, posY), "");
 			else
 				if (saveName == Wolf("loadInit", Vector2f(0, 0)).getToSaveName())
@@ -192,7 +192,7 @@ void WorldHandler::Load()
 	fin.close();
 
 	//preparations for the inventory system 
-	auto hero = dynamic_cast<Deerchant*>(dynamicGrid.getItemByName(focusedObject->getName()));
+	auto hero = dynamic_cast<deerchant*>(dynamicGrid.getItemByName(focusedObject->getName()));
 
 	inventorySystem.inventoryBounding(&hero->bags);
 	//------------------------------------
@@ -427,7 +427,7 @@ void WorldHandler::onMouseUp(const int currentMouseButton)
 	if (mouseDisplayName.empty())
 		selectedObject = nullptr;
 
-	auto hero = dynamic_cast<Deerchant*>(dynamicGrid.getItemByName(focusedObject->getName()));
+	auto hero = dynamic_cast<deerchant*>(dynamicGrid.getItemByName(focusedObject->getName()));
 	hero->onMouseUp(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.buildingPosition != Vector2f(-1, -1) && !buildSystem.instantBuild));
 }
 
@@ -466,7 +466,7 @@ void WorldHandler::interact(Vector2f render_target_size, long long elapsedTime, 
 
 	setTransparent(localTerrain);
 
-	const auto hero = dynamic_cast<Deerchant*>(dynamicGrid.getItemByName(focusedObject->getName()));
+	const auto hero = dynamic_cast<deerchant*>(dynamicGrid.getItemByName(focusedObject->getName()));
 	hero->heldItem = &inventorySystem.getHeldItem();
 
 	//making route to the desire position

@@ -2,7 +2,7 @@
 
 using namespace sf;
 
-bear::bear(const std::string& objectName, Vector2f centerPosition) : NeutralMob(objectName, centerPosition)
+bear::bear(const std::string& objectName, Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
 {
 	conditionalSizeUnits = { 432, 384 };
 	currentSprite[0] = 1;

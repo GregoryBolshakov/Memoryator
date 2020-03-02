@@ -1,6 +1,6 @@
-#include "Nightmare3.h"
+#include "nightmare_third.h"
 
-Nightmare3::Nightmare3(std::string objectName, Vector2f centerPosition) : Monster(std::move(objectName), centerPosition)
+nightmare_third::nightmare_third(std::string objectName, Vector2f centerPosition) : monster(std::move(objectName), centerPosition)
 {
 	conditionalSizeUnits = { 600, 600 };
 	moveSystem.defaultSpeed = 0.0003f;
@@ -19,18 +19,18 @@ Nightmare3::Nightmare3(std::string objectName, Vector2f centerPosition) : Monste
 }
 
 
-Nightmare3::~Nightmare3()
+nightmare_third::~nightmare_third()
 = default;
 
 
-Vector2f Nightmare3::calculateTextureOffset()
+Vector2f nightmare_third::calculateTextureOffset()
 {
 	textureBox.width = textureBox.width * getScaleRatio().x;
 	textureBox.height = textureBox.height * getScaleRatio().y;
 	return { textureBox.width / 2, textureBox.height * 6 / 8 };
 }
 
-void Nightmare3::doAttack(WorldObject* target)
+void nightmare_third::doAttack(WorldObject* target)
 {
 	if (timeAfterHit >= timeForNewHit)
 	{
@@ -49,7 +49,7 @@ void Nightmare3::doAttack(WorldObject* target)
 	}	
 }
 
-void Nightmare3::endingPreviousAction()
+void nightmare_third::endingPreviousAction()
 {
 	if (lastAction == combatState)
 		changeAction(relax, true, false);
@@ -60,7 +60,7 @@ void Nightmare3::endingPreviousAction()
 	lastAction = relax;
 }
 
-void Nightmare3::onSpriteChange()
+void nightmare_third::onSpriteChange()
 {
 	if (currentAction == directHit && currentSprite[0] == 5)
 	{
@@ -72,7 +72,7 @@ void Nightmare3::onSpriteChange()
 	}
 }
 
-std::vector<SpriteChainElement*> Nightmare3::prepareSprites(long long elapsedTime)
+std::vector<SpriteChainElement*> nightmare_third::prepareSprites(long long elapsedTime)
 {
     return {};
 	/*spriteChainElement fullSprite;

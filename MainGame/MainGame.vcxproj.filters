@@ -13,12 +13,6 @@
     <ClCompile Include="Spawn.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="Deerchant.cpp">
-      <Filter>Creatures</Filter>
-    </ClCompile>
-    <ClCompile Include="Monster.cpp">
-      <Filter>Creatures</Filter>
-    </ClCompile>
     <ClCompile Include="Wolf.cpp">
       <Filter>Creatures</Filter>
     </ClCompile>
@@ -39,9 +33,6 @@
     </ClCompile>
     <ClCompile Include="HareTrap.cpp">
       <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Hare.cpp">
-      <Filter>Creatures</Filter>
     </ClCompile>
     <ClCompile Include="GridList.cpp" />
     <ClCompile Include="Stump.cpp">
@@ -64,9 +55,6 @@
     </ClCompile>
     <ClCompile Include="Mugwort.cpp">
       <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="NeutralMob.cpp">
-      <Filter>Creatures</Filter>
     </ClCompile>
     <ClCompile Include="Noose.cpp">
       <Filter>DynamicObjects</Filter>
@@ -94,15 +82,6 @@
     </ClCompile>
     <ClCompile Include="ObjectInitializer.cpp">
       <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Nightmare1.cpp">
-      <Filter>Creatures</Filter>
-    </ClCompile>
-    <ClCompile Include="Nightmare2.cpp">
-      <Filter>Creatures</Filter>
-    </ClCompile>
-    <ClCompile Include="Nightmare3.cpp">
-      <Filter>Creatures</Filter>
     </ClCompile>
     <ClCompile Include="ClapWhirl.cpp">
       <Filter>DynamicObjects</Filter>
@@ -213,6 +192,27 @@
     <ClCompile Include="deer.cpp">
       <Filter>Creatures</Filter>
     </ClCompile>
+    <ClCompile Include="deerchant.cpp">
+      <Filter>Creatures</Filter>
+    </ClCompile>
+    <ClCompile Include="hare.cpp">
+      <Filter>Creatures</Filter>
+    </ClCompile>
+    <ClCompile Include="monster.cpp">
+      <Filter>Creatures</Filter>
+    </ClCompile>
+    <ClCompile Include="neutral_mob.cpp">
+      <Filter>Creatures</Filter>
+    </ClCompile>
+    <ClCompile Include="nightmare_first.cpp">
+      <Filter>Creatures</Filter>
+    </ClCompile>
+    <ClCompile Include="nightmare_second.cpp">
+      <Filter>Creatures</Filter>
+    </ClCompile>
+    <ClCompile Include="nightmare_third.cpp">
+      <Filter>Creatures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EventHandler.h" />
@@ -226,12 +226,6 @@
     </ClInclude>
     <ClInclude Include="Spawn.h">
       <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Deerchant.h">
-      <Filter>Creatures</Filter>
-    </ClInclude>
-    <ClInclude Include="Monster.h">
-      <Filter>Creatures</Filter>
     </ClInclude>
     <ClInclude Include="Wolf.h">
       <Filter>Creatures</Filter>
@@ -254,9 +248,6 @@
     <ClInclude Include="HareTrap.h">
       <Filter>Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="Hare.h">
-      <Filter>Creatures</Filter>
-    </ClInclude>
     <ClInclude Include="GridList.h" />
     <ClInclude Include="Stump.h">
       <Filter>Terrain</Filter>
@@ -278,9 +269,6 @@
     </ClInclude>
     <ClInclude Include="Mugwort.h">
       <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="NeutralMob.h">
-      <Filter>Creatures</Filter>
     </ClInclude>
     <ClInclude Include="Noose.h">
       <Filter>DynamicObjects</Filter>
@@ -309,15 +297,6 @@
     </ClInclude>
     <ClInclude Include="ObjectInitializer.h">
       <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Nightmare1.h">
-      <Filter>Creatures</Filter>
-    </ClInclude>
-    <ClInclude Include="Nightmare2.h">
-      <Filter>Creatures</Filter>
-    </ClInclude>
-    <ClInclude Include="Nightmare3.h">
-      <Filter>Creatures</Filter>
     </ClInclude>
     <ClInclude Include="ClapWhirl.h">
       <Filter>DynamicObjects</Filter>
@@ -432,6 +411,27 @@
       <Filter>Creatures</Filter>
     </ClInclude>
     <ClInclude Include="deer.h">
+      <Filter>Creatures</Filter>
+    </ClInclude>
+    <ClInclude Include="deerchant.h">
+      <Filter>Creatures</Filter>
+    </ClInclude>
+    <ClInclude Include="hare.h">
+      <Filter>Creatures</Filter>
+    </ClInclude>
+    <ClInclude Include="monster.h">
+      <Filter>Creatures</Filter>
+    </ClInclude>
+    <ClInclude Include="neutral_mob.h">
+      <Filter>Creatures</Filter>
+    </ClInclude>
+    <ClInclude Include="nightmare_first.h">
+      <Filter>Creatures</Filter>
+    </ClInclude>
+    <ClInclude Include="nightmare_second.h">
+      <Filter>Creatures</Filter>
+    </ClInclude>
+    <ClInclude Include="nightmare_third.h">
       <Filter>Creatures</Filter>
     </ClInclude>
   </ItemGroup>
