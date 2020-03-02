@@ -229,7 +229,7 @@ std::vector<text_chain_element*> hero_book_page::prepareHeadingText()
 	{
 	case 1:
 	{
-		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Creatures", text_chain_element::defaultCharacterSize * 1.2f));
+		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Creatures", text_chain_element::default_character_size * 1.2f));
 		result.push_back(new text_chain_element({ headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Hare"));
 		result.push_back(new text_chain_element({ headingTextPedestals[1].x * x + upperLeftCorner.x, headingTextPedestals[1].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Owl"));
 		result.push_back(new text_chain_element({ headingTextPedestals[2].x * x + upperLeftCorner.x, headingTextPedestals[2].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Deer"));
@@ -238,18 +238,18 @@ std::vector<text_chain_element*> hero_book_page::prepareHeadingText()
 	break;
 	case 2:
 	{
-		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Items", text_chain_element::defaultCharacterSize * 1.2f));
+		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Items", text_chain_element::default_character_size * 1.2f));
 		result.push_back(new text_chain_element({ headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Bag"));
 	}
 	break;
 	case 3:
 	{
-		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "World", text_chain_element::defaultCharacterSize * 1.2f));
+		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "World", text_chain_element::default_character_size * 1.2f));
 	}
 	break;
 	case 4:
 	{
-		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Flowers", text_chain_element::defaultCharacterSize * 1.2f));
+		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Flowers", text_chain_element::default_character_size * 1.2f));
 		result.push_back(new text_chain_element({ headingTextPedestals[0].x * x + upperLeftCorner.x, headingTextPedestals[0].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Chamomile"));
 		result.push_back(new text_chain_element({ headingTextPedestals[1].x * x + upperLeftCorner.x, headingTextPedestals[1].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Yarrow"));
 		result.push_back(new text_chain_element({ headingTextPedestals[2].x * x + upperLeftCorner.x, headingTextPedestals[2].y * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Fern"));
@@ -259,7 +259,7 @@ std::vector<text_chain_element*> hero_book_page::prepareHeadingText()
 	break;
 	case 5:
 	{
-		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Sketching", text_chain_element::defaultCharacterSize * 1.2f));
+		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.125f * y + upperLeftCorner.y }, { 0, 0 }, textColor, "Sketching", text_chain_element::default_character_size * 1.2f));
 	}
 	break;
 	case 102:
@@ -272,7 +272,7 @@ std::vector<text_chain_element*> hero_book_page::prepareHeadingText()
 	case 404:
 	case 405:
 	{
-		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.085f * y + upperLeftCorner.y }, { 0, 0 }, textColor, buttonToString(button_tag(currentPage)), text_chain_element::defaultCharacterSize * 1.2f));
+		result.push_back(new text_chain_element({ 0.2f * x + upperLeftCorner.x, 0.085f * y + upperLeftCorner.y }, { 0, 0 }, textColor, buttonToString(button_tag(currentPage)), text_chain_element::default_character_size * 1.2f));
 	}
 	break;
 	default:

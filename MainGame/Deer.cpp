@@ -139,7 +139,7 @@ Vector2f deer::getHeadPosition()
 {
 	const auto upperLeft = Vector2f(position_.x - texture_box_offset_.x, position_.y - texture_box_offset_.y);
 
-	if (directionSystem.lastDirection == direction::UP)
+	if (directionSystem.last_direction == direction::UP)
 	{
 		if (current_sprite_[0] == 1)
 		{
@@ -170,7 +170,7 @@ Vector2f deer::getHeadPosition()
 			return {upperLeft.x + conditional_size_units_.x * 0.575F, upperLeft.y + conditional_size_units_.y * 0.075F};
 		}
 	}
-	if (directionSystem.lastDirection == direction::DOWN)
+	if (directionSystem.last_direction == direction::DOWN)
 	{
 		if (current_sprite_[0] == 1)
 		{
@@ -201,7 +201,7 @@ Vector2f deer::getHeadPosition()
 			return {upperLeft.x + conditional_size_units_.x * 0.445F, upperLeft.y + conditional_size_units_.y * 0.182F};
 		}
 	}
-	if (direction_system::cut_diagonals(directionSystem.lastDirection) == direction::LEFT)
+	if (direction_system::cut_diagonals(directionSystem.last_direction) == direction::LEFT)
 	{
 		if (current_sprite_[0] == 1)
 		{
@@ -232,7 +232,7 @@ Vector2f deer::getHeadPosition()
 			return {upperLeft.x + conditional_size_units_.x * 0.277F, upperLeft.y + conditional_size_units_.y * 0.138F};
 		}
 	}
-	if (direction_system::cut_diagonals(directionSystem.lastDirection) == direction::RIGHT)
+	if (direction_system::cut_diagonals(directionSystem.last_direction) == direction::RIGHT)
 	{
 		if (current_sprite_[0] == 1)
 		{
@@ -271,13 +271,13 @@ std::vector<sprite_chain_element*> deer::prepare_sprites(long long elapsedTime)
 	auto body = new sprite_chain_element(pack_tag::deer, pack_part::stand, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
 	animation_speed_ = 10;
 
-	auto spriteDirection = direction_system::cut_diagonals(directionSystem.lastDirection);
+	auto spriteDirection = direction_system::cut_diagonals(directionSystem.last_direction);
 
 	if (directionSystem.side == right)
 	{
 		body->mirrored = true;
 	}
-	if (directionSystem.lastDirection == direction::RIGHT || directionSystem.lastDirection == direction::UPRIGHT || directionSystem.lastDirection == direction::DOWNRIGHT)
+	if (directionSystem.last_direction == direction::RIGHT || directionSystem.last_direction == direction::UPRIGHT || directionSystem.last_direction == direction::DOWNRIGHT)
 	{
 		spriteDirection = direction_system::cut_rights(spriteDirection);
 		body->mirrored = true;

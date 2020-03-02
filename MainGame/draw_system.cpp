@@ -104,20 +104,20 @@ void init_sprite_pack(const LPCTSTR lpsz_file_name, std::map<pack_tag, sprite_pa
 	}
 	const auto png_extension_with_dot_length = 4;
 	pack_name.erase(pack_name.size() - png_extension_with_dot_length, png_extension_with_dot_length);
-	if (sprite_pack::mappedPackTag.count(pack_name) == 0)
+	if (sprite_pack::mapped_pack_tag.count(pack_name) == 0)
 	{
 		return;
 	}
-	const auto tag = sprite_pack::mappedPackTag.at(pack_name);
+	const auto tag = sprite_pack::mapped_pack_tag.at(pack_name);
 	packs_map[tag].init(pack_path, json_path, tag);
 }
 
 void draw_system::init_packs_map()
 {
 	search_files("Game/spritePacks/*.png", init_sprite_pack, true);
-	sprite_pack::iconWithoutSpaceSize = Vector2f(
-		float(packs_map.at(pack_tag::inventory).getOriginalInfo(pack_part::areas, direction::DOWN, 1).frame.w),
-		float(packs_map.at(pack_tag::inventory).getOriginalInfo(pack_part::areas, direction::DOWN, 1).frame.h));
+	sprite_pack::icon_without_space_size = Vector2f(
+		float(packs_map.at(pack_tag::inventory).get_original_info(pack_part::areas, direction::DOWN, 1).frame.w),
+		float(packs_map.at(pack_tag::inventory).get_original_info(pack_part::areas, direction::DOWN, 1).frame.h));
 }
 
 void draw_system::advanced_scale(sprite_chain_element& item, Sprite& sprite, const sprite_pack_structure::sprite& original_info, const float scale)
@@ -182,13 +182,13 @@ void draw_system::draw_sprite_chain_element(RenderTarget& target, sprite_chain_e
 		return;
 	}
 
-	auto sprite = packs_map.at(sprite_chain_item->pack_tag).getSprite(sprite_chain_item->pack_part, sprite_chain_item->direction, sprite_chain_item->number, sprite_chain_item->mirrored);
+	auto sprite = packs_map.at(sprite_chain_item->pack_tag).get_sprite(sprite_chain_item->pack_part, sprite_chain_item->direction, sprite_chain_item->number, sprite_chain_item->mirrored);
 	if (sprite.getTextureRect() == IntRect())
 	{
 		return;
 	}
 
-	const auto original_info = packs_map.at(sprite_chain_item->pack_tag).getOriginalInfo(sprite_chain_item->pack_part, sprite_chain_item->direction, sprite_chain_item->number);
+	const auto original_info = packs_map.at(sprite_chain_item->pack_tag).get_original_info(sprite_chain_item->pack_part, sprite_chain_item->direction, sprite_chain_item->number);
 	const Vector2f sprite_pos = {
 		(sprite_chain_item->position.x - camera_position.x - sprite_chain_item->offset.x) * scale + screen_center.x,
 		(sprite_chain_item->position.y - camera_position.y - sprite_chain_item->offset.y) * scale + screen_center.y
@@ -212,7 +212,7 @@ void draw_system::draw_text_chain_element(RenderTarget& target, text_chain_eleme
 	text_system::drawString(
 		text_chain_item->string,
 		text_chain_item->font,
-		text_chain_item->characterSize,
+		text_chain_item->character_size,
 		text_chain_item->position.x - text_chain_item->offset.x,
 		text_chain_item->position.y - text_chain_item->offset.y,
 		target,

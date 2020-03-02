@@ -2,64 +2,64 @@
 
 console::console(const FloatRect rect, world_handler* world)
 {
-	this->world = world;
+	this->world_ = world;
 	body.init(rect);
 }
 
 console::~console()
 = default;
 
-input_box console::getBody() const
+input_box console::get_body() const
 {
 	return body;
 }
 
-void console::resetCommandStackIterator()
+void console::reset_command_stack_iterator()
 {
-	commandStackIterator = commandStack.size();
+	command_stack_iterator_ = command_stack_.size();
 }
 
-bool console::getState() const
+bool console::get_state() const
 {
-	return state;
+	return state_;
 }
 
 void console::draw(RenderWindow& window)
 {
-	if (!state)
+	if (!state_)
 		return;
 
 	body.draw(window);
 }
 
-void console::interact(long long elapsedTime)
+void console::interact(long long elapsed_time)
 {
-	if (!state)
+	if (!state_)
 		return;
 	//body->line = commandStack[commandStackIterator];
-	body.interact(elapsedTime);	
+	body.interact(elapsed_time);	
 }
 
-void console::handleEvents(const Event event)
+void console::handle_events(const Event event)
 {
 	if (event.type == Event::KeyPressed && Keyboard::isKeyPressed(Keyboard::Tilde))
-		state = !state;
+		state_ = !state_;
 	if (event.type == Event::KeyPressed && Keyboard::isKeyPressed(Keyboard::Enter))
-		doCommand();
-	if (event.type == Event::KeyPressed && Keyboard::isKeyPressed(Keyboard::Up) && commandStackIterator > 0)
+		do_command();
+	if (event.type == Event::KeyPressed && Keyboard::isKeyPressed(Keyboard::Up) && command_stack_iterator_ > 0)
 	{
-		commandStackIterator--;
-		body.line = commandStack[commandStackIterator];
+		command_stack_iterator_--;
+		body.line = command_stack_[command_stack_iterator_];
 		body.resetCursor(true);
 	}
-	if (event.type == Event::KeyPressed && Keyboard::isKeyPressed(Keyboard::Down) && commandStackIterator < commandStack.size() - 1)
+	if (event.type == Event::KeyPressed && Keyboard::isKeyPressed(Keyboard::Down) && command_stack_iterator_ < command_stack_.size() - 1)
 	{
-		commandStackIterator++;
-		body.line = commandStack[commandStackIterator];
+		command_stack_iterator_++;
+		body.line = command_stack_[command_stack_iterator_];
 		body.resetCursor(true);
 	}
 
-	if (!state)
+	if (!state_)
 		return;
 	body.handleEvents(event);
 }
@@ -86,9 +86,9 @@ bool findByValue(std::vector<K> & vec, std::map<K, V> mapOfElements, V value)
 	return bResult;
 }
 
-void console::doCommand()
+void console::do_command()
 {
-	resetCommandStackIterator();
+	reset_command_stack_iterator();
 
 	if (body.line.empty())
 		return;
@@ -106,11 +106,11 @@ void console::doCommand()
 	}
 
 	body.resetCursor();
-	commandStack[commandStack.size() - 1] = body.line;
-	commandStack.emplace_back("");
+	command_stack_[command_stack_.size() - 1] = body.line;
+	command_stack_.emplace_back("");
 	body.line.clear();
 
-	if (!world)
+	if (!world_)
 		return;
 
 	for (auto& command : commands)
@@ -121,7 +121,7 @@ void console::doCommand()
 		{
 			auto object = object_initializer::mappedStrings.at(commands[1]);
 			if (int(object) >= 102 && int(object) <= 112)
-				world->getWorldGenerator().initializeDynamicItem(object, { world->focusedObject->get_position().x + 50, world->focusedObject->get_position().y + 50 }, "");
+				world_->getWorldGenerator().initializeDynamicItem(object, { world_->focusedObject->get_position().x + 50, world_->focusedObject->get_position().y + 50 }, "");
 		}
 		if (commands[0] == "build" && object_initializer::mappedStrings.count(commands[1]) > 0)
 		{
@@ -131,11 +131,11 @@ void console::doCommand()
 			auto object = object_initializer::mappedStrings.at(commands[1]);
 
 			if (int(object) >= 211 || int(object) >= 301 && int(object) <= 405)
-				world->setObjectToBuild(object, typeOfObject, true);	
+				world_->setObjectToBuild(object, typeOfObject, true);	
 		}
 		if (commands[0] == "set" && commands[1] == "pedestal")
-			world->pedestalController.readyToStart = true;		
+			world_->pedestalController.readyToStart = true;		
 	}
 
-	state = false;
+	state_ = false;
 }

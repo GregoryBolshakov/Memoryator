@@ -11,7 +11,7 @@ text_system::text_system()
 {
 	initFonts();
 	initTextBoxes();
-	numberOfItems.setFont(fonts[font_name::BebasFont]);
+	numberOfItems.setFont(fonts[font_name::bebas_font]);
 	numberOfItems.setCharacterSize(30);
 	numberOfItems.setFillColor(sf::Color::White);
 }
@@ -23,22 +23,22 @@ void text_system::initFonts()
 {
 	Font currentFont;
 	currentFont.loadFromFile("fonts/Bebas.ttf");
-	fonts.insert({font_name::BebasFont, currentFont});
+	fonts.insert({font_name::bebas_font, currentFont});
 	currentFont.loadFromFile("fonts/normal.ttf");
-	fonts.insert({ font_name::NormalFont, currentFont });
+	fonts.insert({ font_name::normal_font, currentFont });
 	currentFont.loadFromFile("fonts/Console.ttf");
-	fonts.insert({ font_name::ConsoleFont, currentFont });
+	fonts.insert({ font_name::console_font, currentFont });
 }
 
 void text_system::initTextBoxes()
 {
 	Text currentText;
-	currentText.setFont(fonts[font_name::BebasFont]);
-	textBoxes.insert({ font_name::BebasFont, currentText });
-	currentText.setFont(fonts[font_name::NormalFont]);
-	textBoxes.insert({ font_name::NormalFont, currentText });
-	currentText.setFont(fonts[font_name::ConsoleFont]);
-	textBoxes.insert({ font_name::ConsoleFont, currentText });
+	currentText.setFont(fonts[font_name::bebas_font]);
+	textBoxes.insert({ font_name::bebas_font, currentText });
+	currentText.setFont(fonts[font_name::normal_font]);
+	textBoxes.insert({ font_name::normal_font, currentText });
+	currentText.setFont(fonts[font_name::console_font]);
+	textBoxes.insert({ font_name::console_font, currentText });
 }
 
 void text_system::drawString(const std::string& str, const font_name font, const float size, const float posX, const float posY, RenderTarget& target, const sf::Color color)
@@ -92,7 +92,7 @@ void text_system::drawNumberOfItems(const Vector2f pos, const int itemsCount, Re
 {
 	numberOfItems.setString(std::to_string(itemsCount));
 	numberOfItems.setOrigin(numberOfItems.getGlobalBounds().width, numberOfItems.getGlobalBounds().height);
-	numberOfItems.setPosition(pos.x + sprite_pack::iconSize.x, pos.y + sprite_pack::iconSize.x);
+	numberOfItems.setPosition(pos.x + sprite_pack::icon_size.x, pos.y + sprite_pack::icon_size.x);
 	target.draw(numberOfItems);
 }
 

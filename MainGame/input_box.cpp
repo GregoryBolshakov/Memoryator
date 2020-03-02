@@ -26,7 +26,7 @@ void input_box::init(const FloatRect rect)
 	cursor.setPosition(innerPart.getPosition().x + microOffset, innerPart.getPosition().y + microOffset * 3.0f / 4);
 	cursor.setFillColor(textColor);
 
-	text.setFont(text_system::fonts.at(font_name::ConsoleFont));
+	text.setFont(text_system::fonts.at(font_name::console_font));
 	text.setCharacterSize(unsigned int(ceil(text_system::characterSize)));
 	text.setFillColor(textColor);
 	text.setPosition(innerPart.getPosition().x + microOffset * 2, innerPart.getPosition().y - microOffset / 2.0f);
@@ -52,7 +52,7 @@ void input_box::draw(sf::RenderWindow & window) const
 {
 	window.draw(body);
 	window.draw(innerPart);
-	text_system::drawString(line, font_name::ConsoleFont, characterSize, innerPart.getPosition().x + microOffset * 2.0f, innerPart.getPosition().y - microOffset / 2.0f, window, textColor);
+	text_system::drawString(line, font_name::console_font, characterSize, innerPart.getPosition().x + microOffset * 2.0f, innerPart.getPosition().y - microOffset / 2.0f, window, textColor);
 	window.draw(cursor);
 }
 

@@ -75,7 +75,7 @@ void hare::behavior(long long elapsedTime)
 
 	directionSystem.calculate_direction();
 	if (directionSystem.direction != direction::STAND)
-		directionSystem.lastDirection = directionSystem.direction;
+		directionSystem.last_direction = directionSystem.direction;
 
 	// first-priority actions
 	if (boundTarget)
@@ -203,7 +203,7 @@ std::vector<sprite_chain_element*> hare::prepare_sprites(long long elapsedTime)
 		spriteSide = left;
 		body->mirrored = true;
 	}
-	if (directionSystem.lastDirection == direction::RIGHT || directionSystem.lastDirection == direction::UPRIGHT || directionSystem.lastDirection == direction::DOWNRIGHT)
+	if (directionSystem.last_direction == direction::RIGHT || directionSystem.last_direction == direction::UPRIGHT || directionSystem.last_direction == direction::DOWNRIGHT)
 	{
 		body->mirrored = true;
 	}

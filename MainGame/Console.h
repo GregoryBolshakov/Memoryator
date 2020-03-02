@@ -10,19 +10,19 @@ class console
 public:	
 	console(FloatRect rect, world_handler* world = nullptr);
 	~console();
-	input_box getBody() const;
+	input_box get_body() const;
 	void draw(RenderWindow& window);
-	void interact(long long elapsedTime);
-	void handleEvents(Event event);
-	void resetCommandStackIterator();;
-	bool getState() const;
+	void interact(long long elapsed_time);
+	void handle_events(Event event);
+	void reset_command_stack_iterator();;
+	bool get_state() const;
 private:
-	void doCommand();
+	void do_command();
 
 	input_box body;
-	bool state = false;
-	std::vector<std::string> commandStack = { {""} };
-	size_t commandStackIterator = 0;
-	world_handler* world = nullptr;
+	bool state_ = false;
+	std::vector<std::string> command_stack_ = { {""} };
+	size_t command_stack_iterator_ = 0;
+	world_handler* world_ = nullptr;
 };
 

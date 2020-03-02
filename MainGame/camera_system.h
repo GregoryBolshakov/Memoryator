@@ -10,16 +10,17 @@ public:
 	camera_system();
 	~camera_system();
 
-	void makeShake(int count = 0, float speed = 0);
-	void shakeInteract(long long elapsedTime);
-	
-	static const Vector2f maxCameraDistance, camOffset;
-	static const float shakeDefaultSpeed;
-	static const long long shakeDefaultDuration;
-	Vector2f shakeVector = { 0, 0 };
+	void make_shake(int count = 0, float speed = 0);
+	void shake_interact(long long elapsed_time);
+
+	static const Vector2f max_camera_distance;
+	static const Vector2f cam_offset;
+	static const float shake_default_speed;
+	static const long long shake_default_duration;
+	Vector2f shake_vector = { 0, 0 };
 	Vector2f position = { 0, 0 };
-	long long shakeDuration = 0;
-	float shakeSpeed = shakeDefaultSpeed;
-	int shakeCount = 0;
+	long long shake_duration = 0;
+	float shake_speed = shake_default_speed;
+	int shake_count = 0;
 };
 

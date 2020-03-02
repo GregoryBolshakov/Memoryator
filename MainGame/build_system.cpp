@@ -13,21 +13,21 @@ build_system::~build_system()
 
 void build_system::init()
 {
-	initializeObjectsInfo();
+	initialize_objects_info();
 
-	font.loadFromFile("Fonts/Bebas.ttf");
-	successInit = true;
+	font_.loadFromFile("Fonts/Bebas.ttf");
+	success_init_ = true;
 }
 
-void build_system::inventoryBounding(std::vector<hero_bag>* boundBags)
+void build_system::inventory_bounding(std::vector<hero_bag>* bound_bags)
 {
-	this->boundBags = boundBags;
+	this->bound_bags = bound_bags;
 }
 
-void build_system::initializeObjectsInfo()
+void build_system::initialize_objects_info()
 {
 	std::string objectIconPath, objectImageType;
-	std::ifstream fin(BuildSystemObjectsInfoFileDirectory);
+	std::ifstream fin(build_system_objects_info_file_directory_);
 	while (fin >> objectIconPath >> objectImageType)
 	{
 		object_info infoItem;
@@ -44,27 +44,27 @@ void build_system::initializeObjectsInfo()
 			infoItem.recipe.push_back(std::make_pair(entity_tag(recipeItemId), recipeItemAmount));
 		}
 
-		builtObjects.push_back(infoItem);
+		built_objects_.push_back(infoItem);
 	}
 
 	fin.close();
 }
 
-std::vector <sprite_chain_element*> build_system::prepareSprites(grid_list& staticGrid, const std::vector<world_object*>& visibleItems, std::map<pack_tag, sprite_pack>* packsMap)
+std::vector <sprite_chain_element*> build_system::prepare_sprites(grid_list& static_grid, const std::vector<world_object*>& visible_items, std::map<pack_tag, sprite_pack>* packs_map)
 {
-	if (selectedObject == entity_tag::emptyCell)
+	if (selected_object == entity_tag::emptyCell)
 		return {};
 
 	static_object* terrain = nullptr;
-	if (droppedLootIdList.count(selectedObject) > 0)
-		terrain = object_initializer::initializeStaticItem(entity_tag::droppedLoot, mouseWorldPos, int(selectedObject), "", 1, DarkWoods, packsMap);
+	if (dropped_loot_id_list.count(selected_object) > 0)
+		terrain = object_initializer::initializeStaticItem(entity_tag::droppedLoot, mouse_world_pos_, int(selected_object), "", 1, DarkWoods, packs_map);
 	else
 	{
-		if (selectedObject == entity_tag::totem)
+		if (selected_object == entity_tag::totem)
 		{
-			for (auto item : visibleItems)
+			for (auto item : visible_items)
 			{
-				if (staticGrid.get_index_by_point(item->get_position().x, item->get_position().y) != staticGrid.get_index_by_point(mouseWorldPos.x, mouseWorldPos.y))
+				if (static_grid.get_index_by_point(item->get_position().x, item->get_position().y) != static_grid.get_index_by_point(mouse_world_pos_.x, mouse_world_pos_.y))
 					continue;
 				bool match = false;
 				auto droppedLoot = dynamic_cast<dropped_loot*>(item);
@@ -79,22 +79,22 @@ std::vector <sprite_chain_element*> build_system::prepareSprites(grid_list& stat
 				}
 				if (match)
 				{
-					buildType = 2;
+					build_type = 2;
 					break;
 				}
 			}
 		}
-		terrain = object_initializer::initializeStaticItem(selectedObject, mouseWorldPos, buildType, "", 1, DarkWoods, packsMap, false);
+		terrain = object_initializer::initializeStaticItem(selected_object, mouse_world_pos_, build_type, "", 1, DarkWoods, packs_map, false);
 	}
 
 	auto sprites = terrain->prepare_sprites(0);
-	canBePlaced = true;
+	can_be_placed = true;
 
-	if (staticGrid.is_intersect_with_others(terrain))
+	if (static_grid.is_intersect_with_others(terrain))
 	{
 		for (auto& sprite : sprites)
 			sprite->color = sf::Color(255,99,71);
-		canBePlaced = false;
+		can_be_placed = false;
 	}
 	else
 		for (auto& sprite : sprites)
@@ -103,55 +103,55 @@ std::vector <sprite_chain_element*> build_system::prepareSprites(grid_list& stat
 	return sprites;
 }
 
-void build_system::interact(Vector2f cameraPosition, float scaleFactor)
+void build_system::interact(Vector2f camera_position, float scale_factor)
 {
 	const Vector2f mousePos = Vector2f(Mouse::getPosition());
-	mouseWorldPos = Vector2f((mousePos.x - helper::GetScreenSize().x / 2 + cameraPosition.x * scaleFactor) / scaleFactor,
-		(mousePos.y - helper::GetScreenSize().y / 2 + cameraPosition.y * scaleFactor) / scaleFactor);
+	mouse_world_pos_ = Vector2f((mousePos.x - helper::GetScreenSize().x / 2 + camera_position.x * scale_factor) / scale_factor,
+		(mousePos.y - helper::GetScreenSize().y / 2 + camera_position.y * scale_factor) / scale_factor);
 }
 
-void build_system::onMouseUp()
+void build_system::on_mouse_up()
 {
-	usedMouse = false;
+	used_mouse_ = false;
 
-	if (selectedObject != entity_tag::emptyCell || currentObject != -1)
-		usedMouse = true;
+	if (selected_object != entity_tag::emptyCell || current_object_ != -1)
+		used_mouse_ = true;
 
-	if (selectedObject != entity_tag::emptyCell && currentObject == -1 && canBePlaced)
+	if (selected_object != entity_tag::emptyCell && current_object_ == -1 && can_be_placed)
 	{
-		if (spriteBuildPos != Vector2f (-1, -1))
-			buildingPosition = spriteBuildPos;
+		if (sprite_build_pos_ != Vector2f (-1, -1))
+			building_position = sprite_build_pos_;
 		else
-			buildingPosition = mouseWorldPos;
+			building_position = mouse_world_pos_;
 	}
 	else
-		buildingPosition = Vector2f (-1, -1);
+		building_position = Vector2f (-1, -1);
 }
 
-void build_system::buildHeldItem(Vector2f focusedObjectPosition, float scaleFactor)
+void build_system::build_held_item(Vector2f focused_object_position, float scale_factor)
 {
-	if (heldItem->first == entity_tag::emptyCell)
+	if (held_item_->first == entity_tag::emptyCell)
 	{
-		buildingPosition = Vector2f (-1, -1);
+		building_position = Vector2f (-1, -1);
 		return;
 	}
 
-	if (canBePlaced)
+	if (can_be_placed)
 	{
-		buildingPosition = Vector2f ((Mouse::getPosition().x - helper::GetScreenSize().x / 2 + focusedObjectPosition.x * scaleFactor) / scaleFactor,
-			(Mouse::getPosition().y - helper::GetScreenSize().y / 2 + focusedObjectPosition.y*scaleFactor) / scaleFactor);
+		building_position = Vector2f ((Mouse::getPosition().x - helper::GetScreenSize().x / 2 + focused_object_position.x * scale_factor) / scale_factor,
+			(Mouse::getPosition().y - helper::GetScreenSize().y / 2 + focused_object_position.y*scale_factor) / scale_factor);
 	}
 }
 
-bool build_system::canAfford()
+bool build_system::can_afford()
 {
-	if (currentObject != -1)
+	if (current_object_ != -1)
 	{
-		std::vector<std::pair <entity_tag, int>> temporaryInventory = builtObjects[currentObject].recipe;
+		std::vector<std::pair <entity_tag, int>> temporaryInventory = built_objects_[current_object_].recipe;
 
 		for (auto&curRecipeItem = temporaryInventory.begin(); curRecipeItem != temporaryInventory.end(); ++curRecipeItem)
 		{
-			for (auto bag = boundBags->begin(); bag != boundBags->end(); bag++)
+			for (auto bag = bound_bags->begin(); bag != bound_bags->end(); bag++)
 			{
 				bool isBreak = false;
 				for (auto&item : bag->cells)
@@ -180,17 +180,17 @@ bool build_system::canAfford()
 	return false;
 }
 
-void build_system::wasPlaced()
+void build_system::was_placed()
 {
-	selectedObject = entity_tag::emptyCell;
-	buildingPosition = Vector2f (-1, -1);
+	selected_object = entity_tag::emptyCell;
+	building_position = Vector2f (-1, -1);
 }
 
-void build_system::clearHareBags(int block, grid_list& staticGrid, std::vector<world_object*>* visibleItems)
+void build_system::clear_hare_bags(int block, grid_list& static_grid, std::vector<world_object*>* visible_items)
 {
-	for (auto& item : *visibleItems)
+	for (auto& item : *visible_items)
 	{
-		if (staticGrid.get_index_by_point(item->get_position().x, item->get_position().y) != staticGrid.get_index_by_point(mouseWorldPos.x, mouseWorldPos.y))
+		if (static_grid.get_index_by_point(item->get_position().x, item->get_position().y) != static_grid.get_index_by_point(mouse_world_pos_.x, mouse_world_pos_.y))
 			continue;
 		bool match = false;
 		auto droppedLoot = dynamic_cast<dropped_loot*>(item);
@@ -211,20 +211,20 @@ void build_system::clearHareBags(int block, grid_list& staticGrid, std::vector<w
 	}
 }
 
-void build_system::animator(long long elapsedTime)
+void build_system::animator(long long elapsed_time)
 {
-	if (builtObjects[0].iconSprite.getPosition().x < builtObjects[0].iconSprite.getTextureRect().width / 8 && animationSpeed > 0)
-		animationSpeed -= (float)elapsedTime / 400000000;
+	if (built_objects_[0].icon_sprite.getPosition().x < built_objects_[0].icon_sprite.getTextureRect().width / 8 && animation_speed_ > 0)
+		animation_speed_ -= (float)elapsed_time / 400000000;
 	else
 	{
-		animationSpeed = 0;
-		for (int i = 0; i < builtObjects.size(); i++)
+		animation_speed_ = 0;
+		for (int i = 0; i < built_objects_.size(); i++)
 		{
-			builtObjects[i].iconSprite.setPosition(builtObjects[i].iconSprite.getTextureRect().width / 8 + animationSpeed * elapsedTime, builtObjects[i].iconSprite.getPosition().y);
+			built_objects_[i].icon_sprite.setPosition(built_objects_[i].icon_sprite.getTextureRect().width / 8 + animation_speed_ * elapsed_time, built_objects_[i].icon_sprite.getPosition().y);
 		}
 	}
-	for (int i = 0; i < builtObjects.size(); i++)
+	for (int i = 0; i < built_objects_.size(); i++)
 	{
-		builtObjects[i].iconSprite.setPosition(builtObjects[i].iconSprite.getPosition().x + animationSpeed * elapsedTime, builtObjects[i].iconSprite.getPosition().y);
+		built_objects_[i].icon_sprite.setPosition(built_objects_[i].icon_sprite.getPosition().x + animation_speed_ * elapsed_time, built_objects_[i].icon_sprite.getPosition().y);
 	}
 }

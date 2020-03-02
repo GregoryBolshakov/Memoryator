@@ -49,14 +49,14 @@ std::vector<sprite_chain_element*> nightmare_second::prepare_sprites(long long e
 	animation_speed_ = 10;
 
 	side spriteSide = directionSystem.side;
-	direction spriteDirection = directionSystem.lastDirection;
+	direction spriteDirection = directionSystem.last_direction;
 
 	if (directionSystem.side == right)
 	{
 		spriteSide = left;
 		body->mirrored = true;
 	}
-	if (directionSystem.lastDirection == direction::RIGHT || directionSystem.lastDirection == direction::UPRIGHT || directionSystem.lastDirection == direction::DOWNRIGHT)
+	if (directionSystem.last_direction == direction::RIGHT || directionSystem.last_direction == direction::UPRIGHT || directionSystem.last_direction == direction::DOWNRIGHT)
 	{
 		spriteDirection = direction_system::cut_rights(spriteDirection);
 		body->mirrored = true;

@@ -5,11 +5,11 @@
 #include "button.h"
 #include "helper.h"
 
-const Vector2f sprite_pack::iconSize = { helper::GetScreenSize().y / 13.8f, helper::GetScreenSize().y / 13.8f };
-Vector2f sprite_pack::iconWithoutSpaceSize = { 0, 0 };
+const Vector2f sprite_pack::icon_size = { helper::GetScreenSize().y / 13.8f, helper::GetScreenSize().y / 13.8f };
+Vector2f sprite_pack::icon_without_space_size = { 0, 0 };
 
 
-std::map<std::string, pack_tag> sprite_pack::mappedPackTag = {
+std::map<std::string, pack_tag> sprite_pack::mapped_pack_tag = {
     {"empty", pack_tag::empty},
     {"heroAbsorb", pack_tag::heroAbsorb},
     {"heroHit", pack_tag::heroHit},
@@ -35,7 +35,7 @@ std::map<std::string, pack_tag> sprite_pack::mappedPackTag = {
 	{"deer", pack_tag::deer}
 };
 
-std::map<std::string, pack_part> sprite_pack::mappedPackPart = {
+std::map<std::string, pack_part> sprite_pack::mapped_pack_part = {
     {"full", pack_part::full},
     {"body", pack_part::body},
     {"legs", pack_part::legs},
@@ -87,15 +87,15 @@ std::map<std::string, pack_part> sprite_pack::mappedPackPart = {
 	{"cell", pack_part::cell} // book's parts
 };
 
-std::map<std::string, direction> sprite_pack::mappedDirection = { {"up", direction::UP}, {"up-right", direction::UPRIGHT}, {"right", direction::RIGHT}, {"down-right", direction::DOWNRIGHT},
+std::map<std::string, direction> sprite_pack::mapped_direction = { {"up", direction::UP}, {"up-right", direction::UPRIGHT}, {"right", direction::RIGHT}, {"down-right", direction::DOWNRIGHT},
 {"down", direction::DOWN}, {"down-left", direction::DOWNLEFT}, {"left", direction::LEFT}, {"up-left", direction::UPLEFT} };
 
-void sprite_pack::init(const std::string& path, const std::string& jsonPath, const pack_tag tag)
+void sprite_pack::init(const std::string& path, const std::string& json_path, const pack_tag tag)
 {
     this->tag = tag;
-    this->texture.loadFromFile(path);
+    this->texture_.loadFromFile(path);
 
-    std::ifstream file(jsonPath);
+    std::ifstream file(json_path);
     json jsonFile;
     file >> jsonFile;
     auto sp = jsonFile.get<sprite_pack_structure::pack>();
@@ -109,35 +109,35 @@ void sprite_pack::init(const std::string& path, const std::string& jsonPath, con
         auto part = pack_part::full;
         auto direction = direction::DOWN;
         auto number = 1;
-        if (!keyWords.empty() && mappedPackPart.count(keyWords[0]) > 0)
+        if (!keyWords.empty() && mapped_pack_part.count(keyWords[0]) > 0)
         {
-            part = mappedPackPart.at(keyWords[0]);
+            part = mapped_pack_part.at(keyWords[0]);
             keyWords.erase(keyWords.begin() + 0);
         }
-        if (!keyWords.empty() && mappedDirection.count(keyWords[0]) > 0)
+        if (!keyWords.empty() && mapped_direction.count(keyWords[0]) > 0)
         {
-            direction = mappedDirection.at(keyWords[0]);
+            direction = mapped_direction.at(keyWords[0]);
             keyWords.erase(keyWords.begin() + 0);
         }
         if (!keyWords.empty() && std::stoi(keyWords[0]) >= 1)
             number = std::stoi(keyWords[0]);
         else
             continue;
-        pack[part][direction][number] = frame;
+        pack_[part][direction][number] = frame;
     }
 }
 
-sprite_pack_structure::sprite sprite_pack::getOriginalInfo(const pack_part part, const direction direction, const int number)
+sprite_pack_structure::sprite sprite_pack::get_original_info(const pack_part part, const direction direction, const int number)
 {
-	if (pack.count(part) <= 0 || pack.at(part).count(direction) <= 0 || pack.at(part).at(direction).count(number) <= 0)
+	if (pack_.count(part) <= 0 || pack_.at(part).count(direction) <= 0 || pack_.at(part).at(direction).count(number) <= 0)
 		return sprite_pack_structure::sprite();
 
-	return pack.at(part).at(direction).at(number);
+	return pack_.at(part).at(direction).at(number);
 }
 
-sprite_chain_element* sprite_pack::tagToIcon(const entity_tag object, const bool selected, const int typeOfObject)
+sprite_chain_element* sprite_pack::tag_to_icon(const entity_tag object, const bool selected, const int type_of_object)
 {
-	auto result = new sprite_chain_element(pack_tag::empty, pack_part::full, direction::DOWN, 1, { 0, 0 }, iconSize, { iconSize.x / 2, iconSize.y / 2 });
+	auto result = new sprite_chain_element(pack_tag::empty, pack_part::full, direction::DOWN, 1, { 0, 0 }, icon_size, { icon_size.x / 2, icon_size.y / 2 });
 
 	auto spriteNumber = int(selected);
 
@@ -153,11 +153,11 @@ sprite_chain_element* sprite_pack::tagToIcon(const entity_tag object, const bool
 		result->set_draw_info(pack_tag::icons, pack_part::craftObjects, direction::DOWN, spriteNumber);
 		return result;
 	case entity_tag::totem:
-		if (typeOfObject == 1)
+		if (type_of_object == 1)
 			spriteNumber += 7;
-		if (typeOfObject == 2)
+		if (type_of_object == 2)
 			spriteNumber += 9;
-		if (typeOfObject == 3)
+		if (type_of_object == 3)
 			spriteNumber += 11;
 		result->set_draw_info(pack_tag::icons, pack_part::craftObjects, direction::DOWN, spriteNumber);
 		return result;
@@ -230,15 +230,15 @@ sprite_chain_element* sprite_pack::tagToIcon(const entity_tag object, const bool
 	return result;
 }
 
-Sprite sprite_pack::getSprite(const pack_part part, const direction direction, const int number, const bool mirrored)
+Sprite sprite_pack::get_sprite(const pack_part part, const direction direction, const int number, const bool mirrored)
 {
     Sprite result;
-    if (pack.count(part) <= 0 || pack.at(part).count(direction) <= 0 || pack.at(part).at(direction).count(number) <= 0)
+    if (pack_.count(part) <= 0 || pack_.at(part).count(direction) <= 0 || pack_.at(part).at(direction).count(number) <= 0)
         return result;
 
-    result.setTexture(texture);
+    result.setTexture(texture_);
 
-    const auto spriteInfo = pack.at(part).at(direction).at(number);
+    const auto spriteInfo = pack_.at(part).at(direction).at(number);
     const Vector2f offset(
 		float(spriteInfo.sprite_source_size.x),
 		float(spriteInfo.sprite_source_size.y));

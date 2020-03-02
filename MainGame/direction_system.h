@@ -14,7 +14,7 @@ class direction_system
 public:
 	direction_system();
 	~direction_system();
-	void init(Vector2f* position, Vector2f* movePosition) { this->position = position; this->movePosition = movePosition; }
+	void init(Vector2f* position, Vector2f* move_position) { this->position = position; this->move_position = move_position; }
 	void calculate_direction();
 	static side calculate_side(Vector2f position, sf::Vector2f other_object_position);
 	static side invert_side(side side);
@@ -27,10 +27,10 @@ public:
 	static direction cut_diagonals(direction dir);
 
 	side side = down;
-	direction direction = direction::STAND, lastDirection = direction::DOWN;
+	direction direction = direction::STAND, last_direction = direction::DOWN;
 
 	// owner info
 	Vector2f* position = nullptr;
-	Vector2f* movePosition = nullptr;
+	Vector2f* move_position = nullptr;
 	//-----------
 };

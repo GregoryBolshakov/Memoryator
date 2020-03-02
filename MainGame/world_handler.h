@@ -73,7 +73,7 @@ public:
 	bool getHeroBookVisibility() const { return isHeroBookVisible; }
 	void changeBookVisibility() { isHeroBookVisible = !isHeroBookVisible; }
 
-	void setObjectToBuild(entity_tag tag, int type = 1, bool instantBuild = false) { buildSystem.selectedObject = tag; buildSystem.buildType = type; buildSystem.instantBuild = instantBuild; }
+	void setObjectToBuild(entity_tag tag, int type = 1, bool instantBuild = false) { buildSystem.selected_object = tag; buildSystem.build_type = type; buildSystem.instant_build = instantBuild; }
 	Vector2i currentTransparentPos = Vector2i(0, 0);
 	std::string debugInfo = "";
 private:

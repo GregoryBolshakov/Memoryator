@@ -79,18 +79,18 @@ namespace sprite_pack_structure
 class sprite_pack
 {
 public:
-    void init(const std::string& path, const std::string& jsonPath, pack_tag tag);
-    Sprite getSprite(pack_part part, direction direction, int number, bool mirrored = false);
-	sprite_pack_structure::sprite getOriginalInfo(pack_part part, direction direction, int number);
-	static sprite_chain_element* tagToIcon(entity_tag object, bool selected = false, int typeOfObject = 1);
+    void init(const std::string& path, const std::string& json_path, pack_tag tag);
+    Sprite get_sprite(pack_part part, direction direction, int number, bool mirrored = false);
+	sprite_pack_structure::sprite get_original_info(pack_part part, direction direction, int number);
+	static sprite_chain_element* tag_to_icon(entity_tag object, bool selected = false, int type_of_object = 1);
 
     pack_tag tag;
-    static std::map<std::string, pack_tag> mappedPackTag;
-    static std::map<std::string, pack_part> mappedPackPart;
-    static std::map<std::string, direction> mappedDirection;
-	static const Vector2f iconSize;
-	static Vector2f iconWithoutSpaceSize;
+    static std::map<std::string, pack_tag> mapped_pack_tag;
+    static std::map<std::string, pack_part> mapped_pack_part;
+    static std::map<std::string, direction> mapped_direction;
+	static const Vector2f icon_size;
+	static Vector2f icon_without_space_size;
 private:
-    Texture texture;
-    std::map<pack_part, std::map<direction, std::map<int, sprite_pack_structure::sprite>>> pack;
+    Texture texture_;
+    std::map<pack_part, std::map<direction, std::map<int, sprite_pack_structure::sprite>>> pack_;
 };

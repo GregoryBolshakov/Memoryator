@@ -146,14 +146,14 @@ void deerchant::handleInput(const bool usedMouse)
 				moveSystem.bumpedPositions.erase(moveSystem.bumpedPositions.begin() + i);
 		moveSystem.pushAway(0);
 
-		if (directionSystem.direction != directionSystem.lastDirection)
+		if (directionSystem.direction != directionSystem.last_direction)
 		{
-			calculateSpeedLineDirection(directionSystem.lastDirection, directionSystem.direction);
+			calculateSpeedLineDirection(directionSystem.last_direction, directionSystem.direction);
 			current_sprite_[2] = 1;
 		}
 
 		animationSmooth();
-		directionSystem.lastDirection = directionSystem.direction;
+		directionSystem.last_direction = directionSystem.direction;
 		wasPushedAfterMovement = false;
 	}
 	else
@@ -360,14 +360,14 @@ void deerchant::stopping(const bool doStand, const bool forgetBoundTarget, const
 	if (boundTarget != nullptr && currentAction != dropping)
 		if (boundTarget->get_name() == "droppedBag")
 			for (auto& bag : bags)
-				if (bag.currentState == ejected)
-					bag.currentState = bagClosed;
+				if (bag.current_state == ejected)
+					bag.current_state = bag_closed;
 
 	if (doStand)
 	{
 		this->laxMovePosition = { -1, -1 };
 		moveSystem.moveOffset = { -1, -1 };
-		directionSystem.direction = directionSystem.lastDirection;
+		directionSystem.direction = directionSystem.last_direction;
 	}
 
 	if (forgetBoundTarget && boundTarget != nullptr)
@@ -586,7 +586,7 @@ void deerchant::onMouseUp(const int currentMouseButton, world_object *mouseSelec
 
 		for (auto& bag : bags)
 		{
-			if (bag.currentState == ejected)
+			if (bag.current_state == ejected)
 			{
 				if (boundTarget != nullptr)
 				{
@@ -612,12 +612,12 @@ void deerchant::endingPreviousAction()
 {
 	if (lastAction == commonHit && !Mouse::isButtonPressed(Mouse::Left))
 	{
-		directionSystem.lastDirection = direction_system::side_to_direction(directionSystem.side);
+		directionSystem.last_direction = direction_system::side_to_direction(directionSystem.side);
 		changeAction(relax, true, false);
 	}
 	if (lastAction == moveHit && !Mouse::isButtonPressed(Mouse::Left))
 	{
-		directionSystem.lastDirection = direction_system::side_to_direction(directionSystem.side);
+		directionSystem.last_direction = direction_system::side_to_direction(directionSystem.side);
 		changeAction(move, true, false);
 	}
 	if (lastAction == actions::moveEnd)
@@ -653,7 +653,7 @@ void deerchant::endingPreviousAction()
 		else
 		{
 			for (auto cnt = 0u; cnt != bags.size(); cnt++)			
-				if (bags[cnt].currentState == ejected)
+				if (bags[cnt].current_state == ejected)
 				{
 					auto isHareTrap = true;
 					for (auto& item : bags[cnt].cells)					
@@ -673,7 +673,7 @@ void deerchant::endingPreviousAction()
 						dropObject.type_of_object = int(entity_tag::heroBag);	
 					}
 					dropObject.position = { position_.x, position_.y + radius_ };
-					dropObject.inventory = hero_bag::cellsToInventory(bags[cnt].cells);					
+					dropObject.inventory = hero_bag::cells_to_inventory(bags[cnt].cells);					
 					//bags[cnt].~HeroBag();
 					bags.erase(bags.begin() + cnt);
 					birth_statics_.push(dropObject);
@@ -693,7 +693,7 @@ void deerchant::endingPreviousAction()
 	}
     if (lastAction == throwNoose)
     {
-		directionSystem.lastDirection = direction_system::side_to_direction(directionSystem.side);
+		directionSystem.last_direction = direction_system::side_to_direction(directionSystem.side);
 		changeAction(relax, true, false);
     }
 	if (lastAction == open)
@@ -726,7 +726,7 @@ void deerchant::endingPreviousAction()
 			if (nooseItem)
 			{
 				const auto placedNoose = new std::vector<std::pair<entity_tag, int>>({ (std::make_pair(entity_tag::noose, 1)) });
-				if (hero_bag::putItemsIn(placedNoose, &bags))
+				if (hero_bag::put_items_in(placedNoose, &bags))
 					nooseItem->delete_promise_on();
 				delete placedNoose;
 			}
@@ -739,89 +739,89 @@ void deerchant::endingPreviousAction()
 
 void deerchant::animationSmooth()
 {
-	if (directionSystem.direction == direction::UP && directionSystem.lastDirection == direction::LEFT ||
-		directionSystem.direction == direction::LEFT && directionSystem.lastDirection == direction::UP)
+	if (directionSystem.direction == direction::UP && directionSystem.last_direction == direction::LEFT ||
+		directionSystem.direction == direction::LEFT && directionSystem.last_direction == direction::UP)
 	{
 		smoothDirections = { direction::UPLEFT, direction::STAND };
 		return;
 	}
-	if (directionSystem.direction == direction::DOWN && directionSystem.lastDirection == direction::LEFT ||
-		directionSystem.direction == direction::LEFT && directionSystem.lastDirection == direction::DOWN)
+	if (directionSystem.direction == direction::DOWN && directionSystem.last_direction == direction::LEFT ||
+		directionSystem.direction == direction::LEFT && directionSystem.last_direction == direction::DOWN)
 	{
 		smoothDirections = { direction::DOWNLEFT, direction::STAND };
 		return;
 	}
-	if (directionSystem.direction == direction::UP && directionSystem.lastDirection == direction::RIGHT ||
-		directionSystem.direction == direction::RIGHT && directionSystem.lastDirection == direction::UP)
+	if (directionSystem.direction == direction::UP && directionSystem.last_direction == direction::RIGHT ||
+		directionSystem.direction == direction::RIGHT && directionSystem.last_direction == direction::UP)
 	{
 		smoothDirections = { direction::UPRIGHT, direction::STAND };
 		return;
 	}
-	if (directionSystem.direction == direction::DOWN && directionSystem.lastDirection == direction::RIGHT ||
-		directionSystem.direction == direction::RIGHT && directionSystem.lastDirection == direction::DOWN)
+	if (directionSystem.direction == direction::DOWN && directionSystem.last_direction == direction::RIGHT ||
+		directionSystem.direction == direction::RIGHT && directionSystem.last_direction == direction::DOWN)
 	{
 		smoothDirections = { direction::DOWNRIGHT, direction::STAND };
 		return;
 	}
-	if (directionSystem.direction == direction::UP && directionSystem.lastDirection == direction::DOWN)
+	if (directionSystem.direction == direction::UP && directionSystem.last_direction == direction::DOWN)
 	{
 		smoothDirections = { direction::DOWNLEFT, direction::LEFT, direction::UPLEFT, direction::STAND };
 		return;
 	}
-	if (directionSystem.direction == direction::DOWN && directionSystem.lastDirection == direction::UP){
+	if (directionSystem.direction == direction::DOWN && directionSystem.last_direction == direction::UP){
 		smoothDirections = { direction::UPRIGHT, direction::RIGHT, direction::DOWNRIGHT, direction::STAND };
 		return;
 	}
-	if (directionSystem.direction == direction::LEFT && directionSystem.lastDirection == direction::RIGHT)
+	if (directionSystem.direction == direction::LEFT && directionSystem.last_direction == direction::RIGHT)
 	{		
 		smoothDirections = { direction::DOWNRIGHT, direction::DOWN, direction::DOWNLEFT, direction::STAND };
 		return;
 	}
-	if (directionSystem.direction == direction::RIGHT && directionSystem.lastDirection == direction::LEFT)
+	if (directionSystem.direction == direction::RIGHT && directionSystem.last_direction == direction::LEFT)
 	{
 		smoothDirections = { direction::UPLEFT, direction::UP, direction::UPRIGHT, direction::STAND };
 		return;
 	}
-	if (directionSystem.direction == direction::UPLEFT && directionSystem.lastDirection == direction::DOWNRIGHT)
+	if (directionSystem.direction == direction::UPLEFT && directionSystem.last_direction == direction::DOWNRIGHT)
 	{
 		smoothDirections = { direction::RIGHT, direction::UPRIGHT, direction::UPRIGHT, direction::STAND };
 		return;
 	}
-	if (directionSystem.direction == direction::DOWNRIGHT && directionSystem.lastDirection == direction::UPLEFT)
+	if (directionSystem.direction == direction::DOWNRIGHT && directionSystem.last_direction == direction::UPLEFT)
 	{
 		smoothDirections = { direction::UP, direction::UPRIGHT, direction::RIGHT, direction::STAND };
 		return;
 	}
-	if (directionSystem.direction == direction::UPRIGHT && directionSystem.lastDirection == direction::DOWNLEFT)
+	if (directionSystem.direction == direction::UPRIGHT && directionSystem.last_direction == direction::DOWNLEFT)
 	{
 		smoothDirections = { direction::LEFT, direction::UPLEFT, direction::UP, direction::STAND };
 		return;
 	}
-	if (directionSystem.direction == direction::DOWNLEFT && directionSystem.lastDirection == direction::UPRIGHT)
+	if (directionSystem.direction == direction::DOWNLEFT && directionSystem.last_direction == direction::UPRIGHT)
 	{
 		smoothDirections = { direction::UP, direction::UPLEFT, direction::LEFT, direction::STAND };
 		return;
 	}
-	if (directionSystem.direction == direction::UPLEFT && directionSystem.lastDirection == direction::UPRIGHT ||
-		directionSystem.direction == direction::UPRIGHT && directionSystem.lastDirection == direction::UPLEFT)
+	if (directionSystem.direction == direction::UPLEFT && directionSystem.last_direction == direction::UPRIGHT ||
+		directionSystem.direction == direction::UPRIGHT && directionSystem.last_direction == direction::UPLEFT)
 	{
 		smoothDirections = { direction::UP, direction::STAND };
 		return;
 	}
-	if (directionSystem.direction == direction::UPLEFT && directionSystem.lastDirection == direction::DOWNLEFT ||
-		directionSystem.direction == direction::DOWNLEFT && directionSystem.lastDirection == direction::UPLEFT)
+	if (directionSystem.direction == direction::UPLEFT && directionSystem.last_direction == direction::DOWNLEFT ||
+		directionSystem.direction == direction::DOWNLEFT && directionSystem.last_direction == direction::UPLEFT)
 	{
 		smoothDirections = { direction::LEFT, direction::STAND };
 		return;
 	}
-	if (directionSystem.direction == direction::UPRIGHT && directionSystem.lastDirection == direction::DOWNRIGHT ||
-		directionSystem.direction == direction::DOWNRIGHT && directionSystem.lastDirection == direction::UPRIGHT)
+	if (directionSystem.direction == direction::UPRIGHT && directionSystem.last_direction == direction::DOWNRIGHT ||
+		directionSystem.direction == direction::DOWNRIGHT && directionSystem.last_direction == direction::UPRIGHT)
 	{
 		smoothDirections = { direction::RIGHT, direction::STAND };
 		return;
 	}
-	if (directionSystem.direction == direction::DOWNLEFT && directionSystem.lastDirection == direction::DOWNRIGHT ||
-		directionSystem.direction == direction::DOWNRIGHT && directionSystem.lastDirection == direction::DOWNLEFT)
+	if (directionSystem.direction == direction::DOWNLEFT && directionSystem.last_direction == direction::DOWNRIGHT ||
+		directionSystem.direction == direction::DOWNRIGHT && directionSystem.last_direction == direction::DOWNLEFT)
 	{
 		smoothDirections = { direction::DOWN, direction::STAND };
 	}
@@ -954,7 +954,7 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 	auto legsInverse = false, bodyInverse = false;
 	legsSprite->animation_length = 8;
 
-    auto spriteSide = directionSystem.side; auto spriteDirection = directionSystem.lastDirection;
+    auto spriteSide = directionSystem.side; auto spriteDirection = directionSystem.last_direction;
 
 	animation_speed_ = 12;
 
@@ -995,7 +995,7 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 	case dropping:
 		bodyInverse = true;
 		bodySprite->animation_length = 5;
-		if (directionSystem.lastDirection == direction::RIGHT || directionSystem.lastDirection == direction::UPRIGHT || directionSystem.lastDirection == direction::DOWNRIGHT)
+		if (directionSystem.last_direction == direction::RIGHT || directionSystem.last_direction == direction::UPRIGHT || directionSystem.last_direction == direction::DOWNRIGHT)
 			bodySprite->mirrored = true;
 		bodySprite->pack_tag = pack_tag::heroPick; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_diagonals(spriteDirection);
 		break;
@@ -1009,10 +1009,10 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 	case jerking:
 		bodySprite->animation_length = 8;
 		animation_speed_ = 11;
-		spriteDirection = directionSystem.lastDirection;
-		if (directionSystem.lastDirection == direction::RIGHT || directionSystem.lastDirection == direction::UPRIGHT || directionSystem.lastDirection == direction::DOWNRIGHT)
+		spriteDirection = directionSystem.last_direction;
+		if (directionSystem.last_direction == direction::RIGHT || directionSystem.last_direction == direction::UPRIGHT || directionSystem.last_direction == direction::DOWNRIGHT)
 			bodySprite->mirrored = true;
-		if (direction_system::cut_rights(directionSystem.lastDirection) == direction::UPLEFT || direction_system::cut_rights(directionSystem.lastDirection) == direction::DOWNLEFT)
+		if (direction_system::cut_rights(directionSystem.last_direction) == direction::UPLEFT || direction_system::cut_rights(directionSystem.last_direction) == direction::DOWNLEFT)
 			spriteDirection = direction::LEFT;
 		bodySprite->pack_tag = pack_tag::heroRoll; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_rights(spriteDirection);
 		break;
@@ -1020,10 +1020,10 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 		bodySprite->mirrored = false;
 		bodySprite->animation_length = 16;
 		animation_speed_ = 13;
-		spriteDirection = directionSystem.lastDirection;
-		if (directionSystem.lastDirection == direction::RIGHT || directionSystem.lastDirection == direction::UPRIGHT || directionSystem.lastDirection == direction::DOWNRIGHT)
+		spriteDirection = directionSystem.last_direction;
+		if (directionSystem.last_direction == direction::RIGHT || directionSystem.last_direction == direction::UPRIGHT || directionSystem.last_direction == direction::DOWNRIGHT)
 			bodySprite->mirrored = true;
-		if (direction_system::cut_rights(directionSystem.lastDirection) == direction::UPLEFT || direction_system::cut_rights(directionSystem.lastDirection) == direction::DOWNLEFT)
+		if (direction_system::cut_rights(directionSystem.last_direction) == direction::UPLEFT || direction_system::cut_rights(directionSystem.last_direction) == direction::DOWNLEFT)
 			spriteDirection = direction::LEFT;
 		bodySprite->pack_tag = pack_tag::heroStand; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_rights(spriteDirection);
 		break;
@@ -1034,7 +1034,7 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 			animation_speed_ = 10;
 		bodySprite->animation_length = 8;
 
-		auto finalDirection = directionSystem.lastDirection;
+		auto finalDirection = directionSystem.last_direction;
 		if (smoothDirection != direction::STAND)
 			finalDirection = smoothDirection;
 
@@ -1051,14 +1051,14 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 	case actions::moveEnd:
 		bodySprite->animation_length = 8;
 		current_sprite_[1] = 1;
-		if (directionSystem.lastDirection == direction::RIGHT || directionSystem.lastDirection == direction::UPRIGHT || directionSystem.lastDirection == direction::DOWNRIGHT)
+		if (directionSystem.last_direction == direction::RIGHT || directionSystem.last_direction == direction::UPRIGHT || directionSystem.last_direction == direction::DOWNRIGHT)
 		{
 			bodySprite->mirrored = true;
 			legsSprite->mirrored = true;
 		}
-		bodySprite->pack_tag = pack_tag::heroMove; bodySprite->pack_part = pack_part::body; bodySprite->direction = direction_system::cut_rights(directionSystem.lastDirection);
-		directionSystem.lastDirection = direction_system::cut_diagonals(directionSystem.lastDirection);
-		legsSprite->pack_tag = pack_tag::heroHit; legsSprite->pack_part = pack_part::legs; legsSprite->direction = direction_system::cut_rights(directionSystem.lastDirection);
+		bodySprite->pack_tag = pack_tag::heroMove; bodySprite->pack_part = pack_part::body; bodySprite->direction = direction_system::cut_rights(directionSystem.last_direction);
+		directionSystem.last_direction = direction_system::cut_diagonals(directionSystem.last_direction);
+		legsSprite->pack_tag = pack_tag::heroHit; legsSprite->pack_part = pack_part::legs; legsSprite->direction = direction_system::cut_rights(directionSystem.last_direction);
 		
 		break;
 	}

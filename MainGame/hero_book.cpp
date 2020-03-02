@@ -45,11 +45,11 @@ void hero_book::initButtons(std::map<pack_tag, sprite_pack>* packsMap)
 
 		buttonPosition.x = buttonPosition.x * screenSize.x / 100;
 		buttonPosition.y = buttonPosition.y * screenSize.y / 100;
-		const auto textureSize = packsMap->at(sprite_pack::mappedPackTag.at(packTag)).getOriginalInfo(sprite_pack::mappedPackPart.at(packPart), direction::DOWN, number).source_size;
+		const auto textureSize = packsMap->at(sprite_pack::mapped_pack_tag.at(packTag)).get_original_info(sprite_pack::mapped_pack_part.at(packPart), direction::DOWN, number).source_size;
 		buttonSize.y = buttonSize.y * screenSize.y / 100;
 		buttonSize.x = float(textureSize.w) * buttonSize.y / float(textureSize.h);
 
-		buttonList[button_tag(tag)].initialize(sprite_pack::mappedPackTag.at(packTag), sprite_pack::mappedPackPart.at(packPart), number, selectedNumber, pressedNumber, buttonPosition, buttonSize, isSelectable, button_tag(tag), offset);
+		buttonList[button_tag(tag)].initialize(sprite_pack::mapped_pack_tag.at(packTag), sprite_pack::mapped_pack_part.at(packPart), number, selectedNumber, pressedNumber, buttonPosition, buttonSize, isSelectable, button_tag(tag), offset);
 	}
 
 	fin.close();
@@ -431,7 +431,7 @@ void hero_book::onMouseUp()
 		if (buttonList.at(button_tag::makeWreath).is_selected(Vector2f(Mouse::getPosition())))		
 			if (boundBags)
 				if (hero_book_page::tagToWreath(entity_tag(currentPage)) != entity_tag::emptyCell)
-				hero_bag::putItemIn(new std::pair<entity_tag, int>(hero_book_page::tagToWreath(entity_tag(currentPage)), 1), boundBags);					
+				hero_bag::put_item_in(new std::pair<entity_tag, int>(hero_book_page::tagToWreath(entity_tag(currentPage)), 1), boundBags);					
 	//---------------
 
 	// clicking the plus in the draft center

@@ -10,7 +10,7 @@ direction_system::~direction_system()
 void direction_system::calculate_direction()
 {
 	const auto cur_pos = *position;
-	const auto tar_pos = *movePosition;
+	const auto tar_pos = *move_position;
 
 	if (tar_pos == Vector2f(-1, -1))
 	{
@@ -36,7 +36,7 @@ void direction_system::calculate_direction()
 			else
 				direction = direction::DOWN;
 		}
-		lastDirection = direction;
+		last_direction = direction;
 		return;
 	}
 
@@ -75,7 +75,7 @@ void direction_system::calculate_direction()
 				}
 
 	if (direction != direction::STAND)
-		lastDirection = direction;
+		last_direction = direction;
 }
 
 side direction_system::calculate_side(const Vector2f position, const Vector2f other_object_position)

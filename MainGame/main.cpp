@@ -64,7 +64,7 @@ int main() {
 
 			if (event.type == Event::MouseButtonReleased)
 			{			
-				if (menu_system.getState() == closed && world.getBuildSystem().getSuccessInit())
+				if (menu_system.getState() == closed && world.getBuildSystem().get_success_init())
 				{
 					world.onMouseUp(current_mouse_button);					
 					main_book.onMouseUp();
@@ -94,7 +94,7 @@ int main() {
 				main_window.close();
 				break;
 			}
-			console.handleEvents(event);
+			console.handle_events(event);
 		}
 
 		if (menu_system.getState() == mainMenu)
@@ -112,7 +112,7 @@ int main() {
 			time_micro_sec = clock.getElapsedTime().asMicroseconds();
 			clock.restart();
 
-			if (!console.getState())
+			if (!console.get_state())
 			{				
 				world.interact(screen_size, time_micro_sec, event);
 				world.focusedObject->handleInput(world.getInventorySystem().getUsedMouse());
@@ -131,8 +131,8 @@ int main() {
 			//visual_effect_texture.update(mainWindow);
 			//mainWindow.draw(visual_effect_sprite, ambient_light.shader);
 
-			draw_system.draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepareSprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packs_map)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
-			text_system::drawString(world.getMouseDisplayName(), font_name::NormalFont, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));
+			draw_system.draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepare_sprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packs_map)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+			text_system::drawString(world.getMouseDisplayName(), font_name::normal_font, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));
 			world.pedestalController.draw(&main_window, world.getCameraPosition(), world.getWorldGenerator().scaleFactor);
 			draw_system.draw(main_window, main_book.prepareSprites(world.focusedObject->get_health_point() / world.focusedObject->get_max_health_point_value(), time_micro_sec));
 			draw_system.draw(main_window, world.getInventorySystem().prepareSprites(time_micro_sec, world.packsMap));			

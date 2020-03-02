@@ -52,7 +52,7 @@ void world_handler::runWorldGenerator()
 	brazier = dynamic_cast<::brazier*>(staticGrid.get_item_by_name("brazier"));
 	//brazier->linkWithBuildSystem(&buildSystem);
 	worldGenerator.rememberedBlocks = { { staticGrid.get_index_by_point(brazier->get_position().x, brazier->get_position().y), true } };
-	cameraSystem.position = Vector2f(focusedObject->get_position().x + helper::GetScreenSize().x * camera_system::camOffset.x, focusedObject->get_position().y + helper::GetScreenSize().y * camera_system::camOffset.y);
+	cameraSystem.position = Vector2f(focusedObject->get_position().x + helper::GetScreenSize().x * camera_system::cam_offset.x, focusedObject->get_position().y + helper::GetScreenSize().y * camera_system::cam_offset.y);
 
 	const auto hero = dynamic_cast<deerchant*>(focusedObject);
 	inventorySystem.inventoryBounding(&hero->bags);
@@ -382,26 +382,26 @@ bool world_handler::fixedClimbingBeyond(Vector2f &pos) const
 
 void world_handler::setItemFromBuildSystem()
 {
-	if (!(buildSystem.instantBuild || focusedObject->getCurrentAction() == builds))
+	if (!(buildSystem.instant_build || focusedObject->getCurrentAction() == builds))
 		return;
 
-	if (buildSystem.selectedObject != entity_tag::emptyCell && buildSystem.buildingPosition != Vector2f(-1, -1))
+	if (buildSystem.selected_object != entity_tag::emptyCell && buildSystem.building_position != Vector2f(-1, -1))
 	{
-		if (buildSystem.droppedLootIdList.count(buildSystem.selectedObject) > 0)
-			worldGenerator.initializeStaticItem(entity_tag::droppedLoot, buildSystem.buildingPosition, int(buildSystem.selectedObject), "", 1);
+		if (buildSystem.dropped_loot_id_list.count(buildSystem.selected_object) > 0)
+			worldGenerator.initializeStaticItem(entity_tag::droppedLoot, buildSystem.building_position, int(buildSystem.selected_object), "", 1);
 		else
-			worldGenerator.initializeStaticItem(buildSystem.selectedObject, buildSystem.buildingPosition, buildSystem.buildType, "", 1);
+			worldGenerator.initializeStaticItem(buildSystem.selected_object, buildSystem.building_position, buildSystem.build_type, "", 1);
 
-		if (buildSystem.selectedObject == entity_tag::totem)
+		if (buildSystem.selected_object == entity_tag::totem)
 		{
-			if (buildSystem.buildType == 2)
-				buildSystem.clearHareBags(staticGrid.get_index_by_point(buildSystem.buildingPosition.x, buildSystem.buildingPosition.y), staticGrid, &localTerrain);
+			if (buildSystem.build_type == 2)
+				buildSystem.clear_hare_bags(staticGrid.get_index_by_point(buildSystem.building_position.x, buildSystem.building_position.y), staticGrid, &localTerrain);
 		}
-		buildSystem.wasPlaced();
-		buildSystem.instantBuild = false;
+		buildSystem.was_placed();
+		buildSystem.instant_build = false;
 
-		buildSystem.buildingPosition = Vector2f(-1, -1);
-		buildSystem.buildType = 1;
+		buildSystem.building_position = Vector2f(-1, -1);
+		buildSystem.build_type = 1;
 		brazier->clearCurrentCraft();
 	}
 }
@@ -421,14 +421,14 @@ void world_handler::onMouseUp(const int currentMouseButton)
 	
 	inventorySystem.onMouseUp();
 
-	if (buildSystem.getSuccessInit() /* && inventorySystem.getHeldItem()->first == -1*/)
-		buildSystem.onMouseUp();
+	if (buildSystem.get_success_init() /* && inventorySystem.getHeldItem()->first == -1*/)
+		buildSystem.on_mouse_up();
 
 	if (mouseDisplayName.empty())
 		selectedObject = nullptr;
 
 	auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->get_name()));
-	hero->onMouseUp(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.buildingPosition != Vector2f(-1, -1) && !buildSystem.instantBuild));
+	hero->onMouseUp(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.building_position != Vector2f(-1, -1) && !buildSystem.instant_build));
 }
 
 void world_handler::handleEvents(Event& event)
@@ -541,7 +541,7 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 		//--------						
 
 		if (dynamicItem->shakeSpeed != -1)
-			cameraSystem.makeShake(4, dynamicItem->shakeSpeed);
+			cameraSystem.make_shake(4, dynamicItem->shakeSpeed);
 
 		auto newPosition = dynamicItem->doMove(elapsedTime);
 
@@ -613,13 +613,13 @@ std::vector<sprite_chain_element*> world_handler::prepareSprites(const long long
 	const auto screenSize = helper::GetScreenSize();
 	const auto screenCenter = Vector2f(screenSize.x / 2, screenSize.y / 2);
 
-	cameraSystem.position.x += (focusedObject->get_position().x + helper::GetScreenSize().x * camera_system::camOffset.x - cameraSystem.position.x) *
-		(focusedObject->getMoveSystem().speed * float(elapsedTime)) / camera_system::maxCameraDistance.x;
+	cameraSystem.position.x += (focusedObject->get_position().x + helper::GetScreenSize().x * camera_system::cam_offset.x - cameraSystem.position.x) *
+		(focusedObject->getMoveSystem().speed * float(elapsedTime)) / camera_system::max_camera_distance.x;
 	
-	cameraSystem.position.y += (focusedObject->get_position().y + helper::GetScreenSize().y * camera_system::camOffset.y - cameraSystem.position.y) *
-		(focusedObject->getMoveSystem().speed * float(elapsedTime)) / camera_system::maxCameraDistance.y;
+	cameraSystem.position.y += (focusedObject->get_position().y + helper::GetScreenSize().y * camera_system::cam_offset.y - cameraSystem.position.y) *
+		(focusedObject->getMoveSystem().speed * float(elapsedTime)) / camera_system::max_camera_distance.y;
 	
-	cameraSystem.shakeInteract(elapsedTime);
+	cameraSystem.shake_interact(elapsedTime);
 
     worldUpperLeft = Vector2f(
 		ceil(cameraSystem.position.x - (screenCenter.x + extra.x) / worldGenerator.scaleFactor),
