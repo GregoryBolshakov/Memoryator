@@ -2,108 +2,108 @@
 
 #include "hero_bag.h"
 
-float text_system::characterSize = 30.0f * helper::GetScreenSize().y / 1440.0f;
+float text_system::character_size = 30.0f * helper::GetScreenSize().y / 1440.0f;
 std::unordered_map<font_name, Font> text_system::fonts = {};
-std::unordered_map<font_name, Text> text_system::textBoxes = {};
-Text text_system::numberOfItems;
+std::unordered_map<font_name, Text> text_system::text_boxes = {};
+Text text_system::number_of_items;
 
 text_system::text_system()
 {
-	initFonts();
-	initTextBoxes();
-	numberOfItems.setFont(fonts[font_name::bebas_font]);
-	numberOfItems.setCharacterSize(30);
-	numberOfItems.setFillColor(sf::Color::White);
+	init_fonts();
+	init_text_boxes();
+	number_of_items.setFont(fonts[font_name::bebas_font]);
+	number_of_items.setCharacterSize(30);
+	number_of_items.setFillColor(sf::Color::White);
 }
 
 text_system::~text_system()
 = default;
 
-void text_system::initFonts()
+void text_system::init_fonts()
 {
-	Font currentFont;
-	currentFont.loadFromFile("fonts/Bebas.ttf");
-	fonts.insert({font_name::bebas_font, currentFont});
-	currentFont.loadFromFile("fonts/normal.ttf");
-	fonts.insert({ font_name::normal_font, currentFont });
-	currentFont.loadFromFile("fonts/Console.ttf");
-	fonts.insert({ font_name::console_font, currentFont });
+	Font current_font;
+	current_font.loadFromFile("fonts/Bebas.ttf");
+	fonts.insert({font_name::bebas_font, current_font});
+	current_font.loadFromFile("fonts/normal.ttf");
+	fonts.insert({ font_name::normal_font, current_font });
+	current_font.loadFromFile("fonts/Console.ttf");
+	fonts.insert({ font_name::console_font, current_font });
 }
 
-void text_system::initTextBoxes()
+void text_system::init_text_boxes()
 {
-	Text currentText;
-	currentText.setFont(fonts[font_name::bebas_font]);
-	textBoxes.insert({ font_name::bebas_font, currentText });
-	currentText.setFont(fonts[font_name::normal_font]);
-	textBoxes.insert({ font_name::normal_font, currentText });
-	currentText.setFont(fonts[font_name::console_font]);
-	textBoxes.insert({ font_name::console_font, currentText });
+	Text current_text;
+	current_text.setFont(fonts[font_name::bebas_font]);
+	text_boxes.insert({ font_name::bebas_font, current_text });
+	current_text.setFont(fonts[font_name::normal_font]);
+	text_boxes.insert({ font_name::normal_font, current_text });
+	current_text.setFont(fonts[font_name::console_font]);
+	text_boxes.insert({ font_name::console_font, current_text });
 }
 
-void text_system::drawString(const std::string& str, const font_name font, const float size, const float posX, const float posY, RenderTarget& target, const sf::Color color)
+void text_system::draw_string(const std::string& str, const font_name font, const float size, const float pos_x, const float pos_y, RenderTarget& target, const sf::Color color)
 {
-	textBoxes.at(font).setPosition(posX, posY);
-	textBoxes.at(font).setCharacterSize(unsigned(ceil(size)));
-	textBoxes.at(font).setFillColor(color);
-	textBoxes.at(font).setString(str);
-	target.draw(textBoxes.at(font));
+	text_boxes.at(font).setPosition(pos_x, pos_y);
+	text_boxes.at(font).setCharacterSize(unsigned(ceil(size)));
+	text_boxes.at(font).setFillColor(color);
+	text_boxes.at(font).setString(str);
+	target.draw(text_boxes.at(font));
 }
 
-void text_system::drawTextBox(std::string str, const font_name font, const float size, const float posX, const float posY, const float width, const float height, RenderTarget& target, const sf::Color color)
+void text_system::draw_text_box(std::string str, const font_name font, const float size, const float pos_x, const float pos_y, const float width, const float height, RenderTarget& target, const sf::Color color)
 {
-	auto curText = textBoxes.at(font);
-	curText.setString(str);
-	const unsigned long long lineLength = long(ceil(str.size() * (width / curText.getGlobalBounds().width)));
-	auto curPosY = posY;
+	auto cur_text = text_boxes.at(font);
+	cur_text.setString(str);
+	const unsigned long long line_length = long(ceil(str.size() * (width / cur_text.getGlobalBounds().width)));
+	auto cur_pos_y = pos_y;
 
-	if (curText.getGlobalBounds().width <= width)
+	if (cur_text.getGlobalBounds().width <= width)
 	{
-		drawString(str, font, size, posX, curPosY, target, color);
+		draw_string(str, font, size, pos_x, cur_pos_y, target, color);
 		return;
 	}
 
 	while (!str.empty())
 	{
-		if (curPosY > posY + height - curText.getGlobalBounds().height / 2)
+		if (cur_pos_y > pos_y + height - cur_text.getGlobalBounds().height / 2)
 			return;
 
-		auto spacePos = std::min(lineLength, str.size() - 1);
-		if (str.length() > lineLength)
+		auto space_pos = std::min(line_length, str.size() - 1);
+		if (str.length() > line_length)
 		{
-			while (!(str[spacePos] == ' ' || str[spacePos] == '_') && spacePos > 0)
-				spacePos--;
+			while (!(str[space_pos] == ' ' || str[space_pos] == '_') && space_pos > 0)
+				space_pos--;
 		}
 		else
-			spacePos = 0;
+			space_pos = 0;
 
-		if (spacePos != 0)
-			str.erase(str.begin() + spacePos);
+		if (space_pos != 0)
+			str.erase(str.begin() + space_pos);
 		else
-			spacePos = lineLength;
+			space_pos = line_length;
 
-		drawString(str.substr(0, spacePos), font, size, posX, curPosY, target, color);
-		curPosY += curText.getGlobalBounds().height;
-		str.erase(0, spacePos);
+		draw_string(str.substr(0, space_pos), font, size, pos_x, cur_pos_y, target, color);
+		cur_pos_y += cur_text.getGlobalBounds().height;
+		str.erase(0, space_pos);
 	}
 }
 
-void text_system::drawNumberOfItems(const Vector2f pos, const int itemsCount, RenderTarget& target)
+void text_system::draw_number_of_items(const Vector2f pos, const int items_count, RenderTarget& target)
 {
-	numberOfItems.setString(std::to_string(itemsCount));
-	numberOfItems.setOrigin(numberOfItems.getGlobalBounds().width, numberOfItems.getGlobalBounds().height);
-	numberOfItems.setPosition(pos.x + sprite_pack::icon_size.x, pos.y + sprite_pack::icon_size.x);
-	target.draw(numberOfItems);
+	number_of_items.setString(std::to_string(items_count));
+	number_of_items.setOrigin(number_of_items.getGlobalBounds().width, number_of_items.getGlobalBounds().height);
+	number_of_items.setPosition(pos.x + sprite_pack::icon_size.x, pos.y + sprite_pack::icon_size.x);
+	target.draw(number_of_items);
 }
 
-sf::Vector2f text_system::getTextBoxSize(const std::string& string, const float characterSize, const font_name font)
+sf::Vector2f text_system::get_text_box_size(const std::string& string, const float character_size, const font_name font)
 {
-	if (fonts.count(font) <= 0 || textBoxes.count(font) <= 0)
+	if (fonts.count(font) <= 0 || text_boxes.count(font) <= 0)
 		return { 0, 0 };
 
-	textBoxes.at(font).setFont(fonts.at(font));
-	textBoxes.at(font).setString(string);
-	textBoxes.at(font).setCharacterSize(unsigned(ceil(characterSize)));
+	text_boxes.at(font).setFont(fonts.at(font));
+	text_boxes.at(font).setString(string);
+	text_boxes.at(font).setCharacterSize(unsigned(ceil(character_size)));
 
-	return { textBoxes.at(font).getGlobalBounds().width, textBoxes.at(font).getGlobalBounds().height };
+	return { text_boxes.at(font).getGlobalBounds().width, text_boxes.at(font).getGlobalBounds().height };
 }

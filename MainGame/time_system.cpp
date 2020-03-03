@@ -6,36 +6,36 @@ time_system::time_system()
 time_system::~time_system()
 = default;
 
-void time_system::init(const long long minutesPerDay, const long long startTime)
+void time_system::init(const long long minutes_per_day, const long long start_time)
 {
-	this->minutesPerDay = minutesPerDay;
-	this->time = startTime;
-	successInit = true;
+	this->minutes_per_day_ = minutes_per_day;
+	this->time_ = start_time;
+	success_init_ = true;
 }
 
-void time_system::interact(const long long elapsedTime)
+void time_system::interact(const long long elapsed_time)
 {
-	this->time += elapsedTime;
-	time = time % (minutesPerDay * minute);
+	this->time_ += elapsed_time;
+	time_ = time_ % (minutes_per_day_ * minute);
 }
 
-void time_system::setTime(const long long newTime)
+void time_system::set_time(const long long new_time)
 {
-	this->time = newTime;
+	this->time_ = new_time;
 }
 
-void time_system::setMinutesPerDay(const long long minutes)
+void time_system::set_minutes_per_day(const long long minutes)
 {
-	this->minutesPerDay = minutes;
+	this->minutes_per_day_ = minutes;
 }
 
-long long time_system::getTime() const
+long long time_system::get_time() const
 {
-	return time;
+	return time_;
 }
 
-float time_system::getDayPart() const
+float time_system::get_day_part() const
 {
-	return float(time) / float(minutesPerDay * minute);
+	return float(time_) / float(minutes_per_day_ * minute);
 }
 

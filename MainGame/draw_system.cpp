@@ -209,7 +209,7 @@ void draw_system::draw_sprite_chain_element(RenderTarget& target, sprite_chain_e
 
 void draw_system::draw_text_chain_element(RenderTarget& target, text_chain_element* text_chain_item)
 {
-	text_system::drawString(
+	text_system::draw_string(
 		text_chain_item->string,
 		text_chain_item->font,
 		text_chain_item->character_size,
