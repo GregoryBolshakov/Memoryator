@@ -69,8 +69,8 @@ void move_system::push_away(long long elapsed_time, float push_speed)
 	if (red_rest_duration > 0)
 		*color = sf::Color(
 			255,
-			Uint8(push_color.g + (255 - push_color.g) * (1 - red_rest_duration / red_duration)),
-			Uint8(push_color.b + (255 - push_color.b) * (1 - red_rest_duration / red_duration)),
+			push_color.g + Uint8((255.0f - float(push_color.g)) * (1.0f - float(red_rest_duration) / float(red_duration))),
+			push_color.b + Uint8((255.0f - float(push_color.b)) * (1.0f - float(red_rest_duration) / float(red_duration))),
 			255);
 	else
 	{

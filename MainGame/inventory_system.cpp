@@ -30,10 +30,7 @@ void inventory_system::init_max_counts(const std::string& file_path)
 void inventory_system::init()
 {
 	drop_zone_radius_ = helper::GetScreenSize().y * 2 / 7;
-	held_item_.content = {entity_tag::emptyCell, 0};
-	drop_zone_texture.loadFromFile("Game/inventorySprites/dropZone.png");
-	drop_zone.setTexture(drop_zone_texture);
-	drop_zone.setScale(helper::GetScreenSize().x / drop_zone_texture.getSize().x, helper::GetScreenSize().y / drop_zone_texture.getSize().y);
+	held_item_.content = {entity_tag::emptyCell, 0};	
 	bag_pos_dot.setRadius(helper::GetScreenSize().y / 288);
 	bag_pos_dot.setFillColor(sf::Color(53, 53, 53, 200));
 	init_max_counts();
@@ -336,10 +333,8 @@ std::vector<drawable_chain_element*> inventory_system::prepare_sprites(long long
 		if (helper::getDist(bag.get_position(), Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2)) <= drop_zone_radius_ && bag.current_state == bag_closed)
 		{
 			cursor_turned_on = true;
-			if (cursor_text.empty())
-			{
-				effects_system_.add_effect(effects::transparency_removal, &drop_zone, "dropZone", long(3 * 10e4));
-			}
+			//if (cursor_text.empty())
+				//effects_system_.add_effect(effects::transparency_removal, &drop_zone, "dropZone", long(3 * 10e4));			
 			cursor_text = "throw away";
 			cursor_text_pos_ = bag.get_position();
 			bag.ready_to_eject = true;
