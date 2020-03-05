@@ -29,9 +29,7 @@ public:
 	std::string debug_info = "", cursor_text = "";
 
 	Sprite * selected_cell_background{};
-	Sprite drop_zone;
 	CircleShape bag_pos_dot;
-	Texture drop_zone_texture;
 private:
 	//hero bags
 	std::vector<hero_bag>* bound_bags_{};

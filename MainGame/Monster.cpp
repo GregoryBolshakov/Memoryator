@@ -137,5 +137,6 @@ void monster::jerk(float power, float deceleration, Vector2f destinationPoint)
 
 void monster::fightInteract(const long long elapsedTime, dynamic_object* target)
 {
+	timeAfterHitSelf += elapsedTime;
 	moveSystem.push_away(elapsedTime);
 }
