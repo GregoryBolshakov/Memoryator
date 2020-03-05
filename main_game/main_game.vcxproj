@@ -20,8 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3D048429-D77F-4777-A8FC-D4838B9084ED}</ProjectGuid>
-    <RootNamespace>MainGame</RootNamespace>
+    <RootNamespace>main_game</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <ProjectName>main_game</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -142,9 +143,9 @@ xcopy /i /e /s /y /f "$(SolutionDir)Vendors\SFML\PDB" "$(TargetDir)"</Command>
     </Link>
     <PostBuildEvent>
       <Command>
-xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Data" "$(TargetDir)\Data"
-xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Fonts" "$(TargetDir)\Fonts"
-xcopy /i /e /s /y /f "$(SolutionDir)MainGame\Game" "$(TargetDir)\Game"</Command>
+xcopy /i /e /s /y /f "$(SolutionDir)main_game\Data" "$(TargetDir)\Data"
+xcopy /i /e /s /y /f "$(SolutionDir)main_game\Fonts" "$(TargetDir)\Fonts"
+xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

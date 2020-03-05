@@ -1,6 +1,6 @@
 // ReSharper disable once CppUnusedIncludeDirective
-#include "../MainGame/time_system.cpp"
-#include "../MainGame/time_system.h"
+#include "../main_game/time_system.cpp"
+#include "../main_game/time_system.h"
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
