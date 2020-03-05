@@ -19,13 +19,11 @@ bool ambient_light::on_load()
 	shader_.setUniform("target_tex", sf::Shader::CurrentTexture);
 	shader_.setUniform("screen_size", render_target_size_);
 	shader_.setUniform("light_tex", light_texture_);
-	shader_.setUniform("light_tex_size", sf::Glsl::Vec2(light_texture_.getSize()));
 
 	return true;
 }
 
 void ambient_light::on_update()
 {
-	const auto a = time_system_.get_time_normalized();
 	shader_.setUniform("norm_time", time_system_.get_time_normalized());
 }

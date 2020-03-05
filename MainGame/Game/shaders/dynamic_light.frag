@@ -25,7 +25,6 @@
 //
 
 uniform vec2 screen_size;
-uniform vec2 light_tex_size;
 uniform sampler2D target_tex;
 uniform sampler2D light_tex;
 uniform float norm_time;
