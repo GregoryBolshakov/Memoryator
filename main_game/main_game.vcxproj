@@ -103,7 +103,7 @@
     </Link>
     <PostBuildEvent>
       <Command>
-xcopy /i /e /s /y /f "$(SolutionDir)Vendors\SFML\PDB" "$(TargetDir)"</Command>
+xcopy /i /e /s /y /f "$(SolutionDir)vendors\sfml\pdb" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
