@@ -6,36 +6,31 @@ time_system::time_system()
 time_system::~time_system()
 = default;
 
-void time_system::init(const long long minutes_per_day, const long long start_time)
+void time_system::init(const double real_to_game_time_ratio, const mr::time start_at)
 {
-	this->minutes_per_day_ = minutes_per_day;
-	this->time_ = start_time;
-	success_init_ = true;
+	real_to_game_time_ratio_ = real_to_game_time_ratio;
+
+	const auto start_seconds =
+		start_at.hours * minutes_per_hour * seconds_per_minute +
+		start_at.minutes * seconds_per_minute +
+		start_at.seconds;
+
+	time_ = long long(start_seconds) * micro_seconds_per_second;
 }
 
-void time_system::interact(const long long elapsed_time)
+void time_system::interact(const long long elapsed_time_microseconds)
 {
-	this->time_ += elapsed_time;
-	time_ = time_ % (minutes_per_day_ * minute);
+	time_ = (time_ + long long(double(elapsed_time_microseconds) / real_to_game_time_ratio_)) % day_duration;
 }
 
-void time_system::set_time(const long long new_time)
-{
-	this->time_ = new_time;
-}
-
-void time_system::set_minutes_per_day(const long long minutes)
-{
-	this->minutes_per_day_ = minutes;
-}
-
-long long time_system::get_time() const
+long long time_system::get_time_total_micro_seconds() const
 {
 	return time_;
 }
 
-float time_system::get_day_part() const
+float time_system::get_time_normalized() const
 {
-	return float(time_) / float(minutes_per_day_ * minute);
-}
+	const auto result = double(time_) / double(day_duration);
 
+	return float(result);
+}

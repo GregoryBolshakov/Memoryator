@@ -1,7 +1,6 @@
 #include <thread>
 
 #include "console.h"
-#include "deerchant.h"
 #include "draw_system.h"
 #include "hero_book.h"
 #include "menu_system.h"
@@ -40,7 +39,7 @@ int main() {
 	auto visual_effect_texture = surface.getTexture();
 	auto visual_effect_sprite = Sprite(visual_effect_texture);
 
-	ambient_light ambient_light(screen_size);
+	ambient_light ambient_light(world.getTimeSystem(), screen_size);
 	ambient_light.load();
 	
 	while (main_window.isOpen())
@@ -116,7 +115,7 @@ int main() {
 			{				
 				world.interact(screen_size, time_micro_sec, event);
 				world.focusedObject->handleInput(world.getInventorySystem().get_used_mouse());
-				ambient_light.update(screen_size.x / 2, screen_size.y / 2);
+				ambient_light.update();
 			}
 
 			auto hero = dynamic_cast<deerchant*>(world.focusedObject);
@@ -128,8 +127,8 @@ int main() {
             draw_system.draw(main_window, draw_system::upcast_chain(world.prepareSprites(time_micro_sec, true)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
             draw_system.draw(main_window, draw_system::upcast_chain(world.prepareSprites(time_micro_sec, false)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
             
-			//visual_effect_texture.update(mainWindow);
-			//mainWindow.draw(visual_effect_sprite, ambient_light.shader);
+			visual_effect_texture.update(main_window);
+			main_window.draw(visual_effect_sprite, ambient_light.shader);
 
 			draw_system.draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepare_sprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packs_map)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
 			text_system::draw_string(world.getMouseDisplayName(), font_name::normal_font, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));
