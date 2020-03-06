@@ -12,16 +12,16 @@ public:
 	~noose();
 	Vector2f calculate_texture_offset() override;
 	std::vector<sprite_chain_element*> prepare_sprites(long long elapsedTime) override;
-    void behaviorWithDynamic(dynamic_object* target, long long elapsedTime) override;
-	void behaviorWithStatic(world_object* target, long long elapsedTime) override;
+    void behavior_with_dynamic(dynamic_object* target, long long elapsedTime) override;
+	void behavior_with_static(world_object* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;
 	Vector2f get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
 	int get_build_type(Vector2f ounPos, Vector2f otherPos) override;	
 	void setOwner(world_object* owner) { this->owner = owner; };
-	void setTarget(dynamic_object& object) override;
+	void set_target(dynamic_object& object) override;
 	void jerkInteract(long long elapsedTime);
 	void jerk(float power, float deceleration, Vector2f destinationPoint = Vector2f(-1, -1)) override;
-	void fightInteract(long long elapsedTime, dynamic_object* target = nullptr) override;
+	void fight_interact(long long elapsedTime, dynamic_object* target = nullptr) override;
 
 private:
 	void stopping(bool doStand = false, bool forgetBoundTarget = false);

@@ -7,18 +7,18 @@ wolf::wolf(std::string objectName, Vector2f centerPosition) : neutral_mob(std::m
 	conditional_size_units_ = { 250, 200 };
 	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
-	moveSystem.speed = 0.0005f;
+	move_system_.speed = 0.0005f;
 	animation_speed_ = 0.0006f;
 	animationLength = 8;
 	radius_ = 70;
-	strength = 10;
-	sightRange = helper::GetScreenSize().y * 1 / 2; 
+	strength_ = 10;
+	sight_range = helper::GetScreenSize().y * 1 / 2; 
 	morality = 5; // from 1 to 10
 	fear = 0;
 	health_point_ = 0;
-	currentAction = relax;
-	timeAfterHitSelf = 0;
-	timeForNewHitSelf = long(6e5);
+	current_action_ = relax;
+	time_after_hitself_ = 0;
+	time_for_new_hit_self = long(6e5);
 	timeForNewHit = 1000000;
 
 	to_save_name_ = "wolf";
@@ -27,19 +27,19 @@ wolf::wolf(std::string objectName, Vector2f centerPosition) : neutral_mob(std::m
 wolf::~wolf()
 = default;
 
-void wolf::setTarget(dynamic_object& object)
+void wolf::set_target(dynamic_object& object)
 {
 	return;
 }
 
-void wolf::behaviorWithStatic(world_object* target, long long elapsedTime)
+void wolf::behavior_with_static(world_object* target, long long elapsedTime)
 {
 
 }
 
 void wolf::behavior(long long elapsedTime)
 {
-	fightInteract(elapsedTime);
+	fight_interact(elapsedTime);
 }
 
 Vector2f wolf::calculate_texture_offset()

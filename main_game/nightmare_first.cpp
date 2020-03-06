@@ -3,17 +3,17 @@
 nightmare_first::nightmare_first(std::string objectName, const Vector2f centerPosition) : monster(std::move(objectName), centerPosition)
 {
 	conditional_size_units_ = { 375, 375 };
-	moveSystem.default_speed = 0.0005f;
-	moveSystem.speed = 0.0005f;
+	move_system_.default_speed = 0.0005f;
+	move_system_.speed = 0.0005f;
 	radius_ = 90;
 	hitDistance = 70;
-	strength = 10;
+	strength_ = 10;
 	health_point_ = 100;
-	currentAction = relax;	
-	timeForNewHitSelf = long(2e5);
-	timeAfterHitSelf = timeForNewHitSelf;
-	timeForNewHit = long(1e6);
-	timeAfterHit = timeForNewHit;
+	current_action_ = relax;	
+	time_for_new_hit_self = long(2e5);
+	time_after_hitself_ = time_for_new_hit_self;
+	time_for_new_hit = long(1e6);
+	time_after_hit = time_for_new_hit;
 	to_save_name_ = "nightmare1_";
 	tag = entity_tag::nightmare1;
 }
@@ -33,12 +33,12 @@ Vector2f nightmare_first::calculate_texture_offset()
 
 void nightmare_first::doAttack(world_object* target)
 {
-	if (timeAfterHit >= timeForNewHit)
+	if (time_after_hit >= time_for_new_hit)
 	{
-		if (helper::getDist(position_, boundTarget->get_position()) <= (this->radius_ + boundTarget->get_radius() + hitDistance / 5))
+		if (helper::getDist(position_, bound_target_->get_position()) <= (this->radius_ + bound_target_->get_radius() + hitDistance / 5))
 		{
-			changeAction(commonHit, true, false);
-			timeAfterHit = 0;
+			change_action(commonHit, true, false);
+			time_after_hit = 0;
 		}
 	}
 }
@@ -48,15 +48,15 @@ std::vector<sprite_chain_element*> nightmare_first::prepare_sprites(const long l
 	auto body = new sprite_chain_element(pack_tag::nightmare1, pack_part::stand, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
 	animation_speed_ = 10;
 
-	side spriteSide = directionSystem.side;
-	direction spriteDirection = directionSystem.last_direction;
+	side spriteSide = direction_system_.side;
+	direction spriteDirection = direction_system_.last_direction;
 
-	if (directionSystem.side == right)
+	if (direction_system_.side == right)
 	{
 		spriteSide = left;
 		body->mirrored = true;
 	}
-	if (directionSystem.last_direction == direction::RIGHT || directionSystem.last_direction == direction::UPRIGHT || directionSystem.last_direction == direction::DOWNRIGHT)
+	if (direction_system_.last_direction == direction::RIGHT || direction_system_.last_direction == direction::UPRIGHT || direction_system_.last_direction == direction::DOWNRIGHT)
 	{
 		spriteDirection = direction_system::cut_rights(spriteDirection);
 		body->mirrored = true;
@@ -64,7 +64,7 @@ std::vector<sprite_chain_element*> nightmare_first::prepare_sprites(const long l
 
 	body->direction = direction_system::side_to_direction(spriteSide);
 
-	switch (currentAction)
+	switch (current_action_)
 	{
 	case commonHit:
 	{
@@ -110,7 +110,7 @@ std::vector<sprite_chain_element*> nightmare_first::prepare_sprites(const long l
 
 		if (++current_sprite_[0] > animationLength)
 		{
-			lastAction = currentAction;
+			last_action_ = current_action_;
 			current_sprite_[0] = 1;
 		}
 	}

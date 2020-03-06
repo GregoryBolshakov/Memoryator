@@ -101,7 +101,7 @@ void ClapWhirl::stopping(bool doStand, bool forgetBoundTarget)
 {
 	if (doStand)
 	{
-		this->movePosition = { -1, -1 };
+		this->move_position_ = { -1, -1 };
 		this->direction = Direction::STAND;
 	}
 

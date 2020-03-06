@@ -381,7 +381,7 @@ bool world_handler::fixedClimbingBeyond(Vector2f &pos) const
 
 void world_handler::setItemFromBuildSystem()
 {
-	if (!(buildSystem.instant_build || focusedObject->getCurrentAction() == builds))
+	if (!(buildSystem.instant_build || focusedObject->get_current_action() == builds))
 		return;
 
 	if (buildSystem.selected_object != entity_tag::emptyCell && buildSystem.building_position != Vector2f(-1, -1))
@@ -477,23 +477,23 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 		{
 			//staticGrid.setLockedMicroBlocks(dynamicItem, true, true);
 			//dynamicItem->initMicroBlocks();
-			if (dynamicItem->getRouteGenerationAbility() && dynamicItem->laxMovePosition != Vector2f(-1, -1) && dynamicItem->getCurrentAction() != jerking && dynamicItem->tag != entity_tag::hero)
+			if (dynamicItem->get_route_generation_ability() && dynamicItem->lax_move_position != Vector2f(-1, -1) && dynamicItem->get_current_action() != jerking && dynamicItem->tag != entity_tag::hero)
 			{
 				const auto permissibleDistance = 10;			
 				timeAfterNewRoute = 0;
-				staticGrid.make_route(dynamicItem->get_position(), dynamicItem->laxMovePosition,
-				                     dynamicItem->get_position().x - dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale),
-				                     dynamicItem->get_position().y - dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale),
-				                     dynamicItem->get_position().x + dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale),
-				                     dynamicItem->get_position().y + dynamicItem->sightRange / (worldGenerator.scaleFactor * worldGenerator.mainScale), permissibleDistance);
-				dynamicItem->setRoute(staticGrid.route);
+				staticGrid.make_route(dynamicItem->get_position(), dynamicItem->lax_move_position,
+				                     dynamicItem->get_position().x - dynamicItem->sight_range / (worldGenerator.scaleFactor * worldGenerator.mainScale),
+				                     dynamicItem->get_position().y - dynamicItem->sight_range / (worldGenerator.scaleFactor * worldGenerator.mainScale),
+				                     dynamicItem->get_position().x + dynamicItem->sight_range / (worldGenerator.scaleFactor * worldGenerator.mainScale),
+				                     dynamicItem->get_position().y + dynamicItem->sight_range / (worldGenerator.scaleFactor * worldGenerator.mainScale), permissibleDistance);
+				dynamicItem->set_route(staticGrid.route);
 				staticGrid.set_locked_micro_blocks(dynamicItem, false, true);
 			}
 			else			
-				dynamicItem->changeMovePositionToRoute(dynamicItem->laxMovePosition);
+				dynamicItem->change_move_position_to_route(dynamicItem->lax_move_position);
 
 			if (dynamicItem->route.empty())
-				dynamicItem->changeMovePositionToRoute(dynamicItem->laxMovePosition);
+				dynamicItem->change_move_position_to_route(dynamicItem->lax_move_position);
 			//staticGrid.setLockedMicroBlocks(dynamicItem, false, true);
 		}
 	}
@@ -509,16 +509,16 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 			{
 				routeMicroBlock = dynamicItem->route[0];
 				const auto routePos = Vector2f(routeMicroBlock.first * microBlockSize.x, routeMicroBlock.second * microBlockSize.y);
-				if (helper::getDist(dynamicItem->laxMovePosition, routePos) < helper::getDist(dynamicItem->laxMovePosition, dynamicItem->get_position()) && dynamicItem->route.size() > 1)
+				if (helper::getDist(dynamicItem->lax_move_position, routePos) < helper::getDist(dynamicItem->lax_move_position, dynamicItem->get_position()) && dynamicItem->route.size() > 1)
 					break;
 
 				dynamicItem->route.erase(dynamicItem->route.begin());
 			} while (!dynamicItem->route.empty());
 			
-			dynamicItem->changeMovePositionToRoute(Vector2f(routeMicroBlock.first * microBlockSize.x, routeMicroBlock.second * microBlockSize.y));
+			dynamicItem->change_move_position_to_route(Vector2f(routeMicroBlock.first * microBlockSize.x, routeMicroBlock.second * microBlockSize.y));
 		}
 		else
-			dynamicItem->changeMovePositionToRoute(dynamicItem->laxMovePosition);
+			dynamicItem->change_move_position_to_route(dynamicItem->lax_move_position);
 		//------------------------------------
 
 		dynamicItem->behavior(elapsedTime);
@@ -527,26 +527,26 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 		{
 			if (dynamicItem == otherDynamicItem)
 				continue;
-			dynamicItem->setTarget(*otherDynamicItem);
+			dynamicItem->set_target(*otherDynamicItem);
 		}
 		for (auto& otherDynamicItem : localDynamicItems)
 		{
 			if (dynamicItem == otherDynamicItem)
 				continue;
-			dynamicItem->behaviorWithDynamic(otherDynamicItem, elapsedTime);
+			dynamicItem->behavior_with_dynamic(otherDynamicItem, elapsedTime);
 		}
 		for (auto& otherStaticItem : localStaticItems)
-			dynamicItem->behaviorWithStatic(otherStaticItem, elapsedTime);
+			dynamicItem->behavior_with_static(otherStaticItem, elapsedTime);
 		//--------						
 
-		if (dynamicItem->shakeSpeed != -1)
-			cameraSystem.make_shake(4, dynamicItem->shakeSpeed);
+		if (dynamicItem->shake_speed != -1)
+			cameraSystem.make_shake(4, dynamicItem->shake_speed);
 
-		auto newPosition = dynamicItem->doMove(elapsedTime);
+		auto newPosition = dynamicItem->get_move_system().doMove(elapsedTime);
 
 		fixedClimbingBeyond(newPosition);
 
-		newPosition = dynamicItem->doSlip(newPosition, localStaticItems, float(height), elapsedTime);
+		newPosition = dynamicItem->get_move_system().doSlip(newPosition, localStaticItems, float(height), elapsedTime);
 		//newPosition = dynamicItem->doSlipOffDynamic(newPosition, localDynamicItems, height, elapsedTime);
 
 		if (!fixedClimbingBeyond(newPosition))
@@ -613,10 +613,10 @@ std::vector<sprite_chain_element*> world_handler::prepareSprites(const long long
 	const auto screenCenter = Vector2f(screenSize.x / 2, screenSize.y / 2);
 
 	cameraSystem.position.x += (focusedObject->get_position().x + helper::GetScreenSize().x * camera_system::cam_offset.x - cameraSystem.position.x) *
-		(focusedObject->getMoveSystem().speed * float(elapsedTime)) / camera_system::max_camera_distance.x;
+		(focusedObject->get_move_system().speed * float(elapsedTime)) / camera_system::max_camera_distance.x;
 	
 	cameraSystem.position.y += (focusedObject->get_position().y + helper::GetScreenSize().y * camera_system::cam_offset.y - cameraSystem.position.y) *
-		(focusedObject->getMoveSystem().speed * float(elapsedTime)) / camera_system::max_camera_distance.y;
+		(focusedObject->get_move_system().speed * float(elapsedTime)) / camera_system::max_camera_distance.y;
 	
 	cameraSystem.shake_interact(elapsedTime);
 

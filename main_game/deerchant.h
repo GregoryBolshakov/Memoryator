@@ -17,25 +17,25 @@ public:
 	Vector2f calculate_texture_offset() override;
 	std::vector<sprite_chain_element*> prepare_sprites(long long elapsedTime) override;
 	//control
-	void handleInput(bool usedMouse = false) override;
+	void handle_input(bool usedMouse = false) override;
 	void moveEnd(bool animate = false, bool invertDirection = false);
 	[[nodiscard]] int calculateNextMoveEndSprite(int currentSprite = 1) const;
-	void behaviorWithDynamic(dynamic_object* target, long long elapsedTime) override;
-	void behaviorWithStatic(world_object* target, long long elapsedTime) override;
+	void behavior_with_dynamic(dynamic_object* target, long long elapsedTime) override;
+	void behavior_with_static(world_object* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;
 	void onMouseUp(int currentMouseButton, world_object *mouseSelectedObject, Vector2f mouseWorldPos, bool isBuilding = false);
-	void setTarget(dynamic_object& object) override;
+	void set_target(dynamic_object& object) override;
 	void endingPreviousAction();
 	void stopping(bool doStand = false, bool forgetBoundTarget = false, bool offUnsealInventory = false);
 	void calculateSpeedLineDirection(direction lastDirection = direction::STAND, direction direction = direction::STAND);
-	void changeAction(actions newAction, bool resetSpriteNumber, bool rememberLastAction) override;
-	void changeMovePositionToRoute(Vector2f newPosition) override { if (currentAction != jerking) movePosition = newPosition; };
+	void change_action(actions newAction, bool resetSpriteNumber, bool rememberLastAction) override;
+	void change_move_position_to_route(Vector2f newPosition) override { if (current_action_ != jerking) move_position_ = newPosition; };
 	[[nodiscard]] Vector2f getBeltPosition() const;
 
 	void jerk(float power, float deceleration, Vector2f destinationPoint = Vector2f(-1, -1)) override;
 	void jerkInteract(long long elapsedTime);
 	void speedInteract(long long elapsedTime);
-	void fightInteract(long long elapsedTime, dynamic_object* target = nullptr) override;
+	void fight_interact(long long elapsedTime, dynamic_object* target = nullptr) override;
 	void animationSmoothInteract(long long elapsedTime);
 	void animationSmooth();
 

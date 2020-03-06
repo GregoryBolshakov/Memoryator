@@ -3,17 +3,17 @@
 nightmare_third::nightmare_third(std::string objectName, Vector2f centerPosition) : monster(std::move(objectName), centerPosition)
 {
 	conditional_size_units_ = { 600, 600 };
-	moveSystem.default_speed = 0.0003f;
-	moveSystem.speed = 0.0005f;
+	move_system_.default_speed = 0.0003f;
+	move_system_.speed = 0.0005f;
 	radius_ = 120;
 	hitDistance = 120;
-	strength = 25;
+	strength_ = 25;
 	health_point_ = 300;
-	currentAction = relax;
-	timeForNewHitSelf = long(6e5);
-	timeAfterHitSelf = timeForNewHitSelf;
-	timeForNewHit = long(1e6);
-	timeAfterHit = timeForNewHit;
+	current_action_ = relax;
+	time_for_new_hit_self = long(6e5);
+	time_after_hitself_ = time_for_new_hit_self;
+	time_for_new_hit = long(1e6);
+	time_after_hit = time_for_new_hit;
 	to_save_name_ = "nightmare3_";
 	tag = entity_tag::nightmare3;
 }
@@ -32,18 +32,18 @@ Vector2f nightmare_third::calculate_texture_offset()
 
 void nightmare_third::doAttack(world_object* target)
 {
-	if (timeAfterHit >= timeForNewHit)
+	if (time_after_hit >= time_for_new_hit)
 	{
-		if (helper::getDist(position_, boundTarget->get_position()) <= (this->radius_ + boundTarget->get_radius() + hitDistance / 3))
+		if (helper::getDist(position_, bound_target_->get_position()) <= (this->radius_ + bound_target_->get_radius() + hitDistance / 3))
 		{
-			changeAction(commonHit, true, false);
-			timeAfterHit = 0;
+			change_action(commonHit, true, false);
+			time_after_hit = 0;
 		}
 		else
-			if (helper::getDist(position_, boundTarget->get_position()) > this->radius_ + boundTarget->get_radius() + hitDistance * 2)
+			if (helper::getDist(position_, bound_target_->get_position()) > this->radius_ + bound_target_->get_radius() + hitDistance * 2)
 			{
-				changeAction(directHit, true, false);
-				timeAfterHit = 0;
+				change_action(directHit, true, false);
+				time_after_hit = 0;
 			}
 		
 	}	
@@ -51,18 +51,18 @@ void nightmare_third::doAttack(world_object* target)
 
 void nightmare_third::endingPreviousAction()
 {
-	if (lastAction == combatState)
-		changeAction(relax, true, false);
-	if (lastAction == commonHit)
-		changeAction(combatState, true, false);	
-	if (lastAction == directHit)	
-		changeAction(relax, true, false);	
-	lastAction = relax;
+	if (last_action_ == combatState)
+		change_action(relax, true, false);
+	if (last_action_ == commonHit)
+		change_action(combatState, true, false);	
+	if (last_action_ == directHit)	
+		change_action(relax, true, false);	
+	last_action_ = relax;
 }
 
 void nightmare_third::on_sprite_change()
 {
-	if (currentAction == directHit && current_sprite_[0] == 5)
+	if (current_action_ == directHit && current_sprite_[0] == 5)
 	{
 		birth_dynamic_info whirl;
 		whirl.position = position_;

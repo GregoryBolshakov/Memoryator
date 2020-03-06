@@ -5,13 +5,13 @@ using namespace sf;
 neutral_mob::neutral_mob(std::string objectName, Vector2f centerPosition) : dynamic_object(std::move(objectName), centerPosition)
 {
 	current_sprite_[0] = 1;
-	currentAction = relax;
+	current_action_ = relax;
 }
 
 neutral_mob::~neutral_mob()
 = default;
 
-void neutral_mob::setTarget(dynamic_object& object)
+void neutral_mob::set_target(dynamic_object& object)
 {
 	/*if (object.tag == Tag::noose)
 		return;
@@ -22,15 +22,15 @@ void neutral_mob::setTarget(dynamic_object& object)
 	}*/
 
 	if (object.tag == entity_tag::hero)
-		boundTarget = &object;
+		bound_target_ = &object;
 	}
 
-void neutral_mob::behaviorWithDynamic(dynamic_object* target, long long elapsedTime)
+void neutral_mob::behavior_with_dynamic(dynamic_object* target, long long elapsedTime)
 {
 	
 }
 
-void neutral_mob::behaviorWithStatic(world_object* target, long long elapsedTime)
+void neutral_mob::behavior_with_static(world_object* target, long long elapsedTime)
 {
 
 }
@@ -39,43 +39,43 @@ void neutral_mob::behavior(long long elapsedTime)
 {
 	if (health_point_ <= 0)
 	{
-		changeAction(dead, true);
-		directionSystem.direction = direction::STAND;
+		change_action(dead, true);
+		direction_system_.direction = direction::STAND;
 		return;
 	}
-	fightInteract(elapsedTime);
+	fight_interact(elapsedTime);
 
-	directionSystem.side = direction_system::calculate_side(position_, movePosition);
+	direction_system_.side = direction_system::calculate_side(position_, move_position_);
 	//return;
-	if (boundTarget == nullptr)
+	if (bound_target_ == nullptr)
 		return;
-	const float distanceToTarget = helper::getDist(this->position_, boundTarget->get_position());
+	const float distanceToTarget = helper::getDist(this->position_, bound_target_->get_position());
 
-	if (distanceToTarget <= sightRange)
+	if (distanceToTarget <= sight_range)
 	{
-		changeAction(move, false, true);
-		movePosition = Vector2f(position_.x - (boundTarget->get_position().x - position_.x), position_.y - (boundTarget->get_position().y - position_.y));
+		change_action(move, false, true);
+		move_position_ = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
 	}
 	else
 	{
-		if (currentAction == move)
+		if (current_action_ == move)
 		{
-			if (distanceToTarget >= sightRange * 1.5)
+			if (distanceToTarget >= sight_range * 1.5)
 			{
-				changeAction(relax, true, true);
-				directionSystem.direction = direction::STAND;
-				movePosition = { -1, -1 };
+				change_action(relax, true, true);
+				direction_system_.direction = direction::STAND;
+				move_position_ = { -1, -1 };
 			}
 			else
-				movePosition = Vector2f(position_.x - (boundTarget->get_position().x - position_.x), position_.y - (boundTarget->get_position().y - position_.y));
+				move_position_ = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
 		}
 	}
 
 	distanceToNearest = 10e6;
-	boundTarget = nullptr;
+	bound_target_ = nullptr;
 }
 
-void neutral_mob::fightInteract(long long elapsedTime, dynamic_object* target)
+void neutral_mob::fight_interact(long long elapsedTime, dynamic_object* target)
 {
-	moveSystem.push_away(elapsedTime);
+	move_system_.push_away(elapsedTime);
 }

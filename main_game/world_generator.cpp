@@ -103,9 +103,8 @@ void world_generator::generate()
 {	
 	staticGrid->bound_dynamic_matrix(&dynamicGrid->micro_block_matrix);	
 
-	initializeDynamicItem(entity_tag::hero, Vector2f(15800, 15800), "hero");	
-	initializeStaticItem(entity_tag::brazier, Vector2f(16300, 16300), 1, "brazier");
-	//initializeDynamicItem(Tag::nightmare1, Vector2f(15500, 15500), "enemy");
+	initializeDynamicItem(entity_tag::hero, Vector2f(15800, 16300), "hero");	
+	initializeStaticItem(entity_tag::brazier, Vector2f(16300, 15800), 1, "brazier");
 
 	// world generation
 	initBiomesGenerationInfo();
@@ -178,7 +177,7 @@ void world_generator::inBlockGenerate(const int blockIndex)
 	generateGround(blockIndex);
 
 	//block filling
-	//return;
+	return;
 
 	for (auto x = blockTransform.left; x < blockTransform.left + blockTransform.width; x += 100)
 	{
@@ -292,7 +291,7 @@ void world_generator::perimeterGeneration()
 		ceil(characterPosition.x + (screenSize.x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)),
 		ceil(characterPosition.y + (screenSize.y / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)));
 
-	if (focusedObject->getDirectionSystem().direction != direction::STAND)
+	if (focusedObject->get_direction_system().direction != direction::STAND)
 	{
 		for (auto& block : staticGrid->get_blocks_around(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y))
 		{

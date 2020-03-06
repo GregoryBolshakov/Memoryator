@@ -3,7 +3,6 @@
 #include "deer.h"
 #include "deerchant.h"
 
-
 using namespace sf;
 
 noose::noose(const std::string& objectName, const Vector2f centerPosition, world_object* owner) : dynamic_object(objectName, centerPosition)
@@ -12,14 +11,14 @@ noose::noose(const std::string& objectName, const Vector2f centerPosition, world
 	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
 	this->owner = owner;
-	moveSystem.default_speed = 0.0007f;
-	moveSystem.speed = moveSystem.default_speed;
+	move_system_.default_speed = 0.0007f;
+	move_system_.speed = move_system_.default_speed;
 	animation_speed_ = 10;
 	animationLength = 8;
 	radius_ = 50;
-	currentAction = move;
-	routeGenerationAbility = false;
-	moveSystem.can_crash_into_dynamic = false;
+	current_action_ = move;
+	route_generation_ability_ = false;
+	move_system_.can_crash_into_dynamic = false;
 	noose::jerk(2, 1);
 	to_save_name_ = "noose";
 	tag = entity_tag::noose;
@@ -37,13 +36,13 @@ Vector2f noose::calculate_texture_offset()
 	return {0.0F, texture_box_.height / 1.8F};
 }
 
-void noose::setTarget(dynamic_object& object)
+void noose::set_target(dynamic_object& object)
 {
 }
 
-void noose::behaviorWithDynamic(dynamic_object* target, long long /*elapsedTime*/)
+void noose::behavior_with_dynamic(dynamic_object* target, long long /*elapsedTime*/)
 {
-	if (currentAction == dead)
+	if (current_action_ == dead)
 	{
 		return;
 	}
@@ -54,10 +53,10 @@ void noose::behaviorWithDynamic(dynamic_object* target, long long /*elapsedTime*
 
 		if (helper::getDist(position_, deer->getHeadPosition()) <= radius_ + target->get_radius())
 		{
-			boundTarget = target;
-			if (deer->getOwner() == nullptr && deer->getCurrentAction() != commonHit)
+			bound_target_ = target;
+			if (deer->getOwner() == nullptr && deer->get_current_action() != commonHit)
 			{
-				deer->changeAction(commonHit, true, false);
+				deer->change_action(commonHit, true, false);
 			}
 			if (owner != nullptr)
 			{
@@ -67,9 +66,9 @@ void noose::behaviorWithDynamic(dynamic_object* target, long long /*elapsedTime*
 	}
 }
 
-void noose::behaviorWithStatic(world_object* /*target*/, long long /*elapsedTime*/)
+void noose::behavior_with_static(world_object* /*target*/, long long /*elapsedTime*/)
 {
-	if (currentAction == dead)
+	if (current_action_ == dead)
 	{
 		return;
 	}
@@ -77,7 +76,7 @@ void noose::behaviorWithStatic(world_object* /*target*/, long long /*elapsedTime
 
 void noose::behavior(long long elapsedTime)
 {
-	if (currentAction == dead)
+	if (current_action_ == dead)
 	{
 		z_coordinate_ = 0;
 		return;
@@ -93,27 +92,27 @@ void noose::behavior(long long elapsedTime)
 		ownerGlobalBounds = owner->get_conditional_size_units();
 	}
 
-	if (boundTarget != nullptr && owner != nullptr)
+	if (bound_target_ != nullptr && owner != nullptr)
 	{
 		if (helper::getDist(position_, owner->get_position()) >= maximumLength)
 		{
-			auto deer = dynamic_cast<::deer*>(boundTarget);
+			auto deer = dynamic_cast<::deer*>(bound_target_);
 			if (deer != nullptr)
 			{
 				deer->setOwner(nullptr);
 			}
 			stopping(true, true);
-			changeAction(dead, true, false);
+			change_action(dead, true, false);
 			owner = nullptr;
 		}
 	}
 
-	if (boundTarget != nullptr)
+	if (bound_target_ != nullptr)
 	{
-		auto deer = dynamic_cast<::deer*>(boundTarget);
+		auto deer = dynamic_cast<::deer*>(bound_target_);
 		position_ = deer->getHeadPosition();
-		moveSystem.speed = 0;
-		changeAction(relax, false, true);
+		move_system_.speed = 0;
+		change_action(relax, false, true);
 	}
 }
 
@@ -131,39 +130,39 @@ void noose::stopping(bool doStand, bool forgetBoundTarget)
 {
 	if (doStand)
 	{
-		this->movePosition = {-1, -1};
-		directionSystem.direction = direction::STAND;
+		this->move_position_ = {-1, -1};
+		direction_system_.direction = direction::STAND;
 	}
 
-	if (forgetBoundTarget && boundTarget != nullptr)
+	if (forgetBoundTarget && bound_target_ != nullptr)
 	{
-		boundTarget->is_processed = false;
-		boundTarget = nullptr;
+		bound_target_->is_processed = false;
+		bound_target_ = nullptr;
 	}
 }
 
 void noose::endingPreviousAction()
 {
-	if (lastAction == jerking)
+	if (last_action_ == jerking)
 	{
-		currentAction = dead;
+		current_action_ = dead;
 	}
-	lastAction = relax;
+	last_action_ = relax;
 }
 
 void noose::jerkInteract(const long long elapsedTime)
 {
-	if (currentAction == jerking)
+	if (current_action_ == jerking)
 	{
-		if (jerkTime > 0)
+		if (jerk_time_ > 0)
 		{
-			jerkTime -= elapsedTime;
-			moveSystem.speed = jerkDistance / float(jerkDuration) * jerkPower * float(pow(float(jerkTime) / float(jerkDuration), jerkDeceleration));
-			moveSystem.speed = std::max(moveSystem.default_speed / jerkDeceleration, moveSystem.speed);
+			jerk_time_ -= elapsedTime;
+			move_system_.speed = jerk_distance_ / float(jerk_duration_) * jerk_power_ * float(pow(float(jerk_time_) / float(jerk_duration_), jerk_deceleration_));
+			move_system_.speed = std::max(move_system_.default_speed / jerk_deceleration_, move_system_.speed);
 		}
 		else
 		{
-			moveSystem.speed = 0;
+			move_system_.speed = 0;
 		}
 	}
 }
@@ -171,28 +170,28 @@ void noose::jerkInteract(const long long elapsedTime)
 void noose::jerk(const float power, const float deceleration, Vector2f /*destinationPoint*/)
 {
 	stopping(false, false);
-	this->jerkPower = power;
-	this->jerkDeceleration = deceleration;
-	this->jerkDuration = 1e6;
-	this->jerkTime = this->jerkDuration;
-	currentAction = jerking;
-	jerkDistance = 1400;
+	this->jerk_power_ = power;
+	this->jerk_deceleration_ = deceleration;
+	this->jerk_duration_ = long(1e6);
+	this->jerk_time_ = this->jerk_duration_;
+	current_action_ = jerking;
+	jerk_distance_ = 1400;
 	current_sprite_[0] = 1;
 
 	const auto mousePos = Vector2f(Mouse::getPosition());
 	const auto screenCenter = Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2);
-	const auto coeff = jerkDistance / helper::getDist(mousePos, screenCenter);
-	laxMovePosition = Vector2f(owner->get_position().x + (mousePos.x - screenCenter.x) * coeff, owner->get_position().y + (mousePos.y - screenCenter.y) * coeff);
+	const auto coeff = jerk_distance_ / helper::getDist(mousePos, screenCenter);
+	lax_move_position = Vector2f(owner->get_position().x + (mousePos.x - screenCenter.x) * coeff, owner->get_position().y + (mousePos.y - screenCenter.y) * coeff);
 }
 
-void noose::fightInteract(long long elapsedTime, dynamic_object* target)
+void noose::fight_interact(long long elapsedTime, dynamic_object* target)
 {
 }
 
 void noose::rotateAndExtend(sprite_chain_element* rope, sprite_chain_element* loop) const
 {
 	auto localElongation = ropeElongation;
-	if (currentAction == relax)
+	if (current_action_ == relax)
 	{
 		localElongation = 1;
 	}
@@ -211,7 +210,7 @@ void noose::rotateAndExtend(sprite_chain_element* rope, sprite_chain_element* lo
 		}
 	}
 
-	if (currentAction != relax)
+	if (current_action_ != relax)
 	{
 		loop->rotation = rope->rotation + 180;
 		loop->offset.x -= sin(loop->rotation / 180 * pi) * texture_box_offset_.y; // rotational position correction
@@ -225,7 +224,7 @@ void noose::rotateAndExtend(sprite_chain_element* rope, sprite_chain_element* lo
 
 		// change position to hero belt
 		const auto dynOwner = dynamic_cast<deerchant*>(owner);
-		if ((dynOwner != nullptr) && currentAction != dead)
+		if ((dynOwner != nullptr) && current_action_ != dead)
 		{
 			rope->position = dynOwner->getBeltPosition();
 			rope->offset = Vector2f(rope->offset.x + rope->position.x - position_.x, rope->offset.y + rope->position.y - position_.y);
@@ -241,7 +240,7 @@ std::vector<sprite_chain_element*> noose::prepare_sprites(long long elapsedTime)
 
 	loopSprite->number = current_sprite_[0];
 
-	switch (currentAction)
+	switch (current_action_)
 	{
 	case relax:
 		{
@@ -291,7 +290,7 @@ std::vector<sprite_chain_element*> noose::prepare_sprites(long long elapsedTime)
 	default: ;
 	}
 
-	if (currentAction == move)
+	if (current_action_ == move)
 	{
 		animationLength = 13;
 		animation_speed_ = 10;
@@ -311,7 +310,7 @@ std::vector<sprite_chain_element*> noose::prepare_sprites(long long elapsedTime)
 
 		if (++current_sprite_[0] > animationLength)
 		{
-			lastAction = currentAction;
+			last_action_ = current_action_;
 			current_sprite_[0] = 1;
 		}
 	}

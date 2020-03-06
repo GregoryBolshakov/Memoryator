@@ -7,20 +7,20 @@ deer::deer(const std::string& objectName, const Vector2f centerPosition) : neutr
 	conditional_size_units_ = {360, 300};
 	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
-	moveSystem.default_speed = 0.00085F;
+	move_system_.default_speed = 0.00085F;
 	//defaultSpeed = 0.0002f;
-	moveSystem.speed = moveSystem.default_speed;
+	move_system_.speed = move_system_.default_speed;
 	animation_speed_ = 10;
 	animationLength = 8;
 	radius_ = 70;
-	strength = 10;
-	sightRange = conditional_size_units_.x * 3;
+	strength_ = 10;
+	sight_range = conditional_size_units_.x * 3;
 	morality = 5; // from 1 to 10
 	fear = 0;
 	health_point_ = 50;
-	currentAction = relax;
-	timeForNewHitSelf = long(6e5);
-	timeAfterHitSelf = timeForNewHitSelf;
+	current_action_ = relax;
+	time_for_new_hit_self = long(6e5);
+	time_after_hitself_ = time_for_new_hit_self;
 	timeForNewHit = 10e6;
 	to_save_name_ = "deer";
 	tag = entity_tag::deer;
@@ -36,79 +36,79 @@ Vector2f deer::calculate_texture_offset()
 	return {texture_box_.width / 2, texture_box_.height * 7 / 8};
 }
 
-void deer::behaviorWithStatic(world_object* target, long long elapsedTime)
+void deer::behavior_with_static(world_object* target, long long elapsedTime)
 {
 }
 
 void deer::behavior(const long long elapsedTime)
 {
 	endingPreviousAction();
-	directionSystem.calculate_direction();
-	fightInteract(elapsedTime);
+	direction_system_.calculate_direction();
+	fight_interact(elapsedTime);
 
 	if (health_point_ <= 0)
 	{
-		changeAction(dead, true);
-		directionSystem.direction = direction::STAND;
+		change_action(dead, true);
+		direction_system_.direction = direction::STAND;
 		return;
 	}
 
 	if (this->owner != nullptr)
 	{
-		moveSystem.speed = moveSystem.default_speed;
-		if (currentAction == commonHit)
+		move_system_.speed = move_system_.default_speed;
+		if (current_action_ == commonHit)
 		{
-			laxMovePosition = {-1, -1};
+			lax_move_position = {-1, -1};
 			return;
 		}
-		directionSystem.side = direction_system::calculate_side(position_, owner->get_position());
-		if (helper::getDist(position_, owner->get_position()) > sightRange / 2)
+		direction_system_.side = direction_system::calculate_side(position_, owner->get_position());
+		if (helper::getDist(position_, owner->get_position()) > sight_range / 2)
 		{
-			changeAction(moveSlowly, false, false);
-			laxMovePosition = owner->get_position();
+			change_action(moveSlowly, false, false);
+			lax_move_position = owner->get_position();
 		}
-		else if (helper::getDist(position_, owner->get_position()) <= sightRange / 2.5 && currentAction != relax)
+		else if (helper::getDist(position_, owner->get_position()) <= sight_range / 2.5 && current_action_ != relax)
 		{
-			changeAction(relax, true, false);
-			laxMovePosition = {-1, -1};
+			change_action(relax, true, false);
+			lax_move_position = {-1, -1};
 		}
 		return;
 	}
 
-	directionSystem.side = direction_system::calculate_side(position_, laxMovePosition);
+	direction_system_.side = direction_system::calculate_side(position_, lax_move_position);
 
-	if (boundTarget == nullptr)
+	if (bound_target_ == nullptr)
 	{
 		return;
 	}
 
-	const auto distanceToTarget = helper::getDist(this->position_, boundTarget->get_position());
+	const auto distanceToTarget = helper::getDist(this->position_, bound_target_->get_position());
 	//speed = std::max(defaultSpeed, (defaultSpeed * 10) * (1 - (distanceToTarget) / sightRange * 1.5f));
-	animation_speed_ = std::max(0.0004F, 0.0003F * moveSystem.speed / moveSystem.default_speed);
+	animation_speed_ = std::max(0.0004F, 0.0003F * move_system_.speed / move_system_.default_speed);
 
-	if (distanceToTarget <= sightRange)
+	if (distanceToTarget <= sight_range)
 	{
-		changeAction(move, false, true);
-		laxMovePosition = Vector2f(position_.x - (boundTarget->get_position().x - position_.x), position_.y - (boundTarget->get_position().y - position_.y));
+		change_action(move, false, true);
+		lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
 	}
 	else
 	{
-		if (currentAction == move)
+		if (current_action_ == move)
 		{
-			if (distanceToTarget >= sightRange * 1.5)
+			if (distanceToTarget >= sight_range * 1.5)
 			{
-				changeAction(relax, true, true);
-				directionSystem.direction = direction::STAND;
-				laxMovePosition = {-1, -1};
+				change_action(relax, true, true);
+				direction_system_.direction = direction::STAND;
+				lax_move_position = {-1, -1};
 			}
 			else
 			{
-				laxMovePosition = Vector2f(position_.x - (boundTarget->get_position().x - position_.x), position_.y - (boundTarget->get_position().y - position_.y));
+				lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
 			}
 		}
 	}
 	distanceToNearest = 10e6;
-	boundTarget = nullptr;
+	bound_target_ = nullptr;
 }
 
 Vector2f deer::get_build_position(std::vector<world_object*> /*visibleItems*/, float /*scaleFactor*/, Vector2f /*cameraPosition*/)
@@ -123,12 +123,12 @@ int deer::get_build_type(Vector2f /*ounPos*/, Vector2f /*otherPos*/)
 
 void deer::endingPreviousAction()
 {
-	if (lastAction == commonHit)
+	if (last_action_ == commonHit)
 	{
-		currentAction = relax;
+		current_action_ = relax;
 	}
 
-	lastAction = relax;
+	last_action_ = relax;
 }
 
 void deer::jerk(float /*power*/, float /*deceleration*/, Vector2f /*destinationPoint*/)
@@ -139,7 +139,7 @@ Vector2f deer::getHeadPosition()
 {
 	const auto upperLeft = Vector2f(position_.x - texture_box_offset_.x, position_.y - texture_box_offset_.y);
 
-	if (directionSystem.last_direction == direction::UP)
+	if (direction_system_.last_direction == direction::UP)
 	{
 		if (current_sprite_[0] == 1)
 		{
@@ -170,7 +170,7 @@ Vector2f deer::getHeadPosition()
 			return {upperLeft.x + conditional_size_units_.x * 0.575F, upperLeft.y + conditional_size_units_.y * 0.075F};
 		}
 	}
-	if (directionSystem.last_direction == direction::DOWN)
+	if (direction_system_.last_direction == direction::DOWN)
 	{
 		if (current_sprite_[0] == 1)
 		{
@@ -201,7 +201,7 @@ Vector2f deer::getHeadPosition()
 			return {upperLeft.x + conditional_size_units_.x * 0.445F, upperLeft.y + conditional_size_units_.y * 0.182F};
 		}
 	}
-	if (direction_system::cut_diagonals(directionSystem.last_direction) == direction::LEFT)
+	if (direction_system::cut_diagonals(direction_system_.last_direction) == direction::LEFT)
 	{
 		if (current_sprite_[0] == 1)
 		{
@@ -232,7 +232,7 @@ Vector2f deer::getHeadPosition()
 			return {upperLeft.x + conditional_size_units_.x * 0.277F, upperLeft.y + conditional_size_units_.y * 0.138F};
 		}
 	}
-	if (direction_system::cut_diagonals(directionSystem.last_direction) == direction::RIGHT)
+	if (direction_system::cut_diagonals(direction_system_.last_direction) == direction::RIGHT)
 	{
 		if (current_sprite_[0] == 1)
 		{
@@ -271,13 +271,13 @@ std::vector<sprite_chain_element*> deer::prepare_sprites(long long elapsedTime)
 	auto body = new sprite_chain_element(pack_tag::deer, pack_part::stand, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
 	animation_speed_ = 10;
 
-	auto spriteDirection = direction_system::cut_diagonals(directionSystem.last_direction);
+	auto spriteDirection = direction_system::cut_diagonals(direction_system_.last_direction);
 
-	if (directionSystem.side == right)
+	if (direction_system_.side == right)
 	{
 		body->mirrored = true;
 	}
-	if (directionSystem.last_direction == direction::RIGHT || directionSystem.last_direction == direction::UPRIGHT || directionSystem.last_direction == direction::DOWNRIGHT)
+	if (direction_system_.last_direction == direction::RIGHT || direction_system_.last_direction == direction::UPRIGHT || direction_system_.last_direction == direction::DOWNRIGHT)
 	{
 		spriteDirection = direction_system::cut_rights(spriteDirection);
 		body->mirrored = true;
@@ -285,7 +285,7 @@ std::vector<sprite_chain_element*> deer::prepare_sprites(long long elapsedTime)
 
 	body->direction = spriteDirection;
 
-	switch (currentAction)
+	switch (current_action_)
 	{
 	case relax:
 		{
@@ -325,7 +325,7 @@ std::vector<sprite_chain_element*> deer::prepare_sprites(long long elapsedTime)
 
 		if (++current_sprite_[0] > animationLength)
 		{
-			lastAction = currentAction;
+			last_action_ = current_action_;
 			current_sprite_[0] = 1;
 		}
 	}

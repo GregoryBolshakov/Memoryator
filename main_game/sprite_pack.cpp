@@ -268,7 +268,6 @@ Sprite sprite_pack::get_sprite(const pack_part part, const direction direction, 
         result.rotate(-90);
         result.setOrigin(invertedOffset.y + float(spriteInfo.frame.h), -invertedOffset.x);
     }
-    result.~Sprite();
 
     return result;
 }

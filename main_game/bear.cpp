@@ -7,19 +7,19 @@ bear::bear(const std::string& objectName, Vector2f centerPosition) : neutral_mob
 	conditional_size_units_ = { 432, 384 };
 	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
-	moveSystem.default_speed = 0.0003f;
-	moveSystem.speed = 0.0003f;
+	move_system_.default_speed = 0.0003f;
+	move_system_.speed = 0.0003f;
 	animation_speed_ = float(5e-4);
 	animationLength = 8;
 	radius_ = 70;
-	strength = 10;
-	sightRange = conditional_size_units_.x * 3;
+	strength_ = 10;
+	sight_range = conditional_size_units_.x * 3;
 	morality = 5; // from 1 to 10
 	fear = 0;
 	health_point_ = 50;
-	currentAction = relax;	
-	timeForNewHitSelf = long(6e5);
-	timeAfterHitSelf = timeForNewHitSelf;
+	current_action_ = relax;	
+	time_for_new_hit_self = long(6e5);
+	time_after_hitself_ = time_for_new_hit_self;
 	timeForNewHit = 10e6;
 	to_save_name_ = "bear";
 	tag = entity_tag::bear;
@@ -35,7 +35,7 @@ Vector2f bear::calculate_texture_offset()
 	return { texture_box_.width / 2, texture_box_.height * 7 / 8 };
 }
 
-void bear::behaviorWithStatic(world_object* target, long long elapsedTime)
+void bear::behavior_with_static(world_object* target, long long elapsedTime)
 {
 
 }
@@ -43,66 +43,66 @@ void bear::behaviorWithStatic(world_object* target, long long elapsedTime)
 void bear::behavior(long long elapsedTime)
 {
 	endingPreviousAction();
-	fightInteract(elapsedTime);
+	fight_interact(elapsedTime);
 	if (health_point_ <= 0)
 	{
-		changeAction(dead, true);
-		directionSystem.direction = direction::STAND;
+		change_action(dead, true);
+		direction_system_.direction = direction::STAND;
 		return;
 	}
 
 	if (this->owner != nullptr)
 	{
-		moveSystem.speed = moveSystem.default_speed;
-		if (currentAction == commonHit)
+		move_system_.speed = move_system_.default_speed;
+		if (current_action_ == commonHit)
 		{
-			movePosition = position_;
+			move_position_ = position_;
 			return;
 		}
-		directionSystem.side = direction_system::calculate_side(position_, owner->get_position());
-		if (helper::getDist(position_, owner->get_position()) > sightRange / 2)
+		direction_system_.side = direction_system::calculate_side(position_, owner->get_position());
+		if (helper::getDist(position_, owner->get_position()) > sight_range / 2)
 		{
-			changeAction(grab, false, false);
-			movePosition = owner->get_position();
+			change_action(grab, false, false);
+			move_position_ = owner->get_position();
 		}
 		else
-			if (helper::getDist(position_, owner->get_position()) <= sightRange / 2.5 && currentAction != relax)
+			if (helper::getDist(position_, owner->get_position()) <= sight_range / 2.5 && current_action_ != relax)
 			{
-				changeAction(relax, true, false);
-				movePosition = position_;
+				change_action(relax, true, false);
+				move_position_ = position_;
 			}
 		return;
 	}
 
-	directionSystem.side = direction_system::calculate_side(position_, movePosition);
+	direction_system_.side = direction_system::calculate_side(position_, move_position_);
 
-	if (boundTarget == nullptr)
+	if (bound_target_ == nullptr)
 		return;
-	const float distanceToTarget = helper::getDist(this->position_, boundTarget->get_position());
-	moveSystem.speed = std::max(moveSystem.default_speed, (moveSystem.default_speed * 10) * (1 - (distanceToTarget) / sightRange * 1.5f));
+	const float distanceToTarget = helper::getDist(this->position_, bound_target_->get_position());
+	move_system_.speed = std::max(move_system_.default_speed, (move_system_.default_speed * 10) * (1 - (distanceToTarget) / sight_range * 1.5f));
 	//animationSpeed = std::max(0.0003f, 0.0003f * speed / defaultSpeed);
 
-	if (distanceToTarget <= sightRange)
+	if (distanceToTarget <= sight_range)
 	{
-		changeAction(move, false, true);
-		movePosition = Vector2f(position_.x - (boundTarget->get_position().x - position_.x), position_.y - (boundTarget->get_position().y - position_.y));
+		change_action(move, false, true);
+		move_position_ = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
 	}
 	else
 	{
-		if (currentAction == move)
+		if (current_action_ == move)
 		{
-			if (distanceToTarget >= sightRange * 1.5)
+			if (distanceToTarget >= sight_range * 1.5)
 			{
-				changeAction(relax, true, true);
-				directionSystem.direction = direction::STAND;
-				movePosition = { -1, -1 };
+				change_action(relax, true, true);
+				direction_system_.direction = direction::STAND;
+				move_position_ = { -1, -1 };
 			}
 			else
-				movePosition = Vector2f(position_.x - (boundTarget->get_position().x - position_.x), position_.y - (boundTarget->get_position().y - position_.y));
+				move_position_ = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
 		}
 	}
 	distanceToNearest = 10e6;
-	boundTarget = nullptr;
+	bound_target_ = nullptr;
 }
 
 Vector2f bear::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
@@ -117,10 +117,10 @@ int bear::get_build_type(Vector2f ounPos, Vector2f otherPos)
 
 void bear::endingPreviousAction()
 {
-	if (lastAction == commonHit)
-		currentAction = relax;
+	if (last_action_ == commonHit)
+		current_action_ = relax;
 
-	lastAction = relax;
+	last_action_ = relax;
 }
 
 void bear::jerk(float power, float deceleration, Vector2f destinationPoint)

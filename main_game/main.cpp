@@ -114,7 +114,7 @@ int main() {
 			if (!console.get_state())
 			{				
 				world.interact(screen_size, time_micro_sec, event);
-				world.focusedObject->handleInput(world.getInventorySystem().get_used_mouse());
+				world.focusedObject->handle_input(world.getInventorySystem().get_used_mouse());
 				ambient_light.update();
 			}
 

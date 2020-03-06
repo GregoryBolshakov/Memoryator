@@ -14,10 +14,10 @@ protected:
 public:
 	neutral_mob(std::string objectName, Vector2f centerPosition);
 	~neutral_mob();
-	void behaviorWithDynamic(dynamic_object* target, long long elapsedTime) override;
-	void behaviorWithStatic(world_object* target, long long elapsedTime) override;
+	void behavior_with_dynamic(dynamic_object* target, long long elapsedTime) override;
+	void behavior_with_static(world_object* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;
-	void setTarget(dynamic_object& object) override;
+	void set_target(dynamic_object& object) override;
 protected:
-	void fightInteract(long long elapsedTime, dynamic_object* target = nullptr) override;
+	void fight_interact(long long elapsedTime, dynamic_object* target = nullptr) override;
 };

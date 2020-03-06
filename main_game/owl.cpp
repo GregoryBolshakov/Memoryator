@@ -10,21 +10,21 @@ owl::owl(const std::string& objectName, Vector2f centerPosition) : neutral_mob(o
 	conditional_size_units_ = { 280, 200 };
 	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
-	moveSystem.default_speed = 0.0006f;
-	moveSystem.speed = 0.0006f;
+	move_system_.default_speed = 0.0006f;
+	move_system_.speed = 0.0006f;
 	animation_speed_ = 0.0008f;
 	animationLength = 8;
 	radius_ = 70;
-	strength = 10;
-	sightRange = helper::GetScreenSize().y * 1 / 2;
+	strength_ = 10;
+	sight_range = helper::GetScreenSize().y * 1 / 2;
 	health_point_ = 50;
-	currentAction = relax;
-	timeAfterHitSelf = 0;
-	timeForNewHitSelf = long(6e5);
+	current_action_ = relax;
+	time_after_hitself_ = 0;
+	time_for_new_hit_self = long(6e5);
 	timeForNewHit = 1000000;
 	to_save_name_ = "owl";
 	tag = entity_tag::owl;
-	moveSystem.can_crash_into_static = false;
+	move_system_.can_crash_into_static = false;
 	z_coordinate_ = 10;
 }
 
@@ -38,31 +38,31 @@ Vector2f owl::calculate_texture_offset()
 	return { texture_box_.width / 2, texture_box_.height * 7 / 8 };
 }
 
-void owl::setTarget(dynamic_object& object)
+void owl::set_target(dynamic_object& object)
 {	
-	if (object.tag == entity_tag::noose || currentAction == absorbs)
+	if (object.tag == entity_tag::noose || current_action_ == absorbs)
 		return;
-	if (helper::getDist(position_, object.get_position()) <= sightRange)
+	if (helper::getDist(position_, object.get_position()) <= sight_range)
 	{
 		if (object.tag == entity_tag::hero)
 		{
-			boundTarget = &object;
+			bound_target_ = &object;
 			distanceToNearest = helper::getDist(position_, object.get_position());
 		}
 	}
 }
 
-void owl::behaviorWithStatic(world_object* target, long long elapsedTime)
+void owl::behavior_with_static(world_object* target, long long elapsedTime)
 {
-	if (currentAction == absorbs)
+	if (current_action_ == absorbs)
 		return;
 
-	if (target->tag == entity_tag::fern && helper::getDist(position_, target->get_position()) <= sightRange * 2 && timeAfterFear >= fearTime)
+	if (target->tag == entity_tag::fern && helper::getDist(position_, target->get_position()) <= sight_range * 2 && timeAfterFear >= fearTime)
 	{
-		if (!(boundTarget && boundTarget->tag == entity_tag::hero && (helper::getDist(position_, boundTarget->get_position()) <= sightRange ||
-			helper::getDist(target->get_position(), boundTarget->get_position()) <= sightRange)))
+		if (!(bound_target_ && bound_target_->tag == entity_tag::hero && (helper::getDist(position_, bound_target_->get_position()) <= sight_range ||
+			helper::getDist(target->get_position(), bound_target_->get_position()) <= sight_range)))
 		{
-			boundTarget = target;
+			bound_target_ = target;
 			distanceToNearest = helper::getDist(position_, target->get_position());
 		}
 	}
@@ -70,11 +70,11 @@ void owl::behaviorWithStatic(world_object* target, long long elapsedTime)
 	if (target->tag == entity_tag::tree)
 	{
 		auto nearestTreeCasted = dynamic_cast<forest_tree*>(target);
-		if (nearestTreeCasted && !(boundTarget && boundTarget->tag == entity_tag::fern))
-			if (boundTarget != nullptr && boundTarget->tag == entity_tag::hero && helper::getDist(nearestTreeCasted->getOwlBase(), position_) < helper::getDist(nearestTreeCasted->getOwlBase(), boundTarget->get_position()) &&
-				helper::getDist(nearestTreeCasted->getOwlBase(), boundTarget->get_position()) > helper::getDist(position_, boundTarget->get_position()))
+		if (nearestTreeCasted && !(bound_target_ && bound_target_->tag == entity_tag::fern))
+			if (bound_target_ != nullptr && bound_target_->tag == entity_tag::hero && helper::getDist(nearestTreeCasted->getOwlBase(), position_) < helper::getDist(nearestTreeCasted->getOwlBase(), bound_target_->get_position()) &&
+				helper::getDist(nearestTreeCasted->getOwlBase(), bound_target_->get_position()) > helper::getDist(position_, bound_target_->get_position()))
 				if ((nearestTree != nullptr && helper::getDist(nearestTreeCasted->getOwlBase(), position_) < helper::getDist(nearestTree->get_position(), position_)) || nearestTree == nullptr)
-					if (helper::getDist(nearestTreeCasted->getOwlBase(), boundTarget->get_position()) > sightRange * 1.2)
+					if (helper::getDist(nearestTreeCasted->getOwlBase(), bound_target_->get_position()) > sight_range * 1.2)
 						nearestTree = target;							
 	}
 }
@@ -82,87 +82,87 @@ void owl::behaviorWithStatic(world_object* target, long long elapsedTime)
 void owl::behavior(long long elapsedTime)
 {
 	endingPreviousAction();
-	fightInteract(elapsedTime);
+	fight_interact(elapsedTime);
 	if (health_point_ <= 0)
 	{
-		changeAction(dead, true);
-		directionSystem.direction = direction::STAND;
+		change_action(dead, true);
+		direction_system_.direction = direction::STAND;
 		return;
 	}
 
 	// first-priority actions
-	if (boundTarget && boundTarget->tag == entity_tag::hero && helper::getDist(position_, boundTarget->get_position()) <= sightRange)
+	if (bound_target_ && bound_target_->tag == entity_tag::hero && helper::getDist(position_, bound_target_->get_position()) <= sight_range)
 			timeAfterFear = 0;	
 	else
 		timeAfterFear += elapsedTime;
 
-	if (currentAction == absorbs)
+	if (current_action_ == absorbs)
 	{
-		movePosition = position_;
+		move_position_ = position_;
 		return;
 	}
 	//-----------------------	
 
-	if (boundTarget == nullptr || boundTarget && boundTarget->tag == entity_tag::hero && helper::getDist(position_, boundTarget->get_position()) > sightRange)
+	if (bound_target_ == nullptr || bound_target_ && bound_target_->tag == entity_tag::hero && helper::getDist(position_, bound_target_->get_position()) > sight_range)
 	{
 		auto nearestTreeCasted = dynamic_cast<forest_tree*>(nearestTree);
 		if (nearestTree && helper::getDist(position_, nearestTreeCasted->getOwlBase()) > radius_)
 			{				
-				changeAction(move, false, true);
-				movePosition = nearestTreeCasted->getOwlBase();
-				directionSystem.side = direction_system::calculate_side(position_, movePosition);
+				change_action(move, false, true);
+				move_position_ = nearestTreeCasted->getOwlBase();
+				direction_system_.side = direction_system::calculate_side(position_, move_position_);
 				return;
 			}
 
-		changeAction(relax, true, true);
-		directionSystem.direction = direction::STAND;
-		movePosition = position_;
+		change_action(relax, true, true);
+		direction_system_.direction = direction::STAND;
+		move_position_ = position_;
 		return;
 	}
 
 	// bouncing to a trap
-	if (boundTarget && boundTarget->tag == entity_tag::fern)
+	if (bound_target_ && bound_target_->tag == entity_tag::fern)
 	{
-		directionSystem.side = direction_system::calculate_side(position_, boundTarget->get_position());
-		if (helper::getDist(position_, boundTarget->get_position()) <= radius_)
+		direction_system_.side = direction_system::calculate_side(position_, bound_target_->get_position());
+		if (helper::getDist(position_, bound_target_->get_position()) <= radius_)
 		{
-			const auto trap = dynamic_cast<fern*>(boundTarget);
-			if (directionSystem.side == right)
+			const auto trap = dynamic_cast<fern*>(bound_target_);
+			if (direction_system_.side == right)
 				mirrored_ = true;
 			else
 				mirrored_ = false;
 			position_ = trap->getEnterPosition();
-			changeAction(absorbs, true, false);
-			movePosition = position_;
+			change_action(absorbs, true, false);
+			move_position_ = position_;
 		}
 		else
 		{
-			changeAction(move, false, true);
-			movePosition = boundTarget->get_position();
+			change_action(move, false, true);
+			move_position_ = bound_target_->get_position();
 		}
 	}
 	//-------------------
 
 	// runaway from enemy
-	if (boundTarget && boundTarget->tag == entity_tag::hero)
+	if (bound_target_ && bound_target_->tag == entity_tag::hero)
 	{
-		const float distanceToTarget = helper::getDist(this->position_, boundTarget->get_position());
-		directionSystem.side = direction_system::calculate_side(position_, movePosition);
-		moveSystem.speed = std::max(moveSystem.default_speed, (moveSystem.default_speed * 10) * (1 - (helper::getDist(position_, boundTarget->get_position()) / sightRange * 1.5f)));
-		animation_speed_ = std::max(0.0008f, 0.0008f * moveSystem.speed / moveSystem.default_speed);
-		if (distanceToTarget <= sightRange)
+		const float distanceToTarget = helper::getDist(this->position_, bound_target_->get_position());
+		direction_system_.side = direction_system::calculate_side(position_, move_position_);
+		move_system_.speed = std::max(move_system_.default_speed, (move_system_.default_speed * 10) * (1 - (helper::getDist(position_, bound_target_->get_position()) / sight_range * 1.5f)));
+		animation_speed_ = std::max(0.0008f, 0.0008f * move_system_.speed / move_system_.default_speed);
+		if (distanceToTarget <= sight_range)
 		{
-			changeAction(move, false, true);
-			float k = (sightRange * 1.3f / (sqrt(pow(boundTarget->get_position().x - position_.x, 2) + pow(boundTarget->get_position().y - position_.y, 2))));
-			movePosition = Vector2f(position_.x + (position_.x - boundTarget->get_position().x) * k, position_.y + (position_.y - boundTarget->get_position().y) * k);
+			change_action(move, false, true);
+			float k = (sight_range * 1.3f / (sqrt(pow(bound_target_->get_position().x - position_.x, 2) + pow(bound_target_->get_position().y - position_.y, 2))));
+			move_position_ = Vector2f(position_.x + (position_.x - bound_target_->get_position().x) * k, position_.y + (position_.y - bound_target_->get_position().y) * k);
 		}
 	}	
 	//-------------------
 
-	if (currentAction != absorbs)
+	if (current_action_ != absorbs)
 	{
 		distanceToNearest = 10e6;
-		boundTarget = nullptr;
+		bound_target_ = nullptr;
 		nearestTree = nullptr;
 	}
 }
@@ -179,15 +179,15 @@ int owl::get_build_type(Vector2f ounPos, Vector2f otherPos)
 
 void owl::endingPreviousAction()
 {
-	if (lastAction == commonHit)
-		currentAction = relax;
-	if (lastAction == absorbs)
+	if (last_action_ == commonHit)
+		current_action_ = relax;
+	if (last_action_ == absorbs)
 	{
-		auto trap = dynamic_cast<fern*>(boundTarget);
+		auto trap = dynamic_cast<fern*>(bound_target_);
 		trap->inventory.emplace_back(entity_tag::owl, 1);
 		delete_promise_on();
 	}
-	lastAction = relax;
+	last_action_ = relax;
 }
 
 void owl::jerk(float power, float deceleration, Vector2f destinationPoint)

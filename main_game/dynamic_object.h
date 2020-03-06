@@ -1,81 +1,79 @@
 #pragma once
+#ifndef DYNAMICOBJECT_H
+#define DYNAMICOBJECT_H
 
 #include "move_system.h"
-#include "terrain_object.h"
 #include "world_object.h"
 
 class dynamic_object : public world_object
 {
 protected:
-	int ellipseSize{};
-	Vector2f movePosition = { -1, -1 };
-	Vector2f focus1, focus2;
-	float strength = 0;
-	long long timeAfterHitSelf = 0;
-	
-	actions currentAction, lastAction = relax;
-	world_object *boundTarget = nullptr;
-	bool routeGenerationAbility = true;
+	move_system move_system_;
+	direction_system direction_system_;
+	int ellipse_size_{};
+	Vector2f move_position_ = { -1, -1 };
+	Vector2f focus1_, focus2_;
+	float strength_ = 0;
+	long long time_after_hitself_ = 0;
+
+	actions current_action_, last_action_ = relax;
+	world_object* bound_target_ = nullptr;
+	bool route_generation_ability_ = true;
 
 	//fight logic
-	virtual void fightInteract(long long elapsedTime, dynamic_object* target = nullptr) = 0;
+	virtual void fight_interact(long long elapsed_time, dynamic_object* target = nullptr) = 0;
 	//-----------
 
-	const long long DEFAULT_PUSH_DURATION = long(2e5);
-	const float DEFAULT_PUSH_SPEED = 0.00025f;
+	const long long default_push_duration_ = long(2e5);
+	const float default_push_speed_ = 0.00025f;
 
-	float jerkPower{};
-	float jerkDeceleration = 0;
-	float jerkDistance = 0;
-	long long jerkDuration = long(1e6);
-	long long jerkTime = 0;
-	bool isJerking = false;
+	float jerk_power_{};
+	float jerk_deceleration_ = 0;
+	float jerk_distance_ = 0;
+	long long jerk_duration_ = long(1e6);
+	long long jerk_time_ = 0;
+	bool is_jerking_ = false;
 public:
 	dynamic_object(std::string objectName, Vector2f centerPosition);
 	virtual ~dynamic_object();
 	int get_sprite_number() override { return current_sprite_[0]; }
-	[[nodiscard]] int getEllipseSize() const { return ellipseSize; }
-	[[nodiscard]] move_system getMoveSystem() const { return moveSystem; }
-	[[nodiscard]] direction_system getDirectionSystem() const { return directionSystem; }
-	[[nodiscard]] float getStrength() const { return strength; }
-	[[nodiscard]] long long getTimeAfterHitSelf() const { return timeAfterHitSelf; }
-	[[nodiscard]] bool getRouteGenerationAbility() const { return routeGenerationAbility; }
-	[[nodiscard]] Vector2f getFocus1() const { return focus1; }
-	[[nodiscard]] Vector2f getFocus2() const { return focus2; }
-	[[nodiscard]] Vector2f getMovePosition() const { return movePosition; }
-	[[nodiscard]] actions getCurrentAction() const { return currentAction; }
-	[[nodiscard]] world_object *getBoundTarget() const { return boundTarget; }
+	[[nodiscard]] int get_ellipse_size() const { return ellipse_size_; }
+	[[nodiscard]] move_system get_move_system() const { return move_system_; }
+	[[nodiscard]] direction_system get_direction_system() const { return direction_system_; }
+	[[nodiscard]] float get_strength() const { return strength_; }
+	[[nodiscard]] long long get_time_after_hit_self() const { return time_after_hitself_; }
+	[[nodiscard]] bool get_route_generation_ability() const { return route_generation_ability_; }
+	[[nodiscard]] Vector2f get_focus1() const { return focus1_; }
+	[[nodiscard]] Vector2f get_focus2() const { return focus2_; }
+	[[nodiscard]] Vector2f get_move_position() const { return move_position_; }
+	[[nodiscard]] actions get_current_action() const { return current_action_; }
+	[[nodiscard]] world_object *get_bound_target() const { return bound_target_; }
 
-	void setCurrentAction(actions action) { this->currentAction = action; }	
-	virtual void changeMovePositionToRoute(Vector2f newPosition) { movePosition = newPosition; }
-	void take_damage(float damage, Vector2f attackerPos = {-1, -1}) override;
-	void setMoveOffset(long long elapsedTime);
-	void setRoute(std::vector<std::pair<int, int>> route) { this->route = std::move(route); }
+	void set_current_action(actions action) { this->current_action_ = action; }	
+	virtual void change_move_position_to_route(Vector2f newPosition) { move_position_ = newPosition; }
+	void take_damage(float damage, Vector2f attacker_pos = {-1, -1}) override;	
+	void set_route(std::vector<std::pair<int, int>> route) { this->route = std::move(route); }
 	void init_micro_blocks() override;
-	virtual void changeAction(actions newAction, bool resetSpriteNumber = false, bool rememberLastAction = false);
-	virtual void handleInput(bool usedMouse = false);
-	virtual void behaviorWithDynamic(dynamic_object* target, long long elapsedTime) = 0;
-	virtual void behaviorWithStatic(world_object* target, long long elapsedTime) = 0;
+	virtual void change_action(actions new_action, bool reset_sprite_number = false, bool remember_last_action = false);
+	virtual void handle_input(bool used_mouse = false);
+	virtual void behavior_with_dynamic(dynamic_object* target, long long elapsed_time) = 0;
+	virtual void behavior_with_static(world_object* target, long long elapsed_time) = 0;
 	virtual void behavior(long long elapsedTime) = 0;
-	virtual void setTarget(dynamic_object &object) = 0;
-	virtual void jerk(float power, float deceleration, Vector2f destinationPoint) = 0;
-
-	move_system moveSystem;
-	direction_system directionSystem;
-	long long timeForNewHitSelf = long(6e5);
-	long long timeAfterHit = 0;
-	long long timeForNewHit = long(100000);
-	float sightRange = 0;
-	float shakeSpeed = -1;
-	bool isIntersectDynamic(Vector2f newPosition, dynamic_object& otherDynamic) const;
+	virtual void set_target(dynamic_object &object) = 0;
+	virtual void jerk(float power, float deceleration, Vector2f destination_point) = 0;
 	
-	Vector2f ellipseSlip(dynamic_object *dynamic, Vector2f newPos, Vector2f destination, Vector2f f1, Vector2f f2, float ellipseSize, float height, long long elapsedTime) const;
-	Vector2f doMove(long long elapsedTime);
-	Vector2f doSlip(Vector2f newPosition, const std::vector<static_object*>& localStaticItems, float height, long long elapsedTime);
-	Vector2f doSlipOffDynamic(Vector2f newPosition, const std::vector<dynamic_object*>& localDynamicItems, float height, long long elapsedTime);
-	Vector2f laxMovePosition = { -1, -1 };
-	std::string lastIntersected = "";
+	long long time_for_new_hit_self = long(6e5);
+	long long time_after_hit = 0;
+	long long time_for_new_hit = long(100000);
+	float sight_range = 0;
+	float shake_speed = -1;
+	auto is_intersect_dynamic(Vector2f new_position, dynamic_object& other_dynamic) const -> bool;
+	
+	Vector2f lax_move_position = { -1, -1 };
+	std::string last_intersected = "";
 	std::vector<std::pair<int, int>> route = { {} };
 
-	std::string debugInfo;
+	std::string debug_info;
 };
+
+#endif

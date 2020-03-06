@@ -1,4 +1,6 @@
 #pragma once
+#ifndef TERRAINOBJECT_H
+#define TERRAINOBJECT_H
 
 #include "static_object.h"
 
@@ -25,3 +27,5 @@ public:
 
 	std::vector<std::pair<Vector2f, Vector2f>> internalEllipses; // focus1 - focus2
 };
+
+#endif

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef WORLDHANDLER_H
+#define WORLDHANDLER_H
 
 #include <unordered_map>
 #include <windows.h>
@@ -125,3 +127,5 @@ private:
 	// Test
 	std::vector<std::pair<entity_tag, int>>* testInv = new std::vector<std::pair<entity_tag, int>>({ {entity_tag::chamomile, 2}, {entity_tag::chamomile, 2}, {entity_tag::chamomile, 2} });
 };
+
+#endif

@@ -13,8 +13,8 @@ public:
 	~owl() override;
 	Vector2f calculate_texture_offset() override;
 	std::vector<sprite_chain_element*> prepare_sprites(long long elapsedTime) override;
-	void setTarget(dynamic_object& object) override;
-	void behaviorWithStatic(world_object* target, long long elapsedTime) override;
+	void set_target(dynamic_object& object) override;
+	void behavior_with_static(world_object* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;
 	void endingPreviousAction();
 	Vector2f get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;

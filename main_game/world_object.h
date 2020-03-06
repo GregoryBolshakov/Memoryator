@@ -1,4 +1,6 @@
 #pragma once
+#ifndef WORLDOBJECT_H
+#define WORLDOBJECT_H
 
 #include <SFML/Graphics.hpp>
 #include <stack>
@@ -118,3 +120,5 @@ protected:
 	std::stack<birth_dynamic_info> birth_dynamics_;
 	std::vector<Vector2i> locked_micro_blocks_ = {};
 };
+
+#endif

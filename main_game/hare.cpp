@@ -9,16 +9,16 @@ hare::hare(const std::string& objectName, Vector2f centerPosition) : neutral_mob
 	conditional_size_units_ = { 180, 150 };
 	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
-	moveSystem.default_speed = 0.0003f;
-	moveSystem.speed = 0.0003f;
+	move_system_.default_speed = 0.0003f;
+	move_system_.speed = 0.0003f;
 	radius_ = 70;
-	strength = 10;
-	sightRange = 720;
+	strength_ = 10;
+	sight_range = 720;
 	health_point_ = 50;
-	currentAction = relax;
-	timeAfterHitSelf = 0;
-	timeForNewHitSelf = long(6e5);
-	timeForNewHit = 1000000;
+	current_action_ = relax;
+	time_after_hitself_ = 0;
+	time_for_new_hit_self = long(6e5);
+	time_for_new_hit = 1000000;
 	to_save_name_ = "hare";
 	tag = entity_tag::hare;
 }
@@ -33,30 +33,30 @@ Vector2f hare::calculate_texture_offset()
 	return { texture_box_.width / 2, texture_box_.height * 7 / 8 };
 }
 
-void hare::setTarget(dynamic_object& object)
+void hare::set_target(dynamic_object& object)
 {
-	if (object.tag == entity_tag::noose || currentAction == absorbs)
+	if (object.tag == entity_tag::noose || current_action_ == absorbs)
 		return;
-	if (helper::getDist(position_, object.get_position()) <= sightRange)
+	if (helper::getDist(position_, object.get_position()) <= sight_range)
 	{
 		if (object.tag == entity_tag::hero)
 		{
-			boundTarget = &object;
+			bound_target_ = &object;
 			distanceToNearest = helper::getDist(position_, object.get_position());
 		}
 	}
 }
 
-void hare::behaviorWithStatic(world_object* target, long long elapsedTime)
+void hare::behavior_with_static(world_object* target, long long elapsedTime)
 {
-	if (currentAction == absorbs)
+	if (current_action_ == absorbs)
 		return;
-	if (helper::getDist(position_, target->get_position()) <= sightRange && timeAfterFear >= fearTime)		
+	if (helper::getDist(position_, target->get_position()) <= sight_range && timeAfterFear >= fearTime)		
 		if (target->tag == entity_tag::hareTrap)
 		{
-			if (boundTarget == nullptr)
+			if (bound_target_ == nullptr)
 			{
-				boundTarget = target;
+				bound_target_ = target;
 				distanceToNearest = helper::getDist(position_, target->get_position());
 			}
 		}
@@ -65,101 +65,101 @@ void hare::behaviorWithStatic(world_object* target, long long elapsedTime)
 void hare::behavior(long long elapsedTime)
 {	
 	endingPreviousAction();
-	fightInteract(elapsedTime);
+	fight_interact(elapsedTime);
 	if (health_point_ <= 0)
 	{
-		changeAction(dead, true);
-		directionSystem.direction = direction::STAND;
+		change_action(dead, true);
+		direction_system_.direction = direction::STAND;
 		return;
 	}
 
-	directionSystem.calculate_direction();
-	if (directionSystem.direction != direction::STAND)
-		directionSystem.last_direction = directionSystem.direction;
+	direction_system_.calculate_direction();
+	if (direction_system_.direction != direction::STAND)
+		direction_system_.last_direction = direction_system_.direction;
 
 	// first-priority actions
-	if (boundTarget)
+	if (bound_target_)
 	{
-		if (boundTarget->tag == entity_tag::hero)
+		if (bound_target_->tag == entity_tag::hero)
 			timeAfterFear = 0;
 	}
 	else
 		timeAfterFear += elapsedTime;
 
-	if (currentAction == absorbs)
+	if (current_action_ == absorbs)
 	{
-		laxMovePosition = { -1, -1 };
+		lax_move_position = { -1, -1 };
 		return;
 	}
 	//-----------------------	
 
-	if (boundTarget == nullptr)
+	if (bound_target_ == nullptr)
 	{
-		if (helper::getDist(position_, laxMovePosition) <= radius_)
+		if (helper::getDist(position_, lax_move_position) <= radius_)
 		{
-			changeAction(relax, true, true);
-			laxMovePosition = { -1, -1 };
+			change_action(relax, true, true);
+			lax_move_position = { -1, -1 };
 		}
 		return;
 	}
 	
-	const float distanceToTarget = helper::getDist(this->position_, boundTarget->get_position());
+	const float distanceToTarget = helper::getDist(this->position_, bound_target_->get_position());
 
 	// bouncing to a trap
-	if (boundTarget->tag == entity_tag::hareTrap)
+	if (bound_target_->tag == entity_tag::hareTrap)
 	{
-		directionSystem.side = direction_system::calculate_side(position_, boundTarget->get_position());
-		if (helper::getDist(position_, boundTarget->get_position()) <= radius_)
+		direction_system_.side = direction_system::calculate_side(position_, bound_target_->get_position());
+		if (helper::getDist(position_, bound_target_->get_position()) <= radius_)
 		{
-			const auto trap = dynamic_cast<hare_trap*>(boundTarget);
+			const auto trap = dynamic_cast<hare_trap*>(bound_target_);
 			position_ = trap->getEnterPosition();
-			changeAction(absorbs, true, false);
-			laxMovePosition = { -1, -1 };
+			change_action(absorbs, true, false);
+			lax_move_position = { -1, -1 };
 		}
 		else
 		{
-			changeAction(move, false, true);
-			laxMovePosition = boundTarget->get_position();
+			change_action(move, false, true);
+			lax_move_position = bound_target_->get_position();
 		}
 	}
 	//-------------------
 
 	// runaway from enemy
-	if (boundTarget->tag == entity_tag::hero)
+	if (bound_target_->tag == entity_tag::hero)
 	{
-		directionSystem.side = direction_system::calculate_side(position_, laxMovePosition);
-		moveSystem.speed = std::max(moveSystem.default_speed, (moveSystem.default_speed * 10) * (1 - (helper::getDist(position_, boundTarget->get_position()) / sightRange * 1.5f)));
-		animation_speed_ = std::max(0.0004f, 0.0003f * moveSystem.speed / moveSystem.default_speed);
-		if (distanceToTarget <= sightRange)
+		direction_system_.side = direction_system::calculate_side(position_, lax_move_position);
+		move_system_.speed = std::max(move_system_.default_speed, (move_system_.default_speed * 10) * (1 - (helper::getDist(position_, bound_target_->get_position()) / sight_range * 1.5f)));
+		animation_speed_ = std::max(0.0004f, 0.0003f * move_system_.speed / move_system_.default_speed);
+		if (distanceToTarget <= sight_range)
 		{
-			changeAction(move, false, true);
-			float k = (sightRange/* * 1.5f - Helper::getDist(position, boundTarget->getPosition())*/) / helper::getDist(position_, boundTarget->get_position());
-			laxMovePosition = Vector2f(position_.x - (boundTarget->get_position().x - position_.x) * k, position_.y - (boundTarget->get_position().y - position_.y) * k);
+			change_action(move, false, true);
+			float k = (sight_range/* * 1.5f - Helper::getDist(position, boundTarget->getPosition())*/) / helper::getDist(position_, bound_target_->get_position());
+			lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x) * k, position_.y - (bound_target_->get_position().y - position_.y) * k);
 		}
 		else
 		{
-			if (currentAction == move)
+			if (current_action_ == move)
 			{
-				if (distanceToTarget >= sightRange * 1.5f)
+				if (distanceToTarget >= sight_range * 1.5f)
 				{
-					changeAction(relax, true, true);
-					directionSystem.direction = direction::STAND;
-					laxMovePosition = { -1, -1 };
+					change_action(relax, true, true);
+					direction_system_.direction = direction::STAND;
+					lax_move_position = { -1, -1 };
 				}
 				else
 				{
-					float k = (sightRange/* * 1.5f - Helper::getDist(position, boundTarget->getPosition())*/) / helper::getDist(position_, boundTarget->get_position());
-					laxMovePosition = Vector2f(position_.x - (boundTarget->get_position().x - position_.x) * k, position_.y - (boundTarget->get_position().y - position_.y) * k);
+					float k = (sight_range/* * 1.5f - Helper::getDist(position, boundTarget->getPosition())*/) / helper::getDist(position_, bound_target_->get_position());
+					lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x) * k, position_.y - (bound_target_->get_position().y - position_.y) * k);
 				}
 			}
 		}
 	}
 	//-------------------
 
-	if (currentAction != absorbs)
+	if (current_action_ != absorbs)
 	{
 		distanceToNearest = 10e6;
-		boundTarget = nullptr;
+		bound_target_ = nullptr;
 	}
 }
 
@@ -175,15 +175,15 @@ int hare::get_build_type(Vector2f ounPos, Vector2f otherPos)
 
 void hare::endingPreviousAction()
 {
-	if (lastAction == commonHit)
-		currentAction = relax;
-	if (lastAction == absorbs)
+	if (last_action_ == commonHit)
+		current_action_ = relax;
+	if (last_action_ == absorbs)
 	{
-		auto trap = dynamic_cast<hare_trap*>(boundTarget);
+		auto trap = dynamic_cast<hare_trap*>(bound_target_);
 		trap->inventory[0] = std::make_pair(entity_tag::hare, 1);
 		delete_promise_on();
 	}
-	lastAction = relax;
+	last_action_ = relax;
 }
 
 void hare::jerk(float power, float deceleration, Vector2f destinationPoint)
@@ -196,21 +196,21 @@ std::vector<sprite_chain_element*> hare::prepare_sprites(long long elapsedTime)
 	auto body = new sprite_chain_element(pack_tag::hare, pack_part::full, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
 	animation_speed_ = 10;
 
-	side spriteSide = directionSystem.side;
+	side spriteSide = direction_system_.side;
 
-	if (directionSystem.side == right)
+	if (direction_system_.side == right)
 	{
 		spriteSide = left;
 		body->mirrored = true;
 	}
-	if (directionSystem.last_direction == direction::RIGHT || directionSystem.last_direction == direction::UPRIGHT || directionSystem.last_direction == direction::DOWNRIGHT)
+	if (direction_system_.last_direction == direction::RIGHT || direction_system_.last_direction == direction::UPRIGHT || direction_system_.last_direction == direction::DOWNRIGHT)
 	{
 		body->mirrored = true;
 	}
 
 	body->direction = direction_system::side_to_direction(spriteSide);
 
-	switch (currentAction)
+	switch (current_action_)
 	{
 		case relax:
 		{
@@ -250,7 +250,7 @@ std::vector<sprite_chain_element*> hare::prepare_sprites(long long elapsedTime)
 
 		if (++current_sprite_[0] > animationLength)
 		{
-			lastAction = currentAction;
+			last_action_ = current_action_;
 			current_sprite_[0] = 1;
 		}
 	}

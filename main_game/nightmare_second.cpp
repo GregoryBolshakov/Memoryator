@@ -3,17 +3,17 @@
 nightmare_second::nightmare_second(std::string objectName, Vector2f centerPosition) : monster(std::move(objectName), centerPosition)
 {
 	conditional_size_units_ = { 600, 600 };
-	moveSystem.default_speed = 0.0005f;
-	moveSystem.speed = 0.0005f;
+	move_system_.default_speed = 0.0005f;
+	move_system_.speed = 0.0005f;
 	radius_ = 120;
 	hitDistance = 120;
-	strength = 17;
+	strength_ = 17;
 	health_point_ = 180;
-	currentAction = relax;
-	timeForNewHitSelf = long(2e5);
-	timeAfterHitSelf = timeForNewHitSelf;
-	timeForNewHit = long(1e6);
-	timeAfterHit = timeForNewHit;
+	current_action_ = relax;
+	time_for_new_hit_self = long(2e5);
+	time_after_hitself_ = time_for_new_hit_self;
+	time_for_new_hit = long(1e6);
+	time_after_hit = time_for_new_hit;
 	to_save_name_ = "nightmare2_";
 	tag = entity_tag::nightmare2;
 }
@@ -32,12 +32,12 @@ Vector2f nightmare_second::calculate_texture_offset()
 
 void nightmare_second::doAttack(world_object* target)
 {
-	if (timeAfterHit >= timeForNewHit)
+	if (time_after_hit >= time_for_new_hit)
 	{
-		if (helper::getDist(position_, boundTarget->get_position()) <= (this->radius_ + boundTarget->get_radius() + hitDistance / 5))
+		if (helper::getDist(position_, bound_target_->get_position()) <= (this->radius_ + bound_target_->get_radius() + hitDistance / 5))
 		{
-			changeAction(commonHit, true, false);
-			timeAfterHit = 0;
+			change_action(commonHit, true, false);
+			time_after_hit = 0;
 		}
 	}
 }
@@ -45,18 +45,18 @@ void nightmare_second::doAttack(world_object* target)
 std::vector<sprite_chain_element*> nightmare_second::prepare_sprites(long long elapsedTime)
 {
 	auto body = new sprite_chain_element(pack_tag::nightmare2Stand, pack_part::full, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
-	shakeSpeed = -1;
+	shake_speed = -1;
 	animation_speed_ = 10;
 
-	side spriteSide = directionSystem.side;
-	direction spriteDirection = directionSystem.last_direction;
+	side spriteSide = direction_system_.side;
+	direction spriteDirection = direction_system_.last_direction;
 
-	if (directionSystem.side == right)
+	if (direction_system_.side == right)
 	{
 		spriteSide = left;
 		body->mirrored = true;
 	}
-	if (directionSystem.last_direction == direction::RIGHT || directionSystem.last_direction == direction::UPRIGHT || directionSystem.last_direction == direction::DOWNRIGHT)
+	if (direction_system_.last_direction == direction::RIGHT || direction_system_.last_direction == direction::UPRIGHT || direction_system_.last_direction == direction::DOWNRIGHT)
 	{
 		spriteDirection = direction_system::cut_rights(spriteDirection);
 		body->mirrored = true;
@@ -64,7 +64,7 @@ std::vector<sprite_chain_element*> nightmare_second::prepare_sprites(long long e
 
 	body->direction = direction_system::side_to_direction(spriteSide);
 
-	switch (currentAction)
+	switch (current_action_)
 	{
 	case commonHit:
 	{
@@ -97,7 +97,7 @@ std::vector<sprite_chain_element*> nightmare_second::prepare_sprites(long long e
 		animationLength = 8;
 		body->pack_tag = pack_tag::nightmare2Move;
 		if (current_sprite_[0] == 2 || current_sprite_[0] == 6)
-			shakeSpeed = 0;
+			shake_speed = 0;
 		break;
 	}
 	default:;
@@ -113,7 +113,7 @@ std::vector<sprite_chain_element*> nightmare_second::prepare_sprites(long long e
 
 		if (++current_sprite_[0] > animationLength)
 		{
-			lastAction = currentAction;
+			last_action_ = current_action_;
 			current_sprite_[0] = 1;
 		}
 	}
