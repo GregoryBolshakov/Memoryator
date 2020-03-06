@@ -4,6 +4,7 @@
 #include <windows.h>
 
 #include "sprite_pack.h"
+#include "shader_system.h"
 #include "text_chain_element.h"
 
 using namespace sf;
@@ -21,7 +22,7 @@ public:
 	void draw(RenderTarget& target, const std::vector<drawable_chain_element*>& drawable_items, float scale = 1, Vector2f camera_position = {0, 0});
 	static std::vector<drawable_chain_element*> upcast_chain(const std::vector<sprite_chain_element*>& chain);
 	static std::vector<sprite_chain_element*> downcast_to_sprite_chain(const std::vector<drawable_chain_element*>& chain);
-
+	
 	std::map<pack_tag, sprite_pack> packs_map;
 private:
 	void init_packs_map();

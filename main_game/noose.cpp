@@ -12,9 +12,9 @@ noose::noose(const std::string& objectName, const Vector2f centerPosition, world
 	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
 	this->owner = owner;
-	moveSystem.default_speed = 0.0007F;
+	moveSystem.default_speed = 0.0007f;
 	moveSystem.speed = moveSystem.default_speed;
-	animation_speed_ = float(5e-4);
+	animation_speed_ = 10;
 	animationLength = 8;
 	radius_ = 50;
 	currentAction = move;
@@ -158,7 +158,7 @@ void noose::jerkInteract(const long long elapsedTime)
 		if (jerkTime > 0)
 		{
 			jerkTime -= elapsedTime;
-			moveSystem.speed = jerkDistance / float(jerkDuration) * jerkPower * float(pow(jerkTime / jerkDuration, jerkDeceleration));
+			moveSystem.speed = jerkDistance / float(jerkDuration) * jerkPower * float(pow(float(jerkTime) / float(jerkDuration), jerkDeceleration));
 			moveSystem.speed = std::max(moveSystem.default_speed / jerkDeceleration, moveSystem.speed);
 		}
 		else
@@ -173,7 +173,7 @@ void noose::jerk(const float power, const float deceleration, Vector2f /*destina
 	stopping(false, false);
 	this->jerkPower = power;
 	this->jerkDeceleration = deceleration;
-	this->jerkDuration = long(40.0F / animation_speed_ * 13.0F);
+	this->jerkDuration = 1e6;
 	this->jerkTime = this->jerkDuration;
 	currentAction = jerking;
 	jerkDistance = 1400;
@@ -247,7 +247,7 @@ std::vector<sprite_chain_element*> noose::prepare_sprites(long long elapsedTime)
 		{
 			current_sprite_[0] = 1;
 			animationLength = 1;
-			animation_speed_ = 0.0005F;
+			animation_speed_ = 10;
 			ropeSprite->number = 1;
 			ropeSprite->size.y = 60;
 			if (owner != nullptr)
@@ -266,14 +266,14 @@ std::vector<sprite_chain_element*> noose::prepare_sprites(long long elapsedTime)
 	case jerking:
 		{
 			animationLength = 13;
-			animation_speed_ = 0.0005F;
+			animation_speed_ = 10;
 			ropeSprite->number = 3;
 			break;
 		}
 	case dead:
 		{
 			animationLength = 1;
-			animation_speed_ = 0.0005F;
+			animation_speed_ = 10;
 
 			ropeSprite->number = 3;
 			loopSprite->number = 12;
@@ -294,7 +294,7 @@ std::vector<sprite_chain_element*> noose::prepare_sprites(long long elapsedTime)
 	if (currentAction == move)
 	{
 		animationLength = 13;
-		animation_speed_ = 0.0005F;
+		animation_speed_ = 10;
 		ropeSprite->number = 3;
 	}
 
@@ -305,7 +305,7 @@ std::vector<sprite_chain_element*> noose::prepare_sprites(long long elapsedTime)
 
 	timeForNewSprite += elapsedTime;
 
-	if (timeForNewSprite >= long(40.0F / animation_speed_))
+	if (timeForNewSprite >= long(1e6 / animation_speed_))
 	{
 		timeForNewSprite = 0;
 

@@ -20,7 +20,7 @@ void move_system::init(float* radius, Vector2f* position, sf::Color* color)
 
 void move_system::push_by_bumping(Vector2f position, float radius, bool can_crash)
 {
-	if (can_crash_into_dynamic || can_crash || push_damage != 0)
+	if ((!can_crash_into_dynamic && !can_crash) || !push_damage == 0)
 		return;
 	bumped_positions.emplace_back(position, false);
 	bump_distance += radius;

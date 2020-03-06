@@ -13,7 +13,7 @@ int main() {
 	srand(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
 	
 	const auto screen_size = helper::GetScreenSize();
-	RenderWindow main_window(VideoMode(static_cast<unsigned int>(screen_size.x), static_cast<unsigned int>(screen_size.y), 32), "game");//, Style::Fullscreen);
+	RenderWindow main_window(VideoMode(static_cast<unsigned int>(screen_size.x), static_cast<unsigned int>(screen_size.y), 32), "game", Style::Fullscreen);
 
     draw_system draw_system;
 	menu_system menu_system;
@@ -135,7 +135,6 @@ int main() {
 			world.pedestalController.draw(&main_window, world.getCameraPosition(), world.getWorldGenerator().scaleFactor);
 			draw_system.draw(main_window, main_book.prepareSprites(world.focusedObject->get_health_point() / world.focusedObject->get_max_health_point_value(), time_micro_sec));
 			draw_system.draw(main_window, world.getInventorySystem().prepare_sprites(time_micro_sec, world.packsMap));			
-			//world.runInventorySystemDrawing(mainWindow, time);
 		}
 		else
 			clock.restart();

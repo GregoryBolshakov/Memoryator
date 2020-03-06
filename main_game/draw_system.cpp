@@ -226,24 +226,26 @@ void draw_system::draw(RenderTarget& target, const std::vector<drawable_chain_el
 		return;
 	}
 
+	std::vector<drawable_chain_element_with_shader*> drawable_items_with_shaders = shader_system::put_on_shaders(drawable_items);
+	
 	const auto screen_center = camera_position != Vector2f()
 		                           ? Vector2f(target.getSize()) / 2.0F
 		                           : Vector2f();
 
-	for (auto drawable_chain_item : drawable_items)
+	for (auto drawable_chain_item : drawable_items_with_shaders)
 	{
-		if (!drawable_chain_item->initialized)
+		if (!drawable_chain_item->drawable_chain_element->initialized)
 		{
 			continue;
 		}
 
-		const auto sprite_chain_item = dynamic_cast<sprite_chain_element*>(drawable_chain_item);
+		const auto sprite_chain_item = dynamic_cast<sprite_chain_element*>(drawable_chain_item->drawable_chain_element);
 		if (sprite_chain_item != nullptr)
 		{
 			draw_sprite_chain_element(target, sprite_chain_item, camera_position, screen_center, scale);
 		}
 
-		const auto text_chain_item = dynamic_cast<text_chain_element*>(drawable_chain_item);
+		const auto text_chain_item = dynamic_cast<text_chain_element*>(drawable_chain_item->drawable_chain_element);
 		if (text_chain_item != nullptr)
 		{
 			draw_text_chain_element(target, text_chain_item);

@@ -213,6 +213,9 @@
     <ClCompile Include="grid_list.cpp" />
     <ClCompile Include="helper.cpp" />
     <ClCompile Include="light_system.cpp" />
+    <ClCompile Include="shader_system.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tags.h">
@@ -434,6 +437,9 @@
     <ClInclude Include="light_system.h" />
     <ClInclude Include="sprite_structures.h" />
     <ClInclude Include="structs.h" />
+    <ClInclude Include="shader_system.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Terrain">
