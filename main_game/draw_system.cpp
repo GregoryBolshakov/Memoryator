@@ -1,5 +1,6 @@
 #include "draw_system.h"
 
+#include "shader_system.h"
 #include "text_system.h"
 
 draw_system::draw_system()
@@ -240,6 +241,7 @@ void draw_system::draw(RenderTarget& target, const std::vector<drawable_chain_el
 		}
 
 		const auto sprite_chain_item = dynamic_cast<sprite_chain_element*>(drawable_chain_item->drawable_chain_element);
+
 		if (sprite_chain_item != nullptr)
 		{
 			draw_sprite_chain_element(target, sprite_chain_item, camera_position, screen_center, scale);

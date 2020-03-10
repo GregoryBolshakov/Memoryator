@@ -4,7 +4,7 @@
 
 
 
-class visual_effect: public sf::RenderStates, public sf::NonCopyable
+class visual_effect
 {
 public:
 	void load();

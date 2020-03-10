@@ -1,5 +1,7 @@
 #include "direction_system.h"
 
+#include "math_constants.h"
+
 direction_system::direction_system()
 = default;
 

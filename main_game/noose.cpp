@@ -2,6 +2,7 @@
 
 #include "deer.h"
 #include "deerchant.h"
+#include "math_constants.h"
 
 using namespace sf;
 
@@ -172,7 +173,7 @@ void noose::jerk(const float power, const float deceleration, Vector2f /*destina
 	stopping(false, false);
 	this->jerk_power_ = power;
 	this->jerk_deceleration_ = deceleration;
-	this->jerk_duration_ = long(1e6);
+	this->jerk_duration_ = long long(1e6);
 	this->jerk_time_ = this->jerk_duration_;
 	current_action_ = jerking;
 	jerk_distance_ = 1400;
@@ -202,19 +203,19 @@ void noose::rotateAndExtend(sprite_chain_element* rope, sprite_chain_element* lo
 		rope->size = Vector2f(helper::getDist(beginPoint, position_) + localElongation, rope->size.y); // a little bit longer rope for sprite joining		
 		if (position_.y <= beginPoint.y)
 		{
-			rope->rotation = acos((beginPoint.x - position_.x) / sqrt(pow(beginPoint.x - position_.x, 2) + pow(beginPoint.y - position_.y, 2))) / pi * 180;
+			rope->rotation = float(acos((beginPoint.x - position_.x) / sqrt(pow(beginPoint.x - position_.x, 2) + pow(beginPoint.y - position_.y, 2))) / pi * 180);
 		}
 		else
 		{
-			rope->rotation = -acos((beginPoint.x - position_.x) / sqrt(pow(beginPoint.x - position_.x, 2) + pow(beginPoint.y - position_.y, 2))) / pi * 180;
+			rope->rotation = float(-acos((beginPoint.x - position_.x) / sqrt(pow(beginPoint.x - position_.x, 2) + pow(beginPoint.y - position_.y, 2))) / pi * 180);
 		}
 	}
 
 	if (current_action_ != relax)
 	{
 		loop->rotation = rope->rotation + 180;
-		loop->offset.x -= sin(loop->rotation / 180 * pi) * texture_box_offset_.y; // rotational position correction
-		loop->offset.y -= (1 - cos(loop->rotation / 180 * pi)) * texture_box_offset_.y;
+		loop->offset.x -= float(sin(loop->rotation / 180 * pi)) * texture_box_offset_.y; // rotational position correction
+		loop->offset.y -= float(1 - cos(loop->rotation / 180 * pi)) * texture_box_offset_.y;
 	}
 
 	if (ownerPos != Vector2f(0, 0))

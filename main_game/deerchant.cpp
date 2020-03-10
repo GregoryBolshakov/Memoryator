@@ -3,6 +3,7 @@
 #include "brazier.h"
 #include "empty_object.h"
 #include "helper.h"
+#include "math_constants.h"
 #include "noose.h"
 #include "picked_object.h"
 
@@ -915,7 +916,8 @@ void deerchant::jerk(const float power, const float deceleration, Vector2f)
 	jerk_distance_ = 500;
 	current_sprite_[0] = 1;
 
-	lax_move_position = Vector2f(position_.x + cos(float(direction_system_.direction) * pi / 180) * jerk_distance_, position_.y - sin(float(direction_system_.direction) * pi / 180) * jerk_distance_);
+	const auto angle = double(direction_system_.direction) * pi / 180;
+	lax_move_position = Vector2f(position_.x + float(cos(angle)) * jerk_distance_, position_.y - float(sin(angle)) * jerk_distance_);
 }
 
 void deerchant::fight_interact(long long elapsedTime, dynamic_object* target)
@@ -1149,7 +1151,7 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 
 	time_for_new_sprite_ += elapsedTime;
 
-	if (time_for_new_sprite_ >= 1e6 / animation_speed_)
+	if (double(time_for_new_sprite_) >= 1e6 / animation_speed_)
 	{
 		time_for_new_sprite_ = 0;
 

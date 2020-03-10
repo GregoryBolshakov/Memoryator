@@ -1,13 +1,9 @@
 #pragma once
-#ifndef DIRECTIONSYSTEM_H
-#define DIRECTIONSYSTEM_H
 
 #include <SFML/System/Vector2.hpp>
 #include <string>
 
 #include "tags.h"
-
-const float pi = 3.14159265358979323846f;
 
 using Vector2f = sf::Vector2f;
 
@@ -36,5 +32,3 @@ public:
 	Vector2f* move_position = nullptr;
 	//-----------
 };
-
-#endif

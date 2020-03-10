@@ -4,7 +4,8 @@
 #include "draw_system.h"
 #include "hero_book.h"
 #include "menu_system.h"
-#include "VisualEffects/ambient_light.hpp"
+#include "visual_effects/ambient_light.hpp"
+#include "visual_effects/field_of_view.hpp"
 
 
 using namespace sf;
@@ -41,6 +42,9 @@ int main() {
 
 	ambient_light ambient_light(world.getTimeSystem(), screen_size);
 	ambient_light.load();
+
+	field_of_view field_of_view(world.getTimeSystem(), screen_size);
+	field_of_view.load();
 	
 	while (main_window.isOpen())
 	{
@@ -116,6 +120,7 @@ int main() {
 				world.interact(screen_size, time_micro_sec, event);
 				world.focusedObject->handle_input(world.getInventorySystem().get_used_mouse());
 				ambient_light.update();
+				field_of_view.update();
 			}
 
 			auto hero = dynamic_cast<deerchant*>(world.focusedObject);
@@ -129,6 +134,9 @@ int main() {
             
 			visual_effect_texture.update(main_window);
 			main_window.draw(visual_effect_sprite, ambient_light.shader);
+
+			visual_effect_texture.update(main_window);
+			main_window.draw(visual_effect_sprite, field_of_view.shader);
 
 			draw_system.draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepare_sprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packs_map)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
 			text_system::draw_string(world.getMouseDisplayName(), font_name::normal_font, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));

@@ -2,6 +2,8 @@
 
 #include <windows.h>
 
+#include "math_constants.h"
+
 Vector2f helper::GetScreenSize()
 {
 	Vector2f screenSize;
@@ -172,9 +174,9 @@ RectangleShape helper::makeLine(Vector2f point1, Vector2f point2, sf::Color colo
 	result.setSize(Vector2f(sqrt(pow(point1.x - point2.x, 2) + pow(point1.y - point2.y, 2)), 4));
 
 	if (point1.x >= point2.x)
-		result.rotate(acos(abs(point1.y - point2.y) / sqrt(pow(point1.x - point2.x, 2) + pow(point1.y - point2.y, 2))) / pi * 180 + 90);
+		result.rotate(float(acos(abs(point1.y - point2.y) / sqrt(pow(point1.x - point2.x, 2) + pow(point1.y - point2.y, 2))) / pi * 180) + 90);
 	else
-		result.rotate(acos(abs(point1.x - point2.x) / sqrt(pow(point1.x - point2.x, 2) + pow(point1.y - point2.y, 2))) / pi * 180);
+		result.rotate(float(acos(abs(point1.x - point2.x) / sqrt(pow(point1.x - point2.x, 2) + pow(point1.y - point2.y, 2))) / pi * 180));
 	result.setFillColor(color);
 	return result;
 }

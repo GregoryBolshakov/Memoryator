@@ -182,9 +182,6 @@
     <ClCompile Include="yarrow.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="VisualEffects\ambient_light.cpp">
-      <Filter>VisualEffects</Filter>
-    </ClCompile>
     <ClCompile Include="dynamic_object.cpp">
       <Filter>World</Filter>
     </ClCompile>
@@ -215,6 +212,12 @@
     <ClCompile Include="light_system.cpp" />
     <ClCompile Include="shader_system.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="visual_effects\field_of_view.cpp">
+      <Filter>visual_effects</Filter>
+    </ClCompile>
+    <ClCompile Include="visual_effects\ambient_light.cpp">
+      <Filter>visual_effects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -401,12 +404,6 @@
     <ClInclude Include="yarrow.h">
       <Filter>Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="VisualEffects\ambient_light.hpp">
-      <Filter>VisualEffects</Filter>
-    </ClInclude>
-    <ClInclude Include="VisualEffects\visual_effect.hpp">
-      <Filter>VisualEffects</Filter>
-    </ClInclude>
     <ClInclude Include="dynamic_object.h">
       <Filter>World</Filter>
     </ClInclude>
@@ -440,6 +437,16 @@
     <ClInclude Include="shader_system.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="visual_effects\field_of_view.hpp">
+      <Filter>visual_effects</Filter>
+    </ClInclude>
+    <ClInclude Include="visual_effects\ambient_light.hpp">
+      <Filter>visual_effects</Filter>
+    </ClInclude>
+    <ClInclude Include="visual_effects\visual_effect.hpp">
+      <Filter>visual_effects</Filter>
+    </ClInclude>
+    <ClInclude Include="math_constants.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Terrain">
@@ -466,7 +473,7 @@
     <Filter Include="Systems\DrawSystem">
       <UniqueIdentifier>{969d9f18-507a-4244-b5eb-e0aa540d6e67}</UniqueIdentifier>
     </Filter>
-    <Filter Include="VisualEffects">
+    <Filter Include="visual_effects">
       <UniqueIdentifier>{3c325feb-d21d-4623-8836-f7951dc989ca}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

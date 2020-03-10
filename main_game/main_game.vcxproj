@@ -216,7 +216,8 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
     <ClCompile Include="time_system.cpp" />
     <ClCompile Include="totem.cpp" />
     <ClCompile Include="effects_system.cpp" />
-    <ClCompile Include="VisualEffects\ambient_light.cpp" />
+    <ClCompile Include="visual_effects\ambient_light.cpp" />
+    <ClCompile Include="visual_effects\field_of_view.cpp" />
     <ClCompile Include="wolf.cpp" />
     <ClCompile Include="world_generator.cpp" />
     <ClCompile Include="world_handler.cpp" />
@@ -234,6 +235,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
     <ClInclude Include="input_box.h" />
     <ClInclude Include="lake.h" />
     <ClInclude Include="light_system.h" />
+    <ClInclude Include="math_constants.h" />
     <ClInclude Include="mushroom.h" />
     <ClInclude Include="bear.h" />
     <ClInclude Include="bush.h" />
@@ -295,8 +297,9 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
     <ClInclude Include="time_system.h" />
     <ClInclude Include="totem.h" />
     <ClInclude Include="effects_system.h" />
-    <ClInclude Include="VisualEffects\ambient_light.hpp" />
-    <ClInclude Include="VisualEffects\visual_effect.hpp" />
+    <ClInclude Include="visual_effects\ambient_light.hpp" />
+    <ClInclude Include="visual_effects\field_of_view.hpp" />
+    <ClInclude Include="visual_effects\visual_effect.hpp" />
     <ClInclude Include="wolf.h" />
     <ClInclude Include="world_generator.h" />
     <ClInclude Include="world_handler.h" />

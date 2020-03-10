@@ -1,6 +1,7 @@
 #include "move_system.h"
 
 #include "helper.h"
+#include "math_constants.h"
 
 move_system::move_system()
 = default;
@@ -238,8 +239,8 @@ void move_system::set_move_offset(long long elapsedTime)
 	{
 		if (direction_system_->direction != direction::STAND)
 		{
-			const auto angle = float(direction_system_->direction) * pi / 180;
-			const float k = speed * float(elapsedTime) / sqrt(pow(cos(angle), 2) + pow(sin(angle), 2));
+			const auto angle = double(direction_system_->direction) * pi / 180;
+			const auto k = speed * double(elapsedTime) / sqrt(pow(cos(angle), 2) + pow(sin(angle), 2));
 			move_offset.x = float(k * cos(angle));
 			move_offset.y = float(k * -sin(angle));
 			return;
