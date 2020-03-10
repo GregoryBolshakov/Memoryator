@@ -1,10 +1,11 @@
 #pragma once
-#ifndef MOVESYSTEM_H
-#define MOVESYSTEM_H
+#ifndef MOVE_SYSTEM_H
+#define MOVE_SYSTEM_H
 
 #include <SFML/Graphics/Color.hpp>
 #include <vector>
 
+#include "grid_list.h"
 #include "terrain_object.h"
 #include "direction_system.h"
 
@@ -23,19 +24,28 @@ public:
 	void init(entity_tag* tag, float* radius, Vector2f* position, sf::Color* color, actions* current_action, direction_system* direction_system);
 	void turn_off() { turned_on = false; }
 	void push_away(long long elapsed_time, float push_speed = 0);
-	void end_push(long long elapsed_time);
+	void end_push();
 	void push_by_bumping(Vector2f position, float radius, bool can_crash);
 	void set_move_offset(long long elapsedTime);
-	[[nodiscard]] Vector2f ellipseSlip(Vector2f newPos, Vector2f destination, Vector2f f1, Vector2f f2, float ellipseSize, float height, long long elapsedTime) const;
-	Vector2f doMove(long long elapsedTime);
-	Vector2f doSlip(Vector2f newPosition, const std::vector<static_object*>& localStaticItems, float height, long long elapsedTime);	
+	[[nodiscard]] Vector2f ellipse_slip(Vector2f new_pos, Vector2f destination, Vector2f f1, Vector2f f2, float ellipse_size, float height, long long elapsed_time) const;
+	Vector2f do_move(long long elapsedTime);
+	[[nodiscard]] sf::Vector2f do_slip(
+		Vector2f new_position,
+		std::vector<static_object*>& local_static_items,
+		float height,
+		long long elapsed_time) const;
+	void is_route_needed(std::vector<std::vector<bool>>& micro_block_matrix, Vector2f& micro_block_size);
+	void make_route(long long elapsed_time, grid_list* grid_list, float zone_offset);
+	void pass_route_beginning(Vector2f micro_block_size);
 	
-	bool turned_on = false;
+	std::vector<std::pair<int, int>> route = { {} };
+	bool turned_on = false, need_route = false, route_generation_ability = true;;
 	bool can_crash_into_dynamic = true;
 	bool can_crash_into_static = false;
-	Vector2f move_offset = Vector2f(-1, -1), move_position = { -1, -1 };
+	Vector2f move_offset = { -1, -1 }, move_position = { -1, -1 }, lax_move_position = { -1, -1 };
 	float default_speed = 0;
 	float speed = 0;
+	long long time_for_new_route = long(3e5), time_after_new_route = long(3e5);
 
 	std::vector<bump_chain_element> bumped_positions = {};
 	float bump_distance = 0;

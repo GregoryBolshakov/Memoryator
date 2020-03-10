@@ -6,11 +6,11 @@ using namespace sf;
 
 hare::hare(const std::string& objectName, Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
 {
-	conditional_size_units_ = { 180, 150 };
+	conditional_size_units_ = { 240, 200 };
 	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
-	move_system_.default_speed = 0.0003f;
-	move_system_.speed = 0.0003f;
+	move_system.default_speed = 0.0003f;
+	move_system.speed = 0.0003f;
 	radius_ = 70;
 	strength_ = 10;
 	sight_range = 720;
@@ -62,20 +62,20 @@ void hare::behavior_with_static(world_object* target, long long elapsedTime)
 		}
 }
 
-void hare::behavior(long long elapsedTime)
+void hare::behavior(const long long elapsed_time)
 {	
 	endingPreviousAction();
-	fight_interact(elapsedTime);
+	fight_interact(elapsed_time);
 	if (health_point_ <= 0)
 	{
 		change_action(dead, true);
-		direction_system_.direction = direction::STAND;
+		direction_system.direction = direction::STAND;
 		return;
 	}
 
-	direction_system_.calculate_direction();
-	if (direction_system_.direction != direction::STAND)
-		direction_system_.last_direction = direction_system_.direction;
+	direction_system.calculate_direction(elapsed_time);
+	if (direction_system.direction != direction::STAND)
+		direction_system.last_direction = direction_system.direction;
 
 	// first-priority actions
 	if (bound_target_)
@@ -84,21 +84,21 @@ void hare::behavior(long long elapsedTime)
 			timeAfterFear = 0;
 	}
 	else
-		timeAfterFear += elapsedTime;
+		timeAfterFear += elapsed_time;
 
 	if (current_action_ == absorbs)
 	{
-		lax_move_position = { -1, -1 };
+		move_system.lax_move_position = { -1, -1 };
 		return;
 	}
 	//-----------------------	
 
 	if (bound_target_ == nullptr)
 	{
-		if (helper::getDist(position_, lax_move_position) <= radius_)
+		if (helper::getDist(position_, move_system.lax_move_position) <= radius_)
 		{
 			change_action(relax, true, true);
-			lax_move_position = { -1, -1 };
+			move_system.lax_move_position = { -1, -1 };
 		}
 		return;
 	}
@@ -108,18 +108,18 @@ void hare::behavior(long long elapsedTime)
 	// bouncing to a trap
 	if (bound_target_->tag == entity_tag::hareTrap)
 	{
-		direction_system_.side = direction_system::calculate_side(position_, bound_target_->get_position());
+		direction_system.side = direction_system.calculate_side(position_, bound_target_->get_position(), elapsed_time);
 		if (helper::getDist(position_, bound_target_->get_position()) <= radius_)
 		{
 			const auto trap = dynamic_cast<hare_trap*>(bound_target_);
 			position_ = trap->getEnterPosition();
 			change_action(absorbs, true, false);
-			lax_move_position = { -1, -1 };
+			move_system.lax_move_position = { -1, -1 };
 		}
 		else
 		{
 			change_action(move, false, true);
-			lax_move_position = bound_target_->get_position();
+			move_system.lax_move_position = bound_target_->get_position();
 		}
 	}
 	//-------------------
@@ -127,14 +127,13 @@ void hare::behavior(long long elapsedTime)
 	// runaway from enemy
 	if (bound_target_->tag == entity_tag::hero)
 	{
-		direction_system_.side = direction_system::calculate_side(position_, lax_move_position);
-		move_system_.speed = std::max(move_system_.default_speed, (move_system_.default_speed * 10) * (1 - (helper::getDist(position_, bound_target_->get_position()) / sight_range * 1.5f)));
-		animation_speed_ = std::max(0.0004f, 0.0003f * move_system_.speed / move_system_.default_speed);
+		direction_system.side = direction_system.calculate_side(position_, move_system.lax_move_position, elapsed_time);
+		move_system.speed = std::max(move_system.default_speed, (move_system.default_speed * 10) * (1 - (helper::getDist(position_, bound_target_->get_position()) / sight_range * 1.5f)));
 		if (distanceToTarget <= sight_range)
 		{
 			change_action(move, false, true);
 			float k = (sight_range/* * 1.5f - Helper::getDist(position, boundTarget->getPosition())*/) / helper::getDist(position_, bound_target_->get_position());
-			lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x) * k, position_.y - (bound_target_->get_position().y - position_.y) * k);
+			move_system.lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x) * k, position_.y - (bound_target_->get_position().y - position_.y) * k);
 		}
 		else
 		{
@@ -143,13 +142,13 @@ void hare::behavior(long long elapsedTime)
 				if (distanceToTarget >= sight_range * 1.5f)
 				{
 					change_action(relax, true, true);
-					direction_system_.direction = direction::STAND;
-					lax_move_position = { -1, -1 };
+					direction_system.direction = direction::STAND;
+					move_system.lax_move_position = { -1, -1 };
 				}
 				else
 				{
 					float k = (sight_range/* * 1.5f - Helper::getDist(position, boundTarget->getPosition())*/) / helper::getDist(position_, bound_target_->get_position());
-					lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x) * k, position_.y - (bound_target_->get_position().y - position_.y) * k);
+					move_system.lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x) * k, position_.y - (bound_target_->get_position().y - position_.y) * k);
 				}
 			}
 		}
@@ -194,28 +193,56 @@ void hare::jerk(float power, float deceleration, Vector2f destinationPoint)
 std::vector<sprite_chain_element*> hare::prepare_sprites(long long elapsedTime)
 {
 	auto body = new sprite_chain_element(pack_tag::hare, pack_part::full, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
-	animation_speed_ = 10;
+	animation_speed_ = 12;
 
-	side spriteSide = direction_system_.side;
+	const auto angle = direction_system::calculate_angle(move_system.move_offset);
 
-	if (direction_system_.side == right)
+	auto sprite_direction = direction::DOWN;
+	if (angle >= 0 && angle < 45)
 	{
-		spriteSide = left;
+		sprite_direction = direction::UPLEFT;
 		body->mirrored = true;
 	}
-	if (direction_system_.last_direction == direction::RIGHT || direction_system_.last_direction == direction::UPRIGHT || direction_system_.last_direction == direction::DOWNRIGHT)
-	{
-		body->mirrored = true;
-	}
+	else
+		if (angle >= 45 && angle < 90)
+		{
+			sprite_direction = direction::UP;
+			body->mirrored = true;
+		}
+		else
+			if (angle >= 90 && angle < 135)
+				sprite_direction = direction::UP;
+			else
+				if (angle >= 135 && angle < 180)
+					sprite_direction = direction::UPLEFT;
+				else
+					if (angle >= 180 && angle < 225)
+						sprite_direction = direction::DOWNLEFT;
+					else
+						if (angle >= 225 && angle < 270)
+							sprite_direction = direction::DOWN;
+						else
+							if (angle >= 270 && angle < 315)
+							{
+								sprite_direction = direction::DOWN;
+								body->mirrored = true;
+							}
+							else
+								if (angle >= 315 && angle < 360)
+								{
+									sprite_direction = direction::DOWNLEFT;
+									body->mirrored = true;
+								}
 
-	body->direction = direction_system::side_to_direction(spriteSide);
+	body->direction = sprite_direction;
 
 	switch (current_action_)
 	{
 		case relax:
 		{
 			animationLength = 1;
-			body->pack_part = pack_part::stand;
+			current_sprite_[0] = 1;
+			body->pack_part = pack_part::move;
 			break;
 		}
 		case absorbs:
@@ -227,14 +254,14 @@ std::vector<sprite_chain_element*> hare::prepare_sprites(long long elapsedTime)
 		case dead:
 		{
 			animationLength = 1;
-			body->pack_part = pack_part::stand;
 			current_sprite_[0] = 1;
+			body->pack_part = pack_part::move;
 			break;
 		}
 		case move:
 		{
-			animationLength = 5;
-			body->pack_part = pack_part::move;						
+			animationLength = 6;
+			body->pack_part = pack_part::move;
 			break;
 		}
 	default:;

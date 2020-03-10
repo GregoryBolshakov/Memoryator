@@ -114,7 +114,7 @@ int main() {
 			if (!console.get_state())
 			{				
 				world.interact(screen_size, time_micro_sec, event);
-				world.focusedObject->handle_input(world.getInventorySystem().get_used_mouse());
+				world.focusedObject->handle_input(world.getInventorySystem().get_used_mouse(), time_micro_sec);
 				ambient_light.update();
 			}
 
@@ -124,11 +124,11 @@ int main() {
 
 			main_window.clear(sf::Color::White);
 			
-            draw_system.draw(main_window, draw_system::upcast_chain(world.prepareSprites(time_micro_sec, true)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
-            draw_system.draw(main_window, draw_system::upcast_chain(world.prepareSprites(time_micro_sec, false)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+            draw_system.draw(main_window, world.prepareSprites(time_micro_sec, true), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+            draw_system.draw(main_window, world.prepareSprites(time_micro_sec, false), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
             
 			visual_effect_texture.update(main_window);
-			main_window.draw(visual_effect_sprite, ambient_light.shader);
+			//main_window.draw(visual_effect_sprite, ambient_light.shader);
 
 			draw_system.draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepare_sprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packs_map)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
 			text_system::draw_string(world.getMouseDisplayName(), font_name::normal_font, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));
@@ -141,8 +141,9 @@ int main() {
 
 		draw_system.draw(main_window, draw_system::upcast_chain(menu_system.prepare_sprites()));
 
-		//textWriter.drawString(std::to_string(world.getWorldGenerator().scaleFactor), FontName::NormalFont, TextChainElement::defaultCharacterSize, 200, 200, mainWindow);
-
+		world.focusedObject->move_system.set_move_offset(time_micro_sec);
+		draw_system.draw(main_window, { new text_chain_element({500, 500}, {0, 0}, sf::Color::White, std::to_string(direction_system::calculate_angle(world.focusedObject->move_system.move_offset))) });
+		
 		console.interact(time_micro_sec);
 		console.draw(main_window);
 

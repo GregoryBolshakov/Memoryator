@@ -1,4 +1,5 @@
 #include "direction_system.h"
+#include "cmath"
 
 direction_system::direction_system()
 = default;
@@ -7,8 +8,15 @@ direction_system::direction_system()
 direction_system::~direction_system()
 = default;
 
-void direction_system::calculate_direction()
+void direction_system::calculate_direction(const long long elapsed_time)
 {
+	time_after_new_direction += elapsed_time;
+	
+	if (time_after_new_direction < time_for_new_direction)
+		return;
+	else
+		time_after_new_direction = 0;
+	
 	const auto cur_pos = *position;
 	const auto tar_pos = *move_position;
 
@@ -78,8 +86,15 @@ void direction_system::calculate_direction()
 		last_direction = direction;
 }
 
-side direction_system::calculate_side(const Vector2f position, const Vector2f other_object_position)
+side direction_system::calculate_side(const Vector2f position, const Vector2f other_object_position, const long long elapsed_time)
 {
+	time_after_new_side += elapsed_time;
+
+	if (time_after_new_side < time_for_new_side)
+		return side;
+	else
+		time_after_new_side = 0;
+	
 	auto answer = down;
 
 	const auto alpha = atan((float(other_object_position.y) - position.y) / (float(other_object_position.x) - position.x)) * 180 / pi;
@@ -95,6 +110,32 @@ side direction_system::calculate_side(const Vector2f position, const Vector2f ot
 				if (position.x >= other_object_position.x && abs(alpha) >= 0 && abs(alpha) <= 45)
 					answer = left;
 	return answer;
+}
+
+float direction_system::calculate_angle(Vector2f move_offset)
+{
+	if (abs(move_offset.x) <= 0.001f)
+		move_offset.x = 0;
+	if (abs(move_offset.y) <= 0.001f)
+		move_offset.y = 0;
+
+	if (move_offset.x == 0)
+	{
+		if (move_offset.y <= 0)
+			return 90;
+		return 270;
+	}
+	
+	if (move_offset.x > 0 && move_offset.y <= 0)
+		return atan(-move_offset.y / move_offset.x) * 180 / pi;
+	if (move_offset.x < 0 && move_offset.y <= 0)
+		return 90 - atan(-move_offset.y / abs(move_offset.x)) * 180 / pi + 90;
+	if (move_offset.x < 0 && move_offset.y > 0)
+		return atan(move_offset.y / abs(move_offset.x)) * 180 / pi + 180;
+	if (move_offset.x > 0 && move_offset.y > 0)
+		return 90 - atan(move_offset.y / move_offset.x) * 180 / pi + 270;
+
+	return -1;
 }
 
 side direction_system::invert_side(const ::side side)

@@ -219,6 +219,27 @@ void draw_system::draw_text_chain_element(RenderTarget& target, text_chain_eleme
 		text_chain_item->color);
 }
 
+void draw_system::draw_shape_chain_element(RenderTarget& target, shape_chain_element* shape_chain_element)
+{
+	if (shape_chain_element->type == shape_type::circle)
+	{
+		CircleShape circle(shape_chain_element->radius);
+		circle.setPosition(shape_chain_element->position);
+		circle.setFillColor(shape_chain_element->color);
+		target.draw(circle);
+		return;
+	}
+
+	if (shape_chain_element->type == shape_type::rectangle)
+	{
+		RectangleShape rect(shape_chain_element->size);
+		rect.setPosition(shape_chain_element->position);
+		rect.setFillColor(shape_chain_element->color);
+		target.draw(rect);
+		return;
+	}
+}
+
 void draw_system::draw(RenderTarget& target, const std::vector<drawable_chain_element*>& drawable_items, const float scale, const Vector2f camera_position)
 {
 	if (drawable_items.empty())
@@ -239,16 +260,22 @@ void draw_system::draw(RenderTarget& target, const std::vector<drawable_chain_el
 			continue;
 		}
 
-		const auto sprite_chain_item = dynamic_cast<sprite_chain_element*>(drawable_chain_item->drawable_chain_element);
+		const auto sprite_chain_item = dynamic_cast<::sprite_chain_element*>(drawable_chain_item->drawable_chain_element);
 		if (sprite_chain_item != nullptr)
 		{
 			draw_sprite_chain_element(target, sprite_chain_item, camera_position, screen_center, scale);
 		}
 
-		const auto text_chain_item = dynamic_cast<text_chain_element*>(drawable_chain_item->drawable_chain_element);
+		const auto text_chain_item = dynamic_cast<::text_chain_element*>(drawable_chain_item->drawable_chain_element);
 		if (text_chain_item != nullptr)
 		{
 			draw_text_chain_element(target, text_chain_item);
+		}
+
+		const auto shape_chain_element = dynamic_cast<::shape_chain_element*>(drawable_chain_item->drawable_chain_element);
+		if (shape_chain_element != nullptr)
+		{
+			draw_shape_chain_element(target, shape_chain_element);
 		}
 	}
 }

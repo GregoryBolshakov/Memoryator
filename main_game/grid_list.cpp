@@ -93,19 +93,18 @@ Vector2f grid_list::get_point_by_micro_block(const int micro_block_index) const
 	return result;
 }
 
-void grid_list::make_route(
+std::vector<std::pair<int, int>> grid_list::make_route(
 	const Vector2f start_pos,
 	const Vector2f finish_pos,
 	const float upper_left_x,
 	const float upper_left_y,
 	const float bottom_right_x,
-	const float bottom_right_y,
-	const int permissible_distance)
+	const float bottom_right_y)
 {
 	route.clear();
 
 	if (abs(start_pos.x - finish_pos.x) / micro_size_.x + abs(start_pos.y - finish_pos.y) / micro_size_.y < 1)
-		return;
+		return {};
 
 	const auto x_micro_blocks_count = int(ceil((bottom_right_x - upper_left_x) / micro_size_.x));
 	const auto y_micro_blocks_count = int(ceil((bottom_right_y - upper_left_y) / micro_size_.y));
@@ -121,14 +120,14 @@ void grid_list::make_route(
 
 	auto is_break = false;
 	
-	if (!micro_block_matrix[cur_micro_block_x][cur_micro_block_y]/* || !dynamicMicroBlockMatrix->at(curMicroBlockX)[curMicroBlockY]*/)
-	{
+	if (!micro_block_matrix[cur_micro_block_x][cur_micro_block_y])
+	{		
 		for (auto i = -1; i <= 1; i++)
 		{
 			for (auto j = -1; j <= 1; j++)
 				if (cur_micro_block_x + i > 0 && cur_micro_block_x + i < width_to_micro_x_ &&
 					cur_micro_block_y + j > 0 && cur_micro_block_y + j < height_to_micro_y_ && 
-					micro_block_matrix[cur_micro_block_x + i][cur_micro_block_y + j]/* && dynamicMicroBlockMatrix->at(curMicroBlockX + i)[curMicroBlockY + j]*/)
+					micro_block_matrix[cur_micro_block_x + i][cur_micro_block_y + j])
 				{
 					cur_micro_block_x += i;
 					cur_micro_block_y += j;
@@ -140,21 +139,65 @@ void grid_list::make_route(
 		}
 	}
 
-	if (!micro_block_matrix[last_micro_block_x][last_micro_block_y]/* || !dynamicMicroBlockMatrix->at(lastMicroBlockX)[lastMicroBlockY]*/)
+	if (!micro_block_matrix[last_micro_block_x][last_micro_block_y])
 	{
-		for (auto i = -permissible_distance; i <= permissible_distance; i++)
+		const int max_search_distance = 20;
+
+		for (int search_distance = 1; search_distance < max_search_distance; search_distance++)
 		{
-			is_break = false;
-			for (auto j = -permissible_distance; j <= permissible_distance; j++)
-				if (last_micro_block_x + i > 0 && last_micro_block_x + i < width_to_micro_x_ &&
-					last_micro_block_y + j > 0 && last_micro_block_y + j < height_to_micro_y_ && 
-					micro_block_matrix[last_micro_block_x + i][last_micro_block_y + j]/* && dynamicMicroBlockMatrix->at(lastMicroBlockX + i)[lastMicroBlockY + j]*/)
+			for (int cnt_x = -search_distance; cnt_x <= search_distance; cnt_x++)
+				if (last_micro_block_x + cnt_x > 0 && last_micro_block_x + cnt_x < width_to_micro_x_ &&
+					last_micro_block_y - search_distance > 0 && last_micro_block_y - search_distance < height_to_micro_y_ &&
+					micro_block_matrix[last_micro_block_x + cnt_x][last_micro_block_y - search_distance])
 				{
-					last_micro_block_x += i;
-					last_micro_block_y += j;
+					last_micro_block_x += cnt_x;
+					last_micro_block_y += -search_distance;
 					is_break = true;
 					break;
 				}
+
+			if (is_break)
+				break;
+
+			for (int cnt_x = -search_distance; cnt_x <= search_distance; cnt_x++)
+				if (last_micro_block_x + cnt_x > 0 && last_micro_block_x + cnt_x < width_to_micro_x_ &&
+					last_micro_block_y + search_distance > 0 && last_micro_block_y + search_distance < height_to_micro_y_ &&
+					micro_block_matrix[last_micro_block_x + cnt_x][last_micro_block_y + search_distance])
+				{
+					last_micro_block_x += cnt_x;
+					last_micro_block_y += search_distance;
+					is_break = true;
+					break;
+				}
+
+			if (is_break)
+				break;
+
+			for (int cnt_y = -search_distance; cnt_y <= search_distance; cnt_y++)
+				if (last_micro_block_x - search_distance && last_micro_block_x - search_distance < width_to_micro_x_ &&
+					last_micro_block_y + cnt_y > 0 && last_micro_block_y + cnt_y < height_to_micro_y_ &&
+					micro_block_matrix[last_micro_block_x - search_distance][last_micro_block_y + cnt_y])
+				{
+					last_micro_block_x += -search_distance;
+					last_micro_block_y += cnt_y;
+					is_break = true;
+					break;
+				}
+
+			if (is_break)
+				break;
+
+			for (int cnt_y = -search_distance; cnt_y <= search_distance; cnt_y++)
+				if (last_micro_block_x + search_distance && last_micro_block_x + search_distance < width_to_micro_x_ &&
+					last_micro_block_y + cnt_y > 0 && last_micro_block_y + cnt_y < height_to_micro_y_ &&
+					micro_block_matrix[last_micro_block_x + search_distance][last_micro_block_y + cnt_y])
+				{
+					last_micro_block_x += search_distance;
+					last_micro_block_y += cnt_y;
+					is_break = true;
+					break;
+				}
+			
 			if (is_break)
 				break;
 		}
@@ -163,7 +206,7 @@ void grid_list::make_route(
 	if (!micro_block_matrix[last_micro_block_x][last_micro_block_y])
 	{
 		route.clear();
-		return;
+		return {};
 	}
 
 	for (auto i = start_x_ind; i < start_x_ind + x_micro_blocks_count; i++)	
@@ -172,6 +215,8 @@ void grid_list::make_route(
 
 	distances[cur_micro_block_x][cur_micro_block_y] = 0;
 	bfs(start_x_ind + x_micro_blocks_count, start_y_ind + y_micro_blocks_count, cur_micro_block_x, cur_micro_block_y, last_micro_block_x, last_micro_block_y);
+
+	return route;
 }
 
 void grid_list::bfs(const int x_border, const int y_border, int start_x, int start_y, const int finish_x, const int finish_y)
@@ -205,7 +250,7 @@ void grid_list::bfs(const int x_border, const int y_border, int start_x, int sta
 					step -= 0.0001f;
 
 
-				if (distances[to.first][to.second] > distances[v.first][v.second] + step && (micro_block_matrix[to.first][to.second] != 0 && dynamic_micro_block_matrix->at(to.first)[to.second] != 0 || to.first == finish_x && to.second == finish_y))
+				if (distances[to.first][to.second] > distances[v.first][v.second] + step && (micro_block_matrix[to.first][to.second] != 0 || to.first == finish_x && to.second == finish_y))
 				{
 					distances[to.first][to.second] = distances[v.first][v.second] + step;
 					previous[to.first][to.second] = v;
@@ -262,12 +307,12 @@ void grid_list::bfs(const int x_border, const int y_border, int start_x, int sta
 			path.erase(path.begin() + 0);
 
 		// cut corners
-		auto cnt = 0;
+		/*auto cnt = 0;
 		while (cnt < int(path.size() - 3))
 			if (path[cnt + 1].first - path[cnt].first == path[cnt + 2].first - path[cnt + 1].first && path[cnt + 1].second - path[cnt].second == path[cnt + 2].second - path[cnt + 1].second)
 				path.erase(path.begin() + cnt);
 			else
-				cnt++;
+				cnt++;*/
 		//------------
 
 		route = path;
@@ -308,19 +353,14 @@ bool grid_list::is_intersect_with_others(world_object* object) const
 	return object->is_locked_place(check_blocks);
 }
 
-void grid_list::set_locked_micro_blocks(world_object* item, const bool value, const bool dynamic_matrix)
+void grid_list::set_locked_micro_blocks(world_object* item, const bool value)
 {
 	const auto world_item = dynamic_cast<world_object*>(item);
 	if (world_item)
 		for (const auto block : world_item->get_locked_micro_blocks())
 		{
-			if (!(block.x < 0 || block.x > width_to_micro_x_ || block.y < 0 || block.y > height_to_micro_y_))
-			{
-				if (dynamic_matrix)
-					dynamic_micro_block_matrix->at(block.x)[block.y] = value;
-				else
-					micro_block_matrix[block.x][block.y] = value;
-			}
+			if (!(block.x < 0 || block.x > width_to_micro_x_ || block.y < 0 || block.y > height_to_micro_y_))			
+				micro_block_matrix[block.x][block.y] = value;			
 		}
 }
 

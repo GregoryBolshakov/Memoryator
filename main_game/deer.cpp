@@ -7,9 +7,9 @@ deer::deer(const std::string& objectName, const Vector2f centerPosition) : neutr
 	conditional_size_units_ = {360, 300};
 	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
-	move_system_.default_speed = 0.00085F;
-	//defaultSpeed = 0.0002f;
-	move_system_.speed = move_system_.default_speed;
+	//move_system.default_speed = 0.00085F;
+	move_system.default_speed = 0.0004f;
+	move_system.speed = move_system.default_speed;
 	animation_speed_ = 10;
 	animationLength = 8;
 	radius_ = 70;
@@ -43,39 +43,39 @@ void deer::behavior_with_static(world_object* target, long long elapsedTime)
 void deer::behavior(const long long elapsedTime)
 {
 	endingPreviousAction();
-	direction_system_.calculate_direction();
+	direction_system.calculate_direction(elapsedTime);
 	fight_interact(elapsedTime);
 
 	if (health_point_ <= 0)
 	{
 		change_action(dead, true);
-		direction_system_.direction = direction::STAND;
+		direction_system.direction = direction::STAND;
 		return;
 	}
 
 	if (this->owner != nullptr)
 	{
-		move_system_.speed = move_system_.default_speed;
+		move_system.speed = move_system.default_speed;
 		if (current_action_ == commonHit)
 		{
-			lax_move_position = {-1, -1};
+			move_system.lax_move_position = {-1, -1};
 			return;
 		}
-		direction_system_.side = direction_system::calculate_side(position_, owner->get_position());
+		direction_system.side = direction_system.calculate_side(position_, owner->get_position(), elapsedTime);
 		if (helper::getDist(position_, owner->get_position()) > sight_range / 2)
 		{
 			change_action(moveSlowly, false, false);
-			lax_move_position = owner->get_position();
+			move_system.lax_move_position = owner->get_position();
 		}
 		else if (helper::getDist(position_, owner->get_position()) <= sight_range / 2.5 && current_action_ != relax)
 		{
 			change_action(relax, true, false);
-			lax_move_position = {-1, -1};
+			move_system.lax_move_position = {-1, -1};
 		}
 		return;
 	}
 
-	direction_system_.side = direction_system::calculate_side(position_, lax_move_position);
+	direction_system.side = direction_system.calculate_side(position_, move_system.lax_move_position, elapsedTime);
 
 	if (bound_target_ == nullptr)
 	{
@@ -84,12 +84,12 @@ void deer::behavior(const long long elapsedTime)
 
 	const auto distanceToTarget = helper::getDist(this->position_, bound_target_->get_position());
 	//speed = std::max(defaultSpeed, (defaultSpeed * 10) * (1 - (distanceToTarget) / sightRange * 1.5f));
-	animation_speed_ = std::max(0.0004F, 0.0003F * move_system_.speed / move_system_.default_speed);
+	animation_speed_ = std::max(0.0004F, 0.0003F * move_system.speed / move_system.default_speed);
 
 	if (distanceToTarget <= sight_range)
 	{
 		change_action(move, false, true);
-		lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
+		move_system.lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
 	}
 	else
 	{
@@ -98,12 +98,12 @@ void deer::behavior(const long long elapsedTime)
 			if (distanceToTarget >= sight_range * 1.5)
 			{
 				change_action(relax, true, true);
-				direction_system_.direction = direction::STAND;
-				lax_move_position = {-1, -1};
+				direction_system.direction = direction::STAND;
+				move_system.lax_move_position = {-1, -1};
 			}
 			else
 			{
-				lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
+				move_system.lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
 			}
 		}
 	}
@@ -123,10 +123,13 @@ int deer::get_build_type(Vector2f /*ounPos*/, Vector2f /*otherPos*/)
 
 void deer::endingPreviousAction()
 {
-	if (last_action_ == commonHit)
+	if (last_action_ == dead)
 	{
 		current_action_ = relax;
+		delete_promise_on();
 	}
+	if (last_action_ == commonHit)	
+		current_action_ = relax;
 
 	last_action_ = relax;
 }
@@ -139,7 +142,7 @@ Vector2f deer::getHeadPosition()
 {
 	const auto upperLeft = Vector2f(position_.x - texture_box_offset_.x, position_.y - texture_box_offset_.y);
 
-	if (direction_system_.last_direction == direction::UP)
+	if (direction_system.last_direction == direction::UP)
 	{
 		if (current_sprite_[0] == 1)
 		{
@@ -170,7 +173,7 @@ Vector2f deer::getHeadPosition()
 			return {upperLeft.x + conditional_size_units_.x * 0.575F, upperLeft.y + conditional_size_units_.y * 0.075F};
 		}
 	}
-	if (direction_system_.last_direction == direction::DOWN)
+	if (direction_system.last_direction == direction::DOWN)
 	{
 		if (current_sprite_[0] == 1)
 		{
@@ -201,7 +204,7 @@ Vector2f deer::getHeadPosition()
 			return {upperLeft.x + conditional_size_units_.x * 0.445F, upperLeft.y + conditional_size_units_.y * 0.182F};
 		}
 	}
-	if (direction_system::cut_diagonals(direction_system_.last_direction) == direction::LEFT)
+	if (direction_system::cut_diagonals(direction_system.last_direction) == direction::LEFT)
 	{
 		if (current_sprite_[0] == 1)
 		{
@@ -232,7 +235,7 @@ Vector2f deer::getHeadPosition()
 			return {upperLeft.x + conditional_size_units_.x * 0.277F, upperLeft.y + conditional_size_units_.y * 0.138F};
 		}
 	}
-	if (direction_system::cut_diagonals(direction_system_.last_direction) == direction::RIGHT)
+	if (direction_system::cut_diagonals(direction_system.last_direction) == direction::RIGHT)
 	{
 		if (current_sprite_[0] == 1)
 		{
@@ -271,13 +274,13 @@ std::vector<sprite_chain_element*> deer::prepare_sprites(long long elapsedTime)
 	auto body = new sprite_chain_element(pack_tag::deer, pack_part::stand, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
 	animation_speed_ = 10;
 
-	auto spriteDirection = direction_system::cut_diagonals(direction_system_.last_direction);
+	auto spriteDirection = direction_system::cut_diagonals(direction_system.last_direction);
 
-	if (direction_system_.side == right)
+	if (direction_system.side == right)
 	{
 		body->mirrored = true;
 	}
-	if (direction_system_.last_direction == direction::RIGHT || direction_system_.last_direction == direction::UPRIGHT || direction_system_.last_direction == direction::DOWNRIGHT)
+	if (direction_system.last_direction == direction::RIGHT || direction_system.last_direction == direction::UPRIGHT || direction_system.last_direction == direction::DOWNRIGHT)
 	{
 		spriteDirection = direction_system::cut_rights(spriteDirection);
 		body->mirrored = true;

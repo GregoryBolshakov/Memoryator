@@ -40,12 +40,13 @@ void neutral_mob::behavior(long long elapsedTime)
 	if (health_point_ <= 0)
 	{
 		change_action(dead, true);
-		direction_system_.direction = direction::STAND;
+		direction_system.direction = direction::STAND;
+		delete_promise_on();
 		return;
 	}
 	fight_interact(elapsedTime);
 
-	direction_system_.side = direction_system::calculate_side(position_, move_position_);
+	direction_system.side = direction_system.calculate_side(position_, move_system.lax_move_position, elapsedTime);
 	//return;
 	if (bound_target_ == nullptr)
 		return;
@@ -54,7 +55,7 @@ void neutral_mob::behavior(long long elapsedTime)
 	if (distanceToTarget <= sight_range)
 	{
 		change_action(move, false, true);
-		move_position_ = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
+		move_system.lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
 	}
 	else
 	{
@@ -63,11 +64,11 @@ void neutral_mob::behavior(long long elapsedTime)
 			if (distanceToTarget >= sight_range * 1.5)
 			{
 				change_action(relax, true, true);
-				direction_system_.direction = direction::STAND;
-				move_position_ = { -1, -1 };
+				direction_system.direction = direction::STAND;
+				move_system.lax_move_position = { -1, -1 };
 			}
 			else
-				move_position_ = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
+				move_system.lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
 		}
 	}
 
@@ -77,5 +78,6 @@ void neutral_mob::behavior(long long elapsedTime)
 
 void neutral_mob::fight_interact(long long elapsedTime, dynamic_object* target)
 {
-	move_system_.push_away(elapsedTime);
+	time_after_hitself_ += elapsedTime;
+	move_system.push_away(elapsedTime);
 }

@@ -7,7 +7,7 @@ owl_boss::owl_boss(std::string objectName, Vector2f centerPosition) : dynamic_ob
 	conditional_size_units_ = { 600, 600 };
 	current_sprite_[0] = 1;
 	time_for_new_sprite_ = 0;
-	move_system_.default_speed = 0.0005f;
+	move_system.default_speed = 0.0005f;
 	animation_speed_ = 0.0005f;
 	animation_length_ = 1;
 	current_sprite_[0] = 1;
@@ -18,8 +18,8 @@ owl_boss::owl_boss(std::string objectName, Vector2f centerPosition) : dynamic_ob
 	time_after_hitself_ = 0;
 	time_for_new_hit_self = long(6e5);
 	time_for_new_hit = 2000000;
-	route_generation_ability_ = false;
-	move_system_.can_crash_into_dynamic = false;
+	move_system.route_generation_ability = false;
+	move_system.can_crash_into_dynamic = false;
 
 	to_save_name_ = "monster";
 }
@@ -41,14 +41,14 @@ void owl_boss::behavior(long long elapsedTime)
 		if (jerk_time_ > 0)
 		{
 			jerk_time_ -= elapsedTime;
-			move_system_.speed = jerk_distance_ / float(jerk_duration_) * float(pow(jerk_time_ / jerk_duration_, jerk_deceleration_));
-			move_system_.speed = std::max(move_system_.default_speed / jerk_deceleration_, move_system_.speed);
+			move_system.speed = jerk_distance_ / float(jerk_duration_) * float(pow(jerk_time_ / jerk_duration_, jerk_deceleration_));
+			move_system.speed = std::max(move_system.default_speed / jerk_deceleration_, move_system.speed);
 			//speed = defaultSpeed;
 		}
 		else
 		{
 			is_jerking_ = false;
-			move_system_.speed = move_system_.default_speed;
+			move_system.speed = move_system.default_speed;
 		}
 	}
 	//----------------
@@ -93,18 +93,18 @@ void owl_boss::set_target(dynamic_object& object)
 
 void owl_boss::behavior_with_dynamic(dynamic_object* target, const long long elapsedTime)
 {
-	debug_info = std::to_string(helper::getDist(this->position_, move_position_) / jerk_distance_ * 1000.0f);
+	debug_info = std::to_string(helper::getDist(this->position_, move_system.lax_move_position) / jerk_distance_ * 1000.0f);
 	if (health_point_ <= 0)
 	{
 		change_action(dead, true, false);
-		direction_system_.direction = direction::STAND;
+		direction_system.direction = direction::STAND;
 		return;
 	}
 
 	if (target->tag != entity_tag::hero)
 		return;
 
-	direction_system_.side = direction_system::calculate_side(position_, move_position_);
+	direction_system.side = direction_system.calculate_side(position_, move_system.lax_move_position, elapsedTime);
 
 	time_after_hit += elapsedTime;
 
@@ -112,44 +112,44 @@ void owl_boss::behavior_with_dynamic(dynamic_object* target, const long long ela
 	{
 		const auto dragCoefficient = 1.2f; // 1..2
 		const auto startPower = 1.1f; //1..2
-		move_system_.speed = pow(move_system_.default_speed, dragCoefficient / (startPower + float(time_after_hit) / float(time_for_new_hit)));
+		move_system.speed = pow(move_system.default_speed, dragCoefficient / (startPower + float(time_after_hit) / float(time_for_new_hit)));
 		if (helper::getDist(this->position_, target->get_position()) / jerk_distance_ <= 0.2f)
-			move_system_.speed *= helper::getDist(this->position_, target->get_position()) / jerk_distance_;
+			move_system.speed *= helper::getDist(this->position_, target->get_position()) / jerk_distance_;
 	}
-	move_system_.speed = std::max(move_system_.default_speed / 10, move_system_.speed);
+	move_system.speed = std::max(move_system.default_speed / 10, move_system.speed);
 
 	if (flaps_before_jerk_count_ > 1)
 	{
 		time_after_hit = 0;
 		if (!is_jerking_)
-			move_position_ = this->position_;
+			move_system.lax_move_position = this->position_;
 		return;
 	}
 	if (flaps_before_jerk_count_ == 0)
 	{
 		change_action(move, false, true);
-		move_system_.speed = move_system_.default_speed;
+		move_system.speed = move_system.default_speed;
 		jerk_distance_ = helper::getDist(this->position_, target->get_position());
 	}
 
-	if (move_system_.speed <= move_system_.default_speed * 3) //with greater acceleration the owl loses the ability to coordinate the route
+	if (move_system.speed <= move_system.default_speed * 3) //with greater acceleration the owl loses the ability to coordinate the route
 	{
-		move_position_ = Vector2f(target->get_position().x + (target->get_position().x - this->position_.x) / 1.0f, target->get_position().y + (target->get_position().y - this->position_.y) / 1.0f);
+		move_system.lax_move_position = Vector2f(target->get_position().x + (target->get_position().x - this->position_.x) / 1.0f, target->get_position().y + (target->get_position().y - this->position_.y) / 1.0f);
 	}
 
-	if (helper::getDist(this->position_, move_position_) / move_system_.speed <= (40 / animation_speed_) * 3 && current_action_ == move)
+	if (helper::getDist(this->position_, move_system.lax_move_position) / move_system.speed <= (40 / animation_speed_) * 3 && current_action_ == move)
 	{
 		change_action(stopFlap, true, false);
 	}
 
-	if (helper::getDist(this->position_, move_position_) <= this->radius_) //hit interaction
+	if (helper::getDist(this->position_, move_system.lax_move_position) <= this->radius_) //hit interaction
 	{
 		if (helper::getDist(this->position_, target->get_position()) <= this->radius_)
 			target->take_damage(this->strength_, position_);
 		time_after_hit = 0;
 		flaps_before_jerk_count_ = rand() % 3 + 3;
 		change_action(upFlap, true, true);
-		move_system_.speed = move_system_.default_speed;
+		move_system.speed = move_system.default_speed;
 	}
 }
 
@@ -172,12 +172,12 @@ void owl_boss::jerk(const float power, const float deceleration, const Vector2f 
 	is_jerking_ = true;
 	jerk_distance_ = 400;
 
-	move_position_ = Vector2f(destinationPoint);
+	move_system.lax_move_position = Vector2f(destinationPoint);
 }
 
 void owl_boss::fight_interact(const long long elapsedTime, dynamic_object* target)
 {
-	move_system_.push_away(elapsedTime);
+	move_system.push_away(elapsedTime);
 }
 
 std::vector<sprite_chain_element*> owl_boss::prepare_sprites(long long elapsedTime)

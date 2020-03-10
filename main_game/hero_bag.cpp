@@ -1,6 +1,4 @@
 #include "hero_bag.h"
-
-#include "grid_list.h"
 #include "helper.h"
 
 hero_bag::hero_bag()

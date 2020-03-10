@@ -1,4 +1,6 @@
 #pragma once
+#ifndef BUILD_SYSTEM_H
+#define BUILD_SYSTEM_H
 
 #include <SFML/Graphics.hpp>
 
@@ -64,3 +66,5 @@ private:
 	std::string build_system_objects_info_file_directory_ = "Game/buildSystem/buildSystemObjectsInfo.txt";
 	Font font_;
 };
+
+#endif

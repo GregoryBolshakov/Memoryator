@@ -1,4 +1,6 @@
 #pragma once
+#ifndef WORLD_GENERATOR_H
+#define WORLD_GENERATOR_H
 
 #include "object_initializer.h"
 #include "grid_list.h"
@@ -66,3 +68,5 @@ private:
 	Vector2i biomesChangeCenter = { 0, 0 };
 	std::vector<std::vector<Vector2i>> biomesBlocksOffsets = {};
 };
+
+#endif

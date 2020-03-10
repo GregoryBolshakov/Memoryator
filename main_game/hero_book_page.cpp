@@ -2,9 +2,6 @@
 
 #include "hero_book_page.h"
 
-#include "helper.h"
-#include "grid_list.h"
-
 hero_book_page::hero_book_page()
 {
 	initDrafts();

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef GRID_LIST_H
+#define GRID_LIST_H
 
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
@@ -24,7 +26,7 @@ public:
 	[[nodiscard]] std::vector<std::vector<world_object*>> get_cells() const { return cells_; }
 	
 	size_t get_block_items_amount(const int index) { return cells_[index].size(); }
-	void make_route(Vector2f start_pos, Vector2f finish_pos, float upper_left_x, float upper_left_y, float bottom_right_x, float bottom_right_y, int permissible_distance = 1);
+	std::vector<std::pair<int, int>> make_route(Vector2f start_pos, Vector2f finish_pos, float upper_left_x, float upper_left_y, float bottom_right_x, float bottom_right_y);
 	void add_item(world_object* item, const std::string& name, float x, float y);
 	world_object* get_item_by_name(const std::string& name);
 	std::vector<world_object*> get_items(float upper_left_x, float upper_left_y, float bottom_right_x, float bottom_right_y);
@@ -34,8 +36,7 @@ public:
 	
 	void clear_cell(int cell_index);
 	void delete_item(const std::string& name);
-	void set_locked_micro_blocks(world_object* item, bool value = false, bool dynamic_matrix = false);
-	void bound_dynamic_matrix(std::vector<std::vector<bool>>* matrix) { this->dynamic_micro_block_matrix = matrix; }
+	void set_locked_micro_blocks(world_object* item, bool value = false);
 	
 	[[nodiscard]] size_t get_size() const { return items_.size(); }
 
@@ -44,7 +45,6 @@ public:
 	bool is_intersect_with_others(world_object* object) const;
 
 	std::vector<std::vector<bool>> micro_block_matrix;
-	std::vector<std::vector<bool>>* dynamic_micro_block_matrix = nullptr;
 	std::vector<std::vector<float>> distances;
 	std::vector<std::vector<std::pair<int, int>>> previous;
 	std::vector<std::pair<int, int>> route = {{}};
@@ -64,4 +64,4 @@ private:
 	int height_to_micro_y_{};
 };
 
-
+#endif

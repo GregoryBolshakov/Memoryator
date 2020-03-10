@@ -4,14 +4,14 @@
 
 dynamic_object::dynamic_object(std::string objectName, const Vector2f centerPosition) : world_object(std::move(objectName), centerPosition), current_action_()
 {
-	move_system_.init(&tag, &radius_, &position_, &color, &current_action_, &direction_system_);
-	direction_system_.init(&position_, &move_position_);
+	move_system.init(&tag, &radius_, &position_, &color, &current_action_, &direction_system);
+	direction_system.init(&position_, &move_system.move_position);	
 }
 
 dynamic_object::~dynamic_object()
 = default;
 
-void dynamic_object::handle_input(bool used_mouse)
+void dynamic_object::handle_input(bool used_mouse, long long elapsed_time)
 {
 }
 
@@ -49,13 +49,13 @@ void dynamic_object::take_damage(const float damage, const Vector2f attacker_pos
 	this->time_after_hitself_ = 0;
 	this->health_point_ -= damage / this->armor_;
 
-	move_system_.push_damage = damage;
-	move_system_.push_duration = move_system_.default_push_duration;
-	move_system_.push_rest_duration = move_system_.push_duration;
-	move_system_.red_duration = 2 * move_system_.push_duration;
-	move_system_.red_rest_duration = move_system_.red_duration;
+	move_system.push_damage = damage;
+	move_system.push_duration = move_system.default_push_duration;
+	move_system.push_rest_duration = move_system.push_duration;
+	move_system.red_duration = 2 * move_system.push_duration;
+	move_system.red_rest_duration = move_system.red_duration;
 
-	move_system_.push_distance = helper::getDist(this->get_position(), attacker_pos);
+	move_system.push_distance = helper::getDist(this->get_position(), attacker_pos);
 	if (attacker_pos != Vector2f(-1, -1))
-		move_system_.push_direction = Vector2f(this->position_.x - attacker_pos.x, this->position_.y - attacker_pos.y);
+		move_system.push_direction = Vector2f(this->position_.x - attacker_pos.x, this->position_.y - attacker_pos.y);
 }
