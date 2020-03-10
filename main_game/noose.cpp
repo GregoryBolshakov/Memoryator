@@ -12,14 +12,14 @@ noose::noose(const std::string& objectName, const Vector2f centerPosition, world
 	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
 	this->owner = owner;
-	move_system_.default_speed = 0.0007f;
-	move_system_.speed = move_system_.default_speed;
+	move_system.default_speed = 0.0007f;
+	move_system.speed = move_system.default_speed;
 	animation_speed_ = 10;
 	animationLength = 8;
 	radius_ = 50;
 	current_action_ = move;
-	route_generation_ability_ = false;
-	move_system_.can_crash_into_dynamic = false;
+	move_system.route_generation_ability = false;
+	move_system.can_crash_into_dynamic = false;
 	noose::jerk(2, 1);
 	to_save_name_ = "noose";
 	tag = entity_tag::noose;
@@ -112,7 +112,7 @@ void noose::behavior(long long elapsedTime)
 	{
 		auto deer = dynamic_cast<::deer*>(bound_target_);
 		position_ = deer->getHeadPosition();
-		move_system_.speed = 0;
+		move_system.speed = 0;
 		change_action(relax, false, true);
 	}
 }
@@ -131,8 +131,8 @@ void noose::stopping(bool doStand, bool forgetBoundTarget)
 {
 	if (doStand)
 	{
-		this->move_position_ = {-1, -1};
-		direction_system_.direction = direction::STAND;
+		move_system.lax_move_position = {-1, -1};
+		direction_system.direction = direction::STAND;
 	}
 
 	if (forgetBoundTarget && bound_target_ != nullptr)
@@ -158,12 +158,12 @@ void noose::jerkInteract(const long long elapsedTime)
 		if (jerk_time_ > 0)
 		{
 			jerk_time_ -= elapsedTime;
-			move_system_.speed = jerk_distance_ / float(jerk_duration_) * jerk_power_ * float(pow(float(jerk_time_) / float(jerk_duration_), jerk_deceleration_));
-			move_system_.speed = std::max(move_system_.default_speed / jerk_deceleration_, move_system_.speed);
+			move_system.speed = jerk_distance_ / float(jerk_duration_) * jerk_power_ * float(pow(float(jerk_time_) / float(jerk_duration_), jerk_deceleration_));
+			move_system.speed = std::max(move_system.default_speed / jerk_deceleration_, move_system.speed);
 		}
 		else
 		{
-			move_system_.speed = 0;
+			move_system.speed = 0;
 		}
 	}
 }
@@ -182,7 +182,7 @@ void noose::jerk(const float power, const float deceleration, Vector2f /*destina
 	const auto mousePos = Vector2f(Mouse::getPosition());
 	const auto screenCenter = Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2);
 	const auto coeff = jerk_distance_ / helper::getDist(mousePos, screenCenter);
-	lax_move_position = Vector2f(owner->get_position().x + (mousePos.x - screenCenter.x) * coeff, owner->get_position().y + (mousePos.y - screenCenter.y) * coeff);
+	move_system.lax_move_position = Vector2f(owner->get_position().x + (mousePos.x - screenCenter.x) * coeff, owner->get_position().y + (mousePos.y - screenCenter.y) * coeff);
 }
 
 void noose::fight_interact(long long elapsedTime, dynamic_object* target)

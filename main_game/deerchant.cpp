@@ -15,8 +15,8 @@ deerchant::deerchant(std::string objectName, const Vector2f centerPosition) : dy
 	for (auto& number : current_sprite_)
 		number = 1;	
 	time_for_new_sprite_ = 0;
-	move_system_.default_speed = 0.0006f;
-	move_system_.speed = move_system_.default_speed;
+	move_system.default_speed = 0.0006f;
+	move_system.speed = move_system.default_speed;
 	animation_speed_ = 0.0010f;
 	radius_ = 50;
 	moveEndDistance = 55;
@@ -28,7 +28,7 @@ deerchant::deerchant(std::string objectName, const Vector2f centerPosition) : dy
 	current_action_ = relax;
 	to_save_name_ = "hero";
 	tag = entity_tag::hero;
-	move_system_.can_crash_into_static = true;
+	move_system.can_crash_into_static = true;
 
 	for (auto i = 0; i < 3; i++)
 		bags.emplace_back();
@@ -79,12 +79,12 @@ void deerchant::moveEnd(const bool animate, const bool invertDirection)
 
 	auto pushPosition = position_;
 
-	if (direction_system_.direction != direction::STAND)
+	if (direction_system.direction != direction::STAND)
 	{
-		move_system_.set_move_offset(10000);
-		pushPosition = position_ - move_system_.move_offset;
+		move_system.set_move_offset(10000);
+		pushPosition = position_ - move_system.move_offset;
 		if (invertDirection)
-			pushPosition = position_ + move_system_.move_offset;
+			pushPosition = position_ + move_system.move_offset;
 	}
 	else
 	{
@@ -105,7 +105,7 @@ void deerchant::moveEnd(const bool animate, const bool invertDirection)
 	//bumpDistance += distance;
 }
 
-void deerchant::handle_input(const bool usedMouse)
+void deerchant::handle_input(const bool usedMouse, long long elapsed_time)
 {
 	//high-priority actions
 	if (current_action_ == absorbs || current_action_ == grab || current_action_ == dropping || current_action_ == builds || current_action_ == jerking)
@@ -114,7 +114,7 @@ void deerchant::handle_input(const bool usedMouse)
 	if (current_action_ == throwNoose && heldItem->content != std::make_pair(entity_tag::noose, 1))
 		change_action(relax, true, false);
 
-	if (Keyboard::isKeyPressed(Keyboard::Space) && current_action_ != jerking && direction_system_.direction != direction::STAND)
+	if (Keyboard::isKeyPressed(Keyboard::Space) && current_action_ != jerking && direction_system.direction != direction::STAND)
 	{
 		jerk(3, 2);
 		return;
@@ -122,39 +122,39 @@ void deerchant::handle_input(const bool usedMouse)
 	//---------------------
 
 	setHitDirection();
-	move_system_.move_offset = Vector2f(-1, -1);
-	direction_system_.direction = direction::STAND;
+	move_system.move_offset = Vector2f(-1, -1);
+	direction_system.direction = direction::STAND;
 	if (Keyboard::isKeyPressed(Keyboard::A))					
-		direction_system_.direction = direction::LEFT;
+		direction_system.direction = direction::LEFT;
 	if (Keyboard::isKeyPressed(Keyboard::D))						
-		direction_system_.direction = direction::RIGHT;
+		direction_system.direction = direction::RIGHT;
 	if (Keyboard::isKeyPressed(Keyboard::W))							
-		direction_system_.direction = direction::UP;
+		direction_system.direction = direction::UP;
 	if (Keyboard::isKeyPressed(Keyboard::S))								
-		direction_system_.direction = direction::DOWN;
+		direction_system.direction = direction::DOWN;
 	if (Keyboard::isKeyPressed(Keyboard::A) && Keyboard::isKeyPressed(Keyboard::W))
-		direction_system_.direction = direction::UPLEFT;
+		direction_system.direction = direction::UPLEFT;
 	if (Keyboard::isKeyPressed(Keyboard::D) && Keyboard::isKeyPressed(Keyboard::W))
-		direction_system_.direction = direction::UPRIGHT;
+		direction_system.direction = direction::UPRIGHT;
 	if (Keyboard::isKeyPressed(Keyboard::A) && Keyboard::isKeyPressed(Keyboard::S))
-		direction_system_.direction = direction::DOWNLEFT;
+		direction_system.direction = direction::DOWNLEFT;
 	if (Keyboard::isKeyPressed(Keyboard::D) && Keyboard::isKeyPressed(Keyboard::S))
-		direction_system_.direction = direction::DOWNRIGHT;
-	if (direction_system_.direction != direction::STAND && current_action_ != actions::moveEnd)
+		direction_system.direction = direction::DOWNRIGHT;
+	if (direction_system.direction != direction::STAND && current_action_ != actions::moveEnd)
 	{
- 		for (auto i = 0u; i < move_system_.bumped_positions.size(); i++)
-			if (move_system_.bumped_positions[i].cancelable)
-				move_system_.bumped_positions.erase(move_system_.bumped_positions.begin() + i);
-		move_system_.push_away(0);
+ 		for (auto i = 0u; i < move_system.bumped_positions.size(); i++)
+			if (move_system.bumped_positions[i].cancelable)
+				move_system.bumped_positions.erase(move_system.bumped_positions.begin() + i);
+		move_system.push_away(0);
 
-		if (direction_system_.direction != direction_system_.last_direction)
+		if (direction_system.direction != direction_system.last_direction)
 		{
-			calculateSpeedLineDirection(direction_system_.last_direction, direction_system_.direction);
+			calculateSpeedLineDirection(direction_system.last_direction, direction_system.direction);
 			current_sprite_[2] = 1;
 		}
 
 		animationSmooth();
-		direction_system_.last_direction = direction_system_.direction;
+		direction_system.last_direction = direction_system.direction;
 		wasPushedAfterMovement = false;
 	}
 	else
@@ -167,13 +167,13 @@ void deerchant::handle_input(const bool usedMouse)
 		{
 			auto isIntersect = false;
 			if (bound_target_)
-				isIntersect = (sqrt(pow(this->position_.x - lax_move_position.x, 2) + pow(this->position_.y - lax_move_position.y, 2)) <= (this->radius_ + bound_target_->get_radius()));
+				isIntersect = (sqrt(pow(this->position_.x - move_system.lax_move_position.x, 2) + pow(this->position_.y - move_system.lax_move_position.y, 2)) <= (this->radius_ + bound_target_->get_radius()));
 			if (isIntersect || !bound_target_ && current_action_ != actions::moveEnd)
 			{				
-				direction_system_.direction = direction::STAND;
+				direction_system.direction = direction::STAND;
 				if (current_action_ == actions::move || current_action_ == actions::moveEnd)
 				{
-					direction_system_.calculate_direction();
+					direction_system.calculate_direction(elapsed_time);
 					change_action(relax, true, false);
 				}
 			}
@@ -181,8 +181,8 @@ void deerchant::handle_input(const bool usedMouse)
 			{
 				if (bound_target_/* && Helper::getDist(position, laxMovePosition) > (this->radius + boundTarget->getRadius())*/)
 				{
-					direction_system_.calculate_direction();
-					move_system_.set_move_offset(0);
+					direction_system.calculate_direction(elapsed_time);
+					move_system.set_move_offset(0);
 					change_action(move, !(current_action_ == move || current_action_ == actions::moveEnd), false);
 				}
 			}
@@ -198,7 +198,7 @@ void deerchant::handle_input(const bool usedMouse)
 		return;
 	}
 
-	if (direction_system_.direction != direction::STAND && current_action_ != moveHit && !Mouse::isButtonPressed(Mouse::Left))
+	if (direction_system.direction != direction::STAND && current_action_ != moveHit && !Mouse::isButtonPressed(Mouse::Left))
 		change_action(move, current_action_ == relax/*, currentAction != move*/, false);
 
 	if (Keyboard::isKeyPressed(Keyboard::A) || Keyboard::isKeyPressed(Keyboard::W) || Keyboard::isKeyPressed(Keyboard::D) || Keyboard::isKeyPressed(Keyboard::S) ||
@@ -217,7 +217,7 @@ void deerchant::handle_input(const bool usedMouse)
 
 	if (Mouse::isButtonPressed(Mouse::Left) && !usedMouse)
 	{
-		if (direction_system_.direction != direction::STAND)
+		if (direction_system.direction != direction::STAND)
 		{			
 			if (current_action_ != moveHit && current_action_ != commonHit)
 				current_sprite_[0] = 1;
@@ -366,9 +366,9 @@ void deerchant::stopping(const bool doStand, const bool forgetBoundTarget, const
 
 	if (doStand)
 	{
-		this->lax_move_position = { -1, -1 };
-		move_system_.move_offset = { -1, -1 };
-		direction_system_.direction = direction_system_.last_direction;
+		move_system.lax_move_position = { -1, -1 };
+		move_system.move_offset = { -1, -1 };
+		direction_system.direction = direction_system.last_direction;
 	}
 
 	if (forgetBoundTarget && bound_target_ != nullptr)
@@ -397,16 +397,16 @@ void deerchant::setHitDirection()
 	const auto alpha = atan((yPos - mouseY) / (xPos - mouseX)) * 180 / pi;
 	
 	if (mouseY <= yPos && abs(alpha) >= 45 && abs(alpha) <= 90)
-		direction_system_.side = up;
+		direction_system.side = up;
 	else
 		if (mouseX >= xPos && abs(alpha) >= 0 && abs(alpha) <= 45)
-			direction_system_.side = right;
+			direction_system.side = right;
 		else
 			if (mouseY >= yPos && abs(alpha) >= 45 && abs(alpha) <= 90)
-				direction_system_.side = down;
+				direction_system.side = down;
 			else
 				if (mouseX <= xPos && abs(alpha) >= 0 && abs(alpha) <= 45)
-					direction_system_.side = left;
+					direction_system.side = left;
 }
 
 void deerchant::set_target(dynamic_object& object)
@@ -417,11 +417,11 @@ void deerchant::set_target(dynamic_object& object)
 void deerchant::behavior_with_dynamic(dynamic_object* target, long long elapsedTime)
 {
 	if (helper::getDist(position_, target->get_position()) <= radius_ + target->get_radius())
-		move_system_.push_by_bumping(target->get_position(), target->get_radius(), target->get_move_system().can_crash_into_dynamic);
+		move_system.push_by_bumping(target->get_position(), target->get_radius(), target->move_system.can_crash_into_dynamic);
 
 	const auto isIntersect = helper::getDist(position_, target->get_position()) <= this->radius_ + target->get_radius() + hitDistance;
 
-	if (isIntersect && direction_system::calculate_side(position_, target->get_position()) != direction_system::invert_side(direction_system_.side))
+	if (isIntersect && direction_system.calculate_side(position_, target->get_position(), elapsedTime) != direction_system::invert_side(direction_system.side))
 	{
 		if ((this->current_action_ == commonHit || this->current_action_ == moveHit) && (this->get_sprite_number() == 4 || this->get_sprite_number() == 5 || this->get_sprite_number() == 8))	
 			target->take_damage(this->get_strength(), position_);		
@@ -449,14 +449,14 @@ void deerchant::behavior(const long long elapsedTime)
 	// interactions with target
 	if (!bound_target_ || bound_target_->is_processed)
 	{
-		lax_move_position = Vector2f(-1, -1);
+		move_system.lax_move_position = Vector2f(-1, -1);
 		return;
 	}	
 
 	if (current_action_ != jerking && bound_target_->is_processed)
-		lax_move_position = bound_target_->get_position();
+		move_system.lax_move_position = bound_target_->get_position();
 
-	const auto isIntersect = (helper::getDist(position_, lax_move_position)) <= (this->radius_ + bound_target_->get_radius());
+	const auto isIntersect = (helper::getDist(position_, move_system.lax_move_position)) <= (this->radius_ + bound_target_->get_radius());
 
 	//touch selected object 
 	if (isIntersect)
@@ -552,7 +552,7 @@ void deerchant::onMouseUp(const int currentMouseButton, world_object *mouseSelec
 		}
 		bound_target_ = new empty_object("buildItem", mouseWorldPos);
 		bound_target_->tag = entity_tag::buildObject;
-		lax_move_position = mouseWorldPos;
+		move_system.lax_move_position = mouseWorldPos;
 		return;
 	}
 
@@ -581,7 +581,7 @@ void deerchant::onMouseUp(const int currentMouseButton, world_object *mouseSelec
 			}
 			bound_target_ = new empty_object("droppedItem", mouseWorldPos);
 			bound_target_->tag = entity_tag::dropPoint;
-			lax_move_position = mouseWorldPos;
+			move_system.lax_move_position = mouseWorldPos;
 			return;
 		}
 
@@ -596,7 +596,7 @@ void deerchant::onMouseUp(const int currentMouseButton, world_object *mouseSelec
 				}
 				bound_target_ = new empty_object("droppedBag", mouseWorldPos);
 				bound_target_->tag = entity_tag::dropPoint;
-				lax_move_position = mouseWorldPos;
+				move_system.lax_move_position = mouseWorldPos;
 			}
 		}
 		return;
@@ -605,7 +605,7 @@ void deerchant::onMouseUp(const int currentMouseButton, world_object *mouseSelec
 	if (currentMouseButton == 2)
 	{
 		bound_target_ = mouseSelectedObject;
-		lax_move_position = mouseSelectedObject->get_position();
+		move_system.lax_move_position = mouseSelectedObject->get_position();
 	}
 }
 
@@ -613,12 +613,12 @@ void deerchant::endingPreviousAction()
 {
 	if (last_action_ == commonHit && !Mouse::isButtonPressed(Mouse::Left))
 	{
-		direction_system_.last_direction = direction_system::side_to_direction(direction_system_.side);
+		direction_system.last_direction = direction_system::side_to_direction(direction_system.side);
 		change_action(relax, true, false);
 	}
 	if (last_action_ == moveHit && !Mouse::isButtonPressed(Mouse::Left))
 	{
-		direction_system_.last_direction = direction_system::side_to_direction(direction_system_.side);
+		direction_system.last_direction = direction_system::side_to_direction(direction_system.side);
 		change_action(move, true, false);
 	}
 	if (last_action_ == actions::moveEnd)
@@ -694,7 +694,7 @@ void deerchant::endingPreviousAction()
 	}
     if (last_action_ == throwNoose)
     {
-		direction_system_.last_direction = direction_system::side_to_direction(direction_system_.side);
+		direction_system.last_direction = direction_system::side_to_direction(direction_system.side);
 		change_action(relax, true, false);
     }
 	if (last_action_ == open)
@@ -740,89 +740,89 @@ void deerchant::endingPreviousAction()
 
 void deerchant::animationSmooth()
 {
-	if (direction_system_.direction == direction::UP && direction_system_.last_direction == direction::LEFT ||
-		direction_system_.direction == direction::LEFT && direction_system_.last_direction == direction::UP)
+	if (direction_system.direction == direction::UP && direction_system.last_direction == direction::LEFT ||
+		direction_system.direction == direction::LEFT && direction_system.last_direction == direction::UP)
 	{
 		smoothDirections = { direction::UPLEFT, direction::STAND };
 		return;
 	}
-	if (direction_system_.direction == direction::DOWN && direction_system_.last_direction == direction::LEFT ||
-		direction_system_.direction == direction::LEFT && direction_system_.last_direction == direction::DOWN)
+	if (direction_system.direction == direction::DOWN && direction_system.last_direction == direction::LEFT ||
+		direction_system.direction == direction::LEFT && direction_system.last_direction == direction::DOWN)
 	{
 		smoothDirections = { direction::DOWNLEFT, direction::STAND };
 		return;
 	}
-	if (direction_system_.direction == direction::UP && direction_system_.last_direction == direction::RIGHT ||
-		direction_system_.direction == direction::RIGHT && direction_system_.last_direction == direction::UP)
+	if (direction_system.direction == direction::UP && direction_system.last_direction == direction::RIGHT ||
+		direction_system.direction == direction::RIGHT && direction_system.last_direction == direction::UP)
 	{
 		smoothDirections = { direction::UPRIGHT, direction::STAND };
 		return;
 	}
-	if (direction_system_.direction == direction::DOWN && direction_system_.last_direction == direction::RIGHT ||
-		direction_system_.direction == direction::RIGHT && direction_system_.last_direction == direction::DOWN)
+	if (direction_system.direction == direction::DOWN && direction_system.last_direction == direction::RIGHT ||
+		direction_system.direction == direction::RIGHT && direction_system.last_direction == direction::DOWN)
 	{
 		smoothDirections = { direction::DOWNRIGHT, direction::STAND };
 		return;
 	}
-	if (direction_system_.direction == direction::UP && direction_system_.last_direction == direction::DOWN)
+	if (direction_system.direction == direction::UP && direction_system.last_direction == direction::DOWN)
 	{
 		smoothDirections = { direction::DOWNLEFT, direction::LEFT, direction::UPLEFT, direction::STAND };
 		return;
 	}
-	if (direction_system_.direction == direction::DOWN && direction_system_.last_direction == direction::UP){
+	if (direction_system.direction == direction::DOWN && direction_system.last_direction == direction::UP){
 		smoothDirections = { direction::UPRIGHT, direction::RIGHT, direction::DOWNRIGHT, direction::STAND };
 		return;
 	}
-	if (direction_system_.direction == direction::LEFT && direction_system_.last_direction == direction::RIGHT)
+	if (direction_system.direction == direction::LEFT && direction_system.last_direction == direction::RIGHT)
 	{		
 		smoothDirections = { direction::DOWNRIGHT, direction::DOWN, direction::DOWNLEFT, direction::STAND };
 		return;
 	}
-	if (direction_system_.direction == direction::RIGHT && direction_system_.last_direction == direction::LEFT)
+	if (direction_system.direction == direction::RIGHT && direction_system.last_direction == direction::LEFT)
 	{
 		smoothDirections = { direction::UPLEFT, direction::UP, direction::UPRIGHT, direction::STAND };
 		return;
 	}
-	if (direction_system_.direction == direction::UPLEFT && direction_system_.last_direction == direction::DOWNRIGHT)
+	if (direction_system.direction == direction::UPLEFT && direction_system.last_direction == direction::DOWNRIGHT)
 	{
 		smoothDirections = { direction::RIGHT, direction::UPRIGHT, direction::UPRIGHT, direction::STAND };
 		return;
 	}
-	if (direction_system_.direction == direction::DOWNRIGHT && direction_system_.last_direction == direction::UPLEFT)
+	if (direction_system.direction == direction::DOWNRIGHT && direction_system.last_direction == direction::UPLEFT)
 	{
 		smoothDirections = { direction::UP, direction::UPRIGHT, direction::RIGHT, direction::STAND };
 		return;
 	}
-	if (direction_system_.direction == direction::UPRIGHT && direction_system_.last_direction == direction::DOWNLEFT)
+	if (direction_system.direction == direction::UPRIGHT && direction_system.last_direction == direction::DOWNLEFT)
 	{
 		smoothDirections = { direction::LEFT, direction::UPLEFT, direction::UP, direction::STAND };
 		return;
 	}
-	if (direction_system_.direction == direction::DOWNLEFT && direction_system_.last_direction == direction::UPRIGHT)
+	if (direction_system.direction == direction::DOWNLEFT && direction_system.last_direction == direction::UPRIGHT)
 	{
 		smoothDirections = { direction::UP, direction::UPLEFT, direction::LEFT, direction::STAND };
 		return;
 	}
-	if (direction_system_.direction == direction::UPLEFT && direction_system_.last_direction == direction::UPRIGHT ||
-		direction_system_.direction == direction::UPRIGHT && direction_system_.last_direction == direction::UPLEFT)
+	if (direction_system.direction == direction::UPLEFT && direction_system.last_direction == direction::UPRIGHT ||
+		direction_system.direction == direction::UPRIGHT && direction_system.last_direction == direction::UPLEFT)
 	{
 		smoothDirections = { direction::UP, direction::STAND };
 		return;
 	}
-	if (direction_system_.direction == direction::UPLEFT && direction_system_.last_direction == direction::DOWNLEFT ||
-		direction_system_.direction == direction::DOWNLEFT && direction_system_.last_direction == direction::UPLEFT)
+	if (direction_system.direction == direction::UPLEFT && direction_system.last_direction == direction::DOWNLEFT ||
+		direction_system.direction == direction::DOWNLEFT && direction_system.last_direction == direction::UPLEFT)
 	{
 		smoothDirections = { direction::LEFT, direction::STAND };
 		return;
 	}
-	if (direction_system_.direction == direction::UPRIGHT && direction_system_.last_direction == direction::DOWNRIGHT ||
-		direction_system_.direction == direction::DOWNRIGHT && direction_system_.last_direction == direction::UPRIGHT)
+	if (direction_system.direction == direction::UPRIGHT && direction_system.last_direction == direction::DOWNRIGHT ||
+		direction_system.direction == direction::DOWNRIGHT && direction_system.last_direction == direction::UPRIGHT)
 	{
 		smoothDirections = { direction::RIGHT, direction::STAND };
 		return;
 	}
-	if (direction_system_.direction == direction::DOWNLEFT && direction_system_.last_direction == direction::DOWNRIGHT ||
-		direction_system_.direction == direction::DOWNRIGHT && direction_system_.last_direction == direction::DOWNLEFT)
+	if (direction_system.direction == direction::DOWNLEFT && direction_system.last_direction == direction::DOWNRIGHT ||
+		direction_system.direction == direction::DOWNRIGHT && direction_system.last_direction == direction::DOWNLEFT)
 	{
 		smoothDirections = { direction::DOWN, direction::STAND };
 	}
@@ -863,9 +863,9 @@ void deerchant::speedInteract(const long long elapsedTime)
 	const auto partOfSpeed = 0.3f;
 	
 	if (moveTime < speedIncreaseTime)
-		move_system_.speed = (partOfSpeed + float(moveTime) * (1 - partOfSpeed) / speedIncreaseTime) * move_system_.default_speed;
+		move_system.speed = (partOfSpeed + float(moveTime) * (1 - partOfSpeed) / speedIncreaseTime) * move_system.default_speed;
 	else
-		move_system_.speed = move_system_.default_speed;
+		move_system.speed = move_system.default_speed;
 }
 
 void deerchant::jerkInteract(const long long elapsedTime)
@@ -875,13 +875,13 @@ void deerchant::jerkInteract(const long long elapsedTime)
 		if (jerk_time_ > 0)
 		{
 			jerk_time_ -= elapsedTime;
-			move_system_.speed = jerk_distance_ / float(jerk_duration_) * jerk_power_ * pow(float(jerk_time_) / float(jerk_duration_), jerk_deceleration_);
-			move_system_.speed = std::max(move_system_.default_speed / jerk_deceleration_, move_system_.speed);
+			move_system.speed = jerk_distance_ / float(jerk_duration_) * jerk_power_ * pow(float(jerk_time_) / float(jerk_duration_), jerk_deceleration_);
+			move_system.speed = std::max(move_system.default_speed / jerk_deceleration_, move_system.speed);
 		}
 		else
 		{
 			change_action(relax, true, false);
-			move_system_.speed = move_system_.default_speed;
+			move_system.speed = move_system.default_speed;
 		}
 	}
 }
@@ -916,14 +916,14 @@ void deerchant::jerk(const float power, const float deceleration, Vector2f)
 	jerk_distance_ = 500;
 	current_sprite_[0] = 1;
 
-	const auto angle = double(direction_system_.direction) * pi / 180;
-	lax_move_position = Vector2f(position_.x + float(cos(angle)) * jerk_distance_, position_.y - float(sin(angle)) * jerk_distance_);
+	const auto angle = double(direction_system.direction) * pi / 180;
+	move_system.lax_move_position = Vector2f(position_.x + float(cos(angle)) * jerk_distance_, position_.y - float(sin(angle)) * jerk_distance_);
 }
 
 void deerchant::fight_interact(long long elapsedTime, dynamic_object* target)
 {
 	time_after_hitself_ += elapsedTime;
-	move_system_.push_away(elapsedTime);
+	move_system.push_away(elapsedTime);
 }
 
 sprite_chain_element* deerchant::prepareSpeedLine()
@@ -956,17 +956,17 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 	auto legsInverse = false, bodyInverse = false;
 	legsSprite->animation_length = 8;
 
-    auto spriteSide = direction_system_.side; auto spriteDirection = direction_system_.last_direction;
+    auto spriteSide = direction_system.side; auto spriteDirection = direction_system.last_direction;
 
 	animation_speed_ = 12;
 
-	if (direction_system_.direction == direction::RIGHT || direction_system_.direction == direction::UPRIGHT || direction_system_.direction == direction::DOWNRIGHT)
+	if (direction_system.direction == direction::RIGHT || direction_system.direction == direction::UPRIGHT || direction_system.direction == direction::DOWNRIGHT)
 	{
 		spriteDirection = direction_system::cut_rights(spriteDirection);
 		legsSprite->mirrored = true;
 	}
 
-	if (direction_system_.side == right && current_action_ != move && current_action_ != actions::moveEnd && current_action_ != jerking)
+	if (direction_system.side == right && current_action_ != move && current_action_ != actions::moveEnd && current_action_ != jerking)
 	{
 		spriteSide = left;
 		bodySprite->mirrored = true;
@@ -976,7 +976,7 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 	{
 	case commonHit:
 		bodySprite->animation_length = 8;
-		if (direction_system_.side == right)
+		if (direction_system.side == right)
 			legsSprite->mirrored = true;
 		bodySprite->pack_tag = pack_tag::heroHit; bodySprite->pack_part = pack_part::body; bodySprite->direction = direction_system::side_to_direction(spriteSide);
 		legsSprite->pack_tag = pack_tag::heroHit; legsSprite->pack_part = pack_part::legs; legsSprite->direction = direction_system::side_to_direction(spriteSide);
@@ -997,7 +997,7 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 	case dropping:
 		bodyInverse = true;
 		bodySprite->animation_length = 5;
-		if (direction_system_.last_direction == direction::RIGHT || direction_system_.last_direction == direction::UPRIGHT || direction_system_.last_direction == direction::DOWNRIGHT)
+		if (direction_system.last_direction == direction::RIGHT || direction_system.last_direction == direction::UPRIGHT || direction_system.last_direction == direction::DOWNRIGHT)
 			bodySprite->mirrored = true;
 		bodySprite->pack_tag = pack_tag::heroPick; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_diagonals(spriteDirection);
 		break;
@@ -1011,10 +1011,10 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 	case jerking:
 		bodySprite->animation_length = 8;
 		animation_speed_ = 11;
-		spriteDirection = direction_system_.last_direction;
-		if (direction_system_.last_direction == direction::RIGHT || direction_system_.last_direction == direction::UPRIGHT || direction_system_.last_direction == direction::DOWNRIGHT)
+		spriteDirection = direction_system.last_direction;
+		if (direction_system.last_direction == direction::RIGHT || direction_system.last_direction == direction::UPRIGHT || direction_system.last_direction == direction::DOWNRIGHT)
 			bodySprite->mirrored = true;
-		if (direction_system::cut_rights(direction_system_.last_direction) == direction::UPLEFT || direction_system::cut_rights(direction_system_.last_direction) == direction::DOWNLEFT)
+		if (direction_system::cut_rights(direction_system.last_direction) == direction::UPLEFT || direction_system::cut_rights(direction_system.last_direction) == direction::DOWNLEFT)
 			spriteDirection = direction::LEFT;
 		bodySprite->pack_tag = pack_tag::heroRoll; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_rights(spriteDirection);
 		break;
@@ -1022,21 +1022,21 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 		bodySprite->mirrored = false;
 		bodySprite->animation_length = 16;
 		animation_speed_ = 13;
-		spriteDirection = direction_system_.last_direction;
-		if (direction_system_.last_direction == direction::RIGHT || direction_system_.last_direction == direction::UPRIGHT || direction_system_.last_direction == direction::DOWNRIGHT)
+		spriteDirection = direction_system.last_direction;
+		if (direction_system.last_direction == direction::RIGHT || direction_system.last_direction == direction::UPRIGHT || direction_system.last_direction == direction::DOWNRIGHT)
 			bodySprite->mirrored = true;
-		if (direction_system::cut_rights(direction_system_.last_direction) == direction::UPLEFT || direction_system::cut_rights(direction_system_.last_direction) == direction::DOWNLEFT)
+		if (direction_system::cut_rights(direction_system.last_direction) == direction::UPLEFT || direction_system::cut_rights(direction_system.last_direction) == direction::DOWNLEFT)
 			spriteDirection = direction::LEFT;
 		bodySprite->pack_tag = pack_tag::heroStand; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_rights(spriteDirection);
 		break;
 	case move:
 	{
-		animation_speed_ = move_system_.speed / move_system_.default_speed * 12;
+		animation_speed_ = move_system.speed / move_system.default_speed * 12;
 		if (animation_speed_ < 10)
 			animation_speed_ = 10;
 		bodySprite->animation_length = 8;
 
-		auto finalDirection = direction_system_.last_direction;
+		auto finalDirection = direction_system.last_direction;
 		if (smoothDirection != direction::STAND)
 			finalDirection = smoothDirection;
 
@@ -1053,48 +1053,48 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 	case actions::moveEnd:
 		bodySprite->animation_length = 8;
 		current_sprite_[1] = 1;
-		if (direction_system_.last_direction == direction::RIGHT || direction_system_.last_direction == direction::UPRIGHT || direction_system_.last_direction == direction::DOWNRIGHT)
+		if (direction_system.last_direction == direction::RIGHT || direction_system.last_direction == direction::UPRIGHT || direction_system.last_direction == direction::DOWNRIGHT)
 		{
 			bodySprite->mirrored = true;
 			legsSprite->mirrored = true;
 		}
-		bodySprite->pack_tag = pack_tag::heroMove; bodySprite->pack_part = pack_part::body; bodySprite->direction = direction_system::cut_rights(direction_system_.last_direction);
-		direction_system_.last_direction = direction_system::cut_diagonals(direction_system_.last_direction);
-		legsSprite->pack_tag = pack_tag::heroHit; legsSprite->pack_part = pack_part::legs; legsSprite->direction = direction_system::cut_rights(direction_system_.last_direction);
+		bodySprite->pack_tag = pack_tag::heroMove; bodySprite->pack_part = pack_part::body; bodySprite->direction = direction_system::cut_rights(direction_system.last_direction);
+		direction_system.last_direction = direction_system::cut_diagonals(direction_system.last_direction);
+		legsSprite->pack_tag = pack_tag::heroHit; legsSprite->pack_part = pack_part::legs; legsSprite->direction = direction_system::cut_rights(direction_system.last_direction);
 		
 		break;
 	}
 
 	if (current_action_ == moveHit)
 	{
-		animation_speed_ = move_system_.speed / move_system_.default_speed * 12;
+		animation_speed_ = move_system.speed / move_system.default_speed * 12;
 		if (animation_speed_ < 10)
 			animation_speed_ = 10;
 		bodySprite->animation_length = 8;
 
-		if (direction_system_.direction == direction::UP && direction_system_.side == down || direction_system_.direction == direction::DOWN && direction_system_.side == up)
+		if (direction_system.direction == direction::UP && direction_system.side == down || direction_system.direction == direction::DOWN && direction_system.side == up)
 		{
 			legsInverse = true;
 			spriteDirection = direction_system::side_to_direction(spriteSide);
 		}
-		if ((direction_system_.direction == direction::LEFT || direction_system_.direction == direction::UPLEFT || direction_system_.direction == direction::DOWNLEFT) && direction_system_.side == right ||
-			(direction_system_.direction == direction::UPLEFT || direction_system_.direction == direction::UPRIGHT) && direction_system_.side == down ||
-			(direction_system_.direction == direction::RIGHT || direction_system_.direction == direction::UPRIGHT || direction_system_.direction == direction::DOWNRIGHT) && direction_system_.side == left ||
-			(direction_system_.direction == direction::DOWNLEFT || direction_system_.direction == direction::DOWNRIGHT) && direction_system_.side == up)
+		if ((direction_system.direction == direction::LEFT || direction_system.direction == direction::UPLEFT || direction_system.direction == direction::DOWNLEFT) && direction_system.side == right ||
+			(direction_system.direction == direction::UPLEFT || direction_system.direction == direction::UPRIGHT) && direction_system.side == down ||
+			(direction_system.direction == direction::RIGHT || direction_system.direction == direction::UPRIGHT || direction_system.direction == direction::DOWNRIGHT) && direction_system.side == left ||
+			(direction_system.direction == direction::DOWNLEFT || direction_system.direction == direction::DOWNRIGHT) && direction_system.side == up)
 		{
 			legsInverse = true;
 			legsSprite->mirrored = !legsSprite->mirrored;
 			spriteDirection = direction_system::invert_direction(spriteDirection);
 		}
-		if (direction_system_.direction == direction::UP && direction_system_.side == down || direction_system_.direction == direction::DOWN && direction_system_.side == up)
+		if (direction_system.direction == direction::UP && direction_system.side == down || direction_system.direction == direction::DOWN && direction_system.side == up)
 			legsInverse = true;
 
 		legsSprite->pack_tag = pack_tag::heroMove; legsSprite->pack_part = pack_part::legs; legsSprite->direction = direction_system::cut_rights(spriteDirection);
 		bodySprite->pack_tag = pack_tag::heroHit; bodySprite->pack_part = pack_part::body; bodySprite->direction = direction_system::side_to_direction(spriteSide);
 
-		if (direction_system_.direction == direction::STAND)
+		if (direction_system.direction == direction::STAND)
 		{
-			if (direction_system_.side == right)
+			if (direction_system.side == right)
 				legsSprite->mirrored = true;
 			legsSprite->pack_tag = pack_tag::heroMove; legsSprite->pack_part = pack_part::legs; legsSprite->direction = direction_system::side_to_direction(spriteSide);
 			legsSprite->animation_length = 14;
@@ -1104,13 +1104,13 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 	if (current_action_ == throwNoose)
 	{
 		bodySprite->animation_length = 14;
-		if (direction_system_.direction == direction::UP && direction_system_.side == down || direction_system_.direction == direction::DOWN && direction_system_.side == up)
+		if (direction_system.direction == direction::UP && direction_system.side == down || direction_system.direction == direction::DOWN && direction_system.side == up)
 		{
 			legsInverse = true;
 			spriteDirection = direction_system::side_to_direction(spriteSide);
 		}
-		if ((direction_system_.direction == direction::LEFT || direction_system_.direction == direction::UPLEFT || direction_system_.direction == direction::DOWNLEFT) && direction_system_.side == right ||
-			(direction_system_.direction == direction::RIGHT || direction_system_.direction == direction::UPRIGHT || direction_system_.direction == direction::DOWNRIGHT) && direction_system_.side == left)
+		if ((direction_system.direction == direction::LEFT || direction_system.direction == direction::UPLEFT || direction_system.direction == direction::DOWNLEFT) && direction_system.side == right ||
+			(direction_system.direction == direction::RIGHT || direction_system.direction == direction::UPRIGHT || direction_system.direction == direction::DOWNRIGHT) && direction_system.side == left)
 		{
 			legsInverse = true;
 			legsSprite->mirrored = !legsSprite->mirrored;
@@ -1119,9 +1119,9 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(long long elapsedT
 		legsSprite->pack_tag = pack_tag::heroMove; legsSprite->pack_part = pack_part::legs, legsSprite->direction = spriteDirection;
 		bodySprite->pack_tag = pack_tag::heroThrow; bodySprite->pack_part = pack_part::body; bodySprite->direction = direction_system::side_to_direction(spriteSide);
 
-		if (direction_system_.direction == direction::STAND)
+		if (direction_system.direction == direction::STAND)
 		{
-			if (direction_system_.side == right)
+			if (direction_system.side == right)
 				legsSprite->mirrored = true;
 			legsSprite->pack_tag = pack_tag::heroThrow; legsSprite->pack_part = pack_part::legs, legsSprite->direction = direction_system::side_to_direction(spriteSide);
 			legsSprite->animation_length = 14;

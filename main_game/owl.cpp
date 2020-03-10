@@ -10,8 +10,8 @@ owl::owl(const std::string& objectName, Vector2f centerPosition) : neutral_mob(o
 	conditional_size_units_ = { 280, 200 };
 	current_sprite_[0] = 1;
 	timeForNewSprite = 0;
-	move_system_.default_speed = 0.0006f;
-	move_system_.speed = 0.0006f;
+	move_system.default_speed = 0.0006f;
+	move_system.speed = 0.0006f;
 	animation_speed_ = 0.0008f;
 	animationLength = 8;
 	radius_ = 70;
@@ -24,7 +24,7 @@ owl::owl(const std::string& objectName, Vector2f centerPosition) : neutral_mob(o
 	timeForNewHit = 1000000;
 	to_save_name_ = "owl";
 	tag = entity_tag::owl;
-	move_system_.can_crash_into_static = false;
+	move_system.can_crash_into_static = false;
 	z_coordinate_ = 10;
 }
 
@@ -86,7 +86,7 @@ void owl::behavior(long long elapsedTime)
 	if (health_point_ <= 0)
 	{
 		change_action(dead, true);
-		direction_system_.direction = direction::STAND;
+		direction_system.direction = direction::STAND;
 		return;
 	}
 
@@ -98,7 +98,7 @@ void owl::behavior(long long elapsedTime)
 
 	if (current_action_ == absorbs)
 	{
-		move_position_ = position_;
+		move_system.lax_move_position = position_;
 		return;
 	}
 	//-----------------------	
@@ -109,36 +109,36 @@ void owl::behavior(long long elapsedTime)
 		if (nearestTree && helper::getDist(position_, nearestTreeCasted->getOwlBase()) > radius_)
 			{				
 				change_action(move, false, true);
-				move_position_ = nearestTreeCasted->getOwlBase();
-				direction_system_.side = direction_system::calculate_side(position_, move_position_);
+				move_system.lax_move_position = nearestTreeCasted->getOwlBase();
+				direction_system.side = direction_system.calculate_side(position_, move_system.lax_move_position, elapsedTime);
 				return;
 			}
 
 		change_action(relax, true, true);
-		direction_system_.direction = direction::STAND;
-		move_position_ = position_;
+		direction_system.direction = direction::STAND;
+		move_system.lax_move_position = position_;
 		return;
 	}
 
 	// bouncing to a trap
 	if (bound_target_ && bound_target_->tag == entity_tag::fern)
 	{
-		direction_system_.side = direction_system::calculate_side(position_, bound_target_->get_position());
+		direction_system.side = direction_system.calculate_side(position_, bound_target_->get_position(), elapsedTime);
 		if (helper::getDist(position_, bound_target_->get_position()) <= radius_)
 		{
 			const auto trap = dynamic_cast<fern*>(bound_target_);
-			if (direction_system_.side == right)
+			if (direction_system.side == right)
 				mirrored_ = true;
 			else
 				mirrored_ = false;
 			position_ = trap->getEnterPosition();
 			change_action(absorbs, true, false);
-			move_position_ = position_;
+			move_system.lax_move_position = position_;
 		}
 		else
 		{
 			change_action(move, false, true);
-			move_position_ = bound_target_->get_position();
+			move_system.lax_move_position = bound_target_->get_position();
 		}
 	}
 	//-------------------
@@ -147,14 +147,14 @@ void owl::behavior(long long elapsedTime)
 	if (bound_target_ && bound_target_->tag == entity_tag::hero)
 	{
 		const float distanceToTarget = helper::getDist(this->position_, bound_target_->get_position());
-		direction_system_.side = direction_system::calculate_side(position_, move_position_);
-		move_system_.speed = std::max(move_system_.default_speed, (move_system_.default_speed * 10) * (1 - (helper::getDist(position_, bound_target_->get_position()) / sight_range * 1.5f)));
-		animation_speed_ = std::max(0.0008f, 0.0008f * move_system_.speed / move_system_.default_speed);
+		direction_system.side = direction_system.calculate_side(position_, move_system.lax_move_position, elapsedTime);
+		move_system.speed = std::max(move_system.default_speed, (move_system.default_speed * 10) * (1 - (helper::getDist(position_, bound_target_->get_position()) / sight_range * 1.5f)));
+		animation_speed_ = std::max(0.0008f, 0.0008f * move_system.speed / move_system.default_speed);
 		if (distanceToTarget <= sight_range)
 		{
 			change_action(move, false, true);
 			float k = (sight_range * 1.3f / (sqrt(pow(bound_target_->get_position().x - position_.x, 2) + pow(bound_target_->get_position().y - position_.y, 2))));
-			move_position_ = Vector2f(position_.x + (position_.x - bound_target_->get_position().x) * k, position_.y + (position_.y - bound_target_->get_position().y) * k);
+			move_system.lax_move_position = Vector2f(position_.x + (position_.x - bound_target_->get_position().x) * k, position_.y + (position_.y - bound_target_->get_position().y) * k);
 		}
 	}	
 	//-------------------

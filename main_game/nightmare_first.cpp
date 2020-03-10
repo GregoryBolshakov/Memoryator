@@ -3,8 +3,8 @@
 nightmare_first::nightmare_first(std::string objectName, const Vector2f centerPosition) : monster(std::move(objectName), centerPosition)
 {
 	conditional_size_units_ = { 375, 375 };
-	move_system_.default_speed = 0.0005f;
-	move_system_.speed = 0.0005f;
+	move_system.default_speed = 0.0005f;
+	move_system.speed = 0.0005f;
 	radius_ = 90;
 	hitDistance = 70;
 	strength_ = 10;
@@ -48,15 +48,15 @@ std::vector<sprite_chain_element*> nightmare_first::prepare_sprites(const long l
 	auto body = new sprite_chain_element(pack_tag::nightmare1, pack_part::stand, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
 	animation_speed_ = 10;
 
-	side spriteSide = direction_system_.side;
-	direction spriteDirection = direction_system_.last_direction;
+	side spriteSide = direction_system.side;
+	direction spriteDirection = direction_system.last_direction;
 
-	if (direction_system_.side == right)
+	if (direction_system.side == right)
 	{
 		spriteSide = left;
 		body->mirrored = true;
 	}
-	if (direction_system_.last_direction == direction::RIGHT || direction_system_.last_direction == direction::UPRIGHT || direction_system_.last_direction == direction::DOWNRIGHT)
+	if (direction_system.last_direction == direction::RIGHT || direction_system.last_direction == direction::UPRIGHT || direction_system.last_direction == direction::DOWNRIGHT)
 	{
 		spriteDirection = direction_system::cut_rights(spriteDirection);
 		body->mirrored = true;

@@ -1,7 +1,7 @@
 Tag: brazier 
 Type: 1
 Mirrored: 0
-OffsetX: 0.5 OffsetY: 0.761
+OffsetX: 0.5 OffsetY: 0.762
 
 Focus0 X: -0.333 Focus0 Y: 0.04
 Focus1 X: -0.124 Focus1 Y: 0.04

@@ -17,7 +17,7 @@ public:
 	Vector2f calculate_texture_offset() override;
 	std::vector<sprite_chain_element*> prepare_sprites(long long elapsedTime) override;
 	//control
-	void handle_input(bool usedMouse = false) override;
+	void handle_input(bool usedMouse = false, long long elapsed_time = 0) override;
 	void moveEnd(bool animate = false, bool invertDirection = false);
 	[[nodiscard]] int calculateNextMoveEndSprite(int currentSprite = 1) const;
 	void behavior_with_dynamic(dynamic_object* target, long long elapsedTime) override;
@@ -28,8 +28,7 @@ public:
 	void endingPreviousAction();
 	void stopping(bool doStand = false, bool forgetBoundTarget = false, bool offUnsealInventory = false);
 	void calculateSpeedLineDirection(direction lastDirection = direction::STAND, direction direction = direction::STAND);
-	void change_action(actions newAction, bool resetSpriteNumber, bool rememberLastAction) override;
-	void change_move_position_to_route(Vector2f newPosition) override { if (current_action_ != jerking) move_position_ = newPosition; };
+	void change_action(actions newAction, bool resetSpriteNumber, bool rememberLastAction) override;	
 	[[nodiscard]] Vector2f getBeltPosition() const;
 
 	void jerk(float power, float deceleration, Vector2f destinationPoint = Vector2f(-1, -1)) override;

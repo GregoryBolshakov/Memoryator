@@ -5,6 +5,7 @@
 
 #include "sprite_pack.h"
 #include "text_chain_element.h"
+#include "shape_chain_element.h"
 
 using namespace sf;
 using search_func = void (*)(LPCTSTR, std::map<pack_tag, sprite_pack>&);
@@ -18,6 +19,7 @@ public:
 
 	void draw_sprite_chain_element(RenderTarget& target, sprite_chain_element* sprite_chain_item, Vector2f camera_position, Vector2f screen_center, float scale);
 	static void draw_text_chain_element(RenderTarget& target, text_chain_element* text_chain_item);
+	static void draw_shape_chain_element(RenderTarget& target, shape_chain_element* shape_chain_element);
 	void draw(RenderTarget& target, const std::vector<drawable_chain_element*>& drawable_items, float scale = 1, Vector2f camera_position = {0, 0});
 	static std::vector<drawable_chain_element*> upcast_chain(const std::vector<sprite_chain_element*>& chain);
 	static std::vector<sprite_chain_element*> downcast_to_sprite_chain(const std::vector<drawable_chain_element*>& chain);

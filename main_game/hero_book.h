@@ -1,9 +1,12 @@
 #pragma once
+#ifndef HERO_BOOK_H
+#define HERO_BOOK_H
 
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
 
 #include "hero_book_page.h"
+#include "helper.h"
 #include "button.h"
 #include "hero_bag.h"
 #include "text_system.h"
@@ -66,3 +69,4 @@ private:
 	std::vector<hero_bag>* boundBags{};
 };
 
+#endif

@@ -29,7 +29,7 @@ void move_system::push_by_bumping(Vector2f position, float radius, bool can_cras
 	bump_distance += radius;
 }
 
-void move_system::end_push(long long elapsed_time)
+void move_system::end_push()
 {
 	push_direction = { 0, 0 };
 	push_duration = 0;
@@ -85,7 +85,7 @@ void move_system::push_away(long long elapsed_time, float push_speed)
 
 	if (push_rest_duration <= 0 || !turned_on)
 	{
-		end_push(elapsed_time);
+		end_push();
 		return;
 	}
 
@@ -99,61 +99,64 @@ void move_system::push_away(long long elapsed_time, float push_speed)
 }
 //------------------
 
-Vector2f move_system::ellipseSlip(Vector2f newPos, Vector2f destination, Vector2f f1, Vector2f f2, float ellipseSize, float height, long long elapsedTime) const
+Vector2f move_system::ellipse_slip(const Vector2f new_pos, const Vector2f destination, Vector2f f1, const Vector2f f2, float ellipseSize, const float height, const long long elapsed_time) const
 {
-	const auto dynamicPos = Vector2f(position_->x, height - position_->y);
+	const auto terrain_pos = Vector2f((f1.x + f2.x) / 2, ((height - f1.y) + (height - f2.y)) / 2);
+	const auto dynamic_pos = Vector2f(position_->x, height - position_->y);
 	const auto focus1 = Vector2f(f1.x, height - f1.y);
 	const auto focus2 = Vector2f(f2.x, height - f2.y);
-	const auto newPosition = Vector2f(newPos.x, height - newPos.y);
-	const auto destinationPos = Vector2f(destination.x, height - destination.y);
+	const auto new_position = Vector2f(new_pos.x, height - new_pos.y);
+	const auto destination_pos = Vector2f(destination.x, height - destination.y);
 
-	const auto a1 = newPosition.x - dynamicPos.x;
-	const auto b1 = newPosition.y - dynamicPos.y;
-	const auto c1 = -a1 * newPosition.x - b1 * newPosition.y;
+	float c1 = 0, x0 = terrain_pos.x, y0 = terrain_pos.y;
+
+	const auto a1 = (new_position.x - dynamic_pos.x);
+	const auto b1 = (new_position.y - dynamic_pos.y);
+	c1 = -a1 * new_position.x - b1 * new_position.y;
 
 	const auto l = (ellipseSize - abs(focus2.x - focus1.x)) / 2;
 	const auto a2 = ellipseSize / 2;
-	const auto b2 = sqrt(pow((2 * l + abs(focus2.x - focus1.x)) / 2, 2) - pow(abs(focus2.x - focus1.x) / 2, 2));
-	const auto x0 = (focus1.x + focus2.x) / 2;
-	const auto y0 = (focus1.y + focus2.y) / 2;
+	const auto b2 = sqrt(pow((2 * l + (abs(focus2.x - focus1.x))) / 2, 2) - pow(abs(focus2.x - focus1.x) / 2, 2));
+	x0 = (focus1.x + focus2.x) / 2;
+	y0 = (focus1.y + focus2.y) / 2;
 
-	float x1, yl, x2, y2, d;
+	float x1, yl, x2, y2, D = 0;
 
 	if (a1 == 0 && b1 != 0)
 	{
-		d = pow(2 * x0 * b1 * b1 * b2 * b2, 2) - 4 * (b1 * b1 * b2 * b2) * (x0 * x0 * b1 * b1 * b2 * b2 + c1 * c1 * a2 * a2 + y0 * y0 * a2 * a2 * b1 * b1 + 2 * c1 * y0 * a2 * a2 * b1 - a2 * a2 * b1 * b1 * b2 * b2);
+		D = pow(2 * x0 * b1 * b1 * b2 * b2, 2) - 4 * (b1 * b1 * b2 * b2) * (x0 * x0 * b1 * b1 * b2 * b2 + c1 * c1 * a2 * a2 + y0 * y0 * a2 * a2 * b1 * b1 + 2 * c1 * y0 * a2 * a2 * b1 - a2 * a2 * b1 * b1 * b2 * b2);
 
-		if (b1 * b1 * b2 * b2 == 0 || d < 0)
+		if (b1 * b1 * b2 * b2 == 0 || D < 0)
 			return { -1, -1 };
 
-		x1 = -((-(2 * x0 * b1 * b1 * b2 * b2) + sqrt(d)) / (2 * (b1 * b1 * b2 * b2)));
-		x2 = -((-(2 * x0 * b1 * b1 * b2 * b2) - sqrt(d)) / (2 * (b1 * b1 * b2 * b2)));
+		x1 = -((-(2 * x0 * b1 * b1 * b2 * b2) + sqrt(D)) / (2 * (b1 * b1 * b2 * b2)));
+		x2 = -((-(2 * x0 * b1 * b1 * b2 * b2) - sqrt(D)) / (2 * (b1 * b1 * b2 * b2)));
 		yl = -c1 / b1;
 		y2 = -c1 / b1;
 	}
 	else
 		if (a1 != 0 && b1 == 0)
 		{
-			d = pow(-2 * y0 * a1 * a1 * a2 * a2, 2) - 4 * (a1 * a1 * a2 * a2) * (c1 * c1 * b2 * b2 + x0 * x0 * a1 * a1 * b2 * b2 + 2 * c1 * x0 * a1 * b2 * b2 + y0 * y0 * a1 * a1 * a2 * a2 - a1 * a1 * a2 * a2 * b2 * b2);
+			D = pow(-2 * y0 * a1 * a1 * a2 * a2, 2) - 4 * (a1 * a1 * a2 * a2) * (c1 * c1 * b2 * b2 + x0 * x0 * a1 * a1 * b2 * b2 + 2 * c1 * x0 * a1 * b2 * b2 + y0 * y0 * a1 * a1 * a2 * a2 - a1 * a1 * a2 * a2 * b2 * b2);
 
-			if (a1 * a1 * a2 * a2 == 0 || d < 0)
+			if (a1 * a1 * a2 * a2 == 0 || D < 0)
 				return { -1, -1 };
 
-			yl = (2 * y0 * a1 * a1 * a2 * a2 + sqrt(d)) / (2 * a1 * a1 * a2 * a2);
-			y2 = (2 * y0 * a1 * a1 * a2 * a2 - sqrt(d)) / (2 * a1 * a1 * a2 * a2);
+			yl = (2 * y0 * a1 * a1 * a2 * a2 + sqrt(D)) / (2 * a1 * a1 * a2 * a2);
+			y2 = (2 * y0 * a1 * a1 * a2 * a2 - sqrt(D)) / (2 * a1 * a1 * a2 * a2);
 			x1 = -c1 / a1;
 			x2 = -c1 / a1;
 		}
 		else
 			if (a1 != 0 && b1 != 0)
 			{
-				d = pow(2 * b1 * b2 * b2 * c1 + 2 * a1 * b1 * b2 * b2 * x0 - 2 * a1 * a1 * a2 * a2 * y0, 2) - 4 * (b1 * b1 * b2 * b2 + a1 * a1 * a2 * a2) * (b2 * b2 * c1 * c1 + a1 * a1 * b2 * b2 * x0 * x0 + 2 * a1 * b2 * b2 * c1 * x0 + a1 * a1 * a2 * a2 * y0 * y0 - a1 * a1 * a2 * a2 * b2 * b2);
+				D = pow(2 * b1 * b2 * b2 * c1 + 2 * a1 * b1 * b2 * b2 * x0 - 2 * a1 * a1 * a2 * a2 * y0, 2) - 4 * (b1 * b1 * b2 * b2 + a1 * a1 * a2 * a2) * (b2 * b2 * c1 * c1 + a1 * a1 * b2 * b2 * x0 * x0 + 2 * a1 * b2 * b2 * c1 * x0 + a1 * a1 * a2 * a2 * y0 * y0 - a1 * a1 * a2 * a2 * b2 * b2);
 
-				if (b1 * b1 * b2 * b2 + a1 * a1 * a2 * a2 == 0 || d < 0)
+				if (b1 * b1 * b2 * b2 + a1 * a1 * a2 * a2 == 0 || D < 0)
 					return { -1, -1 };
 
-				yl = (-(2 * b1 * b2 * b2 * c1 + 2 * a1 * b1 * b2 * b2 * x0 - 2 * a1 * a1 * a2 * a2 * y0) + sqrt(d)) / (2 * (b1 * b1 * b2 * b2 + a1 * a1 * a2 * a2));
-				y2 = (-(2 * b1 * b2 * b2 * c1 + 2 * a1 * b1 * b2 * b2 * x0 - 2 * a1 * a1 * a2 * a2 * y0) - sqrt(d)) / (2 * (b1 * b1 * b2 * b2 + a1 * a1 * a2 * a2));
+				yl = (-(2 * b1 * b2 * b2 * c1 + 2 * a1 * b1 * b2 * b2 * x0 - 2 * a1 * a1 * a2 * a2 * y0) + sqrt(D)) / (2 * (b1 * b1 * b2 * b2 + a1 * a1 * a2 * a2));
+				y2 = (-(2 * b1 * b2 * b2 * c1 + 2 * a1 * b1 * b2 * b2 * x0 - 2 * a1 * a1 * a2 * a2 * y0) - sqrt(D)) / (2 * (b1 * b1 * b2 * b2 + a1 * a1 * a2 * a2));
 				x1 = -1 * (b1 * yl + c1) / a1;
 				x2 = -1 * (b1 * y2 + c1) / a1;
 			}
@@ -161,66 +164,25 @@ Vector2f move_system::ellipseSlip(Vector2f newPos, Vector2f destination, Vector2
 				return { -1, -1 };
 
 	float dist1, dist2;
-	const auto time = float(elapsedTime);
 
 	if (destination == Vector2f(-1, -1))
-		dist1 = helper::getDist(newPosition, Vector2f(x1, yl)), dist2 = helper::getDist(newPosition, Vector2f(x2, y2));
+		dist1 = helper::getDist(new_position, Vector2f(x1, yl)), dist2 = helper::getDist(new_position, Vector2f(x2, y2));
 	else
-		dist1 = helper::getDist(destinationPos, Vector2f(x1, yl)), dist2 = helper::getDist(destinationPos, Vector2f(x2, y2));
+		dist1 = helper::getDist(destination_pos, Vector2f(x1, yl)), dist2 = helper::getDist(destination_pos, Vector2f(x2, y2));
 
-	if (dist1 <= dist2 && d >= 0 && sqrt(pow(x1 - position_->x, 2) + pow(height - yl - position_->y, 2)) != 0)
+	if (dist1 <= dist2 && D >= 0 && sqrt(pow(x1 - position_->x, 2) + pow((height - yl) - position_->y, 2)) != 0)
 	{
-		const auto k = ((speed * time) / sqrt(pow(x1 - position_->x, 2) + pow(height - yl - position_->y, 2)));
-		return { (x1 - position_->x) * k, (height - yl - position_->y) * k };
+		const auto k = ((speed * float(elapsed_time)) / sqrt(pow(x1 - position_->x, 2) + pow((height - yl) - position_->y, 2)));
+		return { (x1 - position_->x) * k, ((height - yl) - position_->y) * k };
 	}
-	if (dist2 <= dist1 && d >= 0 && sqrt(pow(x2 - position_->x, 2) + pow(height - y2 - position_->y, 2)) != 0)
+	if (dist2 <= dist1 && D >= 0 && sqrt(pow(x2 - position_->x, 2) + pow((height - y2) - position_->y, 2)) != 0)
 	{
-		const auto k = ((speed * time) / sqrt(pow(x2 - position_->x, 2) + pow(height - y2 - position_->y, 2)));
-		return { (x2 - position_->x) * k, (height - y2 - position_->y) * k };
+		const auto k = ((speed * float(elapsed_time)) / sqrt(pow(x2 - position_->x, 2) + pow((height - y2) - position_->y, 2)));
+		return { (x2 - position_->x) * k, ((height - y2) - position_->y) * k };
 	}
 
 	return { -1, -1 };
 }
-
-//void move_system::move_system_.set_move_offset(const long long elapsedTime)
-//{
-//	if (!(currentAction == move || currentAction == moveHit || currentAction == moveEnd || currentAction == jerking || currentAction == throwNoose))
-//	{
-//		moveOffset = { -1, -1 };
-//		return;
-//	}
-//
-//	const auto time = float(elapsedTime);
-//
-//	if (move_position_ == Vector2f(-1, -1))
-//	{
-//		if (direction != Direction::STAND)
-//		{
-//			const auto angle = float(this->getDirection()) * pi / 180;
-//			const auto k = speed * time / sqrt(pow(cos(angle), 2) + pow(sin(angle), 2));
-//			moveOffset.x = float(k * cos(angle));
-//			moveOffset.y = float(k * -sin(angle));
-//			return;
-//		}
-//		moveOffset = Vector2f(-1, -1);
-//		return;
-//	}
-//
-//	const auto distanceToTarget = float(sqrt(pow(move_position_.x - position.x, 2) + pow(move_position_.y - position.y, 2)));
-//	if (distanceToTarget == 0)
-//	{
-//		moveOffset = Vector2f(-1, -1);
-//		return;
-//	}
-//
-//	const float k = speed * time / sqrt(pow(move_position_.x - position.x, 2) + pow(move_position_.y - position.y, 2));
-//	/*if (distanceToTarget <= k)
-//	{
-//		moveOffset = Vector2f(-1, -1);
-//		return;
-//	}*/
-//	moveOffset = { (move_position_.x - position.x) * k, (move_position_.y - position.y) * k };
-//}
 
 void move_system::set_move_offset(long long elapsedTime)
 {
@@ -265,31 +227,33 @@ void move_system::set_move_offset(long long elapsedTime)
 	move_offset = { (move_position.x - position_->x) * k, (move_position.y - position_->y) * k };
 }
 
-Vector2f move_system::doMove(long long elapsedTime)
+Vector2f move_system::do_move(long long elapsedTime)
 {
 	set_move_offset(elapsedTime);
-	auto position = this->position_;
-	position->x += push_vector.x; position->y += push_vector.y;
+	Vector2f position = *position_;
+	position.x += push_vector.x; position.y += push_vector.y;
 
 	//if (this->direction == Direction::STAND)
 		//return position;
 
 	if (move_offset != Vector2f(-1, -1))
 	{
-		position_->x += move_offset.x;
-		position_->y += move_offset.y;
+		position.x += move_offset.x;
+		position.y += move_offset.y;
 	}
 
-	return *position_;
+	return position;
 }
 
-Vector2f move_system::doSlip(Vector2f newPosition, const std::vector<static_object*>& localStaticItems, const float height, const long long elapsedTime)
+Vector2f move_system::do_slip(Vector2f new_position, std::vector<static_object*>& local_static_items, const float height, const long long elapsed_time) const
 {
+	if (move_position != Vector2f(-1, -1))
+		auto a = 123;
 	bool crashed = false;
 	if (!can_crash_into_static)
-		return newPosition;
+		return new_position;
 
-	for (auto& staticItem : localStaticItems)
+	for (auto& staticItem : local_static_items)
 	{
 		auto terrain = dynamic_cast<terrain_object*>(staticItem);
 		if (!terrain || staticItem->is_background || staticItem->get_radius() == 0)
@@ -300,7 +264,7 @@ Vector2f move_system::doSlip(Vector2f newPosition, const std::vector<static_obje
 
 		if (terrain->is_multi_ellipse)
 		{
-			auto curEllipses = terrain->getMultiellipseIntersect(newPosition);
+			auto curEllipses = terrain->getMultiellipseIntersect(new_position);
 			Vector2f motionAfterSlipping;
 
 			if (!curEllipses.empty())
@@ -310,11 +274,11 @@ Vector2f move_system::doSlip(Vector2f newPosition, const std::vector<static_obje
 						return Vector2f(-1, -1);
 
 					crashed = true;
-					motionAfterSlipping = this->ellipseSlip(newPosition, move_position, terrain->internalEllipses[curEllipse].first, terrain->internalEllipses[curEllipse].second, terrain->getEllipseSize(curEllipse), height, elapsedTime);
+					motionAfterSlipping = this->ellipse_slip(new_position, move_position, terrain->internalEllipses[curEllipse].first, terrain->internalEllipses[curEllipse].second, terrain->getEllipseSize(curEllipse), height, elapsed_time);
 
 					if (motionAfterSlipping != Vector2f(-1, -1))
 					{
-						newPosition = Vector2f(position_->x + motionAfterSlipping.x, position_->y + motionAfterSlipping.y);
+						new_position = Vector2f(position_->x + motionAfterSlipping.x, position_->y + motionAfterSlipping.y);
 						continue;
 					}
 
@@ -322,7 +286,7 @@ Vector2f move_system::doSlip(Vector2f newPosition, const std::vector<static_obje
 				}
 		}
 		else
-			if (terrain->isIntersected(*position_, newPosition))
+			if (terrain->isIntersected(*position_, new_position))
 			{
 				if (crashed)
 					return Vector2f(-1, -1);
@@ -331,13 +295,13 @@ Vector2f move_system::doSlip(Vector2f newPosition, const std::vector<static_obje
 				Vector2f motionAfterSlipping;
 
 				if (staticItem->is_dots_adjusted)
-					motionAfterSlipping = terrain->newSlippingPositionForDotsAdjusted(*position_, speed, elapsedTime);
+					motionAfterSlipping = terrain->newSlippingPositionForDotsAdjusted(*position_, speed, elapsed_time);
 				else
-					motionAfterSlipping = this->ellipseSlip(newPosition, move_position, terrain->getFocus1(), terrain->getFocus2(), terrain->getEllipseSize(), height, elapsedTime);
+					motionAfterSlipping = ellipse_slip(new_position, move_position, terrain->getFocus1(), terrain->getFocus2(), terrain->getEllipseSize(), height, elapsed_time);
 
 				if (motionAfterSlipping != Vector2f(-1, -1))
 				{
-					newPosition = Vector2f(position_->x + motionAfterSlipping.x, position_->y + motionAfterSlipping.y);
+					new_position = Vector2f(position_->x + motionAfterSlipping.x, position_->y + motionAfterSlipping.y);
 					continue;
 				}
 
@@ -345,5 +309,80 @@ Vector2f move_system::doSlip(Vector2f newPosition, const std::vector<static_obje
 			}
 	}
 
-	return newPosition;
+	return new_position;
+}
+
+void move_system::is_route_needed(std::vector<std::vector<bool>>& micro_block_matrix, Vector2f& micro_block_size)
+{
+	need_route = false;
+	auto is_break = false;
+
+	for (auto i = long(position_->x - *radius_);
+	     i <= long(position_->x + *radius_); i++)
+	{
+		for (auto j = long(position_->y - *radius_); j <=
+		     long(position_->y + *radius_); j++)
+			if (!micro_block_matrix[i / long(micro_block_size.x)][j / long(micro_block_size.y)])
+			{
+				need_route = true;
+				is_break = true;
+				break;
+			}
+		if (is_break)
+			break;
+	}
+	time_after_new_route = time_for_new_route;
+}
+
+void move_system::make_route(long long elapsed_time, grid_list* grid_list, float zone_offset)
+{
+	time_after_new_route += elapsed_time;
+	if (time_after_new_route >= time_for_new_route)
+	{
+		if (need_route)
+		{
+			time_after_new_route = 0;
+			if (route_generation_ability && lax_move_position != Vector2f(-1, -1) && *current_action_ != jerking && *tag != entity_tag::hero)
+			{
+				time_after_new_route = 0;
+				route = grid_list->make_route(
+					*position_, 
+					lax_move_position, 
+					position_->x - zone_offset,
+					position_->y - zone_offset,
+					position_->x + zone_offset,
+					position_->y + zone_offset);
+			}
+		}
+		else
+		{
+			route.clear();
+			move_position = lax_move_position;
+		}
+	}
+}
+
+void move_system::pass_route_beginning(Vector2f micro_block_size)
+{
+	if (need_route)
+	{
+		if (!route.empty())
+		{
+			std::pair<int, int> routeMicroBlock;
+			do
+			{
+				routeMicroBlock = route[0];
+
+				const auto route_pos = Vector2f(routeMicroBlock.first * micro_block_size.x, routeMicroBlock.second * micro_block_size.y);
+				if (helper::getDist(*position_, route_pos) > sqrt(pow(micro_block_size.x, 2) + pow(micro_block_size.y, 2)))
+					break;
+
+				route.erase(route.begin());
+			} while (!route.empty());
+
+			move_position = Vector2f(routeMicroBlock.first * micro_block_size.x, routeMicroBlock.second * micro_block_size.y);
+		}
+		else
+			move_position = { -1, -1 };
+	}
 }

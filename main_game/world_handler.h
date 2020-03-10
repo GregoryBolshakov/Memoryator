@@ -16,6 +16,7 @@
 #include "pedestal_controller.h"
 #include "time_system.h"
 #include "world_generator.h"
+#include "shape_chain_element.h"
 
 using namespace sf;
 
@@ -50,7 +51,7 @@ public:
 	std::map<pack_tag, sprite_pack>* packsMap;
 	void interact(Vector2f render_target_size, long long elapsedTime, Event event);
 	void handleEvents(Event& event);
-    std::vector<sprite_chain_element*> prepareSprites(long long elapsedTime, bool onlyBackground = false);
+    std::vector<drawable_chain_element*> prepareSprites(long long elapsedTime, bool onlyBackground = false);
 	//void draw(RenderWindow& window, long long elapsedTime);
 	void setItemFromBuildSystem();
 	//void drawVisibleItems(RenderWindow& window, long long elapsedTime, std::vector<SpriteChainElement*> sprites);
@@ -96,8 +97,6 @@ private:
 	Clock timer;
 	long long timeForNewSave = 0;
 	long long timeAfterSave = long(6e7);
-	long long timeForNewRoute = long(3e5);
-	long long timeAfterNewRoute = long(3e5);
 
 	// Selection logic
 	void setTransparent(std::vector<world_object*>& visibleItems);

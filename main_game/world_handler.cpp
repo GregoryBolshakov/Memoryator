@@ -149,7 +149,6 @@ void world_handler::Load()
 {
 	staticGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
 	dynamicGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
-	staticGrid.bound_dynamic_matrix(&dynamicGrid.micro_block_matrix);
 
 	std::ifstream fin("save.txt");
 	std::string saveName;
@@ -468,61 +467,22 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 	const auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->get_name()));
 	hero->heldItem = &inventorySystem.get_held_item();
 
-	//making route to the desire position
-	timeAfterNewRoute += elapsedTime;
-	if (timeAfterNewRoute >= timeForNewRoute)
-	{
-		timeAfterNewRoute = 0;
-		for (auto& dynamicItem : localDynamicItems)
-		{
-			//staticGrid.setLockedMicroBlocks(dynamicItem, true, true);
-			//dynamicItem->initMicroBlocks();
-			if (dynamicItem->get_route_generation_ability() && dynamicItem->lax_move_position != Vector2f(-1, -1) && dynamicItem->get_current_action() != jerking && dynamicItem->tag != entity_tag::hero)
-			{
-				const auto permissibleDistance = 10;			
-				timeAfterNewRoute = 0;
-				staticGrid.make_route(dynamicItem->get_position(), dynamicItem->lax_move_position,
-				                     dynamicItem->get_position().x - dynamicItem->sight_range / (worldGenerator.scaleFactor * worldGenerator.mainScale),
-				                     dynamicItem->get_position().y - dynamicItem->sight_range / (worldGenerator.scaleFactor * worldGenerator.mainScale),
-				                     dynamicItem->get_position().x + dynamicItem->sight_range / (worldGenerator.scaleFactor * worldGenerator.mainScale),
-				                     dynamicItem->get_position().y + dynamicItem->sight_range / (worldGenerator.scaleFactor * worldGenerator.mainScale), permissibleDistance);
-				dynamicItem->set_route(staticGrid.route);
-				staticGrid.set_locked_micro_blocks(dynamicItem, false, true);
-			}
-			else			
-				dynamicItem->change_move_position_to_route(dynamicItem->lax_move_position);
-
-			if (dynamicItem->route.empty())
-				dynamicItem->change_move_position_to_route(dynamicItem->lax_move_position);
-			//staticGrid.setLockedMicroBlocks(dynamicItem, false, true);
-		}
-	}
-	//-----------------------------------
+	for (auto& dynamicItem : localDynamicItems)
+		dynamicItem->move_system.is_route_needed(staticGrid.micro_block_matrix, microBlockSize);
+	
+	for (auto& dynamicItem : localDynamicItems)
+		dynamicItem->move_system.make_route(elapsedTime, &staticGrid, dynamicItem->sight_range / (worldGenerator.scaleFactor * worldGenerator.mainScale));			
 
 	for (auto& dynamicItem : localDynamicItems)
 	{		
-		// passing the beginning  of the route
-		if (!dynamicItem->route.empty())
-		{
-			std::pair<int, int> routeMicroBlock;
-			do
-			{
-				routeMicroBlock = dynamicItem->route[0];
-				const auto routePos = Vector2f(routeMicroBlock.first * microBlockSize.x, routeMicroBlock.second * microBlockSize.y);
-				if (helper::getDist(dynamicItem->lax_move_position, routePos) < helper::getDist(dynamicItem->lax_move_position, dynamicItem->get_position()) && dynamicItem->route.size() > 1)
-					break;
+		dynamicItem->move_system.pass_route_beginning(microBlockSize);
 
-				dynamicItem->route.erase(dynamicItem->route.begin());
-			} while (!dynamicItem->route.empty());
-			
-			dynamicItem->change_move_position_to_route(Vector2f(routeMicroBlock.first * microBlockSize.x, routeMicroBlock.second * microBlockSize.y));
-		}
-		else
-			dynamicItem->change_move_position_to_route(dynamicItem->lax_move_position);
-		//------------------------------------
+		/* crutch */ if (dynamicItem->tag == entity_tag::hero)
+			dynamicItem->move_system.move_position = dynamicItem->move_system.lax_move_position;
 
 		dynamicItem->behavior(elapsedTime);
-		//interaction with other objects		
+		
+		//interaction with other objects
 		for (auto& otherDynamicItem : localDynamicItems)
 		{
 			if (dynamicItem == otherDynamicItem)
@@ -537,17 +497,16 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 		}
 		for (auto& otherStaticItem : localStaticItems)
 			dynamicItem->behavior_with_static(otherStaticItem, elapsedTime);
-		//--------						
+		//------------------------------				
 
 		if (dynamicItem->shake_speed != -1)
 			cameraSystem.make_shake(4, dynamicItem->shake_speed);
 
-		auto newPosition = dynamicItem->get_move_system().doMove(elapsedTime);
+		auto newPosition = dynamicItem->move_system.do_move(elapsedTime);
 
 		fixedClimbingBeyond(newPosition);
 
-		newPosition = dynamicItem->get_move_system().doSlip(newPosition, localStaticItems, float(height), elapsedTime);
-		//newPosition = dynamicItem->doSlipOffDynamic(newPosition, localDynamicItems, height, elapsedTime);
+		newPosition = dynamicItem->move_system.do_slip(newPosition, localStaticItems, float(height), elapsedTime);		
 
 		if (!fixedClimbingBeyond(newPosition))
 			newPosition = dynamicItem->get_position();				
@@ -555,14 +514,12 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 		dynamicGrid.update_item_position(dynamicItem->get_name(), newPosition.x, newPosition.y);		
 	}
 
-	//if (focusedObject->getCurrentAction() == builds)
-		setItemFromBuildSystem();
+	setItemFromBuildSystem();
 
 	//buildSystem.setHeldItem(inventorySystem.getHeldItem()->lootInfo);
 	buildSystem.interact(cameraSystem.position, worldGenerator.scaleFactor);
 	inventorySystem.interact(elapsedTime);
 	pedestalController.interact(elapsedTime, event);
-	//-------------------
 
 	//deleting items
 	for (auto& item : localStaticItems)	
@@ -580,32 +537,39 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 		timeForNewSave = 0;
 		Save();
 	}
+	//------------
 }
 
-bool cmpImgDraw(sprite_chain_element* first, sprite_chain_element* second)
+bool cmpImgDraw(drawable_chain_element* first, drawable_chain_element* second)
 {
-	if (first->is_background && !second->is_background)
+	const auto first_sprite = dynamic_cast<sprite_chain_element*>(first);
+	const auto second_sprite = dynamic_cast<sprite_chain_element*>(second);
+
+	if (!first_sprite || !second_sprite)
 		return true;
-	if (!first->is_background && second->is_background)
+	
+	if (first_sprite->is_background && !second_sprite->is_background)
+		return true;
+	if (!first_sprite->is_background && second_sprite->is_background)
 		return false;
 
-	if (first->z_coordinate == second->z_coordinate)
+	if (first_sprite->z_coordinate == second_sprite->z_coordinate)
 	{
-		if (first->position.y == second->position.y)
+		if (first_sprite->position.y == second_sprite->position.y)
 		{
-			if (first->position.x == second->position.x)
-				return first->size.x * first->size.y < second->size.x * second->size.y;
-			return first->position.x < second->position.x;
+			if (first_sprite->position.x == second_sprite->position.x)
+				return first_sprite->size.x * first_sprite->size.y < second_sprite->size.x * second_sprite->size.y;
+			return first_sprite->position.x < second_sprite->position.x;
 		}
-		return first->position.y < second->position.y;
+		return first_sprite->position.y < second_sprite->position.y;
 	}
 
-	return first->z_coordinate < second->z_coordinate;
+	return first_sprite->z_coordinate < second_sprite->z_coordinate;
 }
 
-std::vector<sprite_chain_element*> world_handler::prepareSprites(const long long elapsedTime, const bool onlyBackground)
+std::vector<drawable_chain_element*> world_handler::prepareSprites(const long long elapsedTime, const bool onlyBackground)
 {
-    std::vector<sprite_chain_element*> result = {};
+    std::vector<drawable_chain_element*> result = {};
 
     const auto extra = staticGrid.get_block_size();
 
@@ -613,10 +577,10 @@ std::vector<sprite_chain_element*> world_handler::prepareSprites(const long long
 	const auto screenCenter = Vector2f(screenSize.x / 2, screenSize.y / 2);
 
 	cameraSystem.position.x += (focusedObject->get_position().x + helper::GetScreenSize().x * camera_system::cam_offset.x - cameraSystem.position.x) *
-		(focusedObject->get_move_system().speed * float(elapsedTime)) / camera_system::max_camera_distance.x;
+		(focusedObject->move_system.speed * float(elapsedTime)) / camera_system::max_camera_distance.x;
 	
 	cameraSystem.position.y += (focusedObject->get_position().y + helper::GetScreenSize().y * camera_system::cam_offset.y - cameraSystem.position.y) *
-		(focusedObject->get_move_system().speed * float(elapsedTime)) / camera_system::max_camera_distance.y;
+		(focusedObject->move_system.speed * float(elapsedTime)) / camera_system::max_camera_distance.y;
 	
 	cameraSystem.shake_interact(elapsedTime);
 
@@ -657,6 +621,29 @@ std::vector<sprite_chain_element*> world_handler::prepareSprites(const long long
     }
 
     sort(result.begin(), result.end(), cmpImgDraw);
+
+	/*auto deer = dynamic_cast<::dynamic_object*>(dynamicGrid.get_item_by_name("deer"));	
+	
+	for (const auto block : staticGrid.get_item_by_name("brazier")->get_locked_micro_blocks())
+	{
+		const Vector2f shape_pos = { (block.x * microBlockSize.x - cameraSystem.position.x) * worldGenerator.scaleFactor + helper::GetScreenSize().x / 2,
+			(block.y * microBlockSize.y - cameraSystem.position.y) * worldGenerator.scaleFactor + helper::GetScreenSize().y / 2 };
+
+		result.push_back(new shape_chain_element(shape_pos, 7.5, { 3.75f, 3.75f }, sf::Color::Red));
+	}
+	
+	for (const auto block : deer->route)
+	{
+		const Vector2f shape_pos = { (block.first * microBlockSize.x - cameraSystem.position.x) * worldGenerator.scaleFactor + helper::GetScreenSize().x / 2,
+			(block.second * microBlockSize.y - cameraSystem.position.y) * worldGenerator.scaleFactor + helper::GetScreenSize().y / 2 };
+		
+		result.push_back(new shape_chain_element(shape_pos, 7, { 3.5f, 3.5f }));
+	}
+
+	const Vector2f shape_pos = { (long(deer->get_position().x) / long(microBlockSize.x) * long(microBlockSize.x) - cameraSystem.position.x) * worldGenerator.scaleFactor + helper::GetScreenSize().x / 2,
+			(long(deer->get_position().y) / long(microBlockSize.y) * long(microBlockSize.y) - cameraSystem.position.y) * worldGenerator.scaleFactor + helper::GetScreenSize().y / 2 };
+
+	result.push_back(new shape_chain_element(shape_pos, 7.5, { 3.75f, 3.75f }, sf::Color::Blue));*/
 
     return result;
 }

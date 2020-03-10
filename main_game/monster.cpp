@@ -7,7 +7,7 @@ monster::monster(std::string objectName, const Vector2f centerPosition) : dynami
 	current_sprite_[0] = 1;
 	time_for_new_sprite_ = 0;
 	current_action_ = relax;
-	direction_system_.side = down;
+	direction_system.side = down;
 	sight_range = 950.0f;
 	strikingSprite = 6;
 	time_for_new_hit = long(1e5);
@@ -39,30 +39,30 @@ void monster::behavior_with_dynamic(dynamic_object* target, const long long elap
 	if (health_point_ <= 0)
 	{
 		change_action(dead, true);
-		direction_system_.direction = direction::STAND;
+		direction_system.direction = direction::STAND;
 		return;
 	}
 
 	if (helper::getDist(position_, target->get_position()) <= radius_ + target->get_radius())
-		move_system_.push_by_bumping(target->get_position(), target->get_radius(), target->get_move_system().can_crash_into_dynamic);
+		move_system.push_by_bumping(target->get_position(), target->get_radius(), target->move_system.can_crash_into_dynamic);
 
 	if (target->tag != entity_tag::hero)
 		return;
 
 	if (helper::getDist(target->get_position(), position_) > sight_range)
 	{		
-		lax_move_position = { -1, -1 };
+		move_system.lax_move_position = { -1, -1 };
 		change_action(relax, current_action_ != relax);
 		return;
 	}
 
 	bound_target_ = target;
-	direction_system_.side = direction_system::calculate_side(position_, bound_target_->get_position());
+	direction_system.side = direction_system.calculate_side(position_, bound_target_->get_position(), elapsedTime);
 
 	if (helper::getDist(position_, bound_target_->get_position()) <= sight_range && time_after_hit >= time_for_new_hit)
-		move_system_.speed = std::max((1 - helper::getDist(position_, bound_target_->get_position()) / sight_range) * move_system_.default_speed / 2 + move_system_.default_speed, move_system_.default_speed);
+		move_system.speed = std::max((1 - helper::getDist(position_, bound_target_->get_position()) / sight_range) * move_system.default_speed / 2 + move_system.default_speed, move_system.default_speed);
 	else
-		move_system_.speed = move_system_.default_speed;
+		move_system.speed = move_system.default_speed;
 	if (isAttack.count(current_action_) == 0)
 		time_after_hit += elapsedTime;
 
@@ -87,7 +87,7 @@ void monster::behavior_with_dynamic(dynamic_object* target, const long long elap
 		if (isAttack.count(current_action_) == 0 && current_action_ != combatState)
 		{
 			change_action(move, false);
-			lax_move_position = bound_target_->get_position();
+			move_system.lax_move_position = bound_target_->get_position();
 		}
 	}
 	else	
@@ -109,9 +109,9 @@ void monster::stopping(const bool doStand, const bool forgetBoundTarget)
 {
 	if (doStand)
 	{
-		this->lax_move_position = { -1, -1 };
-		move_system_.move_offset = { 0, 0 };
-		direction_system_.direction = direction::STAND;
+		move_system.lax_move_position = { -1, -1 };
+		move_system.move_offset = { 0, 0 };
+		direction_system.direction = direction::STAND;
 	}
 
 	if (forgetBoundTarget && bound_target_ != nullptr)
@@ -138,5 +138,5 @@ void monster::jerk(float power, float deceleration, Vector2f destinationPoint)
 void monster::fight_interact(const long long elapsedTime, dynamic_object* target)
 {
 	time_after_hitself_ += elapsedTime;
-	move_system_.push_away(elapsedTime);
+	move_system.push_away(elapsedTime);
 }

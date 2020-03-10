@@ -213,6 +213,9 @@
     <ClCompile Include="shader_system.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="shape_chain_element.cpp">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClCompile>
     <ClCompile Include="visual_effects\field_of_view.cpp">
       <Filter>visual_effects</Filter>
     </ClCompile>
@@ -437,7 +440,9 @@
     <ClInclude Include="shader_system.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="visual_effects\field_of_view.hpp">
+    <ClInclude Include="shape_chain_element.h">
+      <Filter>Systems\DrawSystem</Filter>
+    </ClInclude>    <ClInclude Include="visual_effects\field_of_view.hpp">
       <Filter>visual_effects</Filter>
     </ClInclude>
     <ClInclude Include="visual_effects\ambient_light.hpp">
