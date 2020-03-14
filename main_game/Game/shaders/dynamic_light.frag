@@ -1,17 +1,71 @@
 #version 130
 
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+uniform sampler2D scene_tex;
+uniform sampler2D overlay_tex;
+uniform sampler2D multiply_tex;
+uniform sampler2D fov_tex;
 uniform vec2 screen_size;
-uniform sampler2D target_tex;
-uniform sampler2D light_tex;
+uniform vec3 hero;
 uniform float norm_time;
+
+float overlay_blend(in float back, in float front) 
+{
+	return (1.0 - step(0.5, back)) * ( 2.0 * back * front) + step(0.5, back) * (1.0 - 2.0 * (1.0 - back) * (1.0 - front));
+}
+
+float opacity(in float back, in float front, in float op)
+{
+	return op * front + (1 - op) * back;
+}
+
+float circle(in vec2 _st, in float _radius)
+{
+    vec2 dist = _st - vec2(0.5);
+	return 1.0 - smoothstep(_radius - (_radius * 1.2), _radius + (_radius * 0.5), dot(dist, dist) * 1.0);
+}
 
 void main()
 {	
 	vec2 pixel_xy = gl_FragCoord.xy / screen_size.xy;
-    vec2 target_pixel_pos = vec2(pixel_xy.x, pixel_xy.y);
-	vec4 target_color = texture(target_tex, target_pixel_pos);
-	vec2 light_pixel_pos = vec2(norm_time, 0.0f);
-	vec4 light_color = texture(light_tex, light_pixel_pos);
+	vec4 scene_color = texture(scene_tex, pixel_xy);
 
-	gl_FragColor = mix(target_color, light_color, 1.0f);	
+	vec2 timed_pixel_pos = vec2(norm_time, 0.0f);
+	vec4 overlay_color = texture(overlay_tex, timed_pixel_pos);
+	vec4 multiply_color = texture(multiply_tex, timed_pixel_pos);
+	vec4 fov_color = texture(fov_tex, timed_pixel_pos);
+
+	vec4 result_color = vec4(1.0);
+
+	// color correction
+
+	result_color.r = overlay_blend(scene_color.r, overlay_color.r);
+	result_color.g = overlay_blend(scene_color.g, overlay_color.g);
+	result_color.b = overlay_blend(scene_color.b, overlay_color.b);
+
+	result_color.r = opacity(scene_color.r, result_color.r, overlay_color.a);
+	result_color.g = opacity(scene_color.g, result_color.g, overlay_color.a);
+	result_color.b = opacity(scene_color.b, result_color.b, overlay_color.a);
+
+	// part of the day
+	
+	vec3 mult  = result_color.rgb * multiply_color.rgb;
+
+	result_color.r = opacity(result_color.r, mult.r, multiply_color.a);
+	result_color.g = opacity(result_color.g, mult.g, multiply_color.a);
+	result_color.b = opacity(result_color.b, mult.b, multiply_color.a);
+
+	// field of view
+	
+	float op = 1.0 - circle(pixel_xy, 0.35 / fov_color.a);
+	mult = result_color.rgb * fov_color.rgb;
+
+	result_color.r = opacity(result_color.r, mult.r, op);
+	result_color.g = opacity(result_color.g, mult.g, op);
+	result_color.b = opacity(result_color.b, mult.b, op);
+
+	gl_FragColor = result_color;
 }

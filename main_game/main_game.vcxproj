@@ -311,6 +311,8 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
     <ClInclude Include="yarrow.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Game\shaders\dynamic_light.frag" />
+    <None Include="Game\shaders\field_of_view.frag" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -121,7 +121,7 @@ int main() {
 				world.focusedObject->handle_input(world.getInventorySystem().get_used_mouse(), time_micro_sec);
 
 				ambient_light.update();
-				field_of_view.update();
+				//field_of_view.update();
 			}
 
 			auto hero = dynamic_cast<deerchant*>(world.focusedObject);
@@ -136,8 +136,8 @@ int main() {
 			visual_effect_texture.update(main_window);
 			main_window.draw(visual_effect_sprite, ambient_light.shader);
 
-			visual_effect_texture.update(main_window);
-			main_window.draw(visual_effect_sprite, field_of_view.shader);
+			/*visual_effect_texture.update(main_window);
+			main_window.draw(visual_effect_sprite, field_of_view.shader);*/
 
 			draw_system.draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepare_sprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packs_map)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
 			text_system::draw_string(world.getMouseDisplayName(), font_name::normal_font, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));

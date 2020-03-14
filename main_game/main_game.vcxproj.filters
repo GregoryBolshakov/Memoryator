@@ -442,7 +442,8 @@
     </ClInclude>
     <ClInclude Include="shape_chain_element.h">
       <Filter>Systems\DrawSystem</Filter>
-    </ClInclude>    <ClInclude Include="visual_effects\field_of_view.hpp">
+    </ClInclude>
+    <ClInclude Include="visual_effects\field_of_view.hpp">
       <Filter>visual_effects</Filter>
     </ClInclude>
     <ClInclude Include="visual_effects\ambient_light.hpp">
@@ -481,8 +482,17 @@
     <Filter Include="visual_effects">
       <UniqueIdentifier>{3c325feb-d21d-4623-8836-f7951dc989ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="visual_effects\shaders">
+      <UniqueIdentifier>{06976f74-5598-412b-b323-c9ba79c9b35b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Game\shaders\dynamic_light.frag">
+      <Filter>visual_effects\shaders</Filter>
+    </None>
+    <None Include="Game\shaders\field_of_view.frag">
+      <Filter>visual_effects\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
