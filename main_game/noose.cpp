@@ -55,9 +55,9 @@ void noose::behavior_with_dynamic(dynamic_object* target, long long /*elapsedTim
 		if (helper::getDist(position_, deer->getHeadPosition()) <= radius_ + target->get_radius())
 		{
 			bound_target_ = target;
-			if (deer->getOwner() == nullptr && deer->get_current_action() != commonHit)
+			if (deer->getOwner() == nullptr && deer->get_current_action() != common_hit)
 			{
-				deer->change_action(commonHit, true, false);
+				deer->change_action(common_hit, true, false);
 			}
 			if (owner != nullptr)
 			{

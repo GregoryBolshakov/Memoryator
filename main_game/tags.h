@@ -22,7 +22,8 @@ enum class pack_tag
 enum class pack_part
 {
 	full = 101, body = 102, legs = 103, lines = 104, // creature's parts
-	stand = 1, move = 2, trap = 3, hit = 4, hunt = 5, // action's parts
+	stand = 1, move = 2, trap = 3, hit = 4, hunt = 5, listening = 6, sniff = 7, transition = 8, jump = 9,
+	look_around = 10, startle = 11, // action's parts
 	ground = 201, tree = 202, bush = 203, log = 204, mushroom = 205, path = 206, plant = 207, rock = 208, stump = 209,
 	decor = 210, roof = 211, lake = 212, root = 213, flower = 213,// biome's parts
 	bookLittle = 301, crossButton = 302, menu = 303, // interface's parts
@@ -44,7 +45,34 @@ enum class button_tag { playTag = 0, continueTag = 1, newRunTag = 2, settingsTag
 	heroBag = 201
 };
 
-enum actions { directHit = 2, relax = 3, combatState = 4, move = 5, dead = 6, moveSlowly = 7, commonHit = 9, moveHit = 10, dropping = 11, transitionToEnotherWorld = 12,
-	open = 13, absorbs = 14, grab = 15, builds = 16, jerking = 17, moveEnd = 18, upFlap = 30, leftFlap = 31, rightFlap = 32, startFlap = 33, stopFlap = 34, throwNoose = 35 };
+enum actions { direct_hit = 2,
+	relax = 3,
+	combat_state = 4,
+	move = 5,
+	dead = 6,
+	move_slowly = 7,
+	common_hit = 9,
+	move_hit = 10,
+	dropping = 11,
+	open = 13,
+	absorbs = 14,
+	grab = 15,
+	builds = 16,
+	jerking = 17,
+	move_end = 18,
+	listening = 19,
+	sniff = 20,
+	transition = 21,
+	trap = 22,
+	jump = 23,
+	jump_end = 24,
+	look_around = 25,
+	startle = 26,
+	up_flap = 30,
+	left_flap = 31,
+	right_flap = 32,
+	start_flap = 33,
+	stop_flap = 34,
+	throw_noose = 35 };
 
 enum side { undefined = 0, up = 1, right = 2, down = 3, left = 4 };

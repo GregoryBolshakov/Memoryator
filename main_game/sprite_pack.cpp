@@ -44,7 +44,13 @@ std::map<std::string, pack_part> sprite_pack::mapped_pack_part = {
 	{"move", pack_part::move},
 	{"trap", pack_part::trap},
 	{"hit", pack_part::hit},
-	{"hunt", pack_part::hunt}, // action's parts
+	{"hunt", pack_part::hunt},
+	{"listening", pack_part::listening},
+	{"sniff", pack_part::sniff},
+	{"transition", pack_part::transition},
+	{"jump", pack_part::jump},
+	{"look_around", pack_part::look_around},
+	{"startle", pack_part::startle}, // action's parts
 	{"ground", pack_part::ground},
 	{"tree", pack_part::tree},
 	{"bush", pack_part::bush},

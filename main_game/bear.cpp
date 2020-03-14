@@ -54,7 +54,7 @@ void bear::behavior(long long elapsedTime)
 	if (this->owner != nullptr)
 	{
 		move_system.speed = move_system.default_speed;
-		if (current_action_ == commonHit)
+		if (current_action_ == common_hit)
 		{
 			move_system.lax_move_position = position_;
 			return;
@@ -117,7 +117,7 @@ int bear::get_build_type(Vector2f ounPos, Vector2f otherPos)
 
 void bear::endingPreviousAction()
 {
-	if (last_action_ == commonHit)
+	if (last_action_ == common_hit)
 		current_action_ = relax;
 
 	last_action_ = relax;

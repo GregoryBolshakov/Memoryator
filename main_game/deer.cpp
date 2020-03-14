@@ -56,7 +56,7 @@ void deer::behavior(const long long elapsedTime)
 	if (this->owner != nullptr)
 	{
 		move_system.speed = move_system.default_speed;
-		if (current_action_ == commonHit)
+		if (current_action_ == common_hit)
 		{
 			move_system.lax_move_position = {-1, -1};
 			return;
@@ -64,7 +64,7 @@ void deer::behavior(const long long elapsedTime)
 		direction_system.side = direction_system.calculate_side(position_, owner->get_position(), elapsedTime);
 		if (helper::getDist(position_, owner->get_position()) > sight_range / 2)
 		{
-			change_action(moveSlowly, false, false);
+			change_action(move_slowly, false, false);
 			move_system.lax_move_position = owner->get_position();
 		}
 		else if (helper::getDist(position_, owner->get_position()) <= sight_range / 2.5 && current_action_ != relax)
@@ -128,7 +128,7 @@ void deer::endingPreviousAction()
 		current_action_ = relax;
 		delete_promise_on();
 	}
-	if (last_action_ == commonHit)	
+	if (last_action_ == common_hit)	
 		current_action_ = relax;
 
 	last_action_ = relax;
@@ -295,7 +295,7 @@ std::vector<sprite_chain_element*> deer::prepare_sprites(long long elapsedTime)
 			animationLength = 1;
 			break;
 		}
-	case commonHit:
+	case common_hit:
 		{
 			animationLength = 6;
 			body->pack_part = pack_part::hunt;
@@ -309,7 +309,7 @@ std::vector<sprite_chain_element*> deer::prepare_sprites(long long elapsedTime)
 			break;
 		}
 	case move:
-	case moveSlowly:
+	case move_slowly:
 		{
 			animationLength = 7;
 			body->pack_part = pack_part::move;

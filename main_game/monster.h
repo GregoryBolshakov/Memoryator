@@ -24,7 +24,7 @@ public:
 	virtual void doAttack(world_object* target) = 0;
 protected:
 	world_object* victim = nullptr;
-	std::map<actions, bool> isAttack = { {commonHit, true}, {directHit, true} };
+	std::map<actions, bool> isAttack = { {common_hit, true}, {direct_hit, true} };
 	float hitDistance = 30;
 	int animationLength{};
 	bool wasHit = false;

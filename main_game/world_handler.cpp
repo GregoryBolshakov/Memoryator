@@ -22,7 +22,8 @@ world_handler::world_handler(const int width, const int height, std::map<pack_ta
 	worldGenerator.init(width, height, blockSize, microBlockSize, &staticGrid, &dynamicGrid, packsMap);
 	buildSystem.init();
 	inventorySystem.init();
-	timeSystem.init(10.0 / (24 * 60));
+	timeSystem.init(10.0 / (time_system::hours_per_day * time_system::minutes_per_hour));
+	timeSystem.set_day_part(0.5);
 	lightSystem.init({0, 0, helper::GetScreenSize().x, helper::GetScreenSize().y});
 }
 

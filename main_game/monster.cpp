@@ -77,14 +77,14 @@ void monster::behavior_with_dynamic(dynamic_object* target, const long long elap
 	if (isAttack.count(current_action_) == 0 && helper::getDist(position_, bound_target_->get_position()) <= (this->radius_ + bound_target_->get_radius() + hitDistance / 5))
 	{
 		stopping(true, false);
-		change_action(combatState, false, false);								
+		change_action(combat_state, false, false);								
 	}
 	//---------------------
 	
 	// move to player
 	if (helper::getDist(position_, bound_target_->get_position()) > (this->radius_ + bound_target_->get_radius() + hitDistance / 5))
 	{
-		if (isAttack.count(current_action_) == 0 && current_action_ != combatState)
+		if (isAttack.count(current_action_) == 0 && current_action_ != combat_state)
 		{
 			change_action(move, false);
 			move_system.lax_move_position = bound_target_->get_position();
@@ -96,12 +96,12 @@ void monster::behavior_with_dynamic(dynamic_object* target, const long long elap
 
 void monster::endingPreviousAction()
 {
-	if (last_action_ == combatState)
+	if (last_action_ == combat_state)
 		change_action(relax, true, false);
-	if (last_action_ == commonHit)
-		change_action(combatState, true, false);
-	if (last_action_ == directHit)
-		change_action(combatState, true, false);
+	if (last_action_ == common_hit)
+		change_action(combat_state, true, false);
+	if (last_action_ == direct_hit)
+		change_action(combat_state, true, false);
 	last_action_ = relax;
 }
 

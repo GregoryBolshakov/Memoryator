@@ -24,7 +24,7 @@ bool console::get_state() const
 	return state_;
 }
 
-void console::draw(RenderWindow& window)
+void console::draw(RenderWindow& window) const
 {
 	if (!state_)
 		return;
@@ -115,6 +115,22 @@ void console::do_command()
 
 	for (auto& command : commands)
 		std::transform(command.begin(), command.end(), command.begin(), tolower);
+
+	if (commands.size() >= 3)
+	{
+		if (commands[0] == "set" && commands[1] == "time")
+		{		
+			const auto time = std::stoll(commands[2]);
+			if (time != -1)
+				world_->getTimeSystem().set_time_total_micro_seconds(time);
+		}
+		if (commands[0] == "set" && commands[1] == "daypart")
+		{
+			const auto day_part = std::stod(commands[2]);
+			if (day_part != -1)
+				world_->getTimeSystem().set_day_part(day_part);
+		}
+	}
 	if (commands.size() >= 2)
 	{
 		if (commands[0] == "spawn" && object_initializer::mapped_strings.count(commands[1]) > 0)

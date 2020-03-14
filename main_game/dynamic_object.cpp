@@ -5,7 +5,7 @@
 dynamic_object::dynamic_object(std::string objectName, const Vector2f centerPosition) : world_object(std::move(objectName), centerPosition), current_action_()
 {
 	move_system.init(&tag, &radius_, &position_, &color, &current_action_, &direction_system);
-	direction_system.init(&position_, &move_system.move_position);	
+	direction_system.init(&position_, &move_system.move_position, &mirrored_);	
 }
 
 dynamic_object::~dynamic_object()

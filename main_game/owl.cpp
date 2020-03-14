@@ -179,7 +179,7 @@ int owl::get_build_type(Vector2f ounPos, Vector2f otherPos)
 
 void owl::endingPreviousAction()
 {
-	if (last_action_ == commonHit)
+	if (last_action_ == common_hit)
 		current_action_ = relax;
 	if (last_action_ == absorbs)
 	{

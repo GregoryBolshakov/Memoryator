@@ -37,7 +37,7 @@ void nightmare_first::doAttack(world_object* target)
 	{
 		if (helper::getDist(position_, bound_target_->get_position()) <= (this->radius_ + bound_target_->get_radius() + hitDistance / 5))
 		{
-			change_action(commonHit, true, false);
+			change_action(common_hit, true, false);
 			time_after_hit = 0;
 		}
 	}
@@ -66,14 +66,14 @@ std::vector<sprite_chain_element*> nightmare_first::prepare_sprites(const long l
 
 	switch (current_action_)
 	{
-	case commonHit:
+	case common_hit:
 	{
 		animationLength = 9;
 		body->pack_tag = pack_tag::nightmare1;
 		body->pack_part = pack_part::hit;		
 		break;
 	}
-	case combatState:
+	case combat_state:
 	case relax:
 	{
 		animationLength = 13;

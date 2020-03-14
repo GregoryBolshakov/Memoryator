@@ -36,13 +36,13 @@ void nightmare_third::doAttack(world_object* target)
 	{
 		if (helper::getDist(position_, bound_target_->get_position()) <= (this->radius_ + bound_target_->get_radius() + hitDistance / 3))
 		{
-			change_action(commonHit, true, false);
+			change_action(common_hit, true, false);
 			time_after_hit = 0;
 		}
 		else
 			if (helper::getDist(position_, bound_target_->get_position()) > this->radius_ + bound_target_->get_radius() + hitDistance * 2)
 			{
-				change_action(directHit, true, false);
+				change_action(direct_hit, true, false);
 				time_after_hit = 0;
 			}
 		
@@ -51,18 +51,18 @@ void nightmare_third::doAttack(world_object* target)
 
 void nightmare_third::endingPreviousAction()
 {
-	if (last_action_ == combatState)
+	if (last_action_ == combat_state)
 		change_action(relax, true, false);
-	if (last_action_ == commonHit)
-		change_action(combatState, true, false);	
-	if (last_action_ == directHit)	
+	if (last_action_ == common_hit)
+		change_action(combat_state, true, false);	
+	if (last_action_ == direct_hit)	
 		change_action(relax, true, false);	
 	last_action_ = relax;
 }
 
 void nightmare_third::on_sprite_change()
 {
-	if (current_action_ == directHit && current_sprite_[0] == 5)
+	if (current_action_ == direct_hit && current_sprite_[0] == 5)
 	{
 		birth_dynamic_info whirl;
 		whirl.position = position_;
@@ -105,7 +105,7 @@ std::vector<sprite_chain_element*> nightmare_third::prepare_sprites(long long el
 			doShake = true;
 		break;
 	}
-	case directHit:
+	case direct_hit:
 	{
 		animationLength = 9;		
 		fullSprite.path = "Game/worldSprites/nightmare3/clap/" + sideStr + '/';

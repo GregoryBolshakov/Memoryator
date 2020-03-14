@@ -187,11 +187,11 @@ Vector2f move_system::ellipse_slip(const Vector2f new_pos, const Vector2f destin
 void move_system::set_move_offset(long long elapsedTime)
 {
 	if (!(*current_action_ == move ||
-		*current_action_ == moveHit ||
-		*current_action_ == moveEnd ||
+		*current_action_ == move_hit ||
+		*current_action_ == move_end ||
 		*current_action_ == jerking ||
-		*current_action_ == throwNoose ||
-		*current_action_ == moveSlowly))
+		*current_action_ == throw_noose ||
+		*current_action_ == move_slowly))
 	{
 		move_offset = { -1, -1 };
 		return;

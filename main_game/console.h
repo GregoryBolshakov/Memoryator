@@ -11,7 +11,7 @@ public:
 	console(FloatRect rect, world_handler* world = nullptr);
 	~console();
 	input_box get_body() const;
-	void draw(RenderWindow& window);
+	void draw(RenderWindow& window) const;
 	void interact(long long elapsed_time);
 	void handle_events(Event event);
 	void reset_command_stack_iterator();;

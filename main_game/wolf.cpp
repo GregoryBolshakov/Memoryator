@@ -131,7 +131,7 @@ std::vector<sprite_chain_element*> wolf::prepare_sprites(long long elapsedTime)
 		spriteName += ".png";
 		break;
 	}
-	case directHit:
+	case direct_hit:
 	{
 		animationLength = 8;
 		switch (side)

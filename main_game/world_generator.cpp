@@ -102,6 +102,7 @@ void world_generator::initializeDynamicItem(const entity_tag itemClass, const Ve
 void world_generator::generate()
 {	
 	initializeDynamicItem(entity_tag::hero, Vector2f(15800, 16300), "hero");
+	initializeDynamicItem(entity_tag::hare, Vector2f(15000, 16300), "hare");
 	initializeStaticItem(entity_tag::brazier, Vector2f(16300, 15800), 1, "brazier");
 
 	// world generation
@@ -175,7 +176,7 @@ void world_generator::inBlockGenerate(const int blockIndex)
 	generateGround(blockIndex);
 
 	//block filling
-	//return;
+	return;
 
 	for (auto x = blockTransform.left; x < blockTransform.left + blockTransform.width; x += 100)
 	{

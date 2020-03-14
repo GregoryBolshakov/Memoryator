@@ -88,6 +88,66 @@ void direction_system::calculate_direction(const long long elapsed_time)
 		last_direction = direction;
 }
 
+void direction_system::set_mob_direction(const Vector2f move_offset, const long long elapsed_time)
+{
+	time_after_new_direction += elapsed_time;
+
+	if (time_after_new_direction < time_for_new_direction)
+		return;
+	
+	time_after_new_direction = 0;
+
+	const auto angle = calculate_angle(move_offset);
+	
+	if (angle >= 0 && angle < 45)
+	{
+		direction = direction::UPLEFT;
+		*mirrored = true;
+	}
+	else
+		if (angle >= 45 && angle < 90)
+		{
+			direction = direction::UP;
+			*mirrored = true;
+		}
+		else
+			if (angle >= 90 && angle < 135)
+			{
+				direction = direction::UP;
+				*mirrored = false;
+			}
+			else
+				if (angle >= 135 && angle < 180)
+				{
+					direction = direction::UPLEFT;
+					*mirrored = false;
+				}
+				else
+					if (angle >= 180 && angle < 225)
+					{
+						direction = direction::DOWNLEFT;
+						*mirrored = false;
+					}
+					else
+						if (angle >= 225 && angle < 270)
+						{
+							direction = direction::DOWN;
+							*mirrored = false;
+						}
+						else
+							if (angle >= 270 && angle < 315)
+							{
+								direction = direction::DOWN;
+								*mirrored = true;
+							}
+							else
+								if (angle >= 315 && angle < 360)
+								{
+									direction = direction::DOWNLEFT;
+									*mirrored = true;
+								}
+}
+
 side direction_system::calculate_side(const Vector2f position, const Vector2f other_object_position, const long long elapsed_time)
 {
 	time_after_new_side += elapsed_time;

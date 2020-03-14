@@ -36,7 +36,7 @@ void nightmare_second::doAttack(world_object* target)
 	{
 		if (helper::getDist(position_, bound_target_->get_position()) <= (this->radius_ + bound_target_->get_radius() + hitDistance / 5))
 		{
-			change_action(commonHit, true, false);
+			change_action(common_hit, true, false);
 			time_after_hit = 0;
 		}
 	}
@@ -66,13 +66,13 @@ std::vector<sprite_chain_element*> nightmare_second::prepare_sprites(long long e
 
 	switch (current_action_)
 	{
-	case commonHit:
+	case common_hit:
 	{
 		animationLength = 12;
 		body->pack_tag = pack_tag::nightmare2Hit;
 		break;
 	}
-	case combatState:
+	case combat_state:
 	{
 		animationLength = 9;
 		body->pack_tag = pack_tag::nightmare2Stand;
