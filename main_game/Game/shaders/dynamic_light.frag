@@ -8,8 +8,8 @@ uniform sampler2D scene_tex;
 uniform sampler2D overlay_tex;
 uniform sampler2D multiply_tex;
 uniform sampler2D fov_tex;
-uniform vec2 screen_size;
-uniform vec3 hero;
+uniform vec2 scene_size;
+uniform vec3 view;
 uniform float norm_time;
 
 float overlay_blend(in float back, in float front) 
@@ -22,15 +22,15 @@ float opacity(in float back, in float front, in float op)
 	return op * front + (1 - op) * back;
 }
 
-float circle(in vec2 _st, in float _radius)
+float circle(in vec2 st, in vec2 center, in float radius)
 {
-    vec2 dist = _st - vec2(0.5);
-	return 1.0 - smoothstep(_radius - (_radius * 1.2), _radius + (_radius * 0.5), dot(dist, dist) * 1.0);
+    vec2 dist = st - center;
+	return 1.0 - smoothstep(radius - (radius * 1.2), radius + (radius * 0.5), dot(dist, dist) * 1.0);
 }
 
 void main()
 {	
-	vec2 pixel_xy = gl_FragCoord.xy / screen_size.xy;
+	vec2 pixel_xy = gl_FragCoord.xy / scene_size.xy;
 	vec4 scene_color = texture(scene_tex, pixel_xy);
 
 	vec2 timed_pixel_pos = vec2(norm_time, 0.0f);
@@ -59,8 +59,9 @@ void main()
 	result_color.b = opacity(result_color.b, mult.b, multiply_color.a);
 
 	// field of view
-	
-	float op = 1.0 - circle(pixel_xy, 0.35 / fov_color.a);
+
+	float fov = 0.25 * (1.0 + view.z) / (fov_color.a + 0.00001);
+	float op = 1.0 - circle(pixel_xy, view.xy, fov);
 	mult = result_color.rgb * fov_color.rgb;
 
 	result_color.r = opacity(result_color.r, mult.r, op);

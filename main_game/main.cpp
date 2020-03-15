@@ -4,19 +4,19 @@
 #include "draw_system.h"
 #include "hero_book.h"
 #include "menu_system.h"
-#include "visual_effects/ambient_light.hpp"
+#include "visual_effects/dynamic_light.hpp"
 #include "visual_effects/field_of_view.hpp"
 
 
 using namespace sf;
 
-int main() {	
+int main() {
 	srand(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
-	
-	const auto screen_size = helper::GetScreenSize();
-	RenderWindow main_window(VideoMode(static_cast<unsigned int>(screen_size.x), static_cast<unsigned int>(screen_size.y), 32), "game", Style::Fullscreen);
 
-    draw_system draw_system;
+	const auto screen_size = helper::GetScreenSize();
+	RenderWindow main_window(VideoMode(static_cast<unsigned int>(screen_size.x), static_cast<unsigned int>(screen_size.y), 32), "game");;//, Style::Fullscreen);
+
+	draw_system draw_system;
 	menu_system menu_system;
 	world_handler world(40000, 40000, &draw_system.packs_map);
 	auto window_focus = true;
@@ -30,7 +30,7 @@ int main() {
 	main_book.init(&draw_system.packs_map);
 
 	text_system text_writer;
-	
+
 	RenderTexture surface;
 
 	if (!surface.create(static_cast<unsigned int>(screen_size.x), static_cast<unsigned int>(screen_size.y))) {
@@ -40,18 +40,18 @@ int main() {
 	auto visual_effect_texture = surface.getTexture();
 	auto visual_effect_sprite = Sprite(visual_effect_texture);
 
-	ambient_light ambient_light(world.getTimeSystem(), screen_size);
+	dynamic_light ambient_light(world.getTimeSystem(), world, screen_size);
 	ambient_light.load();
 
 	field_of_view field_of_view(world.getTimeSystem(), screen_size);
 	field_of_view.load();
-	
+
 	while (main_window.isOpen())
 	{
 		Event event{};
 
 		while (main_window.pollEvent(event))
-		{			
+		{
 			world.handleEvents(event);
 			if (Mouse::isButtonPressed(Mouse::Left))
 				current_mouse_button = 1;
@@ -63,16 +63,16 @@ int main() {
 			{
 				if (menu_system.get_state() == closed)
 					world.setScaleFactor(event.mouseWheel.delta);
-			}	
+			}
 
 			if (event.type == Event::MouseButtonReleased)
-			{			
+			{
 				if (menu_system.get_state() == closed && world.getBuildSystem().get_success_init())
 				{
-					world.onMouseUp(current_mouse_button);					
+					world.onMouseUp(current_mouse_button);
 					main_book.onMouseUp();
 				}
-					
+
 				if (current_mouse_button == 1)
 					menu_system.interact(world, main_window);
 			}
@@ -84,11 +84,11 @@ int main() {
 					world.pedestalController.stop();
 			}
 
-			if (event.type == Event::GainedFocus)			
-				window_focus = true;	
+			if (event.type == Event::GainedFocus)
+				window_focus = true;
 
-			if (event.type == Event::LostFocus)			
-				window_focus = false;			
+			if (event.type == Event::LostFocus)
+				window_focus = false;
 
 			if (event.type == Event::Closed)
 			{
@@ -101,7 +101,7 @@ int main() {
 		}
 
 		if (menu_system.get_state() == main_menu)
-		{		
+		{
 			main_window.clear(sf::Color::White);
 			draw_system.draw(main_window, draw_system::upcast_chain(menu_system.prepare_sprites()));
 			main_window.display();
@@ -116,7 +116,7 @@ int main() {
 			clock.restart();
 
 			if (!console.get_state())
-			{				
+			{
 				world.interact(screen_size, time_micro_sec, event);
 				world.focusedObject->handle_input(world.getInventorySystem().get_used_mouse(), time_micro_sec);
 
@@ -129,10 +129,10 @@ int main() {
 			main_book.interact();
 
 			main_window.clear(sf::Color::White);
-			
-            draw_system.draw(main_window, world.prepareSprites(time_micro_sec, true), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
-            draw_system.draw(main_window, world.prepareSprites(time_micro_sec, false), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
-            
+
+			draw_system.draw(main_window, world.prepareSprites(time_micro_sec, true), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+			draw_system.draw(main_window, world.prepareSprites(time_micro_sec, false), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+
 			visual_effect_texture.update(main_window);
 			main_window.draw(visual_effect_sprite, ambient_light.shader);
 
@@ -143,7 +143,7 @@ int main() {
 			text_system::draw_string(world.getMouseDisplayName(), font_name::normal_font, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));
 			world.pedestalController.draw(&main_window, world.getCameraPosition(), world.getWorldGenerator().scaleFactor);
 			draw_system.draw(main_window, main_book.prepareSprites(world.focusedObject->get_health_point() / world.focusedObject->get_max_health_point_value(), time_micro_sec));
-			draw_system.draw(main_window, world.getInventorySystem().prepare_sprites(time_micro_sec, world.packsMap));			
+			draw_system.draw(main_window, world.getInventorySystem().prepare_sprites(time_micro_sec, world.packsMap));
 		}
 		else
 			clock.restart();
@@ -152,7 +152,7 @@ int main() {
 
 		world.focusedObject->move_system.set_move_offset(time_micro_sec);
 		draw_system.draw(main_window, { new text_chain_element({500, 500}, {0, 0}, sf::Color::White, std::to_string(direction_system::calculate_angle(world.focusedObject->move_system.move_offset))) });
-		
+
 		console.interact(time_micro_sec);
 		console.draw(main_window);
 
