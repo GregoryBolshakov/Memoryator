@@ -14,7 +14,7 @@ int main() {
 	srand(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
 	
 	const auto screen_size = helper::GetScreenSize();
-	RenderWindow main_window(VideoMode(static_cast<unsigned int>(screen_size.x), static_cast<unsigned int>(screen_size.y), 32), "game");;//, Style::Fullscreen);
+	RenderWindow main_window(VideoMode(static_cast<unsigned int>(screen_size.x), static_cast<unsigned int>(screen_size.y), 32), "game", Style::Fullscreen);
 
     draw_system draw_system;
 	menu_system menu_system;

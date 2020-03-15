@@ -197,7 +197,107 @@ void owl::jerk(float power, float deceleration, Vector2f destinationPoint)
 
 std::vector<sprite_chain_element*> owl::prepare_sprites(long long elapsedTime)
 {
-    return {};
+	auto body = new sprite_chain_element(pack_tag::owl, pack_part::head, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
+	animation_speed_ = 12;
+
+	auto inverse = false;
+	body->mirrored = mirrored_;
+
+	switch (current_action_)
+	{
+	case relax:
+	{
+		body->animation_length = 1;
+		current_sprite_[0] = 1;		
+	}
+	case head:
+	{
+		body->animation_length = 16;
+		body->pack_part = pack_part::head;
+		break;
+	}
+	case landing:
+	{
+		body->animation_length = 14;
+		body->pack_part = pack_part::landing;
+		break;
+	}
+	case startle:
+	{
+		body->animation_length = 14;
+		body->pack_part = pack_part::startle;
+		break;
+	}
+	case look_around:
+	{
+		body->animation_length = 17;
+		body->pack_part = pack_part::look_around;
+		break;
+	}
+	case sniff:
+	{
+		body->animation_length = 14;
+		body->pack_part = pack_part::sniff;
+		break;
+	}
+	case startle:
+	{
+		body->animation_length = 14;
+		body->pack_part = pack_part::startle;
+		break;
+	}
+	case transition:
+	{
+		if (!stand_)
+			inverse = true;
+		body->animation_length = 3;
+		body->pack_part = pack_part::transition;
+		break;
+	}
+	case trap:
+	{
+		body->mirrored = false;
+		body->animation_length = 12;
+		body->pack_part = pack_part::trap;
+		break;
+	}
+	case dead:
+	{
+		body->animation_length = 1;
+		current_sprite_[0] = 1;
+		body->pack_part = pack_part::listening;
+		break;
+	}
+	case move:
+	{
+		body->animation_length = 6;
+		direction_system.set_mob_direction(move_system.move_offset, elapsedTime);
+		body->direction = direction_system.direction;
+		body->pack_part = pack_part::move;
+		break;
+	}
+	default:;
+	}
+
+	if (inverse)
+		body->number = body->animation_length + 1 - current_sprite_[0];
+	else
+		body->number = current_sprite_[0];
+
+	time_for_new_sprite_ += elapsedTime;
+
+	if (time_for_new_sprite_ >= long(1e6 / animation_speed_))
+	{
+		time_for_new_sprite_ = 0;
+
+		if (++current_sprite_[0] > body->animation_length)
+		{
+			last_action_ = current_action_;
+			current_sprite_[0] = 1;
+		}
+	}
+
+	return { body };
 	/*spriteChainElement fullSprite;
 
 	fullSprite.offset = Vector2f(this->textureBoxOffset);

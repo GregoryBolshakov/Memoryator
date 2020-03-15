@@ -32,7 +32,8 @@ std::map<std::string, pack_tag> sprite_pack::mapped_pack_tag = {
 	{"nightmare2Stand", pack_tag::nightmare2Stand},
 	{"nightmare2Move", pack_tag::nightmare2Move},
 	{"nightmare2Hit", pack_tag::nightmare2Hit},
-	{"deer", pack_tag::deer}
+	{"deer", pack_tag::deer},
+	{"owl", pack_tag::owl}
 };
 
 std::map<std::string, pack_part> sprite_pack::mapped_pack_part = {

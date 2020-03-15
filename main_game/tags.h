@@ -16,7 +16,7 @@ enum class pack_tag
     empty = 0, heroAbsorb = 1, heroHit = 2, heroMove = 3, heroPick = 4, heroRoll = 5, heroStand = 6, heroThrow = 7,
     interfaceElements = 8, locations = 9, darkWoods = 10, birchGrove = 11, swampyTrees = 12, craftObjects = 13,
 	inventory = 14, icons = 15, book = 16, hare = 17, nightmare1 = 18, nightmare2Stand = 20,
-	nightmare2Move = 21, nightmare2Hit = 22, deer = 23
+	nightmare2Move = 21, nightmare2Hit = 22, deer = 23, owl = 24
 };
 
 enum class pack_part

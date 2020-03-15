@@ -107,7 +107,7 @@ void world_generator::initializeDynamicItem(const entity_tag itemClass, const Ve
 void world_generator::generate()
 {	
 	initializeDynamicItem(entity_tag::hero, Vector2f(15800, 16300), "hero");
-	initializeDynamicItem(entity_tag::hare, Vector2f(15000, 16350), "hare");
+	initializeDynamicItem(entity_tag::owl, Vector2f(15000, 16350), "owl");
 	initializeStaticItem(entity_tag::brazier, Vector2f(16300, 15800), 1, "brazier");
 
 	// world generation
