@@ -43,7 +43,7 @@ void hare::behavior_with_static(world_object* target, long long elapsedTime)
 void hare::behavior_with_dynamic(dynamic_object* target, long long elapsedTime)
 {
 	if (target->tag == entity_tag::hero)
-		cheat_hero_pos = target->get_position();
+		cheat_hero_pos_ = target->get_position();
 	
 	const std::map<actions, bool> actions_that_ignore_target_selection = { {trap, true}, {dead, true} };
 	if (actions_that_ignore_target_selection.count(current_action_))
@@ -182,7 +182,7 @@ void hare::calm_behavior(const long long elapsed_time)
 	{
 		move_system.speed = move_system.default_speed / 2;
 		
-		auto move_vector = position_ - cheat_hero_pos;
+		auto move_vector = position_ - cheat_hero_pos_;
 		move_vector.x = move_vector.x / (abs(move_vector.x) + 1) * float(rand() % long(sight_range) + 1);
 		move_vector.y = move_vector.y / (abs(move_vector.y) + 1) * float(rand() % long(sight_range) + 1);
 		

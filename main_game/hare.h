@@ -29,5 +29,5 @@ private:
 	long long time_for_new_calm_state_ = long(15e5), time_after_calm_state_ = long(15e5);
 	long long time_after_fear_ = 0;
 	long long fear_time_ = long(1e6);
-	Vector2f cheat_hero_pos = { 0, 0 };
+	Vector2f cheat_hero_pos_ = { 0, 0 };
 };

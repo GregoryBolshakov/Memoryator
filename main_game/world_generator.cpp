@@ -6,31 +6,31 @@
 world_generator::world_generator()
 = default;
 
-void world_generator::initMainScale()
+void world_generator::init_main_scale()
 {
 	auto mainObject = deerchant("loadInit", Vector2f(0, 0));
 	mainObject.calculate_texture_offset();
-	mainScale = helper::GetScreenSize().y / (5 * mainObject.get_conditional_size_units().y);
-	mainScale = round(mainScale * 100) / 100;
+	main_scale = helper::GetScreenSize().y / (5 * mainObject.get_conditional_size_units().y);
+	main_scale = round(main_scale * 100) / 100;
 }
 
 void world_generator::init(
 	const int width,
 	const int height,
-	const Vector2f blockSize,
-	const Vector2f microBlockSize,
-	grid_list* staticGrid,
-	grid_list* dynamicGrid,
-	std::map<pack_tag, sprite_pack>* packsMap)
+	const Vector2f block_size,
+	const Vector2f micro_block_size,
+	grid_list* static_grid,
+	grid_list* dynamic_grid,
+	std::map<pack_tag, sprite_pack>* packs_map)
 {
-	this->width = width;
-	this->height = height;
-	this->blockSize = blockSize;
-	this->microBlockSize = microBlockSize;
-	this->staticGrid = staticGrid;
-	this->dynamicGrid = dynamicGrid;
-	this->packsMap = packsMap;
-	stepSize = { blockSize.x / 10, blockSize.y / 10 };
+	this->width_ = width;
+	this->height_ = height;
+	this->block_size_ = block_size;
+	this->micro_block_size_ = micro_block_size;
+	this->static_grid_ = static_grid;
+	this->dynamic_grid_ = dynamic_grid;
+	this->packs_map_ = packs_map;
+	step_size_ = { block_size.x / 10, block_size.y / 10 };
 }
 
 world_generator::~world_generator()
@@ -38,20 +38,20 @@ world_generator::~world_generator()
 
 float world_generator::get_scale_delta_normalized() const
 {
-	return (scaleFactor - mainScale) / mainScale;
+	return (scale_factor - main_scale) / main_scale;
 }
 
-void world_generator::initializeStaticItem(
-	entity_tag itemClass,
-	Vector2f itemPosition,
-	int itemType,
-	const std::string& itemName,
-	int count,
-	biomes biome,
-	bool mirrored,
+void world_generator::initialize_static_item(
+	const entity_tag item_class,
+	const Vector2f item_position,
+	const int item_type,
+	const std::string& item_name,
+	const int count,
+	const biomes biome,
+	const bool mirrored,
 	const std::vector<std::pair<entity_tag, int>>& inventory) const
 {
-	auto item = object_initializer::initialize_static_item(itemClass, itemPosition, itemType, itemName, count, biome, packsMap, mirrored, inventory);
+	auto item = object_initializer::initialize_static_item(item_class, item_position, item_type, item_name, count, biome, packs_map_, mirrored, inventory);
 	
 	if (item == nullptr)
 		return;
@@ -62,19 +62,19 @@ void world_generator::initializeStaticItem(
 	{
 		std::map<std::pair<int, int>, bool> checkBlocks = {};
 
-		const auto end_i = int((item->get_position().x + item->get_micro_block_check_area_bounds().x) / microBlockSize.x);
-		const auto end_j = int((item->get_position().y + item->get_micro_block_check_area_bounds().y) / microBlockSize.y);
+		const auto end_i = int((item->get_position().x + item->get_micro_block_check_area_bounds().x) / micro_block_size_.x);
+		const auto end_j = int((item->get_position().y + item->get_micro_block_check_area_bounds().y) / micro_block_size_.y);
 
-		const auto width_to_micro_x = width / int(microBlockSize.x);
-		const auto height_to_micro_y = height / int(microBlockSize.y);
+		const auto width_to_micro_x = width_ / int(micro_block_size_.x);
+		const auto height_to_micro_y = height_ / int(micro_block_size_.y);
 
-		auto i = int((item->get_position().x - item->get_micro_block_check_area_bounds().x) / microBlockSize.x);
+		auto i = int((item->get_position().x - item->get_micro_block_check_area_bounds().x) / micro_block_size_.x);
 		while (i <= end_i)
 		{
-			auto j = int((item->get_position().y - item->get_micro_block_check_area_bounds().y) / microBlockSize.y);
+			auto j = int((item->get_position().y - item->get_micro_block_check_area_bounds().y) / micro_block_size_.y);
 			while (j <= end_j)
 			{
-				if (!(i < 0 || i >width_to_micro_x || j < 0 || j >height_to_micro_y) && !staticGrid->micro_block_matrix[int(round(i))][int(round(j))])
+				if (!(i < 0 || i >width_to_micro_x || j < 0 || j >height_to_micro_y) && !static_grid_->micro_block_matrix[int(round(i))][int(round(j))])
 					checkBlocks[{i, j}] = true;
 				j++;
 			}
@@ -88,39 +88,39 @@ void world_generator::initializeStaticItem(
 		}
 	}
 	
-	staticGrid->add_item(item, item->get_name(), itemPosition.x, itemPosition.y);
+	static_grid_->add_item(item, item->get_name(), item_position.x, item_position.y);
 }
 
-void world_generator::initializeDynamicItem(const entity_tag itemClass, const Vector2f itemPosition, const std::string& itemName, world_object* owner)
+void world_generator::initialize_dynamic_item(const entity_tag item_class, const Vector2f item_position, const std::string& item_name, world_object* owner)
 {
-	const auto item = object_initializer::initialize_dynamic_item(itemClass, itemPosition, itemName, packsMap, owner);
+	const auto item = object_initializer::initialize_dynamic_item(item_class, item_position, item_name, packs_map_, owner);
 	
 	if (item == nullptr)
 		return;
 
-	if (itemClass == entity_tag::hero)	
-		focusedObject = item;			
+	if (item_class == entity_tag::hero)	
+		focused_object = item;			
 
-	dynamicGrid->add_item(item, item->get_name(), itemPosition.x, itemPosition.y);
+	dynamic_grid_->add_item(item, item->get_name(), item_position.x, item_position.y);
 }
 
 void world_generator::generate()
 {	
-	initializeDynamicItem(entity_tag::hero, Vector2f(15800, 16300), "hero");
-	initializeDynamicItem(entity_tag::owl, Vector2f(15000, 16350), "owl");
-	initializeStaticItem(entity_tag::brazier, Vector2f(16300, 15800), 1, "brazier");
+	initialize_dynamic_item(entity_tag::hero, Vector2f(15800, 16300), "hero");
+	initialize_dynamic_item(entity_tag::owl, Vector2f(15000, 16350), "owl");
+	initialize_static_item(entity_tag::brazier, Vector2f(16300, 15800), 1, "brazier");
 
 	// world generation
-	initBiomesGenerationInfo();
+	init_biomes_generation_info();
 	const Vector2f upperLeft(
-		floor(focusedObject->get_position().x - (helper::GetScreenSize().x / 2.0f + blockSize.x) / (FARTHEST_SCALE * mainScale)),
-		floor(focusedObject->get_position().y - (helper::GetScreenSize().y / 2.0f + blockSize.x) / (FARTHEST_SCALE * mainScale)));
+		floor(focused_object->get_position().x - (helper::GetScreenSize().x / 2.0f + block_size_.x) / (FARTHEST_SCALE * main_scale)),
+		floor(focused_object->get_position().y - (helper::GetScreenSize().y / 2.0f + block_size_.x) / (FARTHEST_SCALE * main_scale)));
 	const Vector2f bottomRight(
-		floor(focusedObject->get_position().x + (helper::GetScreenSize().x / 2.0f + blockSize.y) / (FARTHEST_SCALE * mainScale)),
-		floor(focusedObject->get_position().y + (helper::GetScreenSize().y / 2.0f + blockSize.y) / (FARTHEST_SCALE * mainScale)));
+		floor(focused_object->get_position().x + (helper::GetScreenSize().x / 2.0f + block_size_.y) / (FARTHEST_SCALE * main_scale)),
+		floor(focused_object->get_position().y + (helper::GetScreenSize().y / 2.0f + block_size_.y) / (FARTHEST_SCALE * main_scale)));
 
-	for (auto& block : staticGrid->get_blocks_in_sight(upperLeft.x, upperLeft.y, bottomRight.x, bottomRight.y))	
-		inBlockGenerate(block);	
+	for (auto& block : static_grid_->get_blocks_in_sight(upperLeft.x, upperLeft.y, bottomRight.x, bottomRight.y))	
+		in_block_generate(block);	
 }
 
 bool cmpByChance(const std::pair<entity_tag, int> a, const std::pair<entity_tag, int> b)
@@ -128,16 +128,16 @@ bool cmpByChance(const std::pair<entity_tag, int> a, const std::pair<entity_tag,
 	return a.second < b.second;
 }
 
-void world_generator::inBlockGenerate(const int blockIndex)
+void world_generator::in_block_generate(const int block_index)
 {
 	const auto blockTypeProbability = rand() % 100;
-	const auto groundIndX = int(ceil(staticGrid->get_point_by_index(blockIndex).x / blockSize.x));
-	const auto groundIndY = int(ceil(staticGrid->get_point_by_index(blockIndex).y / blockSize.y));
+	const auto groundIndX = int(ceil(static_grid_->get_point_by_index(block_index).x / block_size_.x));
+	const auto groundIndY = int(ceil(static_grid_->get_point_by_index(block_index).y / block_size_.y));
 
 	std::vector<std::pair<entity_tag, int>> roomedBlocksContent = {};
 	std::vector<std::pair<entity_tag, int>> otherBlocksContent = {};
 
-	if (biomeMatrix[groundIndX][groundIndY] == dark_woods)
+	if (biome_matrix[groundIndX][groundIndY] == dark_woods)
 	{
 		if (blockTypeProbability <= 10) // block with roofs		
 			roomedBlocksContent = { {entity_tag::roof, 10}, {entity_tag::rock, 2}, {entity_tag::stump, 2}, {entity_tag::tree, 7} };
@@ -150,7 +150,7 @@ void world_generator::inBlockGenerate(const int blockIndex)
 		otherBlocksContent = { {entity_tag::grass, 6} , {entity_tag::mushroom, 4} };
 	}
 	else
-		if (biomeMatrix[groundIndX][groundIndY] == birch_grove)
+		if (biome_matrix[groundIndX][groundIndY] == birch_grove)
 		{
 			if (blockTypeProbability <= 30) // block with chamomile
 				roomedBlocksContent = { {entity_tag::chamomile, 0}, {entity_tag::rock, 2}, {entity_tag::stump, 2}, {entity_tag::log, 2}, {entity_tag::bush, 5}, {entity_tag::tree, 7} };
@@ -160,7 +160,7 @@ void world_generator::inBlockGenerate(const int blockIndex)
 			otherBlocksContent = { {entity_tag::grass, 6} , {entity_tag::mushroom, 3} };
 		}
 		else
-			if (biomeMatrix[groundIndX][groundIndY] == swampy_trees)
+			if (biome_matrix[groundIndX][groundIndY] == swampy_trees)
 			{
 				if (blockTypeProbability <= 30) // block with chamomile
 					roomedBlocksContent = { {entity_tag::rock, 2}, {entity_tag::lake, 2}, {entity_tag::stump, 2}, {entity_tag::root, 2}, {entity_tag::bush, 5}, {entity_tag::tree, 7} };
@@ -173,28 +173,28 @@ void world_generator::inBlockGenerate(const int blockIndex)
 	std::sort(roomedBlocksContent.begin(), roomedBlocksContent.end(), cmpByChance);
 
 	const auto blockTransform = IntRect(
-		int(staticGrid->get_point_by_index(blockIndex).x),
-		int(staticGrid->get_point_by_index(blockIndex).y),
-		int(Vector2f(blockSize).x),
-		int(Vector2f(blockSize).y));
+		int(static_grid_->get_point_by_index(block_index).x),
+		int(static_grid_->get_point_by_index(block_index).y),
+		int(Vector2f(block_size_).x),
+		int(Vector2f(block_size_).y));
 	
-	generateGround(blockIndex);
+	generate_ground(block_index);
 
 	//block filling
-	return;
+	//return;
 
 	for (auto x = blockTransform.left; x < blockTransform.left + blockTransform.width; x += 100)
 	{
 		for (auto y = blockTransform.top; y < blockTransform.top + blockTransform.height; y += 100)
 		{
-			if (isRoomyStepBlock(x, y))
+			if (is_roomy_step_block(x, y))
 			{
 				for (auto& item : roomedBlocksContent)
 				{
 					const auto placedObjectDeterminant = rand() % 100;
 					if (item.second > placedObjectDeterminant)
 					{
-						initializeStaticItem(item.first, Vector2f(float(x), float(y)), -1, "", 1, biomeMatrix[groundIndX][groundIndY]);
+						initialize_static_item(item.first, Vector2f(float(x), float(y)), -1, "", 1, biome_matrix[groundIndX][groundIndY]);
 						break;
 					}
 				}
@@ -205,7 +205,7 @@ void world_generator::inBlockGenerate(const int blockIndex)
 					const auto placedObjectDeterminant = rand() % 100;
 					if (item.second > placedObjectDeterminant)
 					{
-						initializeStaticItem(item.first, Vector2f(float(x), float(y)), -1, "", 1, biomeMatrix[groundIndX][groundIndY]);
+						initialize_static_item(item.first, Vector2f(float(x), float(y)), -1, "", 1, biome_matrix[groundIndX][groundIndY]);
 						break;
 					}
 				}
@@ -213,123 +213,123 @@ void world_generator::inBlockGenerate(const int blockIndex)
 	}	
 }
 
-void world_generator::generateGround(const int blockIndex)
+void world_generator::generate_ground(const int block_index)
 {
-	const auto position = staticGrid->get_point_by_index(blockIndex);
-	const auto groundIndX = int(ceil(position.x / blockSize.x));
-	const auto groundIndY = int(ceil(position.y / blockSize.y));
-	const auto biome = biomeMatrix[groundIndX][groundIndY];
+	const auto position = static_grid_->get_point_by_index(block_index);
+	const auto groundIndX = int(ceil(position.x / block_size_.x));
+	const auto groundIndY = int(ceil(position.y / block_size_.y));
+	const auto biome = biome_matrix[groundIndX][groundIndY];
 	
-	initializeStaticItem(entity_tag::ground, position, int(biome), "", 1, biome);
-	initializeStaticItem(entity_tag::groundConnection, Vector2f(position), (biome - 1) * 4 + 1, "", 1);
-	initializeStaticItem(entity_tag::groundConnection, Vector2f(position.x, position.y + blockSize.y - 1), (biome - 1) * 4 + 2, "", 1);
-	initializeStaticItem(entity_tag::groundConnection, Vector2f(position), (biome - 1) * 4 + 3, "", 1);
-	initializeStaticItem(entity_tag::groundConnection, Vector2f(position.x + blockSize.x - 1, position.y), (biome - 1) * 4 + 4, "", 1);
+	initialize_static_item(entity_tag::ground, position, int(biome), "", 1, biome);
+	initialize_static_item(entity_tag::groundConnection, Vector2f(position), (biome - 1) * 4 + 1, "", 1);
+	initialize_static_item(entity_tag::groundConnection, Vector2f(position.x, position.y + block_size_.y - 1), (biome - 1) * 4 + 2, "", 1);
+	initialize_static_item(entity_tag::groundConnection, Vector2f(position), (biome - 1) * 4 + 3, "", 1);
+	initialize_static_item(entity_tag::groundConnection, Vector2f(position.x + block_size_.x - 1, position.y), (biome - 1) * 4 + 4, "", 1);
 }
 
-bool world_generator::isRoomyStepBlock(const int x, const int y) const
+bool world_generator::is_roomy_step_block(const int x, const int y) const
 {
-	return roomyStepBlocks.count(std::make_pair(x % int(blockSize.x) / int(stepSize.x), y % int(blockSize.y) / int(stepSize.y))) > 0;
+	return roomy_step_blocks_.count(std::make_pair(x % int(block_size_.x) / int(step_size_.x), y % int(block_size_.y) / int(step_size_.y))) > 0;
 }
 
-bool world_generator::isTriggerBlock(const int x, const int y) const
+bool world_generator::is_trigger_block(const int x, const int y) const
 {
-	return abs(x - biomesChangeCenter.x) >= 4 || abs(y - biomesChangeCenter.y) >= 4 || abs(x - biomesChangeCenter.x) + abs(y - biomesChangeCenter.y) >= 5;
+	return abs(x - biomes_change_center_.x) >= 4 || abs(y - biomes_change_center_.y) >= 4 || abs(x - biomes_change_center_.x) + abs(y - biomes_change_center_.y) >= 5;
 }
 
-void world_generator::initBiomesGenerationInfo()
+void world_generator::init_biomes_generation_info()
 {
-	biomesBlocksOffsets.resize(8);
+	biomes_blocks_offsets_.resize(8);
 	for (auto x = -5; x <= 5; x++)
 		for (auto y = -5; y <= 5; y++)		
 			if (abs(x) + abs(y) >= 6)
 			{
 				if (x < 0 && y < 0)
-					biomesBlocksOffsets[0].emplace_back(x, y);
+					biomes_blocks_offsets_[0].emplace_back(x, y);
 				if (x > 0 && y < 0)
-					biomesBlocksOffsets[2].emplace_back(x, y);
+					biomes_blocks_offsets_[2].emplace_back(x, y);
 				if (x > 0 && y > 0)
-					biomesBlocksOffsets[4].emplace_back(x, y);
+					biomes_blocks_offsets_[4].emplace_back(x, y);
 				if (x < 0 && y > 0)
-					biomesBlocksOffsets[6].emplace_back(x, y);
+					biomes_blocks_offsets_[6].emplace_back(x, y);
 			}
 			else
 				if (abs(x) >= 3 || abs(y) >= 3)
 				{
 					if (y < 0 && abs(x) < abs(y))
-						biomesBlocksOffsets[1].emplace_back(x, y);
+						biomes_blocks_offsets_[1].emplace_back(x, y);
 					if (x > 0 && abs(x) > abs(y))
-						biomesBlocksOffsets[3].emplace_back(x, y);
+						biomes_blocks_offsets_[3].emplace_back(x, y);
 					if (y > 0 && abs(x) < abs(y))
-						biomesBlocksOffsets[5].emplace_back(x, y);
+						biomes_blocks_offsets_[5].emplace_back(x, y);
 					if (x < 0 && abs(x) > abs(y))
-						biomesBlocksOffsets[7].emplace_back(x, y);
+						biomes_blocks_offsets_[7].emplace_back(x, y);
 				}
-	biomesChangeCenter = Vector2i(
-		int(focusedObject->get_position().x / blockSize.x),
-		int(focusedObject->get_position().y / blockSize.y));
-	focusedObjectBlock = biomesChangeCenter;
-	biomesGenerate();
+	biomes_change_center_ = Vector2i(
+		int(focused_object->get_position().x / block_size_.x),
+		int(focused_object->get_position().y / block_size_.y));
+	focused_object_block_ = biomes_change_center_;
+	biomes_generate();
 }
 
-void world_generator::biomesGenerate()
+void world_generator::biomes_generate()
 {
-	biomesChangeCenter = focusedObjectBlock;
+	biomes_change_center_ = focused_object_block_;
 
-	for (auto& biome : biomesBlocksOffsets)
+	for (auto& biome : biomes_blocks_offsets_)
 	{
 		const auto biomeId = rand() % 3 + 1;
 		for (const auto offset : biome)
-			biomeMatrix[biomesChangeCenter.x + offset.x][biomesChangeCenter.y + offset.y] = biomes(biomeId);
+			biome_matrix[biomes_change_center_.x + offset.x][biomes_change_center_.y + offset.y] = biomes(biomeId);
 	}
 }
 
-void world_generator::perimeterGeneration()
+void world_generator::perimeter_generation()
 {
 	const auto screenSize = helper::GetScreenSize();
-	const auto characterPosition = focusedObject->get_position();
+	const auto characterPosition = focused_object->get_position();
 	const Vector2f worldUpperLeft(
-		ceil(characterPosition.x - (screenSize.x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)),
-		ceil(characterPosition.y - (screenSize.y / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)));
+		ceil(characterPosition.x - (screenSize.x / 2 + block_size_.x) / (FARTHEST_SCALE * main_scale)),
+		ceil(characterPosition.y - (screenSize.y / 2 + block_size_.y) / (FARTHEST_SCALE * main_scale)));
 	const Vector2f worldBottomRight(
-		ceil(characterPosition.x + (screenSize.x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)),
-		ceil(characterPosition.y + (screenSize.y / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)));
+		ceil(characterPosition.x + (screenSize.x / 2 + block_size_.x) / (FARTHEST_SCALE * main_scale)),
+		ceil(characterPosition.y + (screenSize.y / 2 + block_size_.y) / (FARTHEST_SCALE * main_scale)));
 
-	if (focusedObject->direction_system.direction != direction::STAND)
+	if (focused_object->direction_system.direction != direction::STAND)
 	{
-		for (auto& block : staticGrid->get_blocks_around(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y))
+		for (auto& block : static_grid_->get_blocks_around(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y))
 		{
-			if (canBeRegenerated(block))
+			if (can_be_regenerated(block))
 			{
-				staticGrid->clear_cell(block);
-				dynamicGrid->clear_cell(block);
-				inBlockGenerate(block);
+				static_grid_->clear_cell(block);
+				dynamic_grid_->clear_cell(block);
+				in_block_generate(block);
 			}
 		}
 	}
 }
 
-void world_generator::beyondScreenGeneration()
+void world_generator::beyond_screen_generation()
 {
 	const auto block = Vector2i(
-		int(focusedObject->get_position().x / blockSize.x),
-		int(focusedObject->get_position().y / blockSize.y));
+		int(focused_object->get_position().x / block_size_.x),
+		int(focused_object->get_position().y / block_size_.y));
 	
-	if (focusedObjectBlock != block)
+	if (focused_object_block_ != block)
 	{		
-		perimeterGeneration();
-		focusedObjectBlock = block;
+		perimeter_generation();
+		focused_object_block_ = block;
 	}
-	if (isTriggerBlock(focusedObjectBlock.x, focusedObjectBlock.y))
-		biomesGenerate();
+	if (is_trigger_block(focused_object_block_.x, focused_object_block_.y))
+		biomes_generate();
 }
 
-bool world_generator::canBeRegenerated(const int blockIndex) const
+bool world_generator::can_be_regenerated(const int block_index) const
 {
-	if (rememberedBlocks.count(blockIndex) > 0)
+	if (remembered_blocks.count(block_index) > 0)
 		return false;
 
-	for (auto& item : dynamicGrid->get_items(blockIndex))
+	for (auto& item : dynamic_grid_->get_items(block_index))
 	{
 		const auto dynamicItem = dynamic_cast<dynamic_object*>(item);
 		if (dynamicItem)

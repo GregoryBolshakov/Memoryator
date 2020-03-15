@@ -125,15 +125,15 @@ int main() {
 
 			main_window.clear(sf::Color::White);
 			
-            draw_system.draw(main_window, world.prepareSprites(time_micro_sec, true), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
-            draw_system.draw(main_window, world.prepareSprites(time_micro_sec, false), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+            draw_system.draw(main_window, world.prepareSprites(time_micro_sec, true), world.getWorldGenerator().scale_factor, world.getCameraPosition());
+            draw_system.draw(main_window, world.prepareSprites(time_micro_sec, false), world.getWorldGenerator().scale_factor, world.getCameraPosition());
             
 			visual_effect_texture.update(main_window);
 			main_window.draw(visual_effect_sprite, dynamic_light.shader);
 
-			draw_system.draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepare_sprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packs_map)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+			draw_system.draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepare_sprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packs_map)), world.getWorldGenerator().scale_factor, world.getCameraPosition());
 			text_system::draw_string(world.getMouseDisplayName(), font_name::normal_font, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));
-			world.pedestalController.draw(&main_window, world.getCameraPosition(), world.getWorldGenerator().scaleFactor);
+			world.pedestalController.draw(&main_window, world.getCameraPosition(), world.getWorldGenerator().scale_factor);
 			draw_system.draw(main_window, main_book.prepareSprites(world.focusedObject->get_health_point() / world.focusedObject->get_max_health_point_value(), time_micro_sec));
 			draw_system.draw(main_window, world.getInventorySystem().prepare_sprites(time_micro_sec, world.packsMap));			
 		}

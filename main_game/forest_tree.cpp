@@ -2,56 +2,56 @@
 
 #include "helper.h"
 
-forest_tree::forest_tree(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
+forest_tree::forest_tree(std::string object_name, const Vector2f center_position, const int type_of_object) : terrain_object(std::move(object_name), center_position)
 {
 	variety_of_types_ = 18; // BirchGrove: 1-7; DarkWoods: 8-13; SwampyTrees: 14-18
-	this->type_of_object_ = typeOfObject;
+	this->type_of_object_ = type_of_object;
 	strength = 0;
 	radius_ = 50;
 	animation_speed_ = 10;
 	to_save_name_ = "ForestTree";
-	forest_tree::setType(typeOfObject);
+	forest_tree::setType(type_of_object);
 	tag = entity_tag::tree;
 }
 
-void forest_tree::setType(const int typeOfObject)
+void forest_tree::setType(const int type_of_object)
 {
-	this->type_of_object_ = typeOfObject;
-	if (typeOfObject == 1)
+	this->type_of_object_ = type_of_object;
+	if (type_of_object == 1)
 		conditional_size_units_ = { 396, 1090 };
-	if (typeOfObject == 2)
+	if (type_of_object == 2)
 		conditional_size_units_ = { 536, 1150 };
-	if (typeOfObject == 3)
+	if (type_of_object == 3)
 		conditional_size_units_ = { 244, 799 };
-	if (typeOfObject == 4)
+	if (type_of_object == 4)
 		conditional_size_units_ = { 623, 875 };
-	if (typeOfObject == 5)
+	if (type_of_object == 5)
 		conditional_size_units_ = { 644, 1235 };
-	if (typeOfObject == 6)
+	if (type_of_object == 6)
 		conditional_size_units_ = { 681, 1027 };
-	if (typeOfObject == 7)
+	if (type_of_object == 7)
 		conditional_size_units_ = { 616, 1169 };
-	if (typeOfObject == 8)
+	if (type_of_object == 8)
 		conditional_size_units_ = { 457, 1152 };
-	if (typeOfObject == 9)
+	if (type_of_object == 9)
 		conditional_size_units_ = { 527, 1188 };
-	if (typeOfObject == 10)
+	if (type_of_object == 10)
 		conditional_size_units_ = { 786, 1296 };
-	if (typeOfObject == 11)
+	if (type_of_object == 11)
 		conditional_size_units_ = { 806, 1292 };
-	if (typeOfObject == 12)
+	if (type_of_object == 12)
 		conditional_size_units_ = { 795, 1190 };
-	if (typeOfObject == 13)
+	if (type_of_object == 13)
 		conditional_size_units_ = { 1221, 386 };
-	if (typeOfObject == 14)
+	if (type_of_object == 14)
 		conditional_size_units_ = { 952, 962 };
-	if (typeOfObject == 15)
+	if (type_of_object == 15)
 		conditional_size_units_ = { 565, 1261 };
-	if (typeOfObject == 16)
+	if (type_of_object == 16)
 		conditional_size_units_ = { 914, 1108 };
-	if (typeOfObject == 17)
+	if (type_of_object == 17)
 		conditional_size_units_ = { 652, 1359 };
-	if (typeOfObject == 18)
+	if (type_of_object == 18)
 		conditional_size_units_ = { 667, 717 };
 
 	//const auto extension = float(90 + rand() % 20) / 100.0f; // in percents
@@ -231,7 +231,7 @@ Vector2f forest_tree::get_build_position(std::vector<world_object*>, float, Vect
 	return { -1, -1 };
 }
 
-Vector2f forest_tree::getOwlBase() const
+Vector2f forest_tree::get_owl_landing_pos()
 {
 	return { position_.x, position_.y - conditional_size_units_.y / 2 };
 }
@@ -241,7 +241,7 @@ int forest_tree::get_build_type(Vector2f, Vector2f)
 	return 1;
 }
 
-std::vector<sprite_chain_element*> forest_tree::prepare_sprites(const long long elapsedTime)
+std::vector<sprite_chain_element*> forest_tree::prepare_sprites(const long long elapsed_time)
 {
 	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::tree, direction::DOWN, type_of_object_, position_, conditional_size_units_, Vector2f(texture_box_offset_), color, mirrored_);
 
@@ -264,7 +264,7 @@ std::vector<sprite_chain_element*> forest_tree::prepare_sprites(const long long 
 		color.a = 255 - current_sprite_[0] * 255 / body->animation_length;
 	}
 
-	time_for_new_sprite_ += elapsedTime;
+	time_for_new_sprite_ += elapsed_time;
 
 	if (time_for_new_sprite_ >= long(1e6 / animation_speed_))
 	{
