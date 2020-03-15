@@ -13,7 +13,7 @@ deerchant::deerchant(std::string objectName, const Vector2f centerPosition) : dy
 {
 	current_sprite_.resize(3);
 	for (auto& number : current_sprite_)
-		number = 1;	
+		number = 1;
 	time_for_new_sprite_ = 0;
 	move_system.default_speed = 0.0006f;
 	move_system.speed = move_system.default_speed;

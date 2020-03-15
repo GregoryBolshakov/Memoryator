@@ -469,18 +469,13 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 	hero->heldItem = &inventorySystem.get_held_item();
 
 	for (auto& dynamicItem : localDynamicItems)
+	{
 		dynamicItem->move_system.is_route_needed(staticGrid.micro_block_matrix, microBlockSize);
-	
-	for (auto& dynamicItem : localDynamicItems)
-		dynamicItem->move_system.make_route(elapsedTime, &staticGrid, dynamicItem->sight_range / (worldGenerator.scaleFactor * worldGenerator.mainScale));			
-
-	for (auto& dynamicItem : localDynamicItems)
-	{		
+		dynamicItem->move_system.make_route(elapsedTime, &staticGrid, dynamicItem->sight_range / (worldGenerator.scaleFactor * worldGenerator.mainScale));
 		dynamicItem->move_system.pass_route_beginning(microBlockSize);
-
 		/* crutch */ if (dynamicItem->tag == entity_tag::hero)
 			dynamicItem->move_system.move_position = dynamicItem->move_system.lax_move_position;
-
+		
 		dynamicItem->behavior(elapsedTime);
 		
 		//interaction with other objects
@@ -498,8 +493,8 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 		}
 		for (auto& otherStaticItem : localStaticItems)
 			dynamicItem->behavior_with_static(otherStaticItem, elapsedTime);
-		//------------------------------				
-
+		//------------------------------						
+		
 		if (dynamicItem->shake_speed != -1)
 			cameraSystem.make_shake(4, dynamicItem->shake_speed);
 

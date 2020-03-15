@@ -15,20 +15,19 @@ public:
 	void behavior_with_static(world_object* target, long long elapsedTime) override;
 	void behavior_with_dynamic(dynamic_object* target, long long elapsedTime) override;
 	void behavior(long long elapsed_time) override;
-	void bounce_to_trap();
-	void run_away_from_enemy(long long elapsed_time);
+	bool bounce_to_trap(long long elapsed_time);
+	bool run_away_from_enemy(long long elapsed_time);
 	void calm_behavior(long long elapsed_time);
-	void endingPreviousAction();
-	Vector2f get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
-	int get_build_type(Vector2f ounPos, Vector2f otherPos) override;
-	void jerk(float power, float deceleration, Vector2f destinationPoint) override;
+	void ending_previous_action();
+	Vector2f get_build_position(std::vector<world_object*> visible_items, float scale_factor, Vector2f camera_position) override;
+	int get_build_type(Vector2f oun_pos, Vector2f other_pos) override;
+	void jerk(float power, float deceleration, Vector2f destination_point) override;
 
 private:
 	bool calm_state_ = true, stand_ = true;
 	std::vector<actions> calm_actions_stack = {};
 	long long time_for_new_calm_state_ = long(15e5), time_after_calm_state_ = long(15e5);
-	long long timeForNewSprite;
-	int animationLength{};
-	long long timeAfterFear = 0;
-	long long fearTime = long(2 * 10e5);
+	long long time_after_fear_ = 0;
+	long long fear_time_ = long(1e6);
+	Vector2f cheat_hero_pos = { 0, 0 };
 };

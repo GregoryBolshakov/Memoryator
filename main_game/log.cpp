@@ -52,36 +52,36 @@ namespace mr
 		{
 		case 1:
 			this->is_multi_ellipse = true;
-			focus1 = Vector2f(position_.x, position_.y);
-			focus2 = Vector2f(position_.x, position_.y);
+			focus1_ = Vector2f(position_.x, position_.y);
+			focus2_ = Vector2f(position_.x, position_.y);
 
 			microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.42f, position_.y + texture_box_.height * 0.15f);
 			microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.073f, position_.y - texture_box_.height * 0.26f);
-			internalEllipses.push_back(microEllipse);
+			internal_ellipses.push_back(microEllipse);
 
 			microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.107f, position_.y - texture_box_.height * 0.197f);
 			microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.169f, position_.y - texture_box_.height * 0.197f);
-			internalEllipses.push_back(microEllipse);
+			internal_ellipses.push_back(microEllipse);
 
 			microEllipse.first = Vector2f(position_.x + texture_box_.width * 0.033f, position_.y - texture_box_.height * 0.2f);
 			microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.407f, position_.y + texture_box_.height * 0.103f);
-			internalEllipses.push_back(microEllipse);
-			ellipseSizeMultipliers = { 1.03f, 1.11f, 1.05f };
+			internal_ellipses.push_back(microEllipse);
+			ellipse_size_multipliers = { 1.03f, 1.11f, 1.05f };
 			break;
 		case 2:
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.399f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.399f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.07f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.399f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.399f, position_.y);
+			ellipse_size_multipliers[0] = { 1.07f };
 			break;
 		case 3:
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.396f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.396f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.12f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.396f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.396f, position_.y);
+			ellipse_size_multipliers[0] = { 1.12f };
 			break;
 		default:
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.311f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.311f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.307f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.311f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.311f, position_.y);
+			ellipse_size_multipliers[0] = { 1.307f };
 			break;
 		}
 		init_micro_blocks();

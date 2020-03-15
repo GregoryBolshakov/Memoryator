@@ -51,88 +51,88 @@ void lake::init_pedestal()
 	switch (type_of_object_)
 	{
 	case 1:
-		focus1 = Vector2f(position_.x, position_.y);
-		focus2 = Vector2f(position_.x, position_.y);
+		focus1_ = Vector2f(position_.x, position_.y);
+		focus2_ = Vector2f(position_.x, position_.y);
 
 		microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.49f, position_.y + texture_box_.height * 0.384f);
 		microEllipse.second = Vector2f(position_.x - texture_box_.width * 0.0158f, position_.y + texture_box_.height * 0.384f);
-		internalEllipses.push_back(microEllipse);
+		internal_ellipses.push_back(microEllipse);
 
 		microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.184f, position_.y + texture_box_.height * 0.269f);
 		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.096f, position_.y + texture_box_.height * 0.269f);
-		internalEllipses.push_back(microEllipse);
+		internal_ellipses.push_back(microEllipse);
 
 		microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.102f, position_.y + texture_box_.height * 0.428f);
 		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.0549f, position_.y + texture_box_.height * 0.428f);
-		internalEllipses.push_back(microEllipse);
+		internal_ellipses.push_back(microEllipse);
 
 		microEllipse.first = Vector2f(position_.x + texture_box_.width * 0.0222f, position_.y + texture_box_.height * 0.159f);
 		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.352f, position_.y + texture_box_.height * 0.159f);
-		internalEllipses.push_back(microEllipse);
-		ellipseSizeMultipliers = { 1.06f, 1.13f, 1.26f, 1.07f, 1.16f };
+		internal_ellipses.push_back(microEllipse);
+		ellipse_size_multipliers = { 1.06f, 1.13f, 1.26f, 1.07f, 1.16f };
 		break;
 	case 2:
-		focus1 = Vector2f(position_.x, position_.y);
-		focus2 = Vector2f(position_.x, position_.y);
+		focus1_ = Vector2f(position_.x, position_.y);
+		focus2_ = Vector2f(position_.x, position_.y);
 
 		microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.452f, position_.y - texture_box_.height * 0.0536f);
 		microEllipse.second = Vector2f(position_.x - texture_box_.width * 0.117f, position_.y - texture_box_.height * 0.0536f);
-		internalEllipses.push_back(microEllipse);
+		internal_ellipses.push_back(microEllipse);
 
 		microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.154f, position_.y + texture_box_.height * 0.202f);
 		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.141f, position_.y + texture_box_.height * 0.202f);
-		internalEllipses.push_back(microEllipse);
+		internal_ellipses.push_back(microEllipse);
 
 		microEllipse.first = Vector2f(position_.x + texture_box_.width * 0.166f, position_.y + texture_box_.height * 0.179f);
 		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.438f, position_.y + texture_box_.height * 0.179f);
-		internalEllipses.push_back(microEllipse);
+		internal_ellipses.push_back(microEllipse);
 
 		microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.17f, position_.y - texture_box_.height * 0.244f);
 		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.114f, position_.y - texture_box_.height * 0.244f);
-		internalEllipses.push_back(microEllipse);
-		ellipseSizeMultipliers = { 1.45f, 1.37f, 1.38f, 1.39f };
+		internal_ellipses.push_back(microEllipse);
+		ellipse_size_multipliers = { 1.45f, 1.37f, 1.38f, 1.39f };
 		break;
 	case 3:
-		focus1 = Vector2f(position_.x, position_.y);
-		focus2 = Vector2f(position_.x, position_.y);
+		focus1_ = Vector2f(position_.x, position_.y);
+		focus2_ = Vector2f(position_.x, position_.y);
 
 		microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.463f, position_.y + texture_box_.height * 0.601f);
 		microEllipse.second = Vector2f(position_.x - texture_box_.width * 0.108f, position_.y + texture_box_.height * 0.601f);
-		internalEllipses.push_back(microEllipse);
+		internal_ellipses.push_back(microEllipse);
 
 		microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.145f, position_.y + texture_box_.height * 0.759f);
 		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.15f, position_.y + texture_box_.height * 0.759f);
-		internalEllipses.push_back(microEllipse);
+		internal_ellipses.push_back(microEllipse);
 
 		microEllipse.first = Vector2f(position_.x + texture_box_.width * 0.175f, position_.y + texture_box_.height * 0.242f);
 		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.392f, position_.y + texture_box_.height * 0.242f);
-		internalEllipses.push_back(microEllipse);
+		internal_ellipses.push_back(microEllipse);
 
 		microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.16f, position_.y + texture_box_.height * 0.426f);
 		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.155f, position_.y + texture_box_.height * 0.426f);
-		internalEllipses.push_back(microEllipse);
-		ellipseSizeMultipliers = { 1.21f, 1.11f, 1.27f, 1.3f };
+		internal_ellipses.push_back(microEllipse);
+		ellipse_size_multipliers = { 1.21f, 1.11f, 1.27f, 1.3f };
 		break;
 	case 4:
-		focus1 = Vector2f(position_.x, position_.y);
-		focus2 = Vector2f(position_.x, position_.y);
+		focus1_ = Vector2f(position_.x, position_.y);
+		focus2_ = Vector2f(position_.x, position_.y);
 
 		microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.413f, position_.y + texture_box_.height * 1.04f);
 		microEllipse.second = Vector2f(position_.x - texture_box_.width * 0.066f, position_.y + texture_box_.height * 1.04f);
-		internalEllipses.push_back(microEllipse);
+		internal_ellipses.push_back(microEllipse);
 
 		microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.046f, position_.y + texture_box_.height * 0.558f);
 		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.399f, position_.y + texture_box_.height * 0.558f);
-		internalEllipses.push_back(microEllipse);
+		internal_ellipses.push_back(microEllipse);
 
 		microEllipse.first = Vector2f(position_.x + texture_box_.width * 0.027f, position_.y + texture_box_.height * 0.305f);
 		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.24f, position_.y + texture_box_.height * 0.305f);
-		internalEllipses.push_back(microEllipse);
+		internal_ellipses.push_back(microEllipse);
 
 		microEllipse.first = Vector2f(position_.x + texture_box_.width * 0.313f, position_.y + texture_box_.height * 0.782f);
 		microEllipse.second = Vector2f(position_.x - texture_box_.width * 0.428f, position_.y + texture_box_.height * 0.782f);
-		internalEllipses.push_back(microEllipse);
-		ellipseSizeMultipliers = { 1.19f, 1.21f, 1.53f, 1.04f };
+		internal_ellipses.push_back(microEllipse);
+		ellipse_size_multipliers = { 1.19f, 1.21f, 1.53f, 1.04f };
 		break;
 	}
 	init_micro_blocks();

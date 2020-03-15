@@ -26,15 +26,15 @@ void pedestal_controller::start(terrain_object * object)
 	bound_object_ = object;
 	focuses_.clear();
 	if (bound_object_->is_multi_ellipse)
-		for (auto& internal_ellipse : bound_object_->internalEllipses)
+		for (auto& internal_ellipse : bound_object_->internal_ellipses)
 		{
 			focuses_.push_back(internal_ellipse.first);
 			focuses_.push_back(internal_ellipse.second);
 		}
 	else
 	{
-		focuses_.push_back(bound_object_->getFocus1());
-		focuses_.push_back(bound_object_->getFocus2());
+		focuses_.push_back(bound_object_->get_focus1());
+		focuses_.push_back(bound_object_->get_focus2());
 	}
 	center_position_ = bound_object_->get_position();
 	running_ = true;
@@ -72,7 +72,7 @@ void pedestal_controller::write_to_file()
 	{
 		stream_out << std::setprecision(3) << "Focus" << i * 2 << " X: " << (focuses_[i * 2].x - center_position_.x) / bound_object_->get_texture_size().x << " " << "Focus" << i * 2 << " Y: " << (focuses_[i * 2].y - center_position_.y) / bound_object_->get_texture_size().y << '\n';
 		stream_out << std::setprecision(3) << "Focus" << i * 2 + 1 << " X: " << (focuses_[i * 2 + 1].x - center_position_.x) / bound_object_->get_texture_size().x << " " << "Focus" << i * 2 + 1 << " Y: " << (focuses_[i * 2 + 1].y - center_position_.y) / bound_object_->get_texture_size().y << '\n';
-		stream_out << std::setprecision(3) << "Ellipse size: " << bound_object_->ellipseSizeMultipliers[i] << '\n' << '\n';
+		stream_out << std::setprecision(3) << "Ellipse size: " << bound_object_->ellipse_size_multipliers[i] << '\n' << '\n';
 	}
 	stream_out.close();
 }
@@ -196,7 +196,7 @@ void pedestal_controller::interact(long long elapsed_time, Event event)
 		}
 		const auto center = Vector2f((focuses_[selected_ellipse_ * 2].x + focuses_[selected_ellipse_ * 2 + 1].x) / 2,
 			(focuses_[selected_ellipse_ * 2].y + focuses_[selected_ellipse_ * 2 + 1].y) / 2);
-		bound_object_->ellipseSizeMultipliers[selected_ellipse_] += bound_object_->ellipseSizeMultipliers[selected_ellipse_] * (helper::getDist(mouse_pos, center) - helper::getDist(last_mouse_pos_, center)) / 100;
+		bound_object_->ellipse_size_multipliers[selected_ellipse_] += bound_object_->ellipse_size_multipliers[selected_ellipse_] * (helper::getDist(mouse_pos, center) - helper::getDist(last_mouse_pos_, center)) / 100;
 	}
 	last_mouse_pos_ = mouse_pos;
 	//---------------
@@ -215,8 +215,8 @@ void pedestal_controller::draw(RenderWindow * window, Vector2f camera_position, 
 	Vector2f area_bounds = { 0, 0 };
 	for (auto i = 0u; i < focuses_.size() / 2; i++)
 	{
-		area_bounds.x += helper::getDist(focuses_[i * 2], focuses_[i * 2 + 1]) * bound_object_->ellipseSizeMultipliers[i] / 2;
-		area_bounds.y += helper::getDist(focuses_[i * 2], focuses_[i * 2 + 1]) * bound_object_->ellipseSizeMultipliers[i] / 2;
+		area_bounds.x += helper::getDist(focuses_[i * 2], focuses_[i * 2 + 1]) * bound_object_->ellipse_size_multipliers[i] / 2;
+		area_bounds.y += helper::getDist(focuses_[i * 2], focuses_[i * 2 + 1]) * bound_object_->ellipse_size_multipliers[i] / 2;
 	}
 	const auto upper_left = Vector2f(std::min(focuses_[0].x, focuses_[1].x) - area_bounds.x, std::min(focuses_[0].y, focuses_[1].y) - area_bounds.y);
 	const auto bottom_right = Vector2f(std::max(focuses_[0].x, focuses_[1].x) + area_bounds.x, std::max(focuses_[0].y, focuses_[1].y) + area_bounds.y);
@@ -233,7 +233,7 @@ void pedestal_controller::draw(RenderWindow * window, Vector2f camera_position, 
 			for (auto i = 0u; i < focuses_.size() / 2; i++)
 			{
 				if (sqrt(pow(x * size_.x - focuses_[i * 2].x, 2) + pow(y * size_.x - focuses_[i * 2].y, 2)) + 
-					sqrt(pow(x * size_.x - focuses_[i * 2 + 1].x, 2) + pow(y * size_.x - focuses_[i * 2 + 1].y, 2)) <= helper::getDist(focuses_[i * 2], focuses_[i * 2 + 1]) * bound_object_->ellipseSizeMultipliers[i])
+					sqrt(pow(x * size_.x - focuses_[i * 2 + 1].x, 2) + pow(y * size_.x - focuses_[i * 2 + 1].y, 2)) <= helper::getDist(focuses_[i * 2], focuses_[i * 2 + 1]) * bound_object_->ellipse_size_multipliers[i])
 				{
 					filed_figure_.setPosition(
 						(x * size_.x - camera_position.x - size_.x / 2.0f) * scale_factor + helper::GetScreenSize().x / 2,

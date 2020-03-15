@@ -32,9 +32,9 @@ Vector2f wreath_table::calculate_texture_offset()
 
 void wreath_table::init_pedestal()
 {
-	focus1 = Vector2f(position_.x - texture_box_.width / 4, position_.y);
-	focus2 = Vector2f(position_.x + texture_box_.width / 4, position_.y);
-	ellipseSizeMultipliers[0] = { 1.2f };
+	focus1_ = Vector2f(position_.x - texture_box_.width / 4, position_.y);
+	focus2_ = Vector2f(position_.x + texture_box_.width / 4, position_.y);
+	ellipse_size_multipliers[0] = { 1.2f };
 	init_micro_blocks();
 }
 

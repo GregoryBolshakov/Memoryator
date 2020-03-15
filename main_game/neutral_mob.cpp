@@ -72,7 +72,7 @@ void neutral_mob::behavior(long long elapsedTime)
 		}
 	}
 
-	distanceToNearest = 10e6;
+	distance_to_nearest_ = 10e6;
 	bound_target_ = nullptr;
 }
 

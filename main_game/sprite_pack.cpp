@@ -50,7 +50,12 @@ std::map<std::string, pack_part> sprite_pack::mapped_pack_part = {
 	{"transition", pack_part::transition},
 	{"jump", pack_part::jump},
 	{"look_around", pack_part::look_around},
-	{"startle", pack_part::startle}, // action's parts
+	{"startle", pack_part::startle},
+	{"flap", pack_part::flap},
+	{"head", pack_part::head},
+	{"landing", pack_part::landing},
+	{"soar", pack_part::soar},
+	{"takeoff", pack_part::takeoff}, // action's parts
 	{"ground", pack_part::ground},
 	{"tree", pack_part::tree},
 	{"bush", pack_part::bush},

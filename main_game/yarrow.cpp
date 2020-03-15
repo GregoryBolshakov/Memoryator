@@ -42,9 +42,9 @@ Vector2f yarrow::calculate_texture_offset()
 
 void yarrow::init_pedestal()
 {
-	focus1 = position_;
-	focus2 = position_;
-	ellipseSizeMultipliers[0] = { 0 };
+	focus1_ = position_;
+	focus2_ = position_;
+	ellipse_size_multipliers[0] = { 0 };
 	init_micro_blocks();
 }
 

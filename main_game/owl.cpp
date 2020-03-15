@@ -47,7 +47,7 @@ void owl::set_target(dynamic_object& object)
 		if (object.tag == entity_tag::hero)
 		{
 			bound_target_ = &object;
-			distanceToNearest = helper::getDist(position_, object.get_position());
+			distance_to_nearest_ = helper::getDist(position_, object.get_position());
 		}
 	}
 }
@@ -63,7 +63,7 @@ void owl::behavior_with_static(world_object* target, long long elapsedTime)
 			helper::getDist(target->get_position(), bound_target_->get_position()) <= sight_range)))
 		{
 			bound_target_ = target;
-			distanceToNearest = helper::getDist(position_, target->get_position());
+			distance_to_nearest_ = helper::getDist(position_, target->get_position());
 		}
 	}
 	else
@@ -161,7 +161,7 @@ void owl::behavior(long long elapsedTime)
 
 	if (current_action_ != absorbs)
 	{
-		distanceToNearest = 10e6;
+		distance_to_nearest_ = 10e6;
 		bound_target_ = nullptr;
 		nearestTree = nullptr;
 	}

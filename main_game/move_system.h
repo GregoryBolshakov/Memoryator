@@ -37,6 +37,7 @@ public:
 	void is_route_needed(std::vector<std::vector<bool>>& micro_block_matrix, Vector2f& micro_block_size);
 	void make_route(long long elapsed_time, grid_list* grid_list, float zone_offset);
 	void pass_route_beginning(Vector2f micro_block_size);
+	void reset_timers() { time_after_new_route = time_for_new_route; direction_system_->time_after_new_direction = direction_system_->time_for_new_direction; }
 	
 	std::vector<std::pair<int, int>> route = { {} };
 	bool turned_on = false, need_route = false, route_generation_ability = true;;

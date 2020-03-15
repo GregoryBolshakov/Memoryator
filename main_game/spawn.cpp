@@ -28,20 +28,20 @@ void spawn::init_pedestal()
 {
 	if (type_of_object_ == 1)
 	{
-		focus1 = Vector2f (texture_box_.left + floor(texture_box_.width / 3.8f), position_.y);
-		focus2 = Vector2f (texture_box_.left + texture_box_.width - floor(texture_box_.width / 3.8f), position_.y);
+		focus1_ = Vector2f (texture_box_.left + floor(texture_box_.width / 3.8f), position_.y);
+		focus2_ = Vector2f (texture_box_.left + texture_box_.width - floor(texture_box_.width / 3.8f), position_.y);
 	}
 	if (type_of_object_ == 2)
 	{
-		focus1 = Vector2f (texture_box_.left + floor(texture_box_.width / 2.3f), position_.y);
-		focus2 = Vector2f (texture_box_.left + texture_box_.width - floor(texture_box_.width / 3.3f), position_.y);	
+		focus1_ = Vector2f (texture_box_.left + floor(texture_box_.width / 2.3f), position_.y);
+		focus2_ = Vector2f (texture_box_.left + texture_box_.width - floor(texture_box_.width / 3.3f), position_.y);	
 	}
 	if (type_of_object_ == 3)
 	{
-		focus1 = Vector2f (texture_box_.left + floor(texture_box_.width / 3.5f), position_.y + texture_box_.height / 20.0f);
-		focus2 = Vector2f (texture_box_.left + texture_box_.width - floor(texture_box_.width / 2.0f), position_.y + texture_box_.height / 100.0f);
+		focus1_ = Vector2f (texture_box_.left + floor(texture_box_.width / 3.5f), position_.y + texture_box_.height / 20.0f);
+		focus2_ = Vector2f (texture_box_.left + texture_box_.width - floor(texture_box_.width / 2.0f), position_.y + texture_box_.height / 100.0f);
 	}
-	ellipseSizeMultipliers = { 1.08f, 1.2f, 1.3f };
+	ellipse_size_multipliers = { 1.08f, 1.2f, 1.3f };
 }
 
 Vector2f spawn::get_build_position(std::vector<world_object*>, float, Vector2f)

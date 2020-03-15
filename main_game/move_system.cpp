@@ -264,7 +264,7 @@ Vector2f move_system::do_slip(Vector2f new_position, std::vector<static_object*>
 
 		if (terrain->is_multi_ellipse)
 		{
-			auto curEllipses = terrain->getMultiellipseIntersect(new_position);
+			auto curEllipses = terrain->get_multi_ellipse_intersect(new_position);
 			Vector2f motionAfterSlipping;
 
 			if (!curEllipses.empty())
@@ -274,7 +274,7 @@ Vector2f move_system::do_slip(Vector2f new_position, std::vector<static_object*>
 						return Vector2f(-1, -1);
 
 					crashed = true;
-					motionAfterSlipping = this->ellipse_slip(new_position, move_position, terrain->internalEllipses[curEllipse].first, terrain->internalEllipses[curEllipse].second, terrain->getEllipseSize(curEllipse), height, elapsed_time);
+					motionAfterSlipping = this->ellipse_slip(new_position, move_position, terrain->internal_ellipses[curEllipse].first, terrain->internal_ellipses[curEllipse].second, terrain->getEllipseSize(curEllipse), height, elapsed_time);
 
 					if (motionAfterSlipping != Vector2f(-1, -1))
 					{
@@ -295,9 +295,9 @@ Vector2f move_system::do_slip(Vector2f new_position, std::vector<static_object*>
 				Vector2f motionAfterSlipping;
 
 				if (staticItem->is_dots_adjusted)
-					motionAfterSlipping = terrain->newSlippingPositionForDotsAdjusted(*position_, speed, elapsed_time);
+					motionAfterSlipping = terrain->new_slipping_position_for_dots_adjusted(*position_, speed, elapsed_time);
 				else
-					motionAfterSlipping = ellipse_slip(new_position, move_position, terrain->getFocus1(), terrain->getFocus2(), terrain->getEllipseSize(), height, elapsed_time);
+					motionAfterSlipping = ellipse_slip(new_position, move_position, terrain->get_focus1(), terrain->get_focus2(), terrain->getEllipseSize(), height, elapsed_time);
 
 				if (motionAfterSlipping != Vector2f(-1, -1))
 				{

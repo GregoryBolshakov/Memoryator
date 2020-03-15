@@ -111,116 +111,116 @@ void forest_tree::init_pedestal()
 	switch (type_of_object_)
 	{
 		case 1:		
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.158f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.158f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.44f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.158f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.158f, position_.y);
+			ellipse_size_multipliers[0] = { 1.44f };
 			break;		
 		case 2:		
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.07f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.07f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.58f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.07f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.07f, position_.y);
+			ellipse_size_multipliers[0] = { 1.58f };
 			break;		
 		case 3:		
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.184f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.184f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.42f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.184f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.184f, position_.y);
+			ellipse_size_multipliers[0] = { 1.42f };
 			break;		
 		case 4:		
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.082f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.082f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.42f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.082f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.082f, position_.y);
+			ellipse_size_multipliers[0] = { 1.42f };
 			break;		
 		case 5:		
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.088f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.088f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.57f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.088f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.088f, position_.y);
+			ellipse_size_multipliers[0] = { 1.57f };
 			break;		
 		case 6:		
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.084f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.084f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.31f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.084f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.084f, position_.y);
+			ellipse_size_multipliers[0] = { 1.31f };
 			break;		
 		case 7:		
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.131f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.131f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.28f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.131f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.131f, position_.y);
+			ellipse_size_multipliers[0] = { 1.28f };
 			break;		
 		case 8:		
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.118f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.118f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.42f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.118f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.118f, position_.y);
+			ellipse_size_multipliers[0] = { 1.42f };
 			break;
 		case 9:		
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.124f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.124f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.21f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.124f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.124f, position_.y);
+			ellipse_size_multipliers[0] = { 1.21f };
 			break;		
 		case 10:		
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.127f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.127f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.25f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.127f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.127f, position_.y);
+			ellipse_size_multipliers[0] = { 1.25f };
 			break;		
 		case 11:		
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.163f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.163f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.25f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.163f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.163f, position_.y);
+			ellipse_size_multipliers[0] = { 1.25f };
 			break;		
 		case 12:		
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.137f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.137f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.25f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.137f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.137f, position_.y);
+			ellipse_size_multipliers[0] = { 1.25f };
 			break;		
 		case 13:
 			this->is_multi_ellipse = true;
-			focus1 = Vector2f(position_.x, position_.y);
-			focus2 = Vector2f(position_.x, position_.y);
+			focus1_ = Vector2f(position_.x, position_.y);
+			focus2_ = Vector2f(position_.x, position_.y);
 
 			microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.42f, position_.y + texture_box_.height * 0.247f);
 			microEllipse.second = Vector2f(position_.x - texture_box_.width * 0.178f, position_.y + texture_box_.height * 0.247f);
-			internalEllipses.push_back(microEllipse);
+			internal_ellipses.push_back(microEllipse);
 
 			microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.235f, position_.y + texture_box_.height * 0.171f);
 			microEllipse.second = Vector2f(position_.x - texture_box_.width * 0.026f, position_.y + texture_box_.height * 0.171f);
-			internalEllipses.push_back(microEllipse);
+			internal_ellipses.push_back(microEllipse);
 
 			microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.044f, position_.y + texture_box_.height * 0.047f);
 			microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.132f, position_.y + texture_box_.height * 0.047f);
-			internalEllipses.push_back(microEllipse);
+			internal_ellipses.push_back(microEllipse);
 
 			microEllipse.first = Vector2f(position_.x + texture_box_.width * 0.14f, position_.y - texture_box_.height * 0.012f);
 			microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.385f, position_.y - texture_box_.height * 0.012f);
-			internalEllipses.push_back(microEllipse);
-			ellipseSizeMultipliers = { 1.03f, 1.09f, 1.27f, 1.12f };
+			internal_ellipses.push_back(microEllipse);
+			ellipse_size_multipliers = { 1.03f, 1.09f, 1.27f, 1.12f };
 			break;
 		case 14:
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.079f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.079f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.42f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.079f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.079f, position_.y);
+			ellipse_size_multipliers[0] = { 1.42f };
 			break;
 		case 15:
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.09f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.09f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.55f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.09f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.09f, position_.y);
+			ellipse_size_multipliers[0] = { 1.55f };
 			break;
 		case 16:
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.066f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.066f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.46f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.066f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.066f, position_.y);
+			ellipse_size_multipliers[0] = { 1.46f };
 			break;
 		case 17:
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.162f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.162f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.25f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.162f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.162f, position_.y);
+			ellipse_size_multipliers[0] = { 1.25f };
 			break;
 		case 18:
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.109f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.109f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.25f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.109f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.109f, position_.y);
+			ellipse_size_multipliers[0] = { 1.25f };
 			break;
 		default:		
-			focus1 = Vector2f(position_.x - texture_box_.width * 0.106f, position_.y);
-			focus2 = Vector2f(position_.x + texture_box_.width * 0.106f, position_.y);
-			ellipseSizeMultipliers[0] = { 1.82f };
+			focus1_ = Vector2f(position_.x - texture_box_.width * 0.106f, position_.y);
+			focus2_ = Vector2f(position_.x + texture_box_.width * 0.106f, position_.y);
+			ellipse_size_multipliers[0] = { 1.82f };
 			break;		
 	}
 	init_micro_blocks();

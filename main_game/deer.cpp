@@ -15,8 +15,8 @@ deer::deer(const std::string& objectName, const Vector2f centerPosition) : neutr
 	radius_ = 70;
 	strength_ = 10;
 	sight_range = conditional_size_units_.x * 3;
-	morality = 5; // from 1 to 10
-	fear = 0;
+	morality_ = 5; // from 1 to 10
+	fear_ = 0;
 	health_point_ = 50;
 	current_action_ = relax;
 	time_for_new_hit_self = long(6e5);
@@ -107,7 +107,7 @@ void deer::behavior(const long long elapsedTime)
 			}
 		}
 	}
-	distanceToNearest = 10e6;
+	distance_to_nearest_ = 10e6;
 	bound_target_ = nullptr;
 }
 

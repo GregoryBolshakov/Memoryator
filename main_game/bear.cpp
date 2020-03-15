@@ -14,8 +14,8 @@ bear::bear(const std::string& objectName, Vector2f centerPosition) : neutral_mob
 	radius_ = 70;
 	strength_ = 10;
 	sight_range = conditional_size_units_.x * 3;
-	morality = 5; // from 1 to 10
-	fear = 0;
+	morality_ = 5; // from 1 to 10
+	fear_ = 0;
 	health_point_ = 50;
 	current_action_ = relax;	
 	time_for_new_hit_self = long(6e5);
@@ -101,7 +101,7 @@ void bear::behavior(long long elapsedTime)
 				move_system.lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
 		}
 	}
-	distanceToNearest = 10e6;
+	distance_to_nearest_ = 10e6;
 	bound_target_ = nullptr;
 }
 

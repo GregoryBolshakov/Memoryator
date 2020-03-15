@@ -32,9 +32,9 @@ Vector2f dropped_loot::calculate_texture_offset()
 
 void dropped_loot::init_pedestal()
 {
-	focus1 = position_;
-	focus2 = position_;
-	ellipseSizeMultipliers[0] = { 0 };
+	focus1_ = position_;
+	focus2_ = position_;
+	ellipse_size_multipliers[0] = { 0 };
 }
 
 Vector2f dropped_loot::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DYNAMICOBJECT_H
-#define DYNAMICOBJECT_H
+#ifndef DYNAMIC_OBJECT_H
+#define DYNAMIC_OBJECT_H
 
 #include "move_system.h"
 #include "world_object.h"
@@ -20,7 +20,7 @@ public:
 	[[nodiscard]] world_object *get_bound_target() const { return bound_target_; }
 
 	void set_current_action(actions action) { this->current_action_ = action; }	
-	void take_damage(float damage, Vector2f attacker_pos = {-1, -1}) override;	
+	void take_damage(float damage, Vector2f attacker_pos = {-1, -1}) override;
 	void set_route(std::vector<std::pair<int, int>> route) { move_system.route = std::move(route); }
 	void init_micro_blocks() override;
 	virtual void change_action(actions new_action, bool reset_sprite_number = false, bool remember_last_action = false);
@@ -30,6 +30,7 @@ public:
 	virtual void behavior(long long elapsedTime) = 0;
 	virtual void set_target(dynamic_object &object) = 0;
 	virtual void jerk(float power, float deceleration, Vector2f destination_point) = 0;
+	virtual bool die_check();
 
 	move_system move_system;
 	direction_system direction_system;
@@ -50,7 +51,7 @@ protected:
 	float strength_ = 0;
 	long long time_after_hitself_ = 0;
 
-	actions current_action_, last_action_ = relax;
+	actions current_action_ = relax, last_action_ = relax;
 	world_object* bound_target_ = nullptr;
 
 	//fight logic

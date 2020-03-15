@@ -1,4 +1,6 @@
 #pragma once
+#ifndef NEUTRAL_MOB_H
+#define NEUTRAL_MOB_H
 
 #include "dynamic_object.h"
 #include "helper.h"
@@ -8,9 +10,9 @@ using namespace sf;
 class neutral_mob : public dynamic_object
 {
 protected:
-	int morality{};
-	int fear{};
-	float distanceToNearest = 10e6;
+	int morality_{};
+	int fear_{};
+	float distance_to_nearest_ = 10e6, run_away_range_ = 0;
 public:
 	neutral_mob(std::string objectName, Vector2f centerPosition);
 	~neutral_mob();
@@ -21,3 +23,5 @@ public:
 protected:
 	void fight_interact(long long elapsedTime, dynamic_object* target = nullptr) override;
 };
+
+#endif

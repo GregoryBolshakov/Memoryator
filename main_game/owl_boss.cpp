@@ -14,7 +14,7 @@ owl_boss::owl_boss(std::string objectName, Vector2f centerPosition) : dynamic_ob
 	radius_ = 100;
 	strength_ = 100;
 	health_point_ = 1000;
-	current_action_ = right_flap;
+	//current_action_ = right_flap;
 	time_after_hitself_ = 0;
 	time_for_new_hit_self = long(6e5);
 	time_for_new_hit = 2000000;
@@ -54,13 +54,13 @@ void owl_boss::behavior(long long elapsedTime)
 	//----------------
 
 	//processing ending of previous actions
-	if (last_action_ == up_flap || last_action_ == left_flap || last_action_ == right_flap || last_action_ == start_flap)
+	//if (last_action_ == up_flap || last_action_ == left_flap || last_action_ == right_flap || last_action_ == start_flap)
 	{
 		if (--flaps_before_jerk_count_ > 0)
 		{
-			if (flaps_before_jerk_count_ == 1)
-				change_action(start_flap, true, false);
-			else
+			//if (flaps_before_jerk_count_ == 1)
+				//change_action(start_flap, true, false);
+			//else
 				change_action(actions(30 + rand() % 3), true, false);
 		}
 		last_action_ = relax;
@@ -71,9 +71,9 @@ void owl_boss::behavior(long long elapsedTime)
 	//------------------
 
 	//processing current actions
-	if (current_action_ == right_flap && !is_jerking_ && current_sprite_[0] == 7)
+	//if (current_action_ == right_flap && !is_jerking_ && current_sprite_[0] == 7)
 		jerk(2, 1, Vector2f(position_.x - 200, position_.y));
-	if (current_action_ == left_flap && !is_jerking_ && current_sprite_[0] == 7)
+	//if (current_action_ == left_flap && !is_jerking_ && current_sprite_[0] == 7)
 		jerk(2, 1, Vector2f(position_.x + 200, position_.y));
 	//--------------------------
 }
@@ -139,7 +139,7 @@ void owl_boss::behavior_with_dynamic(dynamic_object* target, const long long ela
 
 	if (helper::getDist(this->position_, move_system.lax_move_position) / move_system.speed <= (40 / animation_speed_) * 3 && current_action_ == move)
 	{
-		change_action(stop_flap, true, false);
+		//change_action(stop_flap, true, false);
 	}
 
 	if (helper::getDist(this->position_, move_system.lax_move_position) <= this->radius_) //hit interaction
@@ -148,7 +148,7 @@ void owl_boss::behavior_with_dynamic(dynamic_object* target, const long long ela
 			target->take_damage(this->strength_, position_);
 		time_after_hit = 0;
 		flaps_before_jerk_count_ = rand() % 3 + 3;
-		change_action(up_flap, true, true);
+		//change_action(up_flap, true, true);
 		move_system.speed = move_system.default_speed;
 	}
 }

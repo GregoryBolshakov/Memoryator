@@ -151,8 +151,7 @@ int main() {
 		draw_system.draw(main_window, draw_system::upcast_chain(menu_system.prepare_sprites()));
 
 		world.focusedObject->move_system.set_move_offset(time_micro_sec);
-		draw_system.draw(main_window, { new text_chain_element({500, 500}, {0, 0}, sf::Color::White, std::to_string(direction_system::calculate_angle(world.focusedObject->move_system.move_offset))) });
-		
+
 		console.interact(time_micro_sec);
 		console.draw(main_window);
 

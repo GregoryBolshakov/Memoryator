@@ -22,8 +22,9 @@ enum class pack_tag
 enum class pack_part
 {
 	full = 101, body = 102, legs = 103, lines = 104, // creature's parts
-	stand = 1, move = 2, trap = 3, hit = 4, hunt = 5, listening = 6, sniff = 7, transition = 8, jump = 9,
-	look_around = 10, startle = 11, // action's parts
+	stand = 1, move = 2, trap = 3, hit = 4, hunt = 5, listening = 6, sniff = 7,
+	transition = 8, jump = 9, look_around = 10, startle = 11, flap = 12, head = 13,
+	landing = 14, soar = 15, takeoff = 16, // action's parts
 	ground = 201, tree = 202, bush = 203, log = 204, mushroom = 205, path = 206, plant = 207, rock = 208, stump = 209,
 	decor = 210, roof = 211, lake = 212, root = 213, flower = 213,// biome's parts
 	bookLittle = 301, crossButton = 302, menu = 303, // interface's parts
@@ -68,11 +69,11 @@ enum actions { direct_hit = 2,
 	jump_end = 24,
 	look_around = 25,
 	startle = 26,
-	up_flap = 30,
-	left_flap = 31,
-	right_flap = 32,
-	start_flap = 33,
-	stop_flap = 34,
+	flap = 27,
+	head = 28,
+	landing = 29,
+	soar = 30,
+	takeoff = 31,
 	throw_noose = 35 };
 
 enum side { undefined = 0, up = 1, right = 2, down = 3, left = 4 };

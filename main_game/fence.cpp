@@ -62,26 +62,26 @@ void fence::init_pedestal()
 		case 1:
 		case 2:
 		{
-			dot1 = Vector2f(position_.x - texture_box_.width / 3.2f, position_.y);
-			dot2 = Vector2f(position_.x + texture_box_.width / 1.8f, position_.y);
+			dot1_ = Vector2f(position_.x - texture_box_.width / 3.2f, position_.y);
+			dot2_ = Vector2f(position_.x + texture_box_.width / 1.8f, position_.y);
 			break;
 		}
 		case 3:
 		{
-			dot1 = Vector2f(position_.x, position_.y - texture_box_.height / 9.0f);
-			dot2 = Vector2f(position_.x, position_.y + texture_box_.height / 2.8f);
+			dot1_ = Vector2f(position_.x, position_.y - texture_box_.height / 9.0f);
+			dot2_ = Vector2f(position_.x, position_.y + texture_box_.height / 2.8f);
 			break;
 		}
 		case 4:
 		{
-			dot1 = Vector2f(position_.x - texture_box_.width / 4.0f, position_.y/* - textureBox.height / 7*/);
-			dot2 = Vector2f(position_.x - texture_box_.width / 4.0f, position_.y + texture_box_.height / 2.0f);
+			dot1_ = Vector2f(position_.x - texture_box_.width / 4.0f, position_.y/* - textureBox.height / 7*/);
+			dot2_ = Vector2f(position_.x - texture_box_.width / 4.0f, position_.y + texture_box_.height / 2.0f);
 			break;
 		}
 		default:
 		{
-			dot1 = Vector2f(position_.x - texture_box_.width / 2.0f, position_.y);
-			dot2 = Vector2f(position_.x + texture_box_.width / 2.0f, position_.y);
+			dot1_ = Vector2f(position_.x - texture_box_.width / 2.0f, position_.y);
+			dot2_ = Vector2f(position_.x + texture_box_.width / 2.0f, position_.y);
 			break;
 		}
 	}
@@ -95,8 +95,8 @@ Vector2f fence::get_build_position(std::vector<world_object*> visibleItems, cons
 	const auto mouseWorldPos = Vector2f ((mousePos.x - helper::GetScreenSize().x / 2 + cameraPosition.x * scaleFactor) / scaleFactor,
 	                                     (mousePos.y - helper::GetScreenSize().y / 2 + cameraPosition.y * scaleFactor) / scaleFactor);
 
-	const auto dot1 = Vector2f ((this->dot1.x - this->position_.x) + mouseWorldPos.x, (this->dot1.y - this->position_.y) + mouseWorldPos.y);
-	const auto dot2 = Vector2f ((this->dot2.x - this->position_.x) + mouseWorldPos.x, (this->dot2.y - this->position_.y) + mouseWorldPos.y);
+	const auto dot1 = Vector2f ((this->dot1_.x - this->position_.x) + mouseWorldPos.x, (this->dot1_.y - this->position_.y) + mouseWorldPos.y);
+	const auto dot2 = Vector2f ((this->dot2_.x - this->position_.x) + mouseWorldPos.x, (this->dot2_.y - this->position_.y) + mouseWorldPos.y);
 
 	for (auto&item : visibleItems)
 	{
@@ -104,38 +104,38 @@ Vector2f fence::get_build_position(std::vector<world_object*> visibleItems, cons
 		{
 			const auto object = dynamic_cast<fence*>(item);
 
-			auto const dist1 = sqrt(pow(dot1.x - object->getDot2().x, 2) + pow(dot1.y - object->getDot2().y, 2));
-			auto const dist2 = sqrt(pow(dot2.x - object->getDot1().x, 2) + pow(dot2.y - object->getDot1().y, 2));
-			auto const dist3 = sqrt(pow(dot1.x - object->getDot1().x, 2) + pow(dot1.y - object->getDot1().y, 2));
-			auto const dist4 = sqrt(pow(dot2.x - object->getDot2().x, 2) + pow(dot2.y - object->getDot2().y, 2));
+			auto const dist1 = sqrt(pow(dot1.x - object->get_dot2().x, 2) + pow(dot1.y - object->get_dot2().y, 2));
+			auto const dist2 = sqrt(pow(dot2.x - object->get_dot1().x, 2) + pow(dot2.y - object->get_dot1().y, 2));
+			auto const dist3 = sqrt(pow(dot1.x - object->get_dot1().x, 2) + pow(dot1.y - object->get_dot1().y, 2));
+			auto const dist4 = sqrt(pow(dot2.x - object->get_dot2().x, 2) + pow(dot2.y - object->get_dot2().y, 2));
 
 			auto ownDot = Vector2f (-1, -1);
 			auto objDot = Vector2f (-1, -1);
 
 			if (dist1 <= dist2 && dist1 <= dist3 && dist1 <= dist4 && dist1 < 100)
 			{
-				ownDot = Vector2f (this->position_.x - this->dot1.x, this->position_.y - this->dot1.y);
-				objDot = Vector2f (object->getDot2());				
+				ownDot = Vector2f (this->position_.x - this->dot1_.x, this->position_.y - this->dot1_.y);
+				objDot = Vector2f (object->get_dot2());				
 			}
 			else if (dist2 <= dist1 && dist2 <= dist3 && dist2 <= dist4 && dist2 < 100)
 			{
-				ownDot = Vector2f (this->position_.x - this->dot2.x, this->position_.y - this->dot2.y);
-				objDot = Vector2f (object->getDot1());				
+				ownDot = Vector2f (this->position_.x - this->dot2_.x, this->position_.y - this->dot2_.y);
+				objDot = Vector2f (object->get_dot1());				
 			}
 			else if (dist3 <= dist1 && dist3 <= dist2 && dist3 <= dist4 && dist3 < 100)
 			{
-				ownDot = Vector2f (this->position_.x - this->dot1.x, this->position_.y - this->dot1.y);
-				objDot = Vector2f (object->getDot1());				
+				ownDot = Vector2f (this->position_.x - this->dot1_.x, this->position_.y - this->dot1_.y);
+				objDot = Vector2f (object->get_dot1());				
 			}
 			else if (dist4 <= dist1 && dist4 <= dist2 && dist4 <= dist3 && dist4 < 100)
 			{
-				ownDot = Vector2f (this->position_.x - this->dot2.x, this->position_.y - this->dot2.y);
-				objDot = Vector2f (object->getDot2());				
+				ownDot = Vector2f (this->position_.x - this->dot2_.x, this->position_.y - this->dot2_.y);
+				objDot = Vector2f (object->get_dot2());				
 			}	
 
 			if (ownDot != Vector2f (-1, -1) && objDot != Vector2f (-1, -1))
 			{			
-				currentDot = Vector2f (objDot);
+				current_dot_ = Vector2f (objDot);
 				return Vector2f (objDot.x + ownDot.x, objDot.y + ownDot.y);
 			}
 		}

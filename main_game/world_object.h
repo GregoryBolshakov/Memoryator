@@ -1,6 +1,6 @@
 #pragma once
-#ifndef WORLDOBJECT_H
-#define WORLDOBJECT_H
+#ifndef WORLD_OBJECT_H
+#define WORLD_OBJECT_H
 
 #include <SFML/Graphics.hpp>
 #include <stack>
@@ -96,11 +96,11 @@ public:
 protected:
 	int type_of_object_{};
 	int z_coordinate_ = 1;
-	std::vector<int> current_sprite_;
+	std::vector<int> current_sprite_ = { 0 };
 	int variety_of_types_{};
 	bool delete_promise_ = false;
 	bool mirrored_ = false;
-	long long time_for_new_sprite_{};
+	long long time_for_new_sprite_ = 0;
 	float animation_speed_{};
 	float health_point_ = 0;
 	float armor_ = 1;

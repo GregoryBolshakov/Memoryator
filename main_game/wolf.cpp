@@ -13,8 +13,8 @@ wolf::wolf(std::string objectName, Vector2f centerPosition) : neutral_mob(std::m
 	radius_ = 70;
 	strength_ = 10;
 	sight_range = helper::GetScreenSize().y * 1 / 2; 
-	morality = 5; // from 1 to 10
-	fear = 0;
+	morality_ = 5; // from 1 to 10
+	fear_ = 0;
 	health_point_ = 0;
 	current_action_ = relax;
 	time_after_hitself_ = 0;
