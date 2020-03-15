@@ -4,7 +4,7 @@
 #include "draw_system.h"
 #include "hero_book.h"
 #include "menu_system.h"
-#include "visual_effects/ambient_light.hpp"
+#include "visual_effects/dynamic_light.hpp"
 #include "visual_effects/field_of_view.hpp"
 
 
@@ -14,7 +14,7 @@ int main() {
 	srand(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
 	
 	const auto screen_size = helper::GetScreenSize();
-	RenderWindow main_window(VideoMode(static_cast<unsigned int>(screen_size.x), static_cast<unsigned int>(screen_size.y), 32), "game", Style::Fullscreen);
+	RenderWindow main_window(VideoMode(static_cast<unsigned int>(screen_size.x), static_cast<unsigned int>(screen_size.y), 32), "game");;//, Style::Fullscreen);
 
     draw_system draw_system;
 	menu_system menu_system;
@@ -40,7 +40,7 @@ int main() {
 	auto visual_effect_texture = surface.getTexture();
 	auto visual_effect_sprite = Sprite(visual_effect_texture);
 
-	ambient_light ambient_light(world.getTimeSystem(), screen_size);
+	dynamic_light ambient_light(world.getTimeSystem(), world, screen_size);
 	ambient_light.load();
 
 	field_of_view field_of_view(world.getTimeSystem(), screen_size);
@@ -121,7 +121,7 @@ int main() {
 				world.focusedObject->handle_input(world.getInventorySystem().get_used_mouse(), time_micro_sec);
 
 				ambient_light.update();
-				field_of_view.update();
+				//field_of_view.update();
 			}
 
 			auto hero = dynamic_cast<deerchant*>(world.focusedObject);
@@ -136,8 +136,8 @@ int main() {
 			visual_effect_texture.update(main_window);
 			main_window.draw(visual_effect_sprite, ambient_light.shader);
 
-			visual_effect_texture.update(main_window);
-			main_window.draw(visual_effect_sprite, field_of_view.shader);
+			/*visual_effect_texture.update(main_window);
+			main_window.draw(visual_effect_sprite, field_of_view.shader);*/
 
 			draw_system.draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepare_sprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packs_map)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
 			text_system::draw_string(world.getMouseDisplayName(), font_name::normal_font, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));

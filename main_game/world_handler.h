@@ -33,6 +33,7 @@ public:
 	grid_list& getStaticGrid() { return staticGrid; }
 	grid_list& getDynamicGrid() { return dynamicGrid; }
 	Vector2f getCameraPosition() const	{ return cameraSystem.position; }
+	camera_system& get_camera_system() {return cameraSystem; }
 	inventory_system& getInventorySystem() { return inventorySystem; }
 	build_system& getBuildSystem() { return buildSystem; }
 	time_system& getTimeSystem() { return timeSystem; }
@@ -63,6 +64,7 @@ public:
 
 	// Zoom	
 	void setScaleFactor(int delta);
+	float get_scale_delta_normalized() const;
 	void scaleSmoothing();
 	float scaleDecrease{}, timeForScaleDecrease = 0;
 	Clock scaleDecreaseClock;
@@ -70,6 +72,7 @@ public:
 	// Hero
 	dynamic_object* focusedObject = nullptr;
 	brazier* brazier{};
+	Vector2f focused_object_screen_position_normalized() const;
 
 	// Events
 	void onMouseUp(int currentMouseButton);
@@ -90,6 +93,7 @@ private:
 	Vector2f microBlockSize = { 20, 20 };
 	std::string spriteNameFileDirectory = "Game/objects.txt";
 	bool fixedClimbingBeyond(Vector2f &pos) const;
+	Vector2f object_screen_position(dynamic_object* obj) const;
 	
 	world_generator worldGenerator;
 

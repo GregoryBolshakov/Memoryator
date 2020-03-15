@@ -217,7 +217,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
     <ClCompile Include="time_system.cpp" />
     <ClCompile Include="totem.cpp" />
     <ClCompile Include="effects_system.cpp" />
-    <ClCompile Include="visual_effects\ambient_light.cpp" />
+    <ClCompile Include="visual_effects\dynamic_light.cpp" />
     <ClCompile Include="visual_effects\field_of_view.cpp" />
     <ClCompile Include="wolf.cpp" />
     <ClCompile Include="world_generator.cpp" />
@@ -299,7 +299,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
     <ClInclude Include="time_system.h" />
     <ClInclude Include="totem.h" />
     <ClInclude Include="effects_system.h" />
-    <ClInclude Include="visual_effects\ambient_light.hpp" />
+    <ClInclude Include="visual_effects\dynamic_light.hpp" />
     <ClInclude Include="visual_effects\field_of_view.hpp" />
     <ClInclude Include="visual_effects\visual_effect.hpp" />
     <ClInclude Include="wolf.h" />
@@ -311,6 +311,8 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
     <ClInclude Include="yarrow.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Game\shaders\dynamic_light.frag" />
+    <None Include="Game\shaders\field_of_view.frag" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

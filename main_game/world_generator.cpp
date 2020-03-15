@@ -36,6 +36,11 @@ void world_generator::init(
 world_generator::~world_generator()
 = default;
 
+float world_generator::get_scale_delta_normalized() const
+{
+	return (scaleFactor - mainScale) / mainScale;
+}
+
 void world_generator::initializeStaticItem(
 	entity_tag itemClass,
 	Vector2f itemPosition,

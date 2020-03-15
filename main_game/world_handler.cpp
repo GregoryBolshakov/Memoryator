@@ -98,6 +98,12 @@ void world_handler::setScaleFactor(const int delta)
 		worldGenerator.scaleFactor = worldGenerator.CLOSEST_SCALE * worldGenerator.mainScale;
 }
 
+float world_handler::get_scale_delta_normalized() const
+{
+	return worldGenerator.get_scale_delta_normalized();
+}
+
+
 void world_handler::scaleSmoothing()
 {
 	if (abs(scaleDecrease) >= 0.02 && timeForScaleDecrease >= 30000)
@@ -642,4 +648,29 @@ std::vector<drawable_chain_element*> world_handler::prepareSprites(const long lo
 	result.push_back(new shape_chain_element(shape_pos, 7.5, { 3.75f, 3.75f }, sf::Color::Blue));*/
 
     return result;
+}
+
+// TODO: Move scaling to a separate system
+// TODO: Make the scaling system available to the camera system
+// TODO: Move screen position calculations to the camera System 
+
+Vector2f world_handler::focused_object_screen_position_normalized() const
+{
+	const auto size = helper::GetScreenSize();
+	const auto position = object_screen_position(focusedObject);
+	const auto result = Vector2f{ position.x / size.x, position.y / size.y };
+
+	return result;
+}
+
+Vector2f world_handler::object_screen_position(dynamic_object* obj) const
+{
+	const auto position = obj->get_position();
+	const auto center = helper::GetScreenSize() / 2.0f;
+	const auto camera = cameraSystem.position;
+	const auto scale = worldGenerator.scaleFactor;
+
+	const auto result = (position - camera) * scale + center;
+
+	return result;
 }

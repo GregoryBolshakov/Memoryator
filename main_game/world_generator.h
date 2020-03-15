@@ -42,6 +42,9 @@ public:
 	dynamic_object* focusedObject = nullptr;
 	float scaleFactor = 1;
 	float mainScale = 1;
+
+	float get_scale_delta_normalized() const;
+	
 private:
 	grid_list* staticGrid = nullptr;
 	grid_list* dynamicGrid = nullptr;	
