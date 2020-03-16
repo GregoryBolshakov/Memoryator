@@ -8,14 +8,14 @@ const Vector2f camera_system::max_camera_distance = Vector2f(250, 250), camera_s
 const float camera_system::shake_default_speed = 0.0005f;
 const long long camera_system::shake_default_duration = long(3e4);
 
-camera_system::camera_system(scale_system scale_system) :scale_system_{ scale_system }
+camera_system::camera_system(scale_system& scale_system) :scale_system_{ scale_system }
 {
 }
 
 camera_system::~camera_system()
 = default;
 
-void camera_system::set_focused_object(dynamic_object * object)
+void camera_system::set_focused_object(dynamic_object* object)
 {
 	focused_object_ = object;
 }
@@ -75,7 +75,7 @@ Vector2f camera_system::focused_object_screen_position_normalized() const
 	return result;
 }
 
-Vector2f camera_system::object_screen_position(dynamic_object * obj) const
+Vector2f camera_system::object_screen_position(dynamic_object* obj) const
 {
 	const auto position = obj->get_position();
 	const auto center = helper::GetScreenSize() / 2.0f;

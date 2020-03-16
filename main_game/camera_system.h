@@ -15,7 +15,7 @@ public:
 	static const float shake_default_speed;
 	static const long long shake_default_duration;
 
-	explicit camera_system(scale_system scale_system);
+	explicit camera_system(scale_system& scale_system);
 	~camera_system();
 
 	Vector2f position = { 0, 0 };
@@ -30,7 +30,7 @@ public:
 	Vector2f object_screen_position(dynamic_object* obj) const;
 
 private:
-	scale_system scale_system_;
+	scale_system& scale_system_;
 	dynamic_object* focused_object_{};
 	Vector2f shake_vector_ = { 0, 0 };
 	long long shake_duration_ = 0;

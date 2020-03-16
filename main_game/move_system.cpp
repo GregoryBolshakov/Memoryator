@@ -191,7 +191,9 @@ void move_system::set_move_offset(long long elapsedTime)
 		*current_action_ == move_end ||
 		*current_action_ == jerking ||
 		*current_action_ == throw_noose ||
-		*current_action_ == move_slowly))
+		*current_action_ == move_slowly ||
+		*current_action_ == soar ||
+		*current_action_ == flap))
 	{
 		move_offset = { -1, -1 };
 		return;
@@ -274,7 +276,7 @@ Vector2f move_system::do_slip(Vector2f new_position, std::vector<static_object*>
 						return Vector2f(-1, -1);
 
 					crashed = true;
-					motionAfterSlipping = this->ellipse_slip(new_position, move_position, terrain->internal_ellipses[curEllipse].first, terrain->internal_ellipses[curEllipse].second, terrain->getEllipseSize(curEllipse), height, elapsed_time);
+					motionAfterSlipping = this->ellipse_slip(new_position, move_position, terrain->internal_ellipses[curEllipse].first, terrain->internal_ellipses[curEllipse].second, terrain->get_ellipse_size(curEllipse), height, elapsed_time);
 
 					if (motionAfterSlipping != Vector2f(-1, -1))
 					{
@@ -286,7 +288,7 @@ Vector2f move_system::do_slip(Vector2f new_position, std::vector<static_object*>
 				}
 		}
 		else
-			if (terrain->isIntersected(*position_, new_position))
+			if (terrain->is_intersected(*position_, new_position))
 			{
 				if (crashed)
 					return Vector2f(-1, -1);
@@ -297,7 +299,7 @@ Vector2f move_system::do_slip(Vector2f new_position, std::vector<static_object*>
 				if (staticItem->is_dots_adjusted)
 					motionAfterSlipping = terrain->new_slipping_position_for_dots_adjusted(*position_, speed, elapsed_time);
 				else
-					motionAfterSlipping = ellipse_slip(new_position, move_position, terrain->get_focus1(), terrain->get_focus2(), terrain->getEllipseSize(), height, elapsed_time);
+					motionAfterSlipping = ellipse_slip(new_position, move_position, terrain->get_focus1(), terrain->get_focus2(), terrain->get_ellipse_size(), height, elapsed_time);
 
 				if (motionAfterSlipping != Vector2f(-1, -1))
 				{
@@ -313,10 +315,13 @@ Vector2f move_system::do_slip(Vector2f new_position, std::vector<static_object*>
 }
 
 void move_system::is_route_needed(std::vector<std::vector<bool>>& micro_block_matrix, Vector2f& micro_block_size)
-{
+{		
 	need_route = false;
 	auto is_break = false;
 
+	if (!can_crash_into_static)
+		return;
+	
 	for (auto i = long(position_->x - *radius_);
 	     i <= long(position_->x + *radius_); i++)
 	{
@@ -336,6 +341,9 @@ void move_system::is_route_needed(std::vector<std::vector<bool>>& micro_block_ma
 
 void move_system::make_route(long long elapsed_time, grid_list* grid_list, float zone_offset)
 {
+	if (!can_crash_into_static)
+		return;
+	
 	time_after_new_route += elapsed_time;
 	if (time_after_new_route >= time_for_new_route)
 	{
@@ -364,6 +372,12 @@ void move_system::make_route(long long elapsed_time, grid_list* grid_list, float
 
 void move_system::pass_route_beginning(Vector2f micro_block_size)
 {
+	if (!can_crash_into_static)
+	{
+		move_position = lax_move_position;
+		return;
+	}
+	
 	if (need_route)
 	{
 		if (!route.empty())

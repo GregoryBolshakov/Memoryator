@@ -12,13 +12,14 @@ public:
 	void init_micro_blocks() override;
 	[[nodiscard]] Vector2f get_focus1() const { return focus1_; }
 	[[nodiscard]] Vector2f get_focus2() const { return focus2_; }
-	void setFocuses(std::vector<Vector2f> focuses);
+	void set_focuses(std::vector<Vector2f> focuses);
 	[[nodiscard]] Vector2f get_dot1() const { return dot1_; }
 	[[nodiscard]] Vector2f get_dot2() const { return dot2_; }
 	[[nodiscard]] Vector2f get_current_dot() const { return current_dot_; }
+	virtual Vector2f get_owl_landing_pos() { return { -1, -1 }; };
 	std::vector<float> ellipse_size_multipliers = { 1.4f };
-	float getEllipseSize(int i = 0);
-	bool isIntersected(Vector2f cur_position, Vector2f new_position); //const;
+	float get_ellipse_size(int i = 0);
+	bool is_intersected(Vector2f cur_position, Vector2f new_position); //const;
 	[[nodiscard]] std::vector<int> get_multi_ellipse_intersect(Vector2f position) const;
 	[[nodiscard]] Vector2f new_slipping_position_for_dots_adjusted(Vector2f motion_vector, float speed, long long elapsed_time) const;	
 

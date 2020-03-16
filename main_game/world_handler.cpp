@@ -43,17 +43,16 @@ void world_handler::runWorldGenerator()
 {
 	staticGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
 	dynamicGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
-
-	for (auto& i : worldGenerator.biomeMatrix)
-		for (auto& j : i)
+	
+    for (auto& i : worldGenerator.biome_matrix)		for (auto& j : i)
 			j = swampy_trees;
 
 	worldGenerator.generate();
-	focusedObject = worldGenerator.focusedObject;
+	focusedObject = worldGenerator.focused_object;
 	cameraSystem.set_focused_object(focusedObject);
 	brazier = dynamic_cast<::brazier*>(staticGrid.get_item_by_name("brazier"));
 	//brazier->linkWithBuildSystem(&buildSystem);
-	worldGenerator.rememberedBlocks = { { staticGrid.get_index_by_point(brazier->get_position().x, brazier->get_position().y), true } };
+	worldGenerator.remembered_blocks = { { staticGrid.get_index_by_point(brazier->get_position().x, brazier->get_position().y), true } };
 	cameraSystem.position = Vector2f(focusedObject->get_position().x + helper::GetScreenSize().x * camera_system::cam_offset.x, focusedObject->get_position().y + helper::GetScreenSize().y * camera_system::cam_offset.y);
 
 	const auto hero = dynamic_cast<deerchant*>(focusedObject);
@@ -82,8 +81,7 @@ void world_handler::runWorldGenerator()
 
 void world_handler::setScaleFactor(const int delta)
 {
-	scale_system_.set_scale_factor(delta);
-}
+	scale_system_.set_scale_factor(delta);}
 
 void world_handler::birthObjects()
 {
@@ -94,13 +92,13 @@ void world_handler::birthObjects()
 
 		while (!birthStaticStack.empty())
 		{
-			const auto biome = worldGenerator.biomeMatrix[int(birthStaticStack.top().position.x / blockSize.x)][int(birthStaticStack.top().position.y / blockSize.y)];
-			worldGenerator.initializeStaticItem(birthStaticStack.top().tag, birthStaticStack.top().position, birthStaticStack.top().type_of_object, "", birthStaticStack.top().count, biome, true, birthStaticStack.top().inventory);
+			const auto biome = worldGenerator.biome_matrix[int(birthStaticStack.top().position.x / blockSize.x)][int(birthStaticStack.top().position.y / blockSize.y)];
+			worldGenerator.initialize_static_item(birthStaticStack.top().tag, birthStaticStack.top().position, birthStaticStack.top().type_of_object, "", birthStaticStack.top().count, biome, true, birthStaticStack.top().inventory);
 			birthStaticStack.pop();
 		}
 		while (!birthDynamicStack.empty())
 		{
-			worldGenerator.initializeDynamicItem(birthDynamicStack.top().tag, birthDynamicStack.top().position, "", birthDynamicStack.top().owner);
+			worldGenerator.initialize_dynamic_item(birthDynamicStack.top().tag, birthDynamicStack.top().position, "", birthDynamicStack.top().owner);
 			birthDynamicStack.pop();
 		}
 		object->clear_birth_stack();
@@ -122,13 +120,13 @@ void world_handler::Load()
 		fin >> saveName >> posX >> posY;
 
 		if (saveName == nightmare_first("loadInit", Vector2f(0, 0)).get_to_save_name())
-			worldGenerator.initializeDynamicItem(entity_tag::monster, Vector2f(posX, posY), "");
+			worldGenerator.initialize_dynamic_item(entity_tag::monster, Vector2f(posX, posY), "");
 		else
 			if (saveName == deerchant("loadInit", Vector2f(0, 0)).get_to_save_name())
-				worldGenerator.initializeDynamicItem(entity_tag::hero, Vector2f(posX, posY), "");
+				worldGenerator.initialize_dynamic_item(entity_tag::hero, Vector2f(posX, posY), "");
 			else
 				if (saveName == wolf("loadInit", Vector2f(0, 0)).get_to_save_name())
-					worldGenerator.initializeDynamicItem(entity_tag::wolf, Vector2f(posX, posY), "");
+					worldGenerator.initialize_dynamic_item(entity_tag::wolf, Vector2f(posX, posY), "");
 	}
 
 	fin >> num;
@@ -137,16 +135,16 @@ void world_handler::Load()
 		fin >> saveName >> typeOfObject >> posX >> posY;
 
 		if (saveName == ground_connection("loadInit", Vector2f(0, 0), typeOfObject).get_to_save_name())
-			worldGenerator.initializeStaticItem(entity_tag::groundConnection, Vector2f(posX, posY), typeOfObject, "", 1);
+			worldGenerator.initialize_static_item(entity_tag::groundConnection, Vector2f(posX, posY), typeOfObject, "", 1);
 		else
 			if (saveName == ground("loadInit", Vector2f(0, 0), typeOfObject).get_to_save_name())
-				worldGenerator.initializeStaticItem(entity_tag::ground, Vector2f(posX, posY), typeOfObject, "", 1);
+				worldGenerator.initialize_static_item(entity_tag::ground, Vector2f(posX, posY), typeOfObject, "", 1);
 			else
 				if (saveName == forest_tree("loadInit", Vector2f(0, 0), typeOfObject).get_to_save_name())
-					worldGenerator.initializeStaticItem(entity_tag::tree, Vector2f(posX, posY), typeOfObject, "", 1);
+					worldGenerator.initialize_static_item(entity_tag::tree, Vector2f(posX, posY), typeOfObject, "", 1);
 				else
 					if (saveName == grass("loadInit", Vector2f(0, 0), typeOfObject).get_to_save_name())
-						worldGenerator.initializeStaticItem(entity_tag::grass, Vector2f(posX, posY), typeOfObject, "", 1);
+						worldGenerator.initialize_static_item(entity_tag::grass, Vector2f(posX, posY), typeOfObject, "", 1);																
 	}
 
 	fin.close();
@@ -205,7 +203,6 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 {
 	mouseDisplayName = "";
 	const auto mousePos = mouse_position();
-
 	auto minCapacity = 1e6f, minDistance = 1e6f;
 
 	for (auto& visibleItem : visibleItems)
@@ -356,9 +353,9 @@ void world_handler::setItemFromBuildSystem()
 	if (buildSystem.selected_object != entity_tag::emptyCell && buildSystem.building_position != Vector2f(-1, -1))
 	{
 		if (buildSystem.dropped_loot_id_list.count(buildSystem.selected_object) > 0)
-			worldGenerator.initializeStaticItem(entity_tag::droppedLoot, buildSystem.building_position, int(buildSystem.selected_object), "", 1);
+			worldGenerator.initialize_static_item(entity_tag::droppedLoot, buildSystem.building_position, int(buildSystem.selected_object), "", 1);
 		else
-			worldGenerator.initializeStaticItem(buildSystem.selected_object, buildSystem.building_position, buildSystem.build_type, "", 1);
+			worldGenerator.initialize_static_item(buildSystem.selected_object, buildSystem.building_position, buildSystem.build_type, "", 1);
 
 		if (buildSystem.selected_object == entity_tag::totem)
 		{
@@ -384,7 +381,6 @@ void world_handler::onMouseUp(const int currentMouseButton)
 	if (pedestalController.is_running())
 		return;
 	const auto mouseWorldPos = mouse_position();
-
 	inventorySystem.on_mouse_up();
 
 	if (buildSystem.get_success_init() /* && inventorySystem.getHeldItem()->first == -1*/)
@@ -412,7 +408,7 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 	const Vector2f worldUpperLeft(characterPosition.x - render_target_size.x / 2, characterPosition.y - render_target_size.y / 2);
 	const Vector2f worldBottomRight(characterPosition.x + render_target_size.x / 2, characterPosition.y + render_target_size.y / 2);
 
-	worldGenerator.beyondScreenGeneration();
+	worldGenerator.beyond_screen_generation();
 
 	auto localItems = staticGrid.get_items(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y);
 	auto localStaticItems = object_initializer::vector_cast_to_static(localItems);

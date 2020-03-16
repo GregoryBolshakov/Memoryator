@@ -202,7 +202,7 @@ void pedestal_controller::interact(long long elapsed_time, Event event)
 	//---------------
 
 	double_click_timer_ += elapsed_time;
-	bound_object_->setFocuses(focuses_);
+	bound_object_->set_focuses(focuses_);
 }
 
 void pedestal_controller::draw(RenderWindow * window, Vector2f camera_position, float scale_factor)

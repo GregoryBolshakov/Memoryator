@@ -1,6 +1,4 @@
 #pragma once
-#ifndef WORLD_OBJECT_H
-#define WORLD_OBJECT_H
 
 #include <SFML/Graphics.hpp>
 #include <stack>
@@ -56,8 +54,8 @@ public:
 	[[nodiscard]] Vector2f get_conditional_size_units() const { return conditional_size_units_; }
 	[[nodiscard]] Vector2f get_micro_block_check_area_bounds() const { return micro_block_check_area_bounds_; }
 	[[nodiscard]] std::vector<Vector2i> get_locked_micro_blocks() const { return locked_micro_blocks_; }
-	virtual Vector2f get_build_position(std::vector<world_object*> visible_items, float scale_factor, Vector2f camera_position) = 0;
-	virtual int get_build_type(Vector2f own_pos, Vector2f other_pos) = 0;
+	virtual Vector2f get_build_position(std::vector<world_object*> visible_items, float scale_factor, Vector2f camera_position) { return { -1 ,-1 }; };
+	virtual int get_build_type(Vector2f own_pos, Vector2f other_pos) { return 1; };
 	[[nodiscard]] FloatRect get_original_texture_box() const { return original_texture_box_; }
 	[[nodiscard]] state get_state() const { return state_; }	
 	std::pair<std::stack<birth_static_info>, std::stack<birth_dynamic_info>> get_birth_objects() { return std::make_pair(birth_statics_, birth_dynamics_); }	
@@ -120,5 +118,3 @@ protected:
 	std::stack<birth_dynamic_info> birth_dynamics_;
 	std::vector<Vector2i> locked_micro_blocks_ = {};
 };
-
-#endif

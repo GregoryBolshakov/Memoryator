@@ -103,7 +103,7 @@ private:
 	Vector2f  world_handler::mouse_position() const;
 
 	// Systems
-	camera_system cameraSystem;
+	camera_system& cameraSystem;
 	scale_system& scale_system_;
 	effects_system effectSystem;
 	inventory_system inventorySystem;

@@ -125,7 +125,7 @@ bool helper::isIntersectTerrain(const Vector2f position, terrain_object& terrain
 	const auto f1 = terrain.get_focus1();
 	const auto f2 = terrain.get_focus2();
 	return sqrt((position.x - f1.x) * (position.x - f1.x) + (position.y - f1.y) * (position.y - f1.y)) +
-		sqrt((position.x - f2.x) * (position.x - f2.x) + (position.y - f2.y) * (position.y - f2.y))/* - dynamic.radius*/ <= terrain.getEllipseSize() + radius;
+		sqrt((position.x - f2.x) * (position.x - f2.x) + (position.y - f2.y) * (position.y - f2.y))/* - dynamic.radius*/ <= terrain.get_ellipse_size() + radius;
 }
 
 side helper::getSide(const Vector2f position, const Vector2f anotherPosition)
