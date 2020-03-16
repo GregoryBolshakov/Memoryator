@@ -192,7 +192,8 @@ void move_system::set_move_offset(long long elapsedTime)
 		*current_action_ == jerking ||
 		*current_action_ == throw_noose ||
 		*current_action_ == move_slowly ||
-		*current_action_ == soar))
+		*current_action_ == soar ||
+		*current_action_ == flap))
 	{
 		move_offset = { -1, -1 };
 		return;

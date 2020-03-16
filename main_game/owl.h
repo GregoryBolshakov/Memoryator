@@ -17,12 +17,10 @@ public:
 	void behavior_with_static(world_object* target, long long elapsed_time) override;
 	void behavior(long long elapsed_time) override;
 	void ending_previous_action();
-	Vector2f get_build_position(std::vector<world_object*> visible_items, float scale_factor, Vector2f camera_position) override;
-	int get_build_type(Vector2f oun_pos, Vector2f other_pos) override;
 	void jerk(float power, float deceleration, Vector2f destination_point) override;
 private:
-	
-	world_object *nearest_tree_ = nullptr;
-	long long time_after_fear_ = 0;
+	float min_flight_distance_ = 0;
+	long long time_after_fear_ = long(1e6);
 	long long fear_time_ = long(1e6);
+	Vector2f cheat_hero_pos_ = { 0, 0 };
 };
