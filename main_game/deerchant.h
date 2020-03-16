@@ -7,7 +7,9 @@ using namespace sf;
 
 class deerchant : public dynamic_object
 {
-public:	
+public:
+	inline static const Vector2f conditional_size = { 375, 375 };
+	
 	deerchant(std::string objectName, Vector2f centerPosition);
 	~deerchant();
 	//BuildSystem

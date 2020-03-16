@@ -216,10 +216,11 @@
     <ClCompile Include="shape_chain_element.cpp">
       <Filter>Systems\DrawSystem</Filter>
     </ClCompile>
-    <ClCompile Include="visual_effects\field_of_view.cpp">
+    <ClCompile Include="visual_effects\dynamic_light.cpp">
       <Filter>visual_effects</Filter>
     </ClCompile>
-    <ClCompile Include="visual_effects\dynamic_light.cpp">
+    <ClCompile Include="scale_system.cpp" />
+    <ClCompile Include="visual_effects\wave_wiggle.cpp">
       <Filter>visual_effects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -443,14 +444,15 @@
     <ClInclude Include="shape_chain_element.h">
       <Filter>Systems\DrawSystem</Filter>
     </ClInclude>
-    <ClInclude Include="visual_effects\field_of_view.hpp">
-      <Filter>visual_effects</Filter>
-    </ClInclude>
     <ClInclude Include="visual_effects\visual_effect.hpp">
       <Filter>visual_effects</Filter>
     </ClInclude>
     <ClInclude Include="math_constants.h" />
     <ClInclude Include="visual_effects\dynamic_light.hpp">
+      <Filter>visual_effects</Filter>
+    </ClInclude>
+    <ClInclude Include="scale_system.h" />
+    <ClInclude Include="visual_effects\wave_wiggle.hpp">
       <Filter>visual_effects</Filter>
     </ClInclude>
   </ItemGroup>
@@ -491,7 +493,7 @@
     <None Include="Game\shaders\dynamic_light.frag">
       <Filter>visual_effects\shaders</Filter>
     </None>
-    <None Include="Game\shaders\field_of_view.frag">
+    <None Include="Game\shaders\wave_wiggle.frag">
       <Filter>visual_effects\shaders</Filter>
     </None>
   </ItemGroup>

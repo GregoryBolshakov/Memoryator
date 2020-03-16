@@ -1,17 +1,17 @@
-#include "field_of_view.hpp"
+#include "wave_wiggle.hpp"
 
 #include "../math_constants.h"
 
-field_of_view::field_of_view(time_system& time_system, const sf::Vector2f render_target_size)
-	: visual_effect("FieldOfView"),
+wave_wiggle::wave_wiggle(time_system& time_system, const sf::Vector2f render_target_size)
+	: visual_effect("Bend"),
 	time_system_{ time_system },
 	render_target_size_{ render_target_size }
 {
 }
 
-bool field_of_view::on_load()
+bool wave_wiggle::on_load()
 {
-	if (!shader_.loadFromFile("Game/shaders/field_of_view.frag", sf::Shader::Fragment))
+	if (!shader_.loadFromFile("Game/shaders/wave_wiggle.frag", sf::Shader::Fragment))
 		return false;
 
 	shader_.setUniform("tex", sf::Shader::CurrentTexture);
@@ -20,7 +20,7 @@ bool field_of_view::on_load()
 	return true;
 }
 
-void field_of_view::on_update()
+void wave_wiggle::on_update()
 {
 	hero_view_.x = render_target_size_.x / 2;
 	hero_view_.y = render_target_size_.y / 2;

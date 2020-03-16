@@ -4,6 +4,7 @@
 #include "draw_system.h"
 #include "hero_book.h"
 #include "menu_system.h"
+#include "shader_system.h"
 #include "visual_effects/dynamic_light.hpp"
 
 
@@ -15,11 +16,23 @@ int main() {
 	const auto screen_size = helper::GetScreenSize();
 	RenderWindow main_window(VideoMode(static_cast<unsigned int>(screen_size.x), static_cast<unsigned int>(screen_size.y), 32), "game");;//, Style::Fullscreen);
 
-    draw_system draw_system;
+	scale_system scale_system;
+	camera_system camera_system(scale_system);
+	time_system time_system;
+	draw_system draw_system;
 	menu_system menu_system;
-	world_handler world(40000, 40000, &draw_system.packs_map);
+	shader_system shader_system(camera_system, time_system);
+	
+	world_handler world(40000, 40000, camera_system, &draw_system.packs_map);
 	auto window_focus = true;
-	console console(FloatRect(helper::GetScreenSize().x * 0.2f, helper::GetScreenSize().y * 0.8f, helper::GetScreenSize().x * 0.6f, helper::GetScreenSize().y * 0.03f), &world);
+	
+	console console(FloatRect(
+		helper::GetScreenSize().x * 0.2f,
+		helper::GetScreenSize().y * 0.8f,
+		helper::GetScreenSize().x * 0.6f,
+		helper::GetScreenSize().y * 0.03f),
+		time_system,
+		&world);
 
 	Clock clock;
 	long long time_micro_sec = 0;
@@ -39,7 +52,7 @@ int main() {
 	auto visual_effect_texture = surface.getTexture();
 	auto visual_effect_sprite = Sprite(visual_effect_texture);
 
-	dynamic_light dynamic_light(world.getTimeSystem(), world, screen_size);
+	dynamic_light dynamic_light(camera_system, time_system);
 	dynamic_light.load();
 	
 	while (main_window.isOpen())
@@ -112,7 +125,9 @@ int main() {
 			clock.restart();
 
 			if (!console.get_state())
-			{				
+			{
+				scale_system.interact();
+				time_system.interact(time_micro_sec);
 				world.interact(screen_size, time_micro_sec, event);
 				world.focusedObject->handle_input(world.getInventorySystem().get_used_mouse(), time_micro_sec);
 
@@ -124,16 +139,17 @@ int main() {
 			main_book.interact();
 
 			main_window.clear(sf::Color::White);
+			const auto scale = scale_system.get_scale_factor();
 			
-            draw_system.draw(main_window, world.prepareSprites(time_micro_sec, true), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
-            draw_system.draw(main_window, world.prepareSprites(time_micro_sec, false), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+            draw_system.draw(main_window, world.prepareSprites(time_micro_sec, true), scale, camera_system.position);
+            draw_system.draw(main_window, world.prepareSprites(time_micro_sec, false), scale, camera_system.position);
             
 			visual_effect_texture.update(main_window);
 			main_window.draw(visual_effect_sprite, dynamic_light.shader);
 
-			draw_system.draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepare_sprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packs_map)), world.getWorldGenerator().scaleFactor, world.getCameraPosition());
+			draw_system.draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepare_sprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packs_map)), scale, camera_system.position);
 			text_system::draw_string(world.getMouseDisplayName(), font_name::normal_font, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));
-			world.pedestalController.draw(&main_window, world.getCameraPosition(), world.getWorldGenerator().scaleFactor);
+			world.pedestalController.draw(&main_window, camera_system.position, scale);
 			draw_system.draw(main_window, main_book.prepareSprites(world.focusedObject->get_health_point() / world.focusedObject->get_max_health_point_value(), time_micro_sec));
 			draw_system.draw(main_window, world.getInventorySystem().prepare_sprites(time_micro_sec, world.packsMap));			
 		}

@@ -1,19 +1,14 @@
 #pragma once
-#ifndef WORLD_GENERATOR_H
-#define WORLD_GENERATOR_H
 
 #include "object_initializer.h"
 #include "grid_list.h"
+#include "scale_system.h"
 
 class world_generator
 {
 public:	
-	const float CLOSEST_SCALE = 1.7f;
-	const float FARTHEST_SCALE = 0.998f;
-	
 	void generate();
-	void init(int width, int height, Vector2f blockSize, Vector2f microBlockSize, grid_list* staticGrid, grid_list* dynamicGrid, std::map<pack_tag, sprite_pack>* packsMap);
-    void initMainScale();
+	void init(int width, int height, Vector2f blockSize, Vector2f microBlockSize, grid_list* staticGrid, grid_list* dynamicGrid, scale_system* scale_system, std::map<pack_tag, sprite_pack>* packsMap);
 
 	void initializeStaticItem(
 		entity_tag itemClass,
@@ -40,10 +35,6 @@ public:
 	biomes biomeMatrix[100][100]{};
 	std::map<int, bool> rememberedBlocks = { {0, true} };
 	dynamic_object* focusedObject = nullptr;
-	float scaleFactor = 1;
-	float mainScale = 1;
-
-	float get_scale_delta_normalized() const;
 	
 private:
 	grid_list* staticGrid = nullptr;
@@ -54,6 +45,8 @@ private:
 	Vector2f blockSize = { 0, 0 };
 	Vector2f microBlockSize = { 0, 0 };
 	Vector2i focusedObjectBlock = { 0, 0 };
+
+	scale_system* scale_system_ ;
 
 	// block generation
 	void generateGround(int blockIndex);
@@ -71,5 +64,3 @@ private:
 	Vector2i biomesChangeCenter = { 0, 0 };
 	std::vector<std::vector<Vector2i>> biomesBlocksOffsets = {};
 };
-
-#endif

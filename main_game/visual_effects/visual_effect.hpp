@@ -11,9 +11,8 @@ public:
 	void update();
 
 	sf::Shader* shader;
-
+	virtual ~visual_effect();
 protected:
-	~visual_effect();
 	explicit visual_effect(std::string name);
 	sf::Shader shader_;
 

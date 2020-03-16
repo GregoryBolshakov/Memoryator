@@ -202,6 +202,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
     <ClCompile Include="rock.cpp" />
     <ClCompile Include="roof.cpp" />
     <ClCompile Include="root.cpp" />
+    <ClCompile Include="scale_system.cpp" />
     <ClCompile Include="shader_system.cpp" />
     <ClCompile Include="shape_chain_element.cpp" />
     <ClCompile Include="spawn.cpp" />
@@ -218,7 +219,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
     <ClCompile Include="totem.cpp" />
     <ClCompile Include="effects_system.cpp" />
     <ClCompile Include="visual_effects\dynamic_light.cpp" />
-    <ClCompile Include="visual_effects\field_of_view.cpp" />
+    <ClCompile Include="visual_effects\wave_wiggle.cpp" />
     <ClCompile Include="wolf.cpp" />
     <ClCompile Include="world_generator.cpp" />
     <ClCompile Include="world_handler.cpp" />
@@ -252,6 +253,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
     <ClInclude Include="roof.h" />
     <ClInclude Include="root.h" />
     <ClInclude Include="move_system.h" />
+    <ClInclude Include="scale_system.h" />
     <ClInclude Include="shader_system.h" />
     <ClInclude Include="shape_chain_element.h" />
     <ClInclude Include="sprite_chain_element.h" />
@@ -300,7 +302,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
     <ClInclude Include="totem.h" />
     <ClInclude Include="effects_system.h" />
     <ClInclude Include="visual_effects\dynamic_light.hpp" />
-    <ClInclude Include="visual_effects\field_of_view.hpp" />
+    <ClInclude Include="visual_effects\wave_wiggle.hpp" />
     <ClInclude Include="visual_effects\visual_effect.hpp" />
     <ClInclude Include="wolf.h" />
     <ClInclude Include="world_generator.h" />
@@ -312,7 +314,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\shaders\dynamic_light.frag" />
-    <None Include="Game\shaders\field_of_view.frag" />
+    <None Include="Game\shaders\wave_wiggle.frag" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

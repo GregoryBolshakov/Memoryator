@@ -6,14 +6,6 @@
 world_generator::world_generator()
 = default;
 
-void world_generator::initMainScale()
-{
-	auto mainObject = deerchant("loadInit", Vector2f(0, 0));
-	mainObject.calculate_texture_offset();
-	mainScale = helper::GetScreenSize().y / (5 * mainObject.get_conditional_size_units().y);
-	mainScale = round(mainScale * 100) / 100;
-}
-
 void world_generator::init(
 	const int width,
 	const int height,
@@ -21,6 +13,7 @@ void world_generator::init(
 	const Vector2f microBlockSize,
 	grid_list* staticGrid,
 	grid_list* dynamicGrid,
+	scale_system* scale_system,
 	std::map<pack_tag, sprite_pack>* packsMap)
 {
 	this->width = width;
@@ -29,17 +22,13 @@ void world_generator::init(
 	this->microBlockSize = microBlockSize;
 	this->staticGrid = staticGrid;
 	this->dynamicGrid = dynamicGrid;
+	scale_system_ = scale_system;
 	this->packsMap = packsMap;
 	stepSize = { blockSize.x / 10, blockSize.y / 10 };
 }
 
 world_generator::~world_generator()
 = default;
-
-float world_generator::get_scale_delta_normalized() const
-{
-	return (scaleFactor - mainScale) / mainScale;
-}
 
 void world_generator::initializeStaticItem(
 	entity_tag itemClass,
@@ -112,12 +101,15 @@ void world_generator::generate()
 
 	// world generation
 	initBiomesGenerationInfo();
+	
+	const auto max_scale = scale_system_->get_main_scale() * scale_system_->further_scale;
+	
 	const Vector2f upperLeft(
-		floor(focusedObject->get_position().x - (helper::GetScreenSize().x / 2.0f + blockSize.x) / (FARTHEST_SCALE * mainScale)),
-		floor(focusedObject->get_position().y - (helper::GetScreenSize().y / 2.0f + blockSize.x) / (FARTHEST_SCALE * mainScale)));
+		floor(focusedObject->get_position().x - (helper::GetScreenSize().x / 2.0f + blockSize.x) / max_scale),
+		floor(focusedObject->get_position().y - (helper::GetScreenSize().y / 2.0f + blockSize.x) / max_scale));
 	const Vector2f bottomRight(
-		floor(focusedObject->get_position().x + (helper::GetScreenSize().x / 2.0f + blockSize.y) / (FARTHEST_SCALE * mainScale)),
-		floor(focusedObject->get_position().y + (helper::GetScreenSize().y / 2.0f + blockSize.y) / (FARTHEST_SCALE * mainScale)));
+		floor(focusedObject->get_position().x + (helper::GetScreenSize().x / 2.0f + blockSize.y) / max_scale),
+		floor(focusedObject->get_position().y + (helper::GetScreenSize().y / 2.0f + blockSize.y) / max_scale));
 
 	for (auto& block : staticGrid->get_blocks_in_sight(upperLeft.x, upperLeft.y, bottomRight.x, bottomRight.y))	
 		inBlockGenerate(block);	
@@ -181,7 +173,6 @@ void world_generator::inBlockGenerate(const int blockIndex)
 	generateGround(blockIndex);
 
 	//block filling
-	return;
 
 	for (auto x = blockTransform.left; x < blockTransform.left + blockTransform.width; x += 100)
 	{
@@ -288,12 +279,15 @@ void world_generator::perimeterGeneration()
 {
 	const auto screenSize = helper::GetScreenSize();
 	const auto characterPosition = focusedObject->get_position();
+	
+	const auto max_scale = scale_system_->get_main_scale() * scale_system_->further_scale;
+	
 	const Vector2f worldUpperLeft(
-		ceil(characterPosition.x - (screenSize.x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)),
-		ceil(characterPosition.y - (screenSize.y / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)));
+		ceil(characterPosition.x - (screenSize.x / 2 + blockSize.x) / max_scale),
+		ceil(characterPosition.y - (screenSize.y / 2 + blockSize.y) / max_scale));
 	const Vector2f worldBottomRight(
-		ceil(characterPosition.x + (screenSize.x / 2 + blockSize.x) / (FARTHEST_SCALE * mainScale)),
-		ceil(characterPosition.y + (screenSize.y / 2 + blockSize.y) / (FARTHEST_SCALE * mainScale)));
+		ceil(characterPosition.x + (screenSize.x / 2 + blockSize.x) / max_scale),
+		ceil(characterPosition.y + (screenSize.y / 2 + blockSize.y) / max_scale));
 
 	if (focusedObject->direction_system.direction != direction::STAND)
 	{
