@@ -188,5 +188,7 @@ std::vector<sprite_chain_element*> stump::prepare_sprites(long long)
 		body->number -= 10;
 	}
 
+	set_unscaled({ body });
+	
 	return { body };
 }

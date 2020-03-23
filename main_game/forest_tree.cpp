@@ -244,7 +244,9 @@ int forest_tree::get_build_type(Vector2f, Vector2f)
 std::vector<sprite_chain_element*> forest_tree::prepare_sprites(const long long elapsed_time)
 {
 	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::tree, direction::DOWN, type_of_object_, position_, conditional_size_units_, Vector2f(texture_box_offset_), color, mirrored_);
-
+	if (type_of_object_ == 13)
+		body->unscaled = true;
+	
 	if (type_of_object_ >= 1 && type_of_object_ <= 7)
 		body->pack_tag = pack_tag::birchGrove;
 	if (type_of_object_ >= 8 && type_of_object_ <= 13)

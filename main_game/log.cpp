@@ -101,6 +101,8 @@ namespace mr
 	{
 		const auto body = new sprite_chain_element(pack_tag::birchGrove, pack_part::log, direction::DOWN, type_of_object_, position_, conditional_size_units_, Vector2f(texture_box_offset_), color, mirrored_);
 
+		set_unscaled({ body });
+		
 		return { body };
 	}
 }

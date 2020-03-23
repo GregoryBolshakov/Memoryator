@@ -16,15 +16,15 @@ enum class pack_tag
     empty = 0, heroAbsorb = 1, heroHit = 2, heroMove = 3, heroPick = 4, heroRoll = 5, heroStand = 6, heroThrow = 7,
     interfaceElements = 8, locations = 9, darkWoods = 10, birchGrove = 11, swampyTrees = 12, craftObjects = 13,
 	inventory = 14, icons = 15, book = 16, hare = 17, nightmare1 = 18, nightmare2Stand = 20,
-	nightmare2Move = 21, nightmare2Hit = 22, deer = 23, owl = 24
+	nightmare2Move = 21, nightmare2Hit = 22, owl = 24, deer = 25, deerStand = 26
 };
 
 enum class pack_part
 {
 	full = 101, body = 102, legs = 103, lines = 104, // creature's parts
-	stand = 1, move = 2, trap = 3, hit = 4, hunt = 5, listening = 6, sniff = 7,
+	stand = 1, move = 2, walk = 3, hit = 4, hunt = 5, listening = 6, sniff = 7,
 	transition = 8, jump = 9, look_around = 10, startle = 11, flap = 12, head = 13,
-	landing = 14, soar = 15, takeoff = 16, // action's parts
+	landing = 14, soar = 15, takeoff = 16, stop = 17, trap = 18, bend_down = 19, bend_up = 20, // action's parts
 	ground = 201, tree = 202, bush = 203, log = 204, mushroom = 205, path = 206, plant = 207, rock = 208, stump = 209,
 	decor = 210, roof = 211, lake = 212, root = 213, flower = 213,// biome's parts
 	bookLittle = 301, crossButton = 302, menu = 303, // interface's parts

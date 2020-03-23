@@ -103,5 +103,7 @@ std::vector<sprite_chain_element*> root::prepare_sprites(long long)
 {
 	const auto body = new sprite_chain_element(pack_tag::swampyTrees, pack_part::root, direction::DOWN, type_of_object_, position_, conditional_size_units_, Vector2f(texture_box_offset_), color, mirrored_);
 
+	set_unscaled({ body });
+	
 	return { body };
 }

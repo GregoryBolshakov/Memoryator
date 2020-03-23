@@ -20,6 +20,7 @@ noose::noose(const std::string& objectName, const Vector2f centerPosition, world
 	current_action_ = move;
 	move_system.route_generation_ability = false;
 	move_system.can_crash_into_dynamic = false;
+	move_system.can_crash_into_static = false;
 	noose::jerk(2, 1);
 	to_save_name_ = "noose";
 	tag = entity_tag::noose;
@@ -227,7 +228,7 @@ void noose::rotateAndExtend(sprite_chain_element* rope, sprite_chain_element* lo
 		const auto dynOwner = dynamic_cast<deerchant*>(owner);
 		if ((dynOwner != nullptr) && current_action_ != dead)
 		{
-			rope->position = dynOwner->getBeltPosition();
+			rope->position = dynOwner->get_belt_position();
 			rope->offset = Vector2f(rope->offset.x + rope->position.x - position_.x, rope->offset.y + rope->position.y - position_.y);
 		}
 	}

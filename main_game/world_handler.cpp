@@ -205,7 +205,7 @@ void world_handler::Load()
 	//buildSystem.succesInit = true;
 	//buildSystem.succesInit = true;
 
-	Save();
+	//Save();
 }
 
 void world_handler::Save()
@@ -433,7 +433,7 @@ void world_handler::onMouseUp(const int currentMouseButton)
 		selectedObject = nullptr;
 
 	auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->get_name()));
-	hero->onMouseUp(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.building_position != Vector2f(-1, -1) && !buildSystem.instant_build));
+	hero->on_mouse_up(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.building_position != Vector2f(-1, -1) && !buildSystem.instant_build));
 }
 
 void world_handler::handleEvents(Event& event)
@@ -472,7 +472,7 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 	setTransparent(localTerrain);
 
 	const auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->get_name()));
-	hero->heldItem = &inventorySystem.get_held_item();
+	hero->held_item = &inventorySystem.get_held_item();
 
 	for (auto& dynamicItem : localDynamicItems)
 	{

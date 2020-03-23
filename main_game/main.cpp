@@ -120,7 +120,7 @@ int main() {
 			}
 
 			auto hero = dynamic_cast<deerchant*>(world.focusedObject);
-			main_book.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().get_held_item(), hero->nearTheTable);
+			main_book.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().get_held_item(), hero->near_the_table);
 			main_book.interact();
 
 			main_window.clear(sf::Color::White);
