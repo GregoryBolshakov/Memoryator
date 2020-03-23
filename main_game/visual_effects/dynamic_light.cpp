@@ -1,15 +1,11 @@
 #include "dynamic_light.hpp"
 
 
-dynamic_light::dynamic_light(
-	time_system& time_system,
-	world_handler& world_handler,
-	const Vector2f render_target_size)
+dynamic_light::dynamic_light(camera_system& camera_system, time_system& time_system)
 	:
-	visual_effect("AmbientLight"),
-	time_system_{ time_system },
-	world_handler_{ world_handler },
-	render_target_size_{ render_target_size }
+	visual_effect("DynamicLight"),
+	camera_system_{ camera_system },
+	time_system_{ time_system }
 {
 }
 
@@ -31,18 +27,18 @@ bool dynamic_light::on_load()
 	shader_.setUniform("overlay_tex", overlay_texture_);
 	shader_.setUniform("multiply_tex", multiply_texture_);
 	shader_.setUniform("fov_tex", field_of_view_texture_);
-	shader_.setUniform("scene_size", render_target_size_);
+	shader_.setUniform("scene_size", camera_system::get_screen_size());
 
 	return true;
 }
 
 void dynamic_light::on_update()
 {
-	const auto position = world_handler_.focused_object_screen_position_normalized();
+	const auto position = camera_system_.focused_object_screen_position_normalized();
 	const Glsl::Vec3 view{
 		position.x,
 		position.y,
-		world_handler_.get_scale_delta_normalized()
+		camera_system_.get_scale_system().scale_delta_normalized()
 	};
 	shader_.setUniform("view", view);
 	shader_.setUniform("norm_time", time_system_.get_time_normalized());

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "input_box.h"
+#include "time_system.h"
 #include "world_handler.h"
 
 using namespace sf;
@@ -8,7 +9,7 @@ using namespace sf;
 class console
 {
 public:	
-	console(FloatRect rect, world_handler* world = nullptr);
+	console(FloatRect rect, time_system& time_system, world_handler* world = nullptr);
 	~console();
 	input_box get_body() const;
 	void draw(RenderWindow& window) const;
@@ -23,6 +24,7 @@ private:
 	bool state_ = false;
 	std::vector<std::string> command_stack_ = { {""} };
 	size_t command_stack_iterator_ = 0;
+	time_system& time_system_;
 	world_handler* world_ = nullptr;
 };
 

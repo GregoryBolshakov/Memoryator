@@ -1,7 +1,10 @@
 #include "time_system.h"
 
 time_system::time_system()
-= default;
+{
+	init(10.0 / (hours_per_day * minutes_per_hour));
+	set_day_part(0.5);
+}
 
 time_system::~time_system()
 = default;

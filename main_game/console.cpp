@@ -1,6 +1,6 @@
 #include "console.h"
 
-console::console(const FloatRect rect, world_handler* world)
+console::console(const FloatRect rect, time_system& time_system, world_handler* world) :time_system_{ time_system }
 {
 	this->world_ = world;
 	body.init(rect);
@@ -24,7 +24,7 @@ bool console::get_state() const
 	return state_;
 }
 
-void console::draw(RenderWindow& window) const
+void console::draw(RenderWindow & window) const
 {
 	if (!state_)
 		return;
@@ -37,7 +37,7 @@ void console::interact(long long elapsed_time)
 	if (!state_)
 		return;
 	//body->line = commandStack[commandStackIterator];
-	body.interact(elapsed_time);	
+	body.interact(elapsed_time);
 }
 
 void console::handle_events(const Event event)
@@ -119,16 +119,16 @@ void console::do_command()
 	if (commands.size() >= 3)
 	{
 		if (commands[0] == "set" && commands[1] == "time")
-		{		
+		{
 			const auto time = std::stoll(commands[2]);
 			if (time != -1)
-				world_->getTimeSystem().set_time_total_micro_seconds(time);
+				time_system_.set_time_total_micro_seconds(time);
 		}
 		if (commands[0] == "set" && commands[1] == "daypart")
 		{
 			const auto day_part = std::stod(commands[2]);
 			if (day_part != -1)
-				world_->getTimeSystem().set_day_part(day_part);
+				time_system_.set_day_part(day_part);
 		}
 	}
 	if (commands.size() >= 2)
@@ -147,10 +147,10 @@ void console::do_command()
 			auto object = object_initializer::mapped_strings.at(commands[1]);
 
 			if (int(object) >= 211 || int(object) >= 301 && int(object) <= 405)
-				world_->setObjectToBuild(object, typeOfObject, true);	
+				world_->setObjectToBuild(object, typeOfObject, true);
 		}
 		if (commands[0] == "set" && commands[1] == "pedestal")
-			world_->pedestalController.ready_to_start = true;		
+			world_->pedestalController.ready_to_start = true;
 	}
 
 	state_ = false;

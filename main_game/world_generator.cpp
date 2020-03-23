@@ -6,14 +6,6 @@
 world_generator::world_generator()
 = default;
 
-void world_generator::init_main_scale()
-{
-	auto mainObject = deerchant("loadInit", Vector2f(0, 0));
-	mainObject.calculate_texture_offset();
-	main_scale = helper::GetScreenSize().y / (5 * mainObject.get_conditional_size_units().y);
-	main_scale = round(main_scale * 100) / 100;
-}
-
 void world_generator::init(
 	const int width,
 	const int height,
@@ -21,6 +13,7 @@ void world_generator::init(
 	const Vector2f micro_block_size,
 	grid_list* static_grid,
 	grid_list* dynamic_grid,
+	scale_system* scale_system,
 	std::map<pack_tag, sprite_pack>* packs_map)
 {
 	this->width_ = width;
@@ -30,16 +23,11 @@ void world_generator::init(
 	this->static_grid_ = static_grid;
 	this->dynamic_grid_ = dynamic_grid;
 	this->packs_map_ = packs_map;
-	step_size_ = { block_size.x / 10, block_size.y / 10 };
-}
+	scale_system_ = scale_system;
+	step_size_ = { block_size.x / 10, block_size.y / 10 };}
 
 world_generator::~world_generator()
 = default;
-
-float world_generator::get_scale_delta_normalized() const
-{
-	return (scale_factor - main_scale) / main_scale;
-}
 
 void world_generator::initialize_static_item(
 	const entity_tag item_class,
@@ -112,14 +100,17 @@ void world_generator::generate()
 
 	// world generation
 	init_biomes_generation_info();
-	const Vector2f upperLeft(
-		floor(focused_object->get_position().x - (helper::GetScreenSize().x / 2.0f + block_size_.x) / (FARTHEST_SCALE * main_scale)),
-		floor(focused_object->get_position().y - (helper::GetScreenSize().y / 2.0f + block_size_.x) / (FARTHEST_SCALE * main_scale)));
-	const Vector2f bottomRight(
-		floor(focused_object->get_position().x + (helper::GetScreenSize().x / 2.0f + block_size_.y) / (FARTHEST_SCALE * main_scale)),
-		floor(focused_object->get_position().y + (helper::GetScreenSize().y / 2.0f + block_size_.y) / (FARTHEST_SCALE * main_scale)));
+	
+	const auto max_scale = scale_system_->get_main_scale() * scale_system_->further_scale;
+	
+	const Vector2f upper_left(
+		floor(focused_object->get_position().x - (helper::GetScreenSize().x / 2.0f + block_size_.x) / max_scale),
+		floor(focused_object->get_position().y - (helper::GetScreenSize().y / 2.0f + block_size_.x) / max_scale));
+	const Vector2f bottom_right(
+		floor(focused_object->get_position().x + (helper::GetScreenSize().x / 2.0f + block_size_.y) / max_scale),
+		floor(focused_object->get_position().y + (helper::GetScreenSize().y / 2.0f + block_size_.y) / max_scale));
 
-	for (auto& block : static_grid_->get_blocks_in_sight(upperLeft.x, upperLeft.y, bottomRight.x, bottomRight.y))	
+	for (auto& block : static_grid_->get_blocks_in_sight(upper_left.x, upper_left.y, bottom_right.x, bottom_right.y))	
 		in_block_generate(block);	
 }
 
@@ -130,42 +121,42 @@ bool cmpByChance(const std::pair<entity_tag, int> a, const std::pair<entity_tag,
 
 void world_generator::in_block_generate(const int block_index)
 {
-	const auto blockTypeProbability = rand() % 100;
-	const auto groundIndX = int(ceil(static_grid_->get_point_by_index(block_index).x / block_size_.x));
-	const auto groundIndY = int(ceil(static_grid_->get_point_by_index(block_index).y / block_size_.y));
+	const auto block_type_probability = rand() % 100;
+	const auto ground_ind_x = int(ceil(static_grid_->get_point_by_index(block_index).x / block_size_.x));
+	const auto ground_ind_y = int(ceil(static_grid_->get_point_by_index(block_index).y / block_size_.y));
 
 	std::vector<std::pair<entity_tag, int>> roomedBlocksContent = {};
 	std::vector<std::pair<entity_tag, int>> otherBlocksContent = {};
 
-	if (biome_matrix[groundIndX][groundIndY] == dark_woods)
+	if (biome_matrix[ground_ind_x][ground_ind_y] == dark_woods)
 	{
-		if (blockTypeProbability <= 10) // block with roofs		
+		if (block_type_probability <= 10) // block with roofs		
 			roomedBlocksContent = { {entity_tag::roof, 10}, {entity_tag::rock, 2}, {entity_tag::stump, 2}, {entity_tag::tree, 7} };
 		else
-			if (blockTypeProbability <= 30) // block with yarrow
+			if (block_type_probability <= 30) // block with yarrow
 				roomedBlocksContent = { {entity_tag::yarrow, 0}, {entity_tag::rock, 2}, {entity_tag::stump, 2}, {entity_tag::tree, 7} };
 			else
-				if (blockTypeProbability <= 99) // common block				
+				if (block_type_probability <= 99) // common block				
 					roomedBlocksContent = { {entity_tag::rock, 2}, {entity_tag::stump, 2}, {entity_tag::tree, 7} };
 		otherBlocksContent = { {entity_tag::grass, 6} , {entity_tag::mushroom, 4} };
 	}
 	else
-		if (biome_matrix[groundIndX][groundIndY] == birch_grove)
+		if (biome_matrix[ground_ind_x][ground_ind_y] == birch_grove)
 		{
-			if (blockTypeProbability <= 30) // block with chamomile
+			if (block_type_probability <= 30) // block with chamomile
 				roomedBlocksContent = { {entity_tag::chamomile, 0}, {entity_tag::rock, 2}, {entity_tag::stump, 2}, {entity_tag::log, 2}, {entity_tag::bush, 5}, {entity_tag::tree, 7} };
 			else
-				if (blockTypeProbability <= 99) // common block
+				if (block_type_probability <= 99) // common block
 					roomedBlocksContent = { {entity_tag::rock, 5}, {entity_tag::stump, 2}, {entity_tag::log, 2}, {entity_tag::bush, 5}, {entity_tag::tree, 7} };
 			otherBlocksContent = { {entity_tag::grass, 6} , {entity_tag::mushroom, 3} };
 		}
 		else
-			if (biome_matrix[groundIndX][groundIndY] == swampy_trees)
+			if (biome_matrix[ground_ind_x][ground_ind_y] == swampy_trees)
 			{
-				if (blockTypeProbability <= 30) // block with chamomile
+				if (block_type_probability <= 30) // block with chamomile
 					roomedBlocksContent = { {entity_tag::rock, 2}, {entity_tag::lake, 2}, {entity_tag::stump, 2}, {entity_tag::root, 2}, {entity_tag::bush, 5}, {entity_tag::tree, 7} };
 				else
-					if (blockTypeProbability <= 99) // common block
+					if (block_type_probability <= 99) // common block
 						roomedBlocksContent = { {entity_tag::rock, 2}, {entity_tag::lake, 2}, {entity_tag::stump, 2}, {entity_tag::root, 2}, {entity_tag::bush, 5}, {entity_tag::tree, 7} };
 				otherBlocksContent = { {entity_tag::grass, 6} , {entity_tag::mushroom, 2} };
 			}
@@ -181,7 +172,6 @@ void world_generator::in_block_generate(const int block_index)
 	generate_ground(block_index);
 
 	//block filling
-	//return;
 
 	for (auto x = blockTransform.left; x < blockTransform.left + blockTransform.width; x += 100)
 	{
@@ -194,7 +184,7 @@ void world_generator::in_block_generate(const int block_index)
 					const auto placedObjectDeterminant = rand() % 100;
 					if (item.second > placedObjectDeterminant)
 					{
-						initialize_static_item(item.first, Vector2f(float(x), float(y)), -1, "", 1, biome_matrix[groundIndX][groundIndY]);
+						initialize_static_item(item.first, Vector2f(float(x), float(y)), -1, "", 1, biome_matrix[ground_ind_x][ground_ind_y]);
 						break;
 					}
 				}
@@ -205,7 +195,7 @@ void world_generator::in_block_generate(const int block_index)
 					const auto placedObjectDeterminant = rand() % 100;
 					if (item.second > placedObjectDeterminant)
 					{
-						initialize_static_item(item.first, Vector2f(float(x), float(y)), -1, "", 1, biome_matrix[groundIndX][groundIndY]);
+						initialize_static_item(item.first, Vector2f(float(x), float(y)), -1, "", 1, biome_matrix[ground_ind_x][ground_ind_y]);
 						break;
 					}
 				}
@@ -286,18 +276,21 @@ void world_generator::biomes_generate()
 
 void world_generator::perimeter_generation()
 {
-	const auto screenSize = helper::GetScreenSize();
-	const auto characterPosition = focused_object->get_position();
-	const Vector2f worldUpperLeft(
-		ceil(characterPosition.x - (screenSize.x / 2 + block_size_.x) / (FARTHEST_SCALE * main_scale)),
-		ceil(characterPosition.y - (screenSize.y / 2 + block_size_.y) / (FARTHEST_SCALE * main_scale)));
-	const Vector2f worldBottomRight(
-		ceil(characterPosition.x + (screenSize.x / 2 + block_size_.x) / (FARTHEST_SCALE * main_scale)),
-		ceil(characterPosition.y + (screenSize.y / 2 + block_size_.y) / (FARTHEST_SCALE * main_scale)));
+	const auto screen_size = helper::GetScreenSize();
+	const auto character_position = focused_object->get_position();
+	
+	const auto max_scale = scale_system_->get_main_scale() * scale_system_->further_scale;
+	
+	const Vector2f world_upper_left(
+		ceil(character_position.x - (screen_size.x / 2 + block_size_.x) / max_scale),
+		ceil(character_position.y - (screen_size.y / 2 + block_size_.y) / max_scale));
+	const Vector2f world_bottom_right(
+		ceil(character_position.x + (screen_size.x / 2 + block_size_.x) / max_scale),
+		ceil(character_position.y + (screen_size.y / 2 + block_size_.y) / max_scale));
 
 	if (focused_object->direction_system.direction != direction::STAND)
 	{
-		for (auto& block : static_grid_->get_blocks_around(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y))
+		for (auto& block : static_grid_->get_blocks_around(world_upper_left.x, world_upper_left.y, world_bottom_right.x, world_bottom_right.y))
 		{
 			if (can_be_regenerated(block))
 			{

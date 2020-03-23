@@ -45,7 +45,7 @@ deerchant::~deerchant()
 
 Vector2f deerchant::calculate_texture_offset()
 {
-	conditional_size_units_ = { 375, 375 };
+	conditional_size_units_ = conditional_size;
 	texture_box_.width = float(texture_box_.width)*get_scale_ratio().x;
 	texture_box_.height = float(texture_box_.height)*get_scale_ratio().y;
 	return { texture_box_.width / 2, texture_box_.height * 4 / 5 };

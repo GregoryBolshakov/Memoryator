@@ -137,6 +137,14 @@ void owl::ending_previous_action()
 	}
 	if (last_action_ == takeoff)
 		current_action_ = flap;
+	if (last_action_ == flap || last_action_ == soar)
+	{
+		int soar_probability = rand() % 100 + 1;
+		if (soar_probability >= 50)
+			current_action_ = soar;
+		else 
+			current_action_ = flap;
+	}
 	if (last_action_ == landing)
 		current_action_ = relax;
 	if (last_action_ == common_hit || last_action_ == startle)
