@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "drawable_chain_element.h"
-#include "Tags.h"
+#include "tags.h"
 
 class sprite_chain_element : public drawable_chain_element
 {

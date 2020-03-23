@@ -315,6 +315,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
   <ItemGroup>
     <None Include="Game\shaders\dynamic_light.frag" />
     <None Include="Game\shaders\wave_wiggle.frag" />
+    <None Include="Game\shaders\wave_wiggle.vert" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

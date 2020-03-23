@@ -30,7 +30,6 @@ public:
 	void beyond_screen_generation();
 
 	world_generator();
-	~world_generator();
 
 	biomes biome_matrix[100][100]{};
 	std::map<int, bool> remembered_blocks = { {0, true} };
@@ -46,7 +45,7 @@ private:
 	Vector2f micro_block_size_ = { 0, 0 };
 	Vector2i focused_object_block_ = { 0, 0 };
 
-	scale_system* scale_system_ ;
+	scale_system* scale_system_{};
 
 	// block generation
 	void generate_ground(int block_index);

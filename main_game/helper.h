@@ -29,4 +29,8 @@ public:
 	static RectangleShape makeLine(Vector2f point1, Vector2f point2, sf::Color color = sf::Color(255, 240, 134, 255));
 	static std::pair<float, float> solveSqr(float a, float b, float c);
     static std::vector<std::string> split(std::string line, char delimiter = ' ');
+	static Vector2f rotate(Vector2f point, float angle_deg);
+	static Vector2f rotate(Vector2f point, float angle_deg, Vector2f origin);
+	static FloatRect rotate(FloatRect rect, float angle_deg);
+	static FloatRect rotate(FloatRect rect, float angle_deg, Vector2f origin);
 };

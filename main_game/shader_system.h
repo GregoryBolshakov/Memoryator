@@ -8,27 +8,20 @@ class scale_system;
 class time_system;
 class world_handler;
 
-enum class shader_kind { dynamic_light = 1, wave_wiggle = 0 };
-
-struct drawable_chain_element_with_shaders
-{
-	explicit drawable_chain_element_with_shaders(drawable_chain_element* element) : drawable_chain_element(element) {}
-	drawable_chain_element* drawable_chain_element;
-	std::map<shader_kind, bool> shaders;
-};
+enum class shader_kind { dynamic_light = 0, wave_wiggle = 1 };
 
 class shader_system
 {
 public:
 	shader_system(camera_system& camera_system, time_system& time_system);
-	~shader_system();
 
-	visual_effect* get_shader(shader_kind kind);
-	std::vector<visual_effect*> get_shaders(drawable_chain_element*);
+	void initialize();
+	void update();
 
-	static std::vector<drawable_chain_element_with_shaders*> assign_shaders(const std::vector<drawable_chain_element*>& elements);
+	sf::Shader* get_shader(shader_kind kind);
+	sf::Shader* get_shader(sf::RenderTarget& target, sprite_chain_element*, sf::Sprite& sprite);
 private:
-	std::map<shader_kind, visual_effect*> shaders_;
+	std::map<shader_kind, std::unique_ptr<visual_effect>> shaders_;
 	camera_system& camera_system_;
 	time_system& time_system_;
 };

@@ -6,16 +6,12 @@
 class wave_wiggle final : public visual_effect
 {
 public:
-	explicit wave_wiggle(time_system& time_system, sf::Vector2f render_target_size);
+	explicit wave_wiggle();
 
 private:
-	const float variable_view_distance_ = 0.55F;
-	const float constant_view_distance_ = 0.3F;
-	
 	bool on_load() override;
 	void on_update() override;
+	void on_update(sf::RenderTarget& target, sf::Sprite& sprite) override;
 
-	time_system& time_system_;
-	sf::Vector2f render_target_size_;
-	sf::Glsl::Vec3 hero_view_;
+	sf::Clock clock_;
 };

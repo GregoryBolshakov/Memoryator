@@ -85,7 +85,7 @@ std::string helper::withoutNums(std::string s)
 std::string helper::getObjectName(const std::string& s)
 {
 	std::string answer;
-	
+
 	for (auto i : s)
 	{
 		if (i != '.')
@@ -93,7 +93,7 @@ std::string helper::getObjectName(const std::string& s)
 		else
 			break;
 	}
-	
+
 	return answer;
 }
 
@@ -194,4 +194,28 @@ std::vector<std::string> helper::split(std::string line, char delimiter)
 		temp.erase(0, token.size() + 1);
 	}
 	return commands;
+}
+
+Vector2f helper::rotate(const Vector2f point, const float angle_deg)
+{
+	return rotate(point, angle_deg, point / 2.0f);
+}
+
+Vector2f helper::rotate(const Vector2f point, const float angle_deg, const Vector2f origin)
+{
+	Transform rotation;
+	rotation.rotate(angle_deg, origin.x, origin.y);
+	return rotation.transformPoint(point);
+}
+
+FloatRect helper::rotate(const FloatRect rect, const float angle_deg)
+{
+	return rotate(rect, angle_deg, Vector2f(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f));
+}
+
+FloatRect helper::rotate(const FloatRect rect, const float angle_deg, const Vector2f origin)
+{
+	Transform rotation;
+	rotation.rotate(angle_deg, origin.x, origin.y);
+	return rotation.transformRect(rect);
 }

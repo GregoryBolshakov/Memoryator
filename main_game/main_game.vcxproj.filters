@@ -496,5 +496,8 @@
     <None Include="Game\shaders\wave_wiggle.frag">
       <Filter>visual_effects\shaders</Filter>
     </None>
+    <None Include="Game\shaders\wave_wiggle.vert">
+      <Filter>visual_effects\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

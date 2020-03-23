@@ -12,8 +12,8 @@
 #include "light_system.h"
 #include "pedestal_controller.h"
 #include "scale_system.h"
-#include "world_generator.h"
 #include "shape_chain_element.h"
+#include "world_generator.h"
 
 using namespace sf;
 

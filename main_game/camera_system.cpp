@@ -12,9 +12,6 @@ camera_system::camera_system(scale_system& scale_system) :scale_system_{ scale_s
 {
 }
 
-camera_system::~camera_system()
-= default;
-
 void camera_system::set_focused_object(dynamic_object* object)
 {
 	focused_object_ = object;

@@ -3,12 +3,14 @@
 #include "shader_system.h"
 #include "text_system.h"
 
-draw_system::draw_system()
+
+draw_system::draw_system(shader_system& shader_system, const Vector2f screen_size) :shader_system_{ shader_system }
 {
 	init_packs_map();
+	render_texture_.create(unsigned(screen_size.x), unsigned(screen_size.y));
+	shader_texture_ = render_texture_.getTexture();
+	shader_sprite_ = Sprite(shader_texture_);
 }
-
-draw_system::~draw_system() = default;
 
 bool draw_system::search_files(const LPCTSTR lpsz_file_name, const search_func lp_search_func, const bool b_inner_folders)
 {
@@ -52,8 +54,7 @@ bool draw_system::search_files(const LPCTSTR lpsz_file_name, const search_func l
 
 					search_files(next, lp_search_func, true);
 				}
-			}
-			while (FindNextFile(h_search, &wfd));
+			} while (FindNextFile(h_search, &wfd));
 		}
 
 		FindClose(h_search);
@@ -76,8 +77,7 @@ bool draw_system::search_files(const LPCTSTR lpsz_file_name, const search_func l
 
 			lp_search_func(file, packs_map);
 		}
-	}
-	while (FindNextFile(h_search, &wfd));
+	} while (FindNextFile(h_search, &wfd));
 	FindClose(h_search);
 
 	return TRUE;
@@ -150,7 +150,7 @@ void draw_system::advanced_scale(sprite_chain_element& item, Sprite& sprite, con
 		{
 			sprite.scale(pow(scale, 1.0F / 6), 1);
 			sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - (pow(scale, 1.0F / 6) - 1) * size_w);
-		}
+		}	
 	}
 }
 
@@ -205,7 +205,15 @@ void draw_system::draw_sprite_chain_element(RenderTarget& target, sprite_chain_e
 
 	advanced_scale(*sprite_chain_item, sprite, original_info, scale);
 
-	target.draw(sprite);
+	//if (sprite_chain_item->pack_tag == pack_tag::swampyTrees && sprite_chain_item->pack_part == pack_part::tree && original_info.frame_name == "tree/5")
+	{
+		const auto shader = shader_system_.get_shader(target, sprite_chain_item, sprite);
+		target.draw(sprite, shader);
+	}
+	//else
+	
+
+	//target.draw(sprite);
 }
 
 void draw_system::draw_text_chain_element(RenderTarget& target, text_chain_element* text_chain_item)
@@ -248,36 +256,43 @@ void draw_system::draw(RenderTarget& target, const std::vector<drawable_chain_el
 		return;
 	}
 
-	auto drawable_items_with_shaders = shader_system::assign_shaders(drawable_items);
-	
 	const auto screen_center = camera_position != Vector2f()
-		                           ? Vector2f(target.getSize()) / 2.0F
-		                           : Vector2f();
+		? Vector2f(target.getSize()) / 2.0F
+		: Vector2f();
 
-	for (auto drawable_chain_item : drawable_items_with_shaders)
+	for (auto item : drawable_items)
 	{
-		if (!drawable_chain_item->drawable_chain_element->initialized)
+		if (!item->initialized)
 		{
 			continue;
 		}
 
-		const auto sprite_chain_item = dynamic_cast<sprite_chain_element*>(drawable_chain_item->drawable_chain_element);
+		const auto sprite_chain_item = dynamic_cast<sprite_chain_element*>(item);
 
 		if (sprite_chain_item != nullptr)
 		{
 			draw_sprite_chain_element(target, sprite_chain_item, camera_position, screen_center, scale);
+			continue;
 		}
 
-		const auto text_chain_item = dynamic_cast<::text_chain_element*>(drawable_chain_item->drawable_chain_element);
+		const auto text_chain_item = dynamic_cast<::text_chain_element*>(item);
 		if (text_chain_item != nullptr)
 		{
 			draw_text_chain_element(target, text_chain_item);
+			continue;
 		}
 
-		const auto shape_chain_element = dynamic_cast<::shape_chain_element*>(drawable_chain_item->drawable_chain_element);
+		const auto shape_chain_element = dynamic_cast<::shape_chain_element*>(item);
 		if (shape_chain_element != nullptr)
 		{
 			draw_shape_chain_element(target, shape_chain_element);
+		}
 	}
 }
+
+void draw_system::draw(RenderWindow& target, const shader_kind kind)
+{
+	shader_texture_.update(target);
+	const auto shader = shader_system_.get_shader(kind);
+	target.draw(shader_sprite_, shader);
 }

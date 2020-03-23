@@ -22,7 +22,6 @@ public:
 		) * micro_seconds_per_second;
 
 	time_system();
-	~time_system();
 
 	void init(double real_to_game_time_ratio, mr::time start_at = { 0, 0, 0 });
 	void interact(long long elapsed_time_microseconds);

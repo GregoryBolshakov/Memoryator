@@ -26,9 +26,6 @@ void world_generator::init(
 	scale_system_ = scale_system;
 	step_size_ = { block_size.x / 10, block_size.y / 10 };}
 
-world_generator::~world_generator()
-= default;
-
 void world_generator::initialize_static_item(
 	const entity_tag item_class,
 	const Vector2f item_position,

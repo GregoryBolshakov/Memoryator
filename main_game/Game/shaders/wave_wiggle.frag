@@ -1,24 +1,62 @@
 #version 130
 
+uniform sampler2D pack;
+uniform vec2 tex_pos;
+uniform vec2 tex_size;
+uniform vec2 sprite_pos;
+uniform vec2 sprite_size;
 uniform vec2 screen_size;
-uniform sampler2D tex;
-uniform vec3 hero;
+uniform float func;
+uniform float angle;
+
+
+bool in_box(vec2 p, vec2 lo, vec2 hi) {
+    return p.x >= lo.x && p.y >= lo.y && p.x <= hi.x && p.y <= hi.y;
+}
+
+vec2 norm(vec2 p, vec2 lo, vec2 hi) 
+{
+	return (p - lo) / (hi - lo);
+}
+
+vec2 rotate_point(vec2 pt, float angle, vec2 or){
+
+     return vec2(cos(angle) * (pt.x - or.x) - sin(angle) * (pt.y - or.y) + or.x,
+				 sin(angle) * (pt.x - or.x) + cos(angle) * (pt.y - or.y) + or.y);
+}
 
 void main()
-{	
-	vec2 pixel_xy = gl_FragCoord.xy / screen_size.xy;
-    vec2 pixel_pos = vec2(pixel_xy.x, pixel_xy.y);
-	vec4 color = texture(tex, pixel_pos);
+{
+	vec2 pack_size = textureSize(pack, 0);
+	vec2 tex_pos_norm = tex_pos / pack_size;
+	vec2 tex_size_norm = tex_size / pack_size;
+
+	vec2 frag_coord = vec2(gl_FragCoord.x, screen_size.y - gl_FragCoord.y);
+	vec2 lo = vec2(sprite_pos.x, sprite_pos.y);
+	vec2 hi = vec2(sprite_pos.x + sprite_size.x, sprite_pos.y + sprite_size.y);
 	
-	float dist = distance(gl_FragCoord.xy, hero.xy);
-	float r = hero.z * screen_size.x;
+	vec2 coord_norm = norm(frag_coord, lo, hi);		
 
-	float step1 = hero.z;
-    float step2 = hero.z * 4;
-	float att = dist / (r + 0.0001);
+	float y = coord_norm.y;
+	float fy = 1.0 - y * (2.0 - y);
+	float f =  func * fy;
 
-	vec4 dark = vec4(0.0, 0.0, 0.0, 0.75);
-    color = mix(color, dark, smoothstep(step1, step2, att));
+	vec2 axis = vec2(1.0, 0.0);
+	axis = rotate_point(axis, -angle, vec2(0.0));
 
-    gl_FragColor = color;
+	coord_norm = rotate_point(coord_norm, -angle, vec2(0.5));
+	coord_norm +=  f * axis;
+
+	vec2 tex_coord_norm = tex_pos_norm + ((tex_pos_norm + tex_size_norm) - tex_pos_norm) * coord_norm;
+
+	vec4 color = texture(pack, tex_coord_norm);
+	color.a *= int(in_box(coord_norm, vec2(0), vec2(1.0)));
+
+//	vec2 p = 1.0 / sprite_size;	
+//	if(coord_norm.x > (0.1 - p.x / 2.0 ) && coord_norm.x < (0.1 + p.x / 2.0) || coord_norm.y > (0.1 - p.y / 2.0 ) && coord_norm.y < (0.1 + p.y / 2.0))
+//	{
+//		color = uvec4(0.0, 0.0, 1.0, 1.0);
+//	}
+		
+    gl_FragColor = color;	
 }

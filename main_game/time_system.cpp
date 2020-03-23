@@ -2,12 +2,9 @@
 
 time_system::time_system()
 {
-	init(10.0 / (hours_per_day * minutes_per_hour));
+	init(24.0 / (hours_per_day * minutes_per_hour));
 	set_day_part(0.5);
 }
-
-time_system::~time_system()
-= default;
 
 void time_system::init(const double real_to_game_time_ratio, const mr::time start_at)
 {

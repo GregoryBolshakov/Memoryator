@@ -5,7 +5,6 @@
 #include "hero_book.h"
 #include "menu_system.h"
 #include "shader_system.h"
-#include "visual_effects/dynamic_light.hpp"
 
 
 using namespace sf;
@@ -14,14 +13,17 @@ int main() {
 	srand(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
 	
 	const auto screen_size = helper::GetScreenSize();
-	RenderWindow main_window(VideoMode(static_cast<unsigned int>(screen_size.x), static_cast<unsigned int>(screen_size.y), 32), "game", Style::Fullscreen);
+	RenderWindow main_window(VideoMode(static_cast<unsigned int>(screen_size.x), static_cast<unsigned int>(screen_size.y), 32), "game");//, Style::Fullscreen);
 
 	scale_system scale_system;
 	camera_system camera_system(scale_system);
 	time_system time_system;
-	draw_system draw_system;
-	menu_system menu_system;
+	
 	shader_system shader_system(camera_system, time_system);
+	shader_system.initialize();
+	
+	draw_system draw_system(shader_system, screen_size);
+	menu_system menu_system;
 	
 	world_handler world(40000, 40000, camera_system, &draw_system.packs_map);
 	auto window_focus = true;
@@ -42,18 +44,6 @@ int main() {
 	main_book.init(&draw_system.packs_map);
 
 	text_system text_writer;
-	
-	RenderTexture surface;
-
-	if (!surface.create(static_cast<unsigned int>(screen_size.x), static_cast<unsigned int>(screen_size.y))) {
-		err() << "Error creating renderer texture." << std::endl;
-		return EXIT_FAILURE;
-	}
-	auto visual_effect_texture = surface.getTexture();
-	auto visual_effect_sprite = Sprite(visual_effect_texture);
-
-	dynamic_light dynamic_light(camera_system, time_system);
-	dynamic_light.load();
 	
 	while (main_window.isOpen())
 	{
@@ -131,7 +121,7 @@ int main() {
 				world.interact(screen_size, time_micro_sec, event);
 				world.focusedObject->handle_input(world.getInventorySystem().get_used_mouse(), time_micro_sec);
 
-				dynamic_light.update();
+				shader_system.update();
 			}
 
 			auto hero = dynamic_cast<deerchant*>(world.focusedObject);
@@ -144,8 +134,7 @@ int main() {
             draw_system.draw(main_window, world.prepareSprites(time_micro_sec, true), scale, camera_system.position);
             draw_system.draw(main_window, world.prepareSprites(time_micro_sec, false), scale, camera_system.position);
             
-			visual_effect_texture.update(main_window);
-			main_window.draw(visual_effect_sprite, dynamic_light.shader);
+			draw_system.draw(main_window, shader_kind::dynamic_light);
 
 			draw_system.draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepare_sprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packs_map)), scale, camera_system.position);
 			text_system::draw_string(world.getMouseDisplayName(), font_name::normal_font, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));

@@ -6,66 +6,45 @@
 shader_system::shader_system(camera_system& camera_system, time_system& time_system)
 	: camera_system_{ camera_system }, time_system_{ time_system }
 {
-	shaders_[shader_kind::dynamic_light] = new dynamic_light(camera_system_, time_system_);
-	shaders_[shader_kind::wave_wiggle] = new wave_wiggle(time_system_, camera_system::get_screen_size());
+	shaders_[shader_kind::dynamic_light] = std::make_unique<dynamic_light>(camera_system_, time_system_);
+	shaders_[shader_kind::wave_wiggle] = std::make_unique<wave_wiggle>();
 }
 
-shader_system::~shader_system()
+void shader_system::initialize()
 {
 	for (auto& [key, value] : shaders_)
 	{
-		delete value;
+		value->load();
 	}
 }
 
-visual_effect* shader_system::get_shader(const shader_kind kind)
+void shader_system::update()
 {
-	return shaders_[kind];
-}
-
-std::vector<visual_effect*> shader_system::get_shaders(drawable_chain_element* element)
-{
-	std::vector<visual_effect*> result;
-
-	const auto sprite_element = dynamic_cast<sprite_chain_element*>(element);
-	if (sprite_element)
+	for (auto& [key, value] : shaders_)
 	{
-		if ((sprite_element->pack_tag == pack_tag::darkWoods ||
-			sprite_element->pack_tag == pack_tag::birchGrove ||
-			sprite_element->pack_tag == pack_tag::swampyTrees) &&
-			(sprite_element->pack_part == pack_part::tree ||
-				sprite_element->pack_part == pack_part::bush ||
-				sprite_element->pack_part == pack_part::plant))
-		{
-			result.push_back(get_shader(shader_kind::wave_wiggle));
-		}
+		value->update();
 	}
-
-	return result;
 }
 
-
-std::vector<drawable_chain_element_with_shaders*> shader_system::assign_shaders(const std::vector<drawable_chain_element*>& elements)
+Shader* shader_system::get_shader(const shader_kind kind)
 {
-	std::vector<drawable_chain_element_with_shaders*> result = {};
+	return shaders_[kind]->shader;
+}
 
-	for (auto& element : elements)
+Shader* shader_system::get_shader(RenderTarget& target, sprite_chain_element* element, Sprite& sprite)
+{
+	if ((element->pack_tag == pack_tag::darkWoods ||
+			element->pack_tag == pack_tag::birchGrove ||
+			element->pack_tag == pack_tag::swampyTrees) &&
+		(element->pack_part == pack_part::tree ||
+			element->pack_part == pack_part::bush ||
+			element->pack_part == pack_part::plant))
 	{
-		result.push_back(new drawable_chain_element_with_shaders(element));
-
-		// adding wave wiggle shader
-		const auto sprite_element = dynamic_cast<sprite_chain_element*>(element);
-		if (sprite_element)
-		{
-			if ((sprite_element->pack_tag == pack_tag::darkWoods ||
-				sprite_element->pack_tag == pack_tag::birchGrove ||
-				sprite_element->pack_tag == pack_tag::swampyTrees) &&
-				(sprite_element->pack_part == pack_part::tree ||
-					sprite_element->pack_part == pack_part::bush ||
-					sprite_element->pack_part == pack_part::plant))
-				result[result.size() - 1]->shaders[shader_kind::wave_wiggle] = true;
-		}
+		const auto effect = shaders_[shader_kind::wave_wiggle].get();
+		effect->update(target, sprite);
+		
+		return effect->shader;
 	}
 
-	return result;
+	return nullptr;
 }

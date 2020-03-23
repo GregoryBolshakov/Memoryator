@@ -1,34 +1,43 @@
 #include "wave_wiggle.hpp"
 
+#include "../helper.h"
 #include "../math_constants.h"
 
-wave_wiggle::wave_wiggle(time_system& time_system, const sf::Vector2f render_target_size)
-	: visual_effect("Bend"),
-	time_system_{ time_system },
-	render_target_size_{ render_target_size }
+
+wave_wiggle::wave_wiggle()
+	: visual_effect("WaveWiggle")
 {
 }
 
 bool wave_wiggle::on_load()
 {
-	if (!shader_.loadFromFile("Game/shaders/wave_wiggle.frag", sf::Shader::Fragment))
+	if (!shader_.loadFromFile("Game/shaders/wave_wiggle.vert", "Game/shaders/wave_wiggle.frag"))
 		return false;
 
-	shader_.setUniform("tex", sf::Shader::CurrentTexture);
-	shader_.setUniform("screen_size", render_target_size_);
+	shader_.setUniform("pack", Shader::CurrentTexture);
 
 	return true;
 }
 
 void wave_wiggle::on_update()
 {
-	hero_view_.x = render_target_size_.x / 2;
-	hero_view_.y = render_target_size_.y / 2;
+	const auto t = clock_.getElapsedTime().asSeconds() / 20;
+	const auto func = float((cos(t * pi) * cos(t * pi) * cos(t * 3 * pi) * cos(t * 5 * pi) * 0.5 + sin(t * 25 * pi) * 0.02) / 10.0 );
+	//const auto func = sin(clock_.getElapsedTime().asSeconds()) / 10;
+	shader_.setUniform("func", func);
+}
 
-	const auto t = time_system_.get_time_normalized();
-
-	const auto m = float((sin((t * 2.0 + 3.0 / 2.0) * pi) + 1.0) / 2.0); // 0.0 -> 1.0 -> 0.0
-	hero_view_.z = variable_view_distance_ * m + constant_view_distance_;
-
-	shader_.setUniform("hero", hero_view_);
+void wave_wiggle::on_update(RenderTarget& target, Sprite& sprite)
+{
+	const auto texture_rect = FloatRect(sprite.getTextureRect());
+	const auto target_size = Vector2f(target.getSize());
+	const auto sprite_bounds = FloatRect(sprite.getGlobalBounds());	
+	const auto sprite_pos = target.mapCoordsToPixel(sf::Vector2f(sprite_bounds.left, sprite_bounds.top));
+	
+	shader_.setUniform("angle", float(sprite.getRotation() * pi / 180.0));
+	shader_.setUniform("tex_pos", sf::Vector2f(texture_rect.left, texture_rect.top));
+	shader_.setUniform("tex_size", sf::Vector2f(texture_rect.width, texture_rect.height));
+	shader_.setUniform("sprite_pos", sf::Vector2f(float(sprite_pos.x), float(sprite_pos.y)));
+	shader_.setUniform("sprite_size", sf::Vector2f(float(sprite_bounds.width), float(sprite_bounds.height)));
+	shader_.setUniform("screen_size", sf::Vector2f(target_size.x, target_size.y));
 }

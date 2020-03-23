@@ -16,7 +16,6 @@ public:
 	static const long long shake_default_duration;
 
 	explicit camera_system(scale_system& scale_system);
-	~camera_system();
 
 	Vector2f position = { 0, 0 };
 
