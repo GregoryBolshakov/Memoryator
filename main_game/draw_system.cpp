@@ -209,6 +209,7 @@ void draw_system::draw_sprite_chain_element(RenderTarget& target, sprite_chain_e
 	{
 		const auto shader = shader_system_.get_shader(target, sprite_chain_item, sprite);
 		target.draw(sprite, shader);
+		//target.draw(sprite);
 	}
 	//else
 	
