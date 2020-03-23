@@ -32,28 +32,15 @@ Vector2f owl::calculate_texture_offset()
 	return { texture_box_.width / 2, texture_box_.height * 7 / 8 };
 }
 
-Vector2f abs(Vector2f a) { return Vector2f(abs(a.x), abs(a.y)); }
-Vector2f operator / (Vector2f a, Vector2f b) { return Vector2f(a.x / b.x, a.y / b.y); }
+Vector2f abs(const Vector2f v) { return Vector2f(abs(v.x), abs(v.y)); }
+Vector2f operator / (const Vector2f v1, const Vector2f v2) { return Vector2f(v1.x / v2.x, v1.y / v2.y); }
 
 void owl::behavior_with_static(world_object* target, long long elapsed_time)
 {
 	const auto distance_to_target = helper::getDist(position_, target->get_position());
-	/*if (current_action_ == absorbs)
-		return;
 
-	if (target->tag == entity_tag::fern && helper::getDist(position_, target->get_position()) <= sight_range * 2 && time_after_fear_ >= fear_time_)
-	{
-		if (!(bound_target_ && bound_target_->tag == entity_tag::hero && (helper::getDist(position_, bound_target_->get_position()) <= sight_range ||
-			helper::getDist(target->get_position(), bound_target_->get_position()) <= sight_range)))
-		{
-			bound_target_ = target;
-			distance_to_nearest_ = helper::getDist(position_, target->get_position());
-		}
-	}
-	else*/
-	
+	// set new landing pos
 	auto terrain = dynamic_cast<terrain_object*>(target);
-	
 	if (current_action_ == relax && time_after_fear_ < fear_time_ &&
 		terrain && terrain->get_owl_landing_pos() != Vector2f(-1, -1))
 	{
@@ -69,6 +56,7 @@ void owl::behavior_with_static(world_object* target, long long elapsed_time)
 			change_action(takeoff, true);
 		}
 	}
+	//--------------------
 }
 
 void owl::behavior_with_dynamic(dynamic_object* target, long long elapsedTime)
@@ -93,7 +81,15 @@ void owl::behavior(long long elapsed_time)
 	if (die_check())
 		return;
 
-	if (helper::getDist(position_, move_system.lax_move_position) <= radius_)
+	calm_behavior(elapsed_time);
+	
+	land_on_a_tree();
+}
+
+void owl::land_on_a_tree()
+{
+	const auto minimal_contact_distance = (micro_block_size.x + micro_block_size.y) / 2;
+	if (helper::getDist(position_, move_system.lax_move_position) <= minimal_contact_distance)
 	{
 		time_after_fear_ = fear_time_;
 		current_action_ = landing;
@@ -101,13 +97,57 @@ void owl::behavior(long long elapsed_time)
 	}
 }
 
+void owl::calm_behavior(long long elapsed_time)
+{
+	if (time_after_fear_ < fear_time_)
+		return;
+
+	time_after_calm_state_ += elapsed_time;
+	if (time_after_calm_state_ < time_for_new_calm_state_ || current_action_ != relax)
+		return;
+
+	time_after_calm_state_ = rand() % (time_for_new_calm_state_ / 2);
+
+	std::vector<std::pair<actions, int>> actions = {};
+
+	actions = { {startle, 25} };
+
+	auto action_discriminant = rand() % 100 + 1;
+
+	for (const auto action : actions)
+	{
+		if (action.second >= action_discriminant)
+		{
+			change_action(action.first, true);
+			break;
+		}
+		action_discriminant -= action.second;
+	}
+}
+
 void owl::ending_previous_action()
 {
+	if (last_action_ == flap || last_action_ == soar)
+	{
+		const auto flap_probability = rand() % 2;
+		if (flap_probability)
+			current_action_ = flap;
+		else
+			current_action_ = soar;
+	}
 	if (last_action_ == takeoff)
 		current_action_ = flap;
+	if (last_action_ == flap || last_action_ == soar)
+	{
+		int soar_probability = rand() % 100 + 1;
+		if (soar_probability >= 50)
+			current_action_ = soar;
+		else 
+			current_action_ = flap;
+	}
 	if (last_action_ == landing)
 		current_action_ = relax;
-	if (last_action_ == common_hit)
+	if (last_action_ == common_hit || last_action_ == startle)
 		current_action_ = relax;
 	if (last_action_ == absorbs)
 	{
@@ -135,8 +175,10 @@ std::vector<sprite_chain_element*> owl::prepare_sprites(long long elapsed_time)
 	{
 	case relax:
 	{
+		mirrored_ = false;
 		body->animation_length = 1;
-		current_sprite_[0] = 1;		
+		const auto sight_angle = direction_system::calculate_angle(cheat_hero_pos_ - position_);	
+		current_sprite_[0] = int(sight_angle / 22.5f) + 1;		
 	}
 	case head:
 	{
@@ -165,7 +207,7 @@ std::vector<sprite_chain_element*> owl::prepare_sprites(long long elapsed_time)
 	case flap:
 	{
 		body->animation_length = 8;
-		direction_system.set_mob_direction(move_system.move_offset, elapsed_time);
+		direction_system.set_direction_from_12(move_system.move_offset, elapsed_time);
 		body->direction = direction_system.direction;
 		body->pack_part = pack_part::flap;
 		break;
@@ -173,7 +215,7 @@ std::vector<sprite_chain_element*> owl::prepare_sprites(long long elapsed_time)
 	case soar:
 	{
 		body->animation_length = 7;
-		direction_system.set_mob_direction(move_system.move_offset, elapsed_time);
+		direction_system.set_direction_from_12(move_system.move_offset, elapsed_time);
 		body->direction = direction_system.direction;
 		body->pack_part = pack_part::soar;
 		break;

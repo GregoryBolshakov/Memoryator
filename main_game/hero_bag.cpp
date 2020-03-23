@@ -12,8 +12,8 @@ hero_bag::~hero_bag()
 std::unordered_map<entity_tag, int> hero_bag::items_max_count = std::unordered_map<entity_tag, int>();
 
 std::vector<std::pair<entity_tag, int>> hero_bag::test_inventory =
-{ {entity_tag::yarrow, 1}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0} };
-//{ {entity_tag::noose, 1}, {entity_tag::yarrow, 3}, {entity_tag::emptyCell, 0}, {entity_tag::inkyBlackPen, 1}, {entity_tag::hare, 1}, {entity_tag::chamomile, 2}, {entity_tag::emptyCell, 0} };
+//{ {entity_tag::yarrow, 1}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0} };
+{ {entity_tag::noose, 1}, {entity_tag::yarrow, 3}, {entity_tag::emptyCell, 0}, {entity_tag::inkyBlackPen, 1}, {entity_tag::hare, 1}, {entity_tag::chamomile, 2}, {entity_tag::emptyCell, 0} };
 std::vector<std::pair<entity_tag, int>> hero_bag::empty_inventory =
 { {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0} };
 

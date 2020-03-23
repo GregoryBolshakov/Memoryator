@@ -32,8 +32,9 @@ std::map<std::string, pack_tag> sprite_pack::mapped_pack_tag = {
 	{"nightmare2Stand", pack_tag::nightmare2Stand},
 	{"nightmare2Move", pack_tag::nightmare2Move},
 	{"nightmare2Hit", pack_tag::nightmare2Hit},
+	{"owl", pack_tag::owl},
 	{"deer", pack_tag::deer},
-	{"owl", pack_tag::owl}
+	{"deerStand", pack_tag::deerStand}
 };
 
 std::map<std::string, pack_part> sprite_pack::mapped_pack_part = {
@@ -43,6 +44,7 @@ std::map<std::string, pack_part> sprite_pack::mapped_pack_part = {
 	{"lines", pack_part::lines}, // creature's parts
 	{"stand", pack_part::stand},
 	{"move", pack_part::move},
+	{"walk", pack_part::walk},
 	{"trap", pack_part::trap},
 	{"hit", pack_part::hit},
 	{"hunt", pack_part::hunt},
@@ -56,7 +58,10 @@ std::map<std::string, pack_part> sprite_pack::mapped_pack_part = {
 	{"head", pack_part::head},
 	{"landing", pack_part::landing},
 	{"soar", pack_part::soar},
-	{"takeoff", pack_part::takeoff}, // action's parts
+	{"takeoff", pack_part::takeoff},
+	{"stop", pack_part::stop},
+	{"bendDown", pack_part::bend_down},
+	{"bendUp", pack_part::bend_up}, // action's parts
 	{"ground", pack_part::ground},
 	{"tree", pack_part::tree},
 	{"bush", pack_part::bush},

@@ -235,5 +235,7 @@ std::vector<sprite_chain_element*> rock::prepare_sprites(long long elapsedTime)
 		body->number -= 13;
 	}
 
+	set_unscaled({ body });
+	
 	return { body };
 }

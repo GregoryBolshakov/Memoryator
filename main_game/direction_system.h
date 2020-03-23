@@ -14,7 +14,8 @@ public:
 	~direction_system();
 	void init(Vector2f* position, Vector2f* move_position, bool* mirrored) { this->position = position; this->move_position = move_position; this->mirrored = mirrored; }
 	void calculate_direction(const long long elapsed_time);
-	void set_mob_direction(const Vector2f move_offset, const long long elapsed_time);
+	void set_direction_from_8(const Vector2f move_offset, const long long elapsed_time);
+	void set_direction_from_12(const Vector2f move_offset, const long long elapsed_time);
 	side calculate_side(Vector2f position, sf::Vector2f other_object_position, const long long elapsed_time);
 	static side invert_side(side side);
 	static std::string side_to_string(side side);

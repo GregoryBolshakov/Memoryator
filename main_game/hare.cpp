@@ -322,7 +322,7 @@ std::vector<sprite_chain_element*> hare::prepare_sprites(long long elapsedTime)
 		case move:
 		{
 			body->animation_length = 6;			
-			direction_system.set_mob_direction(move_system.move_offset, elapsedTime);
+			direction_system.set_direction_from_8(move_system.move_offset, elapsedTime);
 			body->direction = direction_system.direction;
 			body->pack_part = pack_part::move;
 			break;

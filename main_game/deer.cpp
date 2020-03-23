@@ -56,7 +56,7 @@ void deer::behavior(const long long elapsedTime)
 	if (this->owner != nullptr)
 	{
 		move_system.speed = move_system.default_speed;
-		if (current_action_ == common_hit)
+		if (current_action_ == trap)
 		{
 			move_system.lax_move_position = {-1, -1};
 			return;
@@ -128,7 +128,7 @@ void deer::endingPreviousAction()
 		current_action_ = relax;
 		delete_promise_on();
 	}
-	if (last_action_ == common_hit)	
+	if (last_action_ == trap)
 		current_action_ = relax;
 
 	last_action_ = relax;
@@ -271,40 +271,29 @@ Vector2f deer::getHeadPosition()
 
 std::vector<sprite_chain_element*> deer::prepare_sprites(long long elapsedTime)
 {
-	auto body = new sprite_chain_element(pack_tag::deer, pack_part::stand, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
-	animation_speed_ = 10;
+	auto body = new sprite_chain_element(pack_tag::deerStand, pack_part::head, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
+	animation_speed_ = 12;
 
-	auto spriteDirection = direction_system::cut_diagonals(direction_system.last_direction);
-
-	if (direction_system.side == right)
-	{
-		body->mirrored = true;
-	}
-	if (direction_system.last_direction == direction::RIGHT || direction_system.last_direction == direction::UPRIGHT || direction_system.last_direction == direction::DOWNRIGHT)
-	{
-		spriteDirection = direction_system::cut_rights(spriteDirection);
-		body->mirrored = true;
-	}
-
-	body->direction = spriteDirection;
+	auto inverse = false;
+	body->mirrored = mirrored_;
 
 	switch (current_action_)
 	{
 	case relax:
 		{
-			animationLength = 1;
+			animationLength = 11;
 			break;
 		}
-	case common_hit:
+	case actions::trap:
 		{
 			animationLength = 6;
-			body->pack_part = pack_part::hunt;
+			body->pack_tag = pack_tag::deer;
+			body->pack_part = pack_part::stop;
 			break;
 		}
 	case dead:
 		{
 			animationLength = 1;
-			body->direction = direction::DOWN;
 			current_sprite_[0] = 1;
 			break;
 		}
@@ -312,6 +301,9 @@ std::vector<sprite_chain_element*> deer::prepare_sprites(long long elapsedTime)
 	case move_slowly:
 		{
 			animationLength = 7;
+			direction_system.set_direction_from_8(move_system.move_offset, elapsedTime);
+			body->direction = direction_system.direction;
+			body->pack_tag = pack_tag::deer;
 			body->pack_part = pack_part::move;
 			break;
 		}

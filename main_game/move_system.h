@@ -42,7 +42,7 @@ public:
 	std::vector<std::pair<int, int>> route = { {} };
 	bool turned_on = false, need_route = false, route_generation_ability = true;;
 	bool can_crash_into_dynamic = true;
-	bool can_crash_into_static = false;
+	bool can_crash_into_static = true;
 	Vector2f move_offset = { -1, -1 }, move_position = { -1, -1 }, lax_move_position = { -1, -1 };
 	float default_speed = 0;
 	float speed = 0;
