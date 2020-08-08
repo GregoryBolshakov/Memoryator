@@ -371,7 +371,7 @@ void grid_list::add_item(world_object* item, const std::string& name, const floa
 	if (items_.find(name) != items_.end())
 		throw std::invalid_argument("The key " + name + " already exists in the Grid.");
 
-	auto index = get_index_by_point(x, y);	
+	auto index = get_index_by_point(x, y);
 
 	auto position = std::make_pair(index, int(cells_[index].size()));
 
@@ -385,7 +385,7 @@ void grid_list::clear_cell(const int cell_index)
 	for (auto& item : cells_[cell_index])
 	{
 		set_locked_micro_blocks(item, true);
-		items_.erase(items_.find(item->get_name()));		
+		items_.erase(items_.find(item->get_name()));
 	}
 	cells_[cell_index].clear();
 }

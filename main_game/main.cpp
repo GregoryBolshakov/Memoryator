@@ -68,7 +68,7 @@ int main() {
 			{			
 				if (menu_system.get_state() == closed && world.getBuildSystem().get_success_init())
 				{
-					world.onMouseUp(current_mouse_button);					
+					world.onMouseUp(current_mouse_button);
 					main_book.onMouseUp();
 				}
 					
@@ -83,11 +83,11 @@ int main() {
 					world.pedestalController.stop();
 			}
 
-			if (event.type == Event::GainedFocus)			
-				window_focus = true;	
+			if (event.type == Event::GainedFocus)
+				window_focus = true;
 
-			if (event.type == Event::LostFocus)			
-				window_focus = false;			
+			if (event.type == Event::LostFocus)
+				window_focus = false;
 
 			if (event.type == Event::Closed)
 			{
@@ -100,7 +100,7 @@ int main() {
 		}
 
 		if (menu_system.get_state() == main_menu)
-		{		
+		{
 			main_window.clear(sf::Color::White);
 			draw_system.draw(main_window, draw_system::upcast_chain(menu_system.prepare_sprites()));
 			main_window.display();
@@ -134,13 +134,13 @@ int main() {
             draw_system.draw(main_window, world.prepareSprites(time_micro_sec, true), scale, camera_system.position);
             draw_system.draw(main_window, world.prepareSprites(time_micro_sec, false), scale, camera_system.position);
             
-			draw_system.draw(main_window, shader_kind::dynamic_light);
+			//draw_system.draw(main_window, shader_kind::dynamic_light);
 
-			draw_system.draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepare_sprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packs_map)), scale, camera_system.position);
-			text_system::draw_string(world.getMouseDisplayName(), font_name::normal_font, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));
+			//draw_system.draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepare_sprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packs_map)), scale, camera_system.position);
+			//text_system::draw_string(world.getMouseDisplayName(), font_name::normal_font, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));
 			world.pedestalController.draw(&main_window, camera_system.position, scale);
-			draw_system.draw(main_window, main_book.prepareSprites(world.focusedObject->get_health_point() / world.focusedObject->get_max_health_point_value(), time_micro_sec));
-			draw_system.draw(main_window, world.getInventorySystem().prepare_sprites(time_micro_sec, world.packsMap));			
+			//draw_system.draw(main_window, main_book.prepareSprites(world.focusedObject->get_health_point() / world.focusedObject->get_max_health_point_value(), time_micro_sec));
+			//draw_system.draw(main_window, world.getInventorySystem().prepare_sprites(time_micro_sec, world.packsMap));			
 		}
 		else
 			clock.restart();

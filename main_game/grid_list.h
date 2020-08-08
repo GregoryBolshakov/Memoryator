@@ -33,7 +33,6 @@ public:
 	std::vector<world_object*> get_items(int block_index);
 	void update_item_position(const std::string& name, float x, float y);
 
-	
 	void clear_cell(int cell_index);
 	void delete_item(const std::string& name);
 	void set_locked_micro_blocks(world_object* item, bool value = false);
@@ -44,12 +43,13 @@ public:
 	[[nodiscard]] std::vector<int> get_blocks_in_sight(float upper_left_x, float upper_left_y, float bottom_right_x, float bottom_right_y) const;
 	bool is_intersect_with_others(world_object* object) const;
 
+	// route generation-----------------------------------------
 	std::vector<std::vector<bool>> micro_block_matrix;
 	std::vector<std::vector<float>> distances;
 	std::vector<std::vector<std::pair<int, int>>> previous;
 	std::vector<std::pair<int, int>> route = {{}};
 	std::pair<int, int> reserve_destination = std::make_pair(-1, -1);
-
+	//----------------------------------------------------------
 private:
 	int width_;
 	int height_;
