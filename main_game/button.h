@@ -5,6 +5,7 @@
 #include "sprite_chain_element.h"
 
 using namespace sf;
+using std::unique_ptr, std::make_unique;
 
 class button
 {
@@ -23,7 +24,7 @@ public:
 		button_tag tag,
 		Vector2f offset = { 0, 0 });
 	
-	sprite_chain_element* prepare_sprite();
+	unique_ptr<sprite_chain_element> prepare_sprite();
 	
 	void become_gray();
 	

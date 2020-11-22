@@ -7,6 +7,8 @@
 
 class world_object;
 using namespace sf;
+using std::unique_ptr, std::make_unique;
+using std::shared_ptr, std::make_shared;
 
 enum state { common = 1, absorbed = 2, constructed = 3 };
 
@@ -43,7 +45,7 @@ public:
 	[[nodiscard]] float get_permissible_distance() const { return permissible_distance_; }
 	[[nodiscard]] std::string get_to_save_name() const { return to_save_name_; }
 	[[nodiscard]] std::string get_name() const { return name_; }
-	virtual std::vector<sprite_chain_element*> prepare_sprites(long long elapsed_time) = 0;
+	virtual std::vector<unique_ptr<sprite_chain_element>> prepare_sprites(long long elapsed_time) = 0;
 	virtual void on_sprite_change();
 	virtual int get_sprite_number() = 0;
 	[[nodiscard]] Vector2f get_position() const { return position_; }
@@ -67,7 +69,10 @@ public:
 	void set_health_point(const float health_point) { this->health_point_ = health_point; }
 	void set_name(std::string name) { this->name_ = std::move(name); }
 	void delete_promise_on() { delete_promise_ = true; }
-	static void set_unscaled(const std::vector<sprite_chain_element*>& items) { for (auto& item : items) item->unscaled = true; }
+	static void set_unscaled(const std::vector<unique_ptr<sprite_chain_element>>& items)
+	{
+		for (const auto& item : items) item->unscaled = true;
+	}
 	virtual void set_texture_size(Vector2f texture_size);
 	void set_state(state state) { this->state_ = state; }
 	virtual void take_damage(float damage, Vector2f attacker_pos = { -1, -1 });

@@ -40,9 +40,6 @@ sprite_chain_element::sprite_chain_element(
 	this->rotation = rotation;
 }
 
-sprite_chain_element::~sprite_chain_element()
-= default;
-
 void sprite_chain_element::set_draw_info(const ::pack_tag tag, const ::pack_part part, const ::direction direction, const int number) 
 {
 	this->pack_tag = tag;

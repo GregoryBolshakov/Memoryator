@@ -9,7 +9,7 @@ class dynamic_light final : public visual_effect
 {
 public:
 	explicit dynamic_light(camera_system& camera_system, time_system& time_system);
-
+	~dynamic_light() = default;
 private:
 	bool on_load() override;
 	void on_update() override;

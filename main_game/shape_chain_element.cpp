@@ -27,6 +27,3 @@ shape_chain_element::shape_chain_element(
 	type = shape_type::rectangle;
 	this->rotation = rotation;
 }
-
-shape_chain_element::~shape_chain_element()
-= default;

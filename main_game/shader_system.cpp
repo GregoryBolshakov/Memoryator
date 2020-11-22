@@ -26,25 +26,25 @@ void shader_system::update()
 	}
 }
 
-Shader* shader_system::get_shader(const shader_kind kind)
+const Shader& shader_system::get_shader(const shader_kind kind)
 {
-	return shaders_[kind]->shader;
+	return *shaders_[kind]->shader;
 }
 
-Shader* shader_system::get_shader(RenderTarget& target, sprite_chain_element* element, Sprite& sprite)
+const Shader& shader_system::get_shader(RenderTarget& target, sprite_chain_element& element, Sprite& sprite)
 {
-	if ((element->pack_tag == pack_tag::darkWoods ||
-			element->pack_tag == pack_tag::birchGrove ||
-			element->pack_tag == pack_tag::swampyTrees) &&
-		(element->pack_part == pack_part::tree ||
-			element->pack_part == pack_part::bush ||
-			element->pack_part == pack_part::plant))
+	if ((element.pack_tag == pack_tag::darkWoods ||
+			element.pack_tag == pack_tag::birchGrove ||
+			element.pack_tag == pack_tag::swampyTrees) &&
+		(element.pack_part == pack_part::tree ||
+			element.pack_part == pack_part::bush ||
+			element.pack_part == pack_part::plant))
 	{
-		const auto effect = shaders_[shader_kind::wave_wiggle].get();
+		auto* effect = shaders_[shader_kind::wave_wiggle].get();
 		effect->update(target, sprite);
 		
-		return effect->shader;
+		return *effect->shader;
 	}
 
-	return nullptr;
+	return empty_shader_;
 }

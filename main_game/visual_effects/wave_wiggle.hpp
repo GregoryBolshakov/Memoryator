@@ -7,7 +7,7 @@ class wave_wiggle final : public visual_effect
 {
 public:
 	explicit wave_wiggle();
-
+	~wave_wiggle() = default;
 private:
 	bool on_load() override;
 	void on_update() override;

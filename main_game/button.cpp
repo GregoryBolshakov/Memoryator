@@ -81,15 +81,15 @@ void button::stop_being_gray()
 	is_gray_ = false;
 }
 
-sprite_chain_element* button::prepare_sprite()
+unique_ptr<sprite_chain_element> button::prepare_sprite()
 {
-	sprite_chain_element* result;
+	unique_ptr<sprite_chain_element> result;
 	is_active = true;
 	if (is_selected(Vector2f(Mouse::getPosition())) && is_selectable)
 	{
 		if (Mouse::isButtonPressed(Mouse::Left) || Mouse::isButtonPressed(Mouse::Right))
 		{
-			result = new sprite_chain_element(
+			result = make_unique<sprite_chain_element>(
 				button_pressed_->pack_tag,
 				button_pressed_->pack_part,
 				button_pressed_->direction,
@@ -104,7 +104,7 @@ sprite_chain_element* button::prepare_sprite()
 		}
 		else
 		{
-			result = new sprite_chain_element(
+			result = make_unique<sprite_chain_element>(
 				button_selected_->pack_tag,
 				button_selected_->pack_part,
 				button_selected_->direction,
@@ -120,7 +120,7 @@ sprite_chain_element* button::prepare_sprite()
 	}
 	else
 	{
-		result = new sprite_chain_element(
+		result = make_unique<sprite_chain_element>(
 			button_enabled_->pack_tag,
 			button_enabled_->pack_part,
 			button_enabled_->direction,

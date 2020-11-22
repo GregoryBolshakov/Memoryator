@@ -37,9 +37,10 @@ int ground::get_build_type(Vector2f, Vector2f)
 	return 1;
 }
 
-std::vector<sprite_chain_element*> ground::prepare_sprites(long long)
+std::vector<unique_ptr<sprite_chain_element>> ground::prepare_sprites(long long)
 {
-	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::ground, direction::DOWN, 1, position_, conditional_size_units_, Vector2f(texture_box_offset_));
+	std::vector<unique_ptr<sprite_chain_element>> result;
+	auto body = make_unique<sprite_chain_element>(sprite_chain_element(pack_tag::darkWoods, pack_part::ground, direction::DOWN, 1, position_, conditional_size_units_, Vector2f(texture_box_offset_)));
 	
 	body->z_coordinate = z_coordinate_;
 	body->is_background = true;
@@ -51,5 +52,6 @@ std::vector<sprite_chain_element*> ground::prepare_sprites(long long)
 	if (type_of_object_ == 3)
 		body->pack_tag = pack_tag::birchGrove;
 
-    return { body };
+	result.emplace_back(std::move(body));
+	return result;
 }

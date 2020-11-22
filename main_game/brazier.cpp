@@ -145,16 +145,20 @@ int brazier::get_build_type(Vector2f, Vector2f)
 	return 1;
 }
 
-std::vector<sprite_chain_element*> brazier::prepare_sprites(long long)
+std::vector<unique_ptr<sprite_chain_element>> brazier::prepare_sprites(long long)
 {
-    const Vector2f frontOffset(texture_box_.width * 0.506f, texture_box_.height * 0.949f);
-	const Vector2f frontPosition(position_.x - texture_box_offset_.x + frontOffset.x, position_.y - texture_box_offset_.y + frontOffset.y);
-	
-    const auto back = new sprite_chain_element(pack_tag::locations, pack_part::brazier, direction::DOWN, 1, position_, conditional_size_units_, Vector2f(texture_box_offset_));
-    const auto front = new sprite_chain_element(pack_tag::locations, pack_part::brazier, direction::DOWN, 2, frontPosition, conditional_size_units_, frontOffset);
-	
-    return {back, front};
-	
+	std::vector<unique_ptr<sprite_chain_element>> result;
+	const Vector2f front_offset(texture_box_.width * 0.506f, texture_box_.height * 0.949f);
+	const Vector2f front_position(position_.x - texture_box_offset_.x + front_offset.x, position_.y - texture_box_offset_.y + front_offset.y);
+
+	auto back = make_unique<sprite_chain_element>(pack_tag::locations, pack_part::brazier, direction::DOWN, 1, position_, conditional_size_units_, Vector2f(texture_box_offset_));
+	auto front = make_unique<sprite_chain_element>(pack_tag::locations, pack_part::brazier, direction::DOWN, 2, front_position, conditional_size_units_, front_offset);
+
+	result.emplace_back(std::move(back));
+	result.emplace_back(std::move(front));
+
+	return result;
+
 	/*additionalSprites.clear();
 	SpriteChainElement brazierBack, brazierFront, fire, craftIcon;
 	brazierBack.packTag = PackTag::locations; brazierBack.packPart = PackPart::brazier, brazierBack.number = 1;
@@ -170,12 +174,12 @@ std::vector<sprite_chain_element*> brazier::prepare_sprites(long long)
 		fire.position = { position.x, position.y };
 		fire.antiTransparent = true;
 	}*/
-    /*brazierFront.packTag = PackTag::locations; brazierFront.packPart = PackPart::brazier, brazierFront.number = 2;
+	/*brazierFront.packTag = PackTag::locations; brazierFront.packPart = PackPart::brazier, brazierFront.number = 2;
 	brazierFront.size = Vector2f(conditionalSizeUnits);
 	brazierFront.offset = Vector2f(textureBoxOffset.x, textureBoxOffset.y + conditionalSizeUnits.y * 0.2f);
 	brazierFront.position = { position.x, position.y + conditionalSizeUnits.y * 0.2f };
 	brazierFront.antiTransparent = true;
 	additionalSprites.push_back(brazierBack);
 	additionalSprites.push_back(fire);
-    additionalSprites.push_back(brazierFront);*/
+	additionalSprites.push_back(brazierFront);*/
 }

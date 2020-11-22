@@ -2,13 +2,13 @@
 
 #include <SFML/Graphics.hpp>
 
-
 class visual_effect
 {
 public:
 	void load();
 	void update();
 	void update(sf::RenderTarget& target, sf::Sprite& sprite);
+	virtual ~visual_effect() = default;
 
 	sf::Shader* shader;
 protected:

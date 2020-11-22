@@ -35,7 +35,7 @@ public:
 	grid_list& getStaticGrid() { return staticGrid; }
 	grid_list& getDynamicGrid() { return dynamicGrid; }
 	inventory_system& getInventorySystem() { return inventorySystem; }
-	build_system& getBuildSystem() { return buildSystem; }
+	//build_system& getBuildSystem() { return buildSystem; }
 	world_generator& getWorldGenerator() { return worldGenerator; }
 	light_system& getLightSystem() { return lightSystem; }
 	std::string getMouseDisplayName() const { return mouseDisplayName; }
@@ -51,7 +51,7 @@ public:
 	std::map<pack_tag, sprite_pack>* packsMap;
 	void interact(Vector2f render_target_size, long long elapsedTime, Event event);
 	void handleEvents(Event& event);
-    std::vector<drawable_chain_element*> prepareSprites(long long elapsedTime, bool onlyBackground = false);
+	std::vector<std::unique_ptr<drawable_chain_element>> prepare_sprites(long long elapsed_time, bool only_background = false);
 	//void draw(RenderWindow& window, long long elapsedTime);
 	void setItemFromBuildSystem();
 	//void drawVisibleItems(RenderWindow& window, long long elapsedTime, std::vector<SpriteChainElement*> sprites);
@@ -73,7 +73,7 @@ public:
 	bool getHeroBookVisibility() const { return isHeroBookVisible; }
 	void changeBookVisibility() { isHeroBookVisible = !isHeroBookVisible; }
 
-	void setObjectToBuild(entity_tag tag, int type = 1, bool instantBuild = false) { buildSystem.selected_object = tag; buildSystem.build_type = type; buildSystem.instant_build = instantBuild; }
+	//void setObjectToBuild(entity_tag tag, int type = 1, bool instantBuild = false) { buildSystem.selected_object = tag; buildSystem.build_type = type; buildSystem.instant_build = instantBuild; }
 	Vector2i currentTransparentPos = Vector2i(0, 0);
 	std::string debugInfo = "";
 private:
@@ -107,7 +107,7 @@ private:
 	scale_system& scale_system_;
 	effects_system effectSystem;
 	inventory_system inventorySystem;
-	build_system buildSystem;
+	//build_system buildSystem;
 	light_system lightSystem;
 
 	// Grids

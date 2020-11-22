@@ -43,9 +43,10 @@ void nightmare_first::doAttack(world_object* target)
 	}
 }
 
-std::vector<sprite_chain_element*> nightmare_first::prepare_sprites(const long long elapsedTime)
+std::vector<unique_ptr<sprite_chain_element>> nightmare_first::prepare_sprites(const long long elapsed_time)
 {
-	auto body = new sprite_chain_element(pack_tag::nightmare1, pack_part::stand, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
+	std::vector<std::unique_ptr<sprite_chain_element>> result;
+	auto body = make_unique<sprite_chain_element>(pack_tag::nightmare1, pack_part::stand, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
 	animation_speed_ = 10;
 
 	side spriteSide = direction_system.side;
@@ -70,7 +71,7 @@ std::vector<sprite_chain_element*> nightmare_first::prepare_sprites(const long l
 	{
 		animationLength = 9;
 		body->pack_tag = pack_tag::nightmare1;
-		body->pack_part = pack_part::hit;		
+		body->pack_part = pack_part::hit;
 		break;
 	}
 	case combat_state:
@@ -102,7 +103,7 @@ std::vector<sprite_chain_element*> nightmare_first::prepare_sprites(const long l
 
 	body->number = current_sprite_[0];
 
-	time_for_new_sprite_ += elapsedTime;
+	time_for_new_sprite_ += elapsed_time;
 
 	if (time_for_new_sprite_ >= long(1e6 / animation_speed_))
 	{
@@ -115,6 +116,8 @@ std::vector<sprite_chain_element*> nightmare_first::prepare_sprites(const long l
 		}
 	}
 
-	return { body };	
+	result.emplace_back(std::move(body));
+
+	return result;
 }
 

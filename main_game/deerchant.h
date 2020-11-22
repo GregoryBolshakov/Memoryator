@@ -17,7 +17,7 @@ public:
 	//draw
 	std::string name_of_file;
 	Vector2f calculate_texture_offset() override;
-	std::vector<sprite_chain_element*> prepare_sprites(long long elapsed_time) override;
+	std::vector<unique_ptr<sprite_chain_element>> prepare_sprites(long long elapsed_time) override;
 	//control
 	void handle_input(bool used_mouse = false, long long elapsed_time = 0) override;
 	void move_end(bool animate = false, bool invert_direction = false);
@@ -47,7 +47,7 @@ public:
 	bool near_the_table = false;
 private:
 	void set_hit_direction();
-	sprite_chain_element* prepare_speed_line();
+	unique_ptr<sprite_chain_element> prepare_speed_line();
 
 	float hit_distance_ = 0;
 	float move_end_distance_ = 0;

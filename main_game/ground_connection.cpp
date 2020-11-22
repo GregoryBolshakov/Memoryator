@@ -77,17 +77,21 @@ int ground_connection::get_build_type(Vector2f, Vector2f)
 	return 1;
 }
 
-std::vector<sprite_chain_element*> ground_connection::prepare_sprites(long long)
+std::vector<unique_ptr<sprite_chain_element>> ground_connection::prepare_sprites(long long)
 {
+	std::vector<unique_ptr<sprite_chain_element>> result;
+
 	if (type_of_object_ >= 1 && type_of_object_ <= 4)
-		return { new sprite_chain_element() };
+	{
+		result.emplace_back(std::move(make_unique<sprite_chain_element>()));
+		return result;
+	}
 
 	int spriteType = type_of_object_ % 4 + 1;
 	if (spriteType == 1)
 		spriteType = 5;
 
-	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::ground, direction::DOWN, spriteType, position_, conditional_size_units_, Vector2f(texture_box_offset_));
-
+	auto body = make_unique<sprite_chain_element>(pack_tag::darkWoods, pack_part::ground, direction::DOWN, spriteType, position_, conditional_size_units_, Vector2f(texture_box_offset_));
 	body->z_coordinate = z_coordinate_;
 
 	//if (typeOfObject >= 1 && typeOfObject <= 4)
@@ -98,5 +102,7 @@ std::vector<sprite_chain_element*> ground_connection::prepare_sprites(long long)
 		body->pack_tag = pack_tag::birchGrove;
 
 	body->is_background = true;
-	return { body };
+
+	result.emplace_back(std::move(body));
+	return result;
 }

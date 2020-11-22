@@ -16,7 +16,7 @@ public:
 	menu_system();
 	~menu_system();
 	void interact(world_handler &world, RenderWindow &window);
-	std::vector<sprite_chain_element*> prepare_sprites();
+	std::vector<unique_ptr<drawable_chain_element>> prepare_sprites();
 
 	[[nodiscard]] menu_states get_state() const
 	{ return menu_state_; }

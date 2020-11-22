@@ -41,12 +41,17 @@ static_object* object_initializer::initialize_static_item(
 
 	switch (item_class)
 	{
+		case entity_tag::brazier:
+		{
+			item = new brazier("item", Vector2f(0, 0), -1);
+			break;
+		}
 		case entity_tag::tree:
 		{
 			item = new forest_tree("item", Vector2f(0, 0), -1);
 			break;
 		}
-		case entity_tag::grass:
+		/*case entity_tag::grass:
 		{
 			item = new grass("item", Vector2f(0, 0), -1);
 			break;
@@ -69,11 +74,6 @@ static_object* object_initializer::initialize_static_item(
 		case entity_tag::chamomile:
 		{
 			item = new chamomile("item", Vector2f(0, 0), -1);
-			break;
-		}
-		case entity_tag::brazier:
-		{
-			item = new brazier("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::wreathTable:
@@ -155,10 +155,10 @@ static_object* object_initializer::initialize_static_item(
 		{
 			item = new roof("item", Vector2f(0, 0), -1);
 			break;
-		}
+		}*/
 		default:
 		{
-			item = new spawn("item", Vector2f(0, 0), -1);
+			item = new forest_tree("item", Vector2f(0, 0), -1);
 			break;
 		}
 	}
@@ -213,7 +213,7 @@ dynamic_object* object_initializer::initialize_dynamic_item(
 		name_of_image = "Game/worldSprites/hero/stand/down/1";		
 		break;
 	}
-	case entity_tag::wolf:
+	/*case entity_tag::wolf:
 	{
 		item = new wolf("item", Vector2f(0, 0));
 		name_of_image = "Game/worldSprites/wolf/stand/down/1";
@@ -254,7 +254,7 @@ dynamic_object* object_initializer::initialize_dynamic_item(
 		item = new ClapWhirl("item", Vector2f(0, 0), owner);
 		nameOfImage = "Game/worldSprites/nightmare3/clap/whirl";
 		break;
-	}*/
+	}
 	case entity_tag::owlBoss:
 	{
 		item = new owl_boss("item", Vector2f(0, 0));
@@ -278,10 +278,10 @@ dynamic_object* object_initializer::initialize_dynamic_item(
 		item = new nightmare_third("item", Vector2f(0, 0));
 		name_of_image = "Game/worldSprites/nightmare2/stand/down/1";
 		break;
-	}
+	}*/
 	default:
 	{
-		item = new nightmare_second("item", Vector2f(0, 0));
+		item = new nightmare_first("item", Vector2f(0, 0));
 		name_of_image = "Game/worldSprites/nightmare2/stand/down/1";
 		break;
 	}

@@ -18,6 +18,3 @@ drawable_chain_element::drawable_chain_element(
 	this->rotation = rotation;
 	initialized = true;
 }
-
-drawable_chain_element::~drawable_chain_element()
-= default;

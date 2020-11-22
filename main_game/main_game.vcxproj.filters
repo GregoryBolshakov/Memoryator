@@ -210,9 +210,6 @@
     <ClCompile Include="grid_list.cpp" />
     <ClCompile Include="helper.cpp" />
     <ClCompile Include="light_system.cpp" />
-    <ClCompile Include="shader_system.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="shape_chain_element.cpp">
       <Filter>Systems\DrawSystem</Filter>
     </ClCompile>
@@ -222,6 +219,9 @@
     <ClCompile Include="scale_system.cpp" />
     <ClCompile Include="visual_effects\wave_wiggle.cpp">
       <Filter>visual_effects</Filter>
+    </ClCompile>
+    <ClCompile Include="shader_system.cpp">
+      <Filter>Systems\DrawSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -438,9 +438,6 @@
     <ClInclude Include="light_system.h" />
     <ClInclude Include="sprite_structures.h" />
     <ClInclude Include="structs.h" />
-    <ClInclude Include="shader_system.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="shape_chain_element.h">
       <Filter>Systems\DrawSystem</Filter>
     </ClInclude>
@@ -454,6 +451,9 @@
     <ClInclude Include="scale_system.h" />
     <ClInclude Include="visual_effects\wave_wiggle.hpp">
       <Filter>visual_effects</Filter>
+    </ClInclude>
+    <ClInclude Include="shader_system.h">
+      <Filter>Systems\DrawSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

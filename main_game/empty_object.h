@@ -9,7 +9,7 @@ class empty_object : public world_object
 public:
 	empty_object(std::string objectName, Vector2f centerPosition);
 	~empty_object();
-	std::vector<sprite_chain_element*> prepare_sprites(long long elapsedTime) override;
+	std::vector<unique_ptr<sprite_chain_element>> prepare_sprites(long long elapsedTime) override;
 	int get_sprite_number() override;
 	Vector2f get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
 	int get_build_type(Vector2f ounPos, Vector2f otherPos) override;

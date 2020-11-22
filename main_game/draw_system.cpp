@@ -3,7 +3,6 @@
 #include "shader_system.h"
 #include "text_system.h"
 
-
 draw_system::draw_system(shader_system& shader_system, const Vector2f screen_size) :shader_system_{ shader_system }
 {
 	init_packs_map();
@@ -176,39 +175,39 @@ std::vector<sprite_chain_element*> draw_system::downcast_to_sprite_chain(const s
 	return result;
 }
 
-void draw_system::draw_sprite_chain_element(RenderTarget& target, sprite_chain_element* sprite_chain_item, const Vector2f camera_position, const Vector2f screen_center, const float scale)
+void draw_system::draw_sprite_chain_element(RenderTarget& target, sprite_chain_element& sprite_chain_item, const Vector2f camera_position, const Vector2f screen_center, const float scale)
 {
-	if (sprite_chain_item->pack_tag == pack_tag::empty)
+	if (sprite_chain_item.pack_tag == pack_tag::empty)
 	{
 		return;
 	}
 
-	auto sprite = packs_map.at(sprite_chain_item->pack_tag).get_sprite(sprite_chain_item->pack_part, sprite_chain_item->direction, sprite_chain_item->number, sprite_chain_item->mirrored);
+	auto sprite = packs_map.at(sprite_chain_item.pack_tag).get_sprite(sprite_chain_item.pack_part, sprite_chain_item.direction, sprite_chain_item.number, sprite_chain_item.mirrored);
 	if (sprite.getTextureRect() == IntRect())
 	{
 		return;
 	}
 
-	const auto original_info = packs_map.at(sprite_chain_item->pack_tag).get_original_info(sprite_chain_item->pack_part, sprite_chain_item->direction, sprite_chain_item->number);
+	const auto original_info = packs_map.at(sprite_chain_item.pack_tag).get_original_info(sprite_chain_item.pack_part, sprite_chain_item.direction, sprite_chain_item.number);
 	const Vector2f sprite_pos = {
-		(sprite_chain_item->position.x - camera_position.x - sprite_chain_item->offset.x) * scale + screen_center.x,
-		(sprite_chain_item->position.y - camera_position.y - sprite_chain_item->offset.y) * scale + screen_center.y
+		(sprite_chain_item.position.x - camera_position.x - sprite_chain_item.offset.x) * scale + screen_center.x,
+		(sprite_chain_item.position.y - camera_position.y - sprite_chain_item.offset.y) * scale + screen_center.y
 	};
-	if (sprite_chain_item->anti_transparent)
+	if (sprite_chain_item.anti_transparent)
 	{
-		sprite_chain_item->color.a = 255;
+		sprite_chain_item.color.a = 255;
 	}
 
-	sprite.setColor(sprite_chain_item->color);
-	sprite.rotate(sprite_chain_item->rotation);
+	sprite.setColor(sprite_chain_item.color);
+	sprite.rotate(sprite_chain_item.rotation);
 	sprite.setPosition(sprite_pos);
 
-	advanced_scale(*sprite_chain_item, sprite, original_info, scale);
+	advanced_scale(sprite_chain_item, sprite, original_info, scale);
 
-	//if (sprite_chain_item->pack_tag == pack_tag::swampyTrees && sprite_chain_item->pack_part == pack_part::tree && original_info.frame_name == "tree/5")
+	//if (sprite_chain_item.pack_tag == pack_tag::swampyTrees && sprite_chain_item.pack_part == pack_part::tree && original_info.frame_name == "tree/5")
 	{
-		const auto shader = shader_system_.get_shader(target, sprite_chain_item, sprite);
-		target.draw(sprite, shader);
+		const auto& shader = shader_system_.get_shader(target, sprite_chain_item, sprite);
+		target.draw(sprite, &shader);
 		//target.draw(sprite);
 	}
 	//else
@@ -217,40 +216,40 @@ void draw_system::draw_sprite_chain_element(RenderTarget& target, sprite_chain_e
 	//target.draw(sprite);
 }
 
-void draw_system::draw_text_chain_element(RenderTarget& target, text_chain_element* text_chain_item)
+void draw_system::draw_text_chain_element(RenderTarget& target, text_chain_element& text_chain_item)
 {
 	text_system::draw_string(
-		text_chain_item->string,
-		text_chain_item->font,
-		text_chain_item->character_size,
-		text_chain_item->position.x - text_chain_item->offset.x,
-		text_chain_item->position.y - text_chain_item->offset.y,
+		text_chain_item.string,
+		text_chain_item.font,
+		text_chain_item.character_size,
+		text_chain_item.position.x - text_chain_item.offset.x,
+		text_chain_item.position.y - text_chain_item.offset.y,
 		target,
-		text_chain_item->color);
+		text_chain_item.color);
 }
 
-void draw_system::draw_shape_chain_element(RenderTarget& target, shape_chain_element* shape_chain_element)
+void draw_system::draw_shape_chain_element(RenderTarget& target, shape_chain_element& shape_chain_element)
 {
-	if (shape_chain_element->type == shape_type::circle)
+	if (shape_chain_element.type == shape_type::circle)
 	{
-		CircleShape circle(shape_chain_element->radius);
-		circle.setPosition(shape_chain_element->position);
-		circle.setFillColor(shape_chain_element->color);
+		CircleShape circle(shape_chain_element.radius);
+		circle.setPosition(shape_chain_element.position);
+		circle.setFillColor(shape_chain_element.color);
 		target.draw(circle);
 		return;
 	}
 
-	if (shape_chain_element->type == shape_type::rectangle)
+	if (shape_chain_element.type == shape_type::rectangle)
 	{
-		RectangleShape rect(shape_chain_element->size);
-		rect.setPosition(shape_chain_element->position);
-		rect.setFillColor(shape_chain_element->color);
+		RectangleShape rect(shape_chain_element.size);
+		rect.setPosition(shape_chain_element.position);
+		rect.setFillColor(shape_chain_element.color);
 		target.draw(rect);
 		return;
 	}
 }
 
-void draw_system::draw(RenderTarget& target, const std::vector<drawable_chain_element*>& drawable_items, const float scale, const Vector2f camera_position)
+void draw_system::draw(RenderTarget& target, const std::vector<unique_ptr<drawable_chain_element>>& drawable_items, const float scale, const Vector2f camera_position)
 {
 	if (drawable_items.empty())
 	{
@@ -261,32 +260,31 @@ void draw_system::draw(RenderTarget& target, const std::vector<drawable_chain_el
 		? Vector2f(target.getSize()) / 2.0F
 		: Vector2f();
 
-	for (auto item : drawable_items)
+	for (auto& item : drawable_items)
 	{
 		if (!item->initialized)
 		{
 			continue;
 		}
 
-		const auto sprite_chain_item = dynamic_cast<sprite_chain_element*>(item);
-
-		if (sprite_chain_item != nullptr)
+		auto* sprite_chain_item = dynamic_cast<sprite_chain_element*>(item.get());
+		if (sprite_chain_item)
 		{
-			draw_sprite_chain_element(target, sprite_chain_item, camera_position, screen_center, scale);
+			draw_sprite_chain_element(target, *sprite_chain_item, camera_position, screen_center, scale);
 			continue;
 		}
 
-		const auto text_chain_item = dynamic_cast<::text_chain_element*>(item);
+		auto* text_chain_item = dynamic_cast<::text_chain_element*>(item.get());
 		if (text_chain_item != nullptr)
 		{
-			draw_text_chain_element(target, text_chain_item);
+			draw_text_chain_element(target, *text_chain_item);
 			continue;
 		}
 
-		const auto shape_chain_element = dynamic_cast<::shape_chain_element*>(item);
+		auto* shape_chain_element = dynamic_cast<::shape_chain_element*>(item.get());
 		if (shape_chain_element != nullptr)
 		{
-			draw_shape_chain_element(target, shape_chain_element);
+			draw_shape_chain_element(target, *shape_chain_element);
 		}
 	}
 }
@@ -294,6 +292,6 @@ void draw_system::draw(RenderTarget& target, const std::vector<drawable_chain_el
 void draw_system::draw(RenderWindow& target, const shader_kind kind)
 {
 	shader_texture_.update(target);
-	const auto shader = shader_system_.get_shader(kind);
-	target.draw(shader_sprite_, shader);
+	const auto& shader = shader_system_.get_shader(kind);
+	target.draw(shader_sprite_, &shader);
 }

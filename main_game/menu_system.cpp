@@ -111,14 +111,14 @@ void menu_system::interact(world_handler &world, RenderWindow &window)
 	}
 }
 
-std::vector<sprite_chain_element*> menu_system::prepare_sprites()
+std::vector<unique_ptr<drawable_chain_element>> menu_system::prepare_sprites()
 {
-    std::vector<sprite_chain_element*> result = {};
+	std::vector<unique_ptr<drawable_chain_element>> result;
 	if (menu_state_ == main_menu)
 	{
         result.push_back(button_list_.at(button_tag::newRunTag).prepare_sprite());
 		result.push_back(button_list_.at(button_tag::continueTag).prepare_sprite());
-		result.push_back(button_list_.at(button_tag::exitTag).prepare_sprite());		
+		result.push_back(button_list_.at(button_tag::exitTag).prepare_sprite());
 	}
 
 	if (menu_state_ == game_menu)

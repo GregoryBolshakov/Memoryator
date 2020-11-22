@@ -23,7 +23,13 @@ public:
 		float character_size = default_character_size,
 		font_name font = font_name::normal_font,
 		float rotation = 0);
-	virtual ~text_chain_element();
+	text_chain_element(text_chain_element&& element) noexcept : drawable_chain_element(std::move(element))
+	{
+		this->string = element.string;
+		this->font = element.font;
+		this->character_size = element.character_size;
+	}
+	virtual ~text_chain_element() = default;
 	drawable_chain_element* up_cast() { drawable_chain_element* result = this; return result; }
 
 	std::string string = "";

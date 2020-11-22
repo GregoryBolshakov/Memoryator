@@ -543,7 +543,7 @@ void deerchant::behavior(const long long elapsed_time)
 
 void deerchant::on_mouse_up(const int current_mouse_button, world_object *mouse_selected_object, const Vector2f mouse_world_pos, const bool is_building)
 {
-	if (is_building && current_mouse_button == 2)
+	/*if (is_building && current_mouse_button == 2)
 	{
 		if (bound_target_ != nullptr)
 		{
@@ -608,7 +608,7 @@ void deerchant::on_mouse_up(const int current_mouse_button, world_object *mouse_
 	{
 		bound_target_ = mouse_selected_object;
 		move_system.lax_move_position = mouse_selected_object->get_position();
-	}
+	}*/
 }
 
 void deerchant::ending_previous_action()
@@ -725,14 +725,14 @@ void deerchant::ending_previous_action()
 					pickedItem->pickUp(&this->bags);
 			}
 			
-			auto nooseItem = dynamic_cast<noose*>(bound_target_);
+			/*auto nooseItem = dynamic_cast<noose*>(bound_target_);
 			if (nooseItem)
 			{
 				const auto placedNoose = new std::vector<std::pair<entity_tag, int>>({ (std::make_pair(entity_tag::noose, 1)) });
 				if (hero_bag::put_items_in(placedNoose, &bags))
 					nooseItem->delete_promise_on();
 				delete placedNoose;
-			}
+			}*/
 			stopping(true, true);
 			change_action(relax, true, false);
 		}
@@ -928,9 +928,9 @@ void deerchant::fight_interact(const long long elapsed_time, dynamic_object* tar
 	move_system.push_away(elapsed_time);
 }
 
-sprite_chain_element* deerchant::prepare_speed_line()
+unique_ptr<sprite_chain_element> deerchant::prepare_speed_line()
 {
-	auto speedLine = new sprite_chain_element(pack_tag::heroMove, pack_part::lines, direction::STAND, 1, position_, conditional_size_units_, Vector2f(texture_box_offset_));
+	auto speedLine = make_unique<sprite_chain_element>(pack_tag::heroMove, pack_part::lines, direction::STAND, 1, position_, conditional_size_units_, Vector2f(texture_box_offset_));
 	speedLine->animation_length = 3;
 	if (speed_line_direction_ == direction::STAND || current_sprite_[2] > speedLine->animation_length)
 		return speedLine;
@@ -948,13 +948,13 @@ sprite_chain_element* deerchant::prepare_speed_line()
 	return speedLine;
 }
 
-std::vector<sprite_chain_element*> deerchant::prepare_sprites(const long long elapsed_time)
+std::vector<unique_ptr<sprite_chain_element>> deerchant::prepare_sprites(const long long elapsed_time)
 {
-	auto legsSprite = new sprite_chain_element(Vector2f(position_.x, position_.y - 1), conditional_size_units_, { texture_box_offset_.x, texture_box_offset_.y + 1 }, color);
-	auto* bodySprite = new sprite_chain_element(position_, conditional_size_units_, texture_box_offset_, color);
+	auto legsSprite = make_unique<sprite_chain_element>(Vector2f(position_.x, position_.y - 1), conditional_size_units_, Vector2f(texture_box_offset_.x, texture_box_offset_.y + 1), color);
+	auto bodySprite = make_unique<sprite_chain_element>(position_, conditional_size_units_, texture_box_offset_, color);
 
 	const auto speedLine = prepare_speed_line();
-	std::vector<sprite_chain_element*> result = {};
+	std::vector<unique_ptr<sprite_chain_element>> result = {};
 	auto legsInverse = false, bodyInverse = false;
 	legsSprite->animation_length = 8;
 
@@ -1136,16 +1136,7 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(const long long el
 			legsSprite->number = legsSprite->animation_length + 1 - current_sprite_[1];
 		else
 			legsSprite->number = current_sprite_[1];
-		result.push_back(legsSprite);
-	}
-
-	if (bodySprite->pack_tag != pack_tag::empty)
-	{
-		if (bodyInverse)
-			bodySprite->number = bodySprite->animation_length + 1 - current_sprite_[0];
-		else
-			bodySprite->number = current_sprite_[0];
-		result.push_back(bodySprite);
+		result.emplace_back(std::move(legsSprite));
 	}
 
 	time_for_new_sprite_ += elapsed_time;
@@ -1169,13 +1160,22 @@ std::vector<sprite_chain_element*> deerchant::prepare_sprites(const long long el
 				current_sprite_[0] = 1;
 			if (current_sprite_[0] >= bodySprite->animation_length)
 				last_action_ = current_action_;
-			if (++current_sprite_[1] > legsSprite->animation_length)
+			if (legsSprite && ++current_sprite_[1] > legsSprite->animation_length)
 				current_sprite_[1] = 1;
-			if (current_sprite_[2] > speedLine->animation_length)
+			if (speedLine && current_sprite_[2] > speedLine->animation_length)
 				speed_line_direction_ = direction::STAND;
 			else
 				current_sprite_[2]++;
 		}
+	}
+	
+	if (bodySprite->pack_tag != pack_tag::empty)
+	{
+		if (bodyInverse)
+			bodySprite->number = bodySprite->animation_length + 1 - current_sprite_[0];
+		else
+			bodySprite->number = current_sprite_[0];
+		result.emplace_back(std::move(bodySprite));
 	}
 
 	set_unscaled(result);

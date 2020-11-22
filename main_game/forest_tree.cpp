@@ -241,9 +241,10 @@ int forest_tree::get_build_type(Vector2f, Vector2f)
 	return 1;
 }
 
-std::vector<sprite_chain_element*> forest_tree::prepare_sprites(const long long elapsed_time)
+std::vector<std::unique_ptr<sprite_chain_element>> forest_tree::prepare_sprites(const long long elapsed_time)
 {
-	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::tree, direction::DOWN, type_of_object_, position_, conditional_size_units_, Vector2f(texture_box_offset_), color, mirrored_);
+	std::vector<std::unique_ptr<sprite_chain_element>> result;
+	auto body = make_unique<sprite_chain_element>(pack_tag::darkWoods, pack_part::tree, direction::DOWN, type_of_object_, position_, conditional_size_units_, Vector2f(texture_box_offset_), color, mirrored_);
 	if (type_of_object_ == 13)
 		body->unscaled = true;
 	
@@ -283,5 +284,7 @@ std::vector<sprite_chain_element*> forest_tree::prepare_sprites(const long long 
 		}
 	}
 
-	return { body };
+	result.emplace_back(std::move(body));
+
+	return result;
 }

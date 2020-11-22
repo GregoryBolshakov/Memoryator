@@ -10,7 +10,7 @@ empty_object::empty_object(std::string objectName, Vector2f centerPosition) : wo
 empty_object::~empty_object()
 = default;
 
-std::vector<sprite_chain_element*> empty_object::prepare_sprites(long long elapsedTime)
+std::vector<unique_ptr<sprite_chain_element>> empty_object::prepare_sprites(long long elapsedTime)
 {
     return {};
 }

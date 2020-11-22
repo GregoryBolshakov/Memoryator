@@ -190,7 +190,7 @@ void ClapWhirl::rotateAndExtend(spriteChainElement* whirl)
 	}
 }
 
-void ClapWhirl::prepareSprites(long long elapsedTime)
+void ClapWhirl::prepare_sprites(long long elapsedTime)
 {
 	spriteChainElement whirlSprite;
 

@@ -26,14 +26,18 @@ public:
 	shape_chain_element(
 		Vector2f position,
 		Vector2f offset = { 0, 0 },
-		sf::Color color = sf::Color::White,		
+		sf::Color color = sf::Color::White,
 		float rotation = 0);
-	virtual ~shape_chain_element();
-	drawable_chain_element* up_cast() { drawable_chain_element* result = this; return result; }
+	shape_chain_element(shape_chain_element&& element) noexcept : drawable_chain_element(std::move(element))
+	{
+		this->type = element.type;
+		this->radius = element.radius;
+	}
+	virtual ~shape_chain_element() = default;
+	//drawable_chain_element* up_cast() { drawable_chain_element* result = this; return result; }
 
 	shape_type type = shape_type::circle;
 	float radius = 0;
-	Vector2f size = { 0, 0 };
 };
 
 #endif

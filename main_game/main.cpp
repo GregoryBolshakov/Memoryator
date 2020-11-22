@@ -40,8 +40,8 @@ int main() {
 	long long time_micro_sec = 0;
 	auto current_mouse_button = 0;
 
-	hero_book main_book;
-	main_book.init(&draw_system.packs_map);
+	//hero_book main_book;
+	//main_book.init(&draw_system.packs_map);
 
 	text_system text_writer;
 	
@@ -66,11 +66,11 @@ int main() {
 
 			if (event.type == Event::MouseButtonReleased)
 			{			
-				if (menu_system.get_state() == closed && world.getBuildSystem().get_success_init())
+				/*if (menu_system.get_state() == closed && world.getBuildSystem().get_success_init())
 				{
 					world.onMouseUp(current_mouse_button);
 					main_book.onMouseUp();
-				}
+				}*/
 					
 				if (current_mouse_button == 1)
 					menu_system.interact(world, main_window);
@@ -102,7 +102,7 @@ int main() {
 		if (menu_system.get_state() == main_menu)
 		{
 			main_window.clear(sf::Color::White);
-			draw_system.draw(main_window, draw_system::upcast_chain(menu_system.prepare_sprites()));
+			draw_system.draw(main_window, menu_system.prepare_sprites());
 			main_window.display();
 
 			clock.restart();
@@ -125,27 +125,27 @@ int main() {
 			}
 
 			auto hero = dynamic_cast<deerchant*>(world.focusedObject);
-			main_book.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().get_held_item(), hero->near_the_table);
-			main_book.interact();
+			//main_book.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().get_held_item(), hero->near_the_table);
+			//main_book.interact();
 
 			main_window.clear(sf::Color::White);
 			const auto scale = scale_system.get_scale_factor();
 			
-            draw_system.draw(main_window, world.prepareSprites(time_micro_sec, true), scale, camera_system.position);
-            draw_system.draw(main_window, world.prepareSprites(time_micro_sec, false), scale, camera_system.position);
-            
+			draw_system.draw(main_window, world.prepare_sprites(time_micro_sec, true), scale, camera_system.position);
+			draw_system.draw(main_window, world.prepare_sprites(time_micro_sec, false), scale, camera_system.position);
+
 			//draw_system.draw(main_window, shader_kind::dynamic_light);
 
 			//draw_system.draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepare_sprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system.packs_map)), scale, camera_system.position);
 			//text_system::draw_string(world.getMouseDisplayName(), font_name::normal_font, 30, float(Mouse::getPosition().x), float(Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));
 			world.pedestalController.draw(&main_window, camera_system.position, scale);
-			//draw_system.draw(main_window, main_book.prepareSprites(world.focusedObject->get_health_point() / world.focusedObject->get_max_health_point_value(), time_micro_sec));
+			//draw_system.draw(main_window, main_book.prepare_sprites(world.focusedObject->get_health_point() / world.focusedObject->get_max_health_point_value(), time_micro_sec));
 			//draw_system.draw(main_window, world.getInventorySystem().prepare_sprites(time_micro_sec, world.packsMap));			
 		}
 		else
 			clock.restart();
 
-		draw_system.draw(main_window, draw_system::upcast_chain(menu_system.prepare_sprites()));
+		draw_system.draw(main_window, menu_system.prepare_sprites());
 
 		world.focusedObject->move_system.set_move_offset(time_micro_sec);
 

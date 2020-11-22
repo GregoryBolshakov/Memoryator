@@ -20,6 +20,3 @@ text_chain_element::text_chain_element(
 	this->character_size = character_size;
 	this->rotation = rotation;
 }
-
-text_chain_element::~text_chain_element()
-= default;
