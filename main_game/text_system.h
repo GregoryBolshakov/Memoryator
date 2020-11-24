@@ -1,9 +1,9 @@
 #pragma once
 
+#include "text_chain_element.h"
+
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
-
-#include "text_chain_element.h"
 
 using namespace sf;
 

@@ -144,7 +144,7 @@ void sprite_pack::init(const std::string& path, const std::string& json_path, co
 	}
 }
 
-sprite_pack_structure::sprite sprite_pack::get_original_info(const pack_part part, const direction direction, const int number)
+const sprite_pack_structure::sprite& sprite_pack::get_original_info(const pack_part part, const direction direction, const int number)	const
 {
 	if (pack_.count(part) <= 0 || pack_.at(part).count(direction) <= 0 || pack_.at(part).at(direction).count(number) <= 0)
 		return sprite_pack_structure::sprite();

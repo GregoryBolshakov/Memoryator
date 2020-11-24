@@ -23,99 +23,93 @@ public:
 	world_handler(
 		int width,
 		int height,
-		camera_system& camera_system,
-		std::map<pack_tag, sprite_pack>* packsMap);
+		shared_ptr<camera_system> camera_system,
+		shared_ptr<std::map<pack_tag, sprite_pack>> packs_map);
 	
 	~world_handler();
 
 	//adding to the grid
-	void birthObjects();
+	void birth_objects();
 
 	// Getters
-	grid_list& getStaticGrid() { return staticGrid; }
-	grid_list& getDynamicGrid() { return dynamicGrid; }
-	inventory_system& getInventorySystem() { return inventorySystem; }
+	const shared_ptr<grid_list>& get_static_grid() const { return static_grid_; }
+	const shared_ptr<grid_list>& get_dynamic_grid() const { return dynamic_grid_; }
+	const shared_ptr<inventory_system>& get_inventory_system() const { return inventory_system_; }
 	//build_system& getBuildSystem() { return buildSystem; }
-	world_generator& getWorldGenerator() { return worldGenerator; }
-	light_system& getLightSystem() { return lightSystem; }
-	std::string getMouseDisplayName() const { return mouseDisplayName; }
-	world_object* getSelectedObject() const { return selectedObject; }
-	std::vector<world_object*> getLocalTerrain() const { return localTerrain; }
+	const shared_ptr<world_generator>& get_world_generator() const { return world_generator_; }
+	const shared_ptr<light_system>& get_light_system() const { return light_system_; }
+	std::string get_mouse_display_name() const { return mouse_display_name_; }
+	const shared_ptr<world_object>& get_selected_object() const { return selected_object_; }
+	std::vector<shared_ptr<world_object>> get_local_terrain() const { return local_terrain_; }
 
 	// Save-load logic
-	void clearWorld();
-	void Load();
-	void Save();
+	void clear_world();
+	void load();
+	void save();
 	
 	// Base (draw, interact)
-	std::map<pack_tag, sprite_pack>* packsMap;
-	void interact(Vector2f render_target_size, long long elapsedTime, Event event);
-	void handleEvents(Event& event);
+	void interact(Vector2f render_target_size, long long elapsed_time, Event event);
+	void handle_events(Event& event);
 	std::vector<std::unique_ptr<drawable_chain_element>> prepare_sprites(long long elapsed_time, bool only_background = false);
 	//void draw(RenderWindow& window, long long elapsedTime);
-	void setItemFromBuildSystem();
+	void set_item_from_build_system();
 	//void drawVisibleItems(RenderWindow& window, long long elapsedTime, std::vector<SpriteChainElement*> sprites);
-	Vector2f worldUpperLeft, worldBottomRight;
+	Vector2f world_upper_left, world_bottom_right;
 	//void runBuildSystemDrawing(RenderWindow& window, long long elapsedTime);
 	//void runInventorySystemDrawing(RenderWindow& window, long long elapsedTime);
-	void runWorldGenerator();
-	pedestal_controller pedestalController;
+	void run_world_generator();
+	pedestal_controller pedestal_controller;
 
-	void setScaleFactor(int delta);
-	
 	// Hero
-	dynamic_object* focusedObject = nullptr;
-	brazier* brazier{};
-	Vector2f focused_object_screen_position_normalized() const;
+	shared_ptr<dynamic_object> focused_object{};
+	shared_ptr<brazier> main_object{};
 
 	// Events
-	void onMouseUp(int currentMouseButton);
-	bool getHeroBookVisibility() const { return isHeroBookVisible; }
-	void changeBookVisibility() { isHeroBookVisible = !isHeroBookVisible; }
+	void on_mouse_up(int current_mouse_button);
+	bool get_hero_book_visibility() const { return is_hero_book_visible_; }
+	void change_book_visibility() { is_hero_book_visible_ = !is_hero_book_visible_; }
 
 	//void setObjectToBuild(entity_tag tag, int type = 1, bool instantBuild = false) { buildSystem.selected_object = tag; buildSystem.build_type = type; buildSystem.instant_build = instantBuild; }
-	Vector2i currentTransparentPos = Vector2i(0, 0);
-	std::string debugInfo = "";
+	std::string debug_info = "";
 private:
 	// Hero
-	const std::string heroTextureName = "Game/worldSprites/hero/move/body/down/1.png";
-	bool isHeroBookVisible = false;
+	const std::string hero_texture_name_ = "Game/worldSprites/hero/move/body/down/1.png";
+	bool is_hero_book_visible_ = false;
 
-	int width;
-	int height;
-	Vector2f blockSize = { 1000, 1000 };
-	Vector2f microBlockSize = { 20, 20 };
-	std::string spriteNameFileDirectory = "Game/objects.txt";
-	bool fixedClimbingBeyond(Vector2f &pos) const;
-	Vector2f object_screen_position(dynamic_object* obj) const;
-	
-	world_generator worldGenerator;
+	int width_;
+	int height_;
+	Vector2f block_size_ = { 1000, 1000 };
+	Vector2f micro_block_size_ = { 20, 20 };
+	shared_ptr<std::map<pack_tag, sprite_pack>> packs_map_;
+	std::string sprite_name_file_directory_ = "Game/objects.txt";
+	bool fixed_climbing_beyond(Vector2f &pos) const;
 
 	// Time logic
-	Clock timer;
-	long long timeForNewSave = 0;
-	long long timeAfterSave = long(6e7);
+	Clock timer_;
+	long long time_for_new_save_ = 0;
+	long long time_after_save_ = long(6e7);
 
 	// Selection logic
-	void setTransparent(std::vector<world_object*>& visibleItems);
-	std::string mouseDisplayName;
-	world_object* selectedObject = focusedObject;
-	Vector2f  world_handler::mouse_position() const;
+	void set_transparent(std::vector<shared_ptr<world_object>>& visible_items);
+	std::string mouse_display_name_;
+	shared_ptr<world_object> selected_object_ = focused_object;
+	Vector2f mouse_position() const;
 
 	// Systems
-	camera_system& cameraSystem;
-	scale_system& scale_system_;
-	effects_system effectSystem;
-	inventory_system inventorySystem;
-	//build_system buildSystem;
-	light_system lightSystem;
+	shared_ptr<camera_system> camera_system_; // initialized in constructor
+	shared_ptr<effects_system> effect_system_ = make_shared<effects_system>();
+	shared_ptr<inventory_system> inventory_system_ = make_shared<inventory_system>();
+	//build_system buildSystem = make_shared<buildSystem>();
+	shared_ptr<light_system> light_system_ = make_shared<light_system>();
 
 	// Grids
-	grid_list staticGrid;
-	grid_list dynamicGrid;
-	std::vector<sprite_chain_element*> visibleBackground, visibleTerrain;
-	std::vector<world_object*> localTerrain;
+	shared_ptr<grid_list> static_grid_{}; // initialized in constructor
+	shared_ptr<grid_list> dynamic_grid_{}; // initialized in constructor
+	std::vector<sprite_chain_element*> visible_background_, visible_terrain_;
+	std::vector<shared_ptr<world_object>> local_terrain_;
+
+	shared_ptr<world_generator> world_generator_{}; // initialized in constructor
 
 	// Test
-	std::vector<std::pair<entity_tag, int>>* testInv = new std::vector<std::pair<entity_tag, int>>({ {entity_tag::chamomile, 2}, {entity_tag::chamomile, 2}, {entity_tag::chamomile, 2} });
+	std::vector<std::pair<entity_tag, int>>* test_inv_ = new std::vector<std::pair<entity_tag, int>>({ {entity_tag::chamomile, 2}, {entity_tag::chamomile, 2}, {entity_tag::chamomile, 2} });
 };

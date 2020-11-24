@@ -3,10 +3,10 @@
 #include "visual_effects/dynamic_light.hpp"
 #include "visual_effects/wave_wiggle.hpp"
 
-shader_system::shader_system(camera_system& camera_system, time_system& time_system)
+shader_system::shader_system(shared_ptr<camera_system>& camera_system, const shared_ptr<time_system>& time_system)
 	: camera_system_{ camera_system }, time_system_{ time_system }
 {
-	shaders_[shader_kind::dynamic_light] = std::make_unique<dynamic_light>(camera_system_, time_system_);
+	shaders_[shader_kind::dynamic_light] = std::make_unique<dynamic_light>(*camera_system_, *time_system_);
 	shaders_[shader_kind::wave_wiggle] = std::make_unique<wave_wiggle>();
 }
 

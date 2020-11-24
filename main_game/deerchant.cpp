@@ -414,7 +414,7 @@ void deerchant::set_target(dynamic_object& object)
 	near_the_table = false;
 }
 
-void deerchant::behavior_with_dynamic(dynamic_object* target, const long long elapsed_time)
+void deerchant::behavior_with_dynamic(shared_ptr<dynamic_object> target, const long long elapsed_time)
 {
 	if (helper::getDist(position_, target->get_position()) <= radius_ + target->get_radius())
 		move_system.push_by_bumping(target->get_position(), target->get_radius(), target->move_system.can_crash_into_dynamic);
@@ -428,7 +428,7 @@ void deerchant::behavior_with_dynamic(dynamic_object* target, const long long el
 	}
 }
 
-void deerchant::behavior_with_static(world_object* target, long long elapsed_time)
+void deerchant::behavior_with_static(shared_ptr<world_object> target, long long elapsed_time)
 {
 	if (!target)
 		return;
@@ -556,13 +556,13 @@ void deerchant::on_mouse_up(const int current_mouse_button, world_object *mouse_
 		return;
 	}
 
-	if (mouse_selected_object && mouse_selected_object->tag == entity_tag::brazier)
+	if (mouse_selected_object && mouse_selected_object->tag == entity_tag::main_object)
 	{
-		auto brazier = dynamic_cast<::brazier*>(mouse_selected_object);
+		auto main_object = dynamic_cast<::main_object*>(mouse_selected_object);
 		if (held_item->content.first != entity_tag::emptyCell &&
-			helper::getDist(brazier->getPlatePosition(), position_) <= brazier->getPlateRadius() + radius_)
+			helper::getDist(main_object->getPlatePosition(), position_) <= main_object->getPlateRadius() + radius_)
 		{
-			brazier->putItemToCraft(held_item->content.first);
+			main_object->putItemToCraft(held_item->content.first);
 			held_item->content = held_item->content.second > 1
 				? std::make_pair(held_item->content.first, held_item->content.second - 1)
 				: std::make_pair(entity_tag::emptyCell, 0);
@@ -691,7 +691,7 @@ void deerchant::ending_previous_action()
 		birth_dynamic_info nooseObject;
 		nooseObject.position = position_;
 		nooseObject.tag = entity_tag::noose;
-		nooseObject.owner = this;
+		*nooseObject.owner = *this;
 		birth_dynamics_.push(nooseObject);
 	}
     if (last_action_ == throw_noose)
@@ -1130,6 +1130,33 @@ std::vector<unique_ptr<sprite_chain_element>> deerchant::prepare_sprites(const l
 	//if (speedLineDirection != Direction::STAND)
 		//result.push_back(speedLine);
 
+	time_for_new_sprite_ += elapsed_time;
+
+	if (double(time_for_new_sprite_) >= 1e6 / animation_speed_)
+	{
+		time_for_new_sprite_ = 0;
+
+		if (current_action_ == actions::move_end)
+		{
+			current_sprite_[0] = 1;
+			last_action_ = current_action_;
+		}
+		else
+		{
+			++current_sprite_[0];
+			++current_sprite_[1];
+			++current_sprite_[2];
+			if (current_sprite_[0] > bodySprite->animation_length)
+				current_sprite_[0] = 1;
+			if (current_sprite_[0] >= bodySprite->animation_length)
+				last_action_ = current_action_;
+			if (legsSprite && current_sprite_[1] > legsSprite->animation_length)
+				current_sprite_[1] = 1;
+			if (speedLine && current_sprite_[2] > speedLine->animation_length)
+				speed_line_direction_ = direction::STAND;
+		}
+	}
+
 	if (legsSprite->pack_tag != pack_tag::empty)
 	{
 		if (legsInverse)
@@ -1139,36 +1166,6 @@ std::vector<unique_ptr<sprite_chain_element>> deerchant::prepare_sprites(const l
 		result.emplace_back(std::move(legsSprite));
 	}
 
-	time_for_new_sprite_ += elapsed_time;
-
-	if (double(time_for_new_sprite_) >= 1e6 / animation_speed_)
-	{
-		time_for_new_sprite_ = 0;
-
-		if (current_action_ == actions::move_end)
-		{
-			current_sprite_[0] = calculate_next_move_end_sprite(current_sprite_[0]);
-			if (current_sprite_[0] == -1)
-			{
-				last_action_ = current_action_;
-				current_sprite_[0] = 1;
-			}
-		}
-		else
-		{
-			if (++current_sprite_[0] > bodySprite->animation_length)
-				current_sprite_[0] = 1;
-			if (current_sprite_[0] >= bodySprite->animation_length)
-				last_action_ = current_action_;
-			if (legsSprite && ++current_sprite_[1] > legsSprite->animation_length)
-				current_sprite_[1] = 1;
-			if (speedLine && current_sprite_[2] > speedLine->animation_length)
-				speed_line_direction_ = direction::STAND;
-			else
-				current_sprite_[2]++;
-		}
-	}
-	
 	if (bodySprite->pack_tag != pack_tag::empty)
 	{
 		if (bodyInverse)

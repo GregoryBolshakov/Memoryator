@@ -1,29 +1,38 @@
 #define _USE_MATH_DEFINES
 
 #include "world_handler.h"
+#include "object_initializer.h"
 
 #include <fstream>
-
-#include "object_initializer.h"
+#include <utility>
 
 using namespace sf;
 
 world_handler::world_handler(
 	const int width,
 	const int height,
-	camera_system& camera_system,
-	std::map<pack_tag, sprite_pack>* packsMap) : cameraSystem{ camera_system }, scale_system_{ camera_system.get_scale_system() }
+	shared_ptr<camera_system> camera_system,
+	shared_ptr<std::map<pack_tag, sprite_pack>> packs_map) :
+	  packs_map_ {std::move(packs_map)}
+	, camera_system_{std::move(camera_system)}
+	, static_grid_{ make_unique<grid_list>(width, height, block_size_, micro_block_size_) }
+	, dynamic_grid_{ make_unique<grid_list>(width, height, block_size_, micro_block_size_) }
+	, world_generator_{ make_unique<world_generator>(
+		  width
+		  , height
+		  , block_size_
+		  , micro_block_size_
+		  , static_grid_
+		  , dynamic_grid_
+		  , camera_system_->get_scale_system()
+		  , this->packs_map_) }
 {
-	this->packsMap = packsMap;
-	world_object::micro_block_size = microBlockSize;
-	this->width = width;
-	this->height = height;
-	staticGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
-	dynamicGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
-	worldGenerator.init(width, height, blockSize, microBlockSize, &staticGrid, &dynamicGrid, &scale_system_, packsMap);
+	world_object::micro_block_size = micro_block_size_;
+	this->width_ = width;
+	this->height_ = height;
 	//buildSystem.init();
-	inventorySystem.init();
-	lightSystem.init({ 0, 0, helper::GetScreenSize().x, helper::GetScreenSize().y });
+	inventory_system_->init();
+	light_system_->init({ 0, 0, helper::GetScreenSize().x, helper::GetScreenSize().y });
 }
 
 world_handler::~world_handler()
@@ -39,24 +48,18 @@ world_handler::~world_handler()
 		item->~WorldObject();*/
 }
 
-void world_handler::runWorldGenerator()
+void world_handler::run_world_generator()
 {
-	staticGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
-	dynamicGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
-	
-    for (auto& i : worldGenerator.biome_matrix)		for (auto& j : i)
-			j = swampy_trees;
+	world_generator_->generate();
+	focused_object = world_generator_->focused_object;
+	camera_system_->set_focused_object(focused_object);
+	main_object = dynamic_pointer_cast<::brazier>(static_grid_->get_item_by_name("brazier"));
+	//main_object->linkWithBuildSystem(&buildSystem);
+	world_generator_->remembered_blocks = { { static_grid_->get_index_by_point(main_object->get_position().x, main_object->get_position().y), true } };
+	camera_system_->position = Vector2f(focused_object->get_position().x + helper::GetScreenSize().x * camera_system::cam_offset.x, focused_object->get_position().y + helper::GetScreenSize().y * camera_system::cam_offset.y);
 
-	worldGenerator.generate();
-	focusedObject = worldGenerator.focused_object;
-	cameraSystem.set_focused_object(focusedObject);
-	brazier = dynamic_cast<::brazier*>(staticGrid.get_item_by_name("brazier"));
-	//brazier->linkWithBuildSystem(&buildSystem);
-	worldGenerator.remembered_blocks = { { staticGrid.get_index_by_point(brazier->get_position().x, brazier->get_position().y), true } };
-	cameraSystem.position = Vector2f(focusedObject->get_position().x + helper::GetScreenSize().x * camera_system::cam_offset.x, focusedObject->get_position().y + helper::GetScreenSize().y * camera_system::cam_offset.y);
-
-	const auto hero = dynamic_cast<deerchant*>(focusedObject);
-	inventorySystem.inventory_bounding(&hero->bags);
+	const auto hero = dynamic_pointer_cast<deerchant>(focused_object);
+	inventory_system_->inventory_bounding(&hero->bags);
 }
 
 //void WorldHandler::initShaders()
@@ -79,33 +82,29 @@ void world_handler::runWorldGenerator()
 //	float level = 0;
 //}
 
-void world_handler::setScaleFactor(const int delta)
+void world_handler::birth_objects()
 {
-	scale_system_.set_scale_factor(delta);}
-
-void world_handler::birthObjects()
-{
-	for (auto& object : localTerrain)
+	for (auto& object : local_terrain_)
 	{
 		auto birthStaticStack = object->get_birth_objects().first;
 		auto birthDynamicStack = object->get_birth_objects().second;
 
 		while (!birthStaticStack.empty())
 		{
-			const auto biome = worldGenerator.biome_matrix[int(birthStaticStack.top().position.x / blockSize.x)][int(birthStaticStack.top().position.y / blockSize.y)];
-			worldGenerator.initialize_static_item(birthStaticStack.top().tag, birthStaticStack.top().position, birthStaticStack.top().type_of_object, "", birthStaticStack.top().count, biome, true, birthStaticStack.top().inventory);
+			const auto biome = world_generator_->biome_matrix[int(birthStaticStack.top().position.x / block_size_.x)][int(birthStaticStack.top().position.y / block_size_.y)];
+			world_generator_->initialize_static_item(birthStaticStack.top().tag, birthStaticStack.top().position, birthStaticStack.top().type_of_object, "", birthStaticStack.top().count, biome, true, birthStaticStack.top().inventory);
 			birthStaticStack.pop();
 		}
 		while (!birthDynamicStack.empty())
 		{
-			worldGenerator.initialize_dynamic_item(birthDynamicStack.top().tag, birthDynamicStack.top().position, "", birthDynamicStack.top().owner);
+			world_generator_->initialize_dynamic_item(birthDynamicStack.top().tag, birthDynamicStack.top().position, "", birthDynamicStack.top().owner);
 			birthDynamicStack.pop();
 		}
 		object->clear_birth_stack();
 	}
 }
 
-void world_handler::Load()
+void world_handler::load()
 {
 	/*staticGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
 	dynamicGrid = grid_list(this->width, this->height, blockSize, microBlockSize);
@@ -161,53 +160,53 @@ void world_handler::Load()
 	//Save();*/
 }
 
-void world_handler::Save()
+void world_handler::save()
 {
-	if (staticGrid.get_size() == 0)
+	/*if (static_grid_->get_size() == 0)
 		return;
 
 	std::ofstream fout("save.txt");
 	fout.clear();
-	auto staticItems = object_initializer::vector_cast_to_static(staticGrid.get_items(0, 0, float(width), float(height)));
-	auto dynamicItems = object_initializer::vector_cast_to_dynamic(dynamicGrid.get_items(0, 0, float(width), float(height)));
+	auto static_items = object_initializer::vector_cast_to_static(static_grid_->get_items(0, 0, float(width_), float(height_)));
+	auto dynamic_items = object_initializer::vector_cast_to_dynamic(dynamic_grid_->get_items(0, 0, float(width_), float(height_)));
 
-	fout << dynamicItems.size() << std::endl;
-	for (auto& dynamicItem : dynamicItems)
+	fout << dynamic_items.size() << std::endl;
+	for (auto& dynamicItem : dynamic_items)
 	{
 		fout << dynamicItem->get_to_save_name() << " " << dynamicItem->get_position().x << " " << dynamicItem->get_position().y << std::endl;
 	}
-	fout << staticItems.size() << std::endl;
-	for (auto& staticItem : staticItems)
+	fout << static_items.size() << std::endl;
+	for (auto& staticItem : static_items)
 	{
 		fout << staticItem->get_to_save_name() << " " << staticItem->get_type() << " " << staticItem->get_position().x << " " << staticItem->get_position().y << std::endl;
 	}
-	fout.close();
+	fout.close();*/
 }
 
-void world_handler::clearWorld()
+void world_handler::clear_world()
 {
-	staticGrid.~grid_list();
-	dynamicGrid.~grid_list();
+	static_grid_->~grid_list();
+	dynamic_grid_->~grid_list();
 }
 
 Vector2f  world_handler::mouse_position() const
 {
-	const auto scale = scale_system_.get_scale_factor();
+	const auto scale = camera_system_->get_scale_system()->get_scale_factor();
 	const auto mouse = Vector2f(Mouse::getPosition());
-	const auto position = (mouse - helper::GetScreenSize() / 2.0f + cameraSystem.position * scale) / scale;
+	const auto position = (mouse - helper::GetScreenSize() / 2.0f + camera_system_->position * scale) / scale;
 
 	return position;
 }
 
-void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
+void world_handler::set_transparent(std::vector<shared_ptr<world_object>>& visible_items)
 {
-	mouseDisplayName = "";
+	mouse_display_name_ = "";
 	const auto mousePos = mouse_position();
 	auto minCapacity = 1e6f, minDistance = 1e6f;
 
-	for (auto& visibleItem : visibleItems)
+	for (auto& visibleItem : visible_items)
 	{
-		if (!visibleItem || visibleItem->get_name() == focusedObject->get_name() || visibleItem->intangible)
+		if (!visibleItem || visibleItem->get_name() == focused_object->get_name() || visibleItem->intangible)
 			continue;
 
 		visibleItem->is_transparent = false;
@@ -239,44 +238,44 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 				minCapacity = itemCapacity;
 				minDistance = distanceToItemCenter;
 
-				const auto terrain = dynamic_cast<terrain_object*>(visibleItem);
-				if (terrain && pedestalController.ready_to_start)
-					mouseDisplayName = "Set pedestal";
+				const auto terrain = dynamic_pointer_cast<terrain_object>(visibleItem);
+				if (terrain && pedestal_controller.ready_to_start)
+					mouse_display_name_ = "Set pedestal";
 				else
 					switch (visibleItem->tag)
 					{
 					case entity_tag::tree:
 					{
-						mouseDisplayName = "Absorb";
+						mouse_display_name_ = "Absorb";
 						break;
 					}
 					case entity_tag::brazier:
 					{
-						if (inventorySystem.get_held_item().content.first != entity_tag::emptyCell &&
-							helper::getDist(brazier->getPlatePosition(), mousePos) <= brazier->getPlateRadius())
+						if (inventory_system_->get_held_item().content.first != entity_tag::emptyCell &&
+							helper::getDist(main_object->getPlatePosition(), mousePos) <= main_object->getPlateRadius())
 						{
-							if (helper::getDist(brazier->getPlatePosition(), focusedObject->get_position()) <= brazier->getPlateRadius() + focusedObject->get_radius())
-								mouseDisplayName = "Toss";
+							if (helper::getDist(main_object->getPlatePosition(), focused_object->get_position()) <= main_object->getPlateRadius() + focused_object->get_radius())
+								mouse_display_name_ = "Toss";
 							else
-								mouseDisplayName = "Come to toss";
+								mouse_display_name_ = "Come to toss";
 						}
 						break;
 					}
 					case entity_tag::hare:
 					case entity_tag::owl:
 					{
-						if (inventorySystem.get_held_item().content.first == entity_tag::inkyBlackPen)
-							mouseDisplayName = "Sketch";
+						if (inventory_system_->get_held_item().content.first == entity_tag::inkyBlackPen)
+							mouse_display_name_ = "Sketch";
 						else
-							mouseDisplayName = "Catch up";
+							mouse_display_name_ = "Catch up";
 						break;
 					}
 					case entity_tag::fern:
 					{
 						if (!visibleItem->inventory.empty())
-							mouseDisplayName = "Open";
+							mouse_display_name_ = "Open";
 						else
-							mouseDisplayName = "Pick up";
+							mouse_display_name_ = "Pick up";
 						break;
 					}
 					case entity_tag::yarrow:
@@ -286,21 +285,21 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 					case entity_tag::hareTrap:
 					case entity_tag::droppedLoot:
 					{
-						mouseDisplayName = "Pick up";
+						mouse_display_name_ = "Pick up";
 						break;
 					}
 					default:
 					{
-						mouseDisplayName = visibleItem->get_to_save_name();
+						mouse_display_name_ = visibleItem->get_to_save_name();
 						break;
 					}
 					}
 
-				selectedObject = visibleItem;
+				selected_object_ = visibleItem;
 			}
 		}
 
-		if (focusedObject->get_position().x >= itemPos.x && focusedObject->get_position().x <= itemPos.x + visibleItem->get_conditional_size_units().x && focusedObject->get_position().y >= itemPos.y && focusedObject->get_position().y <= visibleItem->get_position().y && !visibleItem->is_background)
+		if (focused_object->get_position().x >= itemPos.x && focused_object->get_position().x <= itemPos.x + visibleItem->get_conditional_size_units().x && focused_object->get_position().y >= itemPos.y && focused_object->get_position().y <= visibleItem->get_position().y && !visibleItem->is_background)
 		{
 			visibleItem->is_transparent = true;
 			if (visibleItem->color.a > 125)
@@ -314,10 +313,10 @@ void world_handler::setTransparent(std::vector<world_object*>& visibleItems)
 	}
 }
 
-bool world_handler::fixedClimbingBeyond(Vector2f& pos) const
+bool world_handler::fixed_climbing_beyond(Vector2f& pos) const
 {
 	const auto screenSize = helper::GetScreenSize();
-	const auto extra = staticGrid.get_block_size();
+	const auto extra = static_grid_->get_block_size();
 
 	const auto limit_x = (screenSize.x / 2.0f + extra.x) * 1.5f;
 	const auto limit_y = (screenSize.y / 2.0f + extra.y) * 1.5f;
@@ -327,9 +326,9 @@ bool world_handler::fixedClimbingBeyond(Vector2f& pos) const
 		pos.x = limit_x;
 		return false;
 	}
-	if (pos.x > float(width) - limit_x)
+	if (pos.x > float(width_) - limit_x)
 	{
-		pos.x = float(width) - limit_x;
+		pos.x = float(width_) - limit_x;
 		return false;
 	}
 	if (pos.y < limit_y)
@@ -337,15 +336,15 @@ bool world_handler::fixedClimbingBeyond(Vector2f& pos) const
 		pos.y = limit_y;
 		return false;
 	}
-	if (pos.y > float(height) - limit_y)
+	if (pos.y > float(height_) - limit_y)
 	{
-		pos.y = float(height) - limit_y;
+		pos.y = float(height_) - limit_y;
 		return false;
 	}
 	return true;
 }
 
-void world_handler::setItemFromBuildSystem()
+void world_handler::set_item_from_build_system()
 {
 	/*if (!(buildSystem.instant_build || focusedObject->get_current_action() == builds))
 		return;
@@ -367,11 +366,11 @@ void world_handler::setItemFromBuildSystem()
 
 		buildSystem.building_position = Vector2f(-1, -1);
 		buildSystem.build_type = 1;
-		brazier->clearCurrentCraft();
+		main_object->clearCurrentCraft();
 	}*/
 }
 
-void world_handler::onMouseUp(const int currentMouseButton)
+void world_handler::on_mouse_up(const int current_mouse_button)
 {
 	/*if (mouseDisplayName == "Set pedestal")
 	{
@@ -393,48 +392,48 @@ void world_handler::onMouseUp(const int currentMouseButton)
 	hero->on_mouse_up(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.building_position != Vector2f(-1, -1) && !buildSystem.instant_build));*/
 }
 
-void world_handler::handleEvents(Event& event)
+void world_handler::handle_events(Event& event)
 {
-	pedestalController.handle_events(event);
+	pedestal_controller.handle_events(event);
 }
 
-void world_handler::interact(Vector2f render_target_size, long long elapsedTime, Event event)
+void world_handler::interact(Vector2f render_target_size, long long elapsed_time, Event event)
 {
-	birthObjects();
+	birth_objects();
 
-	const auto extra = staticGrid.get_block_size();
-	const auto characterPosition = focusedObject->get_position();
+	const auto extra = static_grid_->get_block_size();
+	const auto characterPosition = focused_object->get_position();
 
 	const Vector2f worldUpperLeft(characterPosition.x - render_target_size.x / 2, characterPosition.y - render_target_size.y / 2);
 	const Vector2f worldBottomRight(characterPosition.x + render_target_size.x / 2, characterPosition.y + render_target_size.y / 2);
 
-	worldGenerator.beyond_screen_generation();
+	world_generator_->beyond_screen_generation();
 
-	auto localItems = staticGrid.get_items(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y);
+	auto localItems = static_grid_->get_items(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y);
 	auto localStaticItems = object_initializer::vector_cast_to_static(localItems);
-	auto localDynamicItems = object_initializer::vector_cast_to_dynamic(dynamicGrid.get_items(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y));
+	auto localDynamicItems = object_initializer::vector_cast_to_dynamic(dynamic_grid_->get_items(worldUpperLeft.x - extra.x, worldUpperLeft.y - extra.y, worldBottomRight.x + extra.x, worldBottomRight.y + extra.y));
 
-	localTerrain.clear();
+	local_terrain_.clear();
 	for (auto& item : localStaticItems)
 		if (!item->is_background)
-			localTerrain.push_back(item);
+			local_terrain_.push_back(item);
 	for (auto& item : localDynamicItems)
-		localTerrain.push_back(item);
+		local_terrain_.push_back(item);
 
-	setTransparent(localTerrain);
+	set_transparent(local_terrain_);
 
-	const auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->get_name()));
-	hero->held_item = &inventorySystem.get_held_item();
+	const auto hero = dynamic_pointer_cast<deerchant>(dynamic_grid_->get_item_by_name(focused_object->get_name()));
+	hero->held_item = &inventory_system_->get_held_item();
 
 	for (auto& dynamicItem : localDynamicItems)
 	{
-		dynamicItem->move_system.is_route_needed(staticGrid.micro_block_matrix, microBlockSize);
-		dynamicItem->move_system.make_route(elapsedTime, &staticGrid, dynamicItem->sight_range / (scale_system_.get_scale_factor() * scale_system_.get_main_scale()));
-		dynamicItem->move_system.pass_route_beginning(microBlockSize);
+		dynamicItem->move_system.is_route_needed(static_grid_->micro_block_matrix, micro_block_size_);
+		dynamicItem->move_system.make_route(elapsed_time, *static_grid_, dynamicItem->sight_range / (camera_system_->get_scale_system()->get_scale_factor() * camera_system_->get_scale_system()->get_main_scale()));
+		dynamicItem->move_system.pass_route_beginning(micro_block_size_);
 		/* crutch */ if (dynamicItem->tag == entity_tag::hero)
 			dynamicItem->move_system.move_position = dynamicItem->move_system.lax_move_position;
 
-		dynamicItem->behavior(elapsedTime);
+		dynamicItem->behavior(elapsed_time);
 
 		//interaction with other objects
 		for (auto& otherDynamicItem : localDynamicItems)
@@ -447,49 +446,49 @@ void world_handler::interact(Vector2f render_target_size, long long elapsedTime,
 		{
 			if (dynamicItem == otherDynamicItem)
 				continue;
-			dynamicItem->behavior_with_dynamic(otherDynamicItem, elapsedTime);
+			dynamicItem->behavior_with_dynamic(otherDynamicItem, elapsed_time);
 		}
 		for (auto& otherStaticItem : localStaticItems)
-			dynamicItem->behavior_with_static(otherStaticItem, elapsedTime);
+			dynamicItem->behavior_with_static(otherStaticItem, elapsed_time);
 		//------------------------------						
 
 		if (dynamicItem->shake_speed != -1)
-			cameraSystem.make_shake(4, dynamicItem->shake_speed);
+			camera_system_->make_shake(4, dynamicItem->shake_speed);
 
-		auto newPosition = dynamicItem->move_system.do_move(elapsedTime);
+		auto newPosition = dynamicItem->move_system.do_move(elapsed_time);
 
-		fixedClimbingBeyond(newPosition);
+		fixed_climbing_beyond(newPosition);
 
-		newPosition = dynamicItem->move_system.do_slip(newPosition, localStaticItems, float(height), elapsedTime);
+		newPosition = dynamicItem->move_system.do_slip(newPosition, localStaticItems, float(height_), elapsed_time);
 
-		if (!fixedClimbingBeyond(newPosition))
+		if (!fixed_climbing_beyond(newPosition))
 			newPosition = dynamicItem->get_position();
 		dynamicItem->set_position(newPosition);
-		dynamicGrid.update_item_position(dynamicItem->get_name(), newPosition.x, newPosition.y);
+		dynamic_grid_->update_item_position(dynamicItem->get_name(), newPosition.x, newPosition.y);
 	}
 
-	setItemFromBuildSystem();
+	set_item_from_build_system();
 
 	//buildSystem.setHeldItem(inventorySystem.getHeldItem()->lootInfo);
-	//buildSystem.interact(cameraSystem.position, scale_system_.get_scale_factor());
-	inventorySystem.interact(elapsedTime);
-	pedestalController.interact(elapsedTime, event);
+	//buildSystem.interact(cameraSystem.position, scale_system_->get_scale_factor());
+	inventory_system_->interact(elapsed_time);
+	pedestal_controller.interact(elapsed_time, event);
 
 	//deleting items
 	for (auto& item : localStaticItems)
 		if (item->get_delete_promise())
-			staticGrid.delete_item(item->get_name());
+			static_grid_->delete_item(item->get_name());
 	for (auto& item : localDynamicItems)
 		if (item->get_delete_promise())
-			dynamicGrid.delete_item(item->get_name());
+			dynamic_grid_->delete_item(item->get_name());
 	//--------------
 
 	//saving world
-	timeForNewSave += elapsedTime;
-	if (timeForNewSave >= timeAfterSave)
+	time_for_new_save_ += elapsed_time;
+	if (time_for_new_save_ >= time_after_save_)
 	{
-		timeForNewSave = 0;
-		Save();
+		time_for_new_save_ = 0;
+		save();
 	}
 	//------------
 }
@@ -525,38 +524,38 @@ std::vector<std::unique_ptr<drawable_chain_element>> world_handler::prepare_spri
 {
 	std::vector<std::unique_ptr<drawable_chain_element>> result{};
 
-	const auto extra = staticGrid.get_block_size();
+	const auto extra = static_grid_->get_block_size();
 
 	const auto screenSize = helper::GetScreenSize();
 	const auto screenCenter = Vector2f(screenSize.x / 2, screenSize.y / 2);
 
-	cameraSystem.position.x += (focusedObject->get_position().x + helper::GetScreenSize().x * camera_system::cam_offset.x - cameraSystem.position.x) *
-		(focusedObject->move_system.speed * float(elapsed_time)) / camera_system::max_camera_distance.x;
+	camera_system_->position.x += (focused_object->get_position().x + helper::GetScreenSize().x * camera_system::cam_offset.x - camera_system_->position.x) *
+		(focused_object->move_system.speed * float(elapsed_time)) / camera_system::max_camera_distance.x;
 
-	cameraSystem.position.y += (focusedObject->get_position().y + helper::GetScreenSize().y * camera_system::cam_offset.y - cameraSystem.position.y) *
-		(focusedObject->move_system.speed * float(elapsed_time)) / camera_system::max_camera_distance.y;
+	camera_system_->position.y += (focused_object->get_position().y + helper::GetScreenSize().y * camera_system::cam_offset.y - camera_system_->position.y) *
+		(focused_object->move_system.speed * float(elapsed_time)) / camera_system::max_camera_distance.y;
 
-	cameraSystem.shake_interact(elapsed_time);
+	camera_system_->shake_interact(elapsed_time);
 
-	const auto scale = scale_system_.get_scale_factor();
-	worldUpperLeft = Vector2f(
-		ceil(cameraSystem.position.x - (screenCenter.x + extra.x) / scale),
-		ceil(cameraSystem.position.y - (screenCenter.y + extra.y) / scale));
-	worldBottomRight = Vector2f(
-		ceil(cameraSystem.position.x + (screenCenter.x + extra.x) / scale),
-		ceil(cameraSystem.position.y + (screenCenter.y + extra.y) / scale));
+	const auto scale = camera_system_->get_scale_system()->get_scale_factor();
+	world_upper_left = Vector2f(
+		ceil(camera_system_->position.x - (screenCenter.x + extra.x) / scale),
+		ceil(camera_system_->position.y - (screenCenter.y + extra.y) / scale));
+	world_bottom_right = Vector2f(
+		ceil(camera_system_->position.x + (screenCenter.x + extra.x) / scale),
+		ceil(camera_system_->position.y + (screenCenter.y + extra.y) / scale));
 
-	if (worldUpperLeft.x < 0)
-		worldUpperLeft.x = 0;
-	if (worldUpperLeft.y < 0)
-		worldUpperLeft.y = 0;
-	if (worldBottomRight.x > float(width))
-		worldBottomRight.x = float(width);
-	if (worldBottomRight.y > float(height))
-		worldBottomRight.y = float(height);
+	if (world_upper_left.x < 0)
+		world_upper_left.x = 0;
+	if (world_upper_left.y < 0)
+		world_upper_left.y = 0;
+	if (world_bottom_right.x > float(width_))
+		world_bottom_right.x = float(width_);
+	if (world_bottom_right.y > float(height_))
+		world_bottom_right.y = float(height_);
 
-	auto localStaticItems = staticGrid.get_items(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y);
-	auto localDynamicItems = dynamicGrid.get_items(worldUpperLeft.x, worldUpperLeft.y, worldBottomRight.x, worldBottomRight.y);
+	auto localStaticItems = static_grid_->get_items(world_upper_left.x, world_upper_left.y, world_bottom_right.x, world_bottom_right.y);
+	auto localDynamicItems = dynamic_grid_->get_items(world_upper_left.x, world_upper_left.y, world_bottom_right.x, world_bottom_right.y);
 
 	for (auto& item : localStaticItems)
 	{

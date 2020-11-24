@@ -8,7 +8,7 @@
 class world_object;
 using namespace sf;
 using std::unique_ptr, std::make_unique;
-using std::shared_ptr, std::make_shared;
+using std::shared_ptr, std::make_shared, std::dynamic_pointer_cast;
 
 enum state { common = 1, absorbed = 2, constructed = 3 };
 
@@ -25,7 +25,7 @@ struct  birth_dynamic_info
 {
 	entity_tag tag;
 	Vector2f position = { 0,0 };
-	world_object* owner = nullptr;
+	shared_ptr<world_object> owner = nullptr;
 };
 
 class world_object

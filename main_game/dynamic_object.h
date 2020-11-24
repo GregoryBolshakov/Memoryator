@@ -25,8 +25,8 @@ public:
 	void init_micro_blocks() override;
 	virtual void change_action(actions new_action, bool reset_sprite_number = false, bool remember_last_action = false);
 	virtual void handle_input(bool used_mouse = false, long long elapsed_time = 0);
-	virtual void behavior_with_dynamic(dynamic_object* target, long long elapsed_time) = 0;
-	virtual void behavior_with_static(world_object* target, long long elapsed_time) = 0;
+	virtual void behavior_with_dynamic(shared_ptr<dynamic_object> target, long long elapsed_time) = 0;
+	virtual void behavior_with_static(shared_ptr<world_object> target, long long elapsed_time) = 0;
 	virtual void behavior(long long elapsedTime) = 0;
 	virtual void set_target(dynamic_object &object) = 0;
 	virtual void jerk(float power, float deceleration, Vector2f destination_point) = 0;
@@ -45,7 +45,7 @@ public:
 	std::string last_intersected = "";
 
 	std::string debug_info;
-protected:	
+protected:
 	int ellipse_size_{};
 	Vector2f focus1_, focus2_;
 	float strength_ = 0;

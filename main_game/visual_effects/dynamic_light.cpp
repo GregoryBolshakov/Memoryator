@@ -38,7 +38,7 @@ void dynamic_light::on_update()
 	const Glsl::Vec3 view{
 		position.x,
 		position.y,
-		camera_system_.get_scale_system().scale_delta_normalized()
+		camera_system_.get_scale_system()->scale_delta_normalized()
 	};
 	shader_.setUniform("view", view);
 	shader_.setUniform("norm_time", time_system_.get_time_normalized());

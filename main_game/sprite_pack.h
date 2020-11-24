@@ -81,7 +81,7 @@ class sprite_pack
 public:
     void init(const std::string& path, const std::string& json_path, pack_tag tag);
     Sprite get_sprite(pack_part part, direction direction, int number, bool mirrored = false);
-	sprite_pack_structure::sprite get_original_info(pack_part part, direction direction, int number);
+	const sprite_pack_structure::sprite& get_original_info(pack_part part, direction direction, int number) const;
 	static sprite_chain_element* tag_to_icon(entity_tag object, bool selected = false, int type_of_object = 1);
 
     pack_tag tag;

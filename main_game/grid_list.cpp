@@ -28,27 +28,9 @@ grid_list::grid_list(const int width, const int height, const Vector2f size, con
 	
 	const auto vector_size = width_to_size_x_ * height_to_size_y_;
 	cells_.resize(vector_size);
-	for (auto& arr : cells_)
-	{
-		arr.resize(0);
-	}
 	micro_block_matrix.resize(4000, std::vector<bool>(4000, true));	
 	distances.resize(4000, std::vector<float>(4000, 1000));
 	previous.resize(4000, std::vector<std::pair<int, int>>(4000, { -1, -1 }));
-}
-
-grid_list::~grid_list()
-{
-	for (auto cell : cells_)
-	{
-		for (auto ptr : cell)
-		{
-			delete ptr;
-		}
-		cell.clear();
-	}
-	cells_.clear();
-	items_.clear();
 }
 
 int grid_list::get_index_by_point(const float x, const float y) const
@@ -353,18 +335,18 @@ bool grid_list::is_intersect_with_others(world_object* object) const
 	return object->is_locked_place(check_blocks);
 }
 
-void grid_list::set_locked_micro_blocks(world_object* item, const bool value)
+void grid_list::set_locked_micro_blocks(const shared_ptr<world_object>& item, const bool value)
 {
-	const auto world_item = dynamic_cast<world_object*>(item);
+	const auto world_item = dynamic_pointer_cast<world_object>(item);
 	if (world_item)
 		for (const auto block : world_item->get_locked_micro_blocks())
 		{
-			if (!(block.x < 0 || block.x > width_to_micro_x_ || block.y < 0 || block.y > height_to_micro_y_))			
-				micro_block_matrix[block.x][block.y] = value;			
+			if (!(block.x < 0 || block.x > width_to_micro_x_ || block.y < 0 || block.y > height_to_micro_y_))
+				micro_block_matrix[block.x][block.y] = value;
 		}
 }
 
-void grid_list::add_item(world_object* item, const std::string& name, const float x, const float y)
+void grid_list::add_item(const shared_ptr<world_object>& item, const std::string& name, const float x, const float y)
 {
 	set_locked_micro_blocks(item);
 
@@ -373,7 +355,7 @@ void grid_list::add_item(world_object* item, const std::string& name, const floa
 
 	auto index = get_index_by_point(x, y);
 
-	auto position = std::make_pair(index, int(cells_[index].size()));
+	auto position = std::make_pair(index, static_cast<int>(cells_[index].size()));
 
 	cells_[index].push_back(item);
 	
@@ -397,8 +379,7 @@ void grid_list::delete_item(const std::string& name)
 	
 	for (unsigned int i = position.second; i < cells_[position.first].size(); i++)
 	{
-		const auto item_to_update = dynamic_cast<world_object*>(cells_[position.first][i]);
-		auto item_name = item_to_update->get_name();
+		auto item_name = cells_[position.first][i]->get_name();
 		items_.at(item_name).second -= 1;
 	}
 	
@@ -406,36 +387,36 @@ void grid_list::delete_item(const std::string& name)
 	items_.erase(items_.find(name));
 }
 
-world_object* grid_list::get_item_by_name(const std::string& name)
+shared_ptr<world_object> grid_list::get_item_by_name(const std::string& name)
 {
 	const auto position = items_.at(name);
 	return cells_[position.first][position.second];
 }
 
-std::vector<world_object*> grid_list::get_items(const int block_index)
+std::vector<shared_ptr<world_object>> grid_list::get_items(const int block_index)
 {
 	return cells_[block_index];
 }
 
-std::vector<world_object*> grid_list::get_items(float upper_left_x, float upper_left_y, float bottom_right_x, float bottom_right_y)
+std::vector<shared_ptr<world_object>> grid_list::get_items(float upper_left_x, float upper_left_y, float bottom_right_x, float bottom_right_y)
 {
-	std::vector<world_object*> result = {};
+	std::vector<shared_ptr<world_object>> result{};
 	
 	if (upper_left_x < 0)
 	{
 		upper_left_x = 0;
 	}
-	if (bottom_right_x > float(width_))
+	if (bottom_right_x > static_cast<float>(width_))
 	{
-		bottom_right_x = float(width_);
+		bottom_right_x = static_cast<float>(width_);
 	}
 	if (upper_left_y < 0)
 	{
 		upper_left_y = 0;
 	}
-	if (bottom_right_y > float(height_))
+	if (bottom_right_y > static_cast<float>(height_))
 	{
-		bottom_right_y = float(height_);
+		bottom_right_y = static_cast<float>(height_);
 	}
 	const auto rows_count = int(ceil(double(bottom_right_y - upper_left_y) / int(size_.y)));
 	auto first_column = int(get_index_by_point(upper_left_x, upper_left_y));
@@ -542,8 +523,7 @@ void grid_list::update_item_position(const std::string& name, const float x, con
 
 	for (unsigned int i = position.second; i < cells_[position.first].size(); i++)
 	{
-		const auto item_to_update = dynamic_cast<world_object*>(cells_[position.first][i]);
-		auto item_name = item_to_update->get_name();
+		auto item_name = cells_[position.first][i]->get_name();
 		items_.at(item_name).second -= 1;
 	}
 	auto index = get_index_by_point(x, y);

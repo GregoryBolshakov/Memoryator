@@ -1,9 +1,10 @@
 #include "draw_system.h"
-
 #include "shader_system.h"
 #include "text_system.h"
 
-draw_system::draw_system(shader_system& shader_system, const Vector2f screen_size) :shader_system_{ shader_system }
+draw_system::draw_system(shared_ptr<shader_system> shader_system, const Vector2f screen_size) : shader_system_{
+	std::move(shader_system)
+}
 {
 	init_packs_map();
 	render_texture_.create(unsigned(screen_size.x), unsigned(screen_size.y));
@@ -74,7 +75,7 @@ bool draw_system::search_files(const LPCTSTR lpsz_file_name, const search_func l
 			}
 			strcpy(part, wfd.cFileName);
 
-			lp_search_func(file, packs_map);
+			lp_search_func(file, *packs_map_);
 		}
 	} while (FindNextFile(h_search, &wfd));
 	FindClose(h_search);
@@ -114,10 +115,11 @@ void init_sprite_pack(const LPCTSTR lpsz_file_name, std::map<pack_tag, sprite_pa
 
 void draw_system::init_packs_map()
 {
+	packs_map_ = make_shared<packs_map_t>();
 	search_files("Game/spritePacks/*.png", init_sprite_pack, true);
 	sprite_pack::icon_without_space_size = Vector2f(
-		float(packs_map.at(pack_tag::inventory).get_original_info(pack_part::areas, direction::DOWN, 1).frame.w),
-		float(packs_map.at(pack_tag::inventory).get_original_info(pack_part::areas, direction::DOWN, 1).frame.h));
+		float(packs_map_->at(pack_tag::inventory).get_original_info(pack_part::areas, direction::DOWN, 1).frame.w),
+		float(packs_map_->at(pack_tag::inventory).get_original_info(pack_part::areas, direction::DOWN, 1).frame.h));
 }
 
 void draw_system::advanced_scale(sprite_chain_element& item, Sprite& sprite, const sprite_pack_structure::sprite& original_info, const float scale)
@@ -149,30 +151,8 @@ void draw_system::advanced_scale(sprite_chain_element& item, Sprite& sprite, con
 		{
 			sprite.scale(pow(scale, 1.0F / 6), 1);
 			sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - (pow(scale, 1.0F / 6) - 1) * size_w);
-		}	
+		}
 	}
-}
-
-std::vector<drawable_chain_element*> draw_system::upcast_chain(const std::vector<sprite_chain_element*>& chain)
-{
-	std::vector<drawable_chain_element*> result = {};
-	for (auto sprite_chain_item : chain)
-	{
-		auto item = static_cast<drawable_chain_element*>(sprite_chain_item);
-		result.push_back(item);
-	}
-	return result;
-}
-
-std::vector<sprite_chain_element*> draw_system::downcast_to_sprite_chain(const std::vector<drawable_chain_element*>& chain)
-{
-	std::vector<sprite_chain_element*> result = {};
-	for (auto item : chain)
-	{
-		auto sprite_chain_item = dynamic_cast<sprite_chain_element*>(item);
-		result.push_back(sprite_chain_item);
-	}
-	return result;
 }
 
 void draw_system::draw_sprite_chain_element(RenderTarget& target, sprite_chain_element& sprite_chain_item, const Vector2f camera_position, const Vector2f screen_center, const float scale)
@@ -182,13 +162,13 @@ void draw_system::draw_sprite_chain_element(RenderTarget& target, sprite_chain_e
 		return;
 	}
 
-	auto sprite = packs_map.at(sprite_chain_item.pack_tag).get_sprite(sprite_chain_item.pack_part, sprite_chain_item.direction, sprite_chain_item.number, sprite_chain_item.mirrored);
+	auto sprite = packs_map_->at(sprite_chain_item.pack_tag).get_sprite(sprite_chain_item.pack_part, sprite_chain_item.direction, sprite_chain_item.number, sprite_chain_item.mirrored);
 	if (sprite.getTextureRect() == IntRect())
 	{
 		return;
 	}
 
-	const auto original_info = packs_map.at(sprite_chain_item.pack_tag).get_original_info(sprite_chain_item.pack_part, sprite_chain_item.direction, sprite_chain_item.number);
+	const auto original_info = packs_map_->at(sprite_chain_item.pack_tag).get_original_info(sprite_chain_item.pack_part, sprite_chain_item.direction, sprite_chain_item.number);
 	const Vector2f sprite_pos = {
 		(sprite_chain_item.position.x - camera_position.x - sprite_chain_item.offset.x) * scale + screen_center.x,
 		(sprite_chain_item.position.y - camera_position.y - sprite_chain_item.offset.y) * scale + screen_center.y
@@ -204,16 +184,15 @@ void draw_system::draw_sprite_chain_element(RenderTarget& target, sprite_chain_e
 
 	advanced_scale(sprite_chain_item, sprite, original_info, scale);
 
-	//if (sprite_chain_item.pack_tag == pack_tag::swampyTrees && sprite_chain_item.pack_part == pack_part::tree && original_info.frame_name == "tree/5")
+	/*if (sprite_chain_item.pack_tag == pack_tag::swampyTrees && sprite_chain_item.pack_part == pack_part::tree && original_info.frame_name == "tree/5")
 	{
-		const auto& shader = shader_system_.get_shader(target, sprite_chain_item, sprite);
+		const auto& shader = shader_system_->get_shader(target, sprite_chain_item, sprite);
 		target.draw(sprite, &shader);
 		//target.draw(sprite);
 	}
-	//else
-	
+	//else*/
 
-	//target.draw(sprite);
+	target.draw(sprite);
 }
 
 void draw_system::draw_text_chain_element(RenderTarget& target, text_chain_element& text_chain_item)
@@ -292,6 +271,6 @@ void draw_system::draw(RenderTarget& target, const std::vector<unique_ptr<drawab
 void draw_system::draw(RenderWindow& target, const shader_kind kind)
 {
 	shader_texture_.update(target);
-	const auto& shader = shader_system_.get_shader(kind);
+	const auto& shader = shader_system_->get_shader(kind);
 	target.draw(shader_sprite_, &shader);
 }

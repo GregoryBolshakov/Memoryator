@@ -56,7 +56,7 @@ public:
 	std::vector<cell> cells;
 
 	//animation
-	sprite_chain_element* prepare_sprite(long long elapsed_time, std::map<pack_tag, sprite_pack>* packs_map);
+	sprite_chain_element* prepare_sprite(long long elapsed_time);
 	void draw_circuit(RenderWindow* window);
 
 	long long state_change_time = 100000;

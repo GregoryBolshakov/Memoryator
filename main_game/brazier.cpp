@@ -161,20 +161,20 @@ std::vector<unique_ptr<sprite_chain_element>> brazier::prepare_sprites(long long
 
 	/*additionalSprites.clear();
 	SpriteChainElement brazierBack, brazierFront, fire, craftIcon;
-	brazierBack.packTag = PackTag::locations; brazierBack.packPart = PackPart::brazier, brazierBack.number = 1;
+	brazierBack.packTag = PackTag::locations; brazierBack.packPart = PackPart::main_object, brazierBack.number = 1;
 	brazierBack.size = Vector2f(conditionalSizeUnits);	
 	brazierBack.offset = Vector2f(textureBoxOffset.x, textureBoxOffset.y - conditionalSizeUnits.y * 0.2f);
 	brazierBack.position = { position.x, position.y - conditionalSizeUnits.y * 0.2f };
 	brazierBack.antiTransparent = true;*/
 	/*if (!currentCraft.empty())
 	{
-		fire.path = "Game/worldSprites/terrainObjects/brazier/fire.png";
+		fire.path = "Game/worldSprites/terrainObjects/main_object/fire.png";
 		fire.size = Vector2f(conditionalSizeUnits.x * 0.22f, conditionalSizeUnits.y * 0.22f);
 		fire.offset = Vector2f(conditionalSizeUnits.x * 0.06f, textureBoxOffset.y - conditionalSizeUnits.y * 0.555f + scaleFactor * conditionalSizeUnits.y / 20);
 		fire.position = { position.x, position.y };
 		fire.antiTransparent = true;
 	}*/
-	/*brazierFront.packTag = PackTag::locations; brazierFront.packPart = PackPart::brazier, brazierFront.number = 2;
+	/*brazierFront.packTag = PackTag::locations; brazierFront.packPart = PackPart::main_object, brazierFront.number = 2;
 	brazierFront.size = Vector2f(conditionalSizeUnits);
 	brazierFront.offset = Vector2f(textureBoxOffset.x, textureBoxOffset.y + conditionalSizeUnits.y * 0.2f);
 	brazierFront.position = { position.x, position.y + conditionalSizeUnits.y * 0.2f };

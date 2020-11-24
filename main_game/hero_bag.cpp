@@ -311,7 +311,7 @@ void hero_bag::mouse_move()
 	last_mouse_pos_ = Vector2f(Mouse::getPosition());
 }
 
-sprite_chain_element* hero_bag::prepare_sprite(const long long elapsed_time, std::map<pack_tag, sprite_pack> * packs_map)
+sprite_chain_element* hero_bag::prepare_sprite(const long long elapsed_time)
 {
 	const auto screen_center = Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2);
 	bag_sprite_chain_.closed_bag->size = size_closed_; bag_sprite_chain_.closed_bag_selected->size = size_closed_; bag_sprite_chain_.closed_bag_big->size = size_closed_;
@@ -362,11 +362,11 @@ sprite_chain_element* hero_bag::prepare_sprite(const long long elapsed_time, std
 			fix_pos();
 			position_.x += shift_vector.x; position_.y += shift_vector.y;
 
-			const auto texture_size = packs_map->at(pack_tag::inventory).get_original_info(pack_part::bag1, direction::DOWN, 4).source_size;
+			//const auto texture_size = packs_map->at(pack_tag::inventory).get_original_info(pack_part::bag1, direction::DOWN, 4).source_size;
 			const auto changing_to_change_time = float(state_changing_time)/float(state_change_time);
 			const Vector2f scale_value = {
-				(size_closed_.x + (size_open_.x - size_closed_.x) * changing_to_change_time) / float(texture_size.w),
-				(size_closed_.y + (size_open_.y - size_closed_.y) * changing_to_change_time) / float(texture_size.h)
+				(size_closed_.x + (size_open_.x - size_closed_.x) * changing_to_change_time) / bag_sprite_chain_.closed_bag->size.x,
+				(size_closed_.y + (size_open_.y - size_closed_.y) * changing_to_change_time) / bag_sprite_chain_.closed_bag->size.y
 			};
 			bag_sprite_chain_.opened_bag->size.x *= scale_value.x; bag_sprite_chain_.opened_bag->size.y *= scale_value.y;
 

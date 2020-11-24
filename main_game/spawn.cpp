@@ -59,7 +59,7 @@
 //    return {};
 //	/*additionalSprites.clear();
 //	spriteChainElement spawnBody;
-//	spawnBody.path = "Game/worldSprites/terrainObjects/brazier/brazier" + std::to_string(typeOfObject) + ".png";
+//	spawnBody.path = "Game/worldSprites/terrainObjects/main_object/main_object" + std::to_string(typeOfObject) + ".png";
 //	spawnBody.size = Vector2f(conditionalSizeUnits);
 //	spawnBody.offset = Vector2f(textureBoxOffset);
 //	additionalSprites.push_back(spawnBody);*/

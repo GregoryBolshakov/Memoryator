@@ -9,7 +9,7 @@ using namespace sf;
 class console
 {
 public:	
-	console(FloatRect rect, time_system& time_system, world_handler* world = nullptr);
+	console(FloatRect rect, shared_ptr<time_system> time_system, shared_ptr<world_handler> world);
 	~console();
 	input_box get_body() const;
 	void draw(RenderWindow& window) const;
@@ -24,7 +24,7 @@ private:
 	bool state_ = false;
 	std::vector<std::string> command_stack_ = { {""} };
 	size_t command_stack_iterator_ = 0;
-	time_system& time_system_;
-	world_handler* world_ = nullptr;
+	shared_ptr<time_system> time_system_;
+	shared_ptr<world_handler> world_;
 };
 

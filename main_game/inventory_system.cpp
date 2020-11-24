@@ -316,7 +316,7 @@ std::vector<drawable_chain_element*> inventory_system::prepare_sprites(long long
 	for (auto& bag : *bound_bags_)
 	{
 		cnt++;
-		result.push_back(bag.prepare_sprite(elapsed_time, packs_map));
+		result.push_back(bag.prepare_sprite(elapsed_time));
 		bag.ready_to_eject = false;
 		if (bag.was_moved)
 		{

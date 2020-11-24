@@ -1,8 +1,7 @@
 #include "console.h"
 
-console::console(const FloatRect rect, time_system& time_system, world_handler* world) :time_system_{ time_system }
+console::console(const FloatRect rect, shared_ptr<time_system> time_system, shared_ptr<world_handler> world) : time_system_{ std::move(time_system) }, world_{ std::move(world) }
 {
-	this->world_ = world;
 	body.init(rect);
 }
 
@@ -110,9 +109,6 @@ void console::do_command()
 	command_stack_.emplace_back("");
 	body.line.clear();
 
-	if (!world_)
-		return;
-
 	for (auto& command : commands)
 		std::transform(command.begin(), command.end(), command.begin(), tolower);
 
@@ -122,13 +118,13 @@ void console::do_command()
 		{
 			const auto time = std::stoll(commands[2]);
 			if (time != -1)
-				time_system_.set_time_total_micro_seconds(time);
+				time_system_->set_time_total_micro_seconds(time);
 		}
 		if (commands[0] == "set" && commands[1] == "daypart")
 		{
 			const auto day_part = std::stod(commands[2]);
 			if (day_part != -1)
-				time_system_.set_day_part(day_part);
+				time_system_->set_day_part(day_part);
 		}
 	}
 	if (commands.size() >= 2)
@@ -137,7 +133,7 @@ void console::do_command()
 		{
 			auto object = object_initializer::mapped_strings.at(commands[1]);
 			if (int(object) >= 102 && int(object) <= 112)
-				world_->getWorldGenerator().initialize_dynamic_item(object, { world_->focusedObject->get_position().x + 50, world_->focusedObject->get_position().y + 50 }, "");
+				world_->get_world_generator()->initialize_dynamic_item(object, { world_->focused_object->get_position().x + 50, world_->focused_object->get_position().y + 50 }, "");
 		}
 		if (commands[0] == "build" && object_initializer::mapped_strings.count(commands[1]) > 0)
 		{
@@ -147,10 +143,10 @@ void console::do_command()
 			auto object = object_initializer::mapped_strings.at(commands[1]);
 
 			//if (int(object) >= 211 || int(object) >= 301 && int(object) <= 405)
-				//world_->setObjectToBuild(object, typeOfObject, true);
+				//world_.setObjectToBuild(object, typeOfObject, true);
 		}
 		if (commands[0] == "set" && commands[1] == "pedestal")
-			world_->pedestalController.ready_to_start = true;
+			world_->pedestal_controller.ready_to_start = true;
 	}
 
 	state_ = false;

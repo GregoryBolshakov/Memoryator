@@ -21,54 +21,47 @@ std::map<std::string, entity_tag> object_initializer::mapped_strings = { {"hero"
 object_initializer::object_initializer()
 = default;
 
-object_initializer::~object_initializer()
-= default;
 
 int object_initializer::new_name_id = 0;
 
-static_object* object_initializer::initialize_static_item(
+shared_ptr<static_object> object_initializer::initialize_static_item(
 	const entity_tag item_class,
 	const Vector2f item_position,
 	const int item_type,
 	const std::string& item_name,
 	const int count,
-	const biomes biome,	
-	std::map<pack_tag, sprite_pack>* packs_map,
+	const biomes biome,
+	const shared_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
 	const bool mirrored,
 	const std::vector<std::pair<entity_tag, int>>& inventory)
 {
-	static_object* item;
+	shared_ptr<static_object> item;
 
 	switch (item_class)
 	{
 		case entity_tag::brazier:
 		{
-			item = new brazier("item", Vector2f(0, 0), -1);
+			item = make_shared<brazier>("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::tree:
 		{
-			item = new forest_tree("item", Vector2f(0, 0), -1);
+			item = make_shared<forest_tree>("item", Vector2f(0, 0), -1);
+			break;
+		}
+		case entity_tag::ground:
+		{
+			item = make_shared<ground>("item", Vector2f(0, 0), -1);
+			break;
+		}
+		case entity_tag::groundConnection:
+		{
+			item = make_shared<ground_connection>("item", Vector2f(0, 0), -1);
 			break;
 		}
 		/*case entity_tag::grass:
 		{
 			item = new grass("item", Vector2f(0, 0), -1);
-			break;
-		}
-		case entity_tag::spawn:
-		{
-			item = new spawn("item", Vector2f(0, 0), -1);
-			break;
-		}
-		case entity_tag::ground:
-		{
-			item = new ground("item", Vector2f(0, 0), -1);
-			break;
-		}
-		case entity_tag::groundConnection:
-		{
-			item = new ground_connection("item", Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::chamomile:
@@ -157,14 +150,11 @@ static_object* object_initializer::initialize_static_item(
 			break;
 		}*/
 		default:
-		{
-			item = new forest_tree("item", Vector2f(0, 0), -1);
-			break;
-		}
+			return nullptr;
 	}
 
 	const auto current_type = item_type == -1
-		 ? get_random_type_by_biome(item, biome)
+		 ? get_random_type_by_biome(*item, biome)
 		 : item_type;
 
 	new_name_id++;
@@ -175,10 +165,8 @@ static_object* object_initializer::initialize_static_item(
 	
 	if (packs_map->count(sprites[0]->pack_tag) <= 0 ||
 		packs_map->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
-	{
-		delete item;
 		return nullptr;
-	}
+
 	const auto info = packs_map->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number);
 	const auto texture_size = Vector2f(float(info.source_size.w), float(info.source_size.h));
 	item->set_texture_size(texture_size);
@@ -195,22 +183,22 @@ static_object* object_initializer::initialize_static_item(
 	return item;
 }
 
-dynamic_object* object_initializer::initialize_dynamic_item(
+shared_ptr<dynamic_object> object_initializer::initialize_dynamic_item(
 	entity_tag item_class,
 	Vector2f item_position,
 	const std::string& item_name,
-	std::map<pack_tag, sprite_pack>* packs_map,
-	world_object* owner)
+	const shared_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
+	const shared_ptr<world_object>& owner)
 {
-	dynamic_object* item;
+	shared_ptr<dynamic_object> item;
 	std::string name_of_image;
 
 	switch (item_class)
 	{
 	case entity_tag::hero:
 	{
-		item = new deerchant("item", Vector2f(0, 0));
-		name_of_image = "Game/worldSprites/hero/stand/down/1";		
+		item = make_shared<deerchant>("item", Vector2f(0, 0));
+		name_of_image = "Game/worldSprites/hero/stand/down/1";
 		break;
 	}
 	/*case entity_tag::wolf:
@@ -280,38 +268,32 @@ dynamic_object* object_initializer::initialize_dynamic_item(
 		break;
 	}*/
 	default:
-	{
-		item = new nightmare_first("item", Vector2f(0, 0));
-		name_of_image = "Game/worldSprites/nightmare2/stand/down/1";
-		break;
-	}
+		return nullptr;
 	}
 
 	new_name_id++;
 	name_of_image += ".png";
 
 	const auto name = item_name.empty()
-		                  ? std::string(item->get_to_save_name()) + "_" + std::to_string(new_name_id)
-		                  : item_name;
+		? std::string(item->get_to_save_name()) + "_" + std::to_string(new_name_id)
+		: item_name;
 
 	item->set_name(name);
 	item->set_position(Vector2f(item_position));
     auto sprites = item->prepare_sprites(0);
 	if (packs_map->count(sprites[0]->pack_tag) <= 0 || 
 		packs_map->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
-	{
-		delete item;
 		return nullptr;
-	}
+
 	const auto info = packs_map->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number);
 	const auto texture_size = Vector2f(float(info.source_size.w), float(info.source_size.h));
 	item->set_texture_size(texture_size);
 	return item;
 }
 
-int object_initializer::get_random_type_by_biome(world_object* object, const biomes biome)
+int object_initializer::get_random_type_by_biome(const world_object& object, const biomes biome)
 {
-	switch (object->tag)
+	switch (object.tag)
 	{
 		case entity_tag::tree:
 		{
@@ -371,24 +353,26 @@ int object_initializer::get_random_type_by_biome(world_object* object, const bio
 				return rand() % 4 + 13;
 			break;
 		}
-		default: return rand() % object->get_variety_of_types() + 1;
+		default: return rand() % object.get_variety_of_types() + 1;
 	}
 	return 0;
 }
 
-std::vector<static_object*> object_initializer::vector_cast_to_static(const std::vector<world_object*>& items)
+std::vector<shared_ptr<static_object>> object_initializer::vector_cast_to_static(const std::vector<shared_ptr<world_object>>& items)
 {
-	std::vector<static_object*> static_items = {};
-	for (auto item : items)
-		static_items.push_back(dynamic_cast<static_object*>(item));
+	std::vector< shared_ptr<static_object>> static_items{};
+	static_items.reserve(items.size());
+	for (const auto item : items)
+		static_items.push_back(dynamic_pointer_cast<static_object>(item));
 	return static_items;
 }
 
-std::vector<dynamic_object*> object_initializer::vector_cast_to_dynamic(std::vector<world_object*> items)
+std::vector< shared_ptr<dynamic_object>> object_initializer::vector_cast_to_dynamic(const std::vector<shared_ptr<world_object>>& items)
 {
-	auto dynamic_items = *(new std::vector<dynamic_object*>());
+	std::vector<shared_ptr<dynamic_object>> dynamic_items{};
+	dynamic_items.reserve(items.size());
 	for (auto& item : items)
-		dynamic_items.push_back(dynamic_cast<dynamic_object*>(item));
+		dynamic_items.push_back(dynamic_pointer_cast<dynamic_object>(item));
 	return dynamic_items;
 }
 

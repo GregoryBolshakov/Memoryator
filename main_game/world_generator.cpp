@@ -3,28 +3,24 @@
 #include "dynamic_object.h"
 #include "empty_object.h"
 
-world_generator::world_generator()
-= default;
-
-void world_generator::init(
-	const int width,
-	const int height,
-	const Vector2f block_size,
-	const Vector2f micro_block_size,
-	grid_list* static_grid,
-	grid_list* dynamic_grid,
-	scale_system* scale_system,
-	std::map<pack_tag, sprite_pack>* packs_map)
+world_generator::world_generator(int width
+	, int height
+	, Vector2f block_size
+	, Vector2f micro_block_size
+	, const shared_ptr<grid_list>& static_grid
+	, const shared_ptr<grid_list>& dynamic_grid
+	, const shared_ptr<scale_system>& scale_system
+	, const shared_ptr<std::map<pack_tag, sprite_pack>>& packs_map) :
+	  static_grid_(static_grid)
+	, dynamic_grid_(dynamic_grid)
+	, packs_map_(packs_map)
+	, height_(height)
+	, block_size_(block_size)
+	, micro_block_size_(micro_block_size)
+	, scale_system_(scale_system)
 {
-	this->width_ = width;
-	this->height_ = height;
-	this->block_size_ = block_size;
-	this->micro_block_size_ = micro_block_size;
-	this->static_grid_ = static_grid;
-	this->dynamic_grid_ = dynamic_grid;
-	this->packs_map_ = packs_map;
-	scale_system_ = scale_system;
-	step_size_ = { block_size.x / 10, block_size.y / 10 };}
+	step_size_ = { block_size.x / 10, block_size.y / 10 };
+}
 
 void world_generator::initialize_static_item(
 	const entity_tag item_class,
@@ -42,24 +38,24 @@ void world_generator::initialize_static_item(
 		return;
 
 	// locked place check
-	const auto terrain = dynamic_cast<terrain_object*>(item);
+	const auto terrain = dynamic_pointer_cast<terrain_object>(item);
 	if (terrain)
 	{
 		std::map<std::pair<int, int>, bool> checkBlocks = {};
 
-		const auto end_i = int((item->get_position().x + item->get_micro_block_check_area_bounds().x) / micro_block_size_.x);
-		const auto end_j = int((item->get_position().y + item->get_micro_block_check_area_bounds().y) / micro_block_size_.y);
+		const auto end_i = static_cast<int>((item->get_position().x + item->get_micro_block_check_area_bounds().x) / micro_block_size_.x);
+		const auto end_j = static_cast<int>((item->get_position().y + item->get_micro_block_check_area_bounds().y) / micro_block_size_.y);
 
-		const auto width_to_micro_x = width_ / int(micro_block_size_.x);
-		const auto height_to_micro_y = height_ / int(micro_block_size_.y);
+		const auto width_to_micro_x = width_ / static_cast<int>(micro_block_size_.x);
+		const auto height_to_micro_y = height_ / static_cast<int>(micro_block_size_.y);
 
-		auto i = int((item->get_position().x - item->get_micro_block_check_area_bounds().x) / micro_block_size_.x);
+		auto i = static_cast<int>((item->get_position().x - item->get_micro_block_check_area_bounds().x) / micro_block_size_.x);
 		while (i <= end_i)
 		{
-			auto j = int((item->get_position().y - item->get_micro_block_check_area_bounds().y) / micro_block_size_.y);
+			auto j = static_cast<int>((item->get_position().y - item->get_micro_block_check_area_bounds().y) / micro_block_size_.y);
 			while (j <= end_j)
 			{
-				if (!(i < 0 || i >width_to_micro_x || j < 0 || j >height_to_micro_y) && !static_grid_->micro_block_matrix[int(round(i))][int(round(j))])
+				if (!(i < 0 || i >width_to_micro_x || j < 0 || j >height_to_micro_y) && !static_grid_->micro_block_matrix[static_cast<int>(round(i))][static_cast<int>(round(j))])
 					checkBlocks[{i, j}] = true;
 				j++;
 			}
@@ -67,32 +63,34 @@ void world_generator::initialize_static_item(
 		}
 
 		if (item->is_locked_place(checkBlocks))
-		{
-			delete item;
 			return;
-		}
 	}
 	
 	static_grid_->add_item(item, item->get_name(), item_position.x, item_position.y);
 }
 
-void world_generator::initialize_dynamic_item(const entity_tag item_class, const Vector2f item_position, const std::string& item_name, world_object* owner)
+void world_generator::initialize_dynamic_item(const entity_tag item_class, const Vector2f item_position, const std::string& item_name, const shared_ptr<world_object>& owner)
 {
 	const auto item = object_initializer::initialize_dynamic_item(item_class, item_position, item_name, packs_map_, owner);
 	
 	if (item == nullptr)
 		return;
 
-	if (item_class == entity_tag::hero)	
-		focused_object = item;			
+	if (item_class == entity_tag::hero)
+		focused_object = item;
 
 	dynamic_grid_->add_item(item, item->get_name(), item_position.x, item_position.y);
 }
 
 void world_generator::generate()
-{	
+{
+	biome_matrix = std::vector<std::vector<biomes>>(100, std::vector<biomes>(100));
+	for (auto& i : biome_matrix)
+		for (auto& j : i)
+			j = swampy_trees;
+	
 	initialize_dynamic_item(entity_tag::hero, Vector2f(15800, 16300), "hero");
-	initialize_dynamic_item(entity_tag::owl, Vector2f(15000, 16350), "owl");
+	//initialize_dynamic_item(entity_tag::owl, Vector2f(15000, 16350), "owl");
 	initialize_static_item(entity_tag::brazier, Vector2f(16300, 15800), 1, "brazier");
 
 	// world generation
@@ -321,8 +319,8 @@ bool world_generator::can_be_regenerated(const int block_index) const
 
 	for (auto& item : dynamic_grid_->get_items(block_index))
 	{
-		const auto dynamicItem = dynamic_cast<dynamic_object*>(item);
-		if (dynamicItem)
+		const auto dynamic_item = dynamic_pointer_cast<dynamic_object>(item);
+		if (dynamic_item)
 			return false;
 	}
 

@@ -247,7 +247,7 @@ Vector2f move_system::do_move(long long elapsedTime)
 	return position;
 }
 
-Vector2f move_system::do_slip(Vector2f new_position, std::vector<static_object*>& local_static_items, const float height, const long long elapsed_time) const
+Vector2f move_system::do_slip(Vector2f new_position, std::vector<shared_ptr<static_object>>& local_static_items, const float height, const long long elapsed_time) const
 {
 	if (move_position != Vector2f(-1, -1))
 		auto a = 123;
@@ -257,7 +257,7 @@ Vector2f move_system::do_slip(Vector2f new_position, std::vector<static_object*>
 
 	for (auto& staticItem : local_static_items)
 	{
-		auto terrain = dynamic_cast<terrain_object*>(staticItem);
+		auto terrain = dynamic_pointer_cast<terrain_object>(staticItem);
 		if (!terrain || staticItem->is_background || staticItem->get_radius() == 0)
 			continue;
 
@@ -339,7 +339,7 @@ void move_system::is_route_needed(std::vector<std::vector<bool>>& micro_block_ma
 	time_after_new_route = time_for_new_route;
 }
 
-void move_system::make_route(long long elapsed_time, grid_list* grid_list, float zone_offset)
+void move_system::make_route(long long elapsed_time, grid_list& grid_list, float zone_offset)
 {
 	if (!can_crash_into_static)
 		return;
@@ -353,7 +353,7 @@ void move_system::make_route(long long elapsed_time, grid_list* grid_list, float
 			if (route_generation_ability && lax_move_position != Vector2f(-1, -1) && *current_action_ != jerking && *tag != entity_tag::hero)
 			{
 				time_after_new_route = 0;
-				route = grid_list->make_route(
+				route = grid_list.make_route(
 					*position_, 
 					lax_move_position, 
 					position_->x - zone_offset,

@@ -6,9 +6,17 @@
 
 class world_generator
 {
-public:	
+public:
+	world_generator(int width
+		, int height
+		, Vector2f block_size
+		, Vector2f micro_block_size
+		, const shared_ptr<grid_list>&
+		, const shared_ptr<grid_list>&
+		, const shared_ptr<scale_system>&
+		, const shared_ptr<std::map<pack_tag, sprite_pack>>&);
+
 	void generate();
-	void init(int width, int height, Vector2f block_size, Vector2f micro_block_size, grid_list* static_grid, grid_list* dynamic_grid, scale_system* scale_system, std::map<pack_tag, sprite_pack>* packs_map);
 
 	auto initialize_static_item(
 		entity_tag item_class,
@@ -20,7 +28,7 @@ public:
 		bool mirrored = true,
 		const std::vector<std::pair<entity_tag, int>>& inventory = {}) const -> void;
 	
-	void initialize_dynamic_item(entity_tag item_class, Vector2f item_position, const std::string& item_name, world_object* owner = nullptr);
+	void initialize_dynamic_item(entity_tag item_class, Vector2f item_position, const std::string& item_name, const shared_ptr<world_object>& owner = nullptr);
 
 	//active generation
 	void in_block_generate(int block_index);
@@ -29,23 +37,21 @@ public:
 	void perimeter_generation();
 	void beyond_screen_generation();
 
-	world_generator();
-
-	biomes biome_matrix[100][100]{};
+	std::vector<std::vector<biomes>> biome_matrix;
 	std::map<int, bool> remembered_blocks = { {0, true} };
-	dynamic_object* focused_object = nullptr;
+	shared_ptr<dynamic_object> focused_object = nullptr;
 	
 private:
-	grid_list* static_grid_ = nullptr;
-	grid_list* dynamic_grid_ = nullptr;	
-	std::map<pack_tag, sprite_pack>* packs_map_{};
+	shared_ptr<grid_list> static_grid_;
+	shared_ptr<grid_list> dynamic_grid_;
+	shared_ptr<std::map<pack_tag, sprite_pack>> packs_map_;
 	int width_ = 0;
 	int height_ = 0;
 	Vector2f block_size_ = { 0, 0 };
 	Vector2f micro_block_size_ = { 0, 0 };
 	Vector2i focused_object_block_ = { 0, 0 };
 
-	scale_system* scale_system_{};
+	shared_ptr<scale_system> scale_system_;
 
 	// block generation
 	void generate_ground(int block_index);

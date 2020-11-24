@@ -15,13 +15,13 @@ class menu_system
 public:
 	menu_system();
 	~menu_system();
-	void interact(world_handler &world, RenderWindow &window);
+	void interact(const shared_ptr<world_handler>& world, RenderWindow &window);
 	std::vector<unique_ptr<drawable_chain_element>> prepare_sprites();
 
 	[[nodiscard]] menu_states get_state() const
 	{ return menu_state_; }
 	void set_state(menu_states state) { menu_state_ = state; }
-	void on_key_down(Event event, world_handler &world);
+	void on_key_down(Event event, const shared_ptr<world_handler>& world);
 
 	[[nodiscard]] bool get_activity() const
 	{ return was_active_; }

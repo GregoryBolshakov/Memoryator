@@ -20,7 +20,7 @@ void menu_system::init_buttons()
 menu_system::~menu_system()
 = default;
 
-void menu_system::on_key_down(const Event event, world_handler &world)
+void menu_system::on_key_down(const Event event, const shared_ptr<world_handler>& world)
 {
 	if (event.key.code == Keyboard::Escape)
 	{
@@ -36,7 +36,7 @@ void menu_system::on_key_down(const Event event, world_handler &world)
 	}
 }
 
-void menu_system::interact(world_handler &world, RenderWindow &window)
+void menu_system::interact(const shared_ptr<world_handler>& world, RenderWindow &window)
 {
 	was_active_ = false;
 
@@ -46,7 +46,7 @@ void menu_system::interact(world_handler &world, RenderWindow &window)
 	{
 		if (button_list_[button_tag::newRunTag].is_selected(mouse_pos))
 		{
-			world.runWorldGenerator();
+			world->run_world_generator();
 			menu_state_ = closed;
 			was_active_ = true;
 			return;
@@ -55,7 +55,7 @@ void menu_system::interact(world_handler &world, RenderWindow &window)
 		if (button_list_[button_tag::continueTag].is_selected(mouse_pos))
 		{
 			//world.Load();
-            world.runWorldGenerator();
+			world->run_world_generator();
 			menu_state_ = closed;
 			was_active_ = true;
 			return;
@@ -76,7 +76,7 @@ void menu_system::interact(world_handler &world, RenderWindow &window)
 	{
 		if (button_list_[button_tag::newRunTag].is_selected(mouse_pos))
 		{
-			world.runWorldGenerator();
+			world->run_world_generator();
 			menu_state_ = closed;
 			was_active_ = true;
 			return;
@@ -91,7 +91,7 @@ void menu_system::interact(world_handler &world, RenderWindow &window)
 
 		if (button_list_[button_tag::exitTag].is_selected(mouse_pos))
 		{
-			world.Save();
+			world->save();
 			menu_state_ = main_menu;
 			was_active_ = true;
 			return;

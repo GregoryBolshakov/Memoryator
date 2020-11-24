@@ -22,8 +22,8 @@ public:
 	void handle_input(bool used_mouse = false, long long elapsed_time = 0) override;
 	void move_end(bool animate = false, bool invert_direction = false);
 	[[nodiscard]] int calculate_next_move_end_sprite(int current_sprite = 1) const;
-	void behavior_with_dynamic(dynamic_object* target, long long elapsed_time) override;
-	void behavior_with_static(world_object* target, long long elapsed_time) override;
+	void behavior_with_dynamic(shared_ptr<dynamic_object> target, long long elapsed_time) override;
+	void behavior_with_static(shared_ptr<world_object> target, long long elapsed_time) override;
 	void behavior(long long elapsed_time) override;
 	void on_mouse_up(int current_mouse_button, world_object *mouse_selected_object, Vector2f mouse_world_pos, bool is_building = false);
 	void set_target(dynamic_object& object) override;
