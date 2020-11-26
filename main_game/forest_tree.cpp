@@ -1,8 +1,8 @@
 #include "forest_tree.h"
-
 #include "helper.h"
+#include "sprite_chain_element.h"
 
-forest_tree::forest_tree(std::string object_name, const Vector2f center_position, const int type_of_object) : terrain_object(std::move(object_name), center_position)
+forest_tree::forest_tree(std::string object_name, const sf::Vector2f center_position, const int type_of_object) : terrain_object(std::move(object_name), center_position)
 {
 	variety_of_types_ = 18; // BirchGrove: 1-7; DarkWoods: 8-13; SwampyTrees: 14-18
 	this->type_of_object_ = type_of_object;
@@ -58,7 +58,7 @@ void forest_tree::setType(const int type_of_object)
 	//conditionalSizeUnits.x *= extension; conditionalSizeUnits.y *= extension;
 }
 
-Vector2f forest_tree::calculate_texture_offset()
+sf::Vector2f forest_tree::calculate_texture_offset()
 {
 	texture_box_.width = texture_box_.width * get_scale_ratio().x;
 	texture_box_.height = texture_box_.height * get_scale_ratio().y;
@@ -107,136 +107,131 @@ Vector2f forest_tree::calculate_texture_offset()
 
 void forest_tree::init_pedestal()
 {
-	std::pair<Vector2f, Vector2f> microEllipse;
+	std::pair<sf::Vector2f, sf::Vector2f> microEllipse;
 	switch (type_of_object_)
 	{
 		case 1:		
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.158f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.158f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.158f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.158f, position_.y);
 			ellipse_size_multipliers[0] = { 1.44f };
 			break;		
 		case 2:		
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.07f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.07f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.07f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.07f, position_.y);
 			ellipse_size_multipliers[0] = { 1.58f };
 			break;		
 		case 3:		
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.184f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.184f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.184f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.184f, position_.y);
 			ellipse_size_multipliers[0] = { 1.42f };
 			break;		
 		case 4:		
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.082f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.082f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.082f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.082f, position_.y);
 			ellipse_size_multipliers[0] = { 1.42f };
 			break;		
 		case 5:		
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.088f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.088f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.088f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.088f, position_.y);
 			ellipse_size_multipliers[0] = { 1.57f };
 			break;		
 		case 6:		
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.084f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.084f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.084f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.084f, position_.y);
 			ellipse_size_multipliers[0] = { 1.31f };
 			break;		
 		case 7:		
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.131f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.131f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.131f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.131f, position_.y);
 			ellipse_size_multipliers[0] = { 1.28f };
 			break;		
 		case 8:		
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.118f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.118f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.118f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.118f, position_.y);
 			ellipse_size_multipliers[0] = { 1.42f };
 			break;
 		case 9:		
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.124f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.124f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.124f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.124f, position_.y);
 			ellipse_size_multipliers[0] = { 1.21f };
 			break;		
 		case 10:		
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.127f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.127f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.127f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.127f, position_.y);
 			ellipse_size_multipliers[0] = { 1.25f };
 			break;		
 		case 11:		
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.163f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.163f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.163f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.163f, position_.y);
 			ellipse_size_multipliers[0] = { 1.25f };
 			break;		
 		case 12:		
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.137f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.137f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.137f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.137f, position_.y);
 			ellipse_size_multipliers[0] = { 1.25f };
 			break;		
 		case 13:
 			this->is_multi_ellipse = true;
-			focus1_ = Vector2f(position_.x, position_.y);
-			focus2_ = Vector2f(position_.x, position_.y);
+			focus1_ = sf::Vector2f(position_.x, position_.y);
+			focus2_ = sf::Vector2f(position_.x, position_.y);
 
-			microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.42f, position_.y + texture_box_.height * 0.247f);
-			microEllipse.second = Vector2f(position_.x - texture_box_.width * 0.178f, position_.y + texture_box_.height * 0.247f);
+			microEllipse.first = sf::Vector2f(position_.x - texture_box_.width * 0.42f, position_.y + texture_box_.height * 0.247f);
+			microEllipse.second = sf::Vector2f(position_.x - texture_box_.width * 0.178f, position_.y + texture_box_.height * 0.247f);
 			internal_ellipses.push_back(microEllipse);
 
-			microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.235f, position_.y + texture_box_.height * 0.171f);
-			microEllipse.second = Vector2f(position_.x - texture_box_.width * 0.026f, position_.y + texture_box_.height * 0.171f);
+			microEllipse.first = sf::Vector2f(position_.x - texture_box_.width * 0.235f, position_.y + texture_box_.height * 0.171f);
+			microEllipse.second = sf::Vector2f(position_.x - texture_box_.width * 0.026f, position_.y + texture_box_.height * 0.171f);
 			internal_ellipses.push_back(microEllipse);
 
-			microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.044f, position_.y + texture_box_.height * 0.047f);
-			microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.132f, position_.y + texture_box_.height * 0.047f);
+			microEllipse.first = sf::Vector2f(position_.x - texture_box_.width * 0.044f, position_.y + texture_box_.height * 0.047f);
+			microEllipse.second = sf::Vector2f(position_.x + texture_box_.width * 0.132f, position_.y + texture_box_.height * 0.047f);
 			internal_ellipses.push_back(microEllipse);
 
-			microEllipse.first = Vector2f(position_.x + texture_box_.width * 0.14f, position_.y - texture_box_.height * 0.012f);
-			microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.385f, position_.y - texture_box_.height * 0.012f);
+			microEllipse.first = sf::Vector2f(position_.x + texture_box_.width * 0.14f, position_.y - texture_box_.height * 0.012f);
+			microEllipse.second = sf::Vector2f(position_.x + texture_box_.width * 0.385f, position_.y - texture_box_.height * 0.012f);
 			internal_ellipses.push_back(microEllipse);
 			ellipse_size_multipliers = { 1.03f, 1.09f, 1.27f, 1.12f };
 			break;
 		case 14:
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.079f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.079f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.079f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.079f, position_.y);
 			ellipse_size_multipliers[0] = { 1.42f };
 			break;
 		case 15:
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.09f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.09f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.09f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.09f, position_.y);
 			ellipse_size_multipliers[0] = { 1.55f };
 			break;
 		case 16:
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.066f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.066f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.066f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.066f, position_.y);
 			ellipse_size_multipliers[0] = { 1.46f };
 			break;
 		case 17:
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.162f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.162f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.162f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.162f, position_.y);
 			ellipse_size_multipliers[0] = { 1.25f };
 			break;
 		case 18:
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.109f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.109f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.109f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.109f, position_.y);
 			ellipse_size_multipliers[0] = { 1.25f };
 			break;
 		default:		
-			focus1_ = Vector2f(position_.x - texture_box_.width * 0.106f, position_.y);
-			focus2_ = Vector2f(position_.x + texture_box_.width * 0.106f, position_.y);
+			focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.106f, position_.y);
+			focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.106f, position_.y);
 			ellipse_size_multipliers[0] = { 1.82f };
 			break;		
 	}
-	init_micro_blocks();
+	init_route_blocks();
 }
 
-Vector2f forest_tree::get_build_position(std::vector<world_object*>, float, Vector2f)
+sf::Vector2f forest_tree::get_build_position(std::vector<world_object*>, float, sf::Vector2f)
 {
 	return { -1, -1 };
 }
 
-Vector2f forest_tree::get_owl_landing_pos()
-{
-	return { position_.x, position_.y - conditional_size_units_.y / 2 };
-}
-
-int forest_tree::get_build_type(Vector2f, Vector2f)
+int forest_tree::get_build_type(sf::Vector2f, sf::Vector2f)
 {
 	return 1;
 }
@@ -244,7 +239,7 @@ int forest_tree::get_build_type(Vector2f, Vector2f)
 std::vector<std::unique_ptr<sprite_chain_element>> forest_tree::prepare_sprites(const long long elapsed_time)
 {
 	std::vector<std::unique_ptr<sprite_chain_element>> result;
-	auto body = make_unique<sprite_chain_element>(pack_tag::darkWoods, pack_part::tree, direction::DOWN, type_of_object_, position_, conditional_size_units_, Vector2f(texture_box_offset_), color, mirrored_);
+	auto body = make_unique<sprite_chain_element>(pack_tag::darkWoods, pack_part::tree, direction::DOWN, type_of_object_, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_), color, mirrored_);
 	if (type_of_object_ == 13)
 		body->unscaled = true;
 	

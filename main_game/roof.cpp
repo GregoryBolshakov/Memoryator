@@ -2,7 +2,7 @@
 //
 //#include "helper.h"
 //
-//roof::roof(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
+//roof::roof(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 4;
 //	this->type_of_object_ = typeOfObject;
@@ -52,47 +52,47 @@
 //	switch (type_of_object_)
 //	{
 //	case 1:
-//		focus1_ = Vector2f(position_.x - texture_box_.width * 0.152f, position_.y - texture_box_.height * 0.021f);
-//		focus2_ = Vector2f(position_.x + texture_box_.width * 0.152f, position_.y - texture_box_.height * 0.021f);
+//		focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.152f, position_.y - texture_box_.height * 0.021f);
+//		focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.152f, position_.y - texture_box_.height * 0.021f);
 //		ellipse_size_multipliers[0] = { 1.5f };
 //		break;
 //	case 2:
-//		focus1_ = Vector2f(position_.x - texture_box_.width * 0.143f, position_.y - texture_box_.height * 0.021f);
-//		focus2_ = Vector2f(position_.x + texture_box_.width * 0.143f, position_.y - texture_box_.height * 0.021f);
+//		focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.143f, position_.y - texture_box_.height * 0.021f);
+//		focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.143f, position_.y - texture_box_.height * 0.021f);
 //		ellipse_size_multipliers[0] = { 1.55f };
 //		break;
 //	case 3:
-//		focus1_ = Vector2f(position_.x - texture_box_.width * 0.158f, position_.y - texture_box_.height * 0.037f);
-//		focus2_ = Vector2f(position_.x + texture_box_.width * 0.158f, position_.y - texture_box_.height * 0.037f);
+//		focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.158f, position_.y - texture_box_.height * 0.037f);
+//		focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.158f, position_.y - texture_box_.height * 0.037f);
 //		ellipse_size_multipliers[0] = { 1.62f };
 //		break;
 //	case 4:
-//		focus1_ = Vector2f(position_.x - texture_box_.width * 0.176f, position_.y - texture_box_.height * 0.032f);
-//		focus2_ = Vector2f(position_.x + texture_box_.width * 0.176f, position_.y - texture_box_.height * 0.032f);
+//		focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.176f, position_.y - texture_box_.height * 0.032f);
+//		focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.176f, position_.y - texture_box_.height * 0.032f);
 //		ellipse_size_multipliers[0] = { 1.55f };
 //		break;
 //	default:
-//		focus1_ = Vector2f(position_.x - texture_box_.width * 0.32f, position_.y);
-//		focus2_ = Vector2f(position_.x + texture_box_.width * 0.32f, position_.y);
+//		focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.32f, position_.y);
+//		focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.32f, position_.y);
 //		ellipse_size_multipliers[0] = { 1.3f };
 //		break;
 //	}
-//	init_micro_blocks();
+//	init_route_blocks();
 //}
 //
-//Vector2f roof::get_build_position(std::vector<world_object*>, float, Vector2f)
+//Vector2f roof::get_build_position(std::vector<world_object*>, float, sf::Vector2f)
 //{
 //	return { -1, -1 };
 //}
 //
-//int roof::get_build_type(Vector2f, Vector2f)
+//int roof::get_build_type(sf::Vector2f, sf::Vector2f)
 //{
 //	return 1;
 //}
 //
 //std::vector<sprite_chain_element*> roof::prepare_sprites(long long)
 //{
-//	const auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::roof, direction::DOWN, type_of_object_, position_, conditional_size_units_, Vector2f(texture_box_offset_), color, mirrored_);
+//	const auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::roof, direction::DOWN, type_of_object_, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_), color, mirrored_);
 //
 //	return { body };
 //}

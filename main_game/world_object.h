@@ -3,10 +3,10 @@
 #include <SFML/Graphics.hpp>
 #include <stack>
 
-#include "sprite_chain_element.h"
+class sprite_chain_element;
+enum class entity_tag;
 
 class world_object;
-using namespace sf;
 using std::unique_ptr, std::make_unique;
 using std::shared_ptr, std::make_shared, std::dynamic_pointer_cast;
 
@@ -15,7 +15,7 @@ enum state { common = 1, absorbed = 2, constructed = 3 };
 struct birth_static_info
 {
 	entity_tag tag;
-	Vector2f position = { 0,0 };
+	sf::Vector2f position = { 0,0 };
 	int type_of_object = 1;
 	int count = 1;
 	std::vector<std::pair<entity_tag, int>> inventory;
@@ -24,14 +24,14 @@ struct birth_static_info
 struct  birth_dynamic_info
 {
 	entity_tag tag;
-	Vector2f position = { 0,0 };
+	sf::Vector2f position = { 0,0 };
 	shared_ptr<world_object> owner = nullptr;
 };
 
 class world_object
 {
 public:
-	world_object(std::string object_name, Vector2f center_position);
+	world_object(std::string object_name, sf::Vector2f center_position);
 	virtual ~world_object();
 
 	[[nodiscard]] int get_z_coords() const	{ return z_coordinate_; }
@@ -42,41 +42,36 @@ public:
 	[[nodiscard]] bool get_delete_promise() const { return delete_promise_; }
 	[[nodiscard]] bool get_mirrored_state() const { return mirrored_; }
 	[[nodiscard]] float get_radius() const { return radius_; }
-	[[nodiscard]] float get_permissible_distance() const { return permissible_distance_; }
 	[[nodiscard]] std::string get_to_save_name() const { return to_save_name_; }
 	[[nodiscard]] std::string get_name() const { return name_; }
 	virtual std::vector<unique_ptr<sprite_chain_element>> prepare_sprites(long long elapsed_time) = 0;
 	virtual void on_sprite_change();
 	virtual int get_sprite_number() = 0;
-	[[nodiscard]] Vector2f get_position() const { return position_; }
-	Vector2f *get_ptr_position() { return &position_; }
-	[[nodiscard]] Vector2f get_texture_size() const { return { texture_box_.width, texture_box_.height }; }
-	[[nodiscard]] Vector2f get_texture_offset() const { return { texture_box_offset_.x, texture_box_offset_.y }; }
-	[[nodiscard]] Vector2f get_scale_ratio() const;
-	[[nodiscard]] Vector2f get_conditional_size_units() const { return conditional_size_units_; }
-	[[nodiscard]] Vector2f get_micro_block_check_area_bounds() const { return micro_block_check_area_bounds_; }
-	[[nodiscard]] std::vector<Vector2i> get_locked_micro_blocks() const { return locked_micro_blocks_; }
-	virtual Vector2f get_build_position(std::vector<world_object*> visible_items, float scale_factor, Vector2f camera_position) { return { -1 ,-1 }; };
-	virtual int get_build_type(Vector2f own_pos, Vector2f other_pos) { return 1; };
-	[[nodiscard]] FloatRect get_original_texture_box() const { return original_texture_box_; }
+	[[nodiscard]] sf::Vector2f get_position() const { return position_; }
+	sf::Vector2f *get_ptr_position() { return &position_; }
+	[[nodiscard]] sf::Vector2f get_texture_size() const { return { texture_box_.width, texture_box_.height }; }
+	[[nodiscard]] sf::Vector2f get_texture_offset() const { return { texture_box_offset_.x, texture_box_offset_.y }; }
+	[[nodiscard]] sf::Vector2f get_scale_ratio() const;
+	[[nodiscard]] sf::Vector2f get_conditional_size_units() const { return conditional_size_units_; }
+	[[nodiscard]] std::vector<sf::Vector2i> get_locked_micro_blocks() const { return locked_route_blocks_; }
+	virtual sf::Vector2f get_build_position(std::vector<world_object*> visible_items, float scale_factor, sf::Vector2f camera_position) { return { -1 ,-1 }; };
+	virtual int get_build_type(sf::Vector2f own_pos, sf::Vector2f other_pos) { return 1; };
+	[[nodiscard]] sf::FloatRect get_original_texture_box() const { return original_texture_box_; }
 	[[nodiscard]] state get_state() const { return state_; }	
 	std::pair<std::stack<birth_static_info>, std::stack<birth_dynamic_info>> get_birth_objects() { return std::make_pair(birth_statics_, birth_dynamics_); }	
 
 	void manually_disable_mirroring() { mirrored_ = false; }
 	void cancel_mirroring();
 	void clear_birth_stack() { birth_statics_ = std::stack<birth_static_info>(); birth_dynamics_ = std::stack<birth_dynamic_info>(); }
-	void set_position(Vector2f new_position);
+	virtual void set_position(sf::Vector2f new_position) = 0;
 	void set_health_point(const float health_point) { this->health_point_ = health_point; }
 	void set_name(std::string name) { this->name_ = std::move(name); }
 	void delete_promise_on() { delete_promise_ = true; }
-	static void set_unscaled(const std::vector<unique_ptr<sprite_chain_element>>& items)
-	{
-		for (const auto& item : items) item->unscaled = true;
-	}
-	virtual void set_texture_size(Vector2f texture_size);
+	static void set_unscaled(const std::vector<unique_ptr<sprite_chain_element>>& items);
+	virtual void set_texture_size(sf::Vector2f texture_size);
 	void set_state(state state) { this->state_ = state; }
-	virtual void take_damage(float damage, Vector2f attacker_pos = { -1, -1 });
-	virtual void init_micro_blocks();
+	virtual void take_damage(float damage, sf::Vector2f attacker_pos = { -1, -1 });
+	virtual void init_route_blocks();
 	virtual bool is_locked_place(const std::map<std::pair<int, int>, bool>& check_blocks);
 
 	bool is_transparent = false;
@@ -89,13 +84,13 @@ public:
 	bool is_multi_ellipse = false;
 	bool intangible = false;
 
-	virtual Vector2f calculate_texture_offset() = 0;
+	virtual sf::Vector2f calculate_texture_offset() = 0;
 	virtual void init_pedestal();
 
 	sf::Color color = sf::Color(255, 255, 255);
 	std::vector<std::pair<entity_tag, int>> inventory = {};
-	static Vector2f micro_block_size;
-	entity_tag tag = entity_tag::emptyObject;
+	static sf::Vector2f micro_block_size;
+	entity_tag tag;
 protected:
 	int type_of_object_{};
 	int z_coordinate_ = 1;
@@ -110,16 +105,14 @@ protected:
 	float max_health_point_value_ = 0;
 	std::string name_;
 	std::string to_save_name_ = "";
-	FloatRect texture_box_;
-	FloatRect original_texture_box_;
-	Vector2f texture_box_offset_;
-	Vector2f conditional_size_units_;	
-	Vector2f micro_block_check_area_bounds_ = { 0, 0 };
-	Vector2f position_ = { 0, 0 };
+	sf::FloatRect texture_box_;
+	sf::FloatRect original_texture_box_;
+	sf::Vector2f texture_box_offset_;
+	sf::Vector2f conditional_size_units_;
+	sf::Vector2f position_ = { 0, 0 };
 	float radius_ = 0;
-	float permissible_distance_ = 0;
 	state state_ = common;
 	std::stack<birth_static_info> birth_statics_;
 	std::stack<birth_dynamic_info> birth_dynamics_;
-	std::vector<Vector2i> locked_micro_blocks_ = {};
+	std::vector<sf::Vector2i> locked_route_blocks_{};
 };

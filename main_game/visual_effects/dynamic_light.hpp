@@ -17,7 +17,7 @@ private:
 	camera_system& camera_system_;
 	time_system& time_system_;
 
-	Texture overlay_texture_;
-	Texture multiply_texture_;
-	Texture field_of_view_texture_;
+	sf::Texture overlay_texture_;
+	sf::Texture multiply_texture_;
+	sf::Texture field_of_view_texture_;
 };

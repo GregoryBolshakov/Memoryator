@@ -1,7 +1,15 @@
 #pragma once
 
-#include "sprite_chain_element.h"
-#include "visual_effects/visual_effect.hpp"
+#include <memory>
+#include <SFML/Graphics/Shader.hpp>
+
+namespace sf
+{
+	class RenderTarget;
+	class Sprite;
+}
+class visual_effect;
+class sprite_chain_element;
 
 using std::shared_ptr, std::make_shared;
 

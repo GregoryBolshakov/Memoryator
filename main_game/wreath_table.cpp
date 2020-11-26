@@ -4,7 +4,7 @@
 //
 //#include "object_initializer.h"
 //
-//wreath_table::wreath_table(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
+//wreath_table::wreath_table(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 1;
 //	this->type_of_object_ = typeOfObject;
@@ -32,10 +32,10 @@
 //
 //void wreath_table::init_pedestal()
 //{
-//	focus1_ = Vector2f(position_.x - texture_box_.width / 4, position_.y);
-//	focus2_ = Vector2f(position_.x + texture_box_.width / 4, position_.y);
+//	focus1_ = sf::Vector2f(position_.x - texture_box_.width / 4, position_.y);
+//	focus2_ = sf::Vector2f(position_.x + texture_box_.width / 4, position_.y);
 //	ellipse_size_multipliers[0] = { 1.2f };
-//	init_micro_blocks();
+//	init_route_blocks();
 //}
 //
 //void wreath_table::initCraftRecipes()
@@ -102,19 +102,19 @@
 //	craftResult = checkCraftResult();
 //}
 //
-//Vector2f wreath_table::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+//Vector2f wreath_table::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, sf::Vector2f cameraPosition)
 //{
 //	return { -1, -1 };
 //}
 //
-//int wreath_table::get_build_type(Vector2f ounPos, Vector2f otherPos)
+//int wreath_table::get_build_type(sf::Vector2f ounPos, sf::Vector2f otherPos)
 //{
 //	return 1;
 //}
 //
 //std::vector<sprite_chain_element*> wreath_table::prepare_sprites(long long elapsedTime)
 //{
-//	const auto body = new sprite_chain_element(pack_tag::locations, pack_part::wreathTable, direction::DOWN, type_of_object_, position_, conditional_size_units_, Vector2f(texture_box_offset_), color, mirrored_);
+//	const auto body = new sprite_chain_element(pack_tag::locations, pack_part::wreathTable, direction::DOWN, type_of_object_, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_), color, mirrored_);
 //
 //	return { body };
 //}

@@ -4,24 +4,22 @@
 #include "DynamicObject.h"
 #include "Helper.h"
 
-using namespace sf;
-
 class ClapWhirl : public DynamicObject
 {
 public:
-	ClapWhirl(std::string objectName, Vector2f centerPosition, WorldObject* owner);
+	ClapWhirl(std::string objectName, sf::Vector2f centerPosition, WorldObject* owner);
 	~ClapWhirl();
-	Vector2f calculateTextureOffset() override;
+	sf::Vector2f calculateTextureOffset() override;
 	std::vector<SpriteChainElement*> prepare_sprites(long long elapsedTime) override;
 	void behaviorWithDynamic(DynamicObject* target, long long elapsedTime) override;
 	void behaviorWithStatic(WorldObject* target, long long elapsedTime) override;
 	void behavior(long long elapsedTime) override;
-	Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition) override;
-	int getBuildType(Vector2f ounPos, Vector2f otherPos) override;
+	sf::Vector2f getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, sf::Vector2f cameraPosition) override;
+	int getBuildType(sf::Vector2f ounPos, sf::Vector2f otherPos) override;
 	void setOwner(WorldObject* owner) { this->owner = owner; };
 	void setTarget(DynamicObject& object) override;
 	void jerkInteract(long long elapsedTime);
-	void jerk(float power, float deceleration, Vector2f destinationPoint = Vector2f(-1, -1)) override;
+	void jerk(float power, float deceleration, sf::Vector2f destinationPoint = sf::Vector2f(-1, -1)) override;
 	void fightInteract(long long elapsedTime, DynamicObject* target = nullptr) override;
 private:
 	void stopping(bool doStand = false, bool forgetBoundTarget = false);
@@ -34,7 +32,7 @@ private:
 	bool wasHit = false;
 	SpriteChainElement stillRope, stillLoop;
 	WorldObject* owner;
-	Vector2f ownerPos = { 0, 0 }, startPos = { 0, 0 };
+	sf::Vector2f ownerPos = { 0, 0 }, startPos = { 0, 0 };
 	Vector2i ownerGlobalBounds = { 0, 0 };
 };
 */

@@ -2,7 +2,7 @@
 //
 //using namespace sf;
 //
-//owl_boss::owl_boss(std::string objectName, Vector2f centerPosition) : dynamic_object(std::move(objectName), centerPosition)
+//owl_boss::owl_boss(std::string objectName, sf::Vector2f centerPosition) : dynamic_object(std::move(objectName), centerPosition)
 //{
 //	conditional_size_units_ = { 600, 600 };
 //	current_sprite_[0] = 1;
@@ -53,7 +53,7 @@
 //	}
 //	//----------------
 //
-//	//processing ending of previous actions
+//	//processing ending of previous action
 //	//if (last_action_ == up_flap || last_action_ == left_flap || last_action_ == right_flap || last_action_ == start_flap)
 //	{
 //		if (--flaps_before_jerk_count_ > 0)
@@ -61,7 +61,7 @@
 //			//if (flaps_before_jerk_count_ == 1)
 //				//change_action(start_flap, true, false);
 //			//else
-//				change_action(actions(30 + rand() % 3), true, false);
+//				change_action(action(30 + rand() % 3), true, false);
 //		}
 //		last_action_ = relax;
 //		//changeAction(rightFlap, false, true);
@@ -70,11 +70,11 @@
 //
 //	//------------------
 //
-//	//processing current actions
+//	//processing current action
 //	//if (current_action_ == right_flap && !is_jerking_ && current_sprite_[0] == 7)
-//		jerk(2, 1, Vector2f(position_.x - 200, position_.y));
+//		jerk(2, 1, sf::Vector2f(position_.x - 200, position_.y));
 //	//if (current_action_ == left_flap && !is_jerking_ && current_sprite_[0] == 7)
-//		jerk(2, 1, Vector2f(position_.x + 200, position_.y));
+//		jerk(2, 1, sf::Vector2f(position_.x + 200, position_.y));
 //	//--------------------------
 //}
 //
@@ -134,7 +134,7 @@
 //
 //	if (move_system.speed <= move_system.default_speed * 3) //with greater acceleration the owl loses the ability to coordinate the route
 //	{
-//		move_system.lax_move_position = Vector2f(target->get_position().x + (target->get_position().x - this->position_.x) / 1.0f, target->get_position().y + (target->get_position().y - this->position_.y) / 1.0f);
+//		move_system.lax_move_position = sf::Vector2f(target->get_position().x + (target->get_position().x - this->position_.x) / 1.0f, target->get_position().y + (target->get_position().y - this->position_.y) / 1.0f);
 //	}
 //
 //	if (helper::getDist(this->position_, move_system.lax_move_position) / move_system.speed <= (40 / animation_speed_) * 3 && current_action_ == move)
@@ -153,17 +153,17 @@
 //	}
 //}
 //
-//Vector2f owl_boss::get_build_position(std::vector<world_object*>, float, Vector2f)
+//Vector2f owl_boss::get_build_position(std::vector<world_object*>, float, sf::Vector2f)
 //{
 //	return { -1, -1 };
 //}
 //
-//int owl_boss::get_build_type(Vector2f, Vector2f)
+//int owl_boss::get_build_type(sf::Vector2f, sf::Vector2f)
 //{
 //	return 1;
 //}
 //
-//void owl_boss::jerk(const float power, const float deceleration, const Vector2f destinationPoint)
+//void owl_boss::jerk(const float power, const float deceleration, const sf::Vector2f destinationPoint)
 //{
 //	this->jerk_power_ = power;
 //	this->jerk_deceleration_ = deceleration;
@@ -172,7 +172,7 @@
 //	is_jerking_ = true;
 //	jerk_distance_ = 400;
 //
-//	move_system.lax_move_position = Vector2f(destinationPoint);
+//	move_system.lax_move_position = sf::Vector2f(destinationPoint);
 //}
 //
 //void owl_boss::fight_interact(const long long elapsedTime, dynamic_object* target)
@@ -185,12 +185,12 @@
 //    return {};
 //	/*spriteChainElement legsSprite, bodySprite, fullSprite;
 //	additionalSprites.clear();
-//	legsSprite.offset = Vector2f(this->textureBoxOffset);
-//	legsSprite.size = Vector2f(this->conditionalSizeUnits);
-//	bodySprite.offset = Vector2f(this->textureBoxOffset);
-//	bodySprite.size = Vector2f(this->conditionalSizeUnits);
-//	fullSprite.offset = Vector2f(this->textureBoxOffset);
-//	fullSprite.size = Vector2f(this->conditionalSizeUnits);
+//	legsSprite.offset = sf::Vector2f(this->textureBoxOffset);
+//	legsSprite.size = sf::Vector2f(this->conditionalSizeUnits);
+//	bodySprite.offset = sf::Vector2f(this->textureBoxOffset);
+//	bodySprite.size = sf::Vector2f(this->conditionalSizeUnits);
+//	fullSprite.offset = sf::Vector2f(this->textureBoxOffset);
+//	fullSprite.size = sf::Vector2f(this->conditionalSizeUnits);
 //
 //	switch (currentAction)
 //	{

@@ -1,9 +1,48 @@
 #include "object_initializer.h"
+#include "static_object.h"
+#include "sprite_pack.h"
+#include "rock.h"
+#include "ground.h"
+#include "ground_connection.h"
+#include "dropped_loot.h"
+#include "grass.h"
+#include "ground.h"
+#include "spawn.h"
+#include "chamomile.h"
+#include "yarrow.h"
+#include "mugwort.h"
+#include "fern.h"
+#include "brazier.h"
+#include "totem.h"
+#include "hare_trap.h"
+#include "fence.h"
+#include "stump.h"
+#include "forest_tree.h"
+#include "wreath_table.h"
+#include "mushroom.h"
+#include "log.h"
+#include "bush.h"
+#include "lake.h"
+#include "root.h"
+#include  "roof.h"
+
+#include "monster.h"
+#include "deerchant.h"
+#include "wolf.h"
+#include "hare.h"
+#include "deer.h"
+#include "bear.h"
+#include "owl.h"
+#include "owl_boss.h"
+#include "nightmare_first.h"
+#include "nightmare_second.h"
+#include "nightmare_third.h"
+#include "noose.h"
 
 std::map<entity_tag, std::string> object_initializer::mapped_tags = { {entity_tag::hero, "hero"}, {entity_tag::hare, "hare"}, {entity_tag::owl, "owl"}, {entity_tag::deer, "deer"}, {entity_tag::fox, "fox"}, {entity_tag::bear, "beer"}, {entity_tag::wolf, "wolf"},
 {entity_tag::monster, "monster"}, {entity_tag::owlBoss, "owlBoss"}, {entity_tag::nightmare1, "nightmare1"}, {entity_tag::nightmare2, "nightmare2"}, {entity_tag::nightmare3, "nightmare3"},
 {entity_tag::heroBag, "heroBag"}, {entity_tag::noose, "noose"}, {entity_tag::totem, "totem"}, {entity_tag::hareTrap, "hareTrap"}, {entity_tag::fence, "fence"}, {entity_tag::inkyBlackPen, "inkyBlackPen"},
-	{entity_tag::unknownWreath, "inknownWreath"}, {entity_tag::hareWreath, "hareWreath"}, {entity_tag::owlWreath, "owlWreath"}, {entity_tag::tree, "tree"}, {entity_tag::grass, "grass"}, {entity_tag::spawn, "spawn"},
+	{entity_tag::unknownWreath, "unknownWreath"}, {entity_tag::hareWreath, "hareWreath"}, {entity_tag::owlWreath, "owlWreath"}, {entity_tag::tree, "tree"}, {entity_tag::grass, "grass"}, {entity_tag::spawn, "spawn"},
 	{entity_tag::ground, "ground"}, {entity_tag::groundConnection, "groundConnection"}, {entity_tag::brazier, "brazier"}, {entity_tag::wreathTable, "wreathTable"}, {entity_tag::rock, "rock"},
 	{entity_tag::stump, "stump"}, {entity_tag::droppedLoot, "droppedLoot"}, {entity_tag::mushroom, "mushroom"}, {entity_tag::log, "log"}, {entity_tag::bush, "bush"}, {entity_tag::roof, "roof"}, {entity_tag::lake, "lake"}, {entity_tag::root, "root"},
 	{entity_tag::chamomile, "chamomile"}, {entity_tag::yarrow, "yarrow"}, {entity_tag::fern, "fern"}, {entity_tag::mugwort, "mugwort"}, {entity_tag::poppy, "poppy"}, {entity_tag::buildObject, "buildObject"}, {entity_tag::dropPoint, "dropPoint"},
@@ -26,11 +65,11 @@ int object_initializer::new_name_id = 0;
 
 shared_ptr<static_object> object_initializer::initialize_static_item(
 	const entity_tag item_class,
-	const Vector2f item_position,
+	const sf::Vector2f item_position,
 	const int item_type,
 	const std::string& item_name,
 	const int count,
-	const biomes biome,
+	const biome biome,
 	const shared_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
 	const bool mirrored,
 	const std::vector<std::pair<entity_tag, int>>& inventory)
@@ -41,112 +80,112 @@ shared_ptr<static_object> object_initializer::initialize_static_item(
 	{
 		case entity_tag::brazier:
 		{
-			item = make_shared<brazier>("item", Vector2f(0, 0), -1);
+			item = make_shared<brazier>("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::tree:
 		{
-			item = make_shared<forest_tree>("item", Vector2f(0, 0), -1);
+			item = make_shared<forest_tree>("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::ground:
 		{
-			item = make_shared<ground>("item", Vector2f(0, 0), -1);
+			item = make_shared<ground>("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::groundConnection:
 		{
-			item = make_shared<ground_connection>("item", Vector2f(0, 0), -1);
+			item = make_shared<ground_connection>("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		/*case entity_tag::grass:
 		{
-			item = new grass("item", Vector2f(0, 0), -1);
+			item = new grass("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::chamomile:
 		{
-			item = new chamomile("item", Vector2f(0, 0), -1);
+			item = new chamomile("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::wreathTable:
 		{
-			item = new wreath_table("item", Vector2f(0, 0), -1);
+			item = new wreath_table("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::yarrow:
 		{
-			item = new yarrow("item", Vector2f(0, 0), -1);
+			item = new yarrow("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::fern:
 		{
-			item = new fern("item", Vector2f(0, 0), -1);
+			item = new fern("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::hareTrap:
 		{
-			item = new hare_trap("item", Vector2f(0, 0), -1);
+			item = new hare_trap("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::rock:
 		{
-			item = new rock("item", Vector2f(0, 0), -1);
+			item = new rock("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::fence:
 		{
-			item = new fence("item", Vector2f(0, 0), -1);
+			item = new fence("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::stump:
 		{
-			item = new stump("item", Vector2f(0, 0), -1);
+			item = new stump("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::droppedLoot:
 		{
-			item = new dropped_loot("item", Vector2f(0, 0), -1, count);
+			item = new dropped_loot("item", sf::Vector2f(0, 0), -1, count);
 			break;
 		}
 		case entity_tag::mugwort:
 		{
-			item = new mugwort("item", Vector2f(0, 0), -1);
+			item = new mugwort("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::totem:
 		{
-			item = new totem("item", Vector2f(0, 0), -1);
+			item = new totem("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::mushroom:
 		{
-			item = new mushroom("item", Vector2f(0, 0), -1);
+			item = new mushroom("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::log:
 		{
-			item = new mr::log("item", Vector2f(0, 0), -1);
+			item = new mr::log("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::bush:
 		{
-			item = new bush("item", Vector2f(0, 0), -1);
+			item = new bush("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::lake:
 		{
-			item = new lake("item", Vector2f(0, 0), -1);
+			item = new lake("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::root:
 		{
-			item = new root("item", Vector2f(0, 0), -1);
+			item = new root("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
 		case entity_tag::roof:
 		{
-			item = new roof("item", Vector2f(0, 0), -1);
+			item = new roof("item", sf::Vector2f(0, 0), -1);
 			break;
 		}*/
 		default:
@@ -159,7 +198,7 @@ shared_ptr<static_object> object_initializer::initialize_static_item(
 
 	new_name_id++;
 
-	item->set_position(Vector2f(item_position));
+	item->set_position(sf::Vector2f(item_position));
 	item->setType(current_type);
 	auto sprites = item->prepare_sprites(0);
 	
@@ -168,7 +207,7 @@ shared_ptr<static_object> object_initializer::initialize_static_item(
 		return nullptr;
 
 	const auto info = packs_map->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number);
-	const auto texture_size = Vector2f(float(info.source_size.w), float(info.source_size.h));
+	const auto texture_size = sf::Vector2f(float(info.source_size.w), float(info.source_size.h));
 	item->set_texture_size(texture_size);
 	const auto name = item_name.empty()
 		                  ? std::to_string(new_name_id)
@@ -185,7 +224,7 @@ shared_ptr<static_object> object_initializer::initialize_static_item(
 
 shared_ptr<dynamic_object> object_initializer::initialize_dynamic_item(
 	entity_tag item_class,
-	Vector2f item_position,
+	sf::Vector2f item_position,
 	const std::string& item_name,
 	const shared_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
 	const shared_ptr<world_object>& owner)
@@ -197,73 +236,73 @@ shared_ptr<dynamic_object> object_initializer::initialize_dynamic_item(
 	{
 	case entity_tag::hero:
 	{
-		item = make_shared<deerchant>("item", Vector2f(0, 0));
+		item = make_shared<deerchant>("item", sf::Vector2f(0, 0));
 		name_of_image = "Game/worldSprites/hero/stand/down/1";
 		break;
 	}
 	/*case entity_tag::wolf:
 	{
-		item = new wolf("item", Vector2f(0, 0));
+		item = new wolf("item", sf::Vector2f(0, 0));
 		name_of_image = "Game/worldSprites/wolf/stand/down/1";
 		break;
 	}
 	case entity_tag::hare:
 	{
-		item = new hare("item", Vector2f(0, 0));
+		item = new hare("item", sf::Vector2f(0, 0));
 		name_of_image = "Game/worldSprites/hare/stand/down/1";
 		break;
 	}
 	case entity_tag::deer:
 	{
-		item = new deer("item", Vector2f(0, 0));
+		item = new deer("item", sf::Vector2f(0, 0));
 		name_of_image = "Game/worldSprites/deer/stand/down/1";
 		break;
 	}
 	case entity_tag::bear:
 	{
-		item = new bear("item", Vector2f(0, 0));
+		item = new bear("item", sf::Vector2f(0, 0));
 		name_of_image = "Game/worldSprites/deer/stand/down/1";
 		break;
 	}
 	case entity_tag::owl:
 	{
-		item = new owl("item", Vector2f(0, 0));
+		item = new owl("item", sf::Vector2f(0, 0));
 		name_of_image = "Game/worldSprites/deer/stand/down/1";
 		break;
 	}
 	case entity_tag::noose:
 	{
-		item = new noose("item", Vector2f(0, 0), owner);
+		item = new noose("item", sf::Vector2f(0, 0), owner);
 		name_of_image = "Game/worldSprites/noose/nooseLoop/1";
 		break;
 	}
 	/*case Tag::clapWhirl:
 	{
-		item = new ClapWhirl("item", Vector2f(0, 0), owner);
+		item = new ClapWhirl("item", sf::Vector2f(0, 0), owner);
 		nameOfImage = "Game/worldSprites/nightmare3/clap/whirl";
 		break;
 	}
 	case entity_tag::owlBoss:
 	{
-		item = new owl_boss("item", Vector2f(0, 0));
+		item = new owl_boss("item", sf::Vector2f(0, 0));
 		name_of_image = "Game/worldSprites/owlBoss/stand/down/1";
 		break;
 	}
 	case entity_tag::nightmare1:
 	{
-		item = new nightmare_first("item", Vector2f(0, 0));
+		item = new nightmare_first("item", sf::Vector2f(0, 0));
 		name_of_image = "Game/worldSprites/nightmare1/stand/down/1";
 		break;
 	}
 	case entity_tag::nightmare2:
 	{
-		item = new nightmare_second("item", Vector2f(0, 0));
+		item = new nightmare_second("item", sf::Vector2f(0, 0));
 		name_of_image = "Game/worldSprites/nightmare2/stand/down/1";
 		break;
 	}
 	case entity_tag::nightmare3:
 	{
-		item = new nightmare_third("item", Vector2f(0, 0));
+		item = new nightmare_third("item", sf::Vector2f(0, 0));
 		name_of_image = "Game/worldSprites/nightmare2/stand/down/1";
 		break;
 	}*/
@@ -279,77 +318,77 @@ shared_ptr<dynamic_object> object_initializer::initialize_dynamic_item(
 		: item_name;
 
 	item->set_name(name);
-	item->set_position(Vector2f(item_position));
+	item->set_position(sf::Vector2f(item_position));
     auto sprites = item->prepare_sprites(0);
 	if (packs_map->count(sprites[0]->pack_tag) <= 0 || 
 		packs_map->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
 		return nullptr;
 
 	const auto info = packs_map->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number);
-	const auto texture_size = Vector2f(float(info.source_size.w), float(info.source_size.h));
+	const auto texture_size = sf::Vector2f(float(info.source_size.w), float(info.source_size.h));
 	item->set_texture_size(texture_size);
 	return item;
 }
 
-int object_initializer::get_random_type_by_biome(const world_object& object, const biomes biome)
+int object_initializer::get_random_type_by_biome(const world_object& object, const biome biome)
 {
 	switch (object.tag)
 	{
 		case entity_tag::tree:
 		{
-			if (biome == birch_grove)
+			if (biome == biome::birch_grove)
 				return rand() % 7 + 1;
-			if (biome == dark_woods)
+			if (biome == biome::dark_woods)
 				return rand() % 6 + 8;
-			if (biome == swampy_trees)
+			if (biome == biome::swampy_trees)
 				return rand() % 5 + 14;
 			break;
 		}
 		case entity_tag::grass:
 		{
-			if (biome == birch_grove)
+			if (biome == biome::birch_grove)
 				return rand() % 8 + 1;
-			if (biome == dark_woods)
+			if (biome == biome::dark_woods)
 				return rand() % 13 + 9;
-			if (biome == swampy_trees)
+			if (biome == biome::swampy_trees)
 				return rand() % 9 + 22;
 			break;
 		}
 		case entity_tag::rock:
 		{
-			if (biome == birch_grove)
+			if (biome == biome::birch_grove)
 				return rand() % 8 + 1;
-			if (biome == dark_woods)
+			if (biome == biome::dark_woods)
 				return rand() % 5 + 9;
-			if (biome == swampy_trees)
+			if (biome == biome::swampy_trees)
 				return  rand() % 5 + 14;
 			break;
 		}
 		case entity_tag::stump:
 		{
-			if (biome == birch_grove)
+			if (biome == biome::birch_grove)
 				return rand() % 4 + 1;
-			if (biome == dark_woods)
+			if (biome == biome::dark_woods)
 				return rand() % 6 + 5;
-			if (biome == swampy_trees)
+			if (biome == biome::swampy_trees)
 				return rand() % 3 + 11;
 			break;
 		}
 		case entity_tag::bush:
 		{
-			if (biome == birch_grove)
+			if (biome == biome::birch_grove)
 				return rand() % 8 + 1;
-			if (biome == swampy_trees)
+			if (biome == biome::swampy_trees)
 				return rand() % 7 + 9;
 			break;
 		}
 		case entity_tag::mushroom:
 		{
-			if (biome == birch_grove)
+			if (biome == biome::birch_grove)
 				return rand() % 3 + 1;
-			if (biome == dark_woods)
+			if (biome == biome::dark_woods)
 				return rand() % 9 + 4;
-			if (biome == swampy_trees)
+			if (biome == biome::swampy_trees)
 				return rand() % 4 + 13;
 			break;
 		}
@@ -371,7 +410,7 @@ std::vector< shared_ptr<dynamic_object>> object_initializer::vector_cast_to_dyna
 {
 	std::vector<shared_ptr<dynamic_object>> dynamic_items{};
 	dynamic_items.reserve(items.size());
-	for (auto& item : items)
+	for (const auto& item : items)
 		dynamic_items.push_back(dynamic_pointer_cast<dynamic_object>(item));
 	return dynamic_items;
 }

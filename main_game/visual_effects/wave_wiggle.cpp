@@ -14,7 +14,7 @@ bool wave_wiggle::on_load()
 	if (!shader_.loadFromFile("Game/shaders/wave_wiggle.vert", "Game/shaders/wave_wiggle.frag"))
 		return false;
 
-	shader_.setUniform("pack", Shader::CurrentTexture);
+	shader_.setUniform("pack", sf::Shader::CurrentTexture);
 
 	return true;
 }
@@ -27,11 +27,11 @@ void wave_wiggle::on_update()
 	shader_.setUniform("func", func);
 }
 
-void wave_wiggle::on_update(RenderTarget& target, Sprite& sprite)
+void wave_wiggle::on_update(sf::RenderTarget& target, sf::Sprite& sprite)
 {
-	const auto texture_rect = FloatRect(sprite.getTextureRect());
-	const auto target_size = Vector2f(target.getSize());
-	const auto sprite_bounds = FloatRect(sprite.getGlobalBounds());	
+	const auto texture_rect = sf::FloatRect(sprite.getTextureRect());
+	const auto target_size = sf::Vector2f(target.getSize());
+	const auto sprite_bounds = sf::FloatRect(sprite.getGlobalBounds());	
 	const auto sprite_pos = target.mapCoordsToPixel(sf::Vector2f(sprite_bounds.left, sprite_bounds.top));
 	
 	shader_.setUniform("angle", float(sprite.getRotation() * pi / 180.0));

@@ -3,12 +3,12 @@
 
 #include "math_constants.h"
 
-direction_system::direction_system()
-= default;
-
-
-direction_system::~direction_system()
-= default;
+direction_system::direction_system(sf::Vector2f& position, sf::Vector2f& move_position, bool& mirrored) :
+	  position(position)
+	, move_position(move_position)
+	, mirrored(mirrored)
+{
+}
 
 void direction_system::calculate_direction(const long long elapsed_time)
 {
@@ -19,10 +19,10 @@ void direction_system::calculate_direction(const long long elapsed_time)
 	else
 		time_after_new_direction = 0;
 	
-	const auto cur_pos = *position;
-	const auto tar_pos = *move_position;
+	const auto cur_pos = position;
+	const auto tar_pos = move_position;
 
-	if (tar_pos == Vector2f(-1, -1))
+	if (tar_pos == sf::Vector2f(-1, -1))
 	{
 		direction = direction::STAND;
 		return;
@@ -88,7 +88,7 @@ void direction_system::calculate_direction(const long long elapsed_time)
 		last_direction = direction;
 }
 
-void direction_system::set_direction_from_8(const Vector2f move_offset, const long long elapsed_time)
+void direction_system::set_direction_from_8(const sf::Vector2f move_offset, const long long elapsed_time)
 {
 	time_after_new_direction += elapsed_time;
 
@@ -102,53 +102,53 @@ void direction_system::set_direction_from_8(const Vector2f move_offset, const lo
 	if (angle >= 0 && angle < 45)
 	{
 		direction = direction::UPLEFT;
-		*mirrored = true;
+		mirrored = true;
 	}
 	else
 		if (angle >= 45 && angle < 90)
 		{
 			direction = direction::UP;
-			*mirrored = true;
+			mirrored = true;
 		}
 		else
 			if (angle >= 90 && angle < 135)
 			{
 				direction = direction::UP;
-				*mirrored = false;
+				mirrored = false;
 			}
 			else
 				if (angle >= 135 && angle < 180)
 				{
 					direction = direction::UPLEFT;
-					*mirrored = false;
+					mirrored = false;
 				}
 				else
 					if (angle >= 180 && angle < 225)
 					{
 						direction = direction::DOWNLEFT;
-						*mirrored = false;
+						mirrored = false;
 					}
 					else
 						if (angle >= 225 && angle < 270)
 						{
 							direction = direction::DOWN;
-							*mirrored = false;
+							mirrored = false;
 						}
 						else
 							if (angle >= 270 && angle < 315)
 							{
 								direction = direction::DOWN;
-								*mirrored = true;
+								mirrored = true;
 							}
 							else
 								if (angle >= 315 && angle < 360)
 								{
 									direction = direction::DOWNLEFT;
-									*mirrored = true;
+									mirrored = true;
 								}
 }
 
-void direction_system::set_direction_from_12(const Vector2f move_offset, const long long elapsed_time)
+void direction_system::set_direction_from_12(const sf::Vector2f move_offset, const long long elapsed_time)
 {
 	time_after_new_direction += elapsed_time;
 
@@ -162,53 +162,53 @@ void direction_system::set_direction_from_12(const Vector2f move_offset, const l
 	if (angle >= 0 && angle < 22.5 || angle >= 337.5 && angle < 0)
 	{
 		direction = direction::LEFT;
-		*mirrored = true;
+		mirrored = true;
 	}
 	else
 		if (angle >= 22.5 && angle < 67.5)
 		{
 			direction = direction::UPLEFT;
-			*mirrored = true;
+			mirrored = true;
 		}
 		else
 			if (angle >= 67.5 && angle < 90 || angle >= 90 && angle < 112.5)
 			{
 				direction = direction::UP;
-				*mirrored = false;
+				mirrored = false;
 			}
 			else
 				if (angle >= 112.5 && angle < 157.5)
 				{
 					direction = direction::UPLEFT;
-					*mirrored = false;
+					mirrored = false;
 				}
 				else
 					if (angle >= 157.5 && angle < 202.5)
 					{
 						direction = direction::LEFT;
-						*mirrored = false;
+						mirrored = false;
 					}
 					else
 						if (angle >= 202.5 && angle < 247.5)
 						{
 							direction = direction::DOWNLEFT;
-							*mirrored = false;
+							mirrored = false;
 						}
 						else
 							if (angle >= 247.5 && angle < 292.5)
 							{
 								direction = direction::DOWN;
-								*mirrored = true;
+								mirrored = true;
 							}
 							else
 								if (angle >= 292.5 && angle < 337.5)
 								{
 									direction = direction::DOWNLEFT;
-									*mirrored = true;
+									mirrored = true;
 								}
 }
 
-side direction_system::calculate_side(const Vector2f position, const Vector2f other_object_position, const long long elapsed_time)
+side direction_system::calculate_side(const sf::Vector2f position, const sf::Vector2f other_object_position, const long long elapsed_time)
 {
 	time_after_new_side += elapsed_time;
 
@@ -217,24 +217,24 @@ side direction_system::calculate_side(const Vector2f position, const Vector2f ot
 	else
 		time_after_new_side = 0;
 	
-	auto answer = down;
+	auto answer = side::down;
 
 	const auto alpha = atan((float(other_object_position.y) - position.y) / (float(other_object_position.x) - position.x)) * 180 / pi;
 	if (position.y >= other_object_position.y && abs(alpha) >= 45 && abs(alpha) <= 90)
-		answer = up;
+		answer = side::up;
 	else
 		if (position.x <= other_object_position.x && abs(alpha) >= 0 && abs(alpha) <= 45)
-			answer = right;
+			answer = side::right;
 		else
 			if (position.y <= other_object_position.y && abs(alpha) >= 45 && abs(alpha) <= 90)
-				answer = down;
+				answer = side::down;
 			else
 				if (position.x >= other_object_position.x && abs(alpha) >= 0 && abs(alpha) <= 45)
-					answer = left;
+					answer = side::left;
 	return answer;
 }
 
-float direction_system::calculate_angle(Vector2f move_offset)
+float direction_system::calculate_angle(sf::Vector2f move_offset)
 {
 	if (abs(move_offset.x) <= 0.001f)
 		move_offset.x = 0;
@@ -264,16 +264,16 @@ side direction_system::invert_side(const ::side side)
 {
 	switch (side)
 	{
-	case up:
-		return down;
-	case down:
-		return up;
-	case left:
-		return right;
-	case right:
-		return left;
+	case side::up:
+		return side::down;
+	case side::down:
+		return side::up;
+	case side::left:
+		return side::right;
+	case side::right:
+		return side::left;
 	default:
-		return down;
+		return side::down;
 	}
 }
 
@@ -281,13 +281,13 @@ std::string direction_system::side_to_string(const ::side side)
 {
 	switch (side)
 	{
-	case up:
+	case side::up:
 		return "up";
-	case right:
+	case side::right:
 		return "left";
-	case down:
+	case side::down:
 		return "down";
-	case  left:
+	case  side::left:
 		return "left";
 	default:
 		return "";
@@ -323,13 +323,13 @@ direction direction_system::side_to_direction(const ::side side)
 {
 	switch (side)
 	{
-	case up:
+	case side::up:
 		return direction::UP;
-	case right:
+	case side::right:
 		return direction::RIGHT;
-	case down:
+	case side::down:
 		return direction::DOWN;
-	case  left:
+	case  side::left:
 		return direction::LEFT;
 	default:
 		return direction::DOWN;
@@ -377,8 +377,8 @@ direction direction_system::cut_rights(const ::direction direction)
 
 side direction_system::cut_rights(const ::side side)
 {
-	if (side == right)
-		return left;
+	if (side == side::right)
+		return side::left;
 	
 	return side;
 }

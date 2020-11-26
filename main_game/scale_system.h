@@ -1,4 +1,5 @@
 #pragma once
+
 #include <SFML/System/Clock.hpp>
 
 class scale_system

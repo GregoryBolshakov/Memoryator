@@ -2,7 +2,7 @@
 //
 //#include "helper.h"
 //
-//dropped_loot::dropped_loot(std::string objectName, Vector2f centerPosition, int typeOfObject, int count) : picked_object(std::move(objectName), centerPosition)
+//dropped_loot::dropped_loot(std::string objectName, sf::Vector2f centerPosition, int typeOfObject, int count) : picked_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 5;
 //	this->type_of_object_ = typeOfObject;
@@ -37,12 +37,12 @@
 //	ellipse_size_multipliers[0] = { 0 };
 //}
 //
-//Vector2f dropped_loot::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+//Vector2f dropped_loot::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, sf::Vector2f cameraPosition)
 //{
 //	return { -1, -1 };
 //}
 //
-//int dropped_loot::get_build_type(Vector2f ounPos, Vector2f otherPos)
+//int dropped_loot::get_build_type(sf::Vector2f ounPos, sf::Vector2f otherPos)
 //{
 //	return 1;
 //}

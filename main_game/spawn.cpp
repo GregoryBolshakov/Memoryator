@@ -2,7 +2,7 @@
 //
 //#include "helper.h"
 //
-//spawn::spawn(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
+//spawn::spawn(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 1;
 //	this->type_of_object_ = typeOfObject;
@@ -28,28 +28,28 @@
 //{
 //	if (type_of_object_ == 1)
 //	{
-//		focus1_ = Vector2f (texture_box_.left + floor(texture_box_.width / 3.8f), position_.y);
-//		focus2_ = Vector2f (texture_box_.left + texture_box_.width - floor(texture_box_.width / 3.8f), position_.y);
+//		focus1_ = sf::Vector2f (texture_box_.left + floor(texture_box_.width / 3.8f), position_.y);
+//		focus2_ = sf::Vector2f (texture_box_.left + texture_box_.width - floor(texture_box_.width / 3.8f), position_.y);
 //	}
 //	if (type_of_object_ == 2)
 //	{
-//		focus1_ = Vector2f (texture_box_.left + floor(texture_box_.width / 2.3f), position_.y);
-//		focus2_ = Vector2f (texture_box_.left + texture_box_.width - floor(texture_box_.width / 3.3f), position_.y);	
+//		focus1_ = sf::Vector2f (texture_box_.left + floor(texture_box_.width / 2.3f), position_.y);
+//		focus2_ = sf::Vector2f (texture_box_.left + texture_box_.width - floor(texture_box_.width / 3.3f), position_.y);	
 //	}
 //	if (type_of_object_ == 3)
 //	{
-//		focus1_ = Vector2f (texture_box_.left + floor(texture_box_.width / 3.5f), position_.y + texture_box_.height / 20.0f);
-//		focus2_ = Vector2f (texture_box_.left + texture_box_.width - floor(texture_box_.width / 2.0f), position_.y + texture_box_.height / 100.0f);
+//		focus1_ = sf::Vector2f (texture_box_.left + floor(texture_box_.width / 3.5f), position_.y + texture_box_.height / 20.0f);
+//		focus2_ = sf::Vector2f (texture_box_.left + texture_box_.width - floor(texture_box_.width / 2.0f), position_.y + texture_box_.height / 100.0f);
 //	}
 //	ellipse_size_multipliers = { 1.08f, 1.2f, 1.3f };
 //}
 //
-//Vector2f spawn::get_build_position(std::vector<world_object*>, float, Vector2f)
+//Vector2f spawn::get_build_position(std::vector<world_object*>, float, sf::Vector2f)
 //{
 //	return { -1, -1 };
 //}
 //
-//int spawn::get_build_type(Vector2f, Vector2f)
+//int spawn::get_build_type(sf::Vector2f, sf::Vector2f)
 //{
 //	return 1;
 //}
@@ -60,7 +60,7 @@
 //	/*additionalSprites.clear();
 //	spriteChainElement spawnBody;
 //	spawnBody.path = "Game/worldSprites/terrainObjects/main_object/main_object" + std::to_string(typeOfObject) + ".png";
-//	spawnBody.size = Vector2f(conditionalSizeUnits);
-//	spawnBody.offset = Vector2f(textureBoxOffset);
+//	spawnBody.size = sf::Vector2f(conditionalSizeUnits);
+//	spawnBody.offset = sf::Vector2f(textureBoxOffset);
 //	additionalSprites.push_back(spawnBody);*/
 //}

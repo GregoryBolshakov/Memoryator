@@ -2,7 +2,7 @@
 //
 //using namespace sf;
 //
-//bear::bear(const std::string& objectName, Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
+//bear::bear(const std::string& objectName, sf::Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
 //{
 //	conditional_size_units_ = { 432, 384 };
 //	current_sprite_[0] = 1;
@@ -85,7 +85,7 @@
 //	if (distanceToTarget <= sight_range)
 //	{
 //		change_action(move, false, true);
-//		move_system.lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
+//		move_system.lax_move_position = sf::Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
 //	}
 //	else
 //	{
@@ -98,19 +98,19 @@
 //				move_system.lax_move_position = { -1, -1 };
 //			}
 //			else
-//				move_system.lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
+//				move_system.lax_move_position = sf::Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
 //		}
 //	}
 //	distance_to_nearest_ = 10e6;
 //	bound_target_ = nullptr;
 //}
 //
-//Vector2f bear::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+//Vector2f bear::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, sf::Vector2f cameraPosition)
 //{
 //	return { -1, -1 };
 //}
 //
-//int bear::get_build_type(Vector2f ounPos, Vector2f otherPos)
+//int bear::get_build_type(sf::Vector2f ounPos, sf::Vector2f otherPos)
 //{
 //	return 1;
 //}
@@ -123,7 +123,7 @@
 //	last_action_ = relax;
 //}
 //
-//void bear::jerk(float power, float deceleration, Vector2f destinationPoint)
+//void bear::jerk(float power, float deceleration, sf::Vector2f destinationPoint)
 //{
 //	return;
 //}
@@ -133,8 +133,8 @@
 //    return {};
 //	/*spriteChainElement fullSprite;
 //
-//	fullSprite.offset = Vector2f(this->textureBoxOffset);
-//	fullSprite.size = Vector2f(this->conditionalSizeUnits);
+//	fullSprite.offset = sf::Vector2f(this->textureBoxOffset);
+//	fullSprite.size = sf::Vector2f(this->conditionalSizeUnits);
 //	additionalSprites.clear();
 //	std::string sideStr = DynamicObject::sideToString(side), directionStr = DynamicObject::directionToString(direction);
 //	if (direction == Direction::RIGHT || direction == Direction::UPRIGHT || direction == Direction::DOWNRIGHT)

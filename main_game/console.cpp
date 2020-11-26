@@ -1,6 +1,12 @@
 #include "console.h"
+#include "input_box.h"
+#include "object_initializer.h"
+#include "time_system.h"
+#include "world_handler.h"
+#include "world_generator.h"
+#include "dynamic_object.h"
 
-console::console(const FloatRect rect, shared_ptr<time_system> time_system, shared_ptr<world_handler> world) : time_system_{ std::move(time_system) }, world_{ std::move(world) }
+console::console(const sf::FloatRect rect, shared_ptr<time_system> time_system, shared_ptr<world_handler> world) : time_system_{ std::move(time_system) }, world_{ std::move(world) }
 {
 	body.init(rect);
 }
@@ -23,12 +29,12 @@ bool console::get_state() const
 	return state_;
 }
 
-void console::draw(RenderWindow & window) const
+void console::draw(const shared_ptr<sf::RenderWindow>& target) const
 {
 	if (!state_)
 		return;
 
-	body.draw(window);
+	body.draw(target);
 }
 
 void console::interact(long long elapsed_time)
@@ -39,19 +45,19 @@ void console::interact(long long elapsed_time)
 	body.interact(elapsed_time);
 }
 
-void console::handle_events(const Event event)
+void console::handle_events(const sf::Event event)
 {
-	if (event.type == Event::KeyPressed && Keyboard::isKeyPressed(Keyboard::Tilde))
+	if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Tilde))
 		state_ = !state_;
-	if (event.type == Event::KeyPressed && Keyboard::isKeyPressed(Keyboard::Enter))
+	if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
 		do_command();
-	if (event.type == Event::KeyPressed && Keyboard::isKeyPressed(Keyboard::Up) && command_stack_iterator_ > 0)
+	if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && command_stack_iterator_ > 0)
 	{
 		command_stack_iterator_--;
 		body.line = command_stack_[command_stack_iterator_];
 		body.reset_cursor(true);
 	}
-	if (event.type == Event::KeyPressed && Keyboard::isKeyPressed(Keyboard::Down) && command_stack_iterator_ < command_stack_.size() - 1)
+	if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && command_stack_iterator_ < command_stack_.size() - 1)
 	{
 		command_stack_iterator_++;
 		body.line = command_stack_[command_stack_iterator_];

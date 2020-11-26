@@ -1,13 +1,17 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-
-#include "effects_system.h"
 #include "hero_bag.h"
-#include "sprite_structures.h"
+#include "effects_system.h"
 #include "text_system.h"
 
-using namespace sf;
+#include <map>
+#include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+
+
+class drawable_chain_element;
+class sprite_pack;
+enum class pack_tag;
 
 class inventory_system
 {
@@ -15,8 +19,8 @@ public:
 	inventory_system();
 	~inventory_system();
 	void init();
-	std::vector<drawable_chain_element*> prepare_sprites(long long elapsed_time, std::map<pack_tag, sprite_pack>* packs_map);
-	//void drawInventory(std::vector<std::pair<Tag, int>>* inventory, Vector2f position, RenderWindow& window);
+	std::vector<std::unique_ptr<drawable_chain_element>> prepare_sprites(long long elapsed_time);
+	//void drawInventory(std::vector<std::pair<Tag, int>>* inventory, sf::Vector2f position, RenderWindow& window);
 	void reset_animation_values();
 	void on_mouse_up();
 	void inventory_bounding(std::vector<hero_bag>* bags) { bound_bags_ = bags; }
@@ -29,7 +33,7 @@ public:
 	std::string debug_info = "", cursor_text = "";
 
 	Sprite * selected_cell_background{};
-	CircleShape bag_pos_dot;
+	sf::CircleShape bag_pos_dot;
 private:
 	//hero bags
 	std::vector<hero_bag>* bound_bags_{};
@@ -55,7 +59,7 @@ private:
 	bool used_mouse_ = false;
 	bool cursor_blur_using_ = false;
 	bool success_init_ = false;
-	Vector2f cursor_text_pos_ = {0, 0};
+	sf::Vector2f cursor_text_pos_ = {0, 0};
 	text_system text_writer_;
 	effects_system effects_system_;
 };

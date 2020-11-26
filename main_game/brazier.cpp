@@ -1,10 +1,12 @@
 #include "brazier.h"
+#include "build_system.h"
+#include "helper.h"
+#include "sprite_chain_element.h"
 
 #include <fstream>
 
-#include "helper.h"
-
-brazier::brazier(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
+brazier::brazier(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : craftResult(entity_tag::emptyCell),
+	terrain_object(std::move(objectName), centerPosition)
 {
 	variety_of_types_ = 1;
 	this->type_of_object_ = typeOfObject;
@@ -24,7 +26,7 @@ void brazier::setType(int typeOfObject)
 	this->conditional_size_units_ = {900, 900};
 }
 
-Vector2f brazier::calculate_texture_offset()
+sf::Vector2f brazier::calculate_texture_offset()
 {
 	texture_box_.width = texture_box_.width * get_scale_ratio().x;
 	texture_box_.height = texture_box_.height * get_scale_ratio().y;
@@ -35,39 +37,39 @@ void brazier::init_pedestal()
 {
 	if (type_of_object_ == 1)
 	{
-		/*focus1 = Vector2f (position.x - textureBox.width / 4, position.y);
-		focus2 = Vector2f (position.x + textureBox.width / 4, position.y);
+		/*focus1 = sf::Vector2f (position.x - textureBox.width / 4, position.y);
+		focus2 = sf::Vector2f (position.x + textureBox.width / 4, position.y);
 		ellipseSize = float((focus2.x - focus1.x) * 1.17);*/
-		focus1_ = Vector2f(position_.x, position_.y);
-		focus2_ = Vector2f(position_.x, position_.y);
+		focus1_ = sf::Vector2f(position_.x, position_.y);
+		focus2_ = sf::Vector2f(position_.x, position_.y);
 
-		std::pair<Vector2f, Vector2f> microEllipse;
-		microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.333f, position_.y + texture_box_.height * 0.04f);
-		microEllipse.second = Vector2f(position_.x - texture_box_.width * 0.124f, position_.y + texture_box_.height * 0.04f);
+		std::pair<sf::Vector2f, sf::Vector2f> microEllipse;
+		microEllipse.first = sf::Vector2f(position_.x - texture_box_.width * 0.333f, position_.y + texture_box_.height * 0.04f);
+		microEllipse.second = sf::Vector2f(position_.x - texture_box_.width * 0.124f, position_.y + texture_box_.height * 0.04f);
 		internal_ellipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.25f, position_.y - texture_box_.height * 0.04f);
-		microEllipse.second = Vector2f(position_.x, position_.y - texture_box_.height * 0.04f);
+		microEllipse.first = sf::Vector2f(position_.x - texture_box_.width * 0.25f, position_.y - texture_box_.height * 0.04f);
+		microEllipse.second = sf::Vector2f(position_.x, position_.y - texture_box_.height * 0.04f);
 		internal_ellipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position_.x, position_.y - texture_box_.height * 0.02f);
-		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.25f, position_.y - texture_box_.height * 0.02f);		
+		microEllipse.first = sf::Vector2f(position_.x, position_.y - texture_box_.height * 0.02f);
+		microEllipse.second = sf::Vector2f(position_.x + texture_box_.width * 0.25f, position_.y - texture_box_.height * 0.02f);		
 		internal_ellipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position_.x + texture_box_.width * 0.191f, position_.y + texture_box_.height * 0.0211f);
-		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.335f, position_.y + texture_box_.height * 0.0211f);		
+		microEllipse.first = sf::Vector2f(position_.x + texture_box_.width * 0.191f, position_.y + texture_box_.height * 0.0211f);
+		microEllipse.second = sf::Vector2f(position_.x + texture_box_.width * 0.335f, position_.y + texture_box_.height * 0.0211f);		
 		internal_ellipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position_.x - texture_box_.width * 0.045f, position_.y + texture_box_.height * 0.19f);
-		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.0698f, position_.y + texture_box_.height * 0.19f);		
+		microEllipse.first = sf::Vector2f(position_.x - texture_box_.width * 0.045f, position_.y + texture_box_.height * 0.19f);
+		microEllipse.second = sf::Vector2f(position_.x + texture_box_.width * 0.0698f, position_.y + texture_box_.height * 0.19f);		
 		internal_ellipses.push_back(microEllipse);
 
-		microEllipse.first = Vector2f(position_.x + texture_box_.width * 0.155f, position_.y + texture_box_.height * 0.126f);
-		microEllipse.second = Vector2f(position_.x + texture_box_.width * 0.327f, position_.y + texture_box_.height * 0.126f);		
+		microEllipse.first = sf::Vector2f(position_.x + texture_box_.width * 0.155f, position_.y + texture_box_.height * 0.126f);
+		microEllipse.second = sf::Vector2f(position_.x + texture_box_.width * 0.327f, position_.y + texture_box_.height * 0.126f);		
 		internal_ellipses.push_back(microEllipse);
 	}
 	ellipse_size_multipliers = { 1.2f, 1.25f, 1.17f, 1.58f, 1.25f, 1.43f };
-	init_micro_blocks();
+	init_route_blocks();
 }
 
 void brazier::initCraftRecipes()
@@ -135,12 +137,12 @@ void brazier::putItemToCraft(const entity_tag id)
 	craftResult = checkCraftResult();
 }
 
-Vector2f brazier::get_build_position(std::vector<world_object*>, float, Vector2f)
+sf::Vector2f brazier::get_build_position(std::vector<world_object*>, float, sf::Vector2f)
 {
 	return { -1, -1 };
 }
 
-int brazier::get_build_type(Vector2f, Vector2f)
+int brazier::get_build_type(sf::Vector2f, sf::Vector2f)
 {
 	return 1;
 }
@@ -148,10 +150,10 @@ int brazier::get_build_type(Vector2f, Vector2f)
 std::vector<unique_ptr<sprite_chain_element>> brazier::prepare_sprites(long long)
 {
 	std::vector<unique_ptr<sprite_chain_element>> result;
-	const Vector2f front_offset(texture_box_.width * 0.506f, texture_box_.height * 0.949f);
-	const Vector2f front_position(position_.x - texture_box_offset_.x + front_offset.x, position_.y - texture_box_offset_.y + front_offset.y);
+	const sf::Vector2f front_offset(texture_box_.width * 0.506f, texture_box_.height * 0.949f);
+	const sf::Vector2f front_position(position_.x - texture_box_offset_.x + front_offset.x, position_.y - texture_box_offset_.y + front_offset.y);
 
-	auto back = make_unique<sprite_chain_element>(pack_tag::locations, pack_part::brazier, direction::DOWN, 1, position_, conditional_size_units_, Vector2f(texture_box_offset_));
+	auto back = make_unique<sprite_chain_element>(pack_tag::locations, pack_part::brazier, direction::DOWN, 1, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_));
 	auto front = make_unique<sprite_chain_element>(pack_tag::locations, pack_part::brazier, direction::DOWN, 2, front_position, conditional_size_units_, front_offset);
 
 	result.emplace_back(std::move(back));
@@ -162,21 +164,21 @@ std::vector<unique_ptr<sprite_chain_element>> brazier::prepare_sprites(long long
 	/*additionalSprites.clear();
 	SpriteChainElement brazierBack, brazierFront, fire, craftIcon;
 	brazierBack.packTag = PackTag::locations; brazierBack.packPart = PackPart::main_object, brazierBack.number = 1;
-	brazierBack.size = Vector2f(conditionalSizeUnits);	
-	brazierBack.offset = Vector2f(textureBoxOffset.x, textureBoxOffset.y - conditionalSizeUnits.y * 0.2f);
+	brazierBack.size = sf::Vector2f(conditionalSizeUnits);	
+	brazierBack.offset = sf::Vector2f(textureBoxOffset.x, textureBoxOffset.y - conditionalSizeUnits.y * 0.2f);
 	brazierBack.position = { position.x, position.y - conditionalSizeUnits.y * 0.2f };
 	brazierBack.antiTransparent = true;*/
 	/*if (!currentCraft.empty())
 	{
 		fire.path = "Game/worldSprites/terrainObjects/main_object/fire.png";
-		fire.size = Vector2f(conditionalSizeUnits.x * 0.22f, conditionalSizeUnits.y * 0.22f);
-		fire.offset = Vector2f(conditionalSizeUnits.x * 0.06f, textureBoxOffset.y - conditionalSizeUnits.y * 0.555f + scaleFactor * conditionalSizeUnits.y / 20);
+		fire.size = sf::Vector2f(conditionalSizeUnits.x * 0.22f, conditionalSizeUnits.y * 0.22f);
+		fire.offset = sf::Vector2f(conditionalSizeUnits.x * 0.06f, textureBoxOffset.y - conditionalSizeUnits.y * 0.555f + scaleFactor * conditionalSizeUnits.y / 20);
 		fire.position = { position.x, position.y };
 		fire.antiTransparent = true;
 	}*/
 	/*brazierFront.packTag = PackTag::locations; brazierFront.packPart = PackPart::main_object, brazierFront.number = 2;
-	brazierFront.size = Vector2f(conditionalSizeUnits);
-	brazierFront.offset = Vector2f(textureBoxOffset.x, textureBoxOffset.y + conditionalSizeUnits.y * 0.2f);
+	brazierFront.size = sf::Vector2f(conditionalSizeUnits);
+	brazierFront.offset = sf::Vector2f(textureBoxOffset.x, textureBoxOffset.y + conditionalSizeUnits.y * 0.2f);
 	brazierFront.position = { position.x, position.y + conditionalSizeUnits.y * 0.2f };
 	brazierFront.antiTransparent = true;
 	additionalSprites.push_back(brazierBack);

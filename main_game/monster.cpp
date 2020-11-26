@@ -2,7 +2,7 @@
 //
 //using namespace sf;
 //
-//monster::monster(std::string objectName, const Vector2f centerPosition) : dynamic_object(std::move(objectName), centerPosition)
+//monster::monster(std::string objectName, const sf::Vector2f centerPosition) : dynamic_object(std::move(objectName), centerPosition)
 //{
 //	current_sprite_[0] = 1;
 //	time_for_new_sprite_ = 0;
@@ -121,17 +121,17 @@
 //	}
 //}
 //
-//Vector2f monster::get_build_position(std::vector<world_object*>, float, Vector2f)
+//Vector2f monster::get_build_position(std::vector<world_object*>, float, sf::Vector2f)
 //{
 //	return { -1, -1 };
 //}
 //
-//int monster::get_build_type(Vector2f, Vector2f)
+//int monster::get_build_type(sf::Vector2f, sf::Vector2f)
 //{
 //	return 1;
 //}
 //
-//void monster::jerk(float power, float deceleration, Vector2f destinationPoint)
+//void monster::jerk(float power, float deceleration, sf::Vector2f destinationPoint)
 //{
 //}
 //

@@ -9,10 +9,10 @@ sprite_chain_element::sprite_chain_element(
 	const ::pack_part part,
 	const ::direction direction,
 	const int number,
-	const Vector2f position,
-	const Vector2f size,
-	const Vector2f offset,
-	const Color color,
+	const sf::Vector2f position,
+	const sf::Vector2f size,
+	const sf::Vector2f offset,
+	const sf::Color color,
 	const bool mirrored,
 	const bool unscaled,
 	const float rotation) : drawable_chain_element(position, size, offset, color)
@@ -27,10 +27,10 @@ sprite_chain_element::sprite_chain_element(
 }
 
 sprite_chain_element::sprite_chain_element(
-	const Vector2f position,
-	const Vector2f size,
-	const Vector2f offset,
-	const Color color,
+	const sf::Vector2f position,
+	const sf::Vector2f size,
+	const sf::Vector2f offset,
+	const sf::Color color,
 	const bool mirrored,
 	const bool unscaled,
 	const float rotation) : drawable_chain_element(position, size, offset, color)

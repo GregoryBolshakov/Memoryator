@@ -2,7 +2,7 @@
 //
 //#include "helper.h"
 //
-//root::root(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
+//root::root(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 5; // 1-5
 //	this->type_of_object_ = typeOfObject;
@@ -56,52 +56,52 @@
 //	switch (type_of_object_)
 //	{
 //	case 1:
-//		focus1_ = Vector2f(position_.x - texture_box_.width * 0.229f, position_.y - texture_box_.height * 0.151f);
-//		focus2_ = Vector2f(position_.x + texture_box_.width * 0.229f, position_.y - texture_box_.height * 0.151f);
+//		focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.229f, position_.y - texture_box_.height * 0.151f);
+//		focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.229f, position_.y - texture_box_.height * 0.151f);
 //		ellipse_size_multipliers[0] = { 1.06f };
 //		break;
 //	case 2:
-//		focus1_ = Vector2f(position_.x - texture_box_.width * 0.288f, position_.y - texture_box_.height * 0.09f);
-//		focus2_ = Vector2f(position_.x + texture_box_.width * 0.288f, position_.y - texture_box_.height * 0.09f);
+//		focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.288f, position_.y - texture_box_.height * 0.09f);
+//		focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.288f, position_.y - texture_box_.height * 0.09f);
 //		ellipse_size_multipliers[0] = { 1.07f };
 //		break;
 //	case 3:
-//		focus1_ = Vector2f(position_.x - texture_box_.width * 0.367f, position_.y - texture_box_.height * 0.065f);
-//		focus2_ = Vector2f(position_.x + texture_box_.width * 0.367f, position_.y - texture_box_.height * 0.065f);
+//		focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.367f, position_.y - texture_box_.height * 0.065f);
+//		focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.367f, position_.y - texture_box_.height * 0.065f);
 //		ellipse_size_multipliers[0] = { 1.17f };
 //		break;
 //	case 4:
-//		focus1_ = Vector2f(position_.x - texture_box_.width * 0.311f, position_.y);
-//		focus2_ = Vector2f(position_.x + texture_box_.width * 0.311f, position_.y);
+//		focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.311f, position_.y);
+//		focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.311f, position_.y);
 //		ellipse_size_multipliers[0] = { 0 };
 //		break;
 //	case 5:
-//		focus1_ = Vector2f(position_.x - texture_box_.width * 0.167f, position_.y - texture_box_.height * 0.091f);
-//		focus2_ = Vector2f(position_.x + texture_box_.width * 0.167f, position_.y - texture_box_.height * 0.091f);
+//		focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.167f, position_.y - texture_box_.height * 0.091f);
+//		focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.167f, position_.y - texture_box_.height * 0.091f);
 //		ellipse_size_multipliers[0] = { 0 };
 //		break;
 //	default:
-//		focus1_ = Vector2f(position_.x - texture_box_.width * 0.111f, position_.y);
-//		focus2_ = Vector2f(position_.x + texture_box_.width * 0.111f, position_.y);
+//		focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.111f, position_.y);
+//		focus2_ = sf::Vector2f(position_.x + texture_box_.width * 0.111f, position_.y);
 //		ellipse_size_multipliers[0] = { 0 };
 //		break;
 //	}
-//	init_micro_blocks();
+//	init_route_blocks();
 //}
 //
-//Vector2f root::get_build_position(std::vector<world_object*>, float, Vector2f)
+//Vector2f root::get_build_position(std::vector<world_object*>, float, sf::Vector2f)
 //{
 //	return { -1, -1 };
 //}
 //
-//int root::get_build_type(Vector2f, Vector2f)
+//int root::get_build_type(sf::Vector2f, sf::Vector2f)
 //{
 //	return 1;
 //}
 //
 //std::vector<sprite_chain_element*> root::prepare_sprites(long long)
 //{
-//	const auto body = new sprite_chain_element(pack_tag::swampyTrees, pack_part::root, direction::DOWN, type_of_object_, position_, conditional_size_units_, Vector2f(texture_box_offset_), color, mirrored_);
+//	const auto body = new sprite_chain_element(pack_tag::swampyTrees, pack_part::root, direction::DOWN, type_of_object_, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_), color, mirrored_);
 //
 //	set_unscaled({ body });
 //	

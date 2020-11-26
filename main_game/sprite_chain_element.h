@@ -1,7 +1,5 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-
 #include "drawable_chain_element.h"
 #include "tags.h"
 
@@ -14,18 +12,18 @@ public:
 	    pack_part part,
 	    direction direction,
 	    int number = 1,
-	    Vector2f position = {0, 0},
-	    Vector2f size = {0, 0},
-	    Vector2f offset = {0, 0},
-		Color color = Color(255, 255, 255, 255),
+	    sf::Vector2f position = {0, 0},
+	    sf::Vector2f size = {0, 0},
+	    sf::Vector2f offset = {0, 0},
+		sf::Color color = sf::Color(255, 255, 255, 255),
 		bool mirrored = false,
 		bool unscaled = false,
 		float rotation = 0);
 	sprite_chain_element(
-		Vector2f position,
-		Vector2f size,
-		Vector2f offset,
-		Color color = Color(255, 255, 255, 255),
+		sf::Vector2f position,
+		sf::Vector2f size,
+		sf::Vector2f offset,
+		sf::Color color = sf::Color(255, 255, 255, 255),
 		bool mirrored = false,
 		bool unscaled = false,
 		float rotation = 0);

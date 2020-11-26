@@ -1,18 +1,19 @@
 #include "camera_system.h"
+#include "scale_system.h"
+#include "world_object.h"
+#include "helper.h"
 
 #include <cstdlib>
 
-#include "helper.h"
-
-const Vector2f camera_system::max_camera_distance = Vector2f(250, 250), camera_system::cam_offset = { 0, -0.04f };
+const sf::Vector2f camera_system::max_camera_distance = sf::Vector2f(250, 250), camera_system::cam_offset = { 0, -0.04f };
 const float camera_system::shake_default_speed = 0.0005f;
 const long long camera_system::shake_default_duration = long(3e4);
 
-camera_system::camera_system(const shared_ptr<scale_system>& scale_system) :scale_system_{ scale_system }
+camera_system::camera_system(const std::shared_ptr<scale_system>& scale_system) :scale_system_{ scale_system }
 {
 }
 
-Vector2f camera_system::get_screen_size()
+sf::Vector2f camera_system::get_screen_size()
 {
 	return helper::GetScreenSize();
 }
@@ -29,9 +30,9 @@ void camera_system::make_shake(const int count, const float speed)
 	else
 		shake_speed_ = speed;
 
-	shake_vector_ = Vector2f(float(rand() % 60 - 30), float(rand() % 60 - 30));
+	shake_vector_ = sf::Vector2f(float(rand() % 60 - 30), float(rand() % 60 - 30));
 
-	if (shake_vector_ == Vector2f(0, 0))
+	if (shake_vector_ == sf::Vector2f(0, 0))
 		shake_vector_ = { 1, 1 };
 
 	shake_duration_ = shake_default_duration;
@@ -53,16 +54,16 @@ void camera_system::shake_interact(const long long elapsed_time)
 	}
 }
 
-Vector2f camera_system::focused_object_screen_position_normalized() const
+sf::Vector2f camera_system::focused_object_screen_position_normalized() const
 {
 	const auto size = helper::GetScreenSize();
 	const auto position = object_screen_position(focused_object_->get_position());
-	const auto result = Vector2f{ position.x / size.x, position.y / size.y };
+	const auto result = sf::Vector2f{ position.x / size.x, position.y / size.y };
 
 	return result;
 }
 
-Vector2f camera_system::object_screen_position(Vector2f pos) const
+sf::Vector2f camera_system::object_screen_position(sf::Vector2f pos) const
 {;
 	const auto center = helper::GetScreenSize() / 2.0f;
 	const auto camera = pos;

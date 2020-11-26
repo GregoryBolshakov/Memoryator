@@ -1,8 +1,8 @@
 #include "ground_connection.h"
-
+#include "sprite_chain_element.h"
 #include "helper.h"
 
-ground_connection::ground_connection(std::string object_name, const Vector2f center_position, const int type_of_object) : static_object(std::move(object_name), center_position)
+ground_connection::ground_connection(std::string object_name, const sf::Vector2f center_position, const int type_of_object) : static_object(std::move(object_name), center_position)
 {
 	variety_of_types_ = 12; // SwampyTrees: 1-4; DarkWoods: 5-8; BirchGrove: 9-12
 	this->type_of_object_ = type_of_object;
@@ -54,7 +54,7 @@ void ground_connection::setType(const int type_of_object)
 						this->z_coordinate_ = 50;
 }
 
-Vector2f ground_connection::calculate_texture_offset()
+sf::Vector2f ground_connection::calculate_texture_offset()
 {
 	if (type_of_object_ % 4 == 1)
 		return { 0, texture_box_.height - 5 };
@@ -67,12 +67,12 @@ Vector2f ground_connection::calculate_texture_offset()
 	return { 0, 0 };
 }
 
-Vector2f ground_connection::get_build_position(std::vector<world_object*>, float, Vector2f)
+sf::Vector2f ground_connection::get_build_position(std::vector<world_object*>, float, sf::Vector2f)
 {
 	return { -1, -1 };
 }
 
-int ground_connection::get_build_type(Vector2f, Vector2f)
+int ground_connection::get_build_type(sf::Vector2f, sf::Vector2f)
 {
 	return 1;
 }
@@ -91,7 +91,7 @@ std::vector<unique_ptr<sprite_chain_element>> ground_connection::prepare_sprites
 	if (spriteType == 1)
 		spriteType = 5;
 
-	auto body = make_unique<sprite_chain_element>(pack_tag::darkWoods, pack_part::ground, direction::DOWN, spriteType, position_, conditional_size_units_, Vector2f(texture_box_offset_));
+	auto body = make_unique<sprite_chain_element>(pack_tag::darkWoods, pack_part::ground, direction::DOWN, spriteType, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_));
 	body->z_coordinate = z_coordinate_;
 
 	//if (typeOfObject >= 1 && typeOfObject <= 4)

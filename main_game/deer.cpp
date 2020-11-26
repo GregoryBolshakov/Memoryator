@@ -2,7 +2,7 @@
 //
 //using namespace sf;
 //
-//deer::deer(const std::string& objectName, const Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
+//deer::deer(const std::string& objectName, const sf::Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
 //{
 //	conditional_size_units_ = {360, 300};
 //	current_sprite_[0] = 1;
@@ -89,7 +89,7 @@
 //	if (distanceToTarget <= sight_range)
 //	{
 //		change_action(move, false, true);
-//		move_system.lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
+//		move_system.lax_move_position = sf::Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
 //	}
 //	else
 //	{
@@ -103,7 +103,7 @@
 //			}
 //			else
 //			{
-//				move_system.lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
+//				move_system.lax_move_position = sf::Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
 //			}
 //		}
 //	}
@@ -111,12 +111,12 @@
 //	bound_target_ = nullptr;
 //}
 //
-//Vector2f deer::get_build_position(std::vector<world_object*> /*visibleItems*/, float /*scaleFactor*/, Vector2f /*cameraPosition*/)
+//Vector2f deer::get_build_position(std::vector<world_object*> /*visibleItems*/, float /*scaleFactor*/, sf::Vector2f /*cameraPosition*/)
 //{
 //	return {-1, -1};
 //}
 //
-//int deer::get_build_type(Vector2f /*ounPos*/, Vector2f /*otherPos*/)
+//int deer::get_build_type(sf::Vector2f /*ounPos*/, sf::Vector2f /*otherPos*/)
 //{
 //	return 1;
 //}
@@ -134,13 +134,13 @@
 //	last_action_ = relax;
 //}
 //
-//void deer::jerk(float /*power*/, float /*deceleration*/, Vector2f /*destinationPoint*/)
+//void deer::jerk(float /*power*/, float /*deceleration*/, sf::Vector2f /*destinationPoint*/)
 //{
 //}
 //
 //Vector2f deer::getHeadPosition()
 //{
-//	const auto upperLeft = Vector2f(position_.x - texture_box_offset_.x, position_.y - texture_box_offset_.y);
+//	const auto upperLeft = sf::Vector2f(position_.x - texture_box_offset_.x, position_.y - texture_box_offset_.y);
 //
 //	if (direction_system.last_direction == direction::UP)
 //	{
@@ -284,7 +284,7 @@
 //			animationLength = 11;
 //			break;
 //		}
-//	case actions::trap:
+//	case action::trap:
 //		{
 //			animationLength = 6;
 //			body->pack_tag = pack_tag::deer;

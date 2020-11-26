@@ -7,7 +7,7 @@
 //	initDrafts();
 //
 //	wreathMatrix.resize(17, std::vector<entity_tag>(5));
-//	wreathMatrixPositions.resize(17, std::vector<Vector2f>(5));
+//	wreathMatrixPositions.resize(17, std::vector<sf::Vector2f>(5));
 //	coloredMatrix.resize(17, std::vector<int>(5));
 //	plantsMatrix.resize(2, std::vector<std::pair<entity_tag, int>>(3));
 //	for (auto& raw : wreathMatrix)
@@ -45,22 +45,22 @@
 //		bookmarkApproximateX = pageGlobalBounds.left + pageGlobalBounds.width * 8.9f / 10.0f;
 //	else
 //		bookmarkApproximateX = pageGlobalBounds.left + pageGlobalBounds.width * 9.38f / 10.0f;
-//	buttonList->at(button_tag::bookmarkMobs).set_position(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 1.2f / 10.0f));
-//	buttonList->at(button_tag::bookmarkItems).set_position(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 2.2f / 10.0f));
-//	buttonList->at(button_tag::bookmarkWorld).set_position(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 3.2f / 10.0f));
-//	buttonList->at(button_tag::bookmarkFlowers).set_position(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 4.2f / 10.0f));
-//	buttonList->at(button_tag::bookmarkWreathes).set_position(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 5.2f / 10.0f));
-//	buttonList->at(button_tag::bookmarkNightmare).set_position(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 7.2f / 10.0f));
-//	buttonList->at(button_tag::plus).set_position(Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 8.2f / 10.0f));
-//	buttonList->at(button_tag::makeWreath).set_position(Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.35f / 10.0f, pageGlobalBounds.top + pageGlobalBounds.height * 6.6f / 10.0f));
+//	buttonList->at(button_tag::bookmarkMobs).set_position(sf::Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 1.2f / 10.0f));
+//	buttonList->at(button_tag::bookmarkItems).set_position(sf::Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 2.2f / 10.0f));
+//	buttonList->at(button_tag::bookmarkWorld).set_position(sf::Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 3.2f / 10.0f));
+//	buttonList->at(button_tag::bookmarkFlowers).set_position(sf::Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 4.2f / 10.0f));
+//	buttonList->at(button_tag::bookmarkWreathes).set_position(sf::Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 5.2f / 10.0f));
+//	buttonList->at(button_tag::bookmarkNightmare).set_position(sf::Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 7.2f / 10.0f));
+//	buttonList->at(button_tag::plus).set_position(sf::Vector2f(bookmarkApproximateX, pageGlobalBounds.top + pageGlobalBounds.height * 8.2f / 10.0f));
+//	buttonList->at(button_tag::makeWreath).set_position(sf::Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.35f / 10.0f, pageGlobalBounds.top + pageGlobalBounds.height * 6.6f / 10.0f));
 //}
 //
 //void hero_book_page::setArrowsPosition() const
 //{
 //	const auto pagePatternGlobalBounds = buttonList->at(button_tag::pagePattern).get_global_bounds();
-//	auto nextPagePos = Vector2f(pagePatternGlobalBounds.left + pagePatternGlobalBounds.width - arrowToPageGlobalBounds.width,
+//	auto nextPagePos = sf::Vector2f(pagePatternGlobalBounds.left + pagePatternGlobalBounds.width - arrowToPageGlobalBounds.width,
 //	                            pagePatternGlobalBounds.top + pagePatternGlobalBounds.height - arrowToPageGlobalBounds.height);
-//	const auto previousPagePos = Vector2f(Vector2f(pagePatternGlobalBounds.left,
+//	const auto previousPagePos = sf::Vector2f(sf::Vector2f(pagePatternGlobalBounds.left,
 //	                                               pagePatternGlobalBounds.top + pagePatternGlobalBounds.height - arrowToPageGlobalBounds.height));
 //	
 //	if (currentPage == 0)
@@ -72,7 +72,7 @@
 //
 //void hero_book_page::preparePageBase()
 //{
-//	buttonList->at(button_tag::pageBackground).set_position(Vector2f(buttonList->at(button_tag::bookCover).get_position().x - buttonList->at(button_tag::bookCover).get_global_bounds().width,
+//	buttonList->at(button_tag::pageBackground).set_position(sf::Vector2f(buttonList->at(button_tag::bookCover).get_position().x - buttonList->at(button_tag::bookCover).get_global_bounds().width,
 //		buttonList->at(button_tag::bookCover).get_position().y));
 //
 //	if (currentPage == 0)
@@ -80,14 +80,14 @@
 //	else
 //		pageGlobalBounds = buttonList->at(button_tag::pageBackground).get_global_bounds();
 //
-//	buttonList->at(button_tag::pagePattern).set_position(Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.0f / 13.0f, pageGlobalBounds.top + pageGlobalBounds.height * 1.0f / 21.0f));	
-//	buttonList->at(button_tag::bookmarksList).set_position(Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.0f / 13.0f, pageGlobalBounds.top + pageGlobalBounds.height * 1.0f / 21.0f));	
-//	buttonList->at(button_tag::sketching).set_position(Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.0f / 13.0f, pageGlobalBounds.top + pageGlobalBounds.height * 1.0f / 21.0f));	
+//	buttonList->at(button_tag::pagePattern).set_position(sf::Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.0f / 13.0f, pageGlobalBounds.top + pageGlobalBounds.height * 1.0f / 21.0f));	
+//	buttonList->at(button_tag::bookmarksList).set_position(sf::Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.0f / 13.0f, pageGlobalBounds.top + pageGlobalBounds.height * 1.0f / 21.0f));	
+//	buttonList->at(button_tag::sketching).set_position(sf::Vector2f(pageGlobalBounds.left + pageGlobalBounds.width * 1.0f / 13.0f, pageGlobalBounds.top + pageGlobalBounds.height * 1.0f / 21.0f));	
 //
 //	blockGlobalBounds = buttonList->at(button_tag::yarrow).get_global_bounds();
 //	arrowToPageGlobalBounds = buttonList->at(button_tag::nextPage).get_global_bounds();
-//	leftPagePosition = Vector2f(pageGlobalBounds.left, pageGlobalBounds.top);
-//	rightPagePosition = Vector2f(pageGlobalBounds.left + pageGlobalBounds.width / 2.0f, pageGlobalBounds.top);
+//	leftPagePosition = sf::Vector2f(pageGlobalBounds.left, pageGlobalBounds.top);
+//	rightPagePosition = sf::Vector2f(pageGlobalBounds.left + pageGlobalBounds.width / 2.0f, pageGlobalBounds.top);
 //
 //	setArrowsPosition();
 //}
@@ -107,7 +107,7 @@
 //	{
 //		if (i >= headingPedestals.size())
 //			return;
-//		buttonList->at(buttons[i]).set_position(Vector2f(headingPedestals[i].x * x + upperLeftCorner.x, headingPedestals[i].y * y + upperLeftCorner.y));
+//		buttonList->at(buttons[i]).set_position(sf::Vector2f(headingPedestals[i].x * x + upperLeftCorner.x, headingPedestals[i].y * y + upperLeftCorner.y));
 //	}
 //}
 //
@@ -115,8 +115,8 @@
 //{
 //	const auto screenSize = helper::GetScreenSize();
 //	std::string buttonImagePathDefault;
-//	Vector2f buttonPosition, buttonSize; // in percents
-//	Vector2f offset = { 0, 0 };
+//	sf::Vector2f buttonPosition, buttonSize; // in percents
+//	sf::Vector2f offset = { 0, 0 };
 //	int tag;
 //
 //	std::ifstream fin("Game/heroBook/auxiliarySprites.txt");
@@ -134,7 +134,7 @@
 //		buttonSize.x = buttonTextureDefault.getSize().x * buttonSize.y / buttonTextureDefault.getSize().y;		
 //
 //		auxiliarySpriteMap[auxiliary_sprite_tag(tag)].texture.loadFromFile(buttonImagePathDefault);
-//		const auto textureSize = Vector2f(auxiliarySpriteMap[auxiliary_sprite_tag(tag)].texture.getSize());
+//		const auto textureSize = sf::Vector2f(auxiliarySpriteMap[auxiliary_sprite_tag(tag)].texture.getSize());
 //
 //		auxiliarySpriteMap[auxiliary_sprite_tag(tag)].sprite.setTexture(auxiliarySpriteMap[auxiliary_sprite_tag(tag)].texture);
 //		auxiliarySpriteMap[auxiliary_sprite_tag(tag)].sprite.setScale(buttonSize.x / textureSize.x, buttonSize.y / textureSize.y);		
@@ -174,8 +174,8 @@
 //
 //Vector2f hero_book_page::getConnectionPosition(int numberInOrder)
 //{
-//	const auto upperLeft = Vector2f(buttonList->at(button_tag::pagePattern).get_global_bounds().left, buttonList->at(button_tag::pagePattern).get_global_bounds().top);
-//	const auto pageSize = Vector2f(buttonList->at(button_tag::pagePattern).get_global_bounds().width, buttonList->at(button_tag::pagePattern).get_global_bounds().height);
+//	const auto upperLeft = sf::Vector2f(buttonList->at(button_tag::pagePattern).get_global_bounds().left, buttonList->at(button_tag::pagePattern).get_global_bounds().top);
+//	const auto pageSize = sf::Vector2f(buttonList->at(button_tag::pagePattern).get_global_bounds().width, buttonList->at(button_tag::pagePattern).get_global_bounds().height);
 //	const auto frameOffset = buttonList->at(button_tag::iconFrame2).get_global_bounds().height / 2;
 //	return { upperLeft.x + connectionPedestals[numberInOrder].x * pageSize.x - frameOffset, upperLeft.y + connectionPedestals[numberInOrder].y * pageSize.y - frameOffset };
 //}
@@ -521,7 +521,7 @@
 //
 //std::pair<int, int> hero_book_page::getSelectedWreathCell()
 //{
-//	const auto mousePos = Vector2f(Mouse::getPosition());
+//	const auto mousePos = sf::Vector2f(sf::Mouse::getPosition());
 //	auto minD = float(10e4);
 //	auto ans = std::make_pair(-1, -1);
 //	for (auto cnt1 = 0u; cnt1 < wreathMatrix.size(); cnt1++)
@@ -529,12 +529,12 @@
 //		{
 //			if (wreathMatrix[cnt1][cnt2] == entity_tag::selectedCell)
 //				wreathMatrix[cnt1][cnt2] = entity_tag::emptyCell;
-//			const auto curPos = Vector2f(wreathMatrixPositions[cnt1][cnt2].x + buttonList->at(button_tag::cell).get_global_bounds().width / 2.0f,
+//			const auto curPos = sf::Vector2f(wreathMatrixPositions[cnt1][cnt2].x + buttonList->at(button_tag::cell).get_global_bounds().width / 2.0f,
 //			                             wreathMatrixPositions[cnt1][cnt2].y + buttonList->at(button_tag::cell).get_global_bounds().height / 2.0f);
-//			if (helper::getDist(Vector2f(mousePos), curPos) < minD &&
-//				helper::getDist(Vector2f(mousePos), curPos) <= buttonList->at(button_tag::cell).get_global_bounds().width / 2)
+//			if (helper::getDist(sf::Vector2f(mousePos), curPos) < minD &&
+//				helper::getDist(sf::Vector2f(mousePos), curPos) <= buttonList->at(button_tag::cell).get_global_bounds().width / 2)
 //			{
-//				minD = helper::getDist(Vector2f(mousePos), curPos);
+//				minD = helper::getDist(sf::Vector2f(mousePos), curPos);
 //				ans = std::make_pair(cnt1, cnt2);
 //			}
 //		}
@@ -544,12 +544,12 @@
 //
 //std::pair<int, int> hero_book_page::getSelectedPlantsCell()
 //{
-//	const auto mousePos = Vector2f(Mouse::getPosition());
-//	const auto upperLeftCorner = Vector2f(
+//	const auto mousePos = sf::Vector2f(sf::Mouse::getPosition());
+//	const auto upperLeftCorner = sf::Vector2f(
 //		buttonList->at(button_tag::sketching).get_global_bounds().left + buttonList->at(button_tag::sketching).get_global_bounds().width * 0.066f,
 //		buttonList->at(button_tag::sketching).get_global_bounds().top + buttonList->at(button_tag::sketching).get_global_bounds().height * 0.55f);
 //
-//	const auto size = Vector2f(buttonList->at(button_tag::chamomile).get_global_bounds().width,
+//	const auto size = sf::Vector2f(buttonList->at(button_tag::chamomile).get_global_bounds().width,
 //	                           buttonList->at(button_tag::chamomile).get_global_bounds().height);
 //
 //	if (mousePos.x < upperLeftCorner.x || mousePos.y < upperLeftCorner.y ||
@@ -651,9 +651,9 @@
 //
 //	std::vector<drawable_chain_element*> result = {};
 //
-//	const auto upperLeftCorner = Vector2f(buttonList->at(button_tag::sketching).get_global_bounds().left, buttonList->at(button_tag::sketching).get_global_bounds().top);
-//	const auto pageSize = Vector2f(buttonList->at(button_tag::sketching).get_global_bounds().width, buttonList->at(button_tag::sketching).get_global_bounds().height);
-//	const auto headingPos = Vector2f(upperLeftCorner.x + 0.072f * pageSize.x, upperLeftCorner.y + 0.28f * pageSize.y);
+//	const auto upperLeftCorner = sf::Vector2f(buttonList->at(button_tag::sketching).get_global_bounds().left, buttonList->at(button_tag::sketching).get_global_bounds().top);
+//	const auto pageSize = sf::Vector2f(buttonList->at(button_tag::sketching).get_global_bounds().width, buttonList->at(button_tag::sketching).get_global_bounds().height);
+//	const auto headingPos = sf::Vector2f(upperLeftCorner.x + 0.072f * pageSize.x, upperLeftCorner.y + 0.28f * pageSize.y);
 //
 //	result.push_back(new text_chain_element({ headingPos.x, headingPos.y }, { 0, 0 }, sf::Color(100, 68, 34, 180), "Connected with:"));
 //
@@ -662,7 +662,7 @@
 //	{
 //		if (buttonList->find(button_tag(int(connection))) == buttonList->end())
 //			continue;
-//		buttonList->at(button_tag(int(connection))).set_position(Vector2f(upperLeftCorner.x + flowerConnectionsPedestals[cnt].x * pageSize.x,
+//		buttonList->at(button_tag(int(connection))).set_position(sf::Vector2f(upperLeftCorner.x + flowerConnectionsPedestals[cnt].x * pageSize.x,
 //			upperLeftCorner.y + flowerConnectionsPedestals[cnt].y * pageSize.y));
 //		result.push_back(buttonList->at(button_tag(int(connection))).prepare_sprite());
 //		cnt++;
@@ -715,7 +715,7 @@
 //		result.buttons.push_back(button_tag::sketching);
 //		if (readyToFinishDraft)
 //		{
-//			const auto plusPos = Vector2f(wreathMatrixPositions[8][2].x - (buttonList->at(button_tag::plus).get_global_bounds().width - buttonList->at(button_tag::cell).get_global_bounds().width) / 2,
+//			const auto plusPos = sf::Vector2f(wreathMatrixPositions[8][2].x - (buttonList->at(button_tag::plus).get_global_bounds().width - buttonList->at(button_tag::cell).get_global_bounds().width) / 2,
 //			                              wreathMatrixPositions[8][2].y - (buttonList->at(button_tag::plus).get_global_bounds().height - buttonList->at(button_tag::cell).get_global_bounds().height) / 2);
 //			buttonList->at(button_tag::plus).set_position(plusPos);
 //			result.buttons.push_back(button_tag::plus);
@@ -737,7 +737,7 @@
 //			result.buttons.push_back(button_tag(connection.id));
 //			buttonList->at(button_tag(connection.id)).set_position(getConnectionPosition(connection.pedestal));
 //			
-//			if (buttonList->at(button_tag(connection.id)).is_selected(Vector2f(Mouse::getPosition())))
+//			if (buttonList->at(button_tag(connection.id)).is_selected(sf::Vector2f(sf::Mouse::getPosition())))
 //				result.blockDescription = connection.description;
 //		}
 //		//--------------------------

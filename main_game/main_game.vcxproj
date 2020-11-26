@@ -174,7 +174,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
     <ClCompile Include="fence.cpp" />
     <ClCompile Include="fern.cpp" />
     <ClCompile Include="grass.cpp" />
-    <ClCompile Include="grid_list.cpp" />
+    <ClCompile Include="grid_map.cpp" />
     <ClCompile Include="ground.cpp" />
     <ClCompile Include="ground_connection.cpp" />
     <ClCompile Include="hare.cpp" />
@@ -258,7 +258,6 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
     <ClInclude Include="shape_chain_element.h" />
     <ClInclude Include="sprite_chain_element.h" />
     <ClInclude Include="sprite_pack.h" />
-    <ClInclude Include="sprite_structures.h" />
     <ClInclude Include="brazier.h" />
     <ClInclude Include="build_system.h" />
     <ClInclude Include="button.h" />
@@ -271,7 +270,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
     <ClInclude Include="event_handler.h" />
     <ClInclude Include="fence.h" />
     <ClInclude Include="grass.h" />
-    <ClInclude Include="grid_list.h" />
+    <ClInclude Include="grid_map.h" />
     <ClInclude Include="ground.h" />
     <ClInclude Include="ground_connection.h" />
     <ClInclude Include="hare.h" />
@@ -307,6 +306,7 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
     <ClInclude Include="wolf.h" />
     <ClInclude Include="world_generator.h" />
     <ClInclude Include="world_handler.h" />
+    <ClInclude Include="world_metrics.h" />
     <ClInclude Include="world_object.h" />
     <ClInclude Include="wreath_draft.h" />
     <ClInclude Include="wreath_table.h" />

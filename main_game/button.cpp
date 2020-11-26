@@ -9,11 +9,11 @@ void button::initialize(
 	const int default_sprite_number,
 	const int selected_sprite_number,
 	const int pressed_sprite_number,
-	const Vector2f position,
-	const Vector2f size,
+	const sf::Vector2f position,
+	const sf::Vector2f size,
 	const bool is_selectable,
 	const button_tag tag,
-	const Vector2f offset)
+	const sf::Vector2f offset)
 {
 	tag_ = tag;
 	button_enabled_->pack_tag = pack;
@@ -40,15 +40,15 @@ void button::initialize(
 	this->is_selectable = is_selectable;
 }
 
-bool button::is_selected(Vector2f mouse_pos)
+bool button::is_selected(sf::Vector2f mouse_pos)
 {
 	//if (!isActive)
 	//return false;
 
 	//isActive = false;
 
-	const auto rect = FloatRect(button_enabled_->position.x, button_enabled_->position.y, button_enabled_->size.x, button_enabled_->size.y);
-	if (rect.contains(Vector2f(mouse_pos)))
+	const auto rect = sf::FloatRect(button_enabled_->position.x, button_enabled_->position.y, button_enabled_->size.x, button_enabled_->size.y);
+	if (rect.contains(sf::Vector2f(mouse_pos)))
 	{
 		selected_ = true;
 		return true;
@@ -57,14 +57,14 @@ bool button::is_selected(Vector2f mouse_pos)
 	return false;
 }
 
-void button::set_position(const Vector2f position) const
+void button::set_position(const sf::Vector2f position) const
 {
 	button_enabled_->position = {position.x - button_enabled_->offset.x, position.y - button_enabled_->offset.y};
 	button_selected_->position = {position.x - button_selected_->offset.x, position.y - button_selected_->offset.y};
 	button_pressed_->position = {position.x - button_pressed_->offset.x, position.y - button_pressed_->offset.y};
 }
 
-void button::set_size(const Vector2f size) const
+void button::set_size(const sf::Vector2f size) const
 {
 	button_enabled_->size = size;
 	button_selected_->size = size;
@@ -85,9 +85,9 @@ unique_ptr<sprite_chain_element> button::prepare_sprite()
 {
 	unique_ptr<sprite_chain_element> result;
 	is_active = true;
-	if (is_selected(Vector2f(Mouse::getPosition())) && is_selectable)
+	if (is_selected(sf::Vector2f(sf::Mouse::getPosition())) && is_selectable)
 	{
-		if (Mouse::isButtonPressed(Mouse::Left) || Mouse::isButtonPressed(Mouse::Right))
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) || sf::Mouse::isButtonPressed(sf::Mouse::Right))
 		{
 			result = make_unique<sprite_chain_element>(
 				button_pressed_->pack_tag,

@@ -7,9 +7,9 @@ shape_chain_element::shape_chain_element() : drawable_chain_element()
 }
 
 shape_chain_element::shape_chain_element(
-	Vector2f position,
+	sf::Vector2f position,
 	float radius,
-	Vector2f offset,
+	sf::Vector2f offset,
 	sf::Color color,
 	float rotation) : drawable_chain_element(position, { 0, 0 }, offset, color)
 {
@@ -19,8 +19,8 @@ shape_chain_element::shape_chain_element(
 }
 
 shape_chain_element::shape_chain_element(
-	Vector2f position,
-	Vector2f offset,
+	sf::Vector2f position,
+	sf::Vector2f offset,
 	sf::Color color,
 	float rotation) : drawable_chain_element(position, { 0, 0 }, offset, color)
 {

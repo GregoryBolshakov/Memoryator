@@ -3,9 +3,7 @@
 #include "Deerchant.h"
 #include "nightmare_third.h"
 
-using namespace sf;
-
-ClapWhirl::ClapWhirl(const std::string objectName, Vector2f centerPosition, WorldObject* owner) : DynamicObject(objectName, centerPosition)
+ClapWhirl::ClapWhirl(const std::string objectName, sf::Vector2f centerPosition, WorldObject* owner) : DynamicObject(objectName, centerPosition)
 {
 	conditionalSizeUnits = {250, 500);
 	startPos = owner->getPosition();
@@ -77,7 +75,7 @@ void ClapWhirl::behavior(long long elapsedTime)
 
 	if (owner != nullptr)
 	{
-		ownerPos = Vector2f(owner->getPosition().x + 0, owner->getPosition().y - 0);
+		ownerPos = sf::Vector2f(owner->getPosition().x + 0, owner->getPosition().y - 0);
 		ownerGlobalBounds = owner->getConditionalSizeUnits();
 	}
 
@@ -87,12 +85,12 @@ void ClapWhirl::behavior(long long elapsedTime)
 		color.a = 0;
 }	
 
-Vector2f ClapWhirl::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+Vector2f ClapWhirl::getBuildPosition(std::vector<WorldObject*> visibleItems, float scaleFactor, sf::Vector2f cameraPosition)
 {
 	return { -1, -1 };
 }
 
-int ClapWhirl::getBuildType(Vector2f ounPos, Vector2f otherPos)
+int ClapWhirl::getBuildType(sf::Vector2f ounPos, sf::Vector2f otherPos)
 {
 	return 1;
 }
@@ -141,7 +139,7 @@ void ClapWhirl::jerkInteract(long long elapsedTime)
 	}
 }
 
-void ClapWhirl::jerk(float power, float deceleration, Vector2f destinationPoint)
+void ClapWhirl::jerk(float power, float deceleration, sf::Vector2f destinationPoint)
 {
 	stopping(false, false);
 	this->jerkPower = power;
@@ -152,16 +150,16 @@ void ClapWhirl::jerk(float power, float deceleration, Vector2f destinationPoint)
 	jerkDistance = 1400;
 	currentSprite[0] = 1;
 
-	const Vector2f mousePos = Vector2f(Mouse::getPosition());
-	const Vector2f screenCenter = Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2);	
+	const sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition());
+	const sf::Vector2f screenCenter = sf::Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2);	
 
 	auto nightmare = dynamic_cast<Nightmare3*>(owner);
 	if (nightmare && nightmare->getBoundTarget())
 	{
-		Vector2f flightVector = Vector2f(nightmare->getBoundTarget()->getPosition().x - nightmare->getPosition().x,
+		sf::Vector2f flightVector = sf::Vector2f(nightmare->getBoundTarget()->getPosition().x - nightmare->getPosition().x,
 			nightmare->getBoundTarget()->getPosition().y - nightmare->getPosition().y);
 		float k = jerkDistance / sqrt(pow(flightVector.x, 2) + pow(flightVector.y, 2));
-		laxMovePosition = Vector2f(owner->getPosition().x + flightVector.x * k, owner->getPosition().y + flightVector.y * k);
+		laxMovePosition = sf::Vector2f(owner->getPosition().x + flightVector.x * k, owner->getPosition().y + flightVector.y * k);
 	}
 	else
 		laxMovePosition = { 0, 0 };
@@ -174,7 +172,7 @@ void ClapWhirl::fightInteract(long long elapsedTime, DynamicObject* target)
 
 void ClapWhirl::rotateAndExtend(spriteChainElement* whirl)
 {
-	if (ownerPos != Vector2f(0, 0))
+	if (ownerPos != sf::Vector2f(0, 0))
 	{
 		if (position.y <= startPos.y)
 			whirl->rotation = acos((startPos.x - position.x) / sqrt(pow(startPos.x - position.x, 2) + pow(startPos.y - position.y, 2))) / pi * 180;
@@ -194,8 +192,8 @@ void ClapWhirl::prepare_sprites(long long elapsedTime)
 {
 	spriteChainElement whirlSprite;
 
-	whirlSprite.offset = Vector2f(this->textureBoxOffset);
-	whirlSprite.size = Vector2f(this->conditionalSizeUnits);
+	whirlSprite.offset = sf::Vector2f(this->textureBoxOffset);
+	whirlSprite.size = sf::Vector2f(this->conditionalSizeUnits);
 	additionalSprites.clear();
 	animationSpeed = 10;
 

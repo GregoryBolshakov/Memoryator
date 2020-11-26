@@ -1,12 +1,13 @@
 #include "helper.h"
+#include "math_constants.h"
+#include "tags.h"
+#include "terrain_object.h"
 
 #include <windows.h>
 
-#include "math_constants.h"
-
-Vector2f helper::GetScreenSize()
+sf::Vector2f helper::GetScreenSize()
 {
-	Vector2f screenSize;
+	sf::Vector2f screenSize;
 	DEVMODEA lpDevMode;
 
 	if (EnumDisplaySettings(nullptr, ENUM_CURRENT_SETTINGS, &lpDevMode))
@@ -46,19 +47,19 @@ std::pair<float, float> helper::solveSqr(const float a, const float b, const flo
 //	font.loadFromFile("fonts/normal.ttf");
 //	Text result(text, font, size);
 //	result.setFillColor(Color::White);
-//	Vector2f pos(static_cast<float>(Posx),static_cast<float>(Posy));
-//	result.setPosition(Vector2f(pos));
+//	sf::Vector2f pos(static_cast<float>(Posx),static_cast<float>(Posy));
+//	result.setPosition(sf::Vector2f(pos));
 //	window->draw(result);
 //}
 //
-//void Helper::drawTextWithSettings(std::string text, int size, int Posx, int Posy, Color color, RenderWindow *window)
+//void Helper::drawTextWithSettings(std::string text, int size, int Posx, int Posy, sf::Color color, RenderWindow *window)
 //{
 //	Font font;
 //	font.loadFromFile("fonts/normal.ttf");
 //	Text result(text, font, size);
 //	result.setFillColor(color);
-//	Vector2f pos(static_cast<float>(Posx), static_cast<float>(Posy));
-//	result.setPosition(Vector2f(pos));
+//	sf::Vector2f pos(static_cast<float>(Posx), static_cast<float>(Posy));
+//	result.setPosition(sf::Vector2f(pos));
 //	window->draw(result);
 //}
 
@@ -108,19 +109,19 @@ std::string helper::getObjectName(const std::string& s)
 //	}
 //}
 
-bool helper::isIntersects(const Vector2f pos, const FloatRect shape)
+bool helper::isIntersects(const sf::Vector2f pos, const sf::FloatRect shape)
 {
 	if (pos.x >= shape.left && pos.x <= shape.left + shape.width && pos.y >= shape.top && pos.y <= shape.top + shape.height)
 		return true;
 	return false;
 }
 
-bool helper::isIntersects(const Vector2f pos, const Vector2f circlePos, const float radius)
+bool helper::isIntersects(const sf::Vector2f pos, const sf::Vector2f circlePos, const float radius)
 {
 	return getDist(pos, circlePos) <= radius;
 }
 
-bool helper::isIntersectTerrain(const Vector2f position, terrain_object& terrain, const float radius)
+bool helper::isIntersectTerrain(const sf::Vector2f position, terrain_object& terrain, const float radius)
 {
 	const auto f1 = terrain.get_focus1();
 	const auto f2 = terrain.get_focus2();
@@ -128,26 +129,26 @@ bool helper::isIntersectTerrain(const Vector2f position, terrain_object& terrain
 		sqrt((position.x - f2.x) * (position.x - f2.x) + (position.y - f2.y) * (position.y - f2.y))/* - dynamic.radius*/ <= terrain.get_ellipse_size() + radius;
 }
 
-side helper::getSide(const Vector2f position, const Vector2f anotherPosition)
+side helper::getSide(const sf::Vector2f position, const sf::Vector2f anotherPosition)
 {
-	auto answer = undefined;
+	auto answer = side::undefined;
 	const auto alpha = atan((float(anotherPosition.y) - position.y) / (float(anotherPosition.x) - position.x)) * 180 / pi;
 
 	if (position.y >= anotherPosition.y && abs(alpha) >= 45 && abs(alpha) <= 90)
-		answer = up;
+		answer = side::up;
 	else
 		if (position.x <= anotherPosition.x && abs(alpha) >= 0 && abs(alpha) <= 45)
-			answer = right;
+			answer = side::right;
 		else
 			if (position.y <= anotherPosition.y && abs(alpha) >= 45 && abs(alpha) <= 90)
-				answer = down;
+				answer = side::down;
 			else
 				if (position.x >= anotherPosition.x && abs(alpha) >= 0 && abs(alpha) <= 45)
-					answer = left;
+					answer = side::left;
 	return answer;
 }
 
-float helper::getDist(const Vector2f a, const Vector2f b)
+float helper::getDist(const sf::Vector2f a, const sf::Vector2f b)
 {
 	return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
 }
@@ -162,16 +163,16 @@ bool helper::checkSigns(const float a, const float b)
 	return a > 0 && b > 0 || a < 0 && b < 0;
 }
 
-RectangleShape helper::makeLine(Vector2f point1, Vector2f point2, sf::Color color)
+sf::RectangleShape helper::makeLine(sf::Vector2f point1, sf::Vector2f point2, sf::Color color)
 {
 	if (point1.y >= point2.y)
 		std::swap(point1, point2);
 
 	point1.y -= 4;
 
-	RectangleShape result;
+	sf::RectangleShape result;
 	result.setPosition(point1);
-	result.setSize(Vector2f(sqrt(pow(point1.x - point2.x, 2) + pow(point1.y - point2.y, 2)), 4));
+	result.setSize(sf::Vector2f(sqrt(pow(point1.x - point2.x, 2) + pow(point1.y - point2.y, 2)), 4));
 
 	if (point1.x >= point2.x)
 		result.rotate(float(acos(abs(point1.y - point2.y) / sqrt(pow(point1.x - point2.x, 2) + pow(point1.y - point2.y, 2))) / pi * 180) + 90);
@@ -196,26 +197,26 @@ std::vector<std::string> helper::split(std::string line, char delimiter)
 	return commands;
 }
 
-Vector2f helper::rotate(const Vector2f point, const float angle_deg)
+sf::Vector2f helper::rotate(const sf::Vector2f point, const float angle_deg)
 {
 	return rotate(point, angle_deg, point / 2.0f);
 }
 
-Vector2f helper::rotate(const Vector2f point, const float angle_deg, const Vector2f origin)
+sf::Vector2f helper::rotate(const sf::Vector2f point, const float angle_deg, const sf::Vector2f origin)
 {
-	Transform rotation;
+	sf::Transform rotation;
 	rotation.rotate(angle_deg, origin.x, origin.y);
 	return rotation.transformPoint(point);
 }
 
-FloatRect helper::rotate(const FloatRect rect, const float angle_deg)
+sf::FloatRect helper::rotate(const sf::FloatRect rect, const float angle_deg)
 {
-	return rotate(rect, angle_deg, Vector2f(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f));
+	return rotate(rect, angle_deg, sf::Vector2f(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f));
 }
 
-FloatRect helper::rotate(const FloatRect rect, const float angle_deg, const Vector2f origin)
+sf::FloatRect helper::rotate(const sf::FloatRect rect, const float angle_deg, const sf::Vector2f origin)
 {
-	Transform rotation;
+	sf::Transform rotation;
 	rotation.rotate(angle_deg, origin.x, origin.y);
 	return rotation.transformRect(rect);
 }

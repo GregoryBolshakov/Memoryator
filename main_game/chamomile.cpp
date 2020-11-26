@@ -2,7 +2,7 @@
 //
 //#include "helper.h"
 //
-//chamomile::chamomile(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : picked_object(std::move(objectName), centerPosition)
+//chamomile::chamomile(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : picked_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 5;
 //	this->type_of_object_ = typeOfObject;
@@ -44,15 +44,15 @@
 //	focus1_ = position_;
 //	focus2_ = position_;
 //	ellipse_size_multipliers[0] = { 0 };
-//	init_micro_blocks();
+//	init_route_blocks();
 //}
 //
-//Vector2f chamomile::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+//Vector2f chamomile::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, sf::Vector2f cameraPosition)
 //{
 //	return { -1, -1 };
 //}
 //
-//int chamomile::get_build_type(Vector2f ounPos, Vector2f otherPos)
+//int chamomile::get_build_type(sf::Vector2f ounPos, sf::Vector2f otherPos)
 //{
 //	return 1;
 //}
@@ -63,7 +63,7 @@
 //    /*additionalSprites.clear();
 //	spriteChainElement body;
 //	body->path = "Game/worldSprites/terrainObjects/chamomile/chamomile" + std::to_string(typeOfObject) + ".png";
-//	body->size = Vector2f(conditionalSizeUnits);
-//	body->offset = Vector2f(textureBoxOffset);
+//	body->size = sf::Vector2f(conditionalSizeUnits);
+//	body->offset = sf::Vector2f(textureBoxOffset);
 //	additionalSprites.push_back(body);*/
 //}

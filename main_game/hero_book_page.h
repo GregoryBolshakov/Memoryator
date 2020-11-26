@@ -75,7 +75,7 @@
 //	bool isCenterSurrounded();
 //	std::vector<drawable_chain_element*> prepareConnectableFlowers(entity_tag currentFlower);
 //
-//	std::vector<std::vector<Vector2f>> wreathMatrixPositions;
+//	std::vector<std::vector<sf::Vector2f>> wreathMatrixPositions;
 //	std::vector<std::vector<entity_tag>> wreathMatrix;
 //	std::vector<std::vector<std::pair<entity_tag, int>>> plantsMatrix;
 //	std::map<entity_tag, std::map<entity_tag, int>> doneRecipes;
@@ -99,19 +99,19 @@
 //	int currentPage = 0;
 //	FloatRect pageGlobalBounds;
 //	FloatRect blockGlobalBounds, arrowToPageGlobalBounds;
-//	Vector2f leftPagePosition, rightPagePosition;
+//	sf::Vector2f leftPagePosition, rightPagePosition;
 //
 //	std::unordered_map<auxiliary_sprite_tag, board_sprite> auxiliarySpriteMap;
 //	text_system textWriter;
 //
 //	// object information (creatures, craft, plants, wreaths, nightmare)
-//	Vector2f getConnectionPosition(int numberInOrder);	
+//	sf::Vector2f getConnectionPosition(int numberInOrder);	
 //
 //	std::unordered_map<entity_tag, book_object_info> objectInfo;
-//	std::vector<Vector2f> connectionPedestals = { {0.264f, 0.278f}, {0.113f, 0.390f}, {0.145f, 0.606f}, {0.126f, 0.789f}, {0.242f, 0.479f}, {0.269f, 0.718f}, {0.412f, 0.789f}, {0.363f, 0.566f} };
-//	std::vector<Vector2f> headingPedestals = { {0.061f, 0.315f}, {0.061f, 0.441f}, {0.061f, 0.568f}, {0.061f, 0.696f}, {0.53f, 0.097f}, {0.53f, 0.222f}, {0.53f, 0.348f}, {0.53f, 0.478f}, {0.53f, 0.614f}, {0.53f, 0.740f} };
-//	std::vector<Vector2f> headingTextPedestals = { {0.170f, 0.315f}, {0.170f, 0.441f}, {0.170f, 0.568f}, {0.170f, 0.696f}, {0.637f, 0.097f}, {0.637f, 0.222f}, {0.637f, 0.348f}, {0.637f, 0.478f}, {0.637f, 0.614f}, {0.637f, 0.740f} };
-//	std::vector<Vector2f> flowerConnectionsPedestals = { {0.072f, 0.342f}, {0.160f, 0.342f}, {0.246f, 0.342f} };
+//	std::vector<sf::Vector2f> connectionPedestals = { {0.264f, 0.278f}, {0.113f, 0.390f}, {0.145f, 0.606f}, {0.126f, 0.789f}, {0.242f, 0.479f}, {0.269f, 0.718f}, {0.412f, 0.789f}, {0.363f, 0.566f} };
+//	std::vector<sf::Vector2f> headingPedestals = { {0.061f, 0.315f}, {0.061f, 0.441f}, {0.061f, 0.568f}, {0.061f, 0.696f}, {0.53f, 0.097f}, {0.53f, 0.222f}, {0.53f, 0.348f}, {0.53f, 0.478f}, {0.53f, 0.614f}, {0.53f, 0.740f} };
+//	std::vector<sf::Vector2f> headingTextPedestals = { {0.170f, 0.315f}, {0.170f, 0.441f}, {0.170f, 0.568f}, {0.170f, 0.696f}, {0.637f, 0.097f}, {0.637f, 0.222f}, {0.637f, 0.348f}, {0.637f, 0.478f}, {0.637f, 0.614f}, {0.637f, 0.740f} };
+//	std::vector<sf::Vector2f> flowerConnectionsPedestals = { {0.072f, 0.342f}, {0.160f, 0.342f}, {0.246f, 0.342f} };
 //	//------------------------------------------------------------------
 //
 //	// wreaths

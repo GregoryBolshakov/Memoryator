@@ -4,7 +4,6 @@
 
 #include "sprite_chain_element.h"
 
-using namespace sf;
 using std::unique_ptr, std::make_unique;
 
 class button
@@ -18,11 +17,11 @@ public:
 		int default_sprite_number,
 		int selected_sprite_number,
 		int pressed_sprite_number,
-		Vector2f position,
-		Vector2f size,
+		sf::Vector2f position,
+		sf::Vector2f size,
 		bool is_selectable,
 		button_tag tag,
-		Vector2f offset = { 0, 0 });
+		sf::Vector2f offset = { 0, 0 });
 	
 	unique_ptr<sprite_chain_element> prepare_sprite();
 	
@@ -30,31 +29,31 @@ public:
 	
 	void stop_being_gray();
 	
-	bool is_selected(Vector2f mouse_pos);
+	bool is_selected(sf::Vector2f mouse_pos);
 
-	[[nodiscard]] Vector2f get_position() const
+	[[nodiscard]] sf::Vector2f get_position() const
 	{
 		return button_enabled_->position;
 	}
 
-	[[nodiscard]] Vector2f get_size() const
+	[[nodiscard]] sf::Vector2f get_size() const
 	{
 		return button_enabled_->size;
 	}
 
-	[[nodiscard]] Vector2f get_offset() const
+	[[nodiscard]] sf::Vector2f get_offset() const
 	{
 		return button_enabled_->offset;
 	}
 
-	[[nodiscard]] FloatRect get_global_bounds() const
+	[[nodiscard]] sf::FloatRect get_global_bounds() const
 	{
 		return {get_position(), get_size()};
 	}
 
-	void set_position(Vector2f position) const;
+	void set_position(sf::Vector2f position) const;
 	
-	void set_size(Vector2f size) const;
+	void set_size(sf::Vector2f size) const;
 
 	[[nodiscard]] button_tag get_tag() const
 	{

@@ -7,8 +7,8 @@ text_chain_element::text_chain_element() : drawable_chain_element()
 }
 
 text_chain_element::text_chain_element(
-	Vector2f position, 	
-	Vector2f offset,
+	sf::Vector2f position, 	
+	sf::Vector2f offset,
 	sf::Color color,
 	std::string string,	
 	float character_size,

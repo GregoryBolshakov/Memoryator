@@ -1,5 +1,7 @@
 #pragma once
 
+enum class biome { swampy_trees = 1, dark_woods = 2, birch_grove = 3, flower_valley = 4 };
+
 // mobs 101 - 199; craft objects 201 - 299; world objects 301 - 399; flowers 401 - 499; auxiliary objects 501 - 599;
 enum class entity_tag {
 	hero = 101, hare = 102, owl = 103, deer = 104, fox = 105, bear = 106, wolf = 107, monster = 108, owlBoss = 109, nightmare1 = 110, nightmare2 = 111, nightmare3 = 112,
@@ -46,7 +48,7 @@ enum class button_tag { playTag = 0, continueTag = 1, newRunTag = 2, settingsTag
 	heroBag = 201
 };
 
-enum actions { direct_hit = 2,
+enum class action { direct_hit = 2,
 	relax = 3,
 	combat_state = 4,
 	move = 5,
@@ -76,4 +78,4 @@ enum actions { direct_hit = 2,
 	takeoff = 31,
 	throw_noose = 35 };
 
-enum side { undefined = 0, up = 1, right = 2, down = 3, left = 4 };
+enum class side { undefined = 0, up = 1, right = 2, down = 3, left = 4 };

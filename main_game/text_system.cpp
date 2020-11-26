@@ -1,11 +1,12 @@
 #include "text_system.h"
-
+#include "text_chain_element.h"
 #include "hero_bag.h"
+#include "sprite_pack.h"
 
 float text_system::character_size = 30.0f * helper::GetScreenSize().y / 1440.0f;
-std::unordered_map<font_name, Font> text_system::fonts = {};
-std::unordered_map<font_name, Text> text_system::text_boxes = {};
-Text text_system::number_of_items;
+std::unordered_map<font_name, sf::Font> text_system::fonts = {};
+std::unordered_map<font_name, sf::Text> text_system::text_boxes = {};
+sf::Text text_system::number_of_items;
 
 text_system::text_system()
 {
@@ -21,7 +22,7 @@ text_system::~text_system()
 
 void text_system::init_fonts()
 {
-	Font current_font;
+	sf::Font current_font;
 	current_font.loadFromFile("fonts/Bebas.ttf");
 	fonts.insert({font_name::bebas_font, current_font});
 	current_font.loadFromFile("fonts/normal.ttf");
@@ -32,7 +33,7 @@ void text_system::init_fonts()
 
 void text_system::init_text_boxes()
 {
-	Text current_text;
+	sf::Text current_text;
 	current_text.setFont(fonts[font_name::bebas_font]);
 	text_boxes.insert({ font_name::bebas_font, current_text });
 	current_text.setFont(fonts[font_name::normal_font]);
@@ -41,16 +42,16 @@ void text_system::init_text_boxes()
 	text_boxes.insert({ font_name::console_font, current_text });
 }
 
-void text_system::draw_string(const std::string& str, const font_name font, const float size, const float pos_x, const float pos_y, RenderTarget& target, const sf::Color color)
+void text_system::draw_string(const std::string& str, const font_name font, const float size, const float pos_x, const float pos_y, const std::shared_ptr<sf::RenderWindow>& target, const sf::Color color)
 {
 	text_boxes.at(font).setPosition(pos_x, pos_y);
 	text_boxes.at(font).setCharacterSize(unsigned(ceil(size)));
 	text_boxes.at(font).setFillColor(color);
 	text_boxes.at(font).setString(str);
-	target.draw(text_boxes.at(font));
+	target->draw(text_boxes.at(font));
 }
 
-void text_system::draw_text_box(std::string str, const font_name font, const float size, const float pos_x, const float pos_y, const float width, const float height, RenderTarget& target, const sf::Color color)
+void text_system::draw_text_box(std::string str, const font_name font, const float size, const float pos_x, const float pos_y, const float width, const float height, const std::shared_ptr<sf::RenderWindow>& target, const sf::Color color)
 {
 	auto cur_text = text_boxes.at(font);
 	cur_text.setString(str);
@@ -88,12 +89,12 @@ void text_system::draw_text_box(std::string str, const font_name font, const flo
 	}
 }
 
-void text_system::draw_number_of_items(const Vector2f pos, const int items_count, RenderTarget& target)
+void text_system::draw_number_of_items(const sf::Vector2f pos, const int items_count, const std::shared_ptr<sf::RenderWindow>& target)
 {
 	number_of_items.setString(std::to_string(items_count));
 	number_of_items.setOrigin(number_of_items.getGlobalBounds().width, number_of_items.getGlobalBounds().height);
 	number_of_items.setPosition(pos.x + sprite_pack::icon_size.x, pos.y + sprite_pack::icon_size.x);
-	target.draw(number_of_items);
+	target->draw(number_of_items);
 }
 
 sf::Vector2f text_system::get_text_box_size(const std::string& string, const float character_size, const font_name font)

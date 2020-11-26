@@ -1,14 +1,12 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <string>
-
 #include "drawable_chain_element.h"
 #include "helper.h"
 
-enum class font_name { bebas_font = 1, normal_font = 2, console_font = 3 };
+#include <SFML/Graphics.hpp>
+#include <string>
 
-using Color = sf::Color;
+enum class font_name { bebas_font = 1, normal_font = 2, console_font = 3 };
 
 class text_chain_element : public drawable_chain_element
 {
@@ -16,8 +14,8 @@ public:
 	static const float default_character_size;
 	text_chain_element();
 	text_chain_element(
-		Vector2f position,
-		Vector2f offset,
+		sf::Vector2f position,
+		sf::Vector2f offset,
 		sf::Color color,
 		std::string string,
 		float character_size = default_character_size,

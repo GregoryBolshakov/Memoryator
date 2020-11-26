@@ -1,75 +1,83 @@
 #pragma once
 
-#include "static_object.h"
-#include "sprite_structures.h"
-#include "sprite_pack.h"
-#include "rock.h"
-#include "ground.h"
-#include "ground_connection.h"
-#include "dropped_loot.h"
-#include "grass.h"
-#include "ground.h"
-#include "spawn.h"
-#include "chamomile.h"
-#include "yarrow.h"
-#include "mugwort.h"
-#include "fern.h"
-#include "brazier.h"
-#include "totem.h"
-#include "hare_trap.h"
-#include "fence.h"
-#include "stump.h"
-#include "forest_tree.h"
-#include "wreath_table.h"
-#include "mushroom.h"
-#include "log.h"
-#include "bush.h"
-#include "lake.h"
-#include "root.h"
-#include  "roof.h"
+#include <map>
+#include <memory>
+#include <vector>
+#include <SFML/System/Vector2.hpp>
 
-#include "monster.h"
-#include "deerchant.h"
-#include "wolf.h"
-#include "hare.h"
-#include "deer.h"
-#include "bear.h"
-#include "owl.h"
-#include "owl_boss.h"
-#include "nightmare_first.h"
-#include "nightmare_second.h"
-#include "nightmare_third.h"
-#include "noose.h"
-//#include "clap_whirl.h"
-#include <unordered_map>
+class world_object;
+class dynamic_object;
 
-enum biomes { swampy_trees = 1, dark_woods = 2, birch_grove = 3, flower_valley = 4 };
+class static_object;
+class sprite_pack;
+class rock;
+class ground;
+class ground_connection;
+class dropped_loot;
+class grass;
+class ground;
+class spawn;
+class chamomile;
+class yarrow;
+class mugwort;
+class fern;
+class brazier;
+class totem;
+class hare_trap;
+class fence;
+class stump;
+class forest_tree;
+class wreath_table;
+class mushroom;
+class log;
+class bush;
+class lake;
+class root;
+class roof;
+
+class monster;
+class deerchant;
+class wolf;
+class hare;
+class deer;
+class bear;
+class owl;
+class owl_boss;
+class nightmare_first;
+class nightmare_second;
+class nightmare_third;
+class noose;
+class clap_whirl;
+
+enum class entity_tag;
+enum class pack_tag;
+enum class biome;
 
 class object_initializer
 {
 public:
 	object_initializer();
 	~object_initializer() = default;
-	static shared_ptr<static_object> initialize_static_item(
+	static std::shared_ptr<static_object> initialize_static_item(
 		entity_tag item_class,
-		Vector2f item_position,
+		sf::Vector2f item_position,
 		int item_type,
 		const std::string& item_name,
 		int count,
-		biomes biome,
-		const shared_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
+		biome biome,
+		const std::shared_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
 		bool mirrored = true,
 		const std::vector<std::pair<entity_tag, int>>& inventory = {});
 	static int new_name_id;
-	static int get_random_type_by_biome(const world_object& object, biomes biome);
-	static shared_ptr<dynamic_object> initialize_dynamic_item(
+	static int get_random_type_by_biome(const world_object& object, biome biome);
+	static std::shared_ptr<dynamic_object> initialize_dynamic_item(
 		entity_tag item_class,
-		Vector2f item_position,
+		sf::Vector2f item_position,
 		const std::string& item_name,
-		const shared_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
-		const shared_ptr<world_object>& owner = nullptr);
-	static std::vector<shared_ptr<static_object>> vector_cast_to_static(const std::vector< shared_ptr<world_object>>& items);
-	static std::vector< shared_ptr<dynamic_object>> vector_cast_to_dynamic(const std::vector<shared_ptr<world_object>>& items);
+		const std::shared_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
+		const std::shared_ptr<world_object>& owner = nullptr);
+	static std::vector<std::shared_ptr<static_object>> vector_cast_to_static(const std::vector<std::shared_ptr<world_object>>& items);
+	static std::vector<std::shared_ptr<dynamic_object>> vector_cast_to_dynamic(const std::vector<std::shared_ptr<world_object>>& items);
 
 	static std::map<entity_tag, std::string> mapped_tags;
 	static std::map<std::string, entity_tag> mapped_strings;

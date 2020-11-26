@@ -1,9 +1,12 @@
 #include "menu_system.h"
+#include "button.h"
+#include "helper.h"
+#include "world_handler.h"
 
-const Vector2f new_run_button_position(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.06f);
-const Vector2f continue_button_position(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.21f);
-const Vector2f exit_button_position(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.36f);
-const Vector2f button_size(helper::GetScreenSize().x * 0.2f, helper::GetScreenSize().y * 0.14f);
+const sf::Vector2f new_run_button_position(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.06f);
+const sf::Vector2f continue_button_position(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.21f);
+const sf::Vector2f exit_button_position(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.36f);
+const sf::Vector2f button_size(helper::GetScreenSize().x * 0.2f, helper::GetScreenSize().y * 0.14f);
 
 menu_system::menu_system()
 {
@@ -20,9 +23,9 @@ void menu_system::init_buttons()
 menu_system::~menu_system()
 = default;
 
-void menu_system::on_key_down(const Event event, const shared_ptr<world_handler>& world)
+void menu_system::on_key_down(const sf::Event event, const shared_ptr<world_handler>& world)
 {
-	if (event.key.code == Keyboard::Escape)
+	if (event.key.code == sf::Keyboard::Escape)
 	{
 		if (menu_state_ == closed)
 		{
@@ -36,11 +39,11 @@ void menu_system::on_key_down(const Event event, const shared_ptr<world_handler>
 	}
 }
 
-void menu_system::interact(const shared_ptr<world_handler>& world, RenderWindow &window)
+void menu_system::interact(const shared_ptr<world_handler>& world, const shared_ptr<sf::RenderWindow>& window)
 {
 	was_active_ = false;
 
-	const Vector2f mouse_pos = Vector2f(Mouse::getPosition());
+	const sf::Vector2f mouse_pos = sf::Vector2f(sf::Mouse::getPosition());
 
 	if (menu_state_ == main_menu)
 	{
@@ -64,7 +67,7 @@ void menu_system::interact(const shared_ptr<world_handler>& world, RenderWindow 
 		if (button_list_[button_tag::exitTag].is_selected(mouse_pos))
 		{
 			menu_state_ = closed;
-			window.close();
+			window->close();
 			was_active_ = true;
 			return;
 		}

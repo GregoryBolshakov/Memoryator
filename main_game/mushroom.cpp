@@ -2,7 +2,7 @@
 //
 //#include "helper.h"
 //
-//mushroom::mushroom(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : static_object(std::move(objectName), centerPosition)
+//mushroom::mushroom(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : static_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 16; // BirchGrove: 1-3; DarkWoods: 4-12; SwampyTrees: 13-16
 //	this->type_of_object_ = typeOfObject;
@@ -64,19 +64,19 @@
 //	return { texture_box_.width / 2.0f, texture_box_.height / 2.0f };
 //}
 //
-//Vector2f mushroom::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+//Vector2f mushroom::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, sf::Vector2f cameraPosition)
 //{
 //	return { -1, -1 };
 //}
 //
-//int mushroom::get_build_type(Vector2f ounPos, Vector2f otherPos)
+//int mushroom::get_build_type(sf::Vector2f ounPos, sf::Vector2f otherPos)
 //{
 //	return 1;
 //}
 //
 //std::vector<sprite_chain_element*> mushroom::prepare_sprites(long long elapsedTime)
 //{
-//	sprite_chain_element* body = new sprite_chain_element(pack_tag::darkWoods, pack_part::mushroom, direction::DOWN, type_of_object_, position_, conditional_size_units_, Vector2f(texture_box_offset_));
+//	sprite_chain_element* body = new sprite_chain_element(pack_tag::darkWoods, pack_part::mushroom, direction::DOWN, type_of_object_, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_));
 //	body->unscaled = true;
 //
 //	if (type_of_object_ >= 1 && type_of_object_ <= 3)

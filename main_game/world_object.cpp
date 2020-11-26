@@ -1,22 +1,27 @@
 #include "world_object.h"
-
+#include "sprite_chain_element.h"
 #include "helper.h"
 
-Vector2f world_object::micro_block_size = {20, 20};
+sf::Vector2f world_object::micro_block_size = {20, 20};
 
-world_object::world_object(std::string object_name, const Vector2f center_position)
+world_object::world_object(std::string object_name, const sf::Vector2f center_position) :
+	  tag{ entity_tag::emptyObject }
+	, current_sprite_{std::vector<int>{1}}
+	, name_{std::move(object_name)}
+	, position_{ center_position }
 {
-	name_ = std::move(object_name);
-	position_ = center_position;
 	world_object::init_pedestal();
-	current_sprite_.resize(1);
-	current_sprite_[0] = 1;
 }
 
 world_object::~world_object()
 = default;
 
-void world_object::set_texture_size(const Vector2f texture_size)
+void world_object::set_unscaled(const std::vector<unique_ptr<sprite_chain_element>>& items)
+{
+	for (const auto& item : items) item->unscaled = true;
+}
+
+void world_object::set_texture_size(const sf::Vector2f texture_size)
 {
 	texture_box_.width = texture_size.x;
 	texture_box_.height = texture_size.y;
@@ -29,7 +34,7 @@ void world_object::set_texture_size(const Vector2f texture_size)
 	init_pedestal();
 }
 
-Vector2f world_object::get_scale_ratio() const
+sf::Vector2f world_object::get_scale_ratio() const
 {
 	return { float(conditional_size_units_.x) / original_texture_box_.width, float(conditional_size_units_.y) / original_texture_box_.height };
 }
@@ -45,30 +50,23 @@ void world_object::cancel_mirroring()
 
 void world_object::init_pedestal()
 {
-	init_micro_blocks();
+	init_route_blocks();
 }
 
-void world_object::init_micro_blocks()
+void world_object::init_route_blocks()
 {
 }
 
 bool world_object::is_locked_place(const std::map<std::pair<int, int>, bool>& check_blocks)
 {
-	for (auto& block : locked_micro_blocks_)
+	for (auto& block : locked_route_blocks_)
 		if (check_blocks.count({ block.x, block.y }) > 0)
 			return true;
 	
 	return false;
 }
 
-void world_object::set_position(const Vector2f new_position)
-{
-	position_ = Vector2f(new_position);
-	texture_box_.left = ceil(new_position.x - texture_box_offset_.x);
-	texture_box_.top = ceil(new_position.y - texture_box_offset_.y);
-}
-
-void world_object::take_damage(const float damage, Vector2f attacker_pos)
+void world_object::take_damage(const float damage, sf::Vector2f attacker_pos)
 {
 	this->health_point_ -= damage / this->armor_;
 }

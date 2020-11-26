@@ -1,15 +1,19 @@
 #include "draw_system.h"
+#include "sprite_chain_element.h"
+#include "text_chain_element.h"
+#include "shape_chain_element.h"
 #include "shader_system.h"
 #include "text_system.h"
+#include "sprite_pack.h"
 
-draw_system::draw_system(shared_ptr<shader_system> shader_system, const Vector2f screen_size) : shader_system_{
+draw_system::draw_system(shared_ptr<shader_system> shader_system, const sf::Vector2f screen_size) : shader_system_{
 	std::move(shader_system)
 }
 {
 	init_packs_map();
 	render_texture_.create(unsigned(screen_size.x), unsigned(screen_size.y));
 	shader_texture_ = render_texture_.getTexture();
-	shader_sprite_ = Sprite(shader_texture_);
+	shader_sprite_ = sf::Sprite(shader_texture_);
 }
 
 bool draw_system::search_files(const LPCTSTR lpsz_file_name, const search_func lp_search_func, const bool b_inner_folders)
@@ -117,12 +121,12 @@ void draw_system::init_packs_map()
 {
 	packs_map_ = make_shared<packs_map_t>();
 	search_files("Game/spritePacks/*.png", init_sprite_pack, true);
-	sprite_pack::icon_without_space_size = Vector2f(
+	sprite_pack::icon_without_space_size = sf::Vector2f(
 		float(packs_map_->at(pack_tag::inventory).get_original_info(pack_part::areas, direction::DOWN, 1).frame.w),
 		float(packs_map_->at(pack_tag::inventory).get_original_info(pack_part::areas, direction::DOWN, 1).frame.h));
 }
 
-void draw_system::advanced_scale(sprite_chain_element& item, Sprite& sprite, const sprite_pack_structure::sprite& original_info, const float scale)
+void draw_system::advanced_scale(sprite_chain_element& item, sf::Sprite& sprite, const sprite_pack_structure::sprite& original_info, const float scale)
 {
 	const auto size_w = float(original_info.source_size.w);
 	const auto size_h = float(original_info.source_size.h);
@@ -155,7 +159,7 @@ void draw_system::advanced_scale(sprite_chain_element& item, Sprite& sprite, con
 	}
 }
 
-void draw_system::draw_sprite_chain_element(RenderTarget& target, sprite_chain_element& sprite_chain_item, const Vector2f camera_position, const Vector2f screen_center, const float scale)
+void draw_system::draw_sprite_chain_element(const shared_ptr<sf::RenderWindow>& target, sprite_chain_element& sprite_chain_item, const sf::Vector2f camera_position, const sf::Vector2f screen_center, const float scale)
 {
 	if (sprite_chain_item.pack_tag == pack_tag::empty)
 	{
@@ -163,13 +167,13 @@ void draw_system::draw_sprite_chain_element(RenderTarget& target, sprite_chain_e
 	}
 
 	auto sprite = packs_map_->at(sprite_chain_item.pack_tag).get_sprite(sprite_chain_item.pack_part, sprite_chain_item.direction, sprite_chain_item.number, sprite_chain_item.mirrored);
-	if (sprite.getTextureRect() == IntRect())
+	if (sprite.getTextureRect() == sf::IntRect())
 	{
 		return;
 	}
 
 	const auto original_info = packs_map_->at(sprite_chain_item.pack_tag).get_original_info(sprite_chain_item.pack_part, sprite_chain_item.direction, sprite_chain_item.number);
-	const Vector2f sprite_pos = {
+	const sf::Vector2f sprite_pos = {
 		(sprite_chain_item.position.x - camera_position.x - sprite_chain_item.offset.x) * scale + screen_center.x,
 		(sprite_chain_item.position.y - camera_position.y - sprite_chain_item.offset.y) * scale + screen_center.y
 	};
@@ -192,10 +196,10 @@ void draw_system::draw_sprite_chain_element(RenderTarget& target, sprite_chain_e
 	}
 	//else*/
 
-	target.draw(sprite);
+	target->draw(sprite);
 }
 
-void draw_system::draw_text_chain_element(RenderTarget& target, text_chain_element& text_chain_item)
+void draw_system::draw_text_chain_element(const shared_ptr<sf::RenderWindow>& target, text_chain_element& text_chain_item)
 {
 	text_system::draw_string(
 		text_chain_item.string,
@@ -207,39 +211,39 @@ void draw_system::draw_text_chain_element(RenderTarget& target, text_chain_eleme
 		text_chain_item.color);
 }
 
-void draw_system::draw_shape_chain_element(RenderTarget& target, shape_chain_element& shape_chain_element)
+void draw_system::draw_shape_chain_element(const shared_ptr<sf::RenderWindow>& target, shape_chain_element& shape_chain_element)
 {
 	if (shape_chain_element.type == shape_type::circle)
 	{
-		CircleShape circle(shape_chain_element.radius);
+		sf::CircleShape circle(shape_chain_element.radius);
 		circle.setPosition(shape_chain_element.position);
 		circle.setFillColor(shape_chain_element.color);
-		target.draw(circle);
+		target->draw(circle);
 		return;
 	}
 
 	if (shape_chain_element.type == shape_type::rectangle)
 	{
-		RectangleShape rect(shape_chain_element.size);
+		sf::RectangleShape rect(shape_chain_element.size);
 		rect.setPosition(shape_chain_element.position);
 		rect.setFillColor(shape_chain_element.color);
-		target.draw(rect);
+		target->draw(rect);
 		return;
 	}
 }
 
-void draw_system::draw(RenderTarget& target, const std::vector<unique_ptr<drawable_chain_element>>& drawable_items, const float scale, const Vector2f camera_position)
+void draw_system::draw(const shared_ptr<sf::RenderWindow>& target, const std::vector<std::unique_ptr<drawable_chain_element>>& drawable_items, const float scale, const sf::Vector2f camera_position)
 {
 	if (drawable_items.empty())
 	{
 		return;
 	}
 
-	const auto screen_center = camera_position != Vector2f()
-		? Vector2f(target.getSize()) / 2.0F
-		: Vector2f();
+	const auto screen_center = camera_position != sf::Vector2f()
+		? sf::Vector2f(target->getSize()) / 2.0F
+		: sf::Vector2f();
 
-	for (auto& item : drawable_items)
+	for (const auto& item : drawable_items)
 	{
 		if (!item->initialized)
 		{
@@ -268,9 +272,9 @@ void draw_system::draw(RenderTarget& target, const std::vector<unique_ptr<drawab
 	}
 }
 
-void draw_system::draw(RenderWindow& target, const shader_kind kind)
+void draw_system::draw(const shared_ptr<sf::RenderWindow>& target, const shader_kind kind)
 {
-	shader_texture_.update(target);
+	shader_texture_.update(*target);
 	const auto& shader = shader_system_->get_shader(kind);
-	target.draw(shader_sprite_, &shader);
+	target->draw(shader_sprite_, &shader);
 }

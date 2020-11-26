@@ -2,7 +2,7 @@
 //
 //#include "helper.h"
 //
-//grass::grass(std::string objectName, const Vector2f centerPosition, const int typeOfObject) : static_object(std::move(objectName), centerPosition)
+//grass::grass(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : static_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 30; // BirchGrove: 1-8; DarkWoods: 9-21; SwampyTrees: 22-30
 //	this->type_of_object_ = typeOfObject;
@@ -89,12 +89,12 @@
 //	return { texture_box_.width / 2.0f, texture_box_.height / 1.2f };
 //}
 //
-//Vector2f grass::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+//Vector2f grass::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, sf::Vector2f cameraPosition)
 //{
 //	return { -1, -1 };
 //}
 //
-//int grass::get_build_type(Vector2f ounPos, Vector2f otherPos)
+//int grass::get_build_type(sf::Vector2f ounPos, sf::Vector2f otherPos)
 //{
 //	return 1;
 //}
@@ -102,7 +102,7 @@
 //std::vector<sprite_chain_element*> grass::prepare_sprites(long long elapsedTime)
 //{
 //	std::vector<sprite_chain_element*> result = {};
-//	sprite_chain_element* body = new sprite_chain_element(pack_tag::darkWoods, pack_part::plant, direction::DOWN, type_of_object_, position_, conditional_size_units_, Vector2f(texture_box_offset_));
+//	sprite_chain_element* body = new sprite_chain_element(pack_tag::darkWoods, pack_part::plant, direction::DOWN, type_of_object_, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_));
 //	body->unscaled = true;
 //
 //	if (type_of_object_ >= 1 && type_of_object_ <= 8)

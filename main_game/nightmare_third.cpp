@@ -1,6 +1,6 @@
 //#include "nightmare_third.h"
 //
-//nightmare_third::nightmare_third(std::string objectName, Vector2f centerPosition) : monster(std::move(objectName), centerPosition)
+//nightmare_third::nightmare_third(std::string objectName, sf::Vector2f centerPosition) : monster(std::move(objectName), centerPosition)
 //{
 //	conditional_size_units_ = { 600, 600 };
 //	move_system.default_speed = 0.0003f;
@@ -77,8 +77,8 @@
 //    return {};
 //	/*spriteChainElement fullSprite;
 //
-//	fullSprite.offset = Vector2f(this->textureBoxOffset);
-//	fullSprite.size = Vector2f(this->conditionalSizeUnits);
+//	fullSprite.offset = sf::Vector2f(this->textureBoxOffset);
+//	fullSprite.size = sf::Vector2f(this->conditionalSizeUnits);
 //	additionalSprites.clear();
 //	animationSpeed = 10;
 //

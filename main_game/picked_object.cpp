@@ -1,12 +1,13 @@
 #include "picked_object.h"
+#include "hero_bag.h"
+#include "tags.h"
 
-
-picked_object::picked_object(std::string objectName, const Vector2f centerPosition) : terrain_object(std::move(objectName), centerPosition), id(), count(0)
+picked_object::picked_object(std::string objectName, const sf::Vector2f centerPosition) : terrain_object(std::move(objectName), centerPosition), id(), count(0)
 {
 	radius_ = 0;
 }
 
-bool picked_object::pickUp(std::vector<hero_bag> *bags)
+bool picked_object::pickUp(std::vector<hero_bag>& bags)
 {
 	if (this->tag == entity_tag::emptyCell)
 		return true;
@@ -14,7 +15,7 @@ bool picked_object::pickUp(std::vector<hero_bag> *bags)
 	{
 		cell *maximumFilledCell = nullptr;
 
-		for (auto& bag : *bags)
+		for (auto& bag : bags)
 		{
 			for (auto& cell : bag.cells)
 			{
@@ -25,7 +26,7 @@ bool picked_object::pickUp(std::vector<hero_bag> *bags)
 				}
 				else
 					if (entity_tag(cell.content.first) == id && cell.content.second > maximumFilledCell->content.second && cell.content.second < hero_bag::items_max_count.at(cell.content.first))
-						maximumFilledCell = &cell;					
+						maximumFilledCell = &cell;
 			}
 		}
 		if (maximumFilledCell != nullptr)

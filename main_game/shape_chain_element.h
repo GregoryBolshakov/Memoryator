@@ -10,22 +10,20 @@
 
 enum class shape_type { circle = 1, rectangle = 2 };
 
-using Color = sf::Color;
-
 class shape_chain_element : public drawable_chain_element
 {
 public:
 	static const float default_character_size;
 	shape_chain_element();
 	shape_chain_element(
-		Vector2f position,
+		sf::Vector2f position,
 		float radius,
-		Vector2f offset = { 0, 0 },
+		sf::Vector2f offset = { 0, 0 },
 		sf::Color color = sf::Color::White,
 		float rotation = 0);
 	shape_chain_element(
-		Vector2f position,
-		Vector2f offset = { 0, 0 },
+		sf::Vector2f position,
+		sf::Vector2f offset = { 0, 0 },
 		sf::Color color = sf::Color::White,
 		float rotation = 0);
 	shape_chain_element(shape_chain_element&& element) noexcept : drawable_chain_element(std::move(element))

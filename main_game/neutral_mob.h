@@ -14,7 +14,7 @@
 //	int fear_{};
 //	float distance_to_nearest_ = 10e6, run_away_range_ = 0;
 //public:
-//	neutral_mob(std::string objectName, Vector2f centerPosition);
+//	neutral_mob(std::string objectName, sf::Vector2f centerPosition);
 //	~neutral_mob();
 //	void behavior_with_dynamic(dynamic_object* target, long long elapsedTime) override;
 //	void behavior_with_static(world_object* target, long long elapsedTime) override;

@@ -6,7 +6,7 @@
 //
 //using namespace sf;
 //
-//noose::noose(const std::string& objectName, const Vector2f centerPosition, world_object* owner) : dynamic_object(objectName, centerPosition)
+//noose::noose(const std::string& objectName, const sf::Vector2f centerPosition, world_object* owner) : dynamic_object(objectName, centerPosition)
 //{
 //	conditional_size_units_ = {360, 300};
 //	current_sprite_[0] = 1;
@@ -90,7 +90,7 @@
 //
 //	if (owner != nullptr)
 //	{
-//		ownerPos = Vector2f(owner->get_position().x + owner->get_conditional_size_units().x / 10.0F, owner->get_position().y - owner->get_conditional_size_units().y / 13.0F);
+//		ownerPos = sf::Vector2f(owner->get_position().x + owner->get_conditional_size_units().x / 10.0F, owner->get_position().y - owner->get_conditional_size_units().y / 13.0F);
 //		ownerGlobalBounds = owner->get_conditional_size_units();
 //	}
 //
@@ -118,12 +118,12 @@
 //	}
 //}
 //
-//Vector2f noose::get_build_position(std::vector<world_object*> visible_items, float scale_factor, Vector2f camera_position)
+//Vector2f noose::get_build_position(std::vector<world_object*> visible_items, float scale_factor, sf::Vector2f camera_position)
 //{
 //	return {-1, -1};
 //}
 //
-//int noose::get_build_type(Vector2f oun_pos, Vector2f other_pos)
+//int noose::get_build_type(sf::Vector2f oun_pos, sf::Vector2f other_pos)
 //{
 //	return 1;
 //}
@@ -169,7 +169,7 @@
 //	}
 //}
 //
-//void noose::jerk(const float power, const float deceleration, Vector2f /*destinationPoint*/)
+//void noose::jerk(const float power, const float deceleration, sf::Vector2f /*destinationPoint*/)
 //{
 //	stopping(false, false);
 //	this->jerk_power_ = power;
@@ -180,10 +180,10 @@
 //	jerk_distance_ = 1400;
 //	current_sprite_[0] = 1;
 //
-//	const auto mousePos = Vector2f(Mouse::getPosition());
-//	const auto screenCenter = Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2);
+//	const auto mousePos = sf::Vector2f(sf::Mouse::getPosition());
+//	const auto screenCenter = sf::Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2);
 //	const auto coeff = jerk_distance_ / helper::getDist(mousePos, screenCenter);
-//	move_system.lax_move_position = Vector2f(owner->get_position().x + (mousePos.x - screenCenter.x) * coeff, owner->get_position().y + (mousePos.y - screenCenter.y) * coeff);
+//	move_system.lax_move_position = sf::Vector2f(owner->get_position().x + (mousePos.x - screenCenter.x) * coeff, owner->get_position().y + (mousePos.y - screenCenter.y) * coeff);
 //}
 //
 //void noose::fight_interact(long long elapsedTime, dynamic_object* target)
@@ -198,10 +198,10 @@
 //		localElongation = 1;
 //	}
 //
-//	if (ownerPos != Vector2f(0, 0))
+//	if (ownerPos != sf::Vector2f(0, 0))
 //	{
-//		const auto beginPoint = Vector2f(ownerPos.x, ownerPos.y - ownerGlobalBounds.y / 13.0F);
-//		rope->size = Vector2f(helper::getDist(beginPoint, position_) + localElongation, rope->size.y); // a little bit longer rope for sprite joining		
+//		const auto beginPoint = sf::Vector2f(ownerPos.x, ownerPos.y - ownerGlobalBounds.y / 13.0F);
+//		rope->size = sf::Vector2f(helper::getDist(beginPoint, position_) + localElongation, rope->size.y); // a little bit longer rope for sprite joining		
 //		if (position_.y <= beginPoint.y)
 //		{
 //			rope->rotation = float(acos((beginPoint.x - position_.x) / sqrt(pow(beginPoint.x - position_.x, 2) + pow(beginPoint.y - position_.y, 2))) / pi * 180);
@@ -219,7 +219,7 @@
 //		loop->offset.y -= float(1 - cos(loop->rotation / 180 * pi)) * texture_box_offset_.y;
 //	}
 //
-//	if (ownerPos != Vector2f(0, 0))
+//	if (ownerPos != sf::Vector2f(0, 0))
 //	{
 //		rope->offset.x += (ownerPos.x - position_.x) * localElongation / helper::getDist(position_, ownerPos); // offset of the extended rope
 //		rope->offset.y += (ownerPos.y - position_.y) * localElongation / helper::getDist(position_, ownerPos);
@@ -229,7 +229,7 @@
 //		if ((dynOwner != nullptr) && current_action_ != dead)
 //		{
 //			rope->position = dynOwner->get_belt_position();
-//			rope->offset = Vector2f(rope->offset.x + rope->position.x - position_.x, rope->offset.y + rope->position.y - position_.y);
+//			rope->offset = sf::Vector2f(rope->offset.x + rope->position.x - position_.x, rope->offset.y + rope->position.y - position_.y);
 //		}
 //	}
 //}
@@ -260,8 +260,8 @@
 //			}
 //			loopSprite->number = 2;
 //			loopSprite->direction = direction::DOWN;
-//			loopSprite->size = Vector2f(40, 30);
-//			loopSprite->offset = Vector2f(loopSprite->size.x / 1.8F, loopSprite->size.y / 1.8F);
+//			loopSprite->size = sf::Vector2f(40, 30);
+//			loopSprite->offset = sf::Vector2f(loopSprite->size.x / 1.8F, loopSprite->size.y / 1.8F);
 //			break;
 //		}
 //	case jerking:

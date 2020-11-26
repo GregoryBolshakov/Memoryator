@@ -50,7 +50,7 @@
 //	fin.close();
 //}
 //
-//std::vector <sprite_chain_element*> build_system::prepare_sprites(grid_list& static_grid, const std::vector<world_object*>& visible_items, std::map<pack_tag, sprite_pack>* packs_map)
+//std::vector <sprite_chain_element*> build_system::prepare_sprites(grid_map& static_grid, const std::vector<world_object*>& visible_items, std::map<pack_tag, sprite_pack>* packs_map)
 //{
 //	if (selected_object == entity_tag::emptyCell)
 //		return {};
@@ -103,10 +103,10 @@
 //	return sprites;
 //}
 //
-//void build_system::interact(Vector2f camera_position, float scale_factor)
+//void build_system::interact(sf::Vector2f camera_position, float scale_factor)
 //{
-//	const Vector2f mousePos = Vector2f(Mouse::getPosition());
-//	mouse_world_pos_ = Vector2f((mousePos.x - helper::GetScreenSize().x / 2 + camera_position.x * scale_factor) / scale_factor,
+//	const sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition());
+//	mouse_world_pos_ = sf::Vector2f((mousePos.x - helper::GetScreenSize().x / 2 + camera_position.x * scale_factor) / scale_factor,
 //		(mousePos.y - helper::GetScreenSize().y / 2 + camera_position.y * scale_factor) / scale_factor);
 //}
 //
@@ -119,27 +119,27 @@
 //
 //	if (selected_object != entity_tag::emptyCell && current_object_ == -1 && can_be_placed)
 //	{
-//		if (sprite_build_pos_ != Vector2f (-1, -1))
+//		if (sprite_build_pos_ != sf::Vector2f (-1, -1))
 //			building_position = sprite_build_pos_;
 //		else
 //			building_position = mouse_world_pos_;
 //	}
 //	else
-//		building_position = Vector2f (-1, -1);
+//		building_position = sf::Vector2f (-1, -1);
 //}
 //
-//void build_system::build_held_item(Vector2f focused_object_position, float scale_factor)
+//void build_system::build_held_item(sf::Vector2f focused_object_position, float scale_factor)
 //{
 //	if (held_item_->first == entity_tag::emptyCell)
 //	{
-//		building_position = Vector2f (-1, -1);
+//		building_position = sf::Vector2f (-1, -1);
 //		return;
 //	}
 //
 //	if (can_be_placed)
 //	{
-//		building_position = Vector2f ((Mouse::getPosition().x - helper::GetScreenSize().x / 2 + focused_object_position.x * scale_factor) / scale_factor,
-//			(Mouse::getPosition().y - helper::GetScreenSize().y / 2 + focused_object_position.y*scale_factor) / scale_factor);
+//		building_position = sf::Vector2f ((sf::Mouse::getPosition().x - helper::GetScreenSize().x / 2 + focused_object_position.x * scale_factor) / scale_factor,
+//			(sf::Mouse::getPosition().y - helper::GetScreenSize().y / 2 + focused_object_position.y*scale_factor) / scale_factor);
 //	}
 //}
 //
@@ -183,10 +183,10 @@
 //void build_system::was_placed()
 //{
 //	selected_object = entity_tag::emptyCell;
-//	building_position = Vector2f (-1, -1);
+//	building_position = sf::Vector2f (-1, -1);
 //}
 //
-//void build_system::clear_hare_bags(int block, grid_list& static_grid, std::vector<world_object*>* visible_items)
+//void build_system::clear_hare_bags(int block, grid_map& static_grid, std::vector<world_object*>* visible_items)
 //{
 //	for (auto& item : *visible_items)
 //	{

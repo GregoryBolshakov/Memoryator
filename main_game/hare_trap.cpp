@@ -2,7 +2,7 @@
 //
 //#include "helper.h"
 //
-//hare_trap::hare_trap(std::string object_name, const Vector2f center_position, const int type_of_object) : picked_object(std::move(object_name), center_position)
+//hare_trap::hare_trap(std::string object_name, const sf::Vector2f center_position, const int type_of_object) : picked_object(std::move(object_name), center_position)
 //{
 //	variety_of_types_ = 1;
 //	this->type_of_object_ = type_of_object;
@@ -35,7 +35,7 @@
 //	ellipse_size_multipliers[0] = { 0 };
 //}
 //
-//Vector2f hare_trap::get_build_position(std::vector<world_object*> visible_items, float scale_factor, Vector2f camera_position)
+//Vector2f hare_trap::get_build_position(std::vector<world_object*> visible_items, float scale_factor, sf::Vector2f camera_position)
 //{
 //	return { -1, -1 };
 //}
@@ -45,7 +45,7 @@
 //	return {position_.x + conditional_size_units_.x / 2.0f, position_.y/* + conditional_size_units_.y / 10.0f*/ };
 //}
 //
-//int hare_trap::get_build_type(Vector2f oun_pos, Vector2f other_pos)
+//int hare_trap::get_build_type(sf::Vector2f oun_pos, sf::Vector2f other_pos)
 //{
 //	return 1;
 //}
@@ -54,7 +54,7 @@
 //{
 //	std::vector<sprite_chain_element*> result = {};
 //	const auto body = new sprite_chain_element(pack_tag::craftObjects, pack_part::hareTrap, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_);
-//	const auto front_position = get_enter_position() + Vector2f(0, 1);
+//	const auto front_position = get_enter_position() + sf::Vector2f(0, 1);
 //	const auto front_offset = texture_box_offset_ + (front_position - position_);
 //	const auto front = new sprite_chain_element(pack_tag::craftObjects, pack_part::hareTrap, direction::DOWN, 2, front_position, conditional_size_units_, front_offset);
 //

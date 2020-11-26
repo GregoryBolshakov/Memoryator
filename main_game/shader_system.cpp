@@ -1,5 +1,5 @@
 #include "shader_system.h"
-
+#include "sprite_chain_element.h"
 #include "visual_effects/dynamic_light.hpp"
 #include "visual_effects/wave_wiggle.hpp"
 
@@ -26,12 +26,12 @@ void shader_system::update()
 	}
 }
 
-const Shader& shader_system::get_shader(const shader_kind kind)
+const sf::Shader& shader_system::get_shader(const shader_kind kind)
 {
 	return *shaders_[kind]->shader;
 }
 
-const Shader& shader_system::get_shader(RenderTarget& target, sprite_chain_element& element, Sprite& sprite)
+const sf::Shader& shader_system::get_shader(sf::RenderTarget& target, sprite_chain_element& element, sf::Sprite& sprite)
 {
 	if ((element.pack_tag == pack_tag::darkWoods ||
 			element.pack_tag == pack_tag::birchGrove ||

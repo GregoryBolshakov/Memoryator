@@ -1,12 +1,9 @@
 #pragma once
 
-#include <nlohmann/json.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-
-#include "helper.h"
 #include "sprite_chain_element.h"
 
-using namespace sf;
+#include <nlohmann/json.hpp>
+
 using json = nlohmann::json;
 
 namespace sprite_pack_structure
@@ -80,17 +77,17 @@ class sprite_pack
 {
 public:
     void init(const std::string& path, const std::string& json_path, pack_tag tag);
-    Sprite get_sprite(pack_part part, direction direction, int number, bool mirrored = false);
+    sf::Sprite get_sprite(pack_part part, direction direction, int number, bool mirrored = false);
 	const sprite_pack_structure::sprite& get_original_info(pack_part part, direction direction, int number) const;
-	static sprite_chain_element* tag_to_icon(entity_tag object, bool selected = false, int type_of_object = 1);
+	static std::unique_ptr<sprite_chain_element> tag_to_icon(entity_tag object, bool selected = false, int type_of_object = 1);
 
     pack_tag tag;
     static std::map<std::string, pack_tag> mapped_pack_tag;
     static std::map<std::string, pack_part> mapped_pack_part;
     static std::map<std::string, direction> mapped_direction;
-	static const Vector2f icon_size;
-	static Vector2f icon_without_space_size;
+	static const sf::Vector2f icon_size;
+	static sf::Vector2f icon_without_space_size;
 private:
-    Texture texture_;
+    sf::Texture texture_;
     std::map<pack_part, std::map<direction, std::map<int, sprite_pack_structure::sprite>>> pack_;
 };

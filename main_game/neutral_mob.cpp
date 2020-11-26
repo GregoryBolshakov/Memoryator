@@ -2,7 +2,7 @@
 //
 //using namespace sf;
 //
-//neutral_mob::neutral_mob(std::string objectName, Vector2f centerPosition) : dynamic_object(std::move(objectName), centerPosition)
+//neutral_mob::neutral_mob(std::string objectName, sf::Vector2f centerPosition) : dynamic_object(std::move(objectName), centerPosition)
 //{
 //	current_sprite_[0] = 1;
 //	current_action_ = relax;
@@ -55,7 +55,7 @@
 //	if (distanceToTarget <= sight_range)
 //	{
 //		change_action(move, false, true);
-//		move_system.lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
+//		move_system.lax_move_position = sf::Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
 //	}
 //	else
 //	{
@@ -68,7 +68,7 @@
 //				move_system.lax_move_position = { -1, -1 };
 //			}
 //			else
-//				move_system.lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
+//				move_system.lax_move_position = sf::Vector2f(position_.x - (bound_target_->get_position().x - position_.x), position_.y - (bound_target_->get_position().y - position_.y));
 //		}
 //	}
 //

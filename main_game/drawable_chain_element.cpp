@@ -5,10 +5,10 @@ drawable_chain_element::drawable_chain_element()
 = default;
 
 drawable_chain_element::drawable_chain_element(
-	Vector2f position,
-	Vector2f size,
-	Vector2f offset,
-	Color color,
+	sf::Vector2f position,
+	sf::Vector2f size,
+	sf::Vector2f offset,
+	sf::Color color,
 	float rotation)
 {
 	this->position = position;

@@ -5,8 +5,8 @@
 #include "button.h"
 #include "helper.h"
 
-const Vector2f sprite_pack::icon_size = { helper::GetScreenSize().y / 13.8f, helper::GetScreenSize().y / 13.8f };
-Vector2f sprite_pack::icon_without_space_size = { 0, 0 };
+const sf::Vector2f sprite_pack::icon_size = { helper::GetScreenSize().y / 13.8f, helper::GetScreenSize().y / 13.8f };
+sf::Vector2f sprite_pack::icon_without_space_size = { 0, 0 };
 
 
 std::map<std::string, pack_tag> sprite_pack::mapped_pack_tag = {
@@ -152,9 +152,9 @@ const sprite_pack_structure::sprite& sprite_pack::get_original_info(const pack_p
 	return pack_.at(part).at(direction).at(number);
 }
 
-sprite_chain_element* sprite_pack::tag_to_icon(const entity_tag object, const bool selected, const int type_of_object)
+std::unique_ptr<sprite_chain_element> sprite_pack::tag_to_icon(const entity_tag object, const bool selected, const int type_of_object)
 {
-	auto result = new sprite_chain_element(pack_tag::empty, pack_part::full, direction::DOWN, 1, { 0, 0 }, icon_size, { icon_size.x / 2, icon_size.y / 2 });
+	auto result = std::make_unique<sprite_chain_element>(pack_tag::empty, pack_part::full, direction::DOWN, 1, sf::Vector2f(0, 0), icon_size, sf::Vector2f(icon_size.x / 2, icon_size.y / 2));
 
 	auto spriteNumber = int(selected);
 
@@ -247,44 +247,44 @@ sprite_chain_element* sprite_pack::tag_to_icon(const entity_tag object, const bo
 	return result;
 }
 
-Sprite sprite_pack::get_sprite(const pack_part part, const direction direction, const int number, const bool mirrored)
+sf::Sprite sprite_pack::get_sprite(const pack_part part, const direction direction, const int number, const bool mirrored)
 {
-	Sprite result;
+	sf::Sprite result;
 	if (pack_.count(part) <= 0 || pack_.at(part).count(direction) <= 0 || pack_.at(part).at(direction).count(number) <= 0)
 		return result;
 
 	result.setTexture(texture_);
 
 	const auto spriteInfo = pack_.at(part).at(direction).at(number);
-	const Vector2f offset(
+	const sf::Vector2f offset(
 		float(spriteInfo.sprite_source_size.x),
 		float(spriteInfo.sprite_source_size.y));
-	const Vector2f invertedOffset(
+	const sf::Vector2f invertedOffset(
 		float(spriteInfo.source_size.w - spriteInfo.sprite_source_size.w - spriteInfo.sprite_source_size.x),
 		offset.y);
 
 	if (!spriteInfo.rotated && !mirrored)
 	{
-		result.setTextureRect(IntRect(spriteInfo.frame.x, spriteInfo.frame.y, spriteInfo.frame.w, spriteInfo.frame.h));
+		result.setTextureRect(sf::IntRect(spriteInfo.frame.x, spriteInfo.frame.y, spriteInfo.frame.w, spriteInfo.frame.h));
 		result.setOrigin(-offset.x, -offset.y);
 	}
 	else
 		if (!spriteInfo.rotated && mirrored)
 		{
-			result.setTextureRect(IntRect(spriteInfo.frame.x + spriteInfo.frame.w, spriteInfo.frame.y, -spriteInfo.frame.w, spriteInfo.frame.h));
+			result.setTextureRect(sf::IntRect(spriteInfo.frame.x + spriteInfo.frame.w, spriteInfo.frame.y, -spriteInfo.frame.w, spriteInfo.frame.h));
 			result.setOrigin(-invertedOffset.x, -invertedOffset.y);
 		}
 		else
 			if (spriteInfo.rotated && !mirrored)
 			{
-				result.setTextureRect(IntRect(spriteInfo.frame.x, spriteInfo.frame.y, spriteInfo.frame.h, spriteInfo.frame.w));
+				result.setTextureRect(sf::IntRect(spriteInfo.frame.x, spriteInfo.frame.y, spriteInfo.frame.h, spriteInfo.frame.w));
 				result.rotate(-90);
 				result.setOrigin(offset.y + float(spriteInfo.frame.h), -offset.x);
 			}
 			else
 				if (spriteInfo.rotated && mirrored)
 				{
-					result.setTextureRect(IntRect(spriteInfo.frame.x, spriteInfo.frame.y + spriteInfo.frame.w, spriteInfo.frame.h, -spriteInfo.frame.w));
+					result.setTextureRect(sf::IntRect(spriteInfo.frame.x, spriteInfo.frame.y + spriteInfo.frame.w, spriteInfo.frame.h, -spriteInfo.frame.w));
 					result.rotate(-90);
 					result.setOrigin(invertedOffset.y + float(spriteInfo.frame.h), -invertedOffset.x);
 				}

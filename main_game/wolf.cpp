@@ -2,7 +2,7 @@
 //
 //using namespace sf;
 //
-//wolf::wolf(std::string objectName, Vector2f centerPosition) : neutral_mob(std::move(objectName), centerPosition)
+//wolf::wolf(std::string objectName, sf::Vector2f centerPosition) : neutral_mob(std::move(objectName), centerPosition)
 //{
 //	conditional_size_units_ = { 250, 200 };
 //	current_sprite_[0] = 1;
@@ -49,17 +49,17 @@
 //	return { texture_box_.width / 2, texture_box_.height * 7 / 8 };
 //}
 //
-//Vector2f wolf::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, Vector2f cameraPosition)
+//Vector2f wolf::get_build_position(std::vector<world_object*> visibleItems, float scaleFactor, sf::Vector2f cameraPosition)
 //{
 //	return { -1, -1 };
 //}
 //
-//int wolf::get_build_type(Vector2f ounPos, Vector2f otherPos)
+//int wolf::get_build_type(sf::Vector2f ounPos, sf::Vector2f otherPos)
 //{
 //	return 1;
 //}
 //
-//void wolf::jerk(float power, float deceleration, Vector2f destinationPoint)
+//void wolf::jerk(float power, float deceleration, sf::Vector2f destinationPoint)
 //{
 //	return;
 //}

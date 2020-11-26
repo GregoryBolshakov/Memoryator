@@ -5,7 +5,7 @@
 //
 //using namespace sf;
 //
-//owl::owl(const std::string& object_name, Vector2f center_position) : neutral_mob(object_name, center_position)
+//owl::owl(const std::string& object_name, sf::Vector2f center_position) : neutral_mob(object_name, center_position)
 //{
 //	conditional_size_units_ = { 350, 250 };
 //	move_system.default_speed = 0.0006f;
@@ -32,8 +32,8 @@
 //	return { texture_box_.width / 2, texture_box_.height * 7 / 8 };
 //}
 //
-//Vector2f abs(const Vector2f v) { return Vector2f(abs(v.x), abs(v.y)); }
-//Vector2f operator / (const Vector2f v1, const Vector2f v2) { return Vector2f(v1.x / v2.x, v1.y / v2.y); }
+//Vector2f abs(const sf::Vector2f v) { return sf::Vector2f(abs(v.x), abs(v.y)); }
+//Vector2f operator / (const sf::Vector2f v1, const sf::Vector2f v2) { return sf::Vector2f(v1.x / v2.x, v1.y / v2.y); }
 //
 //void owl::behavior_with_static(world_object* target, long long elapsed_time)
 //{
@@ -42,7 +42,7 @@
 //	// set new landing pos
 //	auto terrain = dynamic_cast<terrain_object*>(target);
 //	if (current_action_ == relax && time_after_fear_ < fear_time_ &&
-//		terrain && terrain->get_owl_landing_pos() != Vector2f(-1, -1))
+//		terrain && terrain->get_owl_landing_pos() != sf::Vector2f(-1, -1))
 //	{
 //		const auto landing_pos = terrain->get_owl_landing_pos();
 //		
@@ -108,13 +108,13 @@
 //
 //	time_after_calm_state_ = rand() % (time_for_new_calm_state_ / 2);
 //
-//	std::vector<std::pair<actions, int>> actions = {};
+//	std::vector<std::pair<action, int>> action = {};
 //
-//	actions = { {startle, 25} };
+//	action = { {startle, 25} };
 //
 //	auto action_discriminant = rand() % 100 + 1;
 //
-//	for (const auto action : actions)
+//	for (const auto action : action)
 //	{
 //		if (action.second >= action_discriminant)
 //		{
@@ -158,7 +158,7 @@
 //	last_action_ = relax;
 //}
 //
-//void owl::jerk(float power, float deceleration, Vector2f destination_point)
+//void owl::jerk(float power, float deceleration, sf::Vector2f destination_point)
 //{
 //	return;
 //}

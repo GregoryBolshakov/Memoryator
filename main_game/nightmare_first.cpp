@@ -1,6 +1,6 @@
 //#include "nightmare_first.h"
 //
-//nightmare_first::nightmare_first(std::string objectName, const Vector2f centerPosition) : monster(std::move(objectName), centerPosition)
+//nightmare_first::nightmare_first(std::string objectName, const sf::Vector2f centerPosition) : monster(std::move(objectName), centerPosition)
 //{
 //	conditional_size_units_ = { 375, 375 };
 //	move_system.default_speed = 0.0005f;
@@ -25,7 +25,7 @@
 //
 //Vector2f nightmare_first::calculate_texture_offset()
 //{	
-//	init_micro_blocks();
+//	init_route_blocks();
 //	texture_box_.width = texture_box_.width * get_scale_ratio().x;
 //	texture_box_.height = texture_box_.height * get_scale_ratio().y;
 //	return { texture_box_.width / 2, texture_box_.height * 7 / 8 };

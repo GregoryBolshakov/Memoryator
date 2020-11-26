@@ -1,71 +1,65 @@
 #pragma once
 
-#include "object_initializer.h"
-#include "grid_list.h"
-#include "scale_system.h"
+#include "tags.h"
+
+#include <map>
+#include <memory>
+#include <vector>
+#include <SFML/System/Vector2.hpp>
+
+class world_object;
+class static_object;
+class dynamic_object;
+class scale_system;
+class sprite_pack;
+class grid_map;
+
+using biome_matrix_t = std::vector<std::vector<biome>>;
 
 class world_generator
 {
 public:
-	world_generator(int width
-		, int height
-		, Vector2f block_size
-		, Vector2f micro_block_size
-		, const shared_ptr<grid_list>&
-		, const shared_ptr<grid_list>&
-		, const shared_ptr<scale_system>&
-		, const shared_ptr<std::map<pack_tag, sprite_pack>>&);
+	world_generator(
+		  std::shared_ptr<grid_map> grid_map
+		, std::shared_ptr<scale_system> scale_system
+		, std::shared_ptr<std::map<pack_tag, sprite_pack>> packs_map);
 
-	void generate();
+	void primordial_generation();
 
-	auto initialize_static_item(
-		entity_tag item_class,
-		Vector2f item_position,
-		int item_type,
-		const std::string& item_name,
-		int count = 1,
-		biomes biome = dark_woods,
-		bool mirrored = true,
-		const std::vector<std::pair<entity_tag, int>>& inventory = {}) const -> void;
+	const std::shared_ptr<static_object>& initialize_static_item(
+		  entity_tag item_class
+		, sf::Vector2f item_position
+		, int item_type
+		, const std::string& item_name
+		, int count = 1
+		, biome biome = biome::dark_woods
+		, bool mirrored = true
+		, const std::vector<std::pair<entity_tag, int>>& inventory = {});
 	
-	void initialize_dynamic_item(entity_tag item_class, Vector2f item_position, const std::string& item_name, const shared_ptr<world_object>& owner = nullptr);
+	const std::shared_ptr<dynamic_object>& initialize_dynamic_item(
+		  entity_tag item_class
+		, sf::Vector2f item_position
+		, const std::string& item_name
+		, const std::shared_ptr<world_object>& owner = nullptr);
 
 	//active generation
-	void in_block_generate(int block_index);
-	[[nodiscard]] bool can_be_regenerated(int block_index) const;
-	void biomes_generate();
-	void perimeter_generation();
-	void beyond_screen_generation();
+	void in_block_generate(sf::Vector2u index);
+	[[nodiscard]] bool whether_block_regeneretable(sf::Vector2u index) const;
 
-	std::vector<std::vector<biomes>> biome_matrix;
-	std::map<int, bool> remembered_blocks = { {0, true} };
-	shared_ptr<dynamic_object> focused_object = nullptr;
-	
+	[[nodiscard]] const std::shared_ptr<dynamic_object>& focused_object() const { return focused_object_; }
+	[[nodiscard]] const std::shared_ptr<static_object>& main_object() const { return main_object_; }
+	[[nodiscard]] const std::map<std::string, std::shared_ptr<static_object>>& all_static_objects() const { return all_static_objects_; }
+	[[nodiscard]] const std::map<std::string, std::shared_ptr<dynamic_object>>& all_dynamic_objects() const { return all_dynamic_objects_; }
 private:
-	shared_ptr<grid_list> static_grid_;
-	shared_ptr<grid_list> dynamic_grid_;
-	shared_ptr<std::map<pack_tag, sprite_pack>> packs_map_;
-	int width_ = 0;
-	int height_ = 0;
-	Vector2f block_size_ = { 0, 0 };
-	Vector2f micro_block_size_ = { 0, 0 };
-	Vector2i focused_object_block_ = { 0, 0 };
-
-	shared_ptr<scale_system> scale_system_;
+	std::shared_ptr<grid_map> grid_map_;
+	std::shared_ptr<scale_system> scale_system_;
+	std::shared_ptr<std::map<pack_tag, sprite_pack>> packs_map_;
+	std::shared_ptr<dynamic_object> focused_object_;
+	std::shared_ptr<static_object> main_object_;
+	std::map<std::string, std::shared_ptr<static_object>> all_static_objects_;
+	std::map<std::string, std::shared_ptr<dynamic_object>> all_dynamic_objects_;
+	biome_matrix_t biome_matrix;
 
 	// block generation
-	void generate_ground(int block_index);
-	[[nodiscard]] bool is_roomy_step_block(int x, int y) const;
-	std::map<std::pair<int, int>, bool> roomy_step_blocks_ = {
-		{std::make_pair(1, 1), true}, {std::make_pair(3, 1), true}, { std::make_pair(5, 1), true}, { std::make_pair(7, 1), true},
-		{std::make_pair(2, 3), true}, { std::make_pair(4, 3), true}, { std::make_pair(6, 3), true}, { std::make_pair(8, 3), true},
-		{ std::make_pair(1, 5), true}, { std::make_pair(3, 5), true}, { std::make_pair(5, 5), true}, { std::make_pair(7, 5), true},
-		{ std::make_pair(2, 7), true}, { std::make_pair(4, 7), true}, { std::make_pair(6, 7), true}, { std::make_pair(8, 7), true} };
-	Vector2f step_size_ = { 0, 0 };
-
-	// biomes generation
-	void init_biomes_generation_info();
-	[[nodiscard]] bool is_trigger_block(int x, int y) const;
-	Vector2i biomes_change_center_ = { 0, 0 };
-	std::vector<std::vector<Vector2i>> biomes_blocks_offsets_ = {};
+	void generate_ground(sf::Vector2u index);
 };

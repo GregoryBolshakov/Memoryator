@@ -3,7 +3,7 @@
 //
 //using namespace sf;
 //
-//hare::hare(const std::string& objectName, Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
+//hare::hare(const std::string& objectName, sf::Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
 //{
 //	conditional_size_units_ = { 240, 200 };
 //	move_system.default_speed = 0.0006f;
@@ -29,7 +29,7 @@
 //
 //void hare::behavior_with_static(world_object* target, long long elapsedTime)
 //{
-//	const std::map<actions, bool> actions_that_ignore_target_selection = { {trap, true}, {dead, true} };
+//	const std::map<action, bool> actions_that_ignore_target_selection = { {trap, true}, {dead, true} };
 //	if (actions_that_ignore_target_selection.count(current_action_))
 //		return;
 //	
@@ -45,7 +45,7 @@
 //	if (target->tag == entity_tag::hero)
 //		cheat_hero_pos_ = target->get_position();
 //	
-//	const std::map<actions, bool> actions_that_ignore_target_selection = { {trap, true}, {dead, true} };
+//	const std::map<action, bool> actions_that_ignore_target_selection = { {trap, true}, {dead, true} };
 //	if (actions_that_ignore_target_selection.count(current_action_))
 //		return;
 //	
@@ -89,7 +89,7 @@
 //			change_action(move, current_action_ != move);
 //			const auto k = run_away_range_ / distance_to_target;
 //			move_system.speed = move_system.default_speed;
-//			move_system.lax_move_position = Vector2f(position_.x - (bound_target_->get_position().x - position_.x) * k,
+//			move_system.lax_move_position = sf::Vector2f(position_.x - (bound_target_->get_position().x - position_.x) * k,
 //				position_.y - (bound_target_->get_position().y - position_.y) * k);
 //			return true;
 //		}
@@ -109,7 +109,7 @@
 //		if (helper::getDist(position_, trap->get_enter_position()) <= minimal_contact_distance)
 //		{
 //			position_ = trap->get_enter_position();
-//			change_action(actions::trap, current_action_ != actions::trap);
+//			change_action(action::trap, current_action_ != action::trap);
 //			move_system.lax_move_position = { -1, -1 };
 //		}
 //
@@ -144,18 +144,18 @@
 //
 //	time_after_calm_state_ = rand() % (time_for_new_calm_state_ / 2);
 //	
-//	std::vector<std::pair<actions, int>> actions = {};
+//	std::vector<std::pair<action, int>> action = {};
 //
 //	while (true)
 //	{
 //		if (stand_)
-//			actions = { {transition, 20}, {move, 35}, {jump, 15}, {look_around, 15}, {startle, 15} };
+//			action = { {transition, 20}, {move, 35}, {jump, 15}, {look_around, 15}, {startle, 15} };
 //		else
-//			actions = { {transition, 40}, {listening, 30}, {sniff, 30} };
+//			action = { {transition, 40}, {listening, 30}, {sniff, 30} };
 //
 //		auto action_discriminant = rand() % 100 + 1;
 //
-//		for (const auto action : actions)
+//		for (const auto action : action)
 //		{
 //			if (action.second >= action_discriminant)
 //			{
@@ -191,12 +191,12 @@
 //	}
 //}
 //
-//Vector2f hare::get_build_position(std::vector<world_object*> visible_items, float scale_factor, Vector2f camera_position)
+//Vector2f hare::get_build_position(std::vector<world_object*> visible_items, float scale_factor, sf::Vector2f camera_position)
 //{
 //	return { -1, -1 };
 //}
 //
-//int hare::get_build_type(Vector2f oun_pos, Vector2f other_pos)
+//int hare::get_build_type(sf::Vector2f oun_pos, sf::Vector2f other_pos)
 //{
 //	return 1;
 //}
@@ -235,7 +235,7 @@
 //	last_action_ = relax;
 //}
 //
-//void hare::jerk(float power, float deceleration, Vector2f destination_point)
+//void hare::jerk(float power, float deceleration, sf::Vector2f destination_point)
 //{
 //	return;
 //}

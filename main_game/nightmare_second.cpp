@@ -1,6 +1,6 @@
 //#include "nightmare_second.h"
 //
-//nightmare_second::nightmare_second(std::string objectName, Vector2f centerPosition) : monster(std::move(objectName), centerPosition)
+//nightmare_second::nightmare_second(std::string objectName, sf::Vector2f centerPosition) : monster(std::move(objectName), centerPosition)
 //{
 //	conditional_size_units_ = { 600, 600 };
 //	move_system.default_speed = 0.0005f;

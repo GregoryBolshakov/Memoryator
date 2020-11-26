@@ -207,7 +207,6 @@
       <Filter>World</Filter>
     </ClCompile>
     <ClCompile Include="event_handler.cpp" />
-    <ClCompile Include="grid_list.cpp" />
     <ClCompile Include="helper.cpp" />
     <ClCompile Include="light_system.cpp" />
     <ClCompile Include="shape_chain_element.cpp">
@@ -223,6 +222,7 @@
     <ClCompile Include="shader_system.cpp">
       <Filter>Systems\DrawSystem</Filter>
     </ClCompile>
+    <ClCompile Include="grid_map.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tags.h">
@@ -433,10 +433,8 @@
       <Filter>World</Filter>
     </ClInclude>
     <ClInclude Include="event_handler.h" />
-    <ClInclude Include="grid_list.h" />
     <ClInclude Include="helper.h" />
     <ClInclude Include="light_system.h" />
-    <ClInclude Include="sprite_structures.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="shape_chain_element.h">
       <Filter>Systems\DrawSystem</Filter>
@@ -455,6 +453,10 @@
     <ClInclude Include="shader_system.h">
       <Filter>Systems\DrawSystem</Filter>
     </ClInclude>
+    <ClInclude Include="world_metrics.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="grid_map.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Terrain">

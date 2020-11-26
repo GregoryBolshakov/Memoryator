@@ -1,4 +1,5 @@
 //#pragma once
+//
 //#ifndef HERO_BOOK_H
 //#define HERO_BOOK_H
 //
@@ -36,7 +37,7 @@
 //	
 //	void boundHeldItem() { this->worldHeldItem = worldHeldItem; }
 //	std::string debugInfo = "";
-//	Vector2f getHpLinePosition() { return {	buttonList.at(button_tag::bookStandTag).get_position().x + buttonList.at(button_tag::bookStandTag).get_global_bounds().width - 40,
+//	sf::Vector2f getHpLinePosition() { return {	buttonList.at(button_tag::bookStandTag).get_position().x + buttonList.at(button_tag::bookStandTag).get_global_bounds().width - 40,
 //		buttonList.at(button_tag::bookStandTag).get_position().y + buttonList.at(button_tag::bookStandTag).get_global_bounds().height / 2 - 20 }; }
 //private:
 //	hero_book_page somePage;
@@ -45,7 +46,7 @@
 //	std::vector<sprite_chain_element*> preparePlantsMatrix();
 //	std::vector <sprite_chain_element*> prepareLineMatrix();
 //	std::vector<sprite_chain_element*> preparePlantsList();
-//	std::vector<drawable_chain_element*> prepareWreathCost(Vector2f pos);
+//	std::vector<drawable_chain_element*> prepareWreathCost(sf::Vector2f pos);
 //	void initButtons(std::map<pack_tag, sprite_pack>* packsMap);
 //	void initContent();
 //
@@ -64,8 +65,8 @@
 //	world_object* worldSelectedObject = nullptr;
 //	entity_tag currentDraft = entity_tag::emptyDraft, currentFlower = entity_tag::emptyCell;
 //	std::string worldMouseName = "";
-//	Vector2f blockDescriptionPoint = Vector2f(0.53f, 0.104f); // as a percentage of the size of the page markup
-//	Vector2f pageDescriptionPoint = Vector2f(0.53f, 0.395f); // as a percentage of the size of the page markup
+//	sf::Vector2f blockDescriptionPoint = sf::Vector2f(0.53f, 0.104f); // as a percentage of the size of the page markup
+//	sf::Vector2f pageDescriptionPoint = sf::Vector2f(0.53f, 0.395f); // as a percentage of the size of the page markup
 //	std::vector<hero_bag>* boundBags{};
 //};
 //

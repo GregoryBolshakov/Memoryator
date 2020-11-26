@@ -1,9 +1,65 @@
 #include "hero_bag.h"
 #include "helper.h"
+#include "sprite_chain_element.h"
+#include "sprite_pack.h"
 
-hero_bag::hero_bag()
+struct bag_sprite_chain
 {
-	state_change_time = 100000;
+	sprite_chain_element closed_bag{};
+	sprite_chain_element closed_bag_selected{};
+	sprite_chain_element closed_bag_big{};
+	sprite_chain_element opened_bag{};
+	sprite_chain_element opened_bag_selected{};
+};
+
+hero_bag::hero_bag(const sf::Vector2f position, const bool is_selectable, std::vector<std::pair<entity_tag, int>> inventory) :
+	  position_(position)
+	, last_mouse_pos_(position)
+{
+	/*size_closed_ = sf::Vector2f(helper::GetScreenSize().x / 12.0f, helper::GetScreenSize().y / 6.0f);
+	size_open_ = sf::Vector2f(helper::GetScreenSize().x / 6.0f, helper::GetScreenSize().y / 3.0f);
+
+	texture_closed_offset = sf::Vector2f(size_closed_.x / 2.0f, size_closed_.y / 1.7f);
+	texture_open_offset = sf::Vector2f(size_open_.x / 2.0f, size_open_.y / 1.7f);
+
+	bag_sprite_chain_->closed_bag.size = size_closed_; bag_sprite_chain_->closed_bag_selected.size = size_closed_; bag_sprite_chain_->closed_bag_big.size = size_closed_;
+	bag_sprite_chain_->opened_bag.size = size_open_; bag_sprite_chain_->opened_bag_selected.size = size_open_;
+	bag_sprite_chain_->closed_bag.offset = texture_closed_offset; bag_sprite_chain_->closed_bag_selected.offset = texture_closed_offset; bag_sprite_chain_->closed_bag_big.offset = texture_closed_offset;
+	bag_sprite_chain_->opened_bag.offset = texture_open_offset; bag_sprite_chain_->opened_bag_selected.offset = texture_open_offset;
+	bag_sprite_chain_->closed_bag.position = position; bag_sprite_chain_->closed_bag_selected.position = position; bag_sprite_chain_->closed_bag_big.position = position;
+	bag_sprite_chain_->opened_bag.position = position; bag_sprite_chain_->opened_bag_selected.position = position;
+	bag_sprite_chain_->closed_bag.initialize(); bag_sprite_chain_->closed_bag_selected.initialize(); bag_sprite_chain_->closed_bag_big.initialize();
+	bag_sprite_chain_->opened_bag.initialize(); bag_sprite_chain_->opened_bag_selected.initialize();
+
+	this->min_dist_to_border = std::max(size_closed_.y - texture_closed_offset.y, texture_closed_offset.y);
+	closed_radius = (size_closed_.x + size_closed_.y) / 4;
+	opened_radius = (size_open_.x + size_open_.y) / 10;
+
+	this->selection_zone_closed_offset = sf::Vector2f(0, -size_closed_.y * 0.15f);
+	this->selection_zone_opened_offset = sf::Vector2f(0, -texture_open_offset.y + size_open_.y * 0.15f);
+
+	if (inventory.empty())
+		inventory = empty_inventory;
+
+	for (auto i = 0; i < 7; i++)
+	{
+		cells_pos_[i].x *= size_open_.x; cells_pos_[i].y *= size_open_.y;
+		cells.push_back(create_cell(sf::Vector2f(position.x + cells_pos_[i].x, position.y + cells_pos_[i].y), inventory[i]));
+	}
+
+	// set sprites from pack
+	if (bag_sprite_chain_->closed_bag.pack_tag == pack_tag::empty)
+		bag_sprite_chain_->closed_bag.set_draw_info(pack_tag::inventory, pack_part::bag1, direction::DOWN, 1);
+	if (bag_sprite_chain_->closed_bag_selected.pack_tag == pack_tag::empty)
+		bag_sprite_chain_->closed_bag_selected.set_draw_info(pack_tag::inventory, pack_part::bag1, direction::DOWN, 2);
+	if (bag_sprite_chain_->closed_bag_big.pack_tag == pack_tag::empty)
+		bag_sprite_chain_->closed_bag_big.set_draw_info(pack_tag::inventory, pack_part::bag1, direction::DOWN, 3);
+	if (bag_sprite_chain_->opened_bag.pack_tag == pack_tag::empty)
+		bag_sprite_chain_->opened_bag.set_draw_info(pack_tag::inventory, pack_part::bag1, direction::DOWN, 4);
+	if (bag_sprite_chain_->opened_bag_selected.pack_tag == pack_tag::empty)
+		bag_sprite_chain_->opened_bag_selected.set_draw_info(pack_tag::inventory, pack_part::bag1, direction::DOWN, 5);
+	//----------------------
+	state_change_time = 100000;*/
 }
 
 hero_bag::~hero_bag()
@@ -17,59 +73,7 @@ std::vector<std::pair<entity_tag, int>> hero_bag::test_inventory =
 std::vector<std::pair<entity_tag, int>> hero_bag::empty_inventory =
 { {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0}, {entity_tag::emptyCell, 0} };
 
-void hero_bag::initialize(const Vector2f position, const bool is_selectable, std::vector<std::pair<entity_tag, int>> inventory)
-{
-	size_closed_ = Vector2f(helper::GetScreenSize().x / 12.0f, helper::GetScreenSize().y / 6.0f);
-	size_open_ = Vector2f(helper::GetScreenSize().x / 6.0f, helper::GetScreenSize().y / 3.0f);
-
-	this->position_ = position;
-	last_mouse_pos_ = position;
-
-	this->is_selectable_ = is_selectable;
-
-	texture_closed_offset = Vector2f(size_closed_.x / 2.0f, size_closed_.y / 1.7f);
-	texture_open_offset = Vector2f(size_open_.x / 2.0f, size_open_.y / 1.7f);
-
-	bag_sprite_chain_.closed_bag->size = size_closed_; bag_sprite_chain_.closed_bag_selected->size = size_closed_; bag_sprite_chain_.closed_bag_big->size = size_closed_;
-	bag_sprite_chain_.opened_bag->size = size_open_; bag_sprite_chain_.opened_bag_selected->size = size_open_;
-	bag_sprite_chain_.closed_bag->offset = texture_closed_offset; bag_sprite_chain_.closed_bag_selected->offset = texture_closed_offset; bag_sprite_chain_.closed_bag_big->offset = texture_closed_offset;
-	bag_sprite_chain_.opened_bag->offset = texture_open_offset; bag_sprite_chain_.opened_bag_selected->offset = texture_open_offset;
-	bag_sprite_chain_.closed_bag->position = position; bag_sprite_chain_.closed_bag_selected->position = position; bag_sprite_chain_.closed_bag_big->position = position;
-	bag_sprite_chain_.opened_bag->position = position; bag_sprite_chain_.opened_bag_selected->position = position;
-	bag_sprite_chain_.closed_bag->initialize(); bag_sprite_chain_.closed_bag_selected->initialize(); bag_sprite_chain_.closed_bag_big->initialize();
-	bag_sprite_chain_.opened_bag->initialize(); bag_sprite_chain_.opened_bag_selected->initialize();
-
-	this->min_dist_to_border = std::max(size_closed_.y - texture_closed_offset.y, texture_closed_offset.y);
-	closed_radius = (size_closed_.x + size_closed_.y) / 4;
-	opened_radius = (size_open_.x + size_open_.y) / 10;
-
-	this->selection_zone_closed_offset = Vector2f(0, -size_closed_.y * 0.15f);
-	this->selection_zone_opened_offset = Vector2f(0, -texture_open_offset.y + size_open_.y * 0.15f);
-
-	if (inventory.empty())
-		inventory = empty_inventory;
-
-	for (auto i = 0; i < 7; i++)
-	{
-		cells_pos_[i].x *= size_open_.x; cells_pos_[i].y *= size_open_.y;
-		cells.push_back(create_cell(Vector2f(position.x + cells_pos_[i].x, position.y + cells_pos_[i].y), inventory[i]));
-	}
-
-	// set sprites from pack
-	if (bag_sprite_chain_.closed_bag->pack_tag == pack_tag::empty)
-		bag_sprite_chain_.closed_bag->set_draw_info(pack_tag::inventory, pack_part::bag1, direction::DOWN, 1);
-	if (bag_sprite_chain_.closed_bag_selected->pack_tag == pack_tag::empty)
-		bag_sprite_chain_.closed_bag_selected->set_draw_info(pack_tag::inventory, pack_part::bag1, direction::DOWN, 2);
-	if (bag_sprite_chain_.closed_bag_big->pack_tag == pack_tag::empty)
-		bag_sprite_chain_.closed_bag_big->set_draw_info(pack_tag::inventory, pack_part::bag1, direction::DOWN, 3);
-	if (bag_sprite_chain_.opened_bag->pack_tag == pack_tag::empty)
-		bag_sprite_chain_.opened_bag->set_draw_info(pack_tag::inventory, pack_part::bag1, direction::DOWN, 4);
-	if (bag_sprite_chain_.opened_bag_selected->pack_tag == pack_tag::empty)
-		bag_sprite_chain_.opened_bag_selected->set_draw_info(pack_tag::inventory, pack_part::bag1, direction::DOWN, 5);
-	//----------------------
-}
-
-cell hero_bag::create_cell(const Vector2f position, const std::pair<entity_tag, int> content)
+cell hero_bag::create_cell(const sf::Vector2f position, const std::pair<entity_tag, int> content)
 {
 	cell cell;
 	cell.position = position;
@@ -77,7 +81,7 @@ cell hero_bag::create_cell(const Vector2f position, const std::pair<entity_tag, 
 	return cell;
 }
 
-int hero_bag::get_selected_cell(const Vector2f position)
+int hero_bag::get_selected_cell(const sf::Vector2f position)
 {
 	for (auto i = 0u; i < cells.size(); i++)
 	{
@@ -90,33 +94,33 @@ int hero_bag::get_selected_cell(const Vector2f position)
 float hero_bag::get_radius() const
 {
 	if (current_state == bag_closed)
-		return bag_sprite_chain_.closed_bag->size.x / 2;
+		return bag_sprite_chain_->closed_bag.size.x / 2;
 
 	if (current_state == bag_opening)
-		return bag_sprite_chain_.closed_bag_selected->size.x / 2;
+		return bag_sprite_chain_->closed_bag_selected.size.x / 2;
 
 	if (current_state == bag_open)
-		return bag_sprite_chain_.opened_bag->size.x / 2;
+		return bag_sprite_chain_->opened_bag.size.x / 2;
 
 	return 0;
 }
 
-void hero_bag::draw_circuit(RenderWindow* window)
+void hero_bag::draw_circuit(sf::RenderWindow* window)
 {
-	const auto i_end = bag_sprite_chain_.opened_bag->position.x + bag_sprite_chain_.opened_bag->size.x;
-	const auto j_end = bag_sprite_chain_.opened_bag->position.y + bag_sprite_chain_.opened_bag->size.y;
+	const auto i_end = bag_sprite_chain_->opened_bag.position.x + bag_sprite_chain_->opened_bag.size.x;
+	const auto j_end = bag_sprite_chain_->opened_bag.position.y + bag_sprite_chain_->opened_bag.size.y;
 
-	auto i = bag_sprite_chain_.opened_bag->position.x;
+	auto i = bag_sprite_chain_->opened_bag.position.x;
 	while (i <= i_end)
 	{
-		auto j = bag_sprite_chain_.opened_bag->position.y;
+		auto j = bag_sprite_chain_->opened_bag.position.y;
 		while (j <= j_end)
 		{
-			if (get_selected_cell(Vector2f(i, j)) != -1)
+			if (get_selected_cell(sf::Vector2f(i, j)) != -1)
 			{
-				RectangleShape rec;
+				sf::RectangleShape rec;
 				rec.setPosition(i, j);
-				rec.setSize(Vector2f(5, 5));
+				rec.setSize(sf::Vector2f(5, 5));
 				rec.setFillColor(sf::Color::Red);
 				window->draw(rec);
 			}
@@ -129,7 +133,7 @@ void hero_bag::draw_circuit(RenderWindow* window)
 void hero_bag::fix_cells()
 {
 	for (auto i = 0u; i < cells.size(); i++)
-		cells[i].position = Vector2f(position_.x + cells_pos_[i].x, position_.y + cells_pos_[i].y);
+		cells[i].position = sf::Vector2f(position_.x + cells_pos_[i].x, position_.y + cells_pos_[i].y);
 }
 
 void hero_bag::fix_pos()
@@ -295,52 +299,52 @@ void hero_bag::mouse_move()
 {
 	if (current_state == bag_closed && (ready_to_change_state || was_moved))
 	{
-		if (Mouse::isButtonPressed(Mouse::Left))
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
 			shift_vector = { 0, 0 };
-			if (last_mouse_pos_ != Vector2f(0, 0))
-				shift_vector = Vector2f(Mouse::getPosition().x - last_mouse_pos_.x, Mouse::getPosition().y - last_mouse_pos_.y);
+			if (last_mouse_pos_ != sf::Vector2f(0, 0))
+				shift_vector = sf::Vector2f(sf::Mouse::getPosition().x - last_mouse_pos_.x, sf::Mouse::getPosition().y - last_mouse_pos_.y);
 			fix_cells();
 			fix_pos();
 			position_.x += shift_vector.x; position_.y += shift_vector.y;
-			if (shift_vector != Vector2f(0, 0))
+			if (shift_vector != sf::Vector2f(0, 0))
 				was_moved = true;
 		}
 	}
 
-	last_mouse_pos_ = Vector2f(Mouse::getPosition());
+	last_mouse_pos_ = sf::Vector2f(sf::Mouse::getPosition());
 }
 
-sprite_chain_element* hero_bag::prepare_sprite(const long long elapsed_time)
+std::unique_ptr<sprite_chain_element> hero_bag::prepare_sprite(const long long elapsed_time)
 {
-	const auto screen_center = Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2);
-	bag_sprite_chain_.closed_bag->size = size_closed_; bag_sprite_chain_.closed_bag_selected->size = size_closed_; bag_sprite_chain_.closed_bag_big->size = size_closed_;
-	bag_sprite_chain_.opened_bag->size = size_open_; bag_sprite_chain_.opened_bag_selected->size = size_open_;
-	bag_sprite_chain_.closed_bag->offset = texture_closed_offset; bag_sprite_chain_.closed_bag_selected->offset = texture_closed_offset; bag_sprite_chain_.closed_bag_big->offset = texture_closed_offset;
-	bag_sprite_chain_.opened_bag->offset = texture_open_offset; bag_sprite_chain_.opened_bag_selected->offset = texture_open_offset;
-	bag_sprite_chain_.closed_bag->position = position_; bag_sprite_chain_.closed_bag_selected->position = position_; bag_sprite_chain_.closed_bag_big->position = position_;
-	bag_sprite_chain_.opened_bag->position = position_; bag_sprite_chain_.opened_bag_selected->position = position_;
+	const auto screen_center = sf::Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2);
+	bag_sprite_chain_->closed_bag.size = size_closed_; bag_sprite_chain_->closed_bag_selected.size = size_closed_; bag_sprite_chain_->closed_bag_big.size = size_closed_;
+	bag_sprite_chain_->opened_bag.size = size_open_; bag_sprite_chain_->opened_bag_selected.size = size_open_;
+	bag_sprite_chain_->closed_bag.offset = texture_closed_offset; bag_sprite_chain_->closed_bag_selected.offset = texture_closed_offset; bag_sprite_chain_->closed_bag_big.offset = texture_closed_offset;
+	bag_sprite_chain_->opened_bag.offset = texture_open_offset; bag_sprite_chain_->opened_bag_selected.offset = texture_open_offset;
+	bag_sprite_chain_->closed_bag.position = position_; bag_sprite_chain_->closed_bag_selected.position = position_; bag_sprite_chain_->closed_bag_big.position = position_;
+	bag_sprite_chain_->opened_bag.position = position_; bag_sprite_chain_->opened_bag_selected.position = position_;
 
 	if (current_state == bag_open)
 	{
-		bag_sprite_chain_.opened_bag->offset = texture_open_offset;
-		bag_sprite_chain_.opened_bag_selected->offset = texture_open_offset;
+		bag_sprite_chain_->opened_bag.offset = texture_open_offset;
+		bag_sprite_chain_->opened_bag_selected.offset = texture_open_offset;
 		
 		if (ready_to_change_state)
-			return bag_sprite_chain_.opened_bag_selected;
+			return std::make_unique<sprite_chain_element>(bag_sprite_chain_->opened_bag_selected);
 		
-		return bag_sprite_chain_.opened_bag;
+		return std::make_unique<sprite_chain_element>(bag_sprite_chain_->opened_bag);
 	}
 
 	if (current_state == bag_closed)
 	{
-		bag_sprite_chain_.closed_bag->offset = texture_closed_offset;
-		bag_sprite_chain_.closed_bag_selected->offset = texture_closed_offset;
+		bag_sprite_chain_->closed_bag.offset = texture_closed_offset;
+		bag_sprite_chain_->closed_bag_selected.offset = texture_closed_offset;
 		
 		if (ready_to_change_state)
-			return bag_sprite_chain_.closed_bag_selected;
+			return std::make_unique<sprite_chain_element>(bag_sprite_chain_->closed_bag_selected);
 		
-		return bag_sprite_chain_.closed_bag;
+		return std::make_unique<sprite_chain_element>(bag_sprite_chain_->closed_bag);
 	}
 
 	const auto elapsed_to_change_time = float(elapsed_time) / float(state_change_time);
@@ -355,27 +359,27 @@ sprite_chain_element* hero_bag::prepare_sprite(const long long elapsed_time)
 		}
 		else
 		{
-			const auto to_center_vector = Vector2f(screen_center.x - position_.x, screen_center.y - position_.y);
+			const auto to_center_vector = sf::Vector2f(screen_center.x - position_.x, screen_center.y - position_.y);
 			const auto cut_coefficient = sqrt(pow((size_open_.x - size_closed_.x) / 2 * elapsed_to_change_time, 2) + pow((size_open_.y - size_closed_.y) / 2 * elapsed_to_change_time, 2)) /
 				sqrt(pow(to_center_vector.x, 2) + pow(to_center_vector.y, 2));
-			shift_vector = Vector2f(to_center_vector.x * cut_coefficient, to_center_vector.y * cut_coefficient);
+			shift_vector = sf::Vector2f(to_center_vector.x * cut_coefficient, to_center_vector.y * cut_coefficient);
 			fix_pos();
 			position_.x += shift_vector.x; position_.y += shift_vector.y;
 
 			//const auto texture_size = packs_map->at(pack_tag::inventory).get_original_info(pack_part::bag1, direction::DOWN, 4).source_size;
 			const auto changing_to_change_time = float(state_changing_time)/float(state_change_time);
-			const Vector2f scale_value = {
-				(size_closed_.x + (size_open_.x - size_closed_.x) * changing_to_change_time) / bag_sprite_chain_.closed_bag->size.x,
-				(size_closed_.y + (size_open_.y - size_closed_.y) * changing_to_change_time) / bag_sprite_chain_.closed_bag->size.y
+			const sf::Vector2f scale_value = {
+				(size_closed_.x + (size_open_.x - size_closed_.x) * changing_to_change_time) / bag_sprite_chain_->closed_bag.size.x,
+				(size_closed_.y + (size_open_.y - size_closed_.y) * changing_to_change_time) / bag_sprite_chain_->closed_bag.size.y
 			};
-			bag_sprite_chain_.opened_bag->size.x *= scale_value.x; bag_sprite_chain_.opened_bag->size.y *= scale_value.y;
+			bag_sprite_chain_->opened_bag.size.x *= scale_value.x; bag_sprite_chain_->opened_bag.size.y *= scale_value.y;
 
-			bag_sprite_chain_.opened_bag->offset = Vector2f(bag_sprite_chain_.opened_bag->size.x / 2.0f, bag_sprite_chain_.opened_bag->size.y / 1.7f);
-			bag_sprite_chain_.opened_bag->position = position_;
+			bag_sprite_chain_->opened_bag.offset = sf::Vector2f(bag_sprite_chain_->opened_bag.size.x / 2.0f, bag_sprite_chain_->opened_bag.size.y / 1.7f);
+			bag_sprite_chain_->opened_bag.position = position_;
 
 			fix_cells();
 		}
-		return bag_sprite_chain_.opened_bag;
+		return std::make_unique<sprite_chain_element>(bag_sprite_chain_->opened_bag);
 	}
 
 	if (current_state == bag_closing)
@@ -388,28 +392,28 @@ sprite_chain_element* hero_bag::prepare_sprite(const long long elapsed_time)
 		}
 		else
 		{
-			const auto from_center_vector = Vector2f(position_.x - screen_center.x, position_.y - screen_center.y);
+			const auto from_center_vector = sf::Vector2f(position_.x - screen_center.x, position_.y - screen_center.y);
 			const auto cut_coefficient = 
 				sqrt(pow((size_open_.x - size_closed_.x) / 2 * elapsed_to_change_time, 2) + pow((size_open_.y - size_closed_.y) / 2 * elapsed_to_change_time, 2)) /
 				sqrt(pow(from_center_vector.x, 2) + pow(from_center_vector.y, 2));
-			shift_vector = Vector2f(from_center_vector.x * cut_coefficient, from_center_vector.y * cut_coefficient);
+			shift_vector = sf::Vector2f(from_center_vector.x * cut_coefficient, from_center_vector.y * cut_coefficient);
 			fix_pos();
 			position_.x += shift_vector.x; position_.y += shift_vector.y;
 
 			const auto delta_time = float(state_change_time - state_changing_time) / float(state_change_time);
-			const Vector2f scale_value = {
-				(size_closed_.x + (size_open_.x - size_closed_.x) * delta_time) / bag_sprite_chain_.closed_bag->size.x,
-				(size_closed_.y + (size_open_.y - size_closed_.y) * delta_time) / bag_sprite_chain_.closed_bag->size.y
+			const sf::Vector2f scale_value = {
+				(size_closed_.x + (size_open_.x - size_closed_.x) * delta_time) / bag_sprite_chain_->closed_bag.size.x,
+				(size_closed_.y + (size_open_.y - size_closed_.y) * delta_time) / bag_sprite_chain_->closed_bag.size.y
 			};
-			bag_sprite_chain_.closed_bag->size = size_closed_;
-			bag_sprite_chain_.closed_bag->size.x *= scale_value.x; bag_sprite_chain_.closed_bag->size.y *= scale_value.y;
+			bag_sprite_chain_->closed_bag.size = size_closed_;
+			bag_sprite_chain_->closed_bag.size.x *= scale_value.x; bag_sprite_chain_->closed_bag.size.y *= scale_value.y;
 
-			bag_sprite_chain_.closed_bag->offset = Vector2f(bag_sprite_chain_.closed_bag->size.x / 2.0f, bag_sprite_chain_.closed_bag->size.y / 1.7f);
-			bag_sprite_chain_.closed_bag->position = position_;
+			bag_sprite_chain_->closed_bag.offset = sf::Vector2f(bag_sprite_chain_->closed_bag.size.x / 2.0f, bag_sprite_chain_->closed_bag.size.y / 1.7f);
+			bag_sprite_chain_->closed_bag.position = position_;
 
 			fix_cells();
 		}
-		return  bag_sprite_chain_.closed_bag;
+		return std::make_unique<sprite_chain_element>(bag_sprite_chain_->closed_bag);
 	}
-	return new sprite_chain_element();
+	return std::make_unique<sprite_chain_element>();
 }
