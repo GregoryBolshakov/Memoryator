@@ -6,9 +6,8 @@
 class light_system
 {
 public:
-	light_system();
+	light_system(sf::FloatRect visible_area);
 	~light_system();
-	void init(sf::FloatRect visibleArea);
 	sf::Vector2f calculate_sun_position(float day_part = 0); // from 0 to 1
 private:
 	float calculate_horizontal_offset(float day_part);

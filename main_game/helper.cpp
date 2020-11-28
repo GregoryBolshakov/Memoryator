@@ -1,6 +1,6 @@
 #include "helper.h"
+#include "direction_system.h"
 #include "math_constants.h"
-#include "tags.h"
 #include "terrain_object.h"
 
 #include <windows.h>

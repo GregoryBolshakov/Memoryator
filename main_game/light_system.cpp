@@ -1,20 +1,17 @@
 #include "light_system.h"
 
 
-light_system::light_system()
-= default;
+light_system::light_system(const sf::FloatRect visible_area)
+{
+	this->visible_area_ = visible_area;
+	circle_center_ = { visible_area.left + visible_area.width / 2, visible_area.top + visible_area.height / 2 };
+	calculations_radius_ = sqrt(pow(visible_area.width / 2, 2) + pow(visible_area.height / 2, 2));
+	calculations_center_ = circle_center_; calculations_center_.y += calculations_radius_;
+}
 
 
 light_system::~light_system()
 = default;
-
-void light_system::init(sf::FloatRect visibleArea)
-{
-	this->visible_area_ = visibleArea;
-	circle_center_ = { visibleArea.left + visibleArea.width / 2, visibleArea.top + visibleArea.height / 2 };
-	calculations_radius_ = sqrt(pow(visibleArea.width / 2, 2) + pow(visibleArea.height / 2, 2));
-	calculations_center_ = circle_center_; calculations_center_.y += calculations_radius_;
-}
 
 float light_system::calculate_horizontal_offset(const float day_part)
 {

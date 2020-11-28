@@ -1,9 +1,10 @@
 #include "sprite_pack.h"
-
-#include <fstream>
-
 #include "button.h"
 #include "helper.h"
+#include "direction_system.h"
+#include "world_object.h"
+
+#include <fstream>
 
 const sf::Vector2f sprite_pack::icon_size = { helper::GetScreenSize().y / 13.8f, helper::GetScreenSize().y / 13.8f };
 sf::Vector2f sprite_pack::icon_without_space_size = { 0, 0 };
@@ -161,7 +162,7 @@ std::unique_ptr<sprite_chain_element> sprite_pack::tag_to_icon(const entity_tag 
 	switch (object)
 	{
 		// craftObjects
-	case entity_tag::cageBear:
+	case entity_tag::cage_bear:
 		spriteNumber += 1;
 		result->set_draw_info(pack_tag::icons, pack_part::craftObjects, direction::DOWN, spriteNumber);
 		return result;
@@ -220,7 +221,7 @@ std::unique_ptr<sprite_chain_element> sprite_pack::tag_to_icon(const entity_tag 
 		spriteNumber = 4;
 		result->set_draw_info(pack_tag::icons, pack_part::mobs, direction::DOWN, spriteNumber);
 		return result;
-	case entity_tag::owlBoss:
+	case entity_tag::owl_boss:
 		spriteNumber = 5;
 		result->set_draw_info(pack_tag::icons, pack_part::mobs, direction::DOWN, spriteNumber);
 		return result;
@@ -234,12 +235,12 @@ std::unique_ptr<sprite_chain_element> sprite_pack::tag_to_icon(const entity_tag 
 		return result;
 		//----
 		// notCraftObjects
-	case entity_tag::inkyBlackPen:
+	case entity_tag::inky_black_pen:
 		spriteNumber = 1;
 		result->set_draw_info(pack_tag::icons, pack_part::notCraftObjects, direction::DOWN, spriteNumber);
 		return result;
 		//----------------
-	case entity_tag::emptyObject:
+	case entity_tag::empty_object:
 		result->set_draw_info(pack_tag::inventory, pack_part::areas, direction::DOWN, 1);
 		return result;
 	}

@@ -53,6 +53,8 @@ enum class entity_tag;
 enum class pack_tag;
 enum class biome;
 
+enum class biome { swampy_trees = 1, dark_woods = 2, birch_grove = 3, flower_valley = 4 };
+
 class object_initializer
 {
 public:
@@ -65,7 +67,7 @@ public:
 		const std::string& item_name,
 		int count,
 		biome biome,
-		const std::shared_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
+		const std::weak_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
 		bool mirrored = true,
 		const std::vector<std::pair<entity_tag, int>>& inventory = {});
 	static int new_name_id;
@@ -74,7 +76,7 @@ public:
 		entity_tag item_class,
 		sf::Vector2f item_position,
 		const std::string& item_name,
-		const std::shared_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
+		const std::weak_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
 		const std::shared_ptr<world_object>& owner = nullptr);
 	static std::vector<std::shared_ptr<static_object>> vector_cast_to_static(const std::vector<std::shared_ptr<world_object>>& items);
 	static std::vector<std::shared_ptr<dynamic_object>> vector_cast_to_dynamic(const std::vector<std::shared_ptr<world_object>>& items);

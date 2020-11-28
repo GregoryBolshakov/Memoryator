@@ -8,30 +8,26 @@
 
 deerchant::deerchant(std::string object_name, const sf::Vector2f center_position) : dynamic_object(std::move(object_name), center_position)
 {
-	current_sprite_.resize(3);
-	for (auto& number : current_sprite_)
-		number = 1;
-	time_for_new_sprite_ = 0;
+	current_sprite_ = { 1, 1, 1 };
 	move_system.default_speed = 0.0006f;
 	move_system.speed = move_system.default_speed;
 	animation_speed_ = 0.0010f;
-	radius_ = 50;
+	radius_ = creature_radius;
 	move_end_distance_ = 55;
-	hit_distance_ = 50;
+	hit_distance_ = creature_radius;
 	striking_sprite_ = 6;
-	strength_ = 10;
-	max_health_point_value_ = 100;
+	strength_ = creature_strength;
+	max_health_point_value_ = creature_max_health;
 	health_point_ = max_health_point_value_;
 	current_action_ = action::relax;
-	to_save_name_ = "hero";
 	tag = entity_tag::hero;
 	move_system.can_crash_into_static = true;
 
 	const auto closedBagSize = sf::Vector2f(helper::GetScreenSize().x / 12, helper::GetScreenSize().y / 6);
 	
-	bags.push_back(hero_bag(sf::Vector2f(helper::GetScreenSize().x - closedBagSize.x, closedBagSize.y), true));
-	//bags.emplace_back(sf::Vector2f(helper::GetScreenSize().x - closedBagSize.x, 2.0f * closedBagSize.y), true);
-	//bags.emplace_back(sf::Vector2f(helper::GetScreenSize().x - closedBagSize.x * 1.5f, 1.5f * closedBagSize.y), true);
+	bags.push_back(hero_bag(sf::Vector2f(helper::GetScreenSize().x - closedBagSize.x, closedBagSize.y)));
+	//bags.emplace_back(sf::Vector2f(helper::GetScreenSize().x - closedBagSize.x, 2.0f * closedBagSize.y));
+	//bags.emplace_back(sf::Vector2f(helper::GetScreenSize().x - closedBagSize.x * 1.5f, 1.5f * closedBagSize.y));
 }
 
 deerchant::~deerchant()
@@ -39,7 +35,7 @@ deerchant::~deerchant()
 
 sf::Vector2f deerchant::calculate_texture_offset()
 {
-	conditional_size_units_ = conditional_size;
+	conditional_size_units_ = { 375, 375 };
 	texture_box_.width = float(texture_box_.width)*get_scale_ratio().x;
 	texture_box_.height = float(texture_box_.height)*get_scale_ratio().y;
 	return { texture_box_.width / 2, texture_box_.height * 4 / 5 };
@@ -105,7 +101,7 @@ void deerchant::handle_input(const bool used_mouse, const long long elapsed_time
 	if (current_action_ == action::absorbs || current_action_ == action::grab || current_action_ == action::dropping || current_action_ == action::builds || current_action_ == action::jerking)
 		return;
 
-	if (current_action_ == action::throw_noose && held_item->content != std::make_pair(entity_tag::noose, 1))
+	if (current_action_ == action::throw_noose && held_item && held_item->content != std::make_pair(entity_tag::noose, 1))
 		change_action(action::relax, true, false);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && current_action_ != action::jerking && direction_system.direction != direction::STAND)
@@ -186,7 +182,7 @@ void deerchant::handle_input(const bool used_mouse, const long long elapsed_time
 		return;
 
 	//define action
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && held_item->content.first == entity_tag::noose)
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && held_item && held_item->content.first == entity_tag::noose)
 	{
 		change_action(action::throw_noose, true, false);
 		return;
@@ -427,7 +423,7 @@ void deerchant::behavior_with_static(shared_ptr<world_object> target, long long 
 	if (!target)
 		return;
 
-	if (target->tag == entity_tag::wreathTable && helper::getDist(position_, target->get_position()) <= radius_ + target->get_radius())
+	if (target->tag == entity_tag::wreath_table && helper::getDist(position_, target->get_position()) <= radius_ + target->get_radius())
 		near_the_table = true;	
 }
 
@@ -491,16 +487,16 @@ void deerchant::behavior(const long long elapsed_time)
 		case entity_tag::yarrow:		
 		case entity_tag::mugwort:
 		case entity_tag::noose:
-		case entity_tag::droppedLoot:
-		case entity_tag::hareTrap:
-		case entity_tag::heroBag:
+		case entity_tag::dropped_loot:
+		case entity_tag::hare_trap:
+		case entity_tag::hero_bag:
 		{
 			change_action(action::grab, true, false);
 			//side = calculateSide(boundTarget->getPosition(), elapsedTime);
 			stopping(true);
 			break;
 		}
-		case entity_tag::dropPoint:
+		case entity_tag::drop_point:
 		{		
 			change_action(action::dropping, true, false);
 			//side = calculateSide(boundTarget->getPosition(), elapsedTime);
@@ -508,7 +504,7 @@ void deerchant::behavior(const long long elapsed_time)
 			stopping(true);
 			break;
 		}
-		case entity_tag::buildObject:
+		case entity_tag::build_object:
 		{
 			change_action(action::builds, true, false);
 			//side = calculateSide(boundTarget->getPosition(), elapsedTime);
@@ -637,15 +633,15 @@ void deerchant::ending_previous_action()
 	if (last_action_ == action::dropping)
 	{
 		change_action(action::relax, true, false);
-		if (held_item->content.first != entity_tag::emptyCell)
+		if (held_item && held_item->content.first != entity_tag::empty_cell)
 		{
 			birth_static_info dropObject;
 			dropObject.position = { bound_target_->get_position().x, bound_target_->get_position().y };
-			dropObject.tag = entity_tag::droppedLoot;
+			dropObject.tag = entity_tag::dropped_loot;
 			dropObject.type_of_object = int(held_item->content.first);
 			dropObject.count = held_item->content.second;
 			birth_statics_.push(dropObject);
-			held_item->content = std::make_pair(entity_tag::emptyCell, 0);
+			held_item->content = std::make_pair(entity_tag::empty_cell, 0);
 		}
 		else
 		{
@@ -678,9 +674,9 @@ void deerchant::ending_previous_action()
 		}
 		stopping(true, true);
 	}
-	if (current_action_ == action::throw_noose && current_sprite_[0] == 12 && held_item->content == std::make_pair(entity_tag::noose, 1))
+	if (current_action_ == action::throw_noose && current_sprite_[0] == 12 && held_item && held_item->content == std::make_pair(entity_tag::noose, 1))
 	{
-		held_item->content = { entity_tag::emptyCell, 0 };
+		held_item->content = { entity_tag::empty_cell, 0 };
 		birth_dynamic_info nooseObject;
 		nooseObject.position = position_;
 		nooseObject.tag = entity_tag::noose;
@@ -707,7 +703,7 @@ void deerchant::ending_previous_action()
 			auto pickedItem = dynamic_cast<picked_object*>(bound_target_);
 			if (pickedItem)
 			{
-				if (pickedItem->get_type() == int(entity_tag::heroBag) || pickedItem->getId() == entity_tag::hareTrap)
+				if (pickedItem->get_type() == int(entity_tag::hero_bag) || pickedItem->getId() == entity_tag::hare_trap)
 				{
 					//bags.emplace_back(sf::Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2), true, pickedItem->inventory);
 					pickedItem->delete_promise_on();
@@ -921,110 +917,110 @@ void deerchant::fight_interact(const long long elapsed_time, dynamic_object* tar
 
 unique_ptr<sprite_chain_element> deerchant::prepare_speed_line()
 {
-	auto speedLine = make_unique<sprite_chain_element>(pack_tag::heroMove, pack_part::lines, direction::STAND, 1, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_));
-	speedLine->animation_length = 3;
-	if (speed_line_direction_ == direction::STAND || current_sprite_[2] > speedLine->animation_length)
-		return speedLine;
+	auto speed_line = make_unique<sprite_chain_element>(pack_tag::heroMove, pack_part::lines, direction::STAND, 1, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_));
+	speed_line->animation_length = 3;
+	if (speed_line_direction_ == direction::STAND || current_sprite_[2] > speed_line->animation_length)
+		return std::make_unique<sprite_chain_element>();
 
-	speedLine->direction = speed_line_direction_;
-	speedLine->mirrored = mirrored_speed_line_;
-	speedLine->offset.y += conditional_size_units_.y / 9.0f;
-	speedLine->position = sf::Vector2f(position_.x, position_.y + conditional_size_units_.y / 9.0f);
+	speed_line->direction = speed_line_direction_;
+	speed_line->mirrored = mirrored_speed_line_;
+	speed_line->offset.y += conditional_size_units_.y / 9.0f;
+	speed_line->position = sf::Vector2f(position_.x, position_.y + conditional_size_units_.y / 9.0f);
 
 	if (reverse_speed_line_)
-		speedLine->number = speedLine->animation_length + 1 - current_sprite_[2];
+		speed_line->number = speed_line->animation_length + 1 - current_sprite_[2];
 	else
-		speedLine->number = current_sprite_[2];
+		speed_line->number = current_sprite_[2];
 
-	return speedLine;
+	return speed_line;
 }
 
 std::vector<unique_ptr<sprite_chain_element>> deerchant::prepare_sprites(const long long elapsed_time)
 {
-	auto legsSprite = make_unique<sprite_chain_element>(sf::Vector2f(position_.x, position_.y - 1), conditional_size_units_, sf::Vector2f(texture_box_offset_.x, texture_box_offset_.y + 1), color);
-	auto bodySprite = make_unique<sprite_chain_element>(position_, conditional_size_units_, texture_box_offset_, color);
+	auto legs_sprite = make_unique<sprite_chain_element>(sf::Vector2f(position_.x, position_.y - 1), conditional_size_units_, sf::Vector2f(texture_box_offset_.x, texture_box_offset_.y + 1), color);
+	auto body_sprite = make_unique<sprite_chain_element>(position_, conditional_size_units_, texture_box_offset_, color);
 
-	const auto speedLine = prepare_speed_line();
-	std::vector<unique_ptr<sprite_chain_element>> result = {};
-	auto legsInverse = false, bodyInverse = false;
-	legsSprite->animation_length = 8;
+	const auto speed_line = prepare_speed_line();
+	std::vector<unique_ptr<sprite_chain_element>> result;
+	auto legs_inverse = false, body_inverse = false;
+	legs_sprite->animation_length = 8;
 
-    auto spriteSide = direction_system.side; auto spriteDirection = direction_system.last_direction;
+	auto sprite_side = direction_system.side; auto spriteDirection = direction_system.last_direction;
 
 	animation_speed_ = 12;
 
 	if (direction_system.direction == direction::RIGHT || direction_system.direction == direction::UPRIGHT || direction_system.direction == direction::DOWNRIGHT)
 	{
 		spriteDirection = direction_system::cut_rights(spriteDirection);
-		legsSprite->mirrored = true;
+		legs_sprite->mirrored = true;
 	}
 
 	if (direction_system.side == side::right && current_action_ != action::move && current_action_ != action::move_end && current_action_ != action::jerking)
 	{
-		spriteSide = side::left;
-		bodySprite->mirrored = true;
+		sprite_side = side::left;
+		body_sprite->mirrored = true;
 	}
 
 	switch (current_action_)
 	{
 	case action::common_hit:
-		bodySprite->animation_length = 8;
+		body_sprite->animation_length = 8;
 		if (direction_system.side == side::right)
-			legsSprite->mirrored = true;
-		bodySprite->pack_tag = pack_tag::heroHit; bodySprite->pack_part = pack_part::body; bodySprite->direction = direction_system::side_to_direction(spriteSide);
-		legsSprite->pack_tag = pack_tag::heroHit; legsSprite->pack_part = pack_part::legs; legsSprite->direction = direction_system::side_to_direction(spriteSide);
+			legs_sprite->mirrored = true;
+		body_sprite->pack_tag = pack_tag::heroHit; body_sprite->pack_part = pack_part::body; body_sprite->direction = direction_system::side_to_direction(sprite_side);
+		legs_sprite->pack_tag = pack_tag::heroHit; legs_sprite->pack_part = pack_part::legs; legs_sprite->direction = direction_system::side_to_direction(sprite_side);
 		break;
 	case action::absorbs:
-		bodySprite->animation_length = 10;
-		bodySprite->pack_tag = pack_tag::heroAbsorb; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_diagonals(spriteDirection);	
+		body_sprite->animation_length = 10;
+		body_sprite->pack_tag = pack_tag::heroAbsorb; body_sprite->pack_part = pack_part::full; body_sprite->direction = direction_system::cut_diagonals(spriteDirection);	
 		break;
 	case action::builds:
-		bodySprite->animation_length = 10;
-		bodySprite->pack_tag = pack_tag::heroAbsorb; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_diagonals(spriteDirection);
+		body_sprite->animation_length = 10;
+		body_sprite->pack_tag = pack_tag::heroAbsorb; body_sprite->pack_part = pack_part::full; body_sprite->direction = direction_system::cut_diagonals(spriteDirection);
 		break;
 	case action::grab:
-		bodySprite->animation_length = 11;
+		body_sprite->animation_length = 11;
 		animation_speed_ = 15;
-		bodySprite->pack_tag = pack_tag::heroPick; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_diagonals(spriteDirection);
+		body_sprite->pack_tag = pack_tag::heroPick; body_sprite->pack_part = pack_part::full; body_sprite->direction = direction_system::cut_diagonals(spriteDirection);
 		break;
 	case action::dropping:
-		bodyInverse = true;
-		bodySprite->animation_length = 5;
+		body_inverse = true;
+		body_sprite->animation_length = 5;
 		if (direction_system.last_direction == direction::RIGHT || direction_system.last_direction == direction::UPRIGHT || direction_system.last_direction == direction::DOWNRIGHT)
-			bodySprite->mirrored = true;
-		bodySprite->pack_tag = pack_tag::heroPick; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_diagonals(spriteDirection);
+			body_sprite->mirrored = true;
+		body_sprite->pack_tag = pack_tag::heroPick; body_sprite->pack_part = pack_part::full; body_sprite->direction = direction_system::cut_diagonals(spriteDirection);
 		break;
 	case action::open:
-		bodySprite->animation_length = 12;
-		bodySprite->pack_tag = pack_tag::heroPick; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_diagonals(spriteDirection);
+		body_sprite->animation_length = 12;
+		body_sprite->pack_tag = pack_tag::heroPick; body_sprite->pack_part = pack_part::full; body_sprite->direction = direction_system::cut_diagonals(spriteDirection);
 		break;	
 	case action::jerking:
-		bodySprite->animation_length = 8;
+		body_sprite->animation_length = 8;
 		animation_speed_ = 11;
 		spriteDirection = direction_system.last_direction;
 		if (direction_system.last_direction == direction::RIGHT || direction_system.last_direction == direction::UPRIGHT || direction_system.last_direction == direction::DOWNRIGHT)
-			bodySprite->mirrored = true;
+			body_sprite->mirrored = true;
 		if (direction_system::cut_rights(direction_system.last_direction) == direction::UPLEFT || direction_system::cut_rights(direction_system.last_direction) == direction::DOWNLEFT)
 			spriteDirection = direction::LEFT;
-		bodySprite->pack_tag = pack_tag::heroRoll; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_rights(spriteDirection);
+		body_sprite->pack_tag = pack_tag::heroRoll; body_sprite->pack_part = pack_part::full; body_sprite->direction = direction_system::cut_rights(spriteDirection);
 		break;
 	case action::relax:
-		bodySprite->mirrored = false;
-		bodySprite->animation_length = 16;
+		body_sprite->mirrored = false;
+		body_sprite->animation_length = 16;
 		animation_speed_ = 13;
 		spriteDirection = direction_system.last_direction;
 		if (direction_system.last_direction == direction::RIGHT || direction_system.last_direction == direction::UPRIGHT || direction_system.last_direction == direction::DOWNRIGHT)
-			bodySprite->mirrored = true;
+			body_sprite->mirrored = true;
 		if (direction_system::cut_rights(direction_system.last_direction) == direction::UPLEFT || direction_system::cut_rights(direction_system.last_direction) == direction::DOWNLEFT)
 			spriteDirection = direction::LEFT;
-		bodySprite->pack_tag = pack_tag::heroStand; bodySprite->pack_part = pack_part::full; bodySprite->direction = direction_system::cut_rights(spriteDirection);
+		body_sprite->pack_tag = pack_tag::heroStand; body_sprite->pack_part = pack_part::full; body_sprite->direction = direction_system::cut_rights(spriteDirection);
 		break;
 	case action::move:
 	{
 		animation_speed_ = move_system.speed / move_system.default_speed * 12;
 		if (animation_speed_ < 10)
 			animation_speed_ = 10;
-		bodySprite->animation_length = 8;
+		body_sprite->animation_length = 8;
 
 		auto finalDirection = direction_system.last_direction;
 		if (smooth_direction_ != direction::STAND)
@@ -1032,25 +1028,25 @@ std::vector<unique_ptr<sprite_chain_element>> deerchant::prepare_sprites(const l
 
 		if (finalDirection == direction::RIGHT || finalDirection == direction::UPRIGHT || finalDirection == direction::DOWNRIGHT)
 		{
-			bodySprite->mirrored = true;
-			legsSprite->mirrored = true;
+			body_sprite->mirrored = true;
+			legs_sprite->mirrored = true;
 		}
 
-		bodySprite->pack_tag = pack_tag::heroMove; bodySprite->pack_part = pack_part::body; bodySprite->direction = direction_system::cut_rights(finalDirection);
-		legsSprite->pack_tag = pack_tag::heroMove; legsSprite->pack_part = pack_part::legs; legsSprite->direction = direction_system::cut_rights(finalDirection);
+		body_sprite->pack_tag = pack_tag::heroMove; body_sprite->pack_part = pack_part::body; body_sprite->direction = direction_system::cut_rights(finalDirection);
+		legs_sprite->pack_tag = pack_tag::heroMove; legs_sprite->pack_part = pack_part::legs; legs_sprite->direction = direction_system::cut_rights(finalDirection);
 		break;
 	}
 	case action::move_end:
-		bodySprite->animation_length = 8;
+		body_sprite->animation_length = 8;
 		current_sprite_[1] = 1;
 		if (direction_system.last_direction == direction::RIGHT || direction_system.last_direction == direction::UPRIGHT || direction_system.last_direction == direction::DOWNRIGHT)
 		{
-			bodySprite->mirrored = true;
-			legsSprite->mirrored = true;
+			body_sprite->mirrored = true;
+			legs_sprite->mirrored = true;
 		}
-		bodySprite->pack_tag = pack_tag::heroMove; bodySprite->pack_part = pack_part::body; bodySprite->direction = direction_system::cut_rights(direction_system.last_direction);
+		body_sprite->pack_tag = pack_tag::heroMove; body_sprite->pack_part = pack_part::body; body_sprite->direction = direction_system::cut_rights(direction_system.last_direction);
 		direction_system.last_direction = direction_system::cut_diagonals(direction_system.last_direction);
-		legsSprite->pack_tag = pack_tag::heroHit; legsSprite->pack_part = pack_part::legs; legsSprite->direction = direction_system::cut_rights(direction_system.last_direction);
+		legs_sprite->pack_tag = pack_tag::heroHit; legs_sprite->pack_part = pack_part::legs; legs_sprite->direction = direction_system::cut_rights(direction_system.last_direction);
 		
 		break;
 	}
@@ -1060,61 +1056,61 @@ std::vector<unique_ptr<sprite_chain_element>> deerchant::prepare_sprites(const l
 		animation_speed_ = move_system.speed / move_system.default_speed * 12;
 		if (animation_speed_ < 10)
 			animation_speed_ = 10;
-		bodySprite->animation_length = 8;
+		body_sprite->animation_length = 8;
 
 		if (direction_system.direction == direction::UP && direction_system.side == side::down || direction_system.direction == direction::DOWN && direction_system.side == side::up)
 		{
-			legsInverse = true;
-			spriteDirection = direction_system::side_to_direction(spriteSide);
+			legs_inverse = true;
+			spriteDirection = direction_system::side_to_direction(sprite_side);
 		}
 		if ((direction_system.direction == direction::LEFT || direction_system.direction == direction::UPLEFT || direction_system.direction == direction::DOWNLEFT) && direction_system.side == side::right ||
 			(direction_system.direction == direction::UPLEFT || direction_system.direction == direction::UPRIGHT) && direction_system.side == side::down ||
 			(direction_system.direction == direction::RIGHT || direction_system.direction == direction::UPRIGHT || direction_system.direction == direction::DOWNRIGHT) && direction_system.side == side::left ||
 			(direction_system.direction == direction::DOWNLEFT || direction_system.direction == direction::DOWNRIGHT) && direction_system.side == side::up)
 		{
-			legsInverse = true;
-			legsSprite->mirrored = !legsSprite->mirrored;
+			legs_inverse = true;
+			legs_sprite->mirrored = !legs_sprite->mirrored;
 			spriteDirection = direction_system::invert_direction(spriteDirection);
 		}
 		if (direction_system.direction == direction::UP && direction_system.side == side::down || direction_system.direction == direction::DOWN && direction_system.side == side::up)
-			legsInverse = true;
+			legs_inverse = true;
 
-		legsSprite->pack_tag = pack_tag::heroMove; legsSprite->pack_part = pack_part::legs; legsSprite->direction = direction_system::cut_rights(spriteDirection);
-		bodySprite->pack_tag = pack_tag::heroHit; bodySprite->pack_part = pack_part::body; bodySprite->direction = direction_system::side_to_direction(spriteSide);
+		legs_sprite->pack_tag = pack_tag::heroMove; legs_sprite->pack_part = pack_part::legs; legs_sprite->direction = direction_system::cut_rights(spriteDirection);
+		body_sprite->pack_tag = pack_tag::heroHit; body_sprite->pack_part = pack_part::body; body_sprite->direction = direction_system::side_to_direction(sprite_side);
 
 		if (direction_system.direction == direction::STAND)
 		{
 			if (direction_system.side == side::right)
-				legsSprite->mirrored = true;
-			legsSprite->pack_tag = pack_tag::heroMove; legsSprite->pack_part = pack_part::legs; legsSprite->direction = direction_system::side_to_direction(spriteSide);
-			legsSprite->animation_length = 14;
+				legs_sprite->mirrored = true;
+			legs_sprite->pack_tag = pack_tag::heroMove; legs_sprite->pack_part = pack_part::legs; legs_sprite->direction = direction_system::side_to_direction(sprite_side);
+			legs_sprite->animation_length = 14;
 		}
 	}
 
 	if (current_action_ == action::throw_noose)
 	{
-		bodySprite->animation_length = 14;
+		body_sprite->animation_length = 14;
 		if (direction_system.direction == direction::UP && direction_system.side == side::down || direction_system.direction == direction::DOWN && direction_system.side == side::up)
 		{
-			legsInverse = true;
-			spriteDirection = direction_system::side_to_direction(spriteSide);
+			legs_inverse = true;
+			spriteDirection = direction_system::side_to_direction(sprite_side);
 		}
 		if ((direction_system.direction == direction::LEFT || direction_system.direction == direction::UPLEFT || direction_system.direction == direction::DOWNLEFT) && direction_system.side == side::right ||
 			(direction_system.direction == direction::RIGHT || direction_system.direction == direction::UPRIGHT || direction_system.direction == direction::DOWNRIGHT) && direction_system.side == side::left)
 		{
-			legsInverse = true;
-			legsSprite->mirrored = !legsSprite->mirrored;
+			legs_inverse = true;
+			legs_sprite->mirrored = !legs_sprite->mirrored;
 		}
 
-		legsSprite->pack_tag = pack_tag::heroMove; legsSprite->pack_part = pack_part::legs, legsSprite->direction = spriteDirection;
-		bodySprite->pack_tag = pack_tag::heroThrow; bodySprite->pack_part = pack_part::body; bodySprite->direction = direction_system::side_to_direction(spriteSide);
+		legs_sprite->pack_tag = pack_tag::heroMove; legs_sprite->pack_part = pack_part::legs, legs_sprite->direction = spriteDirection;
+		body_sprite->pack_tag = pack_tag::heroThrow; body_sprite->pack_part = pack_part::body; body_sprite->direction = direction_system::side_to_direction(sprite_side);
 
 		if (direction_system.direction == direction::STAND)
 		{
 			if (direction_system.side == side::right)
-				legsSprite->mirrored = true;
-			legsSprite->pack_tag = pack_tag::heroThrow; legsSprite->pack_part = pack_part::legs, legsSprite->direction = direction_system::side_to_direction(spriteSide);
-			legsSprite->animation_length = 14;
+				legs_sprite->mirrored = true;
+			legs_sprite->pack_tag = pack_tag::heroThrow; legs_sprite->pack_part = pack_part::legs, legs_sprite->direction = direction_system::side_to_direction(sprite_side);
+			legs_sprite->animation_length = 14;
 		}
 	}
 
@@ -1123,7 +1119,7 @@ std::vector<unique_ptr<sprite_chain_element>> deerchant::prepare_sprites(const l
 
 	time_for_new_sprite_ += elapsed_time;
 
-	if (double(time_for_new_sprite_) >= 1e6 / animation_speed_)
+	if (static_cast<double>(time_for_new_sprite_) >= 1e6 / animation_speed_)
 	{
 		time_for_new_sprite_ = 0;
 
@@ -1137,33 +1133,33 @@ std::vector<unique_ptr<sprite_chain_element>> deerchant::prepare_sprites(const l
 			++current_sprite_[0];
 			++current_sprite_[1];
 			++current_sprite_[2];
-			if (current_sprite_[0] > bodySprite->animation_length)
+			if (current_sprite_[0] > body_sprite->animation_length)
 				current_sprite_[0] = 1;
-			if (current_sprite_[0] >= bodySprite->animation_length)
+			if (current_sprite_[0] >= body_sprite->animation_length)
 				last_action_ = current_action_;
-			if (legsSprite && current_sprite_[1] > legsSprite->animation_length)
+			if (legs_sprite && current_sprite_[1] > legs_sprite->animation_length)
 				current_sprite_[1] = 1;
-			if (speedLine && current_sprite_[2] > speedLine->animation_length)
+			if (speed_line && current_sprite_[2] > speed_line->animation_length)
 				speed_line_direction_ = direction::STAND;
 		}
 	}
 
-	if (legsSprite->pack_tag != pack_tag::empty)
+	if (legs_sprite->pack_tag != pack_tag::empty)
 	{
-		if (legsInverse)
-			legsSprite->number = legsSprite->animation_length + 1 - current_sprite_[1];
+		if (legs_inverse)
+			legs_sprite->number = legs_sprite->animation_length + 1 - current_sprite_[1];
 		else
-			legsSprite->number = current_sprite_[1];
-		result.emplace_back(std::move(legsSprite));
+			legs_sprite->number = current_sprite_[1];
+		result.emplace_back(std::move(legs_sprite));
 	}
 
-	if (bodySprite->pack_tag != pack_tag::empty)
+	if (body_sprite->pack_tag != pack_tag::empty)
 	{
-		if (bodyInverse)
-			bodySprite->number = bodySprite->animation_length + 1 - current_sprite_[0];
+		if (body_inverse)
+			body_sprite->number = body_sprite->animation_length + 1 - current_sprite_[0];
 		else
-			bodySprite->number = current_sprite_[0];
-		result.emplace_back(std::move(bodySprite));
+			body_sprite->number = current_sprite_[0];
+		result.emplace_back(std::move(body_sprite));
 	}
 
 	set_unscaled(result);

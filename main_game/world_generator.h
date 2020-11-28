@@ -1,6 +1,6 @@
 #pragma once
 
-#include "tags.h"
+#include "object_initializer.h"
 
 #include <map>
 #include <memory>
@@ -13,6 +13,8 @@ class dynamic_object;
 class scale_system;
 class sprite_pack;
 class grid_map;
+enum class pack_tag;
+enum class entity_tag;
 
 using biome_matrix_t = std::vector<std::vector<biome>>;
 
@@ -21,10 +23,11 @@ class world_generator
 public:
 	world_generator(
 		  std::shared_ptr<grid_map> grid_map
-		, std::shared_ptr<scale_system> scale_system
-		, std::shared_ptr<std::map<pack_tag, sprite_pack>> packs_map);
+		, const std::shared_ptr<scale_system>& scale_system
+		, const std::shared_ptr<std::map<pack_tag, sprite_pack>>& packs_map);
 
 	void primordial_generation();
+	void fill_zone();
 
 	const std::shared_ptr<static_object>& initialize_static_item(
 		  entity_tag item_class
@@ -46,16 +49,16 @@ public:
 	void in_block_generate(sf::Vector2u index);
 	[[nodiscard]] bool whether_block_regeneretable(sf::Vector2u index) const;
 
-	[[nodiscard]] const std::shared_ptr<dynamic_object>& focused_object() const { return focused_object_; }
-	[[nodiscard]] const std::shared_ptr<static_object>& main_object() const { return main_object_; }
+	[[nodiscard]] const std::weak_ptr<dynamic_object>& player() const { return player_; }
+	[[nodiscard]] const std::weak_ptr<static_object>& main_object() const { return main_object_; }
 	[[nodiscard]] const std::map<std::string, std::shared_ptr<static_object>>& all_static_objects() const { return all_static_objects_; }
 	[[nodiscard]] const std::map<std::string, std::shared_ptr<dynamic_object>>& all_dynamic_objects() const { return all_dynamic_objects_; }
 private:
 	std::shared_ptr<grid_map> grid_map_;
-	std::shared_ptr<scale_system> scale_system_;
-	std::shared_ptr<std::map<pack_tag, sprite_pack>> packs_map_;
-	std::shared_ptr<dynamic_object> focused_object_;
-	std::shared_ptr<static_object> main_object_;
+	std::weak_ptr<scale_system> scale_system_;
+	std::weak_ptr<std::map<pack_tag, sprite_pack>> packs_map_;
+	std::weak_ptr<dynamic_object> player_;
+	std::weak_ptr<static_object> main_object_;
 	std::map<std::string, std::shared_ptr<static_object>> all_static_objects_;
 	std::map<std::string, std::shared_ptr<dynamic_object>> all_dynamic_objects_;
 	biome_matrix_t biome_matrix;

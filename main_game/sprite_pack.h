@@ -4,6 +4,8 @@
 
 #include <nlohmann/json.hpp>
 
+enum class entity_tag;
+
 using json = nlohmann::json;
 
 namespace sprite_pack_structure

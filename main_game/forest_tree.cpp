@@ -1,4 +1,5 @@
 #include "forest_tree.h"
+#include "direction_system.h"
 #include "helper.h"
 #include "sprite_chain_element.h"
 
@@ -9,7 +10,6 @@ forest_tree::forest_tree(std::string object_name, const sf::Vector2f center_posi
 	strength = 0;
 	radius_ = 50;
 	animation_speed_ = 10;
-	to_save_name_ = "ForestTree";
 	forest_tree::setType(type_of_object);
 	tag = entity_tag::tree;
 }

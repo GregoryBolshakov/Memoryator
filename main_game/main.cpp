@@ -12,6 +12,9 @@
 #include "deerchant.h"
 #include "helper.h"
 #include "world_metrics.h"
+#include "sprite_pack.h"
+#include "visual_effects/visual_effect.hpp"
+#include "text_chain_element.h"
 
 #include <thread>
 
@@ -22,8 +25,7 @@ int main() {
 	auto window = make_shared<sf::RenderWindow>(VideoMode(static_cast<unsigned int>(screen_size.x), static_cast<unsigned int>(screen_size.y), 32), "game");//, Style::Fullscreen);
 	world_metrics::set_world_metrics(window);
 	
-	auto scale_system = make_shared<::scale_system>();
-	auto camera_system = make_shared<::camera_system>(scale_system);
+	auto camera_system = make_shared<::camera_system>();
 	auto time_system = make_shared<::time_system>();
 	
 	auto shader_system = make_shared<::shader_system>(camera_system, time_system);
@@ -68,7 +70,7 @@ int main() {
 			if (event.type == sf::Event::MouseWheelMoved)
 			{
 				if (menu_system->get_state() == closed)
-					scale_system->set_scale_factor(event.mouseWheel.delta);
+					camera_system->get_scale_system()->update_zoom_factor(event.mouseWheel.delta);
 			}	
 
 			if (event.type == sf::Event::MouseButtonReleased)
@@ -116,27 +118,27 @@ int main() {
 			continue;
 		}
 
-		if (window_focus && menu_system->get_state() != game_menu)
+		if (window && window_focus && menu_system->get_state() != game_menu)
 		{
 			time_micro_sec = clock.getElapsedTime().asMicroseconds();
 			clock.restart();
 
 			if (!console->get_state())
 			{
-				scale_system->interact();
+				camera_system->get_scale_system()->interact();
 				time_system->interact(time_micro_sec);
 				world->interact(time_micro_sec);
-				world->focused_object->handle_input(world->get_inventory_system()->get_used_mouse(), time_micro_sec);
+				world->get_player().lock()->handle_input(world->get_inventory_system()->get_used_mouse(), time_micro_sec);
 
 				shader_system->update();
 			}
 
-			auto hero = dynamic_pointer_cast<deerchant>(world->focused_object);
+			auto hero = dynamic_pointer_cast<deerchant>(world->get_player().lock());
 			//main_book.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().get_held_item(), hero->near_the_table);
 			//main_book.interact();
 
 			window->clear(sf::Color::White);
-			const auto scale = scale_system->get_scale_factor();
+			const auto scale = camera_system->get_scale_system()->calculate_scale();
 			
 			draw_system->draw(window, world->prepare_sprites(time_micro_sec, true), scale, camera_system->position);
 			draw_system->draw(window, world->prepare_sprites(time_micro_sec, false), scale, camera_system->position);
@@ -148,15 +150,16 @@ int main() {
 			world->pedestal_controller.draw(window, camera_system->position, scale);
 			//draw_system->draw(main_window, main_book.prepare_sprites(world.focusedObject->get_health_point() / world.focusedObject->get_max_health_point_value(), time_micro_sec));
 			//draw_system->draw(main_window, world.getInventorySystem().prepare_sprites(time_micro_sec, world.packsMap));
-			//text_system::draw_string(std::to_string(1000000 / time_micro_sec), font_name::bebas_font, 40, 200, 200, window, sf::Color::Black);
-			//text_system::draw_string(std::to_string(world->focused_object->get_position().x) + " " + std::to_string(world->focused_object->get_position().y), font_name::bebas_font, 40, 200, 300, window, sf::Color::Black);
+			text_system::draw_string(std::to_string(1000000 / time_micro_sec), font_name::bebas_font, 40, 200, 200, window, sf::Color::Black);
+			text_system::draw_string(std::to_string(world->get_player().lock()->get_position().x) + " " + std::to_string(world->get_player().lock()->get_position().y), font_name::bebas_font, 40, 200, 300, window, sf::Color::Black);
+			text_system::draw_string(std::to_string(world->get_camera_system().lock()->get_scale_system()->calculate_scale()), font_name::bebas_font, 40, 200, 400, window, sf::Color::Black);
 		}
 		else
 			clock.restart();
 
 		draw_system->draw(window, menu_system->prepare_sprites());
 
-		world->focused_object->move_system.set_move_offset(time_micro_sec);
+		world->get_player().lock()->move_system.set_move_offset(time_micro_sec);
 
 		console->interact(time_micro_sec);
 		console->draw(window);

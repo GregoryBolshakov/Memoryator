@@ -1,5 +1,7 @@
 #include "ground.h"
+#include "direction_system.h"
 #include "sprite_chain_element.h"
+#include "world_metrics.h"
 #include "helper.h"
 
 ground::ground(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : static_object(std::move(objectName), centerPosition)
@@ -7,7 +9,6 @@ ground::ground(std::string objectName, const sf::Vector2f centerPosition, const 
 	variety_of_types_ = 3;
 	this->type_of_object_ = typeOfObject;
 	is_background = true;
-	to_save_name_ = "ground";
 	ground::setType(typeOfObject);
 	tag = entity_tag::ground;
 }
@@ -18,7 +19,7 @@ void ground::setType(int typeOfObject)
 		return;
 
 	this->type_of_object_ = typeOfObject;
-	this->conditional_size_units_ = { 1000, 1000 };
+	this->conditional_size_units_ = world_metrics::block_size;
 	this->z_coordinate_ = typeOfObject * 10 + 1;
 }
 
@@ -52,6 +53,6 @@ std::vector<unique_ptr<sprite_chain_element>> ground::prepare_sprites(long long)
 	if (type_of_object_ == 3)
 		body->pack_tag = pack_tag::birchGrove;
 
-	result.emplace_back(std::move(body));
+	result.push_back(std::move(body));
 	return result;
 }

@@ -1,46 +1,35 @@
 #include "scale_system.h"
+#include "world_object.h"
+#include "world_metrics.h"
 
 #include <cmath>
+#include <cassert>
 
-
-#include "deerchant.h"
-#include "helper.h"
-
-scale_system::scale_system()
+float scale_system::calculate_scale()
 {
-	main_scale_ = helper::GetScreenSize().y / (5 * deerchant::conditional_size.y);
-	main_scale_ = round(main_scale_ * 100) / 100;
-	scale_factor_ = main_scale_;
+	assert(focused_object_.lock()->get_conditional_size_units() != sf::Vector2f());
+	focused_to_screen_factor_ = world_metrics::window_size.y / (focused_objects_in_height * focused_object_.lock()->get_conditional_size_units().y);
+	return zoom_factor_ * focused_to_screen_factor_;
 }
 
-float scale_system::get_scale_factor() const
+void scale_system::update_zoom_factor(const int delta)
 {
-	return scale_factor_;
-}
-
-void scale_system::set_scale_factor(const int delta)
-{
-	if (delta == -1 && scale_factor_ > further_scale* main_scale_)
+	if (delta == -1 && zoom_factor_ > further_scale* focused_to_screen_factor_)
 	{
-		scale_factor_ -= 0.01f;
+		zoom_factor_ -= 0.01f;
 		scale_decrease_ = -0.03f;
 	}
 	else
-		if (delta == 1 && scale_factor_ < closest_scale * main_scale_)
+		if (delta == 1 && zoom_factor_ < closest_scale * focused_to_screen_factor_)
 		{
-			scale_factor_ += 0.01f;
+			zoom_factor_ += 0.01f;
 			scale_decrease_ = 0.03f;
 		}
 
-	if (scale_decrease_ < 0 && scale_factor_ < further_scale * main_scale_)
-		scale_factor_ = further_scale * main_scale_;
-	if (scale_decrease_ > 0 && scale_factor_ > closest_scale* main_scale_)
-		scale_factor_ = closest_scale * main_scale_;
-}
-
-float scale_system::get_main_scale() const
-{
-	return main_scale_;
+	if (scale_decrease_ < 0 && zoom_factor_ < further_scale * focused_to_screen_factor_)
+		zoom_factor_ = further_scale * focused_to_screen_factor_;
+	if (scale_decrease_ > 0 && zoom_factor_ > closest_scale* focused_to_screen_factor_)
+		zoom_factor_ = closest_scale * focused_to_screen_factor_;
 }
 
 void scale_system::interact()
@@ -54,12 +43,12 @@ void scale_system::scale_smoothing()
 {
 	if (abs(scale_decrease_) >= 0.02 && time_for_scale_decrease_ >= 30000)
 	{
-		if (scale_factor_ != further_scale * main_scale_ && scale_factor_ != closest_scale * main_scale_)
-			scale_factor_ += scale_decrease_;
-		if (scale_decrease_ < 0 && scale_factor_ <= further_scale * main_scale_)
-			scale_factor_ = further_scale * main_scale_;
-		if (scale_decrease_ > 0 && scale_factor_ >= closest_scale * main_scale_)
-			scale_factor_ = closest_scale * main_scale_;
+		if (zoom_factor_ != further_scale * focused_to_screen_factor_ && zoom_factor_ != closest_scale * focused_to_screen_factor_)
+			zoom_factor_ += scale_decrease_;
+		if (scale_decrease_ < 0 && zoom_factor_ <= further_scale * focused_to_screen_factor_)
+			zoom_factor_ = further_scale * focused_to_screen_factor_;
+		if (scale_decrease_ > 0 && zoom_factor_ >= closest_scale * focused_to_screen_factor_)
+			zoom_factor_ = closest_scale * focused_to_screen_factor_;
 
 		if (scale_decrease_ < 0)
 		{
@@ -78,5 +67,5 @@ void scale_system::scale_smoothing()
 
 float scale_system::scale_delta_normalized() const
 {
-	return (scale_factor_ - main_scale_) / main_scale_;
+	return (zoom_factor_ - focused_to_screen_factor_) / focused_to_screen_factor_;
 }

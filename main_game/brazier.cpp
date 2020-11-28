@@ -1,18 +1,18 @@
 #include "brazier.h"
 #include "build_system.h"
+#include "direction_system.h"
 #include "helper.h"
 #include "sprite_chain_element.h"
 
 #include <fstream>
 
-brazier::brazier(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : craftResult(entity_tag::emptyCell),
+brazier::brazier(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : craftResult(entity_tag::empty_cell),
 	terrain_object(std::move(objectName), centerPosition)
 {
 	variety_of_types_ = 1;
 	this->type_of_object_ = typeOfObject;
 	radius_ = 450.0f;
 	plateRadius = 100.0f;
-	to_save_name_ = "brazier";
 	brazier::setType(typeOfObject);
 	is_multi_ellipse = true;
 	mirrored_ = false;
@@ -95,10 +95,10 @@ void brazier::initCraftRecipes()
 
 void brazier::resultAnalysis() const
 {
-	if (craftResult == entity_tag::emptyCell)
+	if (craftResult == entity_tag::empty_cell)
 		return;
 
-	if (craftResult == entity_tag::heroBag)
+	if (craftResult == entity_tag::hero_bag)
 	{
 		
 	}
@@ -124,7 +124,7 @@ entity_tag brazier::checkCraftResult()
 			}
 		}
 
-	return entity_tag::emptyCell;
+	return entity_tag::empty_cell;
 }
 
 void brazier::putItemToCraft(const entity_tag id)

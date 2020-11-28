@@ -21,7 +21,6 @@
 //	time_for_new_hit_self = long(6e5);
 //	time_after_hitself_ = time_for_new_hit_self;
 //	timeForNewHit = 10e6;
-//	to_save_name_ = "bear";
 //	tag = entity_tag::bear;
 //}
 //

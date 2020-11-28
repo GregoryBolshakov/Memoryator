@@ -6,8 +6,6 @@
 class deerchant : public dynamic_object
 {
 public:
-	inline static const sf::Vector2f conditional_size = { 375, 375 };
-	
 	deerchant(std::string object_name, sf::Vector2f center_position);
 	~deerchant();
 	//BuildSystem
@@ -38,7 +36,7 @@ public:
 	void animation_smooth_interact(long long elapsed_time);
 	void animation_smooth();
 
-	cell* held_item = nullptr;
+	std::unique_ptr<cell> held_item;
 	sf::Vector2f get_build_position(std::vector<world_object*> visible_items, float scale_factor, sf::Vector2f camera_position) override;
 	int get_build_type(sf::Vector2f oun_pos, sf::Vector2f other_pos) override;
 	std::vector<hero_bag> bags;

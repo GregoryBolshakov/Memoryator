@@ -292,7 +292,6 @@ xcopy /i /e /s /y /f "$(SolutionDir)main_game\Game" "$(TargetDir)\Game"</Command
     <ClInclude Include="static_object.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="stump.h" />
-    <ClInclude Include="Tags.h" />
     <ClInclude Include="terrain_object.h" />
     <ClInclude Include="neutral_mob.h" />
     <ClInclude Include="text_chain_element.h" />

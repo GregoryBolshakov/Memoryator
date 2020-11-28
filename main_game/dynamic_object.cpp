@@ -6,7 +6,10 @@ dynamic_object::dynamic_object(std::string object_name, const sf::Vector2f cente
 	world_object(std::move(object_name), center_position)
 	, move_system(tag, radius_, position_, color, current_action_, direction_system)
 	, direction_system(position_, move_system.move_position, mirrored_)
-	, current_action_()
+	, time_for_new_hit_self(creature_time_for_new_hitself)
+	, time_for_new_hit(creature_time_for_new_hit)
+	, current_action_(action::relax)
+	, last_action_(action::relax)
 {
 }
 

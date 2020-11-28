@@ -5,8 +5,8 @@
 sf::Vector2f world_object::micro_block_size = {20, 20};
 
 world_object::world_object(std::string object_name, const sf::Vector2f center_position) :
-	  tag{ entity_tag::emptyObject }
-	, current_sprite_{std::vector<int>{1}}
+	  tag{ entity_tag::empty_object }
+	, current_sprite_{std::vector<int>(1)}
 	, name_{std::move(object_name)}
 	, position_{ center_position }
 {

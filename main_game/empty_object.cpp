@@ -1,9 +1,9 @@
 #include "empty_object.h"
-#include "tags.h"
+#include "sprite_chain_element.h"
 
 empty_object::empty_object(std::string objectName, sf::Vector2f centerPosition) : world_object(std::move(objectName), centerPosition)
 {
-	tag = entity_tag::emptyObject;
+	tag = entity_tag::empty_object;
 }
 
 

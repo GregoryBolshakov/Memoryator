@@ -6,6 +6,46 @@
 
 enum class action;
 
+enum class action {
+	direct_hit = 2,
+	relax = 3,
+	combat_state = 4,
+	move = 5,
+	dead = 6,
+	move_slowly = 7,
+	common_hit = 9,
+	move_hit = 10,
+	dropping = 11,
+	open = 13,
+	absorbs = 14,
+	grab = 15,
+	builds = 16,
+	jerking = 17,
+	move_end = 18,
+	listening = 19,
+	sniff = 20,
+	transition = 21,
+	trap = 22,
+	jump = 23,
+	jump_end = 24,
+	look_around = 25,
+	startle = 26,
+	flap = 27,
+	head = 28,
+	landing = 29,
+	soar = 30,
+	takeoff = 31,
+	throw_noose = 35
+};
+
+static const float creature_radius = 50;
+static const float creature_hit_distance = 50;
+static const float creature_strength = 10;
+static const float creature_max_health = 100;
+
+static const long long creature_time_for_new_hit = 100000;
+static const long long creature_time_for_new_hitself = 600000;
+
 class dynamic_object : public world_object
 {
 public:
@@ -37,9 +77,9 @@ public:
 	move_system move_system;
 	direction_system direction_system;
 	
-	long long time_for_new_hit_self = long(6e5);
+	long long time_for_new_hit_self;
 	long long time_after_hit = 0;
-	long long time_for_new_hit = long(100000);
+	long long time_for_new_hit;
 	float sight_range = 0;
 	float shake_speed = -1;
 	auto is_intersect_dynamic(sf::Vector2f new_position, dynamic_object& other_dynamic) const -> bool;
@@ -53,7 +93,7 @@ protected:
 	float strength_ = 0;
 	long long time_after_hitself_ = 0;
 
-	action current_action_ = action::relax, last_action_ = action::relax;
+	action current_action_, last_action_;
 	world_object* bound_target_ = nullptr;
 
 	//fight logic

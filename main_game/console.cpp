@@ -139,7 +139,7 @@ void console::do_command()
 		{
 			auto object = object_initializer::mapped_strings.at(commands[1]);
 			if (int(object) >= 102 && int(object) <= 112)
-				world_->get_world_generator()->initialize_dynamic_item(object, { world_->focused_object->get_position().x + 50, world_->focused_object->get_position().y + 50 }, "");
+				world_->get_world_generator()->initialize_dynamic_item(object, { world_->get_player().lock()->get_position().x + 50, world_->get_player().lock()->get_position().y + 50 }, "");
 		}
 		if (commands[0] == "build" && object_initializer::mapped_strings.count(commands[1]) > 0)
 		{

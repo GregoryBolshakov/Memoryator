@@ -1,10 +1,10 @@
 #include "move_system.h"
 #include "direction_system.h"
+#include "dynamic_object.h"
 #include "terrain_object.h"
 #include "grid_map.h"
 #include "helper.h"
 #include "math_constants.h"
-#include "tags.h"
 
 move_system::move_system(
 	  entity_tag& tag

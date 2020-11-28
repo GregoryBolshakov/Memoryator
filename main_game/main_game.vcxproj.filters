@@ -225,9 +225,6 @@
     <ClCompile Include="grid_map.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Tags.h">
-      <Filter>World</Filter>
-    </ClInclude>
     <ClInclude Include="button.h">
       <Filter>Systems</Filter>
     </ClInclude>

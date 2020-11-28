@@ -12,7 +12,7 @@ namespace sf
 class world_handler;
 class drawable_chain_element;
 class button;
-enum button_tag;
+enum class button_tag;
 
 enum menu_states { main_menu = 1, game_menu = 2, closed = 3 };
 

@@ -1,5 +1,7 @@
 #include "ground_connection.h"
+#include "direction_system.h"
 #include "sprite_chain_element.h"
+#include "world_metrics.h"
 #include "helper.h"
 
 ground_connection::ground_connection(std::string object_name, const sf::Vector2f center_position, const int type_of_object) : static_object(std::move(object_name), center_position)
@@ -7,9 +9,8 @@ ground_connection::ground_connection(std::string object_name, const sf::Vector2f
 	variety_of_types_ = 12; // SwampyTrees: 1-4; DarkWoods: 5-8; BirchGrove: 9-12
 	this->type_of_object_ = type_of_object;
 	is_background = true;
-	to_save_name_ = "groundConnection";
 	ground_connection::setType(type_of_object);
-	tag = entity_tag::groundConnection;
+	tag = entity_tag::ground_connection;
 }
 
 void ground_connection::setType(const int type_of_object)
@@ -20,22 +21,22 @@ void ground_connection::setType(const int type_of_object)
 	this->type_of_object_ = type_of_object;
 	if (type_of_object % 4 == 1)
 	{
-		this->conditional_size_units_ = { 1000, 250 };
+		this->conditional_size_units_ = { world_metrics::block_size.x, world_metrics::block_size.y / 4 };
 	}
 	else
 		if (type_of_object % 4 == 2)
 		{
-			this->conditional_size_units_ = { 1000, 250 };
+			this->conditional_size_units_ = { world_metrics::block_size.x, world_metrics::block_size.y / 4 };
 		}
 		else
 			if (type_of_object % 4 == 3)
 			{
-				this->conditional_size_units_ = { 250, 1000 };
+				this->conditional_size_units_ = { world_metrics::block_size.x / 4, world_metrics::block_size.y };
 			}
 			else
 				if (type_of_object % 4 == 0)
 				{
-					this->conditional_size_units_ = { 250, 1000 };
+					this->conditional_size_units_ = { world_metrics::block_size.x / 4, world_metrics::block_size.y };
 				}
 
 	if (type_of_object >= 1 && type_of_object <= 4)

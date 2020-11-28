@@ -24,8 +24,10 @@ struct cell
 class hero_bag
 {
 public:
-	hero_bag(sf::Vector2f position, bool is_selectable, std::vector<std::pair<entity_tag, int>> inventory = test_inventory);
+	hero_bag(sf::Vector2f position, std::vector<std::pair<entity_tag, int>> inventory = test_inventory);
+	hero_bag(hero_bag& bag);
 	~hero_bag();
+	void init_sprites(sf::Vector2f position, std::vector<std::pair<entity_tag, int>> inventory);
 	static cell create_cell(sf::Vector2f position, std::pair<entity_tag, int> content);
 	[[nodiscard]] sf::Vector2f get_position() const { return position_; }
 	[[nodiscard]] sf::Vector2f get_size_closed() const { return size_closed_; }
@@ -70,6 +72,7 @@ public:
 	bool ready_to_eject = false;
 	bool was_moved = false;
 private:
+	std::vector<std::pair<entity_tag, int>> inventory_;
 	std::unique_ptr<bag_sprite_chain> bag_sprite_chain_;
 	sf::Vector2f position_;
 	sf::Vector2f texture_size_closed_;

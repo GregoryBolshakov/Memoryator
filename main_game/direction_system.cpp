@@ -1,10 +1,13 @@
 #include "direction_system.h"
-#include "cmath"
-
 #include "math_constants.h"
 
+#include <cmath>
+
 direction_system::direction_system(sf::Vector2f& position, sf::Vector2f& move_position, bool& mirrored) :
-	  position(position)
+	  side(side::down)
+	, direction(direction::STAND)
+	, last_direction(direction::DOWN)
+	, position(position)
 	, move_position(move_position)
 	, mirrored(mirrored)
 {

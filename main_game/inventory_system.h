@@ -4,7 +4,6 @@
 #include "effects_system.h"
 #include "text_system.h"
 
-#include <map>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
@@ -18,9 +17,7 @@ class inventory_system
 public:
 	inventory_system();
 	~inventory_system();
-	void init();
 	std::vector<std::unique_ptr<drawable_chain_element>> prepare_sprites(long long elapsed_time);
-	//void drawInventory(std::vector<std::pair<Tag, int>>* inventory, sf::Vector2f position, RenderWindow& window);
 	void reset_animation_values();
 	void on_mouse_up();
 	void inventory_bounding(std::vector<hero_bag>* bags) { bound_bags_ = bags; }
@@ -32,7 +29,7 @@ public:
 	bool was_drawing = false;
 	std::string debug_info = "", cursor_text = "";
 
-	Sprite * selected_cell_background{};
+	Sprite* selected_cell_background{};
 	sf::CircleShape bag_pos_dot;
 private:
 	//hero bags

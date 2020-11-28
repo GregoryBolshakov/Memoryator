@@ -1,7 +1,8 @@
 #include "inventory_system.h"
 #include "text_chain_element.h"
+#include "world_object.h"
+#include "direction_system.h"
 #include "helper.h"
-#include "tags.h"
 #include "sprite_pack.h"
 
 #include<fstream>
@@ -9,6 +10,12 @@
 inventory_system::inventory_system()
 {
 	held_item_speed_ = 0.00005F;
+	drop_zone_radius_ = helper::GetScreenSize().y * 2 / 7;
+	held_item_.content = { entity_tag::empty_cell, 0 };
+	bag_pos_dot.setRadius(helper::GetScreenSize().y / 288);
+	bag_pos_dot.setFillColor(sf::Color(53, 53, 53, 200));
+	init_max_counts();
+	success_init_ = true;
 }
 
 inventory_system::~inventory_system()
@@ -26,16 +33,6 @@ void inventory_system::init_max_counts(const std::string& file_path)
 	}
 
 	file.close();
-}
-
-void inventory_system::init()
-{
-	drop_zone_radius_ = helper::GetScreenSize().y * 2 / 7;
-	held_item_.content = {entity_tag::emptyCell, 0};	
-	bag_pos_dot.setRadius(helper::GetScreenSize().y / 288);
-	bag_pos_dot.setFillColor(sf::Color(53, 53, 53, 200));
-	init_max_counts();
-	success_init_ = true;
 }
 
 void inventory_system::move_other_bags(const int cur) const
@@ -156,7 +153,7 @@ void inventory_system::interact(const long long elapsed_time)
 		}
 	}
 
-	if (held_item_.content.first != entity_tag::emptyCell)
+	if (held_item_.content.first != entity_tag::empty_cell)
 	{
 		const auto shift_vector = sf::Vector2f(sf::Mouse::getPosition().x - held_item_.position.x, sf::Mouse::getPosition().y - held_item_.position.y);
 		held_item_.position.x += shift_vector.x;
@@ -262,7 +259,7 @@ void inventory_system::on_mouse_up()
 		//-------------------
 
 		// put cursor item to bag
-		if (held_item_.content.first != entity_tag::emptyCell)
+		if (held_item_.content.first != entity_tag::empty_cell)
 		{
 			const auto cur_index = bag.get_selected_cell(mouse_pos);
 			if (cur_index == -1)
@@ -270,7 +267,7 @@ void inventory_system::on_mouse_up()
 				continue;
 			}
 			auto& item = bag.cells[cur_index];
-			if (item.content.first == entity_tag::emptyCell || item.content.first == held_item_.content.first)
+			if (item.content.first == entity_tag::empty_cell || item.content.first == held_item_.content.first)
 			{
 				item.content.first = held_item_.content.first;
 				item.content.second += held_item_.content.second;
@@ -281,7 +278,7 @@ void inventory_system::on_mouse_up()
 				}
 				else
 				{
-					held_item_.content = {entity_tag::emptyCell, 0};
+					held_item_.content = {entity_tag::empty_cell, 0};
 				}
 				break;
 			}
@@ -296,7 +293,7 @@ void inventory_system::on_mouse_up()
 			{
 				held_item_.content = bag.cells[cur_index].content;
 				held_item_.position = bag.cells[cur_index].position;
-				bag.cells[cur_index].content = {entity_tag::emptyCell, 0};
+				bag.cells[cur_index].content = {entity_tag::empty_cell, 0};
 			}
 		}
 		//-----------------------
@@ -325,7 +322,7 @@ std::vector<std::unique_ptr<drawable_chain_element>> inventory_system::prepare_s
 		}
 		const auto cur_index = bag.get_selected_cell(mouse_pos);
 
-		if (bag.ready_to_change_state || held_item_.content.first != entity_tag::emptyCell || cur_index != -1)
+		if (bag.ready_to_change_state || held_item_.content.first != entity_tag::empty_cell || cur_index != -1)
 		{
 			used_mouse_ = true;
 		}
@@ -358,12 +355,12 @@ std::vector<std::unique_ptr<drawable_chain_element>> inventory_system::prepare_s
 			const auto item = cell;
 
 			//drawing cell background
-			auto icon_background = sprite_pack::tag_to_icon(entity_tag::emptyObject, false);
+			auto icon_background = sprite_pack::tag_to_icon(entity_tag::empty_object, false);
 			icon_background->position = item.position;
 			result.push_back(std::move(icon_background));
 			//-----------------------
 
-			if (cell.content.first == entity_tag::emptyCell)
+			if (cell.content.first == entity_tag::empty_cell)
 			{
 				continue;
 			}
@@ -388,7 +385,7 @@ std::vector<std::unique_ptr<drawable_chain_element>> inventory_system::prepare_s
 	//----------
 
 	//drawing held item
-	if (held_item_.content.first != entity_tag::emptyCell)
+	if (held_item_.content.first != entity_tag::empty_cell)
 	{
 		auto held_item_icon = sprite_pack::tag_to_icon(held_item_.content.first, true, 1);
 		held_item_icon->position = held_item_.position;

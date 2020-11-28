@@ -40,22 +40,22 @@
 #include "noose.h"
 
 std::map<entity_tag, std::string> object_initializer::mapped_tags = { {entity_tag::hero, "hero"}, {entity_tag::hare, "hare"}, {entity_tag::owl, "owl"}, {entity_tag::deer, "deer"}, {entity_tag::fox, "fox"}, {entity_tag::bear, "beer"}, {entity_tag::wolf, "wolf"},
-{entity_tag::monster, "monster"}, {entity_tag::owlBoss, "owlBoss"}, {entity_tag::nightmare1, "nightmare1"}, {entity_tag::nightmare2, "nightmare2"}, {entity_tag::nightmare3, "nightmare3"},
-{entity_tag::heroBag, "heroBag"}, {entity_tag::noose, "noose"}, {entity_tag::totem, "totem"}, {entity_tag::hareTrap, "hareTrap"}, {entity_tag::fence, "fence"}, {entity_tag::inkyBlackPen, "inkyBlackPen"},
-	{entity_tag::unknownWreath, "unknownWreath"}, {entity_tag::hareWreath, "hareWreath"}, {entity_tag::owlWreath, "owlWreath"}, {entity_tag::tree, "tree"}, {entity_tag::grass, "grass"}, {entity_tag::spawn, "spawn"},
-	{entity_tag::ground, "ground"}, {entity_tag::groundConnection, "groundConnection"}, {entity_tag::brazier, "brazier"}, {entity_tag::wreathTable, "wreathTable"}, {entity_tag::rock, "rock"},
-	{entity_tag::stump, "stump"}, {entity_tag::droppedLoot, "droppedLoot"}, {entity_tag::mushroom, "mushroom"}, {entity_tag::log, "log"}, {entity_tag::bush, "bush"}, {entity_tag::roof, "roof"}, {entity_tag::lake, "lake"}, {entity_tag::root, "root"},
-	{entity_tag::chamomile, "chamomile"}, {entity_tag::yarrow, "yarrow"}, {entity_tag::fern, "fern"}, {entity_tag::mugwort, "mugwort"}, {entity_tag::poppy, "poppy"}, {entity_tag::buildObject, "buildObject"}, {entity_tag::dropPoint, "dropPoint"},
-	{entity_tag::emptyDraft, "emptyDraft"}, {entity_tag::emptyPage, "emptyPage"}, {entity_tag::emptyCell, "emptyCell"}, {entity_tag::selectedCell, "selectedCell"}, {entity_tag::clapWhirl, "clapWhirl"}, {entity_tag::emptyObject, "emptyObject"} };
+{entity_tag::monster, "monster"}, {entity_tag::owl_boss, "owlBoss"}, {entity_tag::nightmare1, "nightmare1"}, {entity_tag::nightmare2, "nightmare2"}, {entity_tag::nightmare3, "nightmare3"},
+{entity_tag::hero_bag, "heroBag"}, {entity_tag::noose, "noose"}, {entity_tag::totem, "totem"}, {entity_tag::hare_trap, "hareTrap"}, {entity_tag::fence, "fence"}, {entity_tag::inky_black_pen, "inkyBlackPen"},
+	{entity_tag::unknown_wreath, "unknownWreath"}, {entity_tag::hare_wreath, "hareWreath"}, {entity_tag::owl_wreath, "owlWreath"}, {entity_tag::tree, "tree"}, {entity_tag::grass, "grass"}, {entity_tag::spawn, "spawn"},
+	{entity_tag::ground, "ground"}, {entity_tag::ground_connection, "groundConnection"}, {entity_tag::brazier, "brazier"}, {entity_tag::wreath_table, "wreathTable"}, {entity_tag::rock, "rock"},
+	{entity_tag::stump, "stump"}, {entity_tag::dropped_loot, "droppedLoot"}, {entity_tag::mushroom, "mushroom"}, {entity_tag::log, "log"}, {entity_tag::bush, "bush"}, {entity_tag::roof, "roof"}, {entity_tag::lake, "lake"}, {entity_tag::root, "root"},
+	{entity_tag::chamomile, "chamomile"}, {entity_tag::yarrow, "yarrow"}, {entity_tag::fern, "fern"}, {entity_tag::mugwort, "mugwort"}, {entity_tag::poppy, "poppy"}, {entity_tag::build_object, "buildObject"}, {entity_tag::drop_point, "dropPoint"},
+	{entity_tag::empty_draft, "emptyDraft"}, {entity_tag::empty_page, "emptyPage"}, {entity_tag::empty_cell, "emptyCell"}, {entity_tag::selected_cell, "selectedCell"}, {entity_tag::clap_whirl, "clapWhirl"}, {entity_tag::empty_object, "emptyObject"} };
 
 std::map<std::string, entity_tag> object_initializer::mapped_strings = { {"hero", entity_tag::hero}, {"hare", entity_tag::hare}, {"owl", entity_tag::owl}, {"deer", entity_tag::deer}, {"fox", entity_tag::fox}, {"bear", entity_tag::bear}, {"wolf", entity_tag::wolf},
-{"monster", entity_tag::monster}, {"owlBoss", entity_tag::owlBoss}, {"nightmare1", entity_tag::nightmare1}, {"nightmare2", entity_tag::nightmare2}, {"nightmare3", entity_tag::nightmare3},
-{"heroBag", entity_tag::heroBag}, {"noose", entity_tag::noose}, {"totem", entity_tag::totem}, {"hareTrap", entity_tag::hareTrap}, {"fence", entity_tag::fence}, {"inkyBlackPen", entity_tag::inkyBlackPen},
-	{"unknownWreath", entity_tag::unknownWreath}, {"hareWreath", entity_tag::hareWreath}, {"owlWreath", entity_tag::owlWreath}, {"tree", entity_tag::tree}, {"grass", entity_tag::grass}, {"spawn", entity_tag::spawn},
-	{"ground", entity_tag::ground}, {"groundConnection", entity_tag::groundConnection}, {"brazier", entity_tag::brazier}, {"wreathTable", entity_tag::wreathTable}, {"rock", entity_tag::rock},
-	{"stump", entity_tag::stump}, {"droppedLoot", entity_tag::droppedLoot}, {"mushroom", entity_tag::mushroom}, {"log", entity_tag::log}, {"bush", entity_tag::bush}, {"roof", entity_tag::roof}, {"lake", entity_tag::lake}, {"root", entity_tag::root},
-	{"chamomile", entity_tag::chamomile}, {"yarrow", entity_tag::yarrow}, {"fern", entity_tag::fern}, {"mugwort", entity_tag::mugwort}, {"poppy", entity_tag::poppy}, {"buildObject", entity_tag::buildObject}, {"dropPoint", entity_tag::dropPoint},
-	{"emptyDraft", entity_tag::emptyDraft}, {"emptyPage", entity_tag::emptyPage}, {"emptyCell", entity_tag::emptyCell}, {"selectedCell", entity_tag::selectedCell}, {"clapWhirl", entity_tag::clapWhirl}, {"emptyObject", entity_tag::emptyObject} };
+{"monster", entity_tag::monster}, {"owlBoss", entity_tag::owl_boss}, {"nightmare1", entity_tag::nightmare1}, {"nightmare2", entity_tag::nightmare2}, {"nightmare3", entity_tag::nightmare3},
+{"heroBag", entity_tag::hero_bag}, {"noose", entity_tag::noose}, {"totem", entity_tag::totem}, {"hareTrap", entity_tag::hare_trap}, {"fence", entity_tag::fence}, {"inkyBlackPen", entity_tag::inky_black_pen},
+	{"unknownWreath", entity_tag::unknown_wreath}, {"hareWreath", entity_tag::hare_wreath}, {"owlWreath", entity_tag::owl_wreath}, {"tree", entity_tag::tree}, {"grass", entity_tag::grass}, {"spawn", entity_tag::spawn},
+	{"ground", entity_tag::ground}, {"groundConnection", entity_tag::ground_connection}, {"brazier", entity_tag::brazier}, {"wreathTable", entity_tag::wreath_table}, {"rock", entity_tag::rock},
+	{"stump", entity_tag::stump}, {"droppedLoot", entity_tag::dropped_loot}, {"mushroom", entity_tag::mushroom}, {"log", entity_tag::log}, {"bush", entity_tag::bush}, {"roof", entity_tag::roof}, {"lake", entity_tag::lake}, {"root", entity_tag::root},
+	{"chamomile", entity_tag::chamomile}, {"yarrow", entity_tag::yarrow}, {"fern", entity_tag::fern}, {"mugwort", entity_tag::mugwort}, {"poppy", entity_tag::poppy}, {"buildObject", entity_tag::build_object}, {"dropPoint", entity_tag::drop_point},
+	{"emptyDraft", entity_tag::empty_draft}, {"emptyPage", entity_tag::empty_page}, {"emptyCell", entity_tag::empty_cell}, {"selectedCell", entity_tag::selected_cell}, {"clapWhirl", entity_tag::clap_whirl}, {"emptyObject", entity_tag::empty_object} };
 
 object_initializer::object_initializer()
 = default;
@@ -70,7 +70,7 @@ shared_ptr<static_object> object_initializer::initialize_static_item(
 	const std::string& item_name,
 	const int count,
 	const biome biome,
-	const shared_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
+	const std::weak_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
 	const bool mirrored,
 	const std::vector<std::pair<entity_tag, int>>& inventory)
 {
@@ -93,7 +93,7 @@ shared_ptr<static_object> object_initializer::initialize_static_item(
 			item = make_shared<ground>("item", sf::Vector2f(0, 0), -1);
 			break;
 		}
-		case entity_tag::groundConnection:
+		case entity_tag::ground_connection:
 		{
 			item = make_shared<ground_connection>("item", sf::Vector2f(0, 0), -1);
 			break;
@@ -202,11 +202,11 @@ shared_ptr<static_object> object_initializer::initialize_static_item(
 	item->setType(current_type);
 	auto sprites = item->prepare_sprites(0);
 	
-	if (packs_map->count(sprites[0]->pack_tag) <= 0 ||
-		packs_map->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
+	if (packs_map.lock()->count(sprites[0]->pack_tag) <= 0 ||
+		packs_map.lock()->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
 		return nullptr;
 
-	const auto info = packs_map->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number);
+	const auto info = packs_map.lock()->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number);
 	const auto texture_size = sf::Vector2f(float(info.source_size.w), float(info.source_size.h));
 	item->set_texture_size(texture_size);
 	const auto name = item_name.empty()
@@ -226,7 +226,7 @@ shared_ptr<dynamic_object> object_initializer::initialize_dynamic_item(
 	entity_tag item_class,
 	sf::Vector2f item_position,
 	const std::string& item_name,
-	const shared_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
+	const std::weak_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
 	const shared_ptr<world_object>& owner)
 {
 	shared_ptr<dynamic_object> item;
@@ -314,17 +314,17 @@ shared_ptr<dynamic_object> object_initializer::initialize_dynamic_item(
 	name_of_image += ".png";
 
 	const auto name = item_name.empty()
-		? std::string(item->get_to_save_name()) + "_" + std::to_string(new_name_id)
+		? mapped_tags.at(item->tag) + "_" + std::to_string(new_name_id)
 		: item_name;
 
 	item->set_name(name);
 	item->set_position(sf::Vector2f(item_position));
     auto sprites = item->prepare_sprites(0);
-	if (packs_map->count(sprites[0]->pack_tag) <= 0 || 
-		packs_map->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
+	if (packs_map.lock()->count(sprites[0]->pack_tag) <= 0 || 
+		packs_map.lock()->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
 		return nullptr;
 
-	const auto info = packs_map->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number);
+	const auto info = packs_map.lock()->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number);
 	const auto texture_size = sf::Vector2f(float(info.source_size.w), float(info.source_size.h));
 	item->set_texture_size(texture_size);
 	return item;

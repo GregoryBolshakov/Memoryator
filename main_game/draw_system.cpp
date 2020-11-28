@@ -3,6 +3,7 @@
 #include "text_chain_element.h"
 #include "shape_chain_element.h"
 #include "shader_system.h"
+#include "direction_system.h"
 #include "text_system.h"
 #include "sprite_pack.h"
 

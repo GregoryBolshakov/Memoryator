@@ -16,24 +16,25 @@
 #include "helper.h"
 #include "drawable_chain_element.h"
 #include "sprite_chain_element.h"
+#include "sprite_pack.h"
 
 #include <utility>
 
 world_handler::world_handler(
-	shared_ptr<camera_system> camera_system,
+	const shared_ptr<camera_system>& camera_system,
 	shared_ptr<std::map<pack_tag, sprite_pack>> packs_map) :
-	  packs_map_ {std::move(packs_map)}
-	, camera_system_{std::move(camera_system)}
+	  camera_system_{ camera_system }
+	, effect_system_{std::make_shared<effects_system>()}
+	, inventory_system_{ std::make_shared<inventory_system>() }
+	, light_system_{ std::make_shared<light_system>(sf::FloatRect(0, 0, helper::GetScreenSize().x, helper::GetScreenSize().y)) }
+	, packs_map_ {std::move(packs_map)}
 	, grid_map_{ make_unique<grid_map>() }
-	, world_generator_{ make_unique<world_generator>(
+	, world_generator_{ make_shared<world_generator>(
 		  grid_map_
-		, camera_system_->get_scale_system()
-		, this->packs_map_) }
-	, selected_object_{focused_object}
+		  , camera_system_.lock()->get_scale_system()
+		  , this->packs_map_) }
 {
 	//buildSystem.init();
-	inventory_system_->init();
-	light_system_->init({ 0, 0, helper::GetScreenSize().x, helper::GetScreenSize().y });
 }
 
 world_handler::~world_handler()
@@ -52,12 +53,14 @@ world_handler::~world_handler()
 void world_handler::run_world_generator()
 {
 	world_generator_->primordial_generation();
-	focused_object = world_generator_->focused_object();
-	main_object = dynamic_pointer_cast<brazier>(world_generator_->main_object());
-	camera_system_->set_focused_object(focused_object);
-	camera_system_->position = world_metrics::center;
+	player_ = world_generator_->player();
+	selected_object_ = world_generator_->player();
+	camera_system_.lock()->set_focus(player_);
+	main_object_ = dynamic_pointer_cast<brazier>(world_generator_->main_object().lock());
+	camera_system_.lock()->position = world_metrics::center;
+	world_generator_->fill_zone();
 
-	const auto hero = dynamic_pointer_cast<deerchant>(focused_object);
+	const auto hero = dynamic_pointer_cast<deerchant>(player_.lock());
 	inventory_system_->inventory_bounding(&hero->bags);
 }
 
@@ -184,9 +187,9 @@ void world_handler::save()
 
 Vector2f  world_handler::mouse_position() const
 {
-	const auto scale = camera_system_->get_scale_system()->get_scale_factor();
+	const auto scale = camera_system_.lock()->get_scale_system()->calculate_scale();
 	const auto mouse = sf::Vector2f(sf::Mouse::getPosition());
-	const auto position = (mouse - helper::GetScreenSize() / 2.0f + camera_system_->position * scale) / scale;
+	const auto position = (mouse - helper::GetScreenSize() / 2.0f + camera_system_.lock()->position * scale) / scale;
 
 	return position;
 }
@@ -199,7 +202,7 @@ void world_handler::set_transparent(std::vector<shared_ptr<world_object>>& visib
 
 	for (auto& visibleItem : visible_items)
 	{
-		if (!visibleItem || visibleItem->get_name() == focused_object->get_name() || visibleItem->intangible)
+		if (!visibleItem || visibleItem->get_name() == player_.lock()->get_name() || visibleItem->intangible)
 			continue;
 
 		visibleItem->is_transparent = false;
@@ -244,10 +247,10 @@ void world_handler::set_transparent(std::vector<shared_ptr<world_object>>& visib
 					}
 					case entity_tag::brazier:
 					{
-						if (inventory_system_->get_held_item().content.first != entity_tag::emptyCell &&
-							helper::getDist(main_object->getPlatePosition(), mousePos) <= main_object->getPlateRadius())
+						if (inventory_system_->get_held_item().content.first != entity_tag::empty_cell &&
+							helper::getDist(main_object_.lock()->getPlatePosition(), mousePos) <= main_object_.lock()->getPlateRadius())
 						{
-							if (helper::getDist(main_object->getPlatePosition(), focused_object->get_position()) <= main_object->getPlateRadius() + focused_object->get_radius())
+							if (helper::getDist(main_object_.lock()->getPlatePosition(), player_.lock()->get_position()) <= main_object_.lock()->getPlateRadius() + player_.lock()->get_radius())
 								mouse_display_name_ = "Toss";
 							else
 								mouse_display_name_ = "Come to toss";
@@ -257,7 +260,7 @@ void world_handler::set_transparent(std::vector<shared_ptr<world_object>>& visib
 					case entity_tag::hare:
 					case entity_tag::owl:
 					{
-						if (inventory_system_->get_held_item().content.first == entity_tag::inkyBlackPen)
+						if (inventory_system_->get_held_item().content.first == entity_tag::inky_black_pen)
 							mouse_display_name_ = "Sketch";
 						else
 							mouse_display_name_ = "Catch up";
@@ -275,15 +278,15 @@ void world_handler::set_transparent(std::vector<shared_ptr<world_object>>& visib
 					case entity_tag::chamomile:
 					case entity_tag::mugwort:
 					case entity_tag::noose:
-					case entity_tag::hareTrap:
-					case entity_tag::droppedLoot:
+					case entity_tag::hare_trap:
+					case entity_tag::dropped_loot:
 					{
 						mouse_display_name_ = "Pick up";
 						break;
 					}
 					default:
 					{
-						mouse_display_name_ = visibleItem->get_to_save_name();
+						mouse_display_name_ = object_initializer::mapped_tags.at(visibleItem->tag);
 						break;
 					}
 					}
@@ -292,7 +295,7 @@ void world_handler::set_transparent(std::vector<shared_ptr<world_object>>& visib
 			}
 		}
 
-		if (focused_object->get_position().x >= itemPos.x && focused_object->get_position().x <= itemPos.x + visibleItem->get_conditional_size_units().x && focused_object->get_position().y >= itemPos.y && focused_object->get_position().y <= visibleItem->get_position().y && !visibleItem->is_background)
+		if (player_.lock()->get_position().x >= itemPos.x && player_.lock()->get_position().x <= itemPos.x + visibleItem->get_conditional_size_units().x && player_.lock()->get_position().y >= itemPos.y && player_.lock()->get_position().y <= visibleItem->get_position().y && !visibleItem->is_background)
 		{
 			visibleItem->is_transparent = true;
 			if (visibleItem->color.a > 125)
@@ -497,15 +500,15 @@ bool cmp_img_draw(const unique_ptr<drawable_chain_element>& first, const unique_
 	return first_sprite->z_coordinate < second_sprite->z_coordinate;
 }
 
-std::vector<std::unique_ptr<drawable_chain_element>> world_handler::prepare_sprites(const long long elapsed_time, const bool only_background)
+std::vector<std::unique_ptr<drawable_chain_element>> world_handler::prepare_sprites(const long long elapsed_time, const bool only_background) const
 {
-	std::vector<std::unique_ptr<drawable_chain_element>> result{};
+	std::vector<std::unique_ptr<drawable_chain_element>> result;
 
-	camera_system_->shake_interact(elapsed_time);
+	camera_system_.lock()->shake_interact(elapsed_time);
 
-	const auto scale = camera_system_->get_scale_system()->get_scale_factor();
+	const auto scale = camera_system_.lock()->get_scale_system()->calculate_scale();
 
-	for (auto& item : world_generator_->all_static_objects())
+	for (const auto& item : world_generator_->all_static_objects())
 	{
 		if ((only_background && item.second->is_background) || (!only_background && !item.second->is_background))
 		{
@@ -513,7 +516,7 @@ std::vector<std::unique_ptr<drawable_chain_element>> world_handler::prepare_spri
 			result.insert(result.end(), std::make_move_iterator(sprites.begin()), std::make_move_iterator(sprites.end()));
 		}
 	}
-	for (auto& item : world_generator_->all_dynamic_objects())
+	for (const auto& item : world_generator_->all_dynamic_objects())
 	{
 		if (!only_background)
 		{

@@ -1,9 +1,10 @@
 #pragma once
 
-#include "tags.h"
-
 #include <SFML/System/Vector2.hpp>
 #include <string>
+
+enum class side { undefined = 0, up = 1, right = 2, down = 3, left = 4 };
+enum class direction { RIGHT = 0, UPRIGHT = 45, UP = 90, UPLEFT = 135, LEFT = 180, DOWNLEFT = 225, DOWN = 270, DOWNRIGHT = 315, STAND = 360 };
 
 class direction_system
 {
@@ -24,8 +25,8 @@ public:
 	static direction cut_diagonals(direction dir);
 	static float calculate_angle(sf::Vector2f move_offset);
 
-	side side = side::down;
-	direction direction = direction::STAND, last_direction = direction::DOWN;
+	side side;
+	direction direction, last_direction;
 	long long time_for_new_direction = long(1e5), time_after_new_direction = long(1e5);
 	long long time_for_new_side = long(1e5), time_after_new_side = long(1e5);
 
