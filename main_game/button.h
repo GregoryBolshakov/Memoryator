@@ -19,10 +19,7 @@ using std::unique_ptr, std::make_unique;
 class button
 {
 public:
-	button();
-	
-	void initialize(
-		pack_tag pack,
+	button(pack_tag pack,
 		pack_part pack_part,
 		int default_sprite_number,
 		int selected_sprite_number,
@@ -31,8 +28,8 @@ public:
 		sf::Vector2f size,
 		bool is_selectable,
 		button_tag tag,
-		sf::Vector2f offset = { 0, 0 });
-	
+		sf::Vector2f offset = sf::Vector2f());
+
 	unique_ptr<sprite_chain_element> prepare_sprite();
 	
 	void become_gray();
@@ -41,29 +38,29 @@ public:
 	
 	bool is_selected(sf::Vector2f mouse_pos);
 
-	[[nodiscard]] sf::Vector2f get_position() const
+	[[nodiscard]] sf::Vector2f get_position()
 	{
-		return button_enabled_->position;
+		return button_enabled_.position;
 	}
 
-	[[nodiscard]] sf::Vector2f get_size() const
+	[[nodiscard]] sf::Vector2f get_size()
 	{
-		return button_enabled_->size;
+		return button_enabled_.size;
 	}
 
-	[[nodiscard]] sf::Vector2f get_offset() const
+	[[nodiscard]] sf::Vector2f get_offset()
 	{
-		return button_enabled_->offset;
+		return button_enabled_.offset;
 	}
 
-	[[nodiscard]] sf::FloatRect get_global_bounds() const
+	[[nodiscard]] sf::FloatRect get_global_bounds()
 	{
 		return {get_position(), get_size()};
 	}
 
-	void set_position(sf::Vector2f position) const;
-	
-	void set_size(sf::Vector2f size) const;
+	void set_position(sf::Vector2f position);
+
+	void set_size(sf::Vector2f size);
 
 	[[nodiscard]] button_tag get_tag() const
 	{
@@ -79,9 +76,9 @@ public:
 	bool is_active = true;
 
 private:
-	sprite_chain_element* button_enabled_ = new sprite_chain_element();
-	sprite_chain_element* button_selected_ = new sprite_chain_element();
-	sprite_chain_element* button_pressed_ = new sprite_chain_element();
+	sprite_chain_element button_enabled_;
+	sprite_chain_element button_selected_;
+	sprite_chain_element button_pressed_;
 	button_tag tag_{};
 	bool selected_ = false;
 	bool is_gray_ = false;

@@ -68,7 +68,7 @@
 //					continue;
 //				bool match = false;
 //				auto droppedLoot = dynamic_cast<dropped_loot*>(item);
-//				if (droppedLoot && droppedLoot->get_type() == 201)
+//				if (droppedLoot && droppedLoot->get_kind() == 201)
 //				{
 //					for (auto& cell : droppedLoot->inventory)
 //						if (cell.first == entity_tag::hare)
@@ -106,8 +106,8 @@
 //void build_system::interact(sf::Vector2f camera_position, float scale_factor)
 //{
 //	const sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition());
-//	mouse_world_pos_ = sf::Vector2f((mousePos.x - helper::GetScreenSize().x / 2 + camera_position.x * scale_factor) / scale_factor,
-//		(mousePos.y - helper::GetScreenSize().y / 2 + camera_position.y * scale_factor) / scale_factor);
+//	mouse_world_pos_ = sf::Vector2f((mousePos.x - world_metrics::window_size.x / 2 + camera_position.x * scale_factor) / scale_factor,
+//		(mousePos.y - world_metrics::window_size.y / 2 + camera_position.y * scale_factor) / scale_factor);
 //}
 //
 //void build_system::on_mouse_up()
@@ -138,8 +138,8 @@
 //
 //	if (can_be_placed)
 //	{
-//		building_position = sf::Vector2f ((sf::Mouse::getPosition().x - helper::GetScreenSize().x / 2 + focused_object_position.x * scale_factor) / scale_factor,
-//			(sf::Mouse::getPosition().y - helper::GetScreenSize().y / 2 + focused_object_position.y*scale_factor) / scale_factor);
+//		building_position = sf::Vector2f ((sf::Mouse::getPosition().x - world_metrics::window_size.x / 2 + focused_object_position.x * scale_factor) / scale_factor,
+//			(sf::Mouse::getPosition().y - world_metrics::window_size.y / 2 + focused_object_position.y*scale_factor) / scale_factor);
 //	}
 //}
 //
@@ -194,7 +194,7 @@
 //			continue;
 //		bool match = false;
 //		auto droppedLoot = dynamic_cast<dropped_loot*>(item);
-//		if (droppedLoot && droppedLoot->get_type() == 201)
+//		if (droppedLoot && droppedLoot->get_kind() == 201)
 //		{
 //			for (auto& cell : droppedLoot->inventory)
 //				if (cell.first == entity_tag::hare)

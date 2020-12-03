@@ -1,7 +1,7 @@
 #include "picked_object.h"
 #include "hero_bag.h"
 
-picked_object::picked_object(std::string objectName, const sf::Vector2f centerPosition) : terrain_object(std::move(objectName), centerPosition), id(), count(0)
+picked_object::picked_object(std::string name, const sf::Vector2f position, const int kind) : terrain_object(std::move(name), position, kind), id(), count(0)
 {
 	radius_ = 0;
 }

@@ -5,7 +5,7 @@
 //chamomile::chamomile(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : picked_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 5;
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	to_save_name_ = "chamomile";
 //	chamomile::setType(typeOfObject);
 //	tag = entity_tag::chamomile;
@@ -19,17 +19,17 @@
 //	if (typeOfObject == -1)
 //		return;
 //
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	if (typeOfObject == 1)
-//		conditional_size_units_ = { 297, 263 };
+//		size_ = { 297, 263 };
 //	if (typeOfObject == 2)
-//		conditional_size_units_ = { 279, 281 };
+//		size_ = { 279, 281 };
 //	if (typeOfObject == 3)
-//		conditional_size_units_ = { 313, 264 };
+//		size_ = { 313, 264 };
 //	if (typeOfObject == 4)
-//		conditional_size_units_ = { 223, 267 };
+//		size_ = { 223, 267 };
 //	if (typeOfObject == 5)
-//		conditional_size_units_ = { 203, 206 };
+//		size_ = { 203, 206 };
 //}
 //
 //Vector2f chamomile::calculate_texture_offset()

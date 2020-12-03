@@ -1,35 +1,32 @@
 #include "hero_bag.h"
 #include "direction_system.h"
 #include "world_object.h"
-#include "helper.h"
+#include "world_metrics.h"
 #include "sprite_chain_element.h"
 #include "sprite_pack.h"
 
 struct bag_sprite_chain
 {
-	sprite_chain_element closed_bag{};
-	sprite_chain_element closed_bag_selected{};
-	sprite_chain_element closed_bag_big{};
-	sprite_chain_element opened_bag{};
-	sprite_chain_element opened_bag_selected{};
+	sprite_chain_element closed_bag;
+	sprite_chain_element closed_bag_selected;
+	sprite_chain_element closed_bag_big;
+	sprite_chain_element opened_bag;
+	sprite_chain_element opened_bag_selected;
 };
 
 void hero_bag::init_sprites(const sf::Vector2f position, std::vector<std::pair<entity_tag, int>> inventory)
 {
-	size_closed_ = sf::Vector2f(helper::GetScreenSize().x / 12.0f, helper::GetScreenSize().y / 6.0f);
-	size_open_ = sf::Vector2f(helper::GetScreenSize().x / 6.0f, helper::GetScreenSize().y / 3.0f);
+	size_closed_ = sf::Vector2f(world_metrics::window_size.x / 12.0f, world_metrics::window_size.y / 6.0f);
+	size_open_ = sf::Vector2f(world_metrics::window_size.x / 6.0f, world_metrics::window_size.y / 3.0f);
 
 	texture_closed_offset = sf::Vector2f(size_closed_.x / 2.0f, size_closed_.y / 1.7f);
 	texture_open_offset = sf::Vector2f(size_open_.x / 2.0f, size_open_.y / 1.7f);
 
-	bag_sprite_chain_->closed_bag.size = size_closed_; bag_sprite_chain_->closed_bag_selected.size = size_closed_; bag_sprite_chain_->closed_bag_big.size = size_closed_;
-	bag_sprite_chain_->opened_bag.size = size_open_; bag_sprite_chain_->opened_bag_selected.size = size_open_;
-	bag_sprite_chain_->closed_bag.offset = texture_closed_offset; bag_sprite_chain_->closed_bag_selected.offset = texture_closed_offset; bag_sprite_chain_->closed_bag_big.offset = texture_closed_offset;
-	bag_sprite_chain_->opened_bag.offset = texture_open_offset; bag_sprite_chain_->opened_bag_selected.offset = texture_open_offset;
-	bag_sprite_chain_->closed_bag.position = position; bag_sprite_chain_->closed_bag_selected.position = position; bag_sprite_chain_->closed_bag_big.position = position;
-	bag_sprite_chain_->opened_bag.position = position; bag_sprite_chain_->opened_bag_selected.position = position;
-	bag_sprite_chain_->closed_bag.initialize(); bag_sprite_chain_->closed_bag_selected.initialize(); bag_sprite_chain_->closed_bag_big.initialize();
-	bag_sprite_chain_->opened_bag.initialize(); bag_sprite_chain_->opened_bag_selected.initialize();
+	bag_sprite_chain_->closed_bag = sprite_chain_element(pack_tag::empty, pack_part::full, direction::DOWN, 1, position, size_closed_, texture_closed_offset);
+	bag_sprite_chain_->closed_bag_selected = sprite_chain_element(pack_tag::empty, pack_part::full, direction::DOWN, 1, position, size_closed_, texture_closed_offset);
+	bag_sprite_chain_->closed_bag_big = sprite_chain_element(pack_tag::empty, pack_part::full, direction::DOWN, 1, position, size_open_, texture_open_offset);
+	bag_sprite_chain_->opened_bag = sprite_chain_element(pack_tag::empty, pack_part::full, direction::DOWN, 1, position, size_open_, texture_open_offset);
+	bag_sprite_chain_->opened_bag_selected = sprite_chain_element(pack_tag::empty, pack_part::full, direction::DOWN, 1, position, size_open_, texture_open_offset);
 
 	this->min_dist_to_border = std::max(size_closed_.y - texture_closed_offset.y, texture_closed_offset.y);
 	closed_radius = (size_closed_.x + size_closed_.y) / 4;
@@ -103,7 +100,7 @@ int hero_bag::get_selected_cell(const sf::Vector2f position)
 {
 	for (auto i = 0u; i < cells.size(); i++)
 	{
-		if (helper::getDist(position, cells[i].position) <= sprite_pack::icon_size.x / 2)
+		if (world_metrics::get_dist(position, cells[i].position) <= sprite_pack::icon_size.x / 2)
 			return i;
 	}
 	return -1;
@@ -161,17 +158,17 @@ void hero_bag::fix_pos()
 
 	if (move_position.x < min_dist_to_border)
 		move_position.x = -1;
-	if (move_position.x > helper::GetScreenSize().x - min_dist_to_border)
+	if (move_position.x > world_metrics::window_size.x - min_dist_to_border)
 		move_position.x = -1;
 
 	if (move_position.y < min_dist_to_border)
 		move_position.y = -1;
-	if (move_position.y > helper::GetScreenSize().y - min_dist_to_border)
+	if (move_position.y > world_metrics::window_size.y - min_dist_to_border)
 		move_position.y = -1;
 
-	if (position_.x + shift_vector.x < min_dist_to_border || position_.x + shift_vector.x > helper::GetScreenSize().x - min_dist_to_border)
+	if (position_.x + shift_vector.x < min_dist_to_border || position_.x + shift_vector.x > world_metrics::window_size.x - min_dist_to_border)
 		shift_vector.x = 0;
-	if (position_.y + shift_vector.y < min_dist_to_border || position_.y + shift_vector.y > helper::GetScreenSize().y - min_dist_to_border)
+	if (position_.y + shift_vector.y < min_dist_to_border || position_.y + shift_vector.y > world_metrics::window_size.y - min_dist_to_border)
 		shift_vector.y = 0;
 }
 
@@ -335,7 +332,7 @@ void hero_bag::mouse_move()
 
 std::unique_ptr<sprite_chain_element> hero_bag::prepare_sprite(const long long elapsed_time)
 {
-	const auto screen_center = sf::Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2);
+	const auto screen_center = sf::Vector2f(world_metrics::window_size.x / 2, world_metrics::window_size.y / 2);
 	bag_sprite_chain_->closed_bag.size = size_closed_; bag_sprite_chain_->closed_bag_selected.size = size_closed_; bag_sprite_chain_->closed_bag_big.size = size_closed_;
 	bag_sprite_chain_->opened_bag.size = size_open_; bag_sprite_chain_->opened_bag_selected.size = size_open_;
 	bag_sprite_chain_->closed_bag.offset = texture_closed_offset; bag_sprite_chain_->closed_bag_selected.offset = texture_closed_offset; bag_sprite_chain_->closed_bag_big.offset = texture_closed_offset;

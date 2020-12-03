@@ -1,9 +1,10 @@
 #include "text_system.h"
+#include "world_metrics.h"
 #include "text_chain_element.h"
 #include "hero_bag.h"
 #include "sprite_pack.h"
 
-float text_system::character_size = 30.0f * helper::GetScreenSize().y / 1440.0f;
+float text_system::character_size = 30.0f * world_metrics::window_size.y / 1440.0f;
 std::unordered_map<font_name, sf::Font> text_system::fonts = {};
 std::unordered_map<font_name, sf::Text> text_system::text_boxes = {};
 sf::Text text_system::number_of_items;

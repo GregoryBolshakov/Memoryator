@@ -19,7 +19,7 @@
 //	//void linkWithBuildSystem(BuildSystem* buildSystem) { this->buildSystem = buildSystem; }
 //	void putItemToCraft(entity_tag id);
 //	void clearCurrentCraft() { currentCraft.clear(); }
-//	[[nodiscard]] sf::Vector2f getPlatePosition() const { return { position_.x + conditional_size_units_.x * 0.06f, position_.y - conditional_size_units_.x * 0.025f }; }
+//	[[nodiscard]] sf::Vector2f getPlatePosition() const { return { position_.x + size_.x * 0.06f, position_.y - size_.x * 0.025f }; }
 //	entity_tag checkCraftResult();
 //
 //	[[nodiscard]] int getPlateRadius() const { return plateRadius; }

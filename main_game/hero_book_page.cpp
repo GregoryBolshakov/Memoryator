@@ -113,7 +113,7 @@
 //
 //void hero_book_page::initAuxiliarySpriteMap()
 //{
-//	const auto screenSize = helper::GetScreenSize();
+//	const auto screenSize = world_metrics::window_size;
 //	std::string buttonImagePathDefault;
 //	sf::Vector2f buttonPosition, buttonSize; // in percents
 //	sf::Vector2f offset = { 0, 0 };

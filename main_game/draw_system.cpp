@@ -6,6 +6,7 @@
 #include "direction_system.h"
 #include "text_system.h"
 #include "sprite_pack.h"
+#include "world_metrics.h"
 
 draw_system::draw_system(shared_ptr<shader_system> shader_system, const sf::Vector2f screen_size) : shader_system_{
 	std::move(shader_system)
@@ -120,7 +121,7 @@ void init_sprite_pack(const LPCTSTR lpsz_file_name, std::map<pack_tag, sprite_pa
 
 void draw_system::init_packs_map()
 {
-	packs_map_ = make_shared<packs_map_t>();
+	packs_map_ = std::make_unique<packs_map_t>();
 	search_files("Game/spritePacks/*.png", init_sprite_pack, true);
 	sprite_pack::icon_without_space_size = sf::Vector2f(
 		float(packs_map_->at(pack_tag::inventory).get_original_info(pack_part::areas, direction::DOWN, 1).frame.w),
@@ -145,22 +146,24 @@ void draw_system::advanced_scale(sprite_chain_element& item, sf::Sprite& sprite,
 			scale * item.size.x / size_w);
 	}
 
-	if (!item.is_background && !item.unscaled)
+	if (!item.is_background && !item.isometric)
 	{
 		if (!original_info.rotated)
 		{
 			sprite.scale(1, pow(scale, 1.0F / 6));
-			sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - (pow(scale, 1.0F / 6) - 1) * size_h);
+			sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - (pow(scale, 1.0f / 6) - 1) * size_h);
+			//sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + pow(scale, 1.0f / 6) * (size_h - item.offset.y));
 		}
 		else
 		{
 			sprite.scale(pow(scale, 1.0F / 6), 1);
-			sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - (pow(scale, 1.0F / 6) - 1) * size_w);
+			sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - (pow(scale, 1.0f / 6) - 1) * size_w);
+			//sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + pow(scale, 1.0f / 6) * (size_w - item.offset.y));
 		}
 	}
 }
 
-void draw_system::draw_sprite_chain_element(const shared_ptr<sf::RenderWindow>& target, sprite_chain_element& sprite_chain_item, const sf::Vector2f camera_position, const sf::Vector2f screen_center, const float scale)
+void draw_system::draw_sprite_chain_element(const shared_ptr<sf::RenderWindow>& target, sprite_chain_element& sprite_chain_item, const float scale) const
 {
 	if (sprite_chain_item.pack_tag == pack_tag::empty)
 	{
@@ -174,10 +177,7 @@ void draw_system::draw_sprite_chain_element(const shared_ptr<sf::RenderWindow>& 
 	}
 
 	const auto original_info = packs_map_->at(sprite_chain_item.pack_tag).get_original_info(sprite_chain_item.pack_part, sprite_chain_item.direction, sprite_chain_item.number);
-	const sf::Vector2f sprite_pos = {
-		(sprite_chain_item.position.x - camera_position.x - sprite_chain_item.offset.x) * scale + screen_center.x,
-		(sprite_chain_item.position.y - camera_position.y - sprite_chain_item.offset.y) * scale + screen_center.y
-	};
+	
 	if (sprite_chain_item.anti_transparent)
 	{
 		sprite_chain_item.color.a = 255;
@@ -185,7 +185,10 @@ void draw_system::draw_sprite_chain_element(const shared_ptr<sf::RenderWindow>& 
 
 	sprite.setColor(sprite_chain_item.color);
 	sprite.rotate(sprite_chain_item.rotation);
-	sprite.setPosition(sprite_pos);
+	if (scale == 1)
+		sprite.setPosition(sprite_chain_item.position - sprite_chain_item.offset);
+	else
+		sprite.setPosition(world_metrics::world_to_screen_draw_position(sprite_chain_item.position, sprite_chain_item.offset));
 
 	advanced_scale(sprite_chain_item, sprite, original_info, scale);
 
@@ -200,6 +203,47 @@ void draw_system::draw_sprite_chain_element(const shared_ptr<sf::RenderWindow>& 
 	target->draw(sprite);
 }
 
+void draw_system::draw_shape_chain_element(const shared_ptr<sf::RenderWindow>& target, shape_chain_element& shape_chain_item, const float scale)
+{
+	if (shape_chain_item.type == shape_type::circle)
+	{
+		sf::CircleShape circle(shape_chain_item.radius * scale);
+		if (scale == 1)
+			circle.setPosition(shape_chain_item.position - shape_chain_item.offset);
+		else
+			circle.setPosition(world_metrics::world_to_screen_draw_position(shape_chain_item.position, shape_chain_item.offset));
+		if (shape_chain_item.hollow)
+		{
+			circle.setOutlineColor(shape_chain_item.color);
+			circle.setOutlineThickness(10);
+			circle.setFillColor(sf::Color(255, 255, 255, 0));
+		}
+		else
+			circle.setFillColor(shape_chain_item.color);
+		target->draw(circle);
+		return;
+	}
+
+	if (shape_chain_item.type == shape_type::rectangle)
+	{
+		sf::RectangleShape rect(shape_chain_item.size * scale);
+		if (scale == 1)
+			rect.setPosition(shape_chain_item.position - shape_chain_item.offset);
+		else
+			rect.setPosition(world_metrics::world_to_screen_draw_position(shape_chain_item.position, shape_chain_item.offset));
+		if (shape_chain_item.hollow)
+		{
+			rect.setOutlineColor(shape_chain_item.color);
+			rect.setOutlineThickness(10);
+			rect.setFillColor(sf::Color(255, 255, 255, 0));
+		}
+		else
+			rect.setFillColor(shape_chain_item.color);
+		target->draw(rect);
+		return;
+	}
+}
+
 void draw_system::draw_text_chain_element(const shared_ptr<sf::RenderWindow>& target, text_chain_element& text_chain_item)
 {
 	text_system::draw_string(
@@ -212,37 +256,12 @@ void draw_system::draw_text_chain_element(const shared_ptr<sf::RenderWindow>& ta
 		text_chain_item.color);
 }
 
-void draw_system::draw_shape_chain_element(const shared_ptr<sf::RenderWindow>& target, shape_chain_element& shape_chain_element)
-{
-	if (shape_chain_element.type == shape_type::circle)
-	{
-		sf::CircleShape circle(shape_chain_element.radius);
-		circle.setPosition(shape_chain_element.position);
-		circle.setFillColor(shape_chain_element.color);
-		target->draw(circle);
-		return;
-	}
-
-	if (shape_chain_element.type == shape_type::rectangle)
-	{
-		sf::RectangleShape rect(shape_chain_element.size);
-		rect.setPosition(shape_chain_element.position);
-		rect.setFillColor(shape_chain_element.color);
-		target->draw(rect);
-		return;
-	}
-}
-
-void draw_system::draw(const shared_ptr<sf::RenderWindow>& target, const std::vector<std::unique_ptr<drawable_chain_element>>& drawable_items, const float scale, const sf::Vector2f camera_position)
+void draw_system::draw(const shared_ptr<sf::RenderWindow>& target, const std::vector<std::unique_ptr<drawable_chain_element>>& drawable_items, const float scale) const
 {
 	if (drawable_items.empty())
 	{
 		return;
 	}
-
-	const auto screen_center = camera_position != sf::Vector2f()
-		? sf::Vector2f(target->getSize()) / 2.0F
-		: sf::Vector2f();
 
 	for (const auto& item : drawable_items)
 	{
@@ -254,7 +273,7 @@ void draw_system::draw(const shared_ptr<sf::RenderWindow>& target, const std::ve
 		auto* sprite_chain_item = dynamic_cast<sprite_chain_element*>(item.get());
 		if (sprite_chain_item)
 		{
-			draw_sprite_chain_element(target, *sprite_chain_item, camera_position, screen_center, scale);
+			draw_sprite_chain_element(target, *sprite_chain_item, scale);
 			continue;
 		}
 
@@ -267,9 +286,7 @@ void draw_system::draw(const shared_ptr<sf::RenderWindow>& target, const std::ve
 
 		auto* shape_chain_element = dynamic_cast<::shape_chain_element*>(item.get());
 		if (shape_chain_element != nullptr)
-		{
-			draw_shape_chain_element(target, *shape_chain_element);
-		}
+			draw_shape_chain_element(target, *shape_chain_element, scale);
 	}
 }
 

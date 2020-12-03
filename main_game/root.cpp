@@ -5,7 +5,7 @@
 //root::root(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 5; // 1-5
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	strength = 0;
 //	radius_ = 50;
 //	animation_speed_ = 10;
@@ -16,17 +16,17 @@
 //
 //void root::setType(const int typeOfObject)
 //{
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	if (typeOfObject == 1)
-//		conditional_size_units_ = { 544, 138 };
+//		size_ = { 544, 138 };
 //	if (typeOfObject == 2)
-//		conditional_size_units_ = { 468, 208 };
+//		size_ = { 468, 208 };
 //	if (typeOfObject == 3)
-//		conditional_size_units_ = { 333, 228 };
+//		size_ = { 333, 228 };
 //	if (typeOfObject == 4)
-//		conditional_size_units_ = { 406, 137 };
+//		size_ = { 406, 137 };
 //	if (typeOfObject == 5)
-//		conditional_size_units_ = { 339, 132 };
+//		size_ = { 339, 132 };
 //}
 //
 //Vector2f root::calculate_texture_offset()
@@ -34,7 +34,7 @@
 //	texture_box_.width = texture_box_.width * get_scale_ratio().x;
 //	texture_box_.height = texture_box_.height * get_scale_ratio().y;
 //
-//	switch (type_of_object_)
+//	switch (type_)
 //	{	
 //	case 1:
 //		return { texture_box_.width * 0.698f, texture_box_.height * 0.47f };
@@ -53,7 +53,7 @@
 //
 //void root::init_pedestal()
 //{
-//	switch (type_of_object_)
+//	switch (type_)
 //	{
 //	case 1:
 //		focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.229f, position_.y - texture_box_.height * 0.151f);
@@ -101,7 +101,7 @@
 //
 //std::vector<sprite_chain_element*> root::prepare_sprites(long long)
 //{
-//	const auto body = new sprite_chain_element(pack_tag::swampyTrees, pack_part::root, direction::DOWN, type_of_object_, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_), color, mirrored_);
+//	const auto body = new sprite_chain_element(pack_tag::swampyTrees, pack_part::root, direction::DOWN, type_, position_, size_, sf::Vector2f(offset_), color, mirrored_);
 //
 //	set_unscaled({ body });
 //	

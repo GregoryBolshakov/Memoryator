@@ -1,29 +1,9 @@
-Tag: brazier 
-Type: 1
-Mirrored: 0
-OffsetX: 0.5 OffsetY: 0.762
+Tag: tree 
+Type: 10
+Mirrored: 1
+OffsetX: 0.679 OffsetY: 0.329
 
-Focus0 X: -0.333 Focus0 Y: 0.04
-Focus1 X: -0.124 Focus1 Y: 0.04
-Ellipse size: 1.2
-
-Focus2 X: -0.25 Focus2 Y: -0.04
-Focus3 X: 0 Focus3 Y: -0.04
+Focus0 X: 0.239 Focus0 Y: 0
+Focus1 X: 0.363 Focus1 Y: 0
 Ellipse size: 1.25
-
-Focus4 X: 0 Focus4 Y: -0.02
-Focus5 X: 0.25 Focus5 Y: -0.02
-Ellipse size: 1.17
-
-Focus6 X: 0.191 Focus6 Y: 0.0211
-Focus7 X: 0.335 Focus7 Y: 0.0211
-Ellipse size: 1.58
-
-Focus8 X: -0.045 Focus8 Y: 0.19
-Focus9 X: 0.0698 Focus9 Y: 0.19
-Ellipse size: 1.25
-
-Focus10 X: 0.155 Focus10 Y: 0.126
-Focus11 X: 0.327 Focus11 Y: 0.126
-Ellipse size: 1.43
 

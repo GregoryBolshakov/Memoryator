@@ -1,9 +1,8 @@
 #include "dynamic_object.h"
+#include "world_metrics.h"
 
-#include "helper.h"
-
-dynamic_object::dynamic_object(std::string object_name, const sf::Vector2f center_position) :
-	world_object(std::move(object_name), center_position)
+dynamic_object::dynamic_object(std::string name, const sf::Vector2f position, const int kind) :
+	world_object(std::move(name), position, kind)
 	, move_system(tag, radius_, position_, color, current_action_, direction_system)
 	, direction_system(position_, move_system.move_position, mirrored_)
 	, time_for_new_hit_self(creature_time_for_new_hitself)
@@ -23,13 +22,6 @@ void dynamic_object::handle_input(bool used_mouse, long long elapsed_time)
 void dynamic_object::init_route_blocks()
 {
 	locked_route_blocks_ = {sf::Vector2i(int(ceil(position_.x / micro_block_size.x)), int(ceil(position_.y / micro_block_size.y))) };
-}
-
-void dynamic_object::set_position(sf::Vector2f new_position)
-{
-	position_ = sf::Vector2f(new_position);
-	texture_box_.left = ceil(new_position.x - texture_box_offset_.x);
-	texture_box_.top = ceil(new_position.y - texture_box_offset_.y);
 }
 
 bool dynamic_object::is_intersect_dynamic(sf::Vector2f new_position, dynamic_object& other_dynamic) const
@@ -60,7 +52,7 @@ void dynamic_object::take_damage(const float damage, const sf::Vector2f attacker
 		return;
 	
 	this->time_after_hitself_ = 0;
-	this->health_point_ -= damage / this->armor_;
+	this->health_ -= damage / this->armor_;
 
 	move_system.push_damage = damage;
 	move_system.push_duration = move_system.default_push_duration;
@@ -68,14 +60,14 @@ void dynamic_object::take_damage(const float damage, const sf::Vector2f attacker
 	move_system.red_duration = 2 * move_system.push_duration;
 	move_system.red_rest_duration = move_system.red_duration;
 
-	move_system.push_distance = helper::getDist(this->get_position(), attacker_pos);
+	move_system.push_distance = world_metrics::get_dist(this->get_position(), attacker_pos);
 	if (attacker_pos != sf::Vector2f(-1, -1))
 		move_system.push_direction = sf::Vector2f(this->position_.x - attacker_pos.x, this->position_.y - attacker_pos.y);
 }
 
 bool dynamic_object::die_check()
 {
-	if (health_point_ > 0)
+	if (health_ > 0)
 		return false;
 	
 	change_action(action::dead, true);

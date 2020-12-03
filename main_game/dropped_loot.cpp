@@ -5,7 +5,7 @@
 //dropped_loot::dropped_loot(std::string objectName, sf::Vector2f centerPosition, int typeOfObject, int count) : picked_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 5;
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	to_save_name_ = "drop";
 //	dropped_loot::setType(typeOfObject);
 //	radius_ = sprite_pack::icon_size.x / 2;
@@ -18,9 +18,9 @@
 //	if (typeOfObject == -1)
 //		return;
 //
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	id = entity_tag(typeOfObject);
-//	conditional_size_units_ = sprite_pack::icon_size;
+//	size_ = sprite_pack::icon_size;
 //}
 //
 //Vector2f dropped_loot::calculate_texture_offset()
@@ -49,9 +49,9 @@
 //
 //std::vector<sprite_chain_element*> dropped_loot::prepare_sprites(long long elapsedTime)
 //{
-//	sprite_chain_element* body = new sprite_chain_element(pack_tag::empty, pack_part::full, direction::DOWN, this->is_selected, position_, conditional_size_units_, texture_box_offset_);	
+//	sprite_chain_element* body = new sprite_chain_element(pack_tag::empty, pack_part::full, direction::DOWN, this->is_selected, position_, size_, offset_);	
 //
-//	switch (type_of_object_)
+//	switch (type_)
 //	{
 //	case 401:
 //		body->set_draw_info(pack_tag::icons, pack_part::flowers, direction::DOWN, body->number + 1);	

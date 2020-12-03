@@ -32,7 +32,7 @@ class sprite_chain_element : public drawable_chain_element
 {
 public:
 	sprite_chain_element();
-	sprite_chain_element(sprite_chain_element&);
+	sprite_chain_element(sprite_chain_element& element);
 	sprite_chain_element(
 	    pack_tag tag,
 	    pack_part part,
@@ -43,7 +43,7 @@ public:
 	    sf::Vector2f offset = {0, 0},
 		sf::Color color = sf::Color(255, 255, 255, 255),
 		bool mirrored = false,
-		bool unscaled = false,
+		bool isometric = false,
 		float rotation = 0);
 	sprite_chain_element(
 		sf::Vector2f position,
@@ -51,10 +51,10 @@ public:
 		sf::Vector2f offset,
 		sf::Color color = sf::Color(255, 255, 255, 255),
 		bool mirrored = false,
-		bool unscaled = false,
+		bool isometric = false,
 		float rotation = 0);
 	sprite_chain_element(sprite_chain_element&& element) noexcept : drawable_chain_element(std::move(element))
-{
+	{
 		this->pack_tag = element.pack_tag;
 		this->pack_part = element.pack_part;
 		this->direction = element.direction;
@@ -65,8 +65,9 @@ public:
 		this->is_background = element.is_background;
 		this->mirrored = element.mirrored;
 		this->anti_transparent = element.anti_transparent;
-		this->unscaled = element.unscaled;
+		this->isometric = element.isometric;
 	}
+	sprite_chain_element operator =(const sprite_chain_element&);
 	virtual ~sprite_chain_element() = default;
 	void set_draw_info(pack_tag tag, pack_part part, direction direction, int number = 1);
 	//drawable_chain_element* up_cast() { drawable_chain_element* result = this; return result; }
@@ -82,5 +83,5 @@ public:
 	bool is_background = false;
 	bool mirrored = false;
 	bool anti_transparent = false;
-	bool unscaled = false;
+	bool isometric = false;
 };

@@ -16,9 +16,9 @@ const float inf = 1e3;
 class grid_map
 {
 public:
-	grid_map();
+	grid_map() = default;
 	~grid_map() = default;
-
+	void init_matrices();
 	static sf::Vector2u get_block_by_point(sf::Vector2f point);
 	static sf::Vector2f get_point_by_block(sf::Vector2u index);
 	void set_locked_micro_blocks(const std::shared_ptr<world_object>& item, bool value = false);

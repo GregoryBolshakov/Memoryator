@@ -65,7 +65,7 @@ void move_system::push_away(long long elapsed_time, float push_speed)
 			return;
 		bump_center.x /= float(bump_count);
 		bump_center.y /= float(bump_count);
-		push_distance = (radius_ + bump_distance) - helper::getDist(position_, bump_center);
+		push_distance = (radius_ + bump_distance) - world_metrics::get_dist(position_, bump_center);
 		push_direction = sf::Vector2f(position_.x - bump_center.x, position_.y - bump_center.y);
 		push_duration = long(push_distance / push_speed);
 		push_rest_duration = push_duration;
@@ -171,9 +171,9 @@ sf::Vector2f move_system::ellipse_slip(const sf::Vector2f new_pos, const sf::Vec
 	float dist1, dist2;
 
 	if (destination == sf::Vector2f(-1, -1))
-		dist1 = helper::getDist(new_position, sf::Vector2f(x1, yl)), dist2 = helper::getDist(new_position, sf::Vector2f(x2, y2));
+		dist1 = world_metrics::get_dist(new_position, sf::Vector2f(x1, yl)), dist2 = world_metrics::get_dist(new_position, sf::Vector2f(x2, y2));
 	else
-		dist1 = helper::getDist(destination_pos, sf::Vector2f(x1, yl)), dist2 = helper::getDist(destination_pos, sf::Vector2f(x2, y2));
+		dist1 = world_metrics::get_dist(destination_pos, sf::Vector2f(x1, yl)), dist2 = world_metrics::get_dist(destination_pos, sf::Vector2f(x2, y2));
 
 	if (dist1 <= dist2 && D >= 0 && sqrt(pow(x1 - position_.x, 2) + pow((height - yl) - position_.y, 2)) != 0)
 	{
@@ -390,7 +390,7 @@ void move_system::pass_route_beginning(sf::Vector2f micro_block_size)
 				routeMicroBlock = route[0];
 
 				const auto route_pos = sf::Vector2f(routeMicroBlock.first * micro_block_size.x, routeMicroBlock.second * micro_block_size.y);
-				if (helper::getDist(position_, route_pos) > sqrt(pow(micro_block_size.x, 2) + pow(micro_block_size.y, 2)))
+				if (world_metrics::get_dist(position_, route_pos) > sqrt(pow(micro_block_size.x, 2) + pow(micro_block_size.y, 2)))
 					break;
 
 				route.erase(route.begin());

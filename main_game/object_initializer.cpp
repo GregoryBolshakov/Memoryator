@@ -64,38 +64,40 @@ object_initializer::object_initializer()
 int object_initializer::new_name_id = 0;
 
 shared_ptr<static_object> object_initializer::initialize_static_item(
-	const entity_tag item_class,
-	const sf::Vector2f item_position,
-	const int item_type,
-	const std::string& item_name,
+	const entity_tag tag,
+	const sf::Vector2f position,
+	const int kind,
+	const std::string& name,
 	const int count,
 	const biome biome,
-	const std::weak_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
 	const bool mirrored,
 	const std::vector<std::pair<entity_tag, int>>& inventory)
 {
 	shared_ptr<static_object> item;
+	const auto calculated_kind = kind ? kind : get_random_type_by_biome(tag, biome);
+	new_name_id++;
+	const auto calculated_name = name.empty() ? std::to_string(new_name_id) : name;
 
-	switch (item_class)
+	switch (tag)
 	{
 		case entity_tag::brazier:
 		{
-			item = make_shared<brazier>("item", sf::Vector2f(0, 0), -1);
+			item = make_shared<brazier>(calculated_name, position, calculated_kind);
 			break;
 		}
 		case entity_tag::tree:
 		{
-			item = make_shared<forest_tree>("item", sf::Vector2f(0, 0), -1);
+			item = make_shared<forest_tree>(calculated_name, position, calculated_kind);
 			break;
 		}
 		case entity_tag::ground:
 		{
-			item = make_shared<ground>("item", sf::Vector2f(0, 0), -1);
+			item = make_shared<ground>(calculated_name, position, calculated_kind);
 			break;
 		}
 		case entity_tag::ground_connection:
 		{
-			item = make_shared<ground_connection>("item", sf::Vector2f(0, 0), -1);
+			item = make_shared<ground_connection>(calculated_name, position, calculated_kind);
 			break;
 		}
 		/*case entity_tag::grass:
@@ -192,27 +194,8 @@ shared_ptr<static_object> object_initializer::initialize_static_item(
 			return nullptr;
 	}
 
-	const auto current_type = item_type == -1
-		 ? get_random_type_by_biome(*item, biome)
-		 : item_type;
+	item->init_pedestal();
 
-	new_name_id++;
-
-	item->set_position(sf::Vector2f(item_position));
-	item->setType(current_type);
-	auto sprites = item->prepare_sprites(0);
-	
-	if (packs_map.lock()->count(sprites[0]->pack_tag) <= 0 ||
-		packs_map.lock()->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
-		return nullptr;
-
-	const auto info = packs_map.lock()->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number);
-	const auto texture_size = sf::Vector2f(float(info.source_size.w), float(info.source_size.h));
-	item->set_texture_size(texture_size);
-	const auto name = item_name.empty()
-		                  ? std::to_string(new_name_id)
-		                  : item_name;
-	item->set_name(name);
 	if (!inventory.empty())
 		item->inventory = inventory;
 
@@ -223,21 +206,22 @@ shared_ptr<static_object> object_initializer::initialize_static_item(
 }
 
 shared_ptr<dynamic_object> object_initializer::initialize_dynamic_item(
-	entity_tag item_class,
-	sf::Vector2f item_position,
-	const std::string& item_name,
-	const std::weak_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
+	const entity_tag tag,
+	const sf::Vector2f position,
+	const std::string& name,
 	const shared_ptr<world_object>& owner)
 {
 	shared_ptr<dynamic_object> item;
-	std::string name_of_image;
-
-	switch (item_class)
+	new_name_id++;
+	const auto calculated_name = name.empty()
+		? mapped_tags.at(item->tag) + "_" + std::to_string(new_name_id)
+		: name;
+	
+	switch (tag)
 	{
 	case entity_tag::hero:
 	{
-		item = make_shared<deerchant>("item", sf::Vector2f(0, 0));
-		name_of_image = "Game/worldSprites/hero/stand/down/1";
+		item = make_shared<deerchant>(calculated_name, position, 1);
 		break;
 	}
 	/*case entity_tag::wolf:
@@ -309,30 +293,13 @@ shared_ptr<dynamic_object> object_initializer::initialize_dynamic_item(
 	default:
 		return nullptr;
 	}
-
-	new_name_id++;
-	name_of_image += ".png";
-
-	const auto name = item_name.empty()
-		? mapped_tags.at(item->tag) + "_" + std::to_string(new_name_id)
-		: item_name;
-
-	item->set_name(name);
-	item->set_position(sf::Vector2f(item_position));
-    auto sprites = item->prepare_sprites(0);
-	if (packs_map.lock()->count(sprites[0]->pack_tag) <= 0 || 
-		packs_map.lock()->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number).source_size == sprite_pack_structure::size(0, 0))
-		return nullptr;
-
-	const auto info = packs_map.lock()->at(sprites[0]->pack_tag).get_original_info(sprites[0]->pack_part, sprites[0]->direction, sprites[0]->number);
-	const auto texture_size = sf::Vector2f(float(info.source_size.w), float(info.source_size.h));
-	item->set_texture_size(texture_size);
+	item->init_pedestal();
 	return item;
 }
 
-int object_initializer::get_random_type_by_biome(const world_object& object, const biome biome)
+int object_initializer::get_random_type_by_biome(const entity_tag tag, const biome biome)
 {
-	switch (object.tag)
+	switch (tag)
 	{
 		case entity_tag::tree:
 		{
@@ -392,7 +359,7 @@ int object_initializer::get_random_type_by_biome(const world_object& object, con
 				return rand() % 4 + 13;
 			break;
 		}
-		default: return rand() % object.get_variety_of_types() + 1;
+		default: return 1;
 	}
 	return 0;
 }

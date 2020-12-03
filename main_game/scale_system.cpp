@@ -5,67 +5,69 @@
 #include <cmath>
 #include <cassert>
 
+template <typename T> int sgn(T val) {
+	return (T(0) < val) - (val < T(0));
+}
+
 float scale_system::calculate_scale()
 {
-	assert(focused_object_.lock()->get_conditional_size_units() != sf::Vector2f());
-	focused_to_screen_factor_ = world_metrics::window_size.y / (focused_objects_in_height * focused_object_.lock()->get_conditional_size_units().y);
+	const auto focused_object_height = focused_object_.lock()->get_size().y;
+	focused_to_screen_factor_ = world_metrics::window_size.y / (focused_objects_in_height * focused_object_height);
 	return zoom_factor_ * focused_to_screen_factor_;
 }
 
 void scale_system::update_zoom_factor(const int delta)
 {
-	if (delta == -1 && zoom_factor_ > further_scale* focused_to_screen_factor_)
+	if (delta == -1 && zoom_factor_ > further_zoom_scale)
 	{
-		zoom_factor_ -= 0.01f;
-		scale_decrease_ = -0.03f;
+		scale_decrease_ = -0.15f;
+		scale_decrease_step_ = -0.01f;
 	}
 	else
-		if (delta == 1 && zoom_factor_ < closest_scale * focused_to_screen_factor_)
+		if (delta == 1 && zoom_factor_ < closest_zoom_scale)
 		{
-			zoom_factor_ += 0.01f;
-			scale_decrease_ = 0.03f;
+			scale_decrease_ = 0.15f;
+			scale_decrease_step_ = 0.01f;
 		}
 
-	if (scale_decrease_ < 0 && zoom_factor_ < further_scale * focused_to_screen_factor_)
-		zoom_factor_ = further_scale * focused_to_screen_factor_;
-	if (scale_decrease_ > 0 && zoom_factor_ > closest_scale* focused_to_screen_factor_)
-		zoom_factor_ = closest_scale * focused_to_screen_factor_;
+	if (scale_decrease_ < 0 && zoom_factor_ < further_zoom_scale)
+		zoom_factor_ = further_zoom_scale;
+	if (scale_decrease_ > 0 && zoom_factor_ > closest_zoom_scale)
+		zoom_factor_ = closest_zoom_scale;
 }
 
 void scale_system::interact()
 {
 	scale_smoothing();
-	time_for_scale_decrease_ += scale_decrease_clock_.getElapsedTime().asMicroseconds();
+	time_after_scale_decrease_ += scale_decrease_clock_.getElapsedTime().asMicroseconds();
 	scale_decrease_clock_.restart();
+	world_metrics::update_scale(calculate_scale());
 }
 
 void scale_system::scale_smoothing()
 {
-	if (abs(scale_decrease_) >= 0.02 && time_for_scale_decrease_ >= 30000)
+	if (scale_decrease_ == 0)
 	{
-		if (zoom_factor_ != further_scale * focused_to_screen_factor_ && zoom_factor_ != closest_scale * focused_to_screen_factor_)
-			zoom_factor_ += scale_decrease_;
-		if (scale_decrease_ < 0 && zoom_factor_ <= further_scale * focused_to_screen_factor_)
-			zoom_factor_ = further_scale * focused_to_screen_factor_;
-		if (scale_decrease_ > 0 && zoom_factor_ >= closest_scale * focused_to_screen_factor_)
-			zoom_factor_ = closest_scale * focused_to_screen_factor_;
-
-		if (scale_decrease_ < 0)
-		{
-			scale_decrease_ += 0.001f;
-		}
-		else
-			if (scale_decrease_ > 0)
-			{
-				scale_decrease_ -= 0.001f;
-			}
-
-
-		time_for_scale_decrease_ = 0;
+		scale_decrease_step_ = 0;
+		return;
 	}
-}
 
-float scale_system::scale_delta_normalized() const
-{
-	return (zoom_factor_ - focused_to_screen_factor_) / focused_to_screen_factor_;
+	const auto time_for_scale_decrease = 20000;
+	if (time_after_scale_decrease_ < time_for_scale_decrease)
+		return;
+
+	if (zoom_factor_ + scale_decrease_step_ < further_zoom_scale || zoom_factor_ + scale_decrease_ + scale_decrease_step_ > closest_zoom_scale)
+	{
+		scale_decrease_ = 0;
+		scale_decrease_step_ = 0;
+		return;
+	}
+
+	zoom_factor_ += scale_decrease_step_;
+	scale_decrease_ -= scale_decrease_step_;
+
+	if (sgn(scale_decrease_) != sgn(scale_decrease_step_))
+		scale_decrease_ = 0;
+
+	time_after_scale_decrease_ = 0;
 }

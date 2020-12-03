@@ -3,15 +3,15 @@
 #include <cmath>
 #include <queue>
 
-grid_map::grid_map()
+void grid_map::init_matrices()
 {
-	const auto matrix_size = sf::Vector2u(world_metrics::constant_zone.width / world_metrics::route_block_size.x + 1,
+	const auto route_matrix_size = sf::Vector2u(world_metrics::constant_zone.width / world_metrics::route_block_size.x + 1,
 		world_metrics::constant_zone.height / world_metrics::route_block_size.y + 1);
-	locked_route_blocks_ = std::make_shared<bool_matrix_t>(matrix_size.x, std::vector<bool>(matrix_size.y));
+	locked_route_blocks_ = std::make_shared<bool_matrix_t>(route_matrix_size.x, std::vector<bool>(route_matrix_size.y));
 
 	constant_blocks_ = std::make_shared<bool_matrix_t>(world_metrics::matrix_size.x, std::vector<bool>(world_metrics::matrix_size.y));
-	
-	micro_block_matrix.resize(4000, std::vector<bool>(4000, true));	
+
+	micro_block_matrix.resize(4000, std::vector<bool>(4000, true));
 	distances.resize(4000, std::vector<float>(4000, 1000));
 	previous.resize(4000, std::vector<std::pair<int, int>>(4000, { -1, -1 }));
 }

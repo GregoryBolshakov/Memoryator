@@ -37,7 +37,7 @@
 //
 //void neutral_mob::behavior(long long elapsedTime)
 //{
-//	if (health_point_ <= 0)
+//	if (health_ <= 0)
 //	{
 //		change_action(dead, true);
 //		direction_system.direction = direction::STAND;

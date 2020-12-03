@@ -7,7 +7,7 @@
 //	log::log(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 //	{
 //		variety_of_types_ = 3;
-//		this->type_of_object_ = typeOfObject;
+//		this->type_ = typeOfObject;
 //		strength = 0;
 //		radius_ = 50;
 //		animation_speed_ = 10;
@@ -18,13 +18,13 @@
 //
 //	void log::setType(const int typeOfObject)
 //	{
-//		this->type_of_object_ = typeOfObject;
+//		this->type_ = typeOfObject;
 //		if (typeOfObject == 1)
-//			conditional_size_units_ = { 687, 179 };
+//			size_ = { 687, 179 };
 //		if (typeOfObject == 2)
-//			conditional_size_units_ = { 507, 231 };
+//			size_ = { 507, 231 };
 //		if (typeOfObject == 3)
-//			conditional_size_units_ = { 509, 246 };
+//			size_ = { 509, 246 };
 //	}
 //
 //	sf::Vector2f log::calculate_texture_offset()
@@ -32,7 +32,7 @@
 //		texture_box_.width = texture_box_.width * get_scale_ratio().x;
 //		texture_box_.height = texture_box_.height * get_scale_ratio().y;
 //
-//		switch (type_of_object_)
+//		switch (type_)
 //		{
 //		case 1:
 //			return { texture_box_.width * 0.492f, texture_box_.height * 0.721f };
@@ -48,7 +48,7 @@
 //	void log::init_pedestal()
 //	{
 //		std::pair<sf::Vector2f, sf::Vector2f> microEllipse;
-//		switch (type_of_object_)
+//		switch (type_)
 //		{
 //		case 1:
 //			this->is_multi_ellipse = true;
@@ -99,7 +99,7 @@
 //
 //	std::vector<sprite_chain_element*> log::prepare_sprites(long long)
 //	{
-//		const auto body = new sprite_chain_element(pack_tag::birchGrove, pack_part::log, direction::DOWN, type_of_object_, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_), color, mirrored_);
+//		const auto body = new sprite_chain_element(pack_tag::birchGrove, pack_part::log, direction::DOWN, type_, position_, size_, sf::Vector2f(offset_), color, mirrored_);
 //
 //		set_unscaled({ body });
 //		

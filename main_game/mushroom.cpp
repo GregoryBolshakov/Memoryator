@@ -5,7 +5,7 @@
 //mushroom::mushroom(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : static_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 16; // BirchGrove: 1-3; DarkWoods: 4-12; SwampyTrees: 13-16
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	this->intangible = true;
 //	to_save_name_ = "mushroom";
 //	mushroom::setType(typeOfObject);
@@ -18,39 +18,39 @@
 //	if (typeOfObject == -1)
 //		return;
 //
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	if (typeOfObject == 1)
-//		conditional_size_units_ = { 72, 140 };
+//		size_ = { 72, 140 };
 //	if (typeOfObject == 2)
-//		conditional_size_units_ = { 67, 178 };
+//		size_ = { 67, 178 };
 //	if (typeOfObject == 3)
-//		conditional_size_units_ = { 82, 94 };
+//		size_ = { 82, 94 };
 //	if (typeOfObject == 4)
-//		conditional_size_units_ = { 143, 203 };
+//		size_ = { 143, 203 };
 //	if (typeOfObject == 5)
-//		conditional_size_units_ = { 120, 134 };
+//		size_ = { 120, 134 };
 //	if (typeOfObject == 6)
-//		conditional_size_units_ = { 173, 161 };
+//		size_ = { 173, 161 };
 //	if (typeOfObject == 7)
-//		conditional_size_units_ = { 70, 134 };
+//		size_ = { 70, 134 };
 //	if (typeOfObject == 8)
-//		conditional_size_units_ = { 91, 81 };
+//		size_ = { 91, 81 };
 //	if (typeOfObject == 9)
-//		conditional_size_units_ = { 94, 78 };
+//		size_ = { 94, 78 };
 //	if (typeOfObject == 10)
-//		conditional_size_units_ = { 103, 137 };
+//		size_ = { 103, 137 };
 //	if (typeOfObject == 11)
-//		conditional_size_units_ = { 89, 71 };
+//		size_ = { 89, 71 };
 //	if (typeOfObject == 12)
-//		conditional_size_units_ = { 144, 122 };
+//		size_ = { 144, 122 };
 //	if (typeOfObject == 13)
-//		conditional_size_units_ = { 54, 60 };
+//		size_ = { 54, 60 };
 //	if (typeOfObject == 14)
-//		conditional_size_units_ = { 80, 74 };
+//		size_ = { 80, 74 };
 //	if (typeOfObject == 15)
-//		conditional_size_units_ = { 80, 80 };
+//		size_ = { 80, 80 };
 //	if (typeOfObject == 16)
-//		conditional_size_units_ = { 77, 53 };
+//		size_ = { 77, 53 };
 //}
 //
 //Vector2f mushroom::calculate_texture_offset()
@@ -58,7 +58,7 @@
 //	texture_box_.width = texture_box_.width * get_scale_ratio().x;
 //	texture_box_.height = texture_box_.height * get_scale_ratio().y;
 //
-//	if (type_of_object_ == 0)
+//	if (type_ == 0)
 //		return { 0, 0 };
 //
 //	return { texture_box_.width / 2.0f, texture_box_.height / 2.0f };
@@ -76,17 +76,17 @@
 //
 //std::vector<sprite_chain_element*> mushroom::prepare_sprites(long long elapsedTime)
 //{
-//	sprite_chain_element* body = new sprite_chain_element(pack_tag::darkWoods, pack_part::mushroom, direction::DOWN, type_of_object_, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_));
-//	body->unscaled = true;
+//	sprite_chain_element* body = new sprite_chain_element(pack_tag::darkWoods, pack_part::mushroom, direction::DOWN, type_, position_, size_, sf::Vector2f(offset_));
+//	body->isometric = true;
 //
-//	if (type_of_object_ >= 1 && type_of_object_ <= 3)
+//	if (type_ >= 1 && type_ <= 3)
 //		body->pack_tag = pack_tag::birchGrove;
-//	if (type_of_object_ >= 4 && type_of_object_ <= 12)
+//	if (type_ >= 4 && type_ <= 12)
 //	{
 //		body->pack_tag = pack_tag::darkWoods;
 //		body->number -= 3;
 //	}
-//	if (type_of_object_ >= 13 && type_of_object_ <= 16)
+//	if (type_ >= 13 && type_ <= 16)
 //	{
 //		body->pack_tag = pack_tag::swampyTrees;
 //		body->number -= 12;

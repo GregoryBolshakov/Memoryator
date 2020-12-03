@@ -61,22 +61,20 @@ public:
 	object_initializer();
 	~object_initializer() = default;
 	static std::shared_ptr<static_object> initialize_static_item(
-		entity_tag item_class,
-		sf::Vector2f item_position,
-		int item_type,
-		const std::string& item_name,
+		entity_tag tag,
+		sf::Vector2f position,
+		int kind,
+		const std::string& name,
 		int count,
 		biome biome,
-		const std::weak_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
 		bool mirrored = true,
 		const std::vector<std::pair<entity_tag, int>>& inventory = {});
 	static int new_name_id;
-	static int get_random_type_by_biome(const world_object& object, biome biome);
+	static int get_random_type_by_biome(entity_tag tag, biome biome);
 	static std::shared_ptr<dynamic_object> initialize_dynamic_item(
-		entity_tag item_class,
-		sf::Vector2f item_position,
-		const std::string& item_name,
-		const std::weak_ptr<std::map<pack_tag, sprite_pack>>& packs_map,
+		entity_tag tag,
+		sf::Vector2f position,
+		const std::string& name,
 		const std::shared_ptr<world_object>& owner = nullptr);
 	static std::vector<std::shared_ptr<static_object>> vector_cast_to_static(const std::vector<std::shared_ptr<world_object>>& items);
 	static std::vector<std::shared_ptr<dynamic_object>> vector_cast_to_dynamic(const std::vector<std::shared_ptr<world_object>>& items);

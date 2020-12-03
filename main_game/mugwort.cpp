@@ -5,7 +5,7 @@
 //mugwort::mugwort(std::string objectName, sf::Vector2f centerPosition, int typeOfObject) : picked_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 3;
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	to_save_name_ = "mugwort";
 //	mugwort::setType(typeOfObject);
 //	radius_ = 50;
@@ -19,13 +19,13 @@
 //	if (typeOfObject == -1)
 //		return;
 //
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	if (typeOfObject == 1)
-//		conditional_size_units_ = { 308, 371 };
+//		size_ = { 308, 371 };
 //	if (typeOfObject == 2)
-//		conditional_size_units_ = { 303, 325 };
+//		size_ = { 303, 325 };
 //	if (typeOfObject == 3)
-//		conditional_size_units_ = { 250, 271 };
+//		size_ = { 250, 271 };
 //}
 //
 //Vector2f mugwort::calculate_texture_offset()

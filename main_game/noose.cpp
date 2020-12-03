@@ -8,7 +8,7 @@
 //
 //noose::noose(const std::string& objectName, const sf::Vector2f centerPosition, world_object* owner) : dynamic_object(objectName, centerPosition)
 //{
-//	conditional_size_units_ = {360, 300};
+//	size_ = {360, 300};
 //	current_sprite_[0] = 1;
 //	timeForNewSprite = 0;
 //	this->owner = owner;
@@ -90,8 +90,8 @@
 //
 //	if (owner != nullptr)
 //	{
-//		ownerPos = sf::Vector2f(owner->get_position().x + owner->get_conditional_size_units().x / 10.0F, owner->get_position().y - owner->get_conditional_size_units().y / 13.0F);
-//		ownerGlobalBounds = owner->get_conditional_size_units();
+//		ownerPos = sf::Vector2f(owner->get_position().x + owner->get_size().x / 10.0F, owner->get_position().y - owner->get_size().y / 13.0F);
+//		ownerGlobalBounds = owner->get_size();
 //	}
 //
 //	if (bound_target_ != nullptr && owner != nullptr)
@@ -181,7 +181,7 @@
 //	current_sprite_[0] = 1;
 //
 //	const auto mousePos = sf::Vector2f(sf::Mouse::getPosition());
-//	const auto screenCenter = sf::Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2);
+//	const auto screenCenter = sf::Vector2f(world_metrics::window_size.x / 2, world_metrics::window_size.y / 2);
 //	const auto coeff = jerk_distance_ / helper::getDist(mousePos, screenCenter);
 //	move_system.lax_move_position = sf::Vector2f(owner->get_position().x + (mousePos.x - screenCenter.x) * coeff, owner->get_position().y + (mousePos.y - screenCenter.y) * coeff);
 //}
@@ -215,8 +215,8 @@
 //	if (current_action_ != relax)
 //	{
 //		loop->rotation = rope->rotation + 180;
-//		loop->offset.x -= float(sin(loop->rotation / 180 * pi)) * texture_box_offset_.y; // rotational position correction
-//		loop->offset.y -= float(1 - cos(loop->rotation / 180 * pi)) * texture_box_offset_.y;
+//		loop->offset.x -= float(sin(loop->rotation / 180 * pi)) * offset_.y; // rotational position correction
+//		loop->offset.y -= float(1 - cos(loop->rotation / 180 * pi)) * offset_.y;
 //	}
 //
 //	if (ownerPos != sf::Vector2f(0, 0))
@@ -237,8 +237,8 @@
 //std::vector<sprite_chain_element*> noose::prepare_sprites(long long elapsedTime)
 //{
 //	std::vector<sprite_chain_element*> result = {};
-//	auto ropeSprite = new sprite_chain_element(pack_tag::craftObjects, pack_part::noose, direction::DOWN, 3, position_, {conditional_size_units_.x, 30}, {0, 0}, color);
-//	auto loopSprite = new sprite_chain_element(pack_tag::craftObjects, pack_part::noose, direction::UP, 1, position_, conditional_size_units_, texture_box_offset_, color);
+//	auto ropeSprite = new sprite_chain_element(pack_tag::craftObjects, pack_part::noose, direction::DOWN, 3, position_, {size_.x, 30}, {0, 0}, color);
+//	auto loopSprite = new sprite_chain_element(pack_tag::craftObjects, pack_part::noose, direction::UP, 1, position_, size_, offset_, color);
 //
 //	loopSprite->number = current_sprite_[0];
 //

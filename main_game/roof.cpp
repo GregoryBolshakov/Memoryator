@@ -5,7 +5,7 @@
 //roof::roof(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 4;
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	strength = 0;
 //	radius_ = 50;
 //	animation_speed_ = 10;
@@ -16,15 +16,15 @@
 //
 //void roof::setType(const int typeOfObject)
 //{
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	if (typeOfObject == 1)
-//		conditional_size_units_ = { 248, 373 };
+//		size_ = { 248, 373 };
 //	if (typeOfObject == 2)
-//		conditional_size_units_ = { 254, 555 };
+//		size_ = { 254, 555 };
 //	if (typeOfObject == 3)
-//		conditional_size_units_ = { 255, 485 };
+//		size_ = { 255, 485 };
 //	if (typeOfObject == 4)
-//		conditional_size_units_ = {239, 474};
+//		size_ = {239, 474};
 //}
 //
 //Vector2f roof::calculate_texture_offset()
@@ -32,7 +32,7 @@
 //	texture_box_.width = texture_box_.width * get_scale_ratio().x;
 //	texture_box_.height = texture_box_.height * get_scale_ratio().y;
 //
-//	switch (type_of_object_)
+//	switch (type_)
 //	{
 //	case 1:
 //		return { texture_box_.width * 0.501f, texture_box_.height * 0.993f };
@@ -49,7 +49,7 @@
 //
 //void roof::init_pedestal()
 //{
-//	switch (type_of_object_)
+//	switch (type_)
 //	{
 //	case 1:
 //		focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.152f, position_.y - texture_box_.height * 0.021f);
@@ -92,7 +92,7 @@
 //
 //std::vector<sprite_chain_element*> roof::prepare_sprites(long long)
 //{
-//	const auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::roof, direction::DOWN, type_of_object_, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_), color, mirrored_);
+//	const auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::roof, direction::DOWN, type_, position_, size_, sf::Vector2f(offset_), color, mirrored_);
 //
 //	return { body };
 //}

@@ -11,13 +11,10 @@
 #include <utility>
 
 world_generator::world_generator(
-	  shared_ptr<grid_map> grid_map
-	, const shared_ptr<scale_system>& scale_system
-	, const shared_ptr<std::map<pack_tag, sprite_pack>>& packs_map) :
+	const shared_ptr<grid_map>& grid_map
+	, const shared_ptr<scale_system>& scale_system) :
 	  grid_map_(grid_map)
 	, scale_system_(scale_system)
-	, packs_map_(packs_map)
-	, biome_matrix(world_metrics::matrix_size.x, std::vector<biome>(world_metrics::matrix_size.y))
 {
 }
 
@@ -31,7 +28,7 @@ const shared_ptr<static_object>& world_generator::initialize_static_item(
 	const bool mirrored,
 	const std::vector<std::pair<entity_tag, int>>& inventory)
 {
-	auto item = object_initializer::initialize_static_item(item_class, item_position, item_type, item_name, count, ::biome(biome), packs_map_, mirrored, inventory);
+	auto item = object_initializer::initialize_static_item(item_class, item_position, item_type, item_name, count, ::biome(biome), mirrored, inventory);
 	assert(item);
 	const auto name = item->get_name();
 	all_static_objects_[name] = std::move(item);
@@ -40,7 +37,7 @@ const shared_ptr<static_object>& world_generator::initialize_static_item(
 
 const shared_ptr<dynamic_object>& world_generator::initialize_dynamic_item(const entity_tag item_class, const sf::Vector2f item_position, const std::string& item_name, const shared_ptr<world_object>& owner)
 {
-	auto item = object_initializer::initialize_dynamic_item(item_class, item_position, item_name, packs_map_, owner);
+	auto item = object_initializer::initialize_dynamic_item(item_class, item_position, item_name, owner);
 	assert(item);
 	const auto name = item->get_name();
 	all_dynamic_objects_[name] = std::move(item);
@@ -49,34 +46,36 @@ const shared_ptr<dynamic_object>& world_generator::initialize_dynamic_item(const
 
 void world_generator::primordial_generation()
 {
-	for (auto& column : biome_matrix)
-		for (auto& cell : column)
-			cell = biome::swampy_trees;
+	all_static_objects_.clear();
+	all_dynamic_objects_.clear();
 	
-	all_dynamic_objects_["hero"] = shared_ptr<dynamic_object>(initialize_dynamic_item(entity_tag::hero, world_metrics::center, "hero"));
+	const sf::Vector2f hero_pos(0, 0);
+	all_dynamic_objects_["hero"] = shared_ptr<dynamic_object>(initialize_dynamic_item(entity_tag::hero, hero_pos, "hero"));
 	player_ = all_dynamic_objects_["hero"];
 	assert(player_.lock());
-	all_static_objects_["brazier"] = shared_ptr<static_object>(initialize_static_item(entity_tag::brazier, world_metrics::center + sf::Vector2f(200, 200), 1, "brazier"));
+	all_static_objects_["brazier"] = shared_ptr<static_object>(initialize_static_item(entity_tag::brazier, sf::Vector2f(1500, 700), 1, "brazier"));
 	main_object_ = all_static_objects_["brazier"];
 	assert(main_object_.lock());
-	grid_map_->add_constant_block(grid_map_->get_block_by_point(main_object_.lock()->get_position()));
-	initialize_static_item(entity_tag::tree, world_metrics::center - sf::Vector2f(200, 200), -1, "tree");
+	initialize_static_item(entity_tag::tree, sf::Vector2f(1000, 400), 0, "tree");
 }
 
 void world_generator::fill_zone()
 {
-	const auto max_scale = scale_system_.lock()->calculate_scale() * scale_system_.lock()->further_scale;
+	biome_matrix_.resize(world_metrics::matrix_size.x, std::vector<biome>(world_metrics::matrix_size.y));
+	for (auto& column : biome_matrix_)
+		for (auto& cell : column)
+			cell = biome::dark_woods;
 
 	auto& zone = world_metrics::constant_zone;
-	for (auto x = zone.left; x <= zone.left + zone.width; x += world_metrics::block_size.x)
-		for (auto y = zone.left; y <= zone.left + zone.width; y += world_metrics::block_size.y)
+	for (auto x = zone.left + 1; x < zone.left + zone.width; x += world_metrics::block_size.x)
+		for (auto y = zone.top + 1; y < zone.top + zone.height; y += world_metrics::block_size.y)
 			in_block_generate(grid_map::get_block_by_point(sf::Vector2f(x, y)));
 }
 
 void world_generator::generate_ground(const sf::Vector2u index)
 {
-	const auto position = grid_map_->get_point_by_block(index);
-	const auto biome = biome_matrix[index.x][index.y];
+	const auto position = grid_map_.lock()->get_point_by_block(index);
+	const auto biome = biome_matrix_[index.x][index.y];
 
 	initialize_static_item(entity_tag::ground, position, int(biome), "", 1, biome);
 	/*initialize_static_item(entity_tag::groundConnection, position, (biome - 1) * 4 + 1, "", 1, biome);
@@ -172,5 +171,5 @@ void world_generator::in_block_generate(const sf::Vector2u index)
 
 bool world_generator::whether_block_regeneretable(const sf::Vector2u index) const
 {
-	return (*grid_map_->get_constant_blocks())[index.x][index.y];
+	return (*grid_map_.lock()->get_constant_blocks())[index.x][index.y];
 }

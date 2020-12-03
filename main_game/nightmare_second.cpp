@@ -2,13 +2,13 @@
 //
 //nightmare_second::nightmare_second(std::string objectName, sf::Vector2f centerPosition) : monster(std::move(objectName), centerPosition)
 //{
-//	conditional_size_units_ = { 600, 600 };
+//	size_ = { 600, 600 };
 //	move_system.default_speed = 0.0005f;
 //	move_system.speed = 0.0005f;
 //	radius_ = 120;
 //	hitDistance = 120;
 //	strength_ = 17;
-//	health_point_ = 180;
+//	health_ = 180;
 //	current_action_ = relax;
 //	time_for_new_hit_self = long(2e5);
 //	time_after_hitself_ = time_for_new_hit_self;
@@ -44,7 +44,7 @@
 //
 //std::vector<sprite_chain_element*> nightmare_second::prepare_sprites(long long elapsedTime)
 //{
-//	auto body = new sprite_chain_element(pack_tag::nightmare2Stand, pack_part::full, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
+//	auto body = new sprite_chain_element(pack_tag::nightmare2Stand, pack_part::full, direction::DOWN, 1, position_, size_, offset_, color, mirrored_, false);
 //	shake_speed = -1;
 //	animation_speed_ = 10;
 //

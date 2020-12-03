@@ -1,12 +1,12 @@
 #include "sprite_pack.h"
 #include "button.h"
-#include "helper.h"
+#include "world_metrics.h"
 #include "direction_system.h"
 #include "world_object.h"
 
 #include <fstream>
 
-const sf::Vector2f sprite_pack::icon_size = { helper::GetScreenSize().y / 13.8f, helper::GetScreenSize().y / 13.8f };
+const sf::Vector2f sprite_pack::icon_size = { world_metrics::window_size.y / 13.8f, world_metrics::window_size.y / 13.8f };
 sf::Vector2f sprite_pack::icon_without_space_size = { 0, 0 };
 
 
@@ -108,6 +108,21 @@ std::map<std::string, pack_part> sprite_pack::mapped_pack_part = {
 std::map<std::string, direction> sprite_pack::mapped_direction = { {"up", direction::UP}, {"up-right", direction::UPRIGHT}, {"right", direction::RIGHT}, {"down-right", direction::DOWNRIGHT},
 {"down", direction::DOWN}, {"down-left", direction::DOWNLEFT}, {"left", direction::LEFT}, {"up-left", direction::UPLEFT} };
 
+std::vector<std::string> split(std::string line, char delimiter)
+{
+	std::vector<std::string> commands;
+	auto temp = std::move(line);
+	if (temp[temp.size() - 1] != delimiter)
+		temp.push_back(delimiter);
+	while (!temp.empty())
+	{
+		auto token = temp.substr(0, temp.find(delimiter));
+		commands.push_back(token);
+		temp.erase(0, token.size() + 1);
+	}
+	return commands;
+}
+
 void sprite_pack::init(const std::string& path, const std::string& json_path, const pack_tag tag)
 {
 	this->tag = tag;
@@ -122,7 +137,7 @@ void sprite_pack::init(const std::string& path, const std::string& json_path, co
 	{
 		const auto pngExtensionWithDotLength = 4;
 		frame.frame_name.erase(frame.frame_name.size() - pngExtensionWithDotLength, pngExtensionWithDotLength);
-		auto keyWords = helper::split(frame.frame_name, '/');
+		auto keyWords = split(frame.frame_name, '/');
 
 		auto part = pack_part::full;
 		auto direction = direction::DOWN;

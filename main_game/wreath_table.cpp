@@ -7,7 +7,7 @@
 //wreath_table::wreath_table(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 1;
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	radius_ = 200;
 //	plateRadius = 100;
 //	to_save_name_ = "wreathTable";
@@ -19,8 +19,8 @@
 //
 //void wreath_table::setType(int typeOfObject)
 //{
-//	this->type_of_object_ = typeOfObject;
-//	this->conditional_size_units_ = { 588, 523 };
+//	this->type_ = typeOfObject;
+//	this->size_ = { 588, 523 };
 //}
 //
 //Vector2f wreath_table::calculate_texture_offset()
@@ -114,7 +114,7 @@
 //
 //std::vector<sprite_chain_element*> wreath_table::prepare_sprites(long long elapsedTime)
 //{
-//	const auto body = new sprite_chain_element(pack_tag::locations, pack_part::wreathTable, direction::DOWN, type_of_object_, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_), color, mirrored_);
+//	const auto body = new sprite_chain_element(pack_tag::locations, pack_part::wreathTable, direction::DOWN, type_, position_, size_, sf::Vector2f(offset_), color, mirrored_);
 //
 //	return { body };
 //}

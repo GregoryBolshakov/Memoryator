@@ -1,11 +1,10 @@
 #include "terrain_object.h"
+#include "world_metrics.h"
 
-#include "helper.h"
-
-terrain_object::terrain_object(std::string object_name, sf::Vector2f center_position) : static_object(std::move(object_name), center_position)
+terrain_object::terrain_object(std::string name, const sf::Vector2f position, const int kind) : static_object(std::move(name), position, kind)
 {
 	is_terrain = true;
-	mirrored_ = bool(rand() % 2);
+	mirrored_ = static_cast<bool>(rand() % 2);
 }
 
 terrain_object::~terrain_object()
@@ -15,7 +14,7 @@ void terrain_object::init_route_blocks()
 {	
 	const auto currentMicroBlock = sf::Vector2i(int(round(position_.x / micro_block_size.x)), int(round(position_.y / micro_block_size.y)));
 	if (mirrored_)
-		texture_box_offset_.x = conditional_size_units_.x - texture_box_offset_.x;
+		offset_.x = size_.x - offset_.x;
 	
 	if (is_multi_ellipse)
 	{
@@ -40,7 +39,7 @@ void terrain_object::init_route_blocks()
 					const auto pos = sf::Vector2f(position_.x + i * micro_block_size.x, position_.y + j * micro_block_size.y);
 					auto const f1 = internal_ellipses[cnt].first;
 					auto const f2 = internal_ellipses[cnt].second;
-					if (helper::getDist(pos, f1) + helper::getDist(pos, f2) < get_ellipse_size(cnt) - sqrt(2.0f * micro_block_size.x) * 1.2f)
+					if (world_metrics::get_dist(pos, f1) + world_metrics::get_dist(pos, f2) < get_ellipse_size(cnt) - sqrt(2.0f * micro_block_size.x) * 1.2f)
 						locked_route_blocks_.emplace_back(currentMicroBlock.x + i, currentMicroBlock.y + j);
 					j++;
 				}
@@ -64,7 +63,7 @@ void terrain_object::init_route_blocks()
 				const auto pos = sf::Vector2f(position_.x + i * micro_block_size.x, position_.y + j * micro_block_size.y);
 				auto const f1 = this->get_focus1();
 				auto const f2 = this->get_focus2();
-				if (helper::getDist(pos, f1) + helper::getDist(pos, f2) < this->get_ellipse_size() - sqrt(2.0f * micro_block_size.x) * 1.2f)
+				if (world_metrics::get_dist(pos, f1) + world_metrics::get_dist(pos, f2) < this->get_ellipse_size() - sqrt(2.0f * micro_block_size.x) * 1.2f)
 					locked_route_blocks_.emplace_back(currentMicroBlock.x + i, currentMicroBlock.y + j);
 				j++;
 			}
@@ -73,9 +72,9 @@ void terrain_object::init_route_blocks()
 	}
 }
 
-void terrain_object::set_position(sf::Vector2f new_position)
+void terrain_object::set_position(const sf::Vector2f position)
 {
-	const auto shift_vector = new_position - position_;
+	const auto shift_vector = position - position_;
 	if (is_multi_ellipse)
 	{
 		for (auto& ellipse : internal_ellipses)
@@ -90,17 +89,15 @@ void terrain_object::set_position(sf::Vector2f new_position)
 		focus2_ += shift_vector;
 	}
 
-	position_ = sf::Vector2f(new_position);
-	texture_box_.left = ceil(new_position.x - texture_box_offset_.x);
-	texture_box_.top = ceil(new_position.y - texture_box_offset_.y);
+	position_ = sf::Vector2f(position);
 }
 
 float terrain_object::get_ellipse_size(int i)
 {
 	if (is_multi_ellipse)
-		return helper::getDist(internal_ellipses[i].first, internal_ellipses[i].second) * ellipse_size_multipliers[i];
+		return world_metrics::get_dist(internal_ellipses[i].first, internal_ellipses[i].second) * ellipse_size_multipliers[i];
 
-	return helper::getDist(focus1_, focus2_) * ellipse_size_multipliers[0];
+	return world_metrics::get_dist(focus1_, focus2_) * ellipse_size_multipliers[0];
 }
 
 void terrain_object::set_focuses(std::vector<sf::Vector2f> focuses)
@@ -128,8 +125,8 @@ bool terrain_object::is_intersected(const sf::Vector2f position) const
 	auto const f1 = this->get_focus1();
 	auto const f2 = this->get_focus2();
 
-	const auto distance = helper::getDist(position, f1) + helper::getDist(position, f2);
-	const auto radius = helper::getDist(f1, f2) * ellipse_size_multipliers[0];
+	const auto distance = world_metrics::get_dist(position, f1) + world_metrics::get_dist(position, f2);
+	const auto radius = world_metrics::get_dist(f1, f2) * ellipse_size_multipliers[0];
 	return  distance <= radius;
 }
 
@@ -144,7 +141,7 @@ std::vector<int> terrain_object::get_multi_ellipse_intersect(sf::Vector2f positi
 		auto const f1 = this->internal_ellipses[i].first;
 		auto const f2 = this->internal_ellipses[i].second;
 
-		if (sqrt(pow(position.x - f1.x, 2) + pow(position.y - f1.y, 2)) + sqrt(pow(position.x - f2.x, 2) + pow(position.y - f2.y, 2)/* - dynamic.radius*/) <= helper::getDist(f1, f2) * ellipse_size_multipliers[i])
+		if (sqrt(pow(position.x - f1.x, 2) + pow(position.y - f1.y, 2)) + sqrt(pow(position.x - f2.x, 2) + pow(position.y - f2.y, 2)/* - dynamic.radius*/) <= world_metrics::get_dist(f1, f2) * ellipse_size_multipliers[i])
 			ans.push_back(i);
 	}
 

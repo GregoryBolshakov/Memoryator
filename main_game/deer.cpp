@@ -4,7 +4,7 @@
 //
 //deer::deer(const std::string& objectName, const sf::Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
 //{
-//	conditional_size_units_ = {360, 300};
+//	size_ = {360, 300};
 //	current_sprite_[0] = 1;
 //	timeForNewSprite = 0;
 //	//move_system.default_speed = 0.00085F;
@@ -14,10 +14,10 @@
 //	animationLength = 8;
 //	radius_ = 70;
 //	strength_ = 10;
-//	sight_range = conditional_size_units_.x * 3;
+//	sight_range = size_.x * 3;
 //	morality_ = 5; // from 1 to 10
 //	fear_ = 0;
-//	health_point_ = 50;
+//	health_ = 50;
 //	current_action_ = relax;
 //	time_for_new_hit_self = long(6e5);
 //	time_after_hitself_ = time_for_new_hit_self;
@@ -46,7 +46,7 @@
 //	direction_system.calculate_direction(elapsedTime);
 //	fight_interact(elapsedTime);
 //
-//	if (health_point_ <= 0)
+//	if (health_ <= 0)
 //	{
 //		change_action(dead, true);
 //		direction_system.direction = direction::STAND;
@@ -140,130 +140,130 @@
 //
 //Vector2f deer::getHeadPosition()
 //{
-//	const auto upperLeft = sf::Vector2f(position_.x - texture_box_offset_.x, position_.y - texture_box_offset_.y);
+//	const auto upperLeft = sf::Vector2f(position_.x - offset_.x, position_.y - offset_.y);
 //
 //	if (direction_system.last_direction == direction::UP)
 //	{
 //		if (current_sprite_[0] == 1)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.569F, upperLeft.y + conditional_size_units_.y * 0.111F};
+//			return {upperLeft.x + size_.x * 0.569F, upperLeft.y + size_.y * 0.111F};
 //		}
 //		if (current_sprite_[0] == 2)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.575F, upperLeft.y + conditional_size_units_.y * 0.155F};
+//			return {upperLeft.x + size_.x * 0.575F, upperLeft.y + size_.y * 0.155F};
 //		}
 //		if (current_sprite_[0] == 3)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.577F, upperLeft.y + conditional_size_units_.y * 0.202F};
+//			return {upperLeft.x + size_.x * 0.577F, upperLeft.y + size_.y * 0.202F};
 //		}
 //		if (current_sprite_[0] == 4)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.580F, upperLeft.y + conditional_size_units_.y * 0.150F};
+//			return {upperLeft.x + size_.x * 0.580F, upperLeft.y + size_.y * 0.150F};
 //		}
 //		if (current_sprite_[0] == 5)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.570F, upperLeft.y + conditional_size_units_.y * 0.106F};
+//			return {upperLeft.x + size_.x * 0.570F, upperLeft.y + size_.y * 0.106F};
 //		}
 //		if (current_sprite_[0] == 6)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.570F, upperLeft.y + conditional_size_units_.y * 0.093F};
+//			return {upperLeft.x + size_.x * 0.570F, upperLeft.y + size_.y * 0.093F};
 //		}
 //		if (current_sprite_[0] == 7)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.575F, upperLeft.y + conditional_size_units_.y * 0.075F};
+//			return {upperLeft.x + size_.x * 0.575F, upperLeft.y + size_.y * 0.075F};
 //		}
 //	}
 //	if (direction_system.last_direction == direction::DOWN)
 //	{
 //		if (current_sprite_[0] == 1)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.446F, upperLeft.y + conditional_size_units_.y * 0.222F};
+//			return {upperLeft.x + size_.x * 0.446F, upperLeft.y + size_.y * 0.222F};
 //		}
 //		if (current_sprite_[0] == 2)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.437F, upperLeft.y + conditional_size_units_.y * 0.243F};
+//			return {upperLeft.x + size_.x * 0.437F, upperLeft.y + size_.y * 0.243F};
 //		}
 //		if (current_sprite_[0] == 3)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.437F, upperLeft.y + conditional_size_units_.y * 0.258F};
+//			return {upperLeft.x + size_.x * 0.437F, upperLeft.y + size_.y * 0.258F};
 //		}
 //		if (current_sprite_[0] == 4)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.437F, upperLeft.y + conditional_size_units_.y * 0.242F};
+//			return {upperLeft.x + size_.x * 0.437F, upperLeft.y + size_.y * 0.242F};
 //		}
 //		if (current_sprite_[0] == 5)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.440F, upperLeft.y + conditional_size_units_.y * 0.168F};
+//			return {upperLeft.x + size_.x * 0.440F, upperLeft.y + size_.y * 0.168F};
 //		}
 //		if (current_sprite_[0] == 6)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.444F, upperLeft.y + conditional_size_units_.y * 0.150F};
+//			return {upperLeft.x + size_.x * 0.444F, upperLeft.y + size_.y * 0.150F};
 //		}
 //		if (current_sprite_[0] == 7)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.445F, upperLeft.y + conditional_size_units_.y * 0.182F};
+//			return {upperLeft.x + size_.x * 0.445F, upperLeft.y + size_.y * 0.182F};
 //		}
 //	}
 //	if (direction_system::cut_diagonals(direction_system.last_direction) == direction::LEFT)
 //	{
 //		if (current_sprite_[0] == 1)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.313F, upperLeft.y + conditional_size_units_.y * 0.147F};
+//			return {upperLeft.x + size_.x * 0.313F, upperLeft.y + size_.y * 0.147F};
 //		}
 //		if (current_sprite_[0] == 2)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.325F, upperLeft.y + conditional_size_units_.y * 0.159F};
+//			return {upperLeft.x + size_.x * 0.325F, upperLeft.y + size_.y * 0.159F};
 //		}
 //		if (current_sprite_[0] == 3)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.338F, upperLeft.y + conditional_size_units_.y * 0.169F};
+//			return {upperLeft.x + size_.x * 0.338F, upperLeft.y + size_.y * 0.169F};
 //		}
 //		if (current_sprite_[0] == 4)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.319F, upperLeft.y + conditional_size_units_.y * 0.138F};
+//			return {upperLeft.x + size_.x * 0.319F, upperLeft.y + size_.y * 0.138F};
 //		}
 //		if (current_sprite_[0] == 5)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.287F, upperLeft.y + conditional_size_units_.y * 0.123F};
+//			return {upperLeft.x + size_.x * 0.287F, upperLeft.y + size_.y * 0.123F};
 //		}
 //		if (current_sprite_[0] == 6)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.282F, upperLeft.y + conditional_size_units_.y * 0.130F};
+//			return {upperLeft.x + size_.x * 0.282F, upperLeft.y + size_.y * 0.130F};
 //		}
 //		if (current_sprite_[0] == 7)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.277F, upperLeft.y + conditional_size_units_.y * 0.138F};
+//			return {upperLeft.x + size_.x * 0.277F, upperLeft.y + size_.y * 0.138F};
 //		}
 //	}
 //	if (direction_system::cut_diagonals(direction_system.last_direction) == direction::RIGHT)
 //	{
 //		if (current_sprite_[0] == 1)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.6F, upperLeft.y + conditional_size_units_.y * 0.17F};
+//			return {upperLeft.x + size_.x * 0.6F, upperLeft.y + size_.y * 0.17F};
 //		}
 //		if (current_sprite_[0] == 2)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.59F, upperLeft.y + conditional_size_units_.y * 0.19F};
+//			return {upperLeft.x + size_.x * 0.59F, upperLeft.y + size_.y * 0.19F};
 //		}
 //		if (current_sprite_[0] == 3)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.56F, upperLeft.y + conditional_size_units_.y * 0.2F};
+//			return {upperLeft.x + size_.x * 0.56F, upperLeft.y + size_.y * 0.2F};
 //		}
 //		if (current_sprite_[0] == 4)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.59F, upperLeft.y + conditional_size_units_.y * 0.17F};
+//			return {upperLeft.x + size_.x * 0.59F, upperLeft.y + size_.y * 0.17F};
 //		}
 //		if (current_sprite_[0] == 5)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.62F, upperLeft.y + conditional_size_units_.y * 0.16F};
+//			return {upperLeft.x + size_.x * 0.62F, upperLeft.y + size_.y * 0.16F};
 //		}
 //		if (current_sprite_[0] == 6)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.63F, upperLeft.y + conditional_size_units_.y * 0.16F};
+//			return {upperLeft.x + size_.x * 0.63F, upperLeft.y + size_.y * 0.16F};
 //		}
 //		if (current_sprite_[0] == 7)
 //		{
-//			return {upperLeft.x + conditional_size_units_.x * 0.63F, upperLeft.y + conditional_size_units_.y * 0.17F};
+//			return {upperLeft.x + size_.x * 0.63F, upperLeft.y + size_.y * 0.17F};
 //		}
 //	}
 //	return position_;
@@ -271,7 +271,7 @@
 //
 //std::vector<sprite_chain_element*> deer::prepare_sprites(long long elapsedTime)
 //{
-//	auto body = new sprite_chain_element(pack_tag::deerStand, pack_part::head, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
+//	auto body = new sprite_chain_element(pack_tag::deerStand, pack_part::head, direction::DOWN, 1, position_, size_, offset_, color, mirrored_, false);
 //	animation_speed_ = 12;
 //
 //	auto inverse = false;

@@ -5,7 +5,7 @@
 //yarrow::yarrow(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : picked_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 5;
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	to_save_name_ = "yarrow";
 //	yarrow::setType(typeOfObject);
 //	radius_ = 50;
@@ -20,17 +20,17 @@
 //	if (typeOfObject == -1)
 //		return;
 //
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	if (typeOfObject == 1)
-//		conditional_size_units_ = { 234, 358 };
+//		size_ = { 234, 358 };
 //	if (typeOfObject == 2)
-//		conditional_size_units_ = { 294, 410 };
+//		size_ = { 294, 410 };
 //	if (typeOfObject == 3)
-//		conditional_size_units_ = { 315, 351 };
+//		size_ = { 315, 351 };
 //	if (typeOfObject == 4)
-//		conditional_size_units_ = { 320, 337 };
+//		size_ = { 320, 337 };
 //	if (typeOfObject == 5)
-//		conditional_size_units_ = { 212, 531 };
+//		size_ = { 212, 531 };
 //}
 //
 //Vector2f yarrow::calculate_texture_offset()

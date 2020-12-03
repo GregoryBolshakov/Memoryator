@@ -5,7 +5,7 @@
 //fence::fence(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 3;
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	radius_ = 120;
 //	to_save_name_ = "fence";
 //	fence::setType(typeOfObject);
@@ -15,24 +15,24 @@
 //
 //void fence::setType(const int typeOfObject)
 //{
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	switch (typeOfObject)
 //	{
 //		case 1:
 //		case 2:
 //		{
-//			this->conditional_size_units_ = { 240, 230 };
+//			this->size_ = { 240, 230 };
 //			break;
 //		}
 //		case 3:
 //		case 4:
 //		{
-//			this->conditional_size_units_ = { 95, 350 };
+//			this->size_ = { 95, 350 };
 //			break;
 //		}
 //		default:
 //		{
-//			this->conditional_size_units_ = { 300, 300 };
+//			this->size_ = { 300, 300 };
 //			break;
 //		}
 //	}
@@ -42,7 +42,7 @@
 //{
 //	texture_box_.width = texture_box_.width * get_scale_ratio().x;
 //	texture_box_.height = texture_box_.height * get_scale_ratio().y;
-//	switch (type_of_object_)
+//	switch (type_)
 //	{
 //		case 1:		
 //		case 2:
@@ -57,7 +57,7 @@
 //
 //void fence::init_pedestal()
 //{
-//	switch (type_of_object_)
+//	switch (type_)
 //	{
 //		case 1:
 //		case 2:
@@ -92,8 +92,8 @@
 //Vector2f fence::get_build_position(std::vector<world_object*> visibleItems, const float scaleFactor, const sf::Vector2f cameraPosition)
 //{
 //	const auto mousePos = sf::Vector2f (sf::Mouse::getPosition());
-//	const auto mouseWorldPos = sf::Vector2f ((mousePos.x - helper::GetScreenSize().x / 2 + cameraPosition.x * scaleFactor) / scaleFactor,
-//	                                     (mousePos.y - helper::GetScreenSize().y / 2 + cameraPosition.y * scaleFactor) / scaleFactor);
+//	const auto mouseWorldPos = sf::Vector2f ((mousePos.x - world_metrics::window_size.x / 2 + cameraPosition.x * scaleFactor) / scaleFactor,
+//	                                     (mousePos.y - world_metrics::window_size.y / 2 + cameraPosition.y * scaleFactor) / scaleFactor);
 //
 //	const auto dot1 = sf::Vector2f ((this->dot1_.x - this->position_.x) + mouseWorldPos.x, (this->dot1_.y - this->position_.y) + mouseWorldPos.y);
 //	const auto dot2 = sf::Vector2f ((this->dot2_.x - this->position_.x) + mouseWorldPos.x, (this->dot2_.y - this->position_.y) + mouseWorldPos.y);

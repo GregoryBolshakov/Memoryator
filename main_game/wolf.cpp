@@ -4,7 +4,7 @@
 //
 //wolf::wolf(std::string objectName, sf::Vector2f centerPosition) : neutral_mob(std::move(objectName), centerPosition)
 //{
-//	conditional_size_units_ = { 250, 200 };
+//	size_ = { 250, 200 };
 //	current_sprite_[0] = 1;
 //	timeForNewSprite = 0;
 //	move_system.speed = 0.0005f;
@@ -12,10 +12,10 @@
 //	animationLength = 8;
 //	radius_ = 70;
 //	strength_ = 10;
-//	sight_range = helper::GetScreenSize().y * 1 / 2; 
+//	sight_range = world_metrics::window_size.y * 1 / 2; 
 //	morality_ = 5; // from 1 to 10
 //	fear_ = 0;
-//	health_point_ = 0;
+//	health_ = 0;
 //	current_action_ = relax;
 //	time_after_hitself_ = 0;
 //	time_for_new_hit_self = long(6e5);

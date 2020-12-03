@@ -4,7 +4,7 @@
 //
 //owl_boss::owl_boss(std::string objectName, sf::Vector2f centerPosition) : dynamic_object(std::move(objectName), centerPosition)
 //{
-//	conditional_size_units_ = { 600, 600 };
+//	size_ = { 600, 600 };
 //	current_sprite_[0] = 1;
 //	time_for_new_sprite_ = 0;
 //	move_system.default_speed = 0.0005f;
@@ -13,7 +13,7 @@
 //	current_sprite_[0] = 1;
 //	radius_ = 100;
 //	strength_ = 100;
-//	health_point_ = 1000;
+//	health_ = 1000;
 //	//current_action_ = right_flap;
 //	time_after_hitself_ = 0;
 //	time_for_new_hit_self = long(6e5);
@@ -94,7 +94,7 @@
 //void owl_boss::behavior_with_dynamic(dynamic_object* target, const long long elapsedTime)
 //{
 //	debug_info = std::to_string(helper::getDist(this->position_, move_system.lax_move_position) / jerk_distance_ * 1000.0f);
-//	if (health_point_ <= 0)
+//	if (health_ <= 0)
 //	{
 //		change_action(dead, true, false);
 //		direction_system.direction = direction::STAND;

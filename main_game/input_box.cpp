@@ -1,5 +1,5 @@
 #include "input_box.h"
-#include "helper.h"
+#include "world_metrics.h"
 #include "text_system.h"
 #include "text_chain_element.h"
 
@@ -66,7 +66,7 @@ void input_box::animate_cursor()
 void input_box::on_mouse_release()
 {
 	mouse_pressed_ = false;
-	float minDist = helper::GetScreenSize().x + helper::GetScreenSize().y;
+	float minDist = world_metrics::window_size.x + world_metrics::window_size.y;
 	int newPos = 0;
 	for (auto i = 0u; i < line.size(); i++)
 	{
@@ -84,7 +84,7 @@ void input_box::on_mouse_release()
 void input_box::interact(const long long elapsed_time)
 {
 	set_cursor_to_pos();
-	if (helper::isIntersects(sf::Vector2f(sf::Mouse::getPosition()), sf::FloatRect(body_.getPosition().x, body_.getPosition().y, body_.getSize().x, body_.getSize().y)))
+	if (body_.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition())))
 		inner_part_.setFillColor(in_fill_selected_);
 	else
 		inner_part_.setFillColor(in_fill_);

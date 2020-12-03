@@ -2,104 +2,80 @@
 #include "direction_system.h"
 #include "sprite_chain_element.h"
 #include "world_metrics.h"
-#include "helper.h"
 
-ground_connection::ground_connection(std::string object_name, const sf::Vector2f center_position, const int type_of_object) : static_object(std::move(object_name), center_position)
+sf::Vector2f ground_connection::calculate_size(const int kind)
 {
-	variety_of_types_ = 12; // SwampyTrees: 1-4; DarkWoods: 5-8; BirchGrove: 9-12
-	this->type_of_object_ = type_of_object;
-	is_background = true;
-	ground_connection::setType(type_of_object);
-	tag = entity_tag::ground_connection;
+	if (kind % 4 == 1)
+		return { world_metrics::block_size.x, world_metrics::block_size.y / 4 };
+	if (kind % 4 == 2)
+		return { world_metrics::block_size.x, world_metrics::block_size.y / 4 };
+	if (kind % 4 == 3)
+		return { world_metrics::block_size.x / 4, world_metrics::block_size.y };
+	if (kind % 4 == 0)
+		return { world_metrics::block_size.x / 4, world_metrics::block_size.y };
+	return { 0, 0 };
 }
 
-void ground_connection::setType(const int type_of_object)
+sf::Vector2f ground_connection::calculate_offset(const int kind, const sf::Vector2f size)
 {
-	if (type_of_object == -1)
-		return;
-
-	this->type_of_object_ = type_of_object;
-	if (type_of_object % 4 == 1)
-	{
-		this->conditional_size_units_ = { world_metrics::block_size.x, world_metrics::block_size.y / 4 };
-	}
-	else
-		if (type_of_object % 4 == 2)
-		{
-			this->conditional_size_units_ = { world_metrics::block_size.x, world_metrics::block_size.y / 4 };
-		}
-		else
-			if (type_of_object % 4 == 3)
-			{
-				this->conditional_size_units_ = { world_metrics::block_size.x / 4, world_metrics::block_size.y };
-			}
-			else
-				if (type_of_object % 4 == 0)
-				{
-					this->conditional_size_units_ = { world_metrics::block_size.x / 4, world_metrics::block_size.y };
-				}
-
-	if (type_of_object >= 1 && type_of_object <= 4)
-		this->z_coordinate_ = 10;
-	else
-		if (type_of_object >= 5 && type_of_object <= 8)
-			this->z_coordinate_ = 20;
-		else
-			if (type_of_object >= 9 && type_of_object <= 12)
-				this->z_coordinate_ = 30;
-			else
-				if (type_of_object >= 13 && type_of_object <= 16)
-					this->z_coordinate_ = 40;
-				else
-					if (type_of_object >= 17 && type_of_object <= 20)
-						this->z_coordinate_ = 50;
-}
-
-sf::Vector2f ground_connection::calculate_texture_offset()
-{
-	if (type_of_object_ % 4 == 1)
-		return { 0, texture_box_.height - 5 };
-	if (type_of_object_ % 4 == 2)
+	if (kind % 4 == 1)
+		return { 0, size.y - 5 };
+	if (kind % 4 == 2)
 		return { 0, 5 };
-	if (type_of_object_ % 4 == 3)
-		return { texture_box_.width - 5, 0 };
-	if (type_of_object_ % 4 == 0)
+	if (kind % 4 == 3)
+		return { size.x - 5, 0 };
+	if (kind % 4 == 0)
 		return { 5, 0 };
 	return { 0, 0 };
 }
 
-sf::Vector2f ground_connection::get_build_position(std::vector<world_object*>, float, sf::Vector2f)
+int ground_connection::calculate_z_coord(const int kind)
 {
-	return { -1, -1 };
+	if (kind >= 1 && kind <= 4)
+		return  10;
+	if (kind >= 5 && kind <= 8)
+		return  20;
+	if (kind >= 9 && kind <= 12)
+		return  30;
+	if (kind >= 13 && kind <= 16)
+		return 40;
+	if (kind >= 17 && kind <= 20)
+		return  50;
+	return 0;
 }
 
-int ground_connection::get_build_type(sf::Vector2f, sf::Vector2f)
+ground_connection::ground_connection(std::string name, const sf::Vector2f position, const int kind) : static_object(std::move(name), position, kind)
 {
-	return 1;
+	// kinds: SwampyTrees: 1-4; DarkWoods: 5-8; BirchGrove: 9-12
+	tag = entity_tag::ground_connection;
+	size_ = calculate_size(kind_);
+	offset_ = calculate_offset(kind_, size_);
+	z_coordinate_ = calculate_z_coord(kind_);
+	is_background = true;
 }
 
 std::vector<unique_ptr<sprite_chain_element>> ground_connection::prepare_sprites(long long)
 {
 	std::vector<unique_ptr<sprite_chain_element>> result;
 
-	if (type_of_object_ >= 1 && type_of_object_ <= 4)
+	if (kind_ >= 1 && kind_ <= 4)
 	{
 		result.emplace_back(std::move(make_unique<sprite_chain_element>()));
 		return result;
 	}
 
-	int spriteType = type_of_object_ % 4 + 1;
+	int spriteType = kind_ % 4 + 1;
 	if (spriteType == 1)
 		spriteType = 5;
 
-	auto body = make_unique<sprite_chain_element>(pack_tag::darkWoods, pack_part::ground, direction::DOWN, spriteType, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_));
+	auto body = make_unique<sprite_chain_element>(pack_tag::darkWoods, pack_part::ground, direction::DOWN, spriteType, position_, size_, sf::Vector2f(offset_));
 	body->z_coordinate = z_coordinate_;
 
 	//if (typeOfObject >= 1 && typeOfObject <= 4)
 		//body->packTag = PackTag::darkWoods;
-	if (type_of_object_ >= 5 && type_of_object_ <= 8)
+	if (kind_ >= 5 && kind_ <= 8)
 		body->pack_tag = pack_tag::darkWoods;
-	if (type_of_object_ >= 9 && type_of_object_ <= 12)
+	if (kind_ >= 9 && kind_ <= 12)
 		body->pack_tag = pack_tag::birchGrove;
 
 	body->is_background = true;

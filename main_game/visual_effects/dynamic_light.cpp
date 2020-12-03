@@ -1,4 +1,5 @@
 #include "dynamic_light.hpp"
+#include "../world_metrics.h"
 #include "../scale_system.h"
 
 
@@ -27,7 +28,7 @@ bool dynamic_light::on_load()
 	shader_.setUniform("overlay_tex", overlay_texture_);
 	shader_.setUniform("multiply_tex", multiply_texture_);
 	shader_.setUniform("fov_tex", field_of_view_texture_);
-	shader_.setUniform("scene_size", camera_system::get_screen_size());
+	shader_.setUniform("scene_size", world_metrics::window_size);
 
 	return true;
 }
@@ -38,7 +39,7 @@ void dynamic_light::on_update()
 	const sf::Glsl::Vec3 view{
 		position.x,
 		position.y,
-		camera_system_.get_scale_system()->scale_delta_normalized()
+		camera_system_.get_scale_system()->calculate_scale()
 	};
 	shader_.setUniform("view", view);
 	shader_.setUniform("norm_time", time_system_.get_time_normalized());

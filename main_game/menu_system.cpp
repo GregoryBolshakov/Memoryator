@@ -3,21 +3,42 @@
 #include "helper.h"
 #include "world_handler.h"
 
-const sf::Vector2f new_run_button_position(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.06f);
-const sf::Vector2f continue_button_position(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.21f);
-const sf::Vector2f exit_button_position(helper::GetScreenSize().x * 0.06f, helper::GetScreenSize().y * 0.36f);
-const sf::Vector2f button_size(helper::GetScreenSize().x * 0.2f, helper::GetScreenSize().y * 0.14f);
-
 menu_system::menu_system()
 {
-	init_buttons();
-}
+	const sf::Vector2f button_size(world_metrics::window_size.x * 0.2f, world_metrics::window_size.y * 0.14f);
+	button_list_.insert({ 
+		button_tag::newRunTag,
+		button(pack_tag::interfaceElements, 
+		pack_part::menu, 1,
+		1,
+		1,
+		sf::Vector2f(world_metrics::window_size.x * 0.06f, world_metrics::window_size.y * 0.06f),
+		button_size,
+		true,
+		button_tag::newRunTag) });
+	button_list_.insert({ 
+		button_tag::continueTag,
+		button(pack_tag::interfaceElements,
+		pack_part::menu,
+		2, 
+		2, 
+		2, 
+		sf::Vector2f(world_metrics::window_size.x * 0.06f, world_metrics::window_size.y * 0.21f),
+		button_size,
+		true,
+		button_tag::continueTag) });
+	button_list_.insert({ 
+		button_tag::exitTag,
+		button(pack_tag::interfaceElements,
+		pack_part::menu,
+		4,
+		4,
+		4,
+		sf::Vector2f(world_metrics::window_size.x * 0.06f, world_metrics::window_size.y * 0.36f),
+		button_size,
+		true,
+		button_tag::exitTag) });
 
-void menu_system::init_buttons()
-{
-    button_list_[button_tag::newRunTag].initialize(pack_tag::interfaceElements, pack_part::menu, 1, 1, 1, new_run_button_position, button_size, true, button_tag::newRunTag);
-    button_list_[button_tag::continueTag].initialize(pack_tag::interfaceElements, pack_part::menu, 2, 2, 2, continue_button_position, button_size, true, button_tag::continueTag);
-    button_list_[button_tag::exitTag].initialize(pack_tag::interfaceElements, pack_part::menu, 4, 4, 4, exit_button_position, button_size, true, button_tag::exitTag);
 }
 
 menu_system::~menu_system()
@@ -47,7 +68,7 @@ void menu_system::interact(const shared_ptr<world_handler>& world, const shared_
 
 	if (menu_state_ == main_menu)
 	{
-		if (button_list_[button_tag::newRunTag].is_selected(mouse_pos))
+		if (button_list_.at(button_tag::newRunTag).is_selected(mouse_pos))
 		{
 			world->run_world_generator();
 			menu_state_ = closed;
@@ -55,7 +76,7 @@ void menu_system::interact(const shared_ptr<world_handler>& world, const shared_
 			return;
 		}
 
-		if (button_list_[button_tag::continueTag].is_selected(mouse_pos))
+		if (button_list_.at(button_tag::continueTag).is_selected(mouse_pos))
 		{
 			//world.Load();
 			world->run_world_generator();
@@ -64,7 +85,7 @@ void menu_system::interact(const shared_ptr<world_handler>& world, const shared_
 			return;
 		}
 
-		if (button_list_[button_tag::exitTag].is_selected(mouse_pos))
+		if (button_list_.at(button_tag::exitTag).is_selected(mouse_pos))
 		{
 			menu_state_ = closed;
 			window->close();
@@ -77,7 +98,7 @@ void menu_system::interact(const shared_ptr<world_handler>& world, const shared_
 
 	if (menu_state_ == game_menu)
 	{
-		if (button_list_[button_tag::newRunTag].is_selected(mouse_pos))
+		if (button_list_.at(button_tag::newRunTag).is_selected(mouse_pos))
 		{
 			world->run_world_generator();
 			menu_state_ = closed;
@@ -85,14 +106,14 @@ void menu_system::interact(const shared_ptr<world_handler>& world, const shared_
 			return;
 		}
 
-		if (button_list_[button_tag::continueTag].is_selected(mouse_pos))
+		if (button_list_.at(button_tag::continueTag).is_selected(mouse_pos))
 		{
 			menu_state_ = closed;
 			was_active_ = true;
 			return;
 		}
 
-		if (button_list_[button_tag::exitTag].is_selected(mouse_pos))
+		if (button_list_.at(button_tag::exitTag).is_selected(mouse_pos))
 		{
 			world->save();
 			menu_state_ = main_menu;

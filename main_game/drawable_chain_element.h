@@ -22,7 +22,28 @@ public:
 		this->color = element.color;
 		this->initialized = element.initialized;
 	}
-	void initialize() { this->initialized = true; }
+	drawable_chain_element(drawable_chain_element& element) noexcept
+	{
+		if (this == &element)
+			return;
+		this->offset = element.offset;
+		this->position = element.position;
+		this->size = element.size;
+		this->rotation = element.rotation;
+		this->color = element.color;
+		this->initialized = element.initialized;
+	}
+	drawable_chain_element(const drawable_chain_element& element) noexcept
+	{
+		if (this == &element)
+			return;
+		this->offset = element.offset;
+		this->position = element.position;
+		this->size = element.size;
+		this->rotation = element.rotation;
+		this->color = element.color;
+		this->initialized = element.initialized;
+	}
 
 	sf::Vector2f offset = { 0, 0 }, position = { 0, 0 }, size = { 0, 0 };
 	float rotation = 0;

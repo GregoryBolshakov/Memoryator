@@ -4,7 +4,7 @@
 //
 //bear::bear(const std::string& objectName, sf::Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
 //{
-//	conditional_size_units_ = { 432, 384 };
+//	size_ = { 432, 384 };
 //	current_sprite_[0] = 1;
 //	timeForNewSprite = 0;
 //	move_system.default_speed = 0.0003f;
@@ -13,10 +13,10 @@
 //	animationLength = 8;
 //	radius_ = 70;
 //	strength_ = 10;
-//	sight_range = conditional_size_units_.x * 3;
+//	sight_range = size_.x * 3;
 //	morality_ = 5; // from 1 to 10
 //	fear_ = 0;
-//	health_point_ = 50;
+//	health_ = 50;
 //	current_action_ = relax;	
 //	time_for_new_hit_self = long(6e5);
 //	time_after_hitself_ = time_for_new_hit_self;
@@ -43,7 +43,7 @@
 //{
 //	endingPreviousAction();
 //	fight_interact(elapsedTime);
-//	if (health_point_ <= 0)
+//	if (health_ <= 0)
 //	{
 //		change_action(dead, true);
 //		direction_system.direction = direction::STAND;

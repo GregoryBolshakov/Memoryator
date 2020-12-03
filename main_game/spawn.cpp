@@ -5,7 +5,7 @@
 //spawn::spawn(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 1;
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	radius_ = 200;
 //	to_save_name_ = "spawn";
 //	spawn::setType(typeOfObject);
@@ -13,8 +13,8 @@
 //
 //void spawn::setType(const int typeOfObject)
 //{
-//	this->type_of_object_ = typeOfObject;
-//	this->conditional_size_units_ = { 1000, 1000 };
+//	this->type_ = typeOfObject;
+//	this->size_ = { 1000, 1000 };
 //}
 //
 //Vector2f spawn::calculate_texture_offset()
@@ -26,17 +26,17 @@
 //
 //void spawn::init_pedestal()
 //{
-//	if (type_of_object_ == 1)
+//	if (type_ == 1)
 //	{
 //		focus1_ = sf::Vector2f (texture_box_.left + floor(texture_box_.width / 3.8f), position_.y);
 //		focus2_ = sf::Vector2f (texture_box_.left + texture_box_.width - floor(texture_box_.width / 3.8f), position_.y);
 //	}
-//	if (type_of_object_ == 2)
+//	if (type_ == 2)
 //	{
 //		focus1_ = sf::Vector2f (texture_box_.left + floor(texture_box_.width / 2.3f), position_.y);
 //		focus2_ = sf::Vector2f (texture_box_.left + texture_box_.width - floor(texture_box_.width / 3.3f), position_.y);	
 //	}
-//	if (type_of_object_ == 3)
+//	if (type_ == 3)
 //	{
 //		focus1_ = sf::Vector2f (texture_box_.left + floor(texture_box_.width / 3.5f), position_.y + texture_box_.height / 20.0f);
 //		focus2_ = sf::Vector2f (texture_box_.left + texture_box_.width - floor(texture_box_.width / 2.0f), position_.y + texture_box_.height / 100.0f);

@@ -6,36 +6,22 @@
 
 #include <fstream>
 
-brazier::brazier(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : craftResult(entity_tag::empty_cell),
-	terrain_object(std::move(objectName), centerPosition)
+brazier::brazier(std::string name, const sf::Vector2f position, const int kind) : terrain_object(std::move(name), position, kind),
+	craftResult(entity_tag::empty_cell)
 {
-	variety_of_types_ = 1;
-	this->type_of_object_ = typeOfObject;
+	tag = entity_tag::brazier;
+	size_ = { 900, 900 };
+	offset_ = { size_.x * 0.5f, size_.y * 0.762f };
 	radius_ = 450.0f;
 	plateRadius = 100.0f;
-	brazier::setType(typeOfObject);
 	is_multi_ellipse = true;
 	mirrored_ = false;
 	initCraftRecipes();
-	tag = entity_tag::brazier;
-}
-
-void brazier::setType(int typeOfObject)
-{
-	this->type_of_object_ = typeOfObject;
-	this->conditional_size_units_ = {900, 900};
-}
-
-sf::Vector2f brazier::calculate_texture_offset()
-{
-	texture_box_.width = texture_box_.width * get_scale_ratio().x;
-	texture_box_.height = texture_box_.height * get_scale_ratio().y;
-	return { texture_box_.width * 0.5f, texture_box_.height * 0.762f };
 }
 
 void brazier::init_pedestal()
 {
-	if (type_of_object_ == 1)
+	if (kind_ == 1)
 	{
 		/*focus1 = sf::Vector2f (position.x - textureBox.width / 4, position.y);
 		focus2 = sf::Vector2f (position.x + textureBox.width / 4, position.y);
@@ -44,28 +30,28 @@ void brazier::init_pedestal()
 		focus2_ = sf::Vector2f(position_.x, position_.y);
 
 		std::pair<sf::Vector2f, sf::Vector2f> microEllipse;
-		microEllipse.first = sf::Vector2f(position_.x - texture_box_.width * 0.333f, position_.y + texture_box_.height * 0.04f);
-		microEllipse.second = sf::Vector2f(position_.x - texture_box_.width * 0.124f, position_.y + texture_box_.height * 0.04f);
+		microEllipse.first = sf::Vector2f(position_.x - size_.x * 0.333f, position_.y + size_.y * 0.04f);
+		microEllipse.second = sf::Vector2f(position_.x - size_.x * 0.124f, position_.y + size_.y * 0.04f);
 		internal_ellipses.push_back(microEllipse);
 
-		microEllipse.first = sf::Vector2f(position_.x - texture_box_.width * 0.25f, position_.y - texture_box_.height * 0.04f);
-		microEllipse.second = sf::Vector2f(position_.x, position_.y - texture_box_.height * 0.04f);
+		microEllipse.first = sf::Vector2f(position_.x - size_.x * 0.25f, position_.y - size_.y * 0.04f);
+		microEllipse.second = sf::Vector2f(position_.x, position_.y - size_.y * 0.04f);
 		internal_ellipses.push_back(microEllipse);
 
-		microEllipse.first = sf::Vector2f(position_.x, position_.y - texture_box_.height * 0.02f);
-		microEllipse.second = sf::Vector2f(position_.x + texture_box_.width * 0.25f, position_.y - texture_box_.height * 0.02f);		
+		microEllipse.first = sf::Vector2f(position_.x, position_.y - size_.y * 0.02f);
+		microEllipse.second = sf::Vector2f(position_.x + size_.x * 0.25f, position_.y - size_.y * 0.02f);
 		internal_ellipses.push_back(microEllipse);
 
-		microEllipse.first = sf::Vector2f(position_.x + texture_box_.width * 0.191f, position_.y + texture_box_.height * 0.0211f);
-		microEllipse.second = sf::Vector2f(position_.x + texture_box_.width * 0.335f, position_.y + texture_box_.height * 0.0211f);		
+		microEllipse.first = sf::Vector2f(position_.x + size_.x * 0.191f, position_.y + size_.y * 0.0211f);
+		microEllipse.second = sf::Vector2f(position_.x + size_.x * 0.335f, position_.y + size_.y * 0.0211f);
 		internal_ellipses.push_back(microEllipse);
 
-		microEllipse.first = sf::Vector2f(position_.x - texture_box_.width * 0.045f, position_.y + texture_box_.height * 0.19f);
-		microEllipse.second = sf::Vector2f(position_.x + texture_box_.width * 0.0698f, position_.y + texture_box_.height * 0.19f);		
+		microEllipse.first = sf::Vector2f(position_.x - size_.x * 0.045f, position_.y + size_.y * 0.19f);
+		microEllipse.second = sf::Vector2f(position_.x + size_.x * 0.0698f, position_.y + size_.y * 0.19f);
 		internal_ellipses.push_back(microEllipse);
 
-		microEllipse.first = sf::Vector2f(position_.x + texture_box_.width * 0.155f, position_.y + texture_box_.height * 0.126f);
-		microEllipse.second = sf::Vector2f(position_.x + texture_box_.width * 0.327f, position_.y + texture_box_.height * 0.126f);		
+		microEllipse.first = sf::Vector2f(position_.x + size_.x * 0.155f, position_.y + size_.y * 0.126f);
+		microEllipse.second = sf::Vector2f(position_.x + size_.x * 0.327f, position_.y + size_.y * 0.126f);
 		internal_ellipses.push_back(microEllipse);
 	}
 	ellipse_size_multipliers = { 1.2f, 1.25f, 1.17f, 1.58f, 1.25f, 1.43f };
@@ -137,24 +123,14 @@ void brazier::putItemToCraft(const entity_tag id)
 	craftResult = checkCraftResult();
 }
 
-sf::Vector2f brazier::get_build_position(std::vector<world_object*>, float, sf::Vector2f)
-{
-	return { -1, -1 };
-}
-
-int brazier::get_build_type(sf::Vector2f, sf::Vector2f)
-{
-	return 1;
-}
-
 std::vector<unique_ptr<sprite_chain_element>> brazier::prepare_sprites(long long)
 {
 	std::vector<unique_ptr<sprite_chain_element>> result;
-	const sf::Vector2f front_offset(texture_box_.width * 0.506f, texture_box_.height * 0.949f);
-	const sf::Vector2f front_position(position_.x - texture_box_offset_.x + front_offset.x, position_.y - texture_box_offset_.y + front_offset.y);
+	const sf::Vector2f front_offset(size_.x * 0.506f, size_.y * 0.949f);
+	const sf::Vector2f front_position(position_.x - offset_.x + front_offset.x, position_.y - offset_.y + front_offset.y);
 
-	auto back = make_unique<sprite_chain_element>(pack_tag::locations, pack_part::brazier, direction::DOWN, 1, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_));
-	auto front = make_unique<sprite_chain_element>(pack_tag::locations, pack_part::brazier, direction::DOWN, 2, front_position, conditional_size_units_, front_offset);
+	auto back = make_unique<sprite_chain_element>(pack_tag::locations, pack_part::brazier, direction::DOWN, 1, position_, size_, sf::Vector2f(offset_));
+	auto front = make_unique<sprite_chain_element>(pack_tag::locations, pack_part::brazier, direction::DOWN, 2, front_position, size_, front_offset);
 
 	result.emplace_back(std::move(back));
 	result.emplace_back(std::move(front));

@@ -1,43 +1,22 @@
 #include "button.h"
+#include "direction_system.h"
 
-button::button()
-= default;
-
-void button::initialize(
-	const pack_tag pack,
-	const pack_part pack_part,
-	const int default_sprite_number,
-	const int selected_sprite_number,
-	const int pressed_sprite_number,
-	const sf::Vector2f position,
-	const sf::Vector2f size,
-	const bool is_selectable,
-	const button_tag tag,
-	const sf::Vector2f offset)
+button::button(pack_tag pack,
+	pack_part pack_part,
+	int default_sprite_number,
+	int selected_sprite_number,
+	int pressed_sprite_number,
+	sf::Vector2f position,
+	sf::Vector2f size,
+	bool is_selectable,
+	button_tag tag,
+	sf::Vector2f offset) :
+	is_selectable(is_selectable)
+	, button_enabled_(pack, pack_part, direction::DOWN, default_sprite_number, position, size, offset, sf::Color(255, 255, 255, 255), false, false)
+	, button_selected_(pack, pack_part, direction::DOWN, default_sprite_number, position, size, offset, sf::Color(255, 255, 255, 255), false, false)
+	, button_pressed_(pack, pack_part, direction::DOWN, default_sprite_number, position, size, offset, sf::Color(255, 255, 255, 255), false, false)
+	, tag_(tag)
 {
-	tag_ = tag;
-	button_enabled_->pack_tag = pack;
-	this->button_selected_->pack_tag = pack;
-	this->button_pressed_->pack_tag = pack;
-	button_enabled_->pack_part = pack_part;
-	this->button_selected_->pack_part = pack_part;
-	this->button_pressed_->pack_part = pack_part;
-	button_enabled_->number = default_sprite_number;
-	this->button_selected_->number = selected_sprite_number;
-	this->button_pressed_->number = pressed_sprite_number;
-	button_enabled_->position = position;
-	this->button_selected_->position = position;
-	this->button_pressed_->position = position;
-	button_enabled_->size = size;
-	this->button_selected_->size = size;
-	this->button_pressed_->size = size;
-	button_enabled_->offset = offset;
-	this->button_selected_->offset = offset;
-	this->button_pressed_->offset = offset;
-	button_enabled_->initialize();
-	this->button_selected_->initialize();
-	this->button_pressed_->initialize();
-	this->is_selectable = is_selectable;
 }
 
 bool button::is_selected(sf::Vector2f mouse_pos)
@@ -47,7 +26,7 @@ bool button::is_selected(sf::Vector2f mouse_pos)
 
 	//isActive = false;
 
-	const auto rect = sf::FloatRect(button_enabled_->position.x, button_enabled_->position.y, button_enabled_->size.x, button_enabled_->size.y);
+	const auto rect = sf::FloatRect(button_enabled_.position.x, button_enabled_.position.y, button_enabled_.size.x, button_enabled_.size.y);
 	if (rect.contains(sf::Vector2f(mouse_pos)))
 	{
 		selected_ = true;
@@ -57,18 +36,18 @@ bool button::is_selected(sf::Vector2f mouse_pos)
 	return false;
 }
 
-void button::set_position(const sf::Vector2f position) const
+void button::set_position(const sf::Vector2f position)
 {
-	button_enabled_->position = {position.x - button_enabled_->offset.x, position.y - button_enabled_->offset.y};
-	button_selected_->position = {position.x - button_selected_->offset.x, position.y - button_selected_->offset.y};
-	button_pressed_->position = {position.x - button_pressed_->offset.x, position.y - button_pressed_->offset.y};
+	button_enabled_.position = {position.x - button_enabled_.offset.x, position.y - button_enabled_.offset.y};
+	button_selected_.position = {position.x - button_selected_.offset.x, position.y - button_selected_.offset.y};
+	button_pressed_.position = {position.x - button_pressed_.offset.x, position.y - button_pressed_.offset.y};
 }
 
-void button::set_size(const sf::Vector2f size) const
+void button::set_size(const sf::Vector2f size)
 {
-	button_enabled_->size = size;
-	button_selected_->size = size;
-	button_pressed_->size = size;
+	button_enabled_.size = size;
+	button_selected_.size = size;
+	button_pressed_.size = size;
 }
 
 void button::become_gray()
@@ -88,51 +67,12 @@ unique_ptr<sprite_chain_element> button::prepare_sprite()
 	if (is_selected(sf::Vector2f(sf::Mouse::getPosition())) && is_selectable)
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) || sf::Mouse::isButtonPressed(sf::Mouse::Right))
-		{
-			result = make_unique<sprite_chain_element>(
-				button_pressed_->pack_tag,
-				button_pressed_->pack_part,
-				button_pressed_->direction,
-				button_pressed_->number,
-				button_pressed_->position,
-				button_pressed_->size,
-				button_pressed_->offset,
-				button_pressed_->color,
-				button_pressed_->mirrored,
-				button_pressed_->unscaled,
-				button_pressed_->rotation);
-		}
+			result = make_unique<sprite_chain_element>(button_pressed_);
 		else
-		{
-			result = make_unique<sprite_chain_element>(
-				button_selected_->pack_tag,
-				button_selected_->pack_part,
-				button_selected_->direction,
-				button_selected_->number,
-				button_selected_->position,
-				button_selected_->size,
-				button_selected_->offset,
-				button_selected_->color,
-				button_selected_->mirrored,
-				button_selected_->unscaled,
-				button_selected_->rotation);
-		}
+			result = make_unique<sprite_chain_element>(button_selected_);
 	}
 	else
-	{
-		result = make_unique<sprite_chain_element>(
-			button_enabled_->pack_tag,
-			button_enabled_->pack_part,
-			button_enabled_->direction,
-			button_enabled_->number,
-			button_enabled_->position,
-			button_enabled_->size,
-			button_enabled_->offset,
-			button_enabled_->color,
-			button_enabled_->mirrored,
-			button_enabled_->unscaled,
-			button_enabled_->rotation);
-	}
+		result = make_unique<sprite_chain_element>(button_enabled_);
 
 	if (is_gray_)
 	{

@@ -13,26 +13,22 @@
 #include "dynamic_object.h"
 #include "brazier.h"
 #include "deerchant.h"
-#include "helper.h"
 #include "drawable_chain_element.h"
 #include "sprite_chain_element.h"
+#include "text_chain_element.h"
 #include "sprite_pack.h"
 
 #include <utility>
 
-world_handler::world_handler(
-	const shared_ptr<camera_system>& camera_system,
-	shared_ptr<std::map<pack_tag, sprite_pack>> packs_map) :
+world_handler::world_handler(const shared_ptr<camera_system>& camera_system) :
 	  camera_system_{ camera_system }
 	, effect_system_{std::make_shared<effects_system>()}
 	, inventory_system_{ std::make_shared<inventory_system>() }
-	, light_system_{ std::make_shared<light_system>(sf::FloatRect(0, 0, helper::GetScreenSize().x, helper::GetScreenSize().y)) }
-	, packs_map_ {std::move(packs_map)}
+	, light_system_{ std::make_shared<light_system>(sf::FloatRect(0, 0, world_metrics::window_size.x, world_metrics::window_size.y)) }
 	, grid_map_{ make_unique<grid_map>() }
 	, world_generator_{ make_shared<world_generator>(
 		  grid_map_
-		  , camera_system_.lock()->get_scale_system()
-		  , this->packs_map_) }
+		  , camera_system_.lock()->get_scale_system()) }
 {
 	//buildSystem.init();
 }
@@ -54,11 +50,15 @@ void world_handler::run_world_generator()
 {
 	world_generator_->primordial_generation();
 	player_ = world_generator_->player();
-	selected_object_ = world_generator_->player();
+	mouse_selected_object_ = world_generator_->player();
 	camera_system_.lock()->set_focus(player_);
 	main_object_ = dynamic_pointer_cast<brazier>(world_generator_->main_object().lock());
-	camera_system_.lock()->position = world_metrics::center;
+
+	world_metrics::update_scale(camera_system_.lock()->get_scale_system()->calculate_scale());
+	// here the size of all matrices will be calculated
+	grid_map_->init_matrices();
 	world_generator_->fill_zone();
+	grid_map_->add_constant_block(grid_map_->get_block_by_point(main_object_.lock()->get_position()));
 
 	const auto hero = dynamic_pointer_cast<deerchant>(player_.lock());
 	inventory_system_->inventory_bounding(&hero->bags);
@@ -180,155 +180,135 @@ void world_handler::save()
 	fout << static_items.size() << std::endl;
 	for (auto& staticItem : static_items)
 	{
-		fout << staticItem->get_to_save_name() << " " << staticItem->get_type() << " " << staticItem->get_position().x << " " << staticItem->get_position().y << std::endl;
+		fout << staticItem->get_to_save_name() << " " << staticItem->get_kind() << " " << staticItem->get_position().x << " " << staticItem->get_position().y << std::endl;
 	}
 	fout.close();*/
 }
 
-Vector2f  world_handler::mouse_position() const
+void world_handler::mouse_selection_logic(const shared_ptr<world_object>& visible_item)
 {
-	const auto scale = camera_system_.lock()->get_scale_system()->calculate_scale();
-	const auto mouse = sf::Vector2f(sf::Mouse::getPosition());
-	const auto position = (mouse - helper::GetScreenSize() / 2.0f + camera_system_.lock()->position * scale) / scale;
+	const auto mouse_pos = world_metrics::screen_to_world_position(Vector2f(Mouse::getPosition()));
 
-	return position;
-}
+	if (!visible_item || visible_item->get_name() == player_.lock()->get_name() || visible_item->intangible)
+		return;
 
-void world_handler::set_transparent(std::vector<shared_ptr<world_object>>& visible_items)
-{
-	mouse_display_name_ = "";
-	const auto mousePos = mouse_position();
-	auto minCapacity = 1e6f, minDistance = 1e6f;
+	visible_item->is_transparent = false;
+	const FloatRect item_rect(
+		visible_item->get_position().x - visible_item->get_offset().x,
+		visible_item->get_position().y - visible_item->get_offset().y,
+		visible_item->get_size().x,
+		visible_item->get_size().y);
 
-	for (auto& visibleItem : visible_items)
+	if (visible_item->is_background || !item_rect.contains(mouse_pos))
+		visible_item->is_selected = false;
+	else
 	{
-		if (!visibleItem || visibleItem->get_name() == player_.lock()->get_name() || visibleItem->intangible)
-			continue;
+		visible_item->is_selected = true;
 
-		visibleItem->is_transparent = false;
-		const auto itemPos = sf::Vector2f(visibleItem->get_position().x - visibleItem->get_texture_offset().x, visibleItem->get_position().y - visibleItem->get_texture_offset().y);
+		const auto item_capacity = visible_item->get_size().x + visible_item->get_size().y;
 
-		if (mousePos.x >= itemPos.x && mousePos.x <= itemPos.x + visibleItem->get_conditional_size_units().x &&
-			mousePos.y >= itemPos.y && mousePos.y <= itemPos.y + visibleItem->get_conditional_size_units().y)
+		const auto distance_to_item_center = abs(mouse_pos.x - (item_rect.left + visible_item->get_size().x / 2)) +
+			abs(mouse_pos.y - (item_rect.top + visible_item->get_size().y / 2));
+
+		if (distance_to_item_center < min_selection_distance_ || distance_to_item_center == min_selection_distance_ && item_capacity < min_selection_capacity_)
 		{
-			visibleItem->is_selected = true;
-		}
-		else
-			visibleItem->is_selected = false;
+			min_selection_capacity_ = item_capacity;
+			min_selection_distance_ = distance_to_item_center;
 
-		if (!visibleItem->is_background && helper::isIntersects(mousePos, sf::FloatRect(itemPos.x, itemPos.y, visibleItem->get_conditional_size_units().x, visibleItem->get_conditional_size_units().y)) ||
-			helper::getDist(mousePos, visibleItem->get_position()) <= visibleItem->get_radius())
-		{
-			auto itemCapacity = visibleItem->get_conditional_size_units().x + visibleItem->get_conditional_size_units().y;
-			if (visibleItem->tag == entity_tag::brazier)
-				itemCapacity /= 10;
-			float distanceToItemCenter;
-			if (!visibleItem->is_background)
-				distanceToItemCenter = abs(mousePos.x - (itemPos.x + visibleItem->get_conditional_size_units().x / 2)) +
-				abs(mousePos.y - (itemPos.y + visibleItem->get_conditional_size_units().y / 2));
+			const auto terrain = dynamic_pointer_cast<terrain_object>(visible_item);
+			if (terrain && pedestal_controller.ready_to_start)
+				mouse_display_name_ = "Set pedestal";
 			else
-				distanceToItemCenter = helper::getDist(mousePos, visibleItem->get_position());
-
-			if (itemCapacity < minCapacity || (itemCapacity == minCapacity && distanceToItemCenter <= minDistance))
-			{
-				minCapacity = itemCapacity;
-				minDistance = distanceToItemCenter;
-
-				const auto terrain = dynamic_pointer_cast<terrain_object>(visibleItem);
-				if (terrain && pedestal_controller.ready_to_start)
-					mouse_display_name_ = "Set pedestal";
-				else
-					switch (visibleItem->tag)
+				switch (visible_item->tag)
+				{
+				case entity_tag::tree:
+				{
+					mouse_display_name_ = "Absorb";
+					break;
+				}
+				case entity_tag::brazier:
+				{
+					if (inventory_system_->get_held_item().content.first != entity_tag::empty_cell &&
+						world_metrics::get_dist(main_object_.lock()->getPlatePosition(), mouse_pos) <= main_object_.lock()->getPlateRadius())
 					{
-					case entity_tag::tree:
-					{
-						mouse_display_name_ = "Absorb";
-						break;
-					}
-					case entity_tag::brazier:
-					{
-						if (inventory_system_->get_held_item().content.first != entity_tag::empty_cell &&
-							helper::getDist(main_object_.lock()->getPlatePosition(), mousePos) <= main_object_.lock()->getPlateRadius())
-						{
-							if (helper::getDist(main_object_.lock()->getPlatePosition(), player_.lock()->get_position()) <= main_object_.lock()->getPlateRadius() + player_.lock()->get_radius())
-								mouse_display_name_ = "Toss";
-							else
-								mouse_display_name_ = "Come to toss";
-						}
-						break;
-					}
-					case entity_tag::hare:
-					case entity_tag::owl:
-					{
-						if (inventory_system_->get_held_item().content.first == entity_tag::inky_black_pen)
-							mouse_display_name_ = "Sketch";
+						if (world_metrics::get_dist(main_object_.lock()->getPlatePosition(), player_.lock()->get_position()) <= main_object_.lock()->getPlateRadius() + player_.lock()->get_radius())
+							mouse_display_name_ = "Toss";
 						else
-							mouse_display_name_ = "Catch up";
-						break;
+							mouse_display_name_ = "Come to toss";
 					}
-					case entity_tag::fern:
-					{
-						if (!visibleItem->inventory.empty())
-							mouse_display_name_ = "Open";
-						else
-							mouse_display_name_ = "Pick up";
-						break;
-					}
-					case entity_tag::yarrow:
-					case entity_tag::chamomile:
-					case entity_tag::mugwort:
-					case entity_tag::noose:
-					case entity_tag::hare_trap:
-					case entity_tag::dropped_loot:
-					{
+					break;
+				}
+				case entity_tag::hare:
+				case entity_tag::owl:
+				{
+					if (inventory_system_->get_held_item().content.first == entity_tag::inky_black_pen)
+						mouse_display_name_ = "Sketch";
+					else
+						mouse_display_name_ = "Catch up";
+					break;
+				}
+				case entity_tag::fern:
+				{
+					if (!visible_item->inventory.empty())
+						mouse_display_name_ = "Open";
+					else
 						mouse_display_name_ = "Pick up";
-						break;
-					}
-					default:
-					{
-						mouse_display_name_ = object_initializer::mapped_tags.at(visibleItem->tag);
-						break;
-					}
-					}
+					break;
+				}
+				case entity_tag::yarrow:
+				case entity_tag::chamomile:
+				case entity_tag::mugwort:
+				case entity_tag::noose:
+				case entity_tag::hare_trap:
+				case entity_tag::dropped_loot:
+				{
+					mouse_display_name_ = "Pick up";
+					break;
+				}
+				default:
+				{
+					mouse_display_name_ = object_initializer::mapped_tags.at(visible_item->tag);
+					break;
+				}
+				}
 
-				selected_object_ = visibleItem;
-			}
+			mouse_selected_object_ = visible_item;
 		}
+	}
 
-		if (player_.lock()->get_position().x >= itemPos.x && player_.lock()->get_position().x <= itemPos.x + visibleItem->get_conditional_size_units().x && player_.lock()->get_position().y >= itemPos.y && player_.lock()->get_position().y <= visibleItem->get_position().y && !visibleItem->is_background)
-		{
-			visibleItem->is_transparent = true;
-			if (visibleItem->color.a > 125)
-				visibleItem->color.a -= 1;
-		}
-		else
-		{
-			if (visibleItem->color.a < 255)
-				visibleItem->color.a += 1;
-		}
+	if (player_.lock()->get_position().x >= item_rect.left && player_.lock()->get_position().x <= item_rect.left + visible_item->get_size().x && player_.lock()->get_position().y >= item_rect.top && player_.lock()->get_position().y <= visible_item->get_position().y && !visible_item->is_background)
+	{
+		visible_item->is_transparent = true;
+		if (visible_item->color.a > 125)
+			visible_item->color.a -= 1;
+	}
+	else
+	{
+		if (visible_item->color.a < 255)
+			visible_item->color.a += 1;
 	}
 }
 
 bool world_handler::fixed_climbing_beyond(sf::Vector2f& pos)
 {
-	if (pos.x < world_metrics::visible_zone.left)
+	if (pos.x < world_metrics::constant_zone.left)
 	{
-		pos.x = world_metrics::visible_zone.left;
+		pos.x = world_metrics::constant_zone.left;
 		return false;
 	}
-	if (pos.x > world_metrics::visible_zone.left + world_metrics::visible_zone.width)
+	if (pos.x > world_metrics::constant_zone.left + world_metrics::constant_zone.width)
 	{
-		pos.x = world_metrics::visible_zone.left + world_metrics::visible_zone.width;
+		pos.x = world_metrics::constant_zone.left + world_metrics::constant_zone.width;
 		return false;
 	}
-	if (pos.y < world_metrics::visible_zone.top)
+	if (pos.y < world_metrics::constant_zone.top)
 	{
-		pos.y = world_metrics::visible_zone.top;
+		pos.y = world_metrics::constant_zone.top;
 		return false;
 	}
-	if (pos.y > world_metrics::visible_zone.top + world_metrics::visible_zone.height)
+	if (pos.y > world_metrics::constant_zone.top + world_metrics::constant_zone.height)
 	{
-		pos.y = world_metrics::visible_zone.top + world_metrics::visible_zone.height;
+		pos.y = world_metrics::constant_zone.top + world_metrics::constant_zone.height;
 		return false;
 	}
 	return true;
@@ -362,24 +342,22 @@ void world_handler::set_item_from_build_system()
 
 void world_handler::on_mouse_up(const int current_mouse_button)
 {
-	/*if (mouseDisplayName == "Set pedestal")
-	{
-		const auto terrain = dynamic_cast<terrain_object*>(selectedObject);
-		pedestalController.start(terrain);
-	}
-	if (pedestalController.is_running())
+	if (mouse_display_name_ == "Set pedestal")
+		if (const auto terrain = dynamic_pointer_cast<terrain_object>(mouse_selected_object_.lock()))
+			pedestal_controller.start(terrain);
+	if (pedestal_controller.is_running())
 		return;
-	const auto mouseWorldPos = mouse_position();
-	inventorySystem.on_mouse_up();
+	const auto mouseWorldPos = world_metrics::screen_to_world_position(Vector2f(Mouse::getPosition()));
+	//inventorySystem.on_mouse_up();
 
-	if (buildSystem.get_success_init())
-		buildSystem.on_mouse_up();
+	//if (buildSystem.get_success_init())
+		//buildSystem.on_mouse_up();
 
-	if (mouseDisplayName.empty())
-		selectedObject = nullptr;
+	//if (mouseDisplayName.empty())
+		//selectedObject = nullptr;
 
-	auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->get_name()));
-	hero->on_mouse_up(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.building_position != sf::Vector2f(-1, -1) && !buildSystem.instant_build));*/
+	//auto hero = dynamic_cast<deerchant*>(dynamicGrid.get_item_by_name(focusedObject->get_name()));
+	//hero->on_mouse_up(currentMouseButton, selectedObject, mouseWorldPos, (buildSystem.building_position != sf::Vector2f(-1, -1) && !buildSystem.instant_build));
 }
 
 void world_handler::handle_events(sf::Event& event)
@@ -403,26 +381,46 @@ Vector2f world_handler::interact_movement(const shared_ptr<dynamic_object>& dyna
 void world_handler::interact(const long long elapsed_time)
 {
 	birth_objects();
+	min_selection_capacity_ = 1e6f; min_selection_distance_ = 1e6f;
+	mouse_display_name_ = ""; mouse_selected_object_.reset();
 
-	const auto hero = world_generator_->all_dynamic_objects().at("hero");
-	whole_world_offset_ = hero->get_position() - interact_movement(hero, elapsed_time);
+	whole_world_offset_ = world_metrics::center - interact_movement(player_.lock(), elapsed_time);
+	player_.lock()->set_position(world_metrics::center);
 
-	for (const auto& static_item : world_generator_->all_static_objects())
+	for (const auto& mapped_static_item : world_generator_->all_static_objects())
 	{
-		if (whole_world_offset_ != sf::Vector2f(0, 0))
-			auto t = 1;
-		const auto& mapped_item = world_generator_->all_static_objects().at(static_item.second->get_name());
-		mapped_item->set_position(mapped_item->get_position() + whole_world_offset_);
+		mapped_static_item.second->set_position(mapped_static_item.second->get_position() + whole_world_offset_);
+		mouse_selection_logic(mapped_static_item.second);
 	}
 	
-	for (const auto& dynamic_item : world_generator_->all_dynamic_objects())
+	for (const auto& mapped_dynamic_item : world_generator_->all_dynamic_objects())
 	{
-		if (dynamic_item.second->get_name() == "hero")
-			continue;
+		const auto& dynamic_item = mapped_dynamic_item.second;
+		
+		if (dynamic_item->get_name() != "hero")
+			dynamic_item->set_position(interact_movement(dynamic_item, elapsed_time) + whole_world_offset_);
 
-		const auto& mapped_item = world_generator_->all_dynamic_objects().at(dynamic_item.second->get_name());
-		mapped_item->set_position(interact_movement(dynamic_item.second, elapsed_time) + whole_world_offset_);
+		dynamic_item->behavior(elapsed_time);
+
+		for (const auto& mapped_other_dynamic_item : world_generator_->all_dynamic_objects())
+		{
+			const auto& other_dynamic_item = mapped_other_dynamic_item.second;
+			if (dynamic_item == other_dynamic_item)
+				continue;
+			dynamic_item->behavior_with_dynamic(other_dynamic_item, elapsed_time);
+		}
+
+		for (const auto& mapped_static_item : world_generator_->all_static_objects())
+		{
+			const auto& static_item = mapped_static_item.second;
+			dynamic_item->behavior_with_static(static_item, elapsed_time);
+		}
+
+		mouse_selection_logic(dynamic_item);
 	}
+
+	camera_system_.lock()->interact(elapsed_time);
+	pedestal_controller.interact(elapsed_time);
 
 	//for (auto& dynamicItem : localDynamicItems)
 	//{
@@ -500,13 +498,9 @@ bool cmp_img_draw(const unique_ptr<drawable_chain_element>& first, const unique_
 	return first_sprite->z_coordinate < second_sprite->z_coordinate;
 }
 
-std::vector<std::unique_ptr<drawable_chain_element>> world_handler::prepare_sprites(const long long elapsed_time, const bool only_background) const
+std::vector<std::unique_ptr<drawable_chain_element>> world_handler::prepare_sprites(const long long elapsed_time, const bool only_background)
 {
 	std::vector<std::unique_ptr<drawable_chain_element>> result;
-
-	camera_system_.lock()->shake_interact(elapsed_time);
-
-	const auto scale = camera_system_.lock()->get_scale_system()->calculate_scale();
 
 	for (const auto& item : world_generator_->all_static_objects())
 	{
@@ -527,26 +521,33 @@ std::vector<std::unique_ptr<drawable_chain_element>> world_handler::prepare_spri
 
 	sort(result.begin(), result.end(), cmp_img_draw);
 
+	// draw pedestal controller
+	auto pedestal_controller_sprites = pedestal_controller.prepare_sprites();
+	result.insert(result.end(), std::make_move_iterator(pedestal_controller_sprites.begin()), std::make_move_iterator(pedestal_controller_sprites.end()));
+	// draw mouse selected string
+	if (const auto object = mouse_selected_object_.lock())
+		result.push_back(std::make_unique<text_chain_element>(Vector2f(sf::Mouse::getPosition()), Vector2f(), Color::White, mouse_display_name_));
+
 	/*auto deer = dynamic_cast<::dynamic_object*>(dynamicGrid.get_item_by_name("deer"));
 
 	for (const auto block : staticGrid.get_item_by_name("brazier")->get_locked_micro_blocks())
 	{
-		const sf::Vector2f shape_pos = { (block.x * microBlockSize.x - cameraSystem.position.x) * worldGenerator.scaleFactor + helper::GetScreenSize().x / 2,
-			(block.y * microBlockSize.y - cameraSystem.position.y) * worldGenerator.scaleFactor + helper::GetScreenSize().y / 2 };
+		const sf::Vector2f shape_pos = { (block.x * microBlockSize.x - cameraSystem.position.x) * worldGenerator.scaleFactor + world_metrics::window_size.x / 2,
+			(block.y * microBlockSize.y - cameraSystem.position.y) * worldGenerator.scaleFactor + world_metrics::window_size.y / 2 };
 
 		result.push_back(new shape_chain_element(shape_pos, 7.5, { 3.75f, 3.75f }, sf::Color::Red));
 	}
 
 	for (const auto block : deer->route)
 	{
-		const sf::Vector2f shape_pos = { (block.first * microBlockSize.x - cameraSystem.position.x) * worldGenerator.scaleFactor + helper::GetScreenSize().x / 2,
-			(block.second * microBlockSize.y - cameraSystem.position.y) * worldGenerator.scaleFactor + helper::GetScreenSize().y / 2 };
+		const sf::Vector2f shape_pos = { (block.first * microBlockSize.x - cameraSystem.position.x) * worldGenerator.scaleFactor + world_metrics::window_size.x / 2,
+			(block.second * microBlockSize.y - cameraSystem.position.y) * worldGenerator.scaleFactor + world_metrics::window_size.y / 2 };
 
 		result.push_back(new shape_chain_element(shape_pos, 7, { 3.5f, 3.5f }));
 	}
 
-	const sf::Vector2f shape_pos = { (long(deer->get_position().x) / long(microBlockSize.x) * long(microBlockSize.x) - cameraSystem.position.x) * worldGenerator.scaleFactor + helper::GetScreenSize().x / 2,
-			(long(deer->get_position().y) / long(microBlockSize.y) * long(microBlockSize.y) - cameraSystem.position.y) * worldGenerator.scaleFactor + helper::GetScreenSize().y / 2 };
+	const sf::Vector2f shape_pos = { (long(deer->get_position().x) / long(microBlockSize.x) * long(microBlockSize.x) - cameraSystem.position.x) * worldGenerator.scaleFactor + world_metrics::window_size.x / 2,
+			(long(deer->get_position().y) / long(microBlockSize.y) * long(microBlockSize.y) - cameraSystem.position.y) * worldGenerator.scaleFactor + world_metrics::window_size.y / 2 };
 
 	result.push_back(new shape_chain_element(shape_pos, 7.5, { 3.75f, 3.75f }, sf::Color::Blue));*/
 

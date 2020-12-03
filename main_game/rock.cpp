@@ -5,7 +5,7 @@
 //rock::rock(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 18; // BirchGrove: 1-8; DarkWoods: 9-13; SwampyTrees: 14-18
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	strength = 0;
 //	radius_ = 50;
 //	animation_speed_ = 10;
@@ -16,45 +16,45 @@
 //
 //void rock::setType(const int typeOfObject)
 //{
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	if (typeOfObject == 1)
-//		conditional_size_units_ = { 395, 231 };
+//		size_ = { 395, 231 };
 //	if (typeOfObject == 2)
-//		conditional_size_units_ = { 579, 294 };
+//		size_ = { 579, 294 };
 //	if (typeOfObject == 3)
-//		conditional_size_units_ = { 343, 95 };
+//		size_ = { 343, 95 };
 //	if (typeOfObject == 4)
-//		conditional_size_units_ = { 236, 106 };
+//		size_ = { 236, 106 };
 //	if (typeOfObject == 5)
-//		conditional_size_units_ = { 269, 116 };
+//		size_ = { 269, 116 };
 //	if (typeOfObject == 6)
-//		conditional_size_units_ = { 349, 113 };
+//		size_ = { 349, 113 };
 //	if (typeOfObject == 7)
-//		conditional_size_units_ = { 278, 204 };
+//		size_ = { 278, 204 };
 //	if (typeOfObject == 8)
-//		conditional_size_units_ = { 417, 113 };
+//		size_ = { 417, 113 };
 //	if (typeOfObject == 9)
-//		conditional_size_units_ = { 428, 259 };
+//		size_ = { 428, 259 };
 //	if (typeOfObject == 10)
-//		conditional_size_units_ = { 474, 463 };
+//		size_ = { 474, 463 };
 //	if (typeOfObject == 11)
-//		conditional_size_units_ = { 314, 116 };
+//		size_ = { 314, 116 };
 //	if (typeOfObject == 12)
-//		conditional_size_units_ = { 371, 205 };
+//		size_ = { 371, 205 };
 //	if (typeOfObject == 13)
-//		conditional_size_units_ = { 259, 144 };
+//		size_ = { 259, 144 };
 //	if (typeOfObject == 14)
-//		conditional_size_units_ = { 278, 190 };
+//		size_ = { 278, 190 };
 //	if (typeOfObject == 15)
-//		conditional_size_units_ = { 300, 175 };
+//		size_ = { 300, 175 };
 //	if (typeOfObject == 16)
-//		conditional_size_units_ = { 173, 154 };
+//		size_ = { 173, 154 };
 //	if (typeOfObject == 17)
-//		conditional_size_units_ = { 406, 208 };
+//		size_ = { 406, 208 };
 //	if (typeOfObject == 18)
-//		conditional_size_units_ = { 254, 173 };
+//		size_ = { 254, 173 };
 //
-//	radius_ = std::max(conditional_size_units_.x, conditional_size_units_.y) / 2;
+//	radius_ = std::max(size_.x, size_.y) / 2;
 //}
 //
 //Vector2f rock::calculate_texture_offset()
@@ -62,7 +62,7 @@
 //	texture_box_.width = texture_box_.width * get_scale_ratio().x;
 //	texture_box_.height = texture_box_.height * get_scale_ratio().y;
 //
-//	switch (type_of_object_)
+//	switch (type_)
 //	{
 //	case 1:
 //		return { texture_box_.width * 0.58f, texture_box_.height * 0.764f };
@@ -107,7 +107,7 @@
 //
 //void rock::init_pedestal()
 //{
-//	switch (type_of_object_)
+//	switch (type_)
 //	{
 //	case 1:
 //		focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.293f, position_.y);
@@ -220,16 +220,16 @@
 //
 //std::vector<sprite_chain_element*> rock::prepare_sprites(long long elapsedTime)
 //{
-//	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::rock, direction::DOWN, type_of_object_, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_), color, mirrored_);
+//	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::rock, direction::DOWN, type_, position_, size_, sf::Vector2f(offset_), color, mirrored_);
 //
-//	if (type_of_object_ >= 1 && type_of_object_ <= 8)
+//	if (type_ >= 1 && type_ <= 8)
 //		body->pack_tag = pack_tag::birchGrove;
-//	if (type_of_object_ >= 9 && type_of_object_ <= 13)
+//	if (type_ >= 9 && type_ <= 13)
 //	{
 //		body->pack_tag = pack_tag::darkWoods;
 //		body->number -= 8;
 //	}
-//	if (type_of_object_ >= 14 && type_of_object_ <= 18)
+//	if (type_ >= 14 && type_ <= 18)
 //	{
 //		body->pack_tag = pack_tag::swampyTrees;
 //		body->number -= 13;

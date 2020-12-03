@@ -1,6 +1,7 @@
 #include "text_chain_element.h"
+#include "world_metrics.h"
 
-const float text_chain_element::default_character_size = helper::GetScreenSize().y * 0.024f;
+const float text_chain_element::default_character_size = world_metrics::window_size.y * 0.024f;
 
 text_chain_element::text_chain_element() : drawable_chain_element()
 {

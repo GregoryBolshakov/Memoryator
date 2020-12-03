@@ -5,7 +5,7 @@
 //fern::fern(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : picked_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 1;
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	to_save_name_ = "fern";
 //	fern::setType(typeOfObject);
 //	tag = entity_tag::fern;
@@ -19,9 +19,9 @@
 //	if (typeOfObject == -1)
 //		return;
 //
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	if (typeOfObject == 1)
-//		conditional_size_units_ = { 330, 370 };
+//		size_ = { 330, 370 };
 //}
 //
 //Vector2f fern::calculate_texture_offset()

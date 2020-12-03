@@ -1,45 +1,40 @@
 #include "deerchant.h"
 #include "sprite_chain_element.h"
 #include "empty_object.h"
-#include "helper.h"
+#include "world_metrics.h"
 #include "math_constants.h"
 #include "noose.h"
 #include "picked_object.h"
 
-deerchant::deerchant(std::string object_name, const sf::Vector2f center_position) : dynamic_object(std::move(object_name), center_position)
+deerchant::deerchant(std::string name, const sf::Vector2f position, const int kind) : dynamic_object(std::move(name), position, kind)
 {
+	tag = entity_tag::hero;
+	size_ = { 375, 375 };
+	offset_ = { size_.x * 0.5f, size_.y * 0.8f };
+	radius_ = creature_radius;
 	current_sprite_ = { 1, 1, 1 };
 	move_system.default_speed = 0.0006f;
 	move_system.speed = move_system.default_speed;
 	animation_speed_ = 0.0010f;
-	radius_ = creature_radius;
 	move_end_distance_ = 55;
 	hit_distance_ = creature_radius;
 	striking_sprite_ = 6;
 	strength_ = creature_strength;
 	max_health_point_value_ = creature_max_health;
-	health_point_ = max_health_point_value_;
+	health_ = max_health_point_value_;
 	current_action_ = action::relax;
-	tag = entity_tag::hero;
+	
 	move_system.can_crash_into_static = true;
 
-	const auto closedBagSize = sf::Vector2f(helper::GetScreenSize().x / 12, helper::GetScreenSize().y / 6);
+	const auto closed_bag_size = sf::Vector2f(world_metrics::window_size.x / 12, world_metrics::window_size.y / 6);
 	
-	bags.push_back(hero_bag(sf::Vector2f(helper::GetScreenSize().x - closedBagSize.x, closedBagSize.y)));
-	//bags.emplace_back(sf::Vector2f(helper::GetScreenSize().x - closedBagSize.x, 2.0f * closedBagSize.y));
-	//bags.emplace_back(sf::Vector2f(helper::GetScreenSize().x - closedBagSize.x * 1.5f, 1.5f * closedBagSize.y));
+	bags.push_back(hero_bag(sf::Vector2f(world_metrics::window_size.x - closed_bag_size.x, closed_bag_size.y)));
+	//bags.emplace_back(sf::Vector2f(world_metrics::window_size.x - closedBagSize.x, 2.0f * closedBagSize.y));
+	//bags.emplace_back(sf::Vector2f(world_metrics::window_size.x - closedBagSize.x * 1.5f, 1.5f * closedBagSize.y));
 }
 
 deerchant::~deerchant()
 = default;
-
-sf::Vector2f deerchant::calculate_texture_offset()
-{
-	conditional_size_units_ = { 375, 375 };
-	texture_box_.width = float(texture_box_.width)*get_scale_ratio().x;
-	texture_box_.height = float(texture_box_.height)*get_scale_ratio().y;
-	return { texture_box_.width / 2, texture_box_.height * 4 / 5 };
-}
 
 int deerchant::calculate_next_move_end_sprite(const int current_sprite) const
 {
@@ -377,9 +372,7 @@ void deerchant::stopping(const bool do_stand, const bool forget_bound_target, co
 
 void deerchant::set_hit_direction()
 {
-	const auto screenSize = helper::GetScreenSize();
-
-	const auto xPos = screenSize.x / 2.0f, yPos = screenSize.y / 2.0f;
+	const auto xPos = world_metrics::window_size.x / 2.0f, yPos = world_metrics::window_size.y / 2.0f;
 	
 	const auto mouseX = float(sf::Mouse::getPosition().x);
 	const auto mouseY = float(sf::Mouse::getPosition().y);
@@ -406,15 +399,15 @@ void deerchant::set_target(dynamic_object& object)
 
 void deerchant::behavior_with_dynamic(shared_ptr<dynamic_object> target, const long long elapsed_time)
 {
-	if (helper::getDist(position_, target->get_position()) <= radius_ + target->get_radius())
+	if (world_metrics::get_dist(position_, target->get_position()) <= radius_ + target->get_radius())
 		move_system.push_by_bumping(target->get_position(), target->get_radius(), target->move_system.can_crash_into_dynamic);
 
-	const auto isIntersect = helper::getDist(position_, target->get_position()) <= this->radius_ + target->get_radius() + hit_distance_;
+	const auto isIntersect = world_metrics::get_dist(position_, target->get_position()) <= this->radius_ + target->get_radius() + hit_distance_;
 
 	if (isIntersect && direction_system.calculate_side(position_, target->get_position(), elapsed_time) != direction_system::invert_side(direction_system.side))
 	{
-		if ((this->current_action_ == action::common_hit || this->current_action_ == action::move_hit) && (this->get_sprite_number() == 4 || this->get_sprite_number() == 5 || this->get_sprite_number() == 8))
-			target->take_damage(this->get_strength(), position_);		
+		if ((this->current_action_ == action::common_hit || this->current_action_ == action::move_hit) && (current_sprite_[0] == 4 || current_sprite_[0] == 5 || current_sprite_[0] == 8))
+			target->take_damage(this->get_strength(), position_);
 	}
 }
 
@@ -423,7 +416,7 @@ void deerchant::behavior_with_static(shared_ptr<world_object> target, long long 
 	if (!target)
 		return;
 
-	if (target->tag == entity_tag::wreath_table && helper::getDist(position_, target->get_position()) <= radius_ + target->get_radius())
+	if (target->tag == entity_tag::wreath_table && world_metrics::get_dist(position_, target->get_position()) <= radius_ + target->get_radius())
 		near_the_table = true;	
 }
 
@@ -446,7 +439,7 @@ void deerchant::behavior(const long long elapsed_time)
 	if (current_action_ != action::jerking && bound_target_->is_processed)
 		move_system.lax_move_position = bound_target_->get_position();
 
-	const auto isIntersect = (helper::getDist(position_, move_system.lax_move_position)) <= (this->radius_ + bound_target_->get_radius());
+	const auto isIntersect = (world_metrics::get_dist(position_, move_system.lax_move_position)) <= (this->radius_ + bound_target_->get_radius());
 
 	//touch selected object 
 	if (isIntersect)
@@ -703,9 +696,9 @@ void deerchant::ending_previous_action()
 			auto pickedItem = dynamic_cast<picked_object*>(bound_target_);
 			if (pickedItem)
 			{
-				if (pickedItem->get_type() == int(entity_tag::hero_bag) || pickedItem->getId() == entity_tag::hare_trap)
+				if (pickedItem->get_kind() == int(entity_tag::hero_bag) || pickedItem->getId() == entity_tag::hare_trap)
 				{
-					//bags.emplace_back(sf::Vector2f(helper::GetScreenSize().x / 2, helper::GetScreenSize().y / 2), true, pickedItem->inventory);
+					//bags.emplace_back(sf::Vector2f(world_metrics::window_size.x / 2, world_metrics::window_size.y / 2), true, pickedItem->inventory);
 					pickedItem->delete_promise_on();
 				}
 				//else
@@ -875,11 +868,6 @@ void deerchant::jerk_interact(const long long elapsed_time)
 	}
 }
 
-sf::Vector2f deerchant::get_build_position(std::vector<world_object*>, float, sf::Vector2f)
-{
-	return { -1, -1 };
-}
-
 sf::Vector2f deerchant::get_belt_position() const
 {
 	/*if (additionalSprites.size() >= 2) return
@@ -887,11 +875,6 @@ sf::Vector2f deerchant::get_belt_position() const
 		(4 * additionalSprites[0].position.y + additionalSprites[1].position.y) / 5.0f);
 	return additionalSprites[0].position;*/
     return position_;
-}
-
-int deerchant::get_build_type(sf::Vector2f, sf::Vector2f)
-{
-	return 1;
 }
 
 void deerchant::jerk(const float power, const float deceleration, sf::Vector2f)
@@ -917,15 +900,15 @@ void deerchant::fight_interact(const long long elapsed_time, dynamic_object* tar
 
 unique_ptr<sprite_chain_element> deerchant::prepare_speed_line()
 {
-	auto speed_line = make_unique<sprite_chain_element>(pack_tag::heroMove, pack_part::lines, direction::STAND, 1, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_));
+	auto speed_line = make_unique<sprite_chain_element>(pack_tag::heroMove, pack_part::lines, direction::STAND, 1, position_, size_, sf::Vector2f(offset_));
 	speed_line->animation_length = 3;
 	if (speed_line_direction_ == direction::STAND || current_sprite_[2] > speed_line->animation_length)
 		return std::make_unique<sprite_chain_element>();
 
 	speed_line->direction = speed_line_direction_;
 	speed_line->mirrored = mirrored_speed_line_;
-	speed_line->offset.y += conditional_size_units_.y / 9.0f;
-	speed_line->position = sf::Vector2f(position_.x, position_.y + conditional_size_units_.y / 9.0f);
+	speed_line->offset.y += size_.y / 9.0f;
+	speed_line->position = sf::Vector2f(position_.x, position_.y + size_.y / 9.0f);
 
 	if (reverse_speed_line_)
 		speed_line->number = speed_line->animation_length + 1 - current_sprite_[2];
@@ -937,8 +920,8 @@ unique_ptr<sprite_chain_element> deerchant::prepare_speed_line()
 
 std::vector<unique_ptr<sprite_chain_element>> deerchant::prepare_sprites(const long long elapsed_time)
 {
-	auto legs_sprite = make_unique<sprite_chain_element>(sf::Vector2f(position_.x, position_.y - 1), conditional_size_units_, sf::Vector2f(texture_box_offset_.x, texture_box_offset_.y + 1), color);
-	auto body_sprite = make_unique<sprite_chain_element>(position_, conditional_size_units_, texture_box_offset_, color);
+	auto legs_sprite = make_unique<sprite_chain_element>(sf::Vector2f(position_.x, position_.y - 1), size_, sf::Vector2f(offset_.x, offset_.y + 1), color);
+	auto body_sprite = make_unique<sprite_chain_element>(position_, size_, offset_, color);
 
 	const auto speed_line = prepare_speed_line();
 	std::vector<unique_ptr<sprite_chain_element>> result;
@@ -1144,25 +1127,23 @@ std::vector<unique_ptr<sprite_chain_element>> deerchant::prepare_sprites(const l
 		}
 	}
 
-	if (legs_sprite->pack_tag != pack_tag::empty)
-	{
-		if (legs_inverse)
-			legs_sprite->number = legs_sprite->animation_length + 1 - current_sprite_[1];
-		else
-			legs_sprite->number = current_sprite_[1];
-		result.emplace_back(std::move(legs_sprite));
-	}
-
 	if (body_sprite->pack_tag != pack_tag::empty)
 	{
 		if (body_inverse)
 			body_sprite->number = body_sprite->animation_length + 1 - current_sprite_[0];
 		else
 			body_sprite->number = current_sprite_[0];
-		result.emplace_back(std::move(body_sprite));
+		result.push_back(std::move(body_sprite));
 	}
 
-	set_unscaled(result);
+	if (legs_sprite->pack_tag != pack_tag::empty)
+	{
+		if (legs_inverse)
+			legs_sprite->number = legs_sprite->animation_length + 1 - current_sprite_[1];
+		else
+			legs_sprite->number = current_sprite_[1];
+		result.push_back(std::move(legs_sprite));
+	}
 
-    return result;
+	return result;
 }

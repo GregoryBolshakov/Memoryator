@@ -11,7 +11,7 @@ protected:
 	entity_tag id;
 	int count;
 public:
-	picked_object::picked_object(std::string objectName, sf::Vector2f centerPosition);
+	picked_object::picked_object(std::string name, sf::Vector2f position, int kind);
 	virtual ~picked_object();
 	bool pickUp(std::vector<hero_bag>& bags);
 	entity_tag getId() { return id; }

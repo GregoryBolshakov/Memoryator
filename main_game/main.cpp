@@ -10,38 +10,41 @@
 #include "time_system.h"
 #include "inventory_system.h"
 #include "deerchant.h"
+#include "world_generator.h"
 #include "helper.h"
 #include "world_metrics.h"
 #include "sprite_pack.h"
 #include "visual_effects/visual_effect.hpp"
 #include "text_chain_element.h"
+#include "shape_chain_element.h"
 
 #include <thread>
 
-int main() {	
+int main()
+{
 	srand(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
-	
-	const auto screen_size = helper::GetScreenSize();
-	auto window = make_shared<sf::RenderWindow>(VideoMode(static_cast<unsigned int>(screen_size.x), static_cast<unsigned int>(screen_size.y), 32), "game");//, Style::Fullscreen);
+
+	auto window = make_shared<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "Memoryator", sf::Style::Fullscreen);
 	world_metrics::set_world_metrics(window);
-	
+	const auto screen_size = world_metrics::window_size;
+
 	auto camera_system = make_shared<::camera_system>();
 	auto time_system = make_shared<::time_system>();
-	
+
 	auto shader_system = make_shared<::shader_system>(camera_system, time_system);
 	shader_system->initialize();
 	
 	auto draw_system = make_shared<::draw_system>(shader_system, screen_size);
 	auto menu_system = make_shared<::menu_system>();
 	
-	auto world = make_shared<::world_handler>(camera_system, draw_system->get_packs_map());
+	auto world = make_shared<::world_handler>(camera_system);
 	auto window_focus = true;
 	
 	auto console = make_shared<::console>(sf::FloatRect(
-		helper::GetScreenSize().x * 0.2f,
-		helper::GetScreenSize().y * 0.8f,
-		helper::GetScreenSize().x * 0.6f,
-		helper::GetScreenSize().y * 0.03f),
+		world_metrics::window_size.x * 0.2f,
+		world_metrics::window_size.y * 0.8f,
+		world_metrics::window_size.x * 0.6f,
+		world_metrics::window_size.y * 0.03f),
 		time_system,
 		world);
 
@@ -67,19 +70,16 @@ int main() {
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 					current_mouse_button = 2;
 
-			if (event.type == sf::Event::MouseWheelMoved)
-			{
-				if (menu_system->get_state() == closed)
+			if (event.type == sf::Event::MouseWheelMoved && menu_system->get_state() == closed)
 					camera_system->get_scale_system()->update_zoom_factor(event.mouseWheel.delta);
-			}	
 
 			if (event.type == sf::Event::MouseButtonReleased)
 			{			
-				/*if (menu_system->get_state() == closed && world.getBuildSystem().get_success_init())
+				if (menu_system->get_state() == closed)
 				{
-					world.onMouseUp(current_mouse_button);
-					main_book.onMouseUp();
-				}*/
+					world->on_mouse_up(current_mouse_button);
+					//main_book.onMouseUp();
+				}
 					
 				if (current_mouse_button == 1)
 					menu_system->interact(world, window);
@@ -101,9 +101,8 @@ int main() {
 			if (event.type == sf::Event::Closed)
 			{
 				world->save();
-				world->~world_handler();
 				window->close();
-				break;
+				return 0;
 			}
 			console->handle_events(event);
 		}
@@ -134,25 +133,24 @@ int main() {
 			}
 
 			auto hero = dynamic_pointer_cast<deerchant>(world->get_player().lock());
-			//main_book.getAllOuterInfo(&hero->bags, world.getMouseDisplayName(), world.getSelectedObject(), &world.getInventorySystem().get_held_item(), hero->near_the_table);
-			//main_book.interact();
 
 			window->clear(sf::Color::White);
 			const auto scale = camera_system->get_scale_system()->calculate_scale();
 			
-			draw_system->draw(window, world->prepare_sprites(time_micro_sec, true), scale, camera_system->position);
-			draw_system->draw(window, world->prepare_sprites(time_micro_sec, false), scale, camera_system->position);
+			draw_system->draw(window, world->prepare_sprites(time_micro_sec, true), scale);
+			draw_system->draw(window, world->prepare_sprites(time_micro_sec, false), scale);
 
 			//draw_system->draw(main_window, shader_kind::dynamic_light);
+			/*text_system::draw_string("constant:   " + std::to_string(int(world_metrics::constant_zone.left)) + "   " + std::to_string(int(world_metrics::constant_zone.top)) + "   " +  std::to_string(int(world_metrics::constant_zone.width)) + "   " + std::to_string(int(world_metrics::constant_zone.height)), font_name::bebas_font, 40, 200, 100, window, sf::Color::Black);
+			text_system::draw_string("visible:   " + std::to_string(int(world_metrics::visible_zone.left)) + "   " + std::to_string(int(world_metrics::visible_zone.top)) + "   " + std::to_string(int(world_metrics::visible_zone.width)) + "   " + std::to_string(int(world_metrics::visible_zone.height)), font_name::bebas_font, 40, 200, 200, window, sf::Color::Black);
+			text_system::draw_string("block:   " + std::to_string(int(world_metrics::block_size.x)) + "   " + std::to_string(int(world_metrics::block_size.y)) + "   " + std::to_string(int(world_metrics::block_size.x * world_metrics::scale)) + "   " + std::to_string(int(world_metrics::block_size.y * world_metrics::scale)), font_name::bebas_font, 40, 200, 300, window, sf::Color::Black);
+			text_system::draw_string("player:   " + std::to_string(int(world->get_player().lock()->get_position().x)) + "   " + std::to_string(int(world->get_player().lock()->get_position().y)), font_name::bebas_font, 40, 200, 400, window, sf::Color::Black);
+			text_system::draw_string("center:   " + std::to_string(int(world_metrics::center.x)) + "   " + std::to_string(int(world_metrics::center.y)), font_name::bebas_font, 40, 200, 350, window, sf::Color::Black);
+			text_system::draw_string("mouse:   " + std::to_string(int(world_metrics::screen_to_world_position(Vector2f(Mouse::getPosition(*window))).x)) + "   " + std::to_string(int(world_metrics::screen_to_world_position(Vector2f(Mouse::getPosition(*window))).y)), font_name::bebas_font, 40, 200, 500, window, sf::Color::Black);
+			text_system::draw_string("scale:   " + std::to_string(world_metrics::scale), font_name::bebas_font, 40, 200, 600, window, sf::Color::Black);
 
-			//draw_system->draw(main_window, draw_system::upcast_chain(world.getBuildSystem().prepare_sprites(world.getStaticGrid(), world.getLocalTerrain(), &draw_system->packs_map)), scale, camera_system->position);
-			//text_system::draw_string(world.getMouseDisplayName(), font_name::normal_font, 30, float(sf::Mouse::getPosition().x), float(sf::Mouse::getPosition().y), main_window, sf::Color(255, 255, 255, 180));
-			world->pedestal_controller.draw(window, camera_system->position, scale);
-			//draw_system->draw(main_window, main_book.prepare_sprites(world.focusedObject->get_health_point() / world.focusedObject->get_max_health_point_value(), time_micro_sec));
-			//draw_system->draw(main_window, world.getInventorySystem().prepare_sprites(time_micro_sec, world.packsMap));
-			text_system::draw_string(std::to_string(1000000 / time_micro_sec), font_name::bebas_font, 40, 200, 200, window, sf::Color::Black);
-			text_system::draw_string(std::to_string(world->get_player().lock()->get_position().x) + " " + std::to_string(world->get_player().lock()->get_position().y), font_name::bebas_font, 40, 200, 300, window, sf::Color::Black);
-			text_system::draw_string(std::to_string(world->get_camera_system().lock()->get_scale_system()->calculate_scale()), font_name::bebas_font, 40, 200, 400, window, sf::Color::Black);
+			shape_chain_element circle(world_metrics::world_to_screen_position(world_metrics::center), 20, Vector2f(20, 20), true, sf::Color::Red);
+			draw_system->draw_shape_chain_element(window, circle);*/
 		}
 		else
 			clock.restart();

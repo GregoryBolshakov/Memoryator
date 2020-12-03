@@ -28,10 +28,7 @@ enum class pack_tag;
 class world_handler
 {
 public:
-	world_handler(
-		const shared_ptr<camera_system>& camera_system,
-		shared_ptr<std::map<pack_tag, sprite_pack>> packs_map);
-	
+	world_handler(const shared_ptr<camera_system>& camera_system);
 	~world_handler();
 
 	//adding to the grid
@@ -45,8 +42,9 @@ public:
 	const shared_ptr<light_system>& get_light_system() const { return light_system_; }
 	const weak_ptr<camera_system>& get_camera_system() const { return camera_system_; }
 	std::string get_mouse_display_name() const { return mouse_display_name_; }
-	const weak_ptr<world_object>& get_selected_object() const { return selected_object_; }
+	const weak_ptr<world_object>& get_mouse_selected_object() const { return mouse_selected_object_; }
 	const weak_ptr<dynamic_object>& get_player() const { return player_; }
+	const weak_ptr<brazier>& get_main_object() const { return main_object_; }
 
 	// Save-load logic
 	void load();
@@ -56,7 +54,7 @@ public:
 	sf::Vector2f interact_movement(const shared_ptr<dynamic_object>& dynamic_item, long long elapsed_time) const;
 	void interact(long long elapsed_time);
 	void handle_events(sf::Event& event);
-	std::vector<std::unique_ptr<drawable_chain_element>> prepare_sprites(long long elapsed_time, bool only_background = false) const;
+	std::vector<std::unique_ptr<drawable_chain_element>> prepare_sprites(long long elapsed_time, bool only_background = false);
 	void set_item_from_build_system();
 	sf::Vector2f world_upper_left, world_bottom_right;
 	//void runBuildSystemDrawing(RenderWindow& window, long long elapsedTime);
@@ -82,17 +80,16 @@ private:
 	//build_system buildSystem = make_shared<buildSystem>();
 	shared_ptr<light_system> light_system_;
 
-	shared_ptr<std::map<pack_tag, sprite_pack>> packs_map_;
 	static bool fixed_climbing_beyond(sf::Vector2f &pos);
 
 	// Time logic
 	sf::Clock timer_;
 
 	// Selection logic
-	void set_transparent(std::vector<shared_ptr<world_object>>& visible_items);
+	void mouse_selection_logic(const shared_ptr<world_object>& visible_item);
 	std::string mouse_display_name_;
-	weak_ptr<world_object> selected_object_;
-	sf::Vector2f mouse_position() const;
+	weak_ptr<world_object> mouse_selected_object_;
+	float min_selection_capacity_ = 1e6f, min_selection_distance_ = 1e6f;
 
 	// Grids
 	shared_ptr<grid_map> grid_map_;

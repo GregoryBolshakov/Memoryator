@@ -7,14 +7,14 @@
 //
 //owl::owl(const std::string& object_name, sf::Vector2f center_position) : neutral_mob(object_name, center_position)
 //{
-//	conditional_size_units_ = { 350, 250 };
+//	size_ = { 350, 250 };
 //	move_system.default_speed = 0.0006f;
 //	move_system.speed = 0.0006f;
 //	radius_ = 70;
 //	sight_range = 720;
 //	run_away_range_ = 1300;
 //	min_flight_distance_ = 500;
-//	health_point_ = 50;
+//	health_ = 50;
 //	time_for_new_hit_self = long(6e5);
 //	to_save_name_ = "owl";
 //	tag = entity_tag::owl;
@@ -165,7 +165,7 @@
 //
 //std::vector<sprite_chain_element*> owl::prepare_sprites(long long elapsed_time)
 //{
-//	auto body = new sprite_chain_element(pack_tag::owl, pack_part::head, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
+//	auto body = new sprite_chain_element(pack_tag::owl, pack_part::head, direction::DOWN, 1, position_, size_, offset_, color, mirrored_, false);
 //	body->z_coordinate = z_coordinate_;
 //	animation_speed_ = 15;
 //

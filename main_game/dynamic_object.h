@@ -49,9 +49,8 @@ static const long long creature_time_for_new_hitself = 600000;
 class dynamic_object : public world_object
 {
 public:
-	dynamic_object(std::string object_name, sf::Vector2f center_position);
+	dynamic_object(std::string name, sf::Vector2f position, int kind);
 	virtual ~dynamic_object();
-	int get_sprite_number() override { return current_sprite_[0]; }
 	[[nodiscard]] int get_ellipse_size() const { return ellipse_size_; }
 	[[nodiscard]] float get_strength() const { return strength_; }
 	[[nodiscard]] long long get_time_after_hit_self() const { return time_after_hitself_; }
@@ -64,12 +63,11 @@ public:
 	void take_damage(float damage, sf::Vector2f attacker_pos = {-1, -1}) override;
 	void set_route(std::vector<std::pair<int, int>> route) { move_system.route = std::move(route); }
 	void init_route_blocks() override;
-	void set_position(sf::Vector2f new_position) override;
 	virtual void change_action(action new_action, bool reset_sprite_number = false, bool remember_last_action = false);
 	virtual void handle_input(bool used_mouse = false, long long elapsed_time = 0);
 	virtual void behavior_with_dynamic(shared_ptr<dynamic_object> target, long long elapsed_time) = 0;
 	virtual void behavior_with_static(shared_ptr<world_object> target, long long elapsed_time) = 0;
-	virtual void behavior(long long elapsedTime) = 0;
+	virtual void behavior(long long elapsed_time) = 0;
 	virtual void set_target(dynamic_object &object) = 0;
 	virtual void jerk(float power, float deceleration, sf::Vector2f destination_point) = 0;
 	virtual bool die_check();

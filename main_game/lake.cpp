@@ -5,7 +5,7 @@
 //lake::lake(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 4; // SwampyTrees: 1-4
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	strength = 0;
 //	radius_ = 50;
 //	animation_speed_ = 10;
@@ -17,20 +17,20 @@
 //
 //void lake::setType(const int typeOfObject)
 //{
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	if (typeOfObject == 1)
-//		conditional_size_units_ = { 1072, 476 };
+//		size_ = { 1072, 476 };
 //	if (typeOfObject == 2)
-//		conditional_size_units_ = { 482, 279 };
+//		size_ = { 482, 279 };
 //	if (typeOfObject == 3)
-//		conditional_size_units_ = { 839, 315 };
+//		size_ = { 839, 315 };
 //	if (typeOfObject == 4)
-//		conditional_size_units_ = { 473, 388 };
+//		size_ = { 473, 388 };
 //}
 //
 //Vector2f lake::calculate_texture_offset()
 //{
-//	switch (type_of_object_)
+//	switch (type_)
 //	{
 //	case 1:
 //		return { texture_box_.width * 0.55f, texture_box_.height * 0.382f };
@@ -48,7 +48,7 @@
 //void lake::init_pedestal()
 //{
 //	std::pair<sf::Vector2f, sf::Vector2f> microEllipse;
-//	switch (type_of_object_)
+//	switch (type_)
 //	{
 //	case 1:
 //		focus1_ = sf::Vector2f(position_.x, position_.y);
@@ -151,7 +151,7 @@
 //std::vector<sprite_chain_element*> lake::prepare_sprites(long long)
 //{
 //	std::vector<sprite_chain_element*> result = {};
-//	const auto body = new sprite_chain_element(pack_tag::swampyTrees, pack_part::lake, direction::DOWN, type_of_object_, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_));
+//	const auto body = new sprite_chain_element(pack_tag::swampyTrees, pack_part::lake, direction::DOWN, type_, position_, size_, sf::Vector2f(offset_));
 //
 //	result.push_back(body);
 //

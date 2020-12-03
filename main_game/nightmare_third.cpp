@@ -2,13 +2,13 @@
 //
 //nightmare_third::nightmare_third(std::string objectName, sf::Vector2f centerPosition) : monster(std::move(objectName), centerPosition)
 //{
-//	conditional_size_units_ = { 600, 600 };
+//	size_ = { 600, 600 };
 //	move_system.default_speed = 0.0003f;
 //	move_system.speed = 0.0005f;
 //	radius_ = 120;
 //	hitDistance = 120;
 //	strength_ = 25;
-//	health_point_ = 300;
+//	health_ = 300;
 //	current_action_ = relax;
 //	time_for_new_hit_self = long(6e5);
 //	time_after_hitself_ = time_for_new_hit_self;

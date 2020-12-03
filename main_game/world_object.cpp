@@ -4,11 +4,21 @@
 
 sf::Vector2f world_object::micro_block_size = {20, 20};
 
-world_object::world_object(std::string object_name, const sf::Vector2f center_position) :
-	  tag{ entity_tag::empty_object }
-	, current_sprite_{std::vector<int>(1)}
-	, name_{std::move(object_name)}
-	, position_{ center_position }
+world_object::world_object(std::string name, const sf::Vector2f position, const int kind) :
+	  color(sf::Color(255, 255, 255))
+	, tag{ entity_tag::empty_object }
+	, kind_(kind)
+	, z_coordinate_(1)
+	, current_sprite_{1}
+	, time_for_new_sprite_(0)
+	, animation_speed_(0)
+	, max_health_point_value_(0)
+	, health_(0)
+	, armor_(0)
+	, name_{std::move(name)}
+	, position_{ position }
+	, radius_(0)
+	, state_(common)
 {
 	world_object::init_pedestal();
 }
@@ -18,25 +28,7 @@ world_object::~world_object()
 
 void world_object::set_unscaled(const std::vector<unique_ptr<sprite_chain_element>>& items)
 {
-	for (const auto& item : items) item->unscaled = true;
-}
-
-void world_object::set_texture_size(const sf::Vector2f texture_size)
-{
-	texture_box_.width = texture_size.x;
-	texture_box_.height = texture_size.y;
-	original_texture_box_ = texture_box_;
-	texture_box_offset_ = calculate_texture_offset();
-
-	texture_box_.left = ceil(position_.x - texture_box_offset_.x);
-	texture_box_.top = ceil(position_.y - texture_box_offset_.y);
-	
-	init_pedestal();
-}
-
-sf::Vector2f world_object::get_scale_ratio() const
-{
-	return { float(conditional_size_units_.x) / original_texture_box_.width, float(conditional_size_units_.y) / original_texture_box_.height };
+	for (const auto& item : items) item->isometric = true;
 }
 
 void world_object::cancel_mirroring()
@@ -44,7 +36,7 @@ void world_object::cancel_mirroring()
 	if (!mirrored_)
 		return;
 
-	texture_box_offset_.x = conditional_size_units_.x - texture_box_offset_.x;
+	offset_.x = size_.x - offset_.x;
 	mirrored_ = false;
 }
 
@@ -68,7 +60,7 @@ bool world_object::is_locked_place(const std::map<std::pair<int, int>, bool>& ch
 
 void world_object::take_damage(const float damage, sf::Vector2f attacker_pos)
 {
-	this->health_point_ -= damage / this->armor_;
+	this->health_ -= damage / this->armor_;
 }
 
 void world_object::on_sprite_change()

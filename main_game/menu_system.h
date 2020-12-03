@@ -26,7 +26,7 @@ public:
 
 	[[nodiscard]] menu_states get_state() const
 	{ return menu_state_; }
-	void set_state(menu_states state) { menu_state_ = state; }
+	void set_state(const menu_states state) { menu_state_ = state; }
 	void on_key_down(sf::Event event, const std::shared_ptr<world_handler>& world);
 
 	[[nodiscard]] bool get_activity() const
@@ -34,8 +34,6 @@ public:
 private:
 	menu_states menu_state_ = main_menu;
 	std::unordered_map<button_tag, button> button_list_;
-	std::string buttons_info_file_directory_ = "Game/MenuSystem/buttonsInfo.txt";
-	void init_buttons();
 	bool was_active_{};
 	sf::Vector2f screen_size_;
 };

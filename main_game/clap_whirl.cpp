@@ -151,7 +151,7 @@ void ClapWhirl::jerk(float power, float deceleration, sf::Vector2f destinationPo
 	currentSprite[0] = 1;
 
 	const sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition());
-	const sf::Vector2f screenCenter = sf::Vector2f(Helper::GetScreenSize().x / 2, Helper::GetScreenSize().y / 2);	
+	const sf::Vector2f screenCenter = sf::Vector2f(world_metrics::window_size.x / 2, world_metrics::window_size.y / 2);	
 
 	auto nightmare = dynamic_cast<Nightmare3*>(owner);
 	if (nightmare && nightmare->getBoundTarget())

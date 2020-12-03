@@ -8,7 +8,7 @@ sprite_chain_element::sprite_chain_element() : drawable_chain_element()
 {
 }
 
-sprite_chain_element::sprite_chain_element(sprite_chain_element& element)
+sprite_chain_element::sprite_chain_element(sprite_chain_element& element) : drawable_chain_element(element)
 {
 	if (this == &element)
 		return;
@@ -18,8 +18,31 @@ sprite_chain_element::sprite_chain_element(sprite_chain_element& element)
 	this->direction = element.direction;
 	this->number = element.number;
 	this->mirrored = element.mirrored;
-	this->unscaled = element.unscaled;
+	this->isometric = element.isometric;
 	this->rotation = element.rotation;
+}
+
+sprite_chain_element sprite_chain_element::operator=(const sprite_chain_element& element)
+{
+	if (this == &element)
+		return *this;
+
+	this->offset = element.offset;
+	this->position = element.position;
+	this->size = element.size;
+	this->rotation = element.rotation;
+	this->color = element.color;
+	this->initialized = element.initialized;
+
+	this->pack_tag = element.pack_tag;
+	this->pack_part = element.pack_part;
+	this->direction = element.direction;
+	this->number = element.number;
+	this->mirrored = element.mirrored;
+	this->isometric = element.isometric;
+	this->rotation = element.rotation;
+
+	return *this;
 }
 
 sprite_chain_element::sprite_chain_element(
@@ -32,7 +55,7 @@ sprite_chain_element::sprite_chain_element(
 	const sf::Vector2f offset,
 	const sf::Color color,
 	const bool mirrored,
-	const bool unscaled,
+	const bool isometric,
 	const float rotation) : drawable_chain_element(position, size, offset, color)
 {
     this->pack_tag = tag;
@@ -40,7 +63,7 @@ sprite_chain_element::sprite_chain_element(
     this->direction = direction;
     this->number = number;
 	this->mirrored = mirrored;
-	this->unscaled = unscaled;
+	this->isometric = isometric;
     this->rotation = rotation;
 }
 
@@ -50,11 +73,14 @@ sprite_chain_element::sprite_chain_element(
 	const sf::Vector2f offset,
 	const sf::Color color,
 	const bool mirrored,
-	const bool unscaled,
+	const bool isometric,
 	const float rotation) : drawable_chain_element(position, size, offset, color)
+	, pack_tag(pack_tag::empty)
+	, pack_part(pack_part::full)
+	, direction(direction::DOWN)
 {
 	this->mirrored = mirrored;
-	this->unscaled = unscaled;
+	this->isometric = isometric;
 	this->rotation = rotation;
 }
 

@@ -5,7 +5,7 @@
 //stump::stump(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 13; // BirchGrove: 1-4; DarkWoods: 5-10; SwampyTrees: 11-13
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	strength = 0;
 //	radius_ = 50;
 //	animation_speed_ = 10;
@@ -16,33 +16,33 @@
 //
 //void stump::setType(const int typeOfObject)
 //{
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	if (typeOfObject == 1)
-//		conditional_size_units_ = { 412, 256 };
+//		size_ = { 412, 256 };
 //	if (typeOfObject == 2)
-//		conditional_size_units_ = { 507, 337 };
+//		size_ = { 507, 337 };
 //	if (typeOfObject == 3)
-//		conditional_size_units_ = { 647, 312 };
+//		size_ = { 647, 312 };
 //	if (typeOfObject == 4)
-//		conditional_size_units_ = { 462, 269 };
+//		size_ = { 462, 269 };
 //	if (typeOfObject == 5)
-//		conditional_size_units_ = { 243, 203 };
+//		size_ = { 243, 203 };
 //	if (typeOfObject == 6)
-//		conditional_size_units_ = { 236, 315 };
+//		size_ = { 236, 315 };
 //	if (typeOfObject == 7)
-//		conditional_size_units_ = { 286, 576 };
+//		size_ = { 286, 576 };
 //	if (typeOfObject == 8)
-//		conditional_size_units_ = { 354, 570 };
+//		size_ = { 354, 570 };
 //	if (typeOfObject == 9)
-//		conditional_size_units_ = { 335, 266 };
+//		size_ = { 335, 266 };
 //	if (typeOfObject == 10)
-//		conditional_size_units_ = { 186, 412 };
+//		size_ = { 186, 412 };
 //	if (typeOfObject == 11)
-//		conditional_size_units_ = { 250, 663 };
+//		size_ = { 250, 663 };
 //	if (typeOfObject == 12)
-//		conditional_size_units_ = { 526, 441 };
+//		size_ = { 526, 441 };
 //	if (typeOfObject == 13)
-//		conditional_size_units_ = { 267, 434 };
+//		size_ = { 267, 434 };
 //}
 //
 //Vector2f stump::calculate_texture_offset()
@@ -50,7 +50,7 @@
 //	texture_box_.width = texture_box_.width * get_scale_ratio().x;
 //	texture_box_.height = texture_box_.height * get_scale_ratio().y;
 //
-//	switch (type_of_object_)
+//	switch (type_)
 //	{
 //	case 1:
 //		return { texture_box_.width * 0.551f, texture_box_.height * 0.645f };
@@ -85,7 +85,7 @@
 //
 //void stump::init_pedestal()
 //{
-//	switch (type_of_object_)
+//	switch (type_)
 //	{
 //	case 1:
 //		focus1_ = sf::Vector2f(position_.x - texture_box_.width * 0.167f, position_.y);
@@ -173,16 +173,16 @@
 //
 //std::vector<sprite_chain_element*> stump::prepare_sprites(long long)
 //{
-//	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::stump, direction::DOWN, type_of_object_, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_), color, mirrored_);
+//	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::stump, direction::DOWN, type_, position_, size_, sf::Vector2f(offset_), color, mirrored_);
 //
-//	if (type_of_object_ >= 1 && type_of_object_ <= 4)
+//	if (type_ >= 1 && type_ <= 4)
 //		body->pack_tag = pack_tag::birchGrove;
-//	if (type_of_object_ >= 5 && type_of_object_ <= 10)
+//	if (type_ >= 5 && type_ <= 10)
 //	{
 //		body->pack_tag = pack_tag::darkWoods;
 //		body->number -= 4;
 //	}
-//	if (type_of_object_ >= 11 && type_of_object_ <= 13)
+//	if (type_ >= 11 && type_ <= 13)
 //	{
 //		body->pack_tag = pack_tag::swampyTrees;
 //		body->number -= 10;

@@ -6,7 +6,7 @@
 //totem::totem(std::string objectName, const sf::Vector2f centerPosition, const int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 1;
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	strength = 0;
 //	radius_ = 20;
 //	to_save_name_ = "totem";
@@ -16,21 +16,21 @@
 //
 //void totem::setType(const int typeOfObject)
 //{
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	if (typeOfObject == 1)
-//		conditional_size_units_ = { 154, 544 };
+//		size_ = { 154, 544 };
 //	if (typeOfObject == 2)
-//		conditional_size_units_ = { 154, 544 };
+//		size_ = { 154, 544 };
 //	if (typeOfObject == 3)
-//		conditional_size_units_ = { 568, 292 };
+//		size_ = { 568, 292 };
 //	if (typeOfObject == 4)
-//		conditional_size_units_ = { 336, 240 };
+//		size_ = { 336, 240 };
 //	if (typeOfObject == 5)
-//		conditional_size_units_ = { 280, 212 };
+//		size_ = { 280, 212 };
 //	if (typeOfObject == 6)
-//		conditional_size_units_ = { 272, 196 };
+//		size_ = { 272, 196 };
 //
-//	radius_ = std::max(conditional_size_units_.x, conditional_size_units_.y) / 2;
+//	radius_ = std::max(size_.x, size_.y) / 2;
 //}
 //
 //Vector2f totem::calculate_texture_offset()
@@ -38,17 +38,17 @@
 //	texture_box_.width = texture_box_.width * get_scale_ratio().x;
 //	texture_box_.height = texture_box_.height * get_scale_ratio().y;
 //
-//	if (type_of_object_ == 1)
+//	if (type_ == 1)
 //		return { texture_box_.width / 2.0f, texture_box_.height / 1.15f };
-//	if (type_of_object_ == 2)
+//	if (type_ == 2)
 //		return { texture_box_.width / 2.0f, texture_box_.height / 1.15f };
-//	if (type_of_object_ == 3)
+//	if (type_ == 3)
 //		return { texture_box_.width / 2.0f, texture_box_.height / 1.5f };
-//	if (type_of_object_ == 4)
+//	if (type_ == 4)
 //		return { texture_box_.width / 2.0f, texture_box_.height / 1.5f };
-//	if (type_of_object_ == 5)
+//	if (type_ == 5)
 //		return { texture_box_.width / 2.0f, texture_box_.height / 1.5f };
-//	if (type_of_object_ == 6)
+//	if (type_ == 6)
 //		return { texture_box_.width / 2.0f, texture_box_.height / 1.25f };
 //
 //	throw std::logic_error("Invalid type of object.");
@@ -77,7 +77,7 @@
 //
 //std::vector<sprite_chain_element*> totem::prepare_sprites(long long)
 //{
-//	const auto body = new sprite_chain_element(pack_tag::craftObjects, pack_part::totem, direction::DOWN, type_of_object_, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_), color, mirrored_);
+//	const auto body = new sprite_chain_element(pack_tag::craftObjects, pack_part::totem, direction::DOWN, type_, position_, size_, sf::Vector2f(offset_), color, mirrored_);
 //
 //	return { body };
 //}

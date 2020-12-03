@@ -19,7 +19,7 @@
 //
 //void hero_book::initButtons(std::map<pack_tag, sprite_pack>* packsMap)
 //{
-//	const auto screenSize = helper::GetScreenSize();
+//	const auto screenSize = world_metrics::window_size;
 //
 //	std::string packTag = "empty";
 //	std::string packPart = "full";
@@ -59,10 +59,10 @@
 //	//-----------------------------
 //
 //	// positioning interface elements
-//	buttonList.at(button_tag::bookButtonTag).set_position(sf::Vector2f(helper::GetScreenSize().x * 2 / 5 - buttonList.at(button_tag::bookButtonTag).get_global_bounds().width, helper::GetScreenSize().y * 14 / 15 - buttonList.at(button_tag::bookButtonTag).get_global_bounds().height));
-//	buttonList.at(button_tag::bookStandTag).set_position(sf::Vector2f(helper::GetScreenSize().x * 2 / 5 - buttonList.at(button_tag::bookStandTag).get_global_bounds().width, helper::GetScreenSize().y * 14 / 15 - buttonList.at(button_tag::bookButtonTag).get_global_bounds().height));
-//	buttonList.at(button_tag::bookGlowTag).set_position(sf::Vector2f(helper::GetScreenSize().x * 2 / 5 - buttonList.at(button_tag::bookStandTag).get_global_bounds().width, helper::GetScreenSize().y * 14 / 15 - buttonList.at(button_tag::bookButtonTag).get_global_bounds().height));
-//	buttonList.at(button_tag::bookLightningTag).set_position(sf::Vector2f(helper::GetScreenSize().x * 2 / 5 - buttonList.at(button_tag::bookStandTag).get_global_bounds().width, helper::GetScreenSize().y * 14 / 15 - buttonList.at(button_tag::bookButtonTag).get_global_bounds().height));
+//	buttonList.at(button_tag::bookButtonTag).set_position(sf::Vector2f(world_metrics::window_size.x * 2 / 5 - buttonList.at(button_tag::bookButtonTag).get_global_bounds().width, world_metrics::window_size.y * 14 / 15 - buttonList.at(button_tag::bookButtonTag).get_global_bounds().height));
+//	buttonList.at(button_tag::bookStandTag).set_position(sf::Vector2f(world_metrics::window_size.x * 2 / 5 - buttonList.at(button_tag::bookStandTag).get_global_bounds().width, world_metrics::window_size.y * 14 / 15 - buttonList.at(button_tag::bookButtonTag).get_global_bounds().height));
+//	buttonList.at(button_tag::bookGlowTag).set_position(sf::Vector2f(world_metrics::window_size.x * 2 / 5 - buttonList.at(button_tag::bookStandTag).get_global_bounds().width, world_metrics::window_size.y * 14 / 15 - buttonList.at(button_tag::bookButtonTag).get_global_bounds().height));
+//	buttonList.at(button_tag::bookLightningTag).set_position(sf::Vector2f(world_metrics::window_size.x * 2 / 5 - buttonList.at(button_tag::bookStandTag).get_global_bounds().width, world_metrics::window_size.y * 14 / 15 - buttonList.at(button_tag::bookButtonTag).get_global_bounds().height));
 //	//-------------------------------
 //}
 //

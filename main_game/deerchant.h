@@ -6,13 +6,12 @@
 class deerchant : public dynamic_object
 {
 public:
-	deerchant(std::string object_name, sf::Vector2f center_position);
+	deerchant(std::string name, sf::Vector2f position, int kind);
 	~deerchant();
 	//BuildSystem
 	bool is_build_system = false;
 	//draw
 	std::string name_of_file;
-	sf::Vector2f calculate_texture_offset() override;
 	std::vector<unique_ptr<sprite_chain_element>> prepare_sprites(long long elapsed_time) override;
 	//control
 	void handle_input(bool used_mouse = false, long long elapsed_time = 0) override;
@@ -37,8 +36,6 @@ public:
 	void animation_smooth();
 
 	std::unique_ptr<cell> held_item;
-	sf::Vector2f get_build_position(std::vector<world_object*> visible_items, float scale_factor, sf::Vector2f camera_position) override;
-	int get_build_type(sf::Vector2f oun_pos, sf::Vector2f other_pos) override;
 	std::vector<hero_bag> bags;
 	bool near_the_table = false;
 private:

@@ -22,9 +22,8 @@ class world_generator
 {
 public:
 	world_generator(
-		  std::shared_ptr<grid_map> grid_map
-		, const std::shared_ptr<scale_system>& scale_system
-		, const std::shared_ptr<std::map<pack_tag, sprite_pack>>& packs_map);
+		  const std::shared_ptr<grid_map>& grid_map
+		, const std::shared_ptr<scale_system>& scale_system);
 
 	void primordial_generation();
 	void fill_zone();
@@ -54,14 +53,13 @@ public:
 	[[nodiscard]] const std::map<std::string, std::shared_ptr<static_object>>& all_static_objects() const { return all_static_objects_; }
 	[[nodiscard]] const std::map<std::string, std::shared_ptr<dynamic_object>>& all_dynamic_objects() const { return all_dynamic_objects_; }
 private:
-	std::shared_ptr<grid_map> grid_map_;
+	std::weak_ptr<grid_map> grid_map_;
 	std::weak_ptr<scale_system> scale_system_;
-	std::weak_ptr<std::map<pack_tag, sprite_pack>> packs_map_;
 	std::weak_ptr<dynamic_object> player_;
 	std::weak_ptr<static_object> main_object_;
 	std::map<std::string, std::shared_ptr<static_object>> all_static_objects_;
 	std::map<std::string, std::shared_ptr<dynamic_object>> all_dynamic_objects_;
-	biome_matrix_t biome_matrix;
+	biome_matrix_t biome_matrix_;
 
 	// block generation
 	void generate_ground(sf::Vector2u index);

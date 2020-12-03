@@ -36,7 +36,7 @@
 //
 //void monster::behavior_with_dynamic(dynamic_object* target, const long long elapsedTime)
 //{
-//	if (health_point_ <= 0)
+//	if (health_ <= 0)
 //	{
 //		change_action(dead, true);
 //		direction_system.direction = direction::STAND;

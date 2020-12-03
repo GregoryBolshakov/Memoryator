@@ -1,7 +1,6 @@
 #pragma once
 
 #include "drawable_chain_element.h"
-#include "helper.h"
 
 #include <SFML/Graphics.hpp>
 #include <string>

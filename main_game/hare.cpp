@@ -5,13 +5,13 @@
 //
 //hare::hare(const std::string& objectName, sf::Vector2f centerPosition) : neutral_mob(objectName, centerPosition)
 //{
-//	conditional_size_units_ = { 240, 200 };
+//	size_ = { 240, 200 };
 //	move_system.default_speed = 0.0006f;
 //	move_system.speed = 0.0006f;
 //	radius_ = 70;
 //	sight_range = 720;
 //	run_away_range_ = 1300;
-//	health_point_ = 50;
+//	health_ = 50;
 //	time_for_new_hit_self = long(6e5);
 //	to_save_name_ = "hare";
 //	tag = entity_tag::hare;
@@ -242,7 +242,7 @@
 //
 //std::vector<sprite_chain_element*> hare::prepare_sprites(long long elapsedTime)
 //{
-//	auto body = new sprite_chain_element(pack_tag::hare, pack_part::full, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_, color, mirrored_, false);
+//	auto body = new sprite_chain_element(pack_tag::hare, pack_part::full, direction::DOWN, 1, position_, size_, offset_, color, mirrored_, false);
 //	animation_speed_ = 12;
 //	
 //	auto inverse = false;

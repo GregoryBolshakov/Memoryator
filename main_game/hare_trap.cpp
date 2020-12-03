@@ -5,7 +5,7 @@
 //hare_trap::hare_trap(std::string object_name, const sf::Vector2f center_position, const int type_of_object) : picked_object(std::move(object_name), center_position)
 //{
 //	variety_of_types_ = 1;
-//	this->type_of_object_ = type_of_object;
+//	this->type_ = type_of_object;
 //	radius_ = 100;
 //	to_save_name_ = "hareTrap";
 //	hare_trap::setType(type_of_object);
@@ -17,8 +17,8 @@
 //
 //void hare_trap::setType(int type_of_object)
 //{
-//	this->type_of_object_ = type_of_object;
-//	this->conditional_size_units_ = { 140, 111 };
+//	this->type_ = type_of_object;
+//	this->size_ = { 140, 111 };
 //}
 //
 //Vector2f hare_trap::calculate_texture_offset()
@@ -42,7 +42,7 @@
 //
 //Vector2f hare_trap::get_enter_position() const
 //{
-//	return {position_.x + conditional_size_units_.x / 2.0f, position_.y/* + conditional_size_units_.y / 10.0f*/ };
+//	return {position_.x + size_.x / 2.0f, position_.y/* + size_.y / 10.0f*/ };
 //}
 //
 //int hare_trap::get_build_type(sf::Vector2f oun_pos, sf::Vector2f other_pos)
@@ -53,10 +53,10 @@
 //std::vector<sprite_chain_element*> hare_trap::prepare_sprites(long long elapsed_time)
 //{
 //	std::vector<sprite_chain_element*> result = {};
-//	const auto body = new sprite_chain_element(pack_tag::craftObjects, pack_part::hareTrap, direction::DOWN, 1, position_, conditional_size_units_, texture_box_offset_);
+//	const auto body = new sprite_chain_element(pack_tag::craftObjects, pack_part::hareTrap, direction::DOWN, 1, position_, size_, offset_);
 //	const auto front_position = get_enter_position() + sf::Vector2f(0, 1);
-//	const auto front_offset = texture_box_offset_ + (front_position - position_);
-//	const auto front = new sprite_chain_element(pack_tag::craftObjects, pack_part::hareTrap, direction::DOWN, 2, front_position, conditional_size_units_, front_offset);
+//	const auto front_offset = offset_ + (front_position - position_);
+//	const auto front = new sprite_chain_element(pack_tag::craftObjects, pack_part::hareTrap, direction::DOWN, 2, front_position, size_, front_offset);
 //
 //	result = { body, front };
 //	set_unscaled(result);

@@ -5,7 +5,7 @@
 //bush::bush(std::string objectName, sf::Vector2f centerPosition, int typeOfObject) : terrain_object(std::move(objectName), centerPosition)
 //{
 //	variety_of_types_ = 15; // BrichGrove: 1-8; SwampyTrees: 9-15
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	strength = 0;
 //	radius_ = 50;
 //	animation_speed_ = 10;
@@ -16,42 +16,42 @@
 //
 //void bush::setType(int typeOfObject)
 //{
-//	this->type_of_object_ = typeOfObject;
+//	this->type_ = typeOfObject;
 //	if (typeOfObject == 1)
-//		conditional_size_units_ = { 173, 254 };
+//		size_ = { 173, 254 };
 //	if (typeOfObject == 2)
-//		conditional_size_units_ = { 152, 163 };
+//		size_ = { 152, 163 };
 //	if (typeOfObject == 3)
-//		conditional_size_units_ = { 272, 429 };
+//		size_ = { 272, 429 };
 //	if (typeOfObject == 4)
-//		conditional_size_units_ = { 283, 259 };
+//		size_ = { 283, 259 };
 //	if (typeOfObject == 5)
-//		conditional_size_units_ = { 349, 284 };
+//		size_ = { 349, 284 };
 //	if (typeOfObject == 6)
-//		conditional_size_units_ = { 363, 286 };
+//		size_ = { 363, 286 };
 //	if (typeOfObject == 7)
-//		conditional_size_units_ = { 231, 424 };
+//		size_ = { 231, 424 };
 //	if (typeOfObject == 8)
-//		conditional_size_units_ = { 405, 315 };
+//		size_ = { 405, 315 };
 //	if (typeOfObject == 9)
-//		conditional_size_units_ = { 642, 311 };
+//		size_ = { 642, 311 };
 //	if (typeOfObject == 10)
-//		conditional_size_units_ = { 289, 279 };
+//		size_ = { 289, 279 };
 //	if (typeOfObject == 11)
-//		conditional_size_units_ = { 396, 409 };
+//		size_ = { 396, 409 };
 //	if (typeOfObject == 12)
-//		conditional_size_units_ = { 385, 285 };
+//		size_ = { 385, 285 };
 //	if (typeOfObject == 13)
-//		conditional_size_units_ = { 450, 283 };
+//		size_ = { 450, 283 };
 //	if (typeOfObject == 14)
-//		conditional_size_units_ = { 462, 290 };
+//		size_ = { 462, 290 };
 //	if (typeOfObject == 15)
-//		conditional_size_units_ = { 189, 188 };
+//		size_ = { 189, 188 };
 //}
 //
 //Vector2f bush::calculate_texture_offset()
 //{
-//	switch (type_of_object_)
+//	switch (type_)
 //	{
 //	case 1:
 //		return { texture_box_.width * 0.551f, texture_box_.height * 0.01f };
@@ -90,7 +90,7 @@
 //
 //void bush::init_pedestal()
 //{
-//	switch (type_of_object_)
+//	switch (type_)
 //	{
 //		case 1:
 //		case 2:
@@ -180,11 +180,11 @@
 //
 //std::vector<sprite_chain_element*> bush::prepare_sprites(long long)
 //{
-//	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::bush, direction::DOWN, type_of_object_, position_, conditional_size_units_, sf::Vector2f(texture_box_offset_), color, mirrored_);
+//	auto body = new sprite_chain_element(pack_tag::darkWoods, pack_part::bush, direction::DOWN, type_, position_, size_, sf::Vector2f(offset_), color, mirrored_);
 //
-//	if (type_of_object_ >= 1 && type_of_object_ <= 8)
+//	if (type_ >= 1 && type_ <= 8)
 //		body->pack_tag = pack_tag::birchGrove;
-//	if (type_of_object_ >= 9 && type_of_object_ <= 15)
+//	if (type_ >= 9 && type_ <= 15)
 //	{
 //		body->pack_tag = pack_tag::swampyTrees;
 //		body->number -= 8;
