@@ -7,6 +7,7 @@
 #include "text_system.h"
 #include "sprite_pack.h"
 #include "world_metrics.h"
+#include "scale_system.h"
 
 draw_system::draw_system(shared_ptr<shader_system> shader_system, const sf::Vector2f screen_size) : shader_system_{
 	std::move(shader_system)
@@ -128,60 +129,38 @@ void draw_system::init_packs_map()
 		float(packs_map_->at(pack_tag::inventory).get_original_info(pack_part::areas, direction::DOWN, 1).frame.h));
 }
 
-void draw_system::advanced_scale(sprite_chain_element& item, sf::Sprite& sprite, const sprite_pack_structure::sprite& original_info, const float scale)
+void draw_system::isometric_scale(sprite_chain_element& item, const float scale)
 {
-	const auto size_w = float(original_info.source_size.w);
-	const auto size_h = float(original_info.source_size.h);
+	if (!item.isometric)
+		return;
 
-	if (!original_info.rotated)
-	{
-		sprite.setScale(
-			scale * item.size.x / size_w,
-			scale * item.size.y / size_h);
-	}
-	else
-	{
-		sprite.setScale(
-			scale * item.size.y / size_h,
-			scale * item.size.x / size_w);
-	}
+	// zoom 3d illusion
+	float elongation = pow(scale / world_metrics::further_scale, 0.12f);
+	item.position.y -= item.size.y * (elongation - 1);
+	item.size.y *= elongation;
 
-	if (!item.is_background && !item.isometric)
-	{
-		if (!original_info.rotated)
-		{
-			sprite.scale(1, pow(scale, 1.0F / 6));
-			sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - (pow(scale, 1.0f / 6) - 1) * size_h);
-			//sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + pow(scale, 1.0f / 6) * (size_h - item.offset.y));
-		}
-		else
-		{
-			sprite.scale(pow(scale, 1.0F / 6), 1);
-			sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - (pow(scale, 1.0f / 6) - 1) * size_w);
-			//sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + pow(scale, 1.0f / 6) * (size_w - item.offset.y));
-		}
-	}
+	// run 3d illusion
+	elongation = pow(1 - (item.position.y - world_metrics::visible_zone.top - world_metrics::visible_zone.height / 3) / world_metrics::visible_zone.height, 0.03f);
+	item.position.y -= item.size.y * (elongation - 1);
+	item.size.y *= elongation;
 }
 
 void draw_system::draw_sprite_chain_element(const shared_ptr<sf::RenderWindow>& target, sprite_chain_element& sprite_chain_item, const float scale) const
 {
 	if (sprite_chain_item.pack_tag == pack_tag::empty)
-	{
 		return;
-	}
+
+	isometric_scale(sprite_chain_item, scale);
 
 	auto sprite = packs_map_->at(sprite_chain_item.pack_tag).get_sprite(sprite_chain_item.pack_part, sprite_chain_item.direction, sprite_chain_item.number, sprite_chain_item.mirrored);
 	if (sprite.getTextureRect() == sf::IntRect())
-	{
 		return;
-	}
 
+	
 	const auto original_info = packs_map_->at(sprite_chain_item.pack_tag).get_original_info(sprite_chain_item.pack_part, sprite_chain_item.direction, sprite_chain_item.number);
 	
 	if (sprite_chain_item.anti_transparent)
-	{
 		sprite_chain_item.color.a = 255;
-	}
 
 	sprite.setColor(sprite_chain_item.color);
 	sprite.rotate(sprite_chain_item.rotation);
@@ -190,7 +169,18 @@ void draw_system::draw_sprite_chain_element(const shared_ptr<sf::RenderWindow>& 
 	else
 		sprite.setPosition(world_metrics::world_to_screen_draw_position(sprite_chain_item.position, sprite_chain_item.offset));
 
-	advanced_scale(sprite_chain_item, sprite, original_info, scale);
+	if (!original_info.rotated)
+	{
+		sprite.setScale(
+			scale * sprite_chain_item.size.x / static_cast<float>(original_info.source_size.w),
+			scale * sprite_chain_item.size.y / static_cast<float>(original_info.source_size.h));
+	}
+	else
+	{
+		sprite.setScale(
+			scale * sprite_chain_item.size.y / static_cast<float>(original_info.source_size.h),
+			scale * sprite_chain_item.size.x / static_cast<float>(original_info.source_size.w));
+	}
 
 	/*if (sprite_chain_item.pack_tag == pack_tag::swampyTrees && sprite_chain_item.pack_part == pack_part::tree && original_info.frame_name == "tree/5")
 	{

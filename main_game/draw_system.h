@@ -39,7 +39,7 @@ public:
 	void draw(const std::shared_ptr<sf::RenderWindow>& target, const std::vector<std::unique_ptr<drawable_chain_element>>& drawable_items, float scale = 1)const;
 	void draw(const std::shared_ptr<sf::RenderWindow>& target, shader_kind kind);
 private:
-	static void advanced_scale(sprite_chain_element& item, sf::Sprite& sprite, const sprite_pack_structure::sprite& original_info, float scale = 1);
+	static void isometric_scale(sprite_chain_element& item, float scale);
 
 	void init_packs_map();
 	bool search_files(LPCTSTR lpsz_file_name, search_func lp_search_func, bool b_inner_folders = true);

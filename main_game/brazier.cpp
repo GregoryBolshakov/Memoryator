@@ -126,15 +126,14 @@ void brazier::putItemToCraft(const entity_tag id)
 std::vector<unique_ptr<sprite_chain_element>> brazier::prepare_sprites(long long)
 {
 	std::vector<unique_ptr<sprite_chain_element>> result;
-	const sf::Vector2f front_offset(size_.x * 0.506f, size_.y * 0.949f);
-	const sf::Vector2f front_position(position_.x - offset_.x + front_offset.x, position_.y - offset_.y + front_offset.y);
 
-	auto back = make_unique<sprite_chain_element>(pack_tag::locations, pack_part::brazier, direction::DOWN, 1, position_, size_, sf::Vector2f(offset_));
-	auto front = make_unique<sprite_chain_element>(pack_tag::locations, pack_part::brazier, direction::DOWN, 2, front_position, size_, front_offset);
+	auto back = make_unique<sprite_chain_element>(pack_tag::locations, pack_part::brazier, direction::DOWN, 1, position_, size_, offset_);
+	auto front = make_unique<sprite_chain_element>(pack_tag::locations, pack_part::brazier, direction::DOWN, 2, position_, size_, offset_);
 
 	result.emplace_back(std::move(back));
 	result.emplace_back(std::move(front));
 
+	set_isometric_state(result, true);
 	return result;
 
 	/*additionalSprites.clear();

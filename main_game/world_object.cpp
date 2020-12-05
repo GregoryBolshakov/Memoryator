@@ -26,9 +26,9 @@ world_object::world_object(std::string name, const sf::Vector2f position, const 
 world_object::~world_object()
 = default;
 
-void world_object::set_unscaled(const std::vector<unique_ptr<sprite_chain_element>>& items)
+void world_object::set_isometric_state(const std::vector<unique_ptr<sprite_chain_element>>& items, const bool state)
 {
-	for (const auto& item : items) item->isometric = true;
+	for (const auto& item : items) item->isometric = state;
 }
 
 void world_object::cancel_mirroring()

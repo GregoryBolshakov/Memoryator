@@ -70,7 +70,7 @@ public:
 	void set_health_point(const float health_point) { this->health_ = health_point; }
 	void set_name(std::string name) { this->name_ = std::move(name); }
 	void delete_promise_on() { delete_promise_ = true; }
-	static void set_unscaled(const std::vector<unique_ptr<sprite_chain_element>>& items);
+	static void set_isometric_state(const std::vector<unique_ptr<sprite_chain_element>>& items, bool state);
 	void set_state(state state) { this->state_ = state; }
 	virtual void take_damage(float damage, sf::Vector2f attacker_pos = { -1, -1 });
 	virtual void init_route_blocks();

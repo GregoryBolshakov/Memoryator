@@ -3,7 +3,6 @@
 #include <memory>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Rect.hpp>
-#include <SFML/Window/VideoMode.hpp>
 #include <SFML/System/Vector2.hpp>
 
 inline sf::Vector2f operator - (const sf::Vector2f v1, const sf::Vector2f v2) { return sf::Vector2f(v1.x - v2.x, v1.y - v2.y); }
@@ -27,13 +26,13 @@ namespace world_metrics
 
 	inline sf::Vector2u matrix_size;
 
-	inline sf::FloatRect constant_zone;	// coords always (0,0)
+	inline sf::FloatRect constant_zone; // coords always (0,0)
 	inline sf::FloatRect visible_zone;
 	inline sf::FloatRect constant_zone_no_scale;
 	inline sf::FloatRect visible_zone_no_scale;
-	inline sf::Vector2f center;	// in world position
-	inline float scale;
-
+	inline sf::Vector2f center; // in world position
+	inline float scale, furthest_factor = 0.8f, closest_factor = 1.5f;
+	inline float closest_scale, further_scale;
 	inline int get_fps(const long long elapsed_time)
 	{
 		return 1000000 / elapsed_time;
@@ -71,10 +70,18 @@ namespace world_metrics
 		world_metrics::scale = scale;
 		window_size = sf::Vector2f(window.lock()->getSize());
 		// division by scale instead of multiplication because it's window, not the object
-		constant_zone = sf::FloatRect(0, 0, constant_zone_no_scale.width / scale, constant_zone_no_scale.height / scale);
-		visible_zone = sf::FloatRect(block_size.x / scale, block_size.y / scale, window_size.x / scale, window_size.y / scale);
+		constant_zone = sf::FloatRect(constant_zone_no_scale.left, constant_zone_no_scale.top, constant_zone_no_scale.width / scale, constant_zone_no_scale.height / scale);
+		visible_zone = sf::FloatRect(visible_zone_no_scale.left, visible_zone_no_scale.top, window_size.x / scale, window_size.y / scale);
 		matrix_size = sf::Vector2u(constant_zone.width / block_size.x + 1, constant_zone.height / block_size.y + 1);
 		center = sf::Vector2f(visible_zone.left + visible_zone.width / 2, visible_zone.top + visible_zone.height / 2);
+		further_scale = furthest_factor * scale;
+		closest_scale = closest_factor * scale;
+	}
+
+	inline void update_further(const float scale)
+	{
+		world_metrics::further_scale = scale * world_metrics::furthest_factor;
+		world_metrics::closest_scale = scale * world_metrics::closest_factor;
 	}
 
 	inline sf::Vector2f screen_to_world_position(const sf::Vector2f position)

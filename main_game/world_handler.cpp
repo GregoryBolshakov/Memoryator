@@ -48,16 +48,18 @@ world_handler::~world_handler()
 
 void world_handler::run_world_generator()
 {
+	world_metrics::set_world_metrics(world_metrics::window.lock());
 	world_generator_->primordial_generation();
-	player_ = world_generator_->player();
+	player_ = world_generator_->all_dynamic_objects().at("hero");
 	mouse_selected_object_ = world_generator_->player();
 	camera_system_.lock()->set_focus(player_);
 	main_object_ = dynamic_pointer_cast<brazier>(world_generator_->main_object().lock());
 
 	world_metrics::update_scale(camera_system_.lock()->get_scale_system()->calculate_scale());
+	player_.lock()->set_position(world_metrics::center);
 	// here the size of all matrices will be calculated
 	grid_map_->init_matrices();
-	world_generator_->fill_zone();
+	world_generator_->fill_inner_zone();
 	grid_map_->add_constant_block(grid_map_->get_block_by_point(main_object_.lock()->get_position()));
 
 	const auto hero = dynamic_pointer_cast<deerchant>(player_.lock());
@@ -381,11 +383,17 @@ Vector2f world_handler::interact_movement(const shared_ptr<dynamic_object>& dyna
 void world_handler::interact(const long long elapsed_time)
 {
 	birth_objects();
+	camera_system_.lock()->interact(elapsed_time);
+	pedestal_controller.interact(elapsed_time);
+
 	min_selection_capacity_ = 1e6f; min_selection_distance_ = 1e6f;
 	mouse_display_name_ = ""; mouse_selected_object_.reset();
 
 	whole_world_offset_ = world_metrics::center - interact_movement(player_.lock(), elapsed_time);
+	world_metrics::constant_zone_no_scale.left += whole_world_offset_.x; world_metrics::constant_zone_no_scale.top += whole_world_offset_.y;
 	player_.lock()->set_position(world_metrics::center);
+
+	world_generator_->interact();
 
 	for (const auto& mapped_static_item : world_generator_->all_static_objects())
 	{
@@ -411,16 +419,10 @@ void world_handler::interact(const long long elapsed_time)
 		}
 
 		for (const auto& mapped_static_item : world_generator_->all_static_objects())
-		{
-			const auto& static_item = mapped_static_item.second;
-			dynamic_item->behavior_with_static(static_item, elapsed_time);
-		}
+			dynamic_item->behavior_with_static(mapped_static_item.second, elapsed_time);
 
 		mouse_selection_logic(dynamic_item);
 	}
-
-	camera_system_.lock()->interact(elapsed_time);
-	pedestal_controller.interact(elapsed_time);
 
 	//for (auto& dynamicItem : localDynamicItems)
 	//{

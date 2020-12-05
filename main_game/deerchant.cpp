@@ -1145,5 +1145,6 @@ std::vector<unique_ptr<sprite_chain_element>> deerchant::prepare_sprites(const l
 		result.push_back(std::move(legs_sprite));
 	}
 
+	set_isometric_state(result, true);
 	return result;
 }

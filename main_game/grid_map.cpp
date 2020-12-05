@@ -244,12 +244,14 @@ void grid_map::bfs(const int x_border, const int y_border, int start_x, int star
 
 sf::Vector2u grid_map::get_block_by_point(const sf::Vector2f point)
 {
-	return sf::Vector2u(point / world_metrics::block_size);
+	const sf::Vector2f constant_zone_offset(world_metrics::constant_zone_no_scale.left, world_metrics::constant_zone_no_scale.top);
+	return sf::Vector2u((point - constant_zone_offset) / world_metrics::block_size);
 }
 
 sf::Vector2f grid_map::get_point_by_block(sf::Vector2u index)
 {
-	return sf::Vector2f(index) * world_metrics::block_size;
+	const sf::Vector2f constant_zone_offset(world_metrics::constant_zone_no_scale.left, world_metrics::constant_zone_no_scale.top);
+	return sf::Vector2f(index) * world_metrics::block_size + constant_zone_offset;
 }
 
 void grid_map::set_locked_micro_blocks(const std::shared_ptr<world_object>& item, const bool value)

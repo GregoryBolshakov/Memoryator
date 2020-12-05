@@ -141,16 +141,13 @@ int main()
 			draw_system->draw(window, world->prepare_sprites(time_micro_sec, false), scale);
 
 			//draw_system->draw(main_window, shader_kind::dynamic_light);
-			/*text_system::draw_string("constant:   " + std::to_string(int(world_metrics::constant_zone.left)) + "   " + std::to_string(int(world_metrics::constant_zone.top)) + "   " +  std::to_string(int(world_metrics::constant_zone.width)) + "   " + std::to_string(int(world_metrics::constant_zone.height)), font_name::bebas_font, 40, 200, 100, window, sf::Color::Black);
+			text_system::draw_string("constant:   " + std::to_string(int(world_metrics::constant_zone.left)) + "   " + std::to_string(int(world_metrics::constant_zone.top)) + "   " +  std::to_string(int(world_metrics::constant_zone.width)) + "   " + std::to_string(int(world_metrics::constant_zone.height)), font_name::bebas_font, 40, 200, 100, window, sf::Color::Black);
 			text_system::draw_string("visible:   " + std::to_string(int(world_metrics::visible_zone.left)) + "   " + std::to_string(int(world_metrics::visible_zone.top)) + "   " + std::to_string(int(world_metrics::visible_zone.width)) + "   " + std::to_string(int(world_metrics::visible_zone.height)), font_name::bebas_font, 40, 200, 200, window, sf::Color::Black);
 			text_system::draw_string("block:   " + std::to_string(int(world_metrics::block_size.x)) + "   " + std::to_string(int(world_metrics::block_size.y)) + "   " + std::to_string(int(world_metrics::block_size.x * world_metrics::scale)) + "   " + std::to_string(int(world_metrics::block_size.y * world_metrics::scale)), font_name::bebas_font, 40, 200, 300, window, sf::Color::Black);
 			text_system::draw_string("player:   " + std::to_string(int(world->get_player().lock()->get_position().x)) + "   " + std::to_string(int(world->get_player().lock()->get_position().y)), font_name::bebas_font, 40, 200, 400, window, sf::Color::Black);
 			text_system::draw_string("center:   " + std::to_string(int(world_metrics::center.x)) + "   " + std::to_string(int(world_metrics::center.y)), font_name::bebas_font, 40, 200, 350, window, sf::Color::Black);
 			text_system::draw_string("mouse:   " + std::to_string(int(world_metrics::screen_to_world_position(Vector2f(Mouse::getPosition(*window))).x)) + "   " + std::to_string(int(world_metrics::screen_to_world_position(Vector2f(Mouse::getPosition(*window))).y)), font_name::bebas_font, 40, 200, 500, window, sf::Color::Black);
 			text_system::draw_string("scale:   " + std::to_string(world_metrics::scale), font_name::bebas_font, 40, 200, 600, window, sf::Color::Black);
-
-			shape_chain_element circle(world_metrics::world_to_screen_position(world_metrics::center), 20, Vector2f(20, 20), true, sf::Color::Red);
-			draw_system->draw_shape_chain_element(window, circle);*/
 		}
 		else
 			clock.restart();

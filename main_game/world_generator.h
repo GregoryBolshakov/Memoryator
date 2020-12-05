@@ -3,6 +3,7 @@
 #include "object_initializer.h"
 
 #include <map>
+#include <set>
 #include <memory>
 #include <vector>
 #include <SFML/System/Vector2.hpp>
@@ -15,6 +16,7 @@ class sprite_pack;
 class grid_map;
 enum class pack_tag;
 enum class entity_tag;
+enum class direction;
 
 using biome_matrix_t = std::vector<std::vector<biome>>;
 
@@ -26,9 +28,10 @@ public:
 		, const std::shared_ptr<scale_system>& scale_system);
 
 	void primordial_generation();
-	void fill_zone();
+	void fill_inner_zone();
+	void fill_outer_zone(std::set<direction> directions);
 
-	const std::shared_ptr<static_object>& initialize_static_item(
+	std::weak_ptr<static_object> initialize_static_item(
 		  entity_tag item_class
 		, sf::Vector2f item_position
 		, int item_type
@@ -38,13 +41,15 @@ public:
 		, bool mirrored = true
 		, const std::vector<std::pair<entity_tag, int>>& inventory = {});
 	
-	const std::shared_ptr<dynamic_object>& initialize_dynamic_item(
+	std::weak_ptr<dynamic_object> initialize_dynamic_item(
 		  entity_tag item_class
 		, sf::Vector2f item_position
 		, const std::string& item_name
 		, const std::shared_ptr<world_object>& owner = nullptr);
 
 	//active generation
+	void clear_excess();
+	void interact();
 	void in_block_generate(sf::Vector2u index);
 	[[nodiscard]] bool whether_block_regeneretable(sf::Vector2u index) const;
 

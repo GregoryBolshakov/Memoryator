@@ -265,5 +265,6 @@ std::vector<std::unique_ptr<sprite_chain_element>> forest_tree::prepare_sprites(
 
 	result.emplace_back(std::move(body));
 
+	set_isometric_state(result, true);
 	return result;
 }

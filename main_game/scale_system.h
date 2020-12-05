@@ -8,10 +8,7 @@ class world_object;
 class scale_system
 {
 public:
-	const float closest_zoom_scale = 1.5f;
-	const float further_zoom_scale = 0.8f;
-	
-	scale_system() = default;
+	scale_system();
 	~scale_system() = default;
 
 	[[nodiscard]] float calculate_scale();
@@ -22,7 +19,7 @@ public:
 private:
 	const float focused_objects_in_height = 4;
 	std::weak_ptr<world_object> focused_object_;
-	float zoom_factor_ = further_zoom_scale;
+	float zoom_factor_;
 	float focused_to_screen_factor_ = 1;
 	float scale_decrease_ = 0, scale_decrease_step_ = 0;
 	float time_after_scale_decrease_ = 0;
